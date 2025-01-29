@@ -1,3 +1,10 @@
-export default function Register(){
-    return <h1>Register</h1>
-}
+import React from 'react';
+import Register from './Register';
+
+const RegisterPage = () => {
+    return (
+        <Register/>
+    );
+};
+
+export default RegisterPage;

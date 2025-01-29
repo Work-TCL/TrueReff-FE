@@ -1,3 +1,5 @@
-export default function ResetPassword(){
-    return <h1>Reset Password</h1>
+import React from "react";
+import ResetPassword from "./Resetpassword";
+export default function ResetPasswordPage(){
+    return <ResetPassword/>
 }
