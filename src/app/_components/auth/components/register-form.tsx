@@ -10,9 +10,8 @@ import { signIn } from "next-auth/react";
 import { loginAPI } from "@/lib/web-api/auth";
 import Input from "@/lib/ui/form/Input";
 import Button from "@/lib/ui/button";
-import Link from "next/link";
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useRouter();
   const schema = loginSchema;
@@ -69,21 +68,17 @@ export default function LoginForm() {
       >
         <Input name="email" type="email" placeholder="Email" />
         <Input name="password" type="password" placeholder="Password" />
-        <div className="mt-6 text-[16px] flex align-middle justify-between  text-gray-600">
-          <div className="flex items-center gap-2">
-            <input type="checkbox" className="w-[20px] h-[20px]" />
-            <span className="">Remember Me</span>
-          </div>
-          <Link
-            href="/forgot-password"
-            className="cursor-pointer"
-            // onClick={() => router.push("/forgot-password")}
-          >
-            <span className="text-[#FF4979]">Forgot password?</span>
-          </Link>
+
+        <div className="mt-6 text-xs flex align-middle gap-2 text-gray-600">
+          <input type="checkbox" className="w-[20px] h-[20px]" />
+          <span className="text-[15px]">
+            By Signing up, you agree to our{" "}
+            <span className="text-[#FF4979]">Privacy Policy</span> &{" "}
+            <span className="text-[#FF4979]">Terms of Use.</span>
+          </span>
         </div>
         <Button type="submit" className="mt-5" loading={loading}>
-          Login
+          Sign up
         </Button>
       </form>
     </FormProvider>

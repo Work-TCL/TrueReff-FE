@@ -1,6 +1,6 @@
 import React from "react";
-import SendOTP from "./SendOTP";
+import SendOtpPage from "@/app/_components/auth/send-otp";
 
-export default function SendOTPPage(){
-    return <SendOTP/>
+export default function page() {
+  return <SendOtpPage />;
 }
