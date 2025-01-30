@@ -1,7 +1,5 @@
-import LandingPage from "./(landing-page)/page";
+import { redirect } from "next/navigation";
 
 export default function App() {
-  return (
-      <LandingPage/>
-  )
+  return redirect("/register");
 }
