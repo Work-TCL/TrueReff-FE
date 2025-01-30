@@ -1,9 +1,13 @@
 import React from "react";
+import { SlidingTabBar } from "../tabs/sllidingTabs";
+import Image from "next/image";
 
 export default function PreFormPage() {
   return (
     <div>
-      <div className="max-w-4xl mx-auto p-6">
+            <SlidingTabBar />
+
+            <div className="max-w-4xl mx-auto p-6">
         <h1 className="text-3xl font-bold text-center text-pink-500 mb-6">
           truereff
         </h1>
