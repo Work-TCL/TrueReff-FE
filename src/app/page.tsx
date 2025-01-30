@@ -1,12 +1,7 @@
-import { SessionProvider } from "next-auth/react"
+import LandingPage from "./(landing-page)/page";
 
-export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
-}: any) {
+export default function App() {
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+      <LandingPage/>
   )
 }
