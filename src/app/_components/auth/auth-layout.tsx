@@ -10,12 +10,12 @@ export default function AuthLayoutPage({
   authImage = "login-image.svg",
 }: IProps) {
   return (
-    <div className="h-screen text-gray-900 grid grid-cols-2 overflow-hidden">
+    <div className="h-screen text-gray-900 grid lg:grid-cols-2 grid-cols-1 overflow-hidden">
       <div
-        className="h-full w-full text-center bg-black bg-contain bg-center bg-no-repeat bg-cover"
+        className="h-full w-full text-center bg-black bg-center bg-no-repeat bg-cover lg:block hidden"
         style={{ backgroundImage: `url('/assets/auth/${authImage}')` }}
       />
-      <div className="sm:p-12 overflow-auto">{children}</div>
+      <div className="sm:p-12 p-4 overflow-auto my-auto">{children}</div>
     </div>
   );
 }

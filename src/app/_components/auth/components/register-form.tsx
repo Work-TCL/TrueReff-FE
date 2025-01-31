@@ -1,6 +1,5 @@
 "use client";
 import { ILoginSchema, loginSchema } from "@/lib/utils/validations";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,7 +12,6 @@ import Button from "@/lib/ui/button";
 
 export default function RegisterForm() {
   const [loading, setLoading] = useState(false);
-  const navigate = useRouter();
   const schema = loginSchema;
   const methods = useForm<ILoginSchema>({
     defaultValues: {},
@@ -69,15 +67,15 @@ export default function RegisterForm() {
         <Input name="email" type="email" placeholder="Email" />
         <Input name="password" type="password" placeholder="Password" />
 
-        <div className="mt-6 text-xs flex align-middle gap-2 text-gray-600">
-          <input type="checkbox" className="w-[20px] h-[20px]" />
-          <span className="text-[15px]">
+        <div className="mt-3 text-xs flex align-middle gap-2 text-gray-600">
+          <input type="checkbox" className="w-4 h-4" />
+          <span className="text-sm">
             By Signing up, you agree to our{" "}
-            <span className="text-[#FF4979]">Privacy Policy</span> &{" "}
-            <span className="text-[#FF4979]">Terms of Use.</span>
+            <span className="text-primary-color font-medium">Privacy Policy</span> &{" "}
+            <span className="text-primary-color font-medium">Terms of Use.</span>
           </span>
         </div>
-        <Button type="submit" className="mt-5" loading={loading}>
+        <Button type="submit" className="mt-3" loading={loading}>
           Sign up
         </Button>
       </form>

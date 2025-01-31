@@ -3,16 +3,15 @@ import AuthLayoutPage from "./auth-layout";
 import HeaderAuth from "./components/header-auth";
 import Link from "next/link";
 import LoginForm from "./components/login-form";
-import LightButton from "@/lib/ui/button/variant/light-button";
 import SocialAuth from "./components/social-auth";
 
 export default function LoginPage() {
   return (
     <AuthLayoutPage>
       <HeaderAuth />
-      <div className="mt-6 flex flex-col items-center mx-auto max-w-lg">
+      <div className="mt-6 flex flex-col items-center mx-auto max-w-lg w-full">
         <div className="w-full flex-1">
-          <div className="flex justify-center text-[32px] font-bold">
+          <div className="flex justify-center text-[32px] font-semibold text-gray-darken">
             Welcome Back!
           </div>
           <div className="mt-5">

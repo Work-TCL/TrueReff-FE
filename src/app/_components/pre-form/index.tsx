@@ -1,18 +1,16 @@
 import React from "react";
 import { SlidingTabBar } from "../tabs/sllidingTabs";
-import Image from "next/image";
+import HeaderAuth from "../auth/components/header-auth";
 
 export default function PreFormPage() {
   return (
-    <div>
-            <SlidingTabBar />
+    <div className="max-w-[960px] w-full mx-auto lg:px-0 px-4 py-10 h-screen overflow-hidden flex flex-col">
+      <HeaderAuth />
 
-            <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-3xl font-bold text-center text-pink-500 mb-6">
-          truereff
-        </h1>
+      <div className="w-full p-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1">
+        <SlidingTabBar />
 
-        <div className="bg-white shadow-md rounded-lg p-6">
+        <div className="pt-6 w-full h-full overflow-auto">
           <h2 className="text-xl font-semibold mb-4">Business Information</h2>
           <form>
             <div className="mb-4">
@@ -89,20 +87,21 @@ export default function PreFormPage() {
               </p>
             </div>
 
-            <button
-              type="button"
-              className="mt-4 bg-pink-500 text-white font-bold py-2 px-4 rounded"
-            >
-              Add another document
-            </button>
 
-            <button
-              type="submit"
-              className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
-            >
-              Save and Continue
-            </button>
           </form>
+          <button
+            type="button"
+            className="mt-4 bg-pink-500 text-white font-bold py-2 px-4 rounded"
+          >
+            Add another document
+          </button>
+
+          <button
+            type="submit"
+            className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
+          >
+            Save and Continue
+          </button>
         </div>
       </div>
     </div>

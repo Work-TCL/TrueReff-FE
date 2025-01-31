@@ -1,6 +1,5 @@
 "use client";
 import { ILoginSchema, loginSchema } from "@/lib/utils/validations";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,7 +13,6 @@ import Link from "next/link";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
-  const navigate = useRouter();
   const schema = loginSchema;
   const methods = useForm<ILoginSchema>({
     defaultValues: {},
@@ -39,6 +37,7 @@ export default function LoginForm() {
         //   return true;
         // }
 
+        // next auth
         const res = await signIn("credentials", {
           username: data?.email,
           password: data?.password,
@@ -69,20 +68,19 @@ export default function LoginForm() {
       >
         <Input name="email" type="email" placeholder="Email" />
         <Input name="password" type="password" placeholder="Password" />
-        <div className="mt-6 text-[16px] flex align-middle justify-between  text-gray-600">
-          <div className="flex items-center gap-2">
-            <input type="checkbox" className="w-[20px] h-[20px]" />
+        <div className="mt-3 text-[16px] flex align-middle justify-between  text-gray-600">
+          <div className="flex items-center gap-2 text-sm">
+            <input type="checkbox" className="w-4 h-4" />
             <span className="">Remember Me</span>
           </div>
           <Link
             href="/forgot-password"
-            className="cursor-pointer"
-            // onClick={() => router.push("/forgot-password")}
+            className="cursor-pointer text-sm"
           >
-            <span className="text-[#FF4979]">Forgot password?</span>
+            <span className="text-primary-color font-medium">Forgot password?</span>
           </Link>
         </div>
-        <Button type="submit" className="mt-5" loading={loading}>
+        <Button type="submit" className="mt-3" loading={loading}>
           Login
         </Button>
       </form>

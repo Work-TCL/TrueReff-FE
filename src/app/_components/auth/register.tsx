@@ -11,12 +11,12 @@ export default function RegisterPage() {
   return (
     <AuthLayoutPage authImage="sign-up-image.svg">
       <HeaderAuth />
-      <div className="mt-6 flex flex-col items-center mx-auto max-w-lg">
+      <div className="mt-6 flex flex-col items-center mx-auto max-w-lg w-full">
         <div className="w-full flex-1 ">
-          <div className="flex justify-center text-[32px] font-bold text-gray-darken">
+          <div className="flex justify-center text-[32px] font-semibold text-gray-darken">
             Sign up to get started
           </div>
-          <div className="mx-auto max-w-lg mt-5">
+          <div className="mt-5">
             <RegisterForm />
           </div>
           <div className="my-6 border-b text-center">
@@ -28,7 +28,7 @@ export default function RegisterPage() {
           <div className="my-6 text-center">
             <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
               Already have an account?{" "}
-              <Link href="/login" className="text-[#FF4979]">
+              <Link href="/login" className="text-primary-color font-medium">
                 Log in
               </Link>
             </div>

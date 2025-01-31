@@ -1,19 +1,24 @@
 "use client";
+import { cn } from "@sohanemon/utils";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
 
 let allTabs = [
     {
-        id: "home",
-        name: "Home",
+        id: "1",
+        name: "Business Information",
+        Icon: HiOutlineSquare3Stack3D
     },
     {
-        id: "blog",
-        name: "Blog",
+        id: "2",
+        name: "Contact Details",
+        Icon: HiOutlineSquare3Stack3D
     },
     {
-        id: "projects",
-        name: "Projects",
+        id: "3",
+        name: "Omni-channel",
+        Icon: HiOutlineSquare3Stack3D
     }
 ];
 
@@ -38,15 +43,21 @@ export const SlidingTabBar = () => {
     }, [activeTabIndex]);
 
     return (
-        <div className="flex relative mx-auto items-center justify-between shadow-sm border-b border-[#E9EAF0] bg-transparent">
+        <div className="flex relative items-center justify-between">
             <span
                 className="absolute bottom-0 top-0 -z-10 flex overflow-hidden  py-2 transition-all duration-300"
                 style={{ left: tabUnderlineLeft - 15, width: tabUnderlineWidth + 30 }}
             >
                 <span className="h-full w-full border-b-2 border-primary-color " />
             </span>
+            <span
+                className="absolute bottom-0 top-0 right-0 -z-10 flex overflow-hidden py-2 transition-all duration-300"
+            >
+                <span className="h-full w-full border-b-2 border-gray-color " />
+            </span>
             {allTabs.map((tab, index) => {
                 const isActive = activeTabIndex === index;
+                const Icon = tab.Icon
                 return (
                     <div className="p-5" key={index}>
                         <button
@@ -54,12 +65,11 @@ export const SlidingTabBar = () => {
                             className={`${isActive ? 'text-primary-color' : 'text-gray-color'
                                 } flex items-center gap-3 text-lg select-none text-center font-light transition-all duration-300 transform ${isActive ? 'scale-105' : 'hover:scale-105'
                                 }`}
-                                style={{ color: isActive ? '#yourActiveColor' : '#yourInactiveColor' }} // Add this line
 
                             onClick={() => setActiveTabIndex(index)}
 
                         >
-                            <Image src="/file.svg" alt="back" width={24} height={24} />
+                            <Icon className={cn('text-lg', isActive ? 'text-primary-color' : 'text-gray-color')} />
                             <span className="hidden md:block">Business Name
                             </span>
                         </button>
