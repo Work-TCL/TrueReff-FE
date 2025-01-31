@@ -10,6 +10,8 @@ import { loginAPI } from "@/lib/web-api/auth";
 import Input from "@/lib/ui/form/Input";
 import Button from "@/lib/ui/button";
 import Link from "next/link";
+import { MdOutlineEmail } from "react-icons/md";
+import { PiLockKey } from "react-icons/pi";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
@@ -66,18 +68,27 @@ export default function LoginForm() {
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-3"
       >
-        <Input name="email" type="email" placeholder="Email" />
-        <Input name="password" type="password" placeholder="Password" />
+        <Input
+          name="email"
+          type="email"
+          placeholder="Email"
+          Icon={MdOutlineEmail}
+        />
+        <Input
+          name="password"
+          type="password"
+          placeholder="Password"
+          Icon={PiLockKey}
+        />
         <div className="mt-3 text-[16px] flex align-middle justify-between  text-gray-600">
           <div className="flex items-center gap-2 text-sm">
             <input type="checkbox" className="w-4 h-4" />
             <span className="">Remember Me</span>
           </div>
-          <Link
-            href="/forgot-password"
-            className="cursor-pointer text-sm"
-          >
-            <span className="text-primary-color font-medium">Forgot password?</span>
+          <Link href="/forgot-password" className="cursor-pointer text-sm">
+            <span className="text-primary-color font-medium">
+              Forgot password?
+            </span>
           </Link>
         </div>
         <Button type="submit" className="mt-3" loading={loading}>

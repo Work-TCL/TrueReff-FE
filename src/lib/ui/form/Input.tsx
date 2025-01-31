@@ -12,6 +12,7 @@ interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
   type?: string;
   required?: boolean;
   rows?: number;
+  Icon?: any;
   options?: {
     label: string;
     value: string;
@@ -30,6 +31,7 @@ export default function Input({
   required = true,
   placeholder = "",
   options = [],
+  Icon,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -66,17 +68,25 @@ export default function Input({
       render={({ field }) => (
         <div className="flex flex-col">
           {label && <label className={cn(labelStyle)}>{label}</label>}
-          <input
-            type={type}
-            className={cn(inputStyle)}
-            placeholder={placeholder}
-            {...field}
-            autoComplete="off"
-            onBlur={() => {
-              field.onBlur();
-              trigger(name);
-            }}
-          />
+          <div className="relative">
+            <input
+              type={type}
+              className={cn(inputStyle, Icon ? "!pl-12" : "")}
+              placeholder={placeholder}
+              {...field}
+              autoComplete="off"
+              onBlur={() => {
+                field.onBlur();
+                trigger(name);
+              }}
+            />
+            {Icon ? (
+              <Icon
+                fontSize={25}
+                className="absolute top-[50%] left-4 text-gray-black z-10 translate-y-[-50%]"
+              />
+            ) : null}
+          </div>
           {getError()}
         </div>
       )}
@@ -94,7 +104,7 @@ export default function Input({
           <div className="w-full relative">
             <input
               type={showPassword ? "text" : type}
-              className={cn(inputStyle)}
+              className={cn(inputStyle, Icon ? "!pl-12" : "")}
               placeholder={placeholder}
               {...field}
               autoComplete="off"
@@ -103,6 +113,12 @@ export default function Input({
                 trigger(name);
               }}
             />
+            {Icon ? (
+              <Icon
+                fontSize={25}
+                className="absolute top-[50%] left-4 text-gray-black z-10 translate-y-[-50%]"
+              />
+            ) : null}
             {showPassword ? (
               <IoIosEye
                 onClick={() => setShowPassword(!showPassword)}
