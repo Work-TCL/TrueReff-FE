@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import NextAuthProvider from "@/lib/context/auth-session-provider";
+import Dialogs from "@/lib/components/dialogs";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,7 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NextAuthProvider>{children}</NextAuthProvider>
+        <NextAuthProvider>
+          {children}
+          <Dialogs />
+        </NextAuthProvider>
       </body>
     </html>
   );

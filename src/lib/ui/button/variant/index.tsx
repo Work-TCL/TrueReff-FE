@@ -17,13 +17,8 @@ const AnchorButton = ({
   ...props
 }: IButton) => {
   const baseStyles =
-    "flex items-center justify-center bg-primary text-black font-medium cursor-pointer transition-colors font-normal duration-300 ease-in-out hover:bg-transparent border border-transparent hover:border-primary hover:text-primary";
-  const sizeStyles =
-    size === "large"
-      ? "py-3 px-1 lg:px-5 font-normal text-xs lg:text-base rounded-md"
-      : size === "medium"
-      ? "py-2 px-9 font-normal rounded-md"
-      : "py-3 px-3 text-xs rounded";
+    "tracking-wide font-medium bg-secondary-color text-white w-full py-4 rounded-lg transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none";
+  const sizeStyles = size === "large" ? "py-4 px-1 lg:px-5" : "py-3 px-3";
 
   return (
     <Link href={href} legacyBehavior>
