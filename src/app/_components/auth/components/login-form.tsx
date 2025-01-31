@@ -1,12 +1,12 @@
 "use client";
 import { ILoginSchema, loginSchema } from "@/lib/utils/validations";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
-import { loginAPI } from "@/lib/web-api/auth";
 import Input from "@/lib/ui/form/Input";
 import Button from "@/lib/ui/button";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
 
 export default function LoginForm() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = loginSchema;
   const methods = useForm<ILoginSchema>({
@@ -26,42 +27,25 @@ export default function LoginForm() {
     setLoading(true);
     try {
       ("use server");
-      const payload: ILoginSchema = {
-        email: data?.email,
-        password: data.password,
-      };
-      const response: any = await loginAPI(payload);
+      const res = await signIn("credentials", {
+        username: data?.email,
+        password: data?.password,
+        redirect: false,
+      });
 
-      if (response?.status === 200) {
-        // if (response?.data?.otpSent) {
-        //   toast.success(response?.message || "Sent Email Successfully.");
-        //   // navigate?.push(`?auth=verify&email=${data?.email}`);
-        //   return true;
-        // }
-
-        // next auth
-        const res = await signIn("credentials", {
-          username: data?.email,
-          password: data?.password,
-          redirect: false,
-        });
-
-        if (res?.ok) {
-          toast.success("Login Successfully.");
-          methods?.reset();
-          return true;
-        }
-        throw res;
+      if (res?.ok) {
+        toast.success("Login Successfully.");
+        methods?.reset();
+        router.push("/dashboard");
+        return true;
       }
-      throw response;
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     } finally {
       setLoading(false);
-    }
-  };
-
+    }
+  };
   return (
     <FormProvider {...methods}>
       <form

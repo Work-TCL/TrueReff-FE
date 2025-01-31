@@ -1,55 +1,49 @@
 "use client";
-import { ILoginSchema, loginSchema } from "@/lib/utils/validations";
+import { IRegisterSchema, registerSchema } from "@/lib/utils/validations";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
-import { signIn } from "next-auth/react";
-import { loginAPI } from "@/lib/web-api/auth";
+import { signUpAPI } from "@/lib/web-api/auth";
 import Input from "@/lib/ui/form/Input";
 import Button from "@/lib/ui/button";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
+interface IRedirectPaths {
+  [key: string]: string;
+}
+const redirectPaths: IRedirectPaths = {
+  "user": '/dashboard',
+  "vendor": '/dashboard',
+  "creator": '/'
+}
 
 export default function RegisterForm() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const schema = loginSchema;
-  const methods = useForm<ILoginSchema>({
+  const schema = registerSchema;
+  const methods = useForm<IRegisterSchema>({
     defaultValues: {},
     resolver: yupResolver(schema),
     mode: "onSubmit",
   });
 
-  const onSubmit = async (data: ILoginSchema) => {
+  const onSubmit = async (data: IRegisterSchema) => {
     setLoading(true);
     try {
       ("use server");
-      const payload: ILoginSchema = {
+      const payload: IRegisterSchema = {
         email: data?.email,
-        password: data.password,
+        password: data.password
       };
-      const response: any = await loginAPI(payload);
-
-      if (response?.status === 200) {
-        // if (response?.data?.otpSent) {
-        //   toast.success(response?.message || "Sent Email Successfully.");
-        //   // navigate?.push(`?auth=verify&email=${data?.email}`);
-        //   return true;
-        // }
-
-        const res = await signIn("credentials", {
-          username: data?.email,
-          password: data?.password,
-          redirect: false,
-        });
-
-        if (res?.ok) {
-          toast.success("Login Successfully.");
+      const response: any = await signUpAPI({...payload,type: 'vendor'});
+      if (response?.status === 201) {
+          toast.success("Registered Successfully.");
           methods?.reset();
+          router.push(redirectPaths[response?.data?.type])
           return true;
-        }
-        throw res;
       }
       throw response;
     } catch (error) {
@@ -66,18 +60,8 @@ export default function RegisterForm() {
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-3"
       >
-        <Input
-          name="email"
-          type="email"
-          placeholder="Email"
-          Icon={MdOutlineEmail}
-        />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Password"
-          Icon={PiLockKey}
-        />
+        <Input name="email" type="email" placeholder="Email"/>
+        <Input name="password" type="password" placeholder="Password" />
 
         <div className="mt-3 text-xs flex align-middle gap-2 text-gray-600">
           <input type="checkbox" className="w-4 h-4" />

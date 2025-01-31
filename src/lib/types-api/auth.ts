@@ -9,14 +9,13 @@ export interface IResendOtp {
 }
 
 export interface IResetPassword {
-  email: string;
-  otp: string;
+  email: string | null;
   password: string;
 }
 
 export interface IVerifyOtp {
-  email: string;
-  otp: string;
+  email: string | null;
+  otpCode: string;
 }
 
 export interface ILogin {

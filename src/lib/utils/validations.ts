@@ -27,8 +27,15 @@ export const forgotSchema = Yup.object().shape({
 
 export interface IForgotSchema extends Yup.Asserts<typeof forgotSchema> {}
 
+export const otpSchema = Yup.object().shape({
+  otpCode: Yup.string()
+    .matches(/^\d+$/, "OTP must be a number")
+    .length(6, "OTP must be exactly 6 digits")
+    .required("OTP is required"),
+});
+export interface IOtpSchema extends Yup.Asserts<typeof otpSchema> {}
+
 export const resetPasswordSchema = Yup.object().shape({
-  otp: Yup.string().length(6).required("otp is required"),
   password: Yup.string()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters")
@@ -53,15 +60,15 @@ export const resetPasswordSchema = Yup.object().shape({
 export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> {}
 
 export const registerSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .required("First Name is required")
-    .min(2, "First Name must be at least 2 characters")
-    .max(50, "First Name must be less than 50 characters"),
-  lastName: Yup.string()
-    .required("Last Name is required")
-    .min(2, "Last Name must be at least 2 characters")
-    .max(50, "Last Name must be less than 50 characters"),
-  countryCode: Yup.string().optional(),
+  // firstName: Yup.string()
+  //   .required("First Name is required")
+  //   .min(2, "First Name must be at least 2 characters")
+  //   .max(50, "First Name must be less than 50 characters"),
+  // lastName: Yup.string()
+  //   .required("Last Name is required")
+  //   .min(2, "Last Name must be at least 2 characters")
+  //   .max(50, "Last Name must be less than 50 characters"),
+  // countryCode: Yup.string().optional(),
   // phone: Yup.string()
   //     .nullable()
   //     .defined().when('countryCode', (countryCode, schema) => {
@@ -93,11 +100,11 @@ export const registerSchema = Yup.object().shape({
       /(?=.*[!@#\$%\^&\*])/,
       "Password must contain at least one special character"
     ),
-  confirmPassword: Yup.string()
-    .required("Confirm Password is required")
-    .oneOf([Yup.ref("password")], "Passwords must match"),
-  terms: Yup.boolean().default(false),
-  subscribe: Yup.boolean().default(true),
+  // confirmPassword: Yup.string()
+  //   .required("Confirm Password is required")
+  //   .oneOf([Yup.ref("password")], "Passwords must match"),
+  // terms: Yup.boolean().default(false),
+  // subscribe: Yup.boolean().default(true),
 });
 
 export interface IRegisterSchema extends Yup.Asserts<typeof registerSchema> {}
@@ -163,14 +170,14 @@ export const preFormSchema = Yup.object().shape({
     .email()
     .lowercase()
     .required("Company Email is required"),
-  company_phone: Yup.number().required("Company Phone is required"),
+  company_phone: Yup.string().required("Company Phone is required"),
   gst_number: Yup.string().required("GST Number is required"),
   website: Yup.string().url().required("Website is required"),
   type_of_business: Yup.string().required("Type of business is required"),
   contacts: Yup.array().of(
     Yup.object().shape({
       name: Yup.string().required("Name is required"),
-      phone: Yup.number().required("Phone number is required"),
+      phone: Yup.string().required("Phone number is required"),
       email: Yup.string()
         .email("Invalid email format")
         .required("Email is required"),
@@ -182,3 +189,12 @@ export const preFormSchema = Yup.object().shape({
 });
 
 export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
+
+export const contactSchema = Yup.object().shape({
+  firstName: Yup.string().required("First Name is required"),
+  email: Yup.string().email('Email must be a valid email address').required("Email is required"),
+  type: Yup.string().required("Type is required"),
+  message: Yup.string().required("Message is required")
+});
+
+export interface IContactSchema extends Yup.Asserts<typeof contactSchema> { }

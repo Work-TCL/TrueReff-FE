@@ -17,7 +17,7 @@ export const signUpAPI = async (
   params: ISignupAPIParams
 ): Promise<IResponse> => {
   try {
-    const response = await axiosInstance.post("/user/auth/signup", params);
+    const response = await axiosInstance.post("/auth/register", params);
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
@@ -27,7 +27,7 @@ export const signUpAPI = async (
 
 export const loginAPI = async (params: ILogin): Promise<IResponse> => {
   try {
-    const response = await axiosInstance.post("/user/auth/login", params);
+    const response = await axiosInstance.post("/auth/login", params);
     return response?.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -47,7 +47,7 @@ export const resendOtp = async (params: IResendOtp): Promise<IResponse> => {
 
 export const verifyOtp = async (params: IVerifyOtp): Promise<IResponse> => {
   try {
-    const response = await axiosInstance.post("/user/auth/verify", params);
+    const response = await axiosInstance.post("/auth/reset-password", params);
     return response;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -60,7 +60,7 @@ export const forgotPassword = async (
 ): Promise<IResponse> => {
   try {
     const response = await axiosInstance.post(
-      "/user/auth/forgot-password",
+      "/auth/forgot-password",
       params
     );
     return response;
@@ -75,7 +75,7 @@ export const resetPasswordAPI = async (
 ): Promise<IResponse> => {
   try {
     const response = await axiosInstance.post(
-      "/user/auth/reset-password",
+      "/auth/reset-password/confirm",
       params
     );
     return response;
@@ -94,5 +94,17 @@ export const contactUsAPI = async (
   } catch (error) {
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While Login");
+  }
+};
+
+export const venderRegister = async (
+  params: any
+): Promise<IResponse> => {
+  try {
+    const response = await axiosInstance.post("/vendor/add-vendor-details", params);
+    return response?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While Signup");
   }
 };

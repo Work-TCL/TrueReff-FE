@@ -18,13 +18,13 @@ const authOptions: NextAuthOptions = {
           let response;
           if (credentials?.otp) {
             // Handle OTP login
-            response = await axiosInstance.post("/user/auth/login", {
+            response = await axiosInstance.post("/auth/login", {
               email: credentials?.username,
               otp: credentials?.otp,
             });
           } else if (credentials?.password) {
             // Handle password login
-            response = await axiosInstance.post("/user/auth/login", {
+            response = await axiosInstance.post("/auth/login", {
               email: credentials?.username,
               password: credentials?.password,
             });

@@ -14,6 +14,8 @@ import BasicInfoForm from "./components/basic-form";
 import ContactDetailsForm from "./components/contact-form";
 import ChannelForm from "./components/channel-form";
 import toast from "react-hot-toast";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { venderRegister } from "@/lib/web-api/auth";
 
 let allTabs: {
   id: string;
@@ -50,16 +52,16 @@ export default function PreFormPage() {
     defaultValues: {
       business_name: "YASH",
       company_email: "yash@gmail.com",
-      company_phone: 9558411111,
+      company_phone: "9558411111",
       contacts: [
         {
           name: "contact1",
-          phone: 9558996325,
+          phone: "9558996325",
           email: "contact1@yopmail.com",
         },
         {
           name: "contact2",
-          phone: 7418529630,
+          phone: "7418529630",
           email: "contact2@yopmail.com",
         },
       ],
@@ -78,18 +80,14 @@ export default function PreFormPage() {
         ...data,
         omni_channels: data.omni_channels?.map((item: any) => item),
       };
+      const response: any = await venderRegister(payload);
 
-      // ready to payload
-      console.log("data", payload);
-
-      // const response: any = await vendorRegister(payload);
-
-      // if (response?.status === 200) {
-      //   toast.success("Vendor successfully registerd.");
-      // }
+      if (response?.status === 200) {
+        toast.success("Vendor successfully registerd.");
+      }
     } catch (error) {
-      // const errorMessage = getErrorMessage(error);
-      // toast.error(errorMessage);
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
