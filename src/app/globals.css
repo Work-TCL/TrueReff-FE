@@ -130,3 +130,21 @@ body {
   font-weight: 900;
   font-style: italic;
 }
+
+/* Global scrollbar styles */
+::-webkit-scrollbar,
+.overflow-scrollbar::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-track,
+.overflow-scrollbar::-webkit-scrollbar-track {
+  border-radius: 9999px;
+  background-color: rgba(243, 244, 246, 0);
+}
+
+::-webkit-scrollbar-thumb,
+.overflow-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background-color: rgba(156, 163, 175, 0.5);
+}

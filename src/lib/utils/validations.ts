@@ -102,33 +102,6 @@ export const registerSchema = Yup.object().shape({
 
 export interface IRegisterSchema extends Yup.Asserts<typeof registerSchema> {}
 
-// profile update
-export const profileSchema = Yup.object().shape({
-  firstName: Yup.string().required("First Name is required"),
-  lastName: Yup.string().required("Last Name is required"),
-  email: Yup.string()
-    .email("Email must be a valid email address")
-    .required("Email is required"),
-  dateOfBirth: Yup.string().optional(),
-  countryCode: Yup.string().optional(),
-  // phone: Yup.string()
-  //     .nullable()
-  //     .defined().when('countryCode', (countryCode, schema) => {
-  //         return schema.test('is-valid-phone', 'Phone number is not valid', function (value) {
-  //             if (!value || value?.length <= 3) return true;
-  //             if (countryCode?.length > 0) {
-  //                 const valid = phone(value, { country: countryCode[0] })
-  //                 return valid?.isValid || false
-  //             }
-  //             return false
-  //         });
-  //     }),
-  gender: Yup.string().optional(),
-  profile: Yup.mixed().optional(),
-});
-
-export interface IProfileSchema extends Yup.Asserts<typeof profileSchema> {}
-
 export const _validatePhone = (number: string, format: string) => {
   if (
     !(format !== String(number).replace(/[0-9]/g, ".")) ||
@@ -181,24 +154,31 @@ export const changePasswordSchema = Yup.object().shape({
 export interface IChangePasswordSchema
   extends Yup.Asserts<typeof changePasswordSchema> {}
 
-export const contactSchema = Yup.object().shape({
-  firstName: Yup.string().required("First Name is required"),
-  email: Yup.string()
-    .email("Email must be a valid email address")
-    .required("Email is required"),
-  type: Yup.string().required("Type is required"),
-  message: Yup.string().required("Message is required"),
-});
-
-export interface IContactSchema extends Yup.Asserts<typeof contactSchema> {}
-
 // add to wishlist
-export const addWishlistSchema = Yup.object().shape({
-  listName: Yup.string()
-    .required("List Name is required")
-    .min(2, "List Name must be at least 2 characters")
-    .max(50, "List Name must be less than 50 characters"),
+export const preFormSchema = Yup.object().shape({
+  business_name: Yup.string()
+    .required("Business Name is required")
+    .min(2, "Business Name must be at least 2 characters"),
+  company_email: Yup.string()
+    .email()
+    .lowercase()
+    .required("Company Email is required"),
+  company_phone: Yup.number().required("Company Phone is required"),
+  gst_number: Yup.string().required("GST Number is required"),
+  website: Yup.string().url().required("Website is required"),
+  type_of_business: Yup.string().required("Type of business is required"),
+  contacts: Yup.array().of(
+    Yup.object().shape({
+      name: Yup.string().required("Name is required"),
+      phone: Yup.number().required("Phone number is required"),
+      email: Yup.string()
+        .email("Invalid email format")
+        .required("Email is required"),
+    })
+  ),
+  omni_channels: Yup.array().of(
+    Yup.string().required("Omni-channel is required")
+  ),
 });
 
-export interface IWishlistSchema
-  extends Yup.Asserts<typeof addWishlistSchema> {}
+export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}

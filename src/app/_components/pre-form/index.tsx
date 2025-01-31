@@ -1,108 +1,170 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { SlidingTabBar } from "../tabs/sllidingTabs";
 import HeaderAuth from "../auth/components/header-auth";
+import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
+import { GrDocumentText } from "react-icons/gr";
+import { FaRegUserCircle } from "react-icons/fa";
+import { IPreFormSchema, preFormSchema } from "@/lib/utils/validations";
+import { FormProvider, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Button from "@/lib/ui/button";
+import Input from "@/lib/ui/form/Input";
+import BasicInfoForm from "./components/basic-form";
+import ContactDetailsForm from "./components/contact-form";
+import ChannelForm from "./components/channel-form";
+import toast from "react-hot-toast";
+
+let allTabs: {
+  id: string;
+  name: string;
+  Icon: any;
+}[] = [
+  {
+    id: "1",
+    name: "Business Information",
+    Icon: HiOutlineSquare3Stack3D,
+  },
+  {
+    id: "2",
+    name: "Contact Details",
+    Icon: GrDocumentText,
+  },
+  {
+    id: "3",
+    name: "Omni-channel",
+    Icon: FaRegUserCircle,
+  },
+];
+
+const TABS_STATUS = {
+  BASIC_INFO: 0,
+  CONTACT_INFO: 1,
+  OMNI_CHANNEL: 2,
+};
 
 export default function PreFormPage() {
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
+  const methods = useForm<IPreFormSchema>({
+    defaultValues: {
+      business_name: "YASH",
+      company_email: "yash@gmail.com",
+      company_phone: 9558411111,
+      contacts: [
+        {
+          name: "contact1",
+          phone: 9558996325,
+          email: "contact1@yopmail.com",
+        },
+        {
+          name: "contact2",
+          phone: 7418529630,
+          email: "contact2@yopmail.com",
+        },
+      ],
+      gst_number: "HYSGBIUYKBH827JHVH",
+      type_of_business: "business type 1",
+      website: "https://www.youtube.com/watch?v=uE2dQHjHpvY",
+    },
+    resolver: yupResolver(preFormSchema),
+    mode: "onChange",
+  });
+
+  const onSubmit = async (data: IPreFormSchema) => {
+    setLoading(true);
+    try {
+      const payload = {
+        ...data,
+        omni_channels: data.omni_channels?.map((item: any) => item),
+      };
+
+      // ready to payload
+      console.log("data", payload);
+
+      // const response: any = await vendorRegister(payload);
+
+      // if (response?.status === 200) {
+      //   toast.success("Vendor successfully registerd.");
+      // }
+    } catch (error) {
+      // const errorMessage = getErrorMessage(error);
+      // toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTriggerStepper = async () => {
+    setLoading(true);
+    if (TABS_STATUS.BASIC_INFO === activeTab) {
+      const basicInfoField: any = [
+        "business_name",
+        "company_email",
+        "company_phone",
+        "gst_number",
+        "website",
+        "type_of_business",
+      ];
+      const isValid = await methods.trigger(basicInfoField);
+
+      if (isValid) {
+        setActiveTab(TABS_STATUS.CONTACT_INFO); // Move to next tab
+      }
+    } else if (TABS_STATUS.CONTACT_INFO === activeTab) {
+      const contactInfoField: any = ["contacts"];
+      const isValid = await methods.trigger(contactInfoField);
+
+      if (isValid) {
+        setActiveTab(TABS_STATUS.OMNI_CHANNEL); // Move to next tab
+      }
+    }
+    setLoading(false);
+  };
   return (
-    <div className="max-w-[960px] w-full mx-auto lg:px-0 px-4 py-10 h-screen overflow-hidden flex flex-col">
+    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
       <HeaderAuth />
 
-      <div className="w-full p-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1">
-        <SlidingTabBar />
-
-        <div className="pt-6 w-full h-full overflow-auto">
-          <h2 className="text-xl font-semibold mb-4">Business Information</h2>
-          <form>
-            <div className="mb-4">
-              <label className="block text-gray-700">Business Name</label>
-              <input
-                type="text"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                placeholder="ABC"
-              />
+      <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
+        <SlidingTabBar
+          tabs={allTabs}
+          setActiveTabIndex={setActiveTab}
+          activeTabIndex={activeTab}
+        />
+        <FormProvider {...methods}>
+          <form
+            onSubmit={methods.handleSubmit(onSubmit)}
+            className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
+          >
+            {TABS_STATUS.OMNI_CHANNEL === activeTab ? <ChannelForm /> : null}
+            {TABS_STATUS.CONTACT_INFO === activeTab ? (
+              <ContactDetailsForm />
+            ) : null}
+            {TABS_STATUS.BASIC_INFO === activeTab ? <BasicInfoForm /> : null}
+            <div className="bg-white">
+              {TABS_STATUS.OMNI_CHANNEL === activeTab ? (
+                <Button
+                  type="submit"
+                  loading={loading}
+                  className="w-fit font-medium px-8"
+                  size="small"
+                >
+                  Submit
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  size="small"
+                  loading={loading}
+                  className="w-fit font-medium px-8 md:text-base text-sm"
+                  onClick={handleTriggerStepper}
+                >
+                  Save and Continue
+                </Button>
+              )}
             </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700">Company Email</label>
-              <input
-                type="email"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                placeholder="abc@gmail.com"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700">
-                Company Phone Number
-              </label>
-              <input
-                type="tel"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                placeholder="+91 958 624 7482"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700">GST Number</label>
-              <input
-                type="text"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                placeholder="24GEIB181151"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700">Website</label>
-              <input
-                type="url"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                placeholder="www.truereff.com"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700">Type of Business</label>
-              <select className="mt-1 block w-full border border-gray-300 rounded-md p-2">
-                <option>24GEIB181151</option>
-              </select>
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700">Brand Documents</label>
-              <input
-                type="text"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                placeholder="GST Certificate"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700">Upload Documents</label>
-              <input
-                type="file"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              />
-              <p className="text-gray-500 text-sm">
-                JPG or PNG format; maximum size of 20MB.
-              </p>
-            </div>
-
-
           </form>
-          <button
-            type="button"
-            className="mt-4 bg-pink-500 text-white font-bold py-2 px-4 rounded"
-          >
-            Add another document
-          </button>
-
-          <button
-            type="submit"
-            className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
-          >
-            Save and Continue
-          </button>
-        </div>
+        </FormProvider>
       </div>
     </div>
   );

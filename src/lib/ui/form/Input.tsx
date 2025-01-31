@@ -1,15 +1,10 @@
 "use client";
 import { Controller, useFormContext } from "react-hook-form";
-import { MdKeyboardArrowDown } from "react-icons/md";
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
-// import { BsCalendar2Date } from "react-icons/bs";
-// import PhoneInput, { CountryData } from "react-phone-input-2";
-// import "react-phone-input-2/lib/style.css";
-// import ProfileUpload from "@/app/components/account-setting/profileUpload";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { useState } from "react";
 import { cn } from "@sohanemon/utils";
+import { GoChevronDown } from "react-icons/go";
+import Select from "react-select";
 
 interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -23,6 +18,11 @@ interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
   }[];
 }
 
+export const inputStyle =
+  "w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white";
+
+export const labelStyle = "mb-1 text-sm text-gray-darken";
+
 export default function Input({
   label = "",
   name,
@@ -33,6 +33,7 @@ export default function Input({
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const {
     formState: { errors, touchedFields, submitCount },
     control,
@@ -40,9 +41,6 @@ export default function Input({
     register,
     setValue,
   } = useFormContext();
-
-  const inputStyle =
-    "w-full px-8 py-4 rounded-lg font-medium border border-gray-light placeholder-gray-500 text-sm focus:outline-none focus:border-gray-light focus:bg-white";
 
   const getErrorMessage = (name: string) => {
     const error = errors[name];
@@ -54,7 +52,6 @@ export default function Input({
 
   const getError = () => {
     return (
-      Boolean(touchedFields[name] || submitCount > 0) &&
       Boolean(errors[name]) && (
         <span className="text-red-500 text-sm">{getErrorMessage(name)}</span>
       )
@@ -68,11 +65,7 @@ export default function Input({
       rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col">
-          {label && (
-            <label className="mb-2 text-black font-medium">
-              {label} {required && <span className="text-red-500">*</span>}
-            </label>
-          )}
+          {label && <label className={cn(labelStyle)}>{label}</label>}
           <input
             type={type}
             className={cn(inputStyle)}
@@ -97,11 +90,7 @@ export default function Input({
       rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col relative">
-          {label && (
-            <label className="mb-2 text-black font-medium">
-              {label} {required && <span className="text-red-500">*</span>}
-            </label>
-          )}
+          {label && <label className={cn(labelStyle)}>{label}</label>}
           <div className="w-full relative">
             <input
               type={showPassword ? "text" : type}
@@ -141,11 +130,7 @@ export default function Input({
       rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col">
-          {label && (
-            <label className="mb-2 text-black font-medium">
-              {label} {required && <span className="text-red-500">*</span>}
-            </label>
-          )}
+          {label && <label className={cn(labelStyle)}>{label}</label>}
           <textarea
             className={cn(inputStyle)}
             placeholder={placeholder}
@@ -170,14 +155,10 @@ export default function Input({
       rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col">
-          {label && (
-            <label className="mb-2 text-black font-medium">
-              {label} {required && <span className="text-red-500">*</span>}
-            </label>
-          )}
+          {label && <label className={cn(labelStyle)}>{label}</label>}
           <div className="relative">
             <select
-              className={cn(inputStyle)}
+              className={cn(inputStyle, "appearance-none")}
               {...field}
               onBlur={() => {
                 field.onBlur();
@@ -191,9 +172,33 @@ export default function Input({
                 </option>
               ))}
             </select>
-            <MdKeyboardArrowDown
-              fontSize={25}
-              className="absolute top-1/2 right-5 transform -translate-y-1/2 pointer-events-none"
+            <GoChevronDown
+              fontSize={27}
+              className="absolute top-1/2 right-5 transform -translate-y-1/2 pointer-events-none font-thin"
+            />
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
+
+  const renderMultiSelectInput = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {label && <label className={cn(labelStyle)}>{label}</label>}
+          <div className="relative">
+            <Select
+              defaultValue={field?.value || []}
+              isMulti
+              options={options}
+              className="basic-multi-select focus:outline-none focus:shadow-none"
+              classNamePrefix="select"
+              {...field}
             />
           </div>
           {getError()}
@@ -268,6 +273,8 @@ export default function Input({
 
       case "select":
         return renderSelectInput();
+      case "select-multiple":
+        return renderMultiSelectInput();
 
       case "textarea":
         return renderTextAreaInput();

@@ -6,7 +6,7 @@ export default function HeaderAuth() {
       <img
         src="/assets/TrueReff-logo.svg"
         alt="Sign in"
-        className="w-mx-auto"
+        className="md:w-auto w-40 mx-auto"
       />
     </div>
   );
