@@ -9,10 +9,10 @@ export default {
   theme: {
   	extend: {
   		colors: {
-  			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			'primary-color': '#FF4979',
   			'secondary-color': '#090919',
+  			// 'secondary': '#090919',
   			'gray-color': '#89858C',
   			'gray-darken': '#2B2A2B',
   			'gray-black': '#262626',
@@ -22,6 +22,8 @@ export default {
 			'font-grey': '#7E7E80',
 			'text': "#262626",
 			'stroke': "#E6E6E6",
+			'success': '#038A00',
+			'background': '#F2F4F5',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
@@ -31,11 +33,11 @@ export default {
   				foreground: 'hsl(var(--popover-foreground))'
   			},
   			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
+  				DEFAULT: '#FF4979',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
   			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
+  				DEFAULT: '#090919',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
   			muted: {
@@ -64,7 +66,8 @@ export default {
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			sm: 'calc(var(--radius) - 4px)',
+			20: '20px'
   		}
   	}
   },
