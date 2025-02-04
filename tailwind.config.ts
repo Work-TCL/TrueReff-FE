@@ -23,6 +23,7 @@ export default {
 			'text': "#262626",
 			'stroke': "#E6E6E6",
 			'success': '#038A00',
+			'success-light': '#038A000D',
 			'background': '#F2F4F5',
   			card: {
   				DEFAULT: 'hsl(var(--card))',

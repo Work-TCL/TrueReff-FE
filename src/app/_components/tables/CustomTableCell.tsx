@@ -1,10 +1,9 @@
 import { TableCell } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 
-export function CustomTableCell({ children, className }: { children: React.ReactNode; className?: string }) {
+export function CustomTableCell({ children, className, parentClassName }: { children: React.ReactNode; className?: string, parentClassName?: string }) {
   return (
-    <TableCell
-    >
+    <TableCell className={cn(parentClassName)}>
       <div 
         className={cn(
           "text-sm text-gray-600 line-clamp-2",
