@@ -4,14 +4,17 @@ import { redirect } from "next/navigation";
 import authOptions from "@/lib/config/authOptions";
 
 interface IAuthenticatedLayout {
-    children: ReactNode;
+    children?: ReactNode;
+    redirectPath?: string;
 }
 
-export default async function AuthenticatedLayout({ children }: IAuthenticatedLayout) {
+export default async function AuthenticatedLayout({ children, redirectPath = '/dashboard' }: IAuthenticatedLayout) {
     const session = await getServerSession(authOptions);
 
     if (!session) {
-        redirect("/?auth=signup");
+        redirect("/register");
+    } else if (redirectPath && session) {
+        redirect(redirectPath);
     }
 
     return <div>{children}</div>;

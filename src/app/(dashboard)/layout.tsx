@@ -1,26 +1,10 @@
 import AuthenticatedLayout from "@/lib/components/authenticated-layout";
+import DashboardLayout from "@/lib/components/layout/dashboard";
 
 export default function PrivateLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <AuthenticatedLayout>{children}</AuthenticatedLayout>;
+  return <AuthenticatedLayout><DashboardLayout>{children}</DashboardLayout></AuthenticatedLayout>;
 }
-
-
-// export default function PrivateLayout({
-//   children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-//   return <AuthenticatedLayout>
-//     <div className="flex">
-//       <Sidebar />
-//       <main className="flex-1">
-//     {children}
-//         {/* <Component {...pageProps} /> */}
-//       </main>
-//     </div>
-//     </AuthenticatedLayout>;
-// }
