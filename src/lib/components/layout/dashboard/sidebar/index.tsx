@@ -77,12 +77,36 @@ const Sidebar: React.FC = () => {
   };
 
   const menuItems: MenuItem[] = [
+    // { label: 'Overview', icon: Home, link: '/dashboard' },
+    // {
+    //   label: 'Product Catalog',
+    //   icon: Box,
+    //   children: [
+    //     { label: 'Add New Product', link: '/product/add' },
+    //     { label: 'Product List', link: '/product/list' },
+    //   ],
+    // },
+    // { label: 'Creator & Collaboration', icon: User, link: '/creator' },
+    // {
+    //   label: 'Campaign',
+    //   icon: Megaphone,
+    //   children: [
+    //     { label: 'Campaign List', link: '/campaign/list' },
+    //     { label: 'Campaign Metrics', link: '/campaign/metrics' },
+    //   ],
+    // },
+    // { label: 'Bids', icon: BarChart, link: '/bids' },
+    // { label: 'Brand Analysis', icon: BarChart, link: '/brand-analysis' },
+    // { label: 'Account Recharge', icon: DollarSign, link: '/recharge' },
+    // { label: 'Payments', icon: DollarSign, link: '/payments' },
+    // { label: 'Support', icon: LifeBuoy, link: '/support' },
+    // { label: 'Settings', icon: Settings, link: '/settings' },
     { label: 'Overview', icon: Home, link: '/dashboard' },
     {
       label: 'Product Catalog',
       icon: Box,
       children: [
-        { label: 'Add New Product', link: '/dashboard' },
+        { label: 'Add New Product', link: '/product/add' },
         { label: 'Product List', link: '/product/list' },
       ],
     },
@@ -91,32 +115,9 @@ const Sidebar: React.FC = () => {
       label: 'Campaign',
       icon: Megaphone,
       children: [
+        { label: 'Add New Campaign', link: '/campaign/add' },
         { label: 'Campaign List', link: '/campaign/list' },
-        { label: 'Campaign Metrics', link: '/campaign/metrics' },
-      ],
-    },
-    { label: 'Bids', icon: BarChart, link: '/bids' },
-    { label: 'Brand Analysis', icon: BarChart, link: '/brand-analysis' },
-    { label: 'Account Recharge', icon: DollarSign, link: '/recharge' },
-    { label: 'Payments', icon: DollarSign, link: '/payments' },
-    { label: 'Support', icon: LifeBuoy, link: '/support' },
-    { label: 'Settings', icon: Settings, link: '/settings' },
-    { label: 'Overview', icon: Home, link: '/dashboard' },
-    {
-      label: 'Product Catalog',
-      icon: Box,
-      children: [
-        { label: 'Add New Product', link: '/dashboard' },
-        { label: 'Product List', link: '/product/list' },
-      ],
-    },
-    { label: 'Creator & Collaboration', icon: User, link: '/creator' },
-    {
-      label: 'Campaign',
-      icon: Megaphone,
-      children: [
-        { label: 'Campaign List', link: '/campaign/list' },
-        { label: 'Campaign Metrics', link: '/campaign/metrics' },
+        // { label: 'Campaign Metrics', link: '/campaign/metrics' },
       ],
     },
     { label: 'Bids', icon: BarChart, link: '/bids' },
