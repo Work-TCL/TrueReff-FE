@@ -184,7 +184,10 @@ export const preFormSchema = Yup.object().shape({
     })
   ),
   omni_channels: Yup.array().of(
-    Yup.string().required("Omni-channel is required")
+    Yup.object().shape({
+      label: Yup.string().required("Label is required"),
+      value: Yup.string().required("Value is required")
+    })
   ),
 });
 

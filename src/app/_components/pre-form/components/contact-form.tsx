@@ -8,7 +8,7 @@ export default function ContactDetailsForm() {
       <div className="col-span-2">
         <Input
           label="Contact Person 1"
-          name={`contacts[0].person`}
+          name={`contacts[0].name`}
           type="text"
           placeholder="ABC"
         />
@@ -32,7 +32,7 @@ export default function ContactDetailsForm() {
       <div className="col-span-2">
         <Input
           label="Contact Person 1"
-          name={`contacts[1].person`}
+          name={`contacts[1].name`}
           type="text"
           placeholder="ABC"
         />

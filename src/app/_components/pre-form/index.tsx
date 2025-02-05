@@ -78,7 +78,7 @@ export default function PreFormPage() {
     try {
       const payload = {
         ...data,
-        omni_channels: data.omni_channels?.map((item: any) => item),
+        omni_channels: data.omni_channels?.map((item: any) => item.value),
       };
       const response: any = await venderRegister(payload);
 
@@ -92,6 +92,9 @@ export default function PreFormPage() {
       setLoading(false);
     }
   };
+
+  console.log("errors-->>", methods.formState.errors, methods.watch());
+
 
   const handleTriggerStepper = async () => {
     setLoading(true);
