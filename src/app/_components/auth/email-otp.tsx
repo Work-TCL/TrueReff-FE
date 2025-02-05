@@ -3,22 +3,22 @@ import AuthLayoutPage from "./auth-layout";
 import BackButton from "@/lib/ui/back-button";
 import AuthTitle from "./components/auth-title";
 import AuthDescription from "./components/auth-desc";
-import ForgotPasswordForm from "./components/forgot-password-form";
+import EmailVerifyOTPForm from "./components/email-verify";
 
-export default function ForgotPasswordPage() {
+export default function EmailVerifyOtpPage() {
   return (
     <AuthLayoutPage authImage="forgot-pass-image.svg">
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
         <div className="w-full">
           <BackButton className="mb-5" />
-          <AuthTitle text="Forgot Password" />
+          <AuthTitle text="Enter OTP" />
           <AuthDescription
             className="mt-2"
-            text="Enter your registered email address. we’ll send you a code to reset
-            your password."
+            text="We have share a code of your registered email address
+            robertfox@example.com"
           />
           <div className="mt-5">
-            <ForgotPasswordForm />
+            <EmailVerifyOTPForm />
           </div>
         </div>
       </div>

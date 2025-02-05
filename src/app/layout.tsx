@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import NextAuthProvider from "@/lib/context/auth-session-provider";
 import Dialogs from "@/lib/components/dialogs";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,6 +20,7 @@ export default function RootLayout({
         <NextAuthProvider>
           {children}
           <Dialogs />
+          <Toaster position="top-right" />
         </NextAuthProvider>
       </body>
     </html>

@@ -10,9 +10,9 @@ import SocialAuth from "./components/social-auth";
 export default function RegisterPage() {
   return (
     <AuthLayoutPage authImage="sign-up-image.svg">
-      <HeaderAuth />
-      <div className="mt-6 flex flex-col items-center mx-auto max-w-lg w-full">
-        <div className="w-full flex-1 ">
+      <div className="flex flex-col justify-center h-full w-full mx-auto max-w-lg">
+        <HeaderAuth />
+        <div className="w-full pt-6">
           <div className="flex justify-center text-[32px] font-semibold text-gray-darken">
             Sign up to get started
           </div>

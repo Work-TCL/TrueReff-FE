@@ -18,7 +18,7 @@ const Button = ({
   ...props
 }: IButton) => {
   const baseStyles =
-    "tracking-wide font-semibold bg-secondary-color text-white w-full py-4 rounded-lg transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none";
+    "tracking-wide font-semibold bg-secondary-color text-white w-full py-4 rounded-lg transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none disabled:opacity-75 disabled:cursor-not-allowed";
   const sizeStyles = size === "large" ? "py-4 px-1 lg:px-5" : "py-3 px-3";
 
   return (

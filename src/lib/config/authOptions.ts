@@ -2,6 +2,7 @@ import { NextAuthOptions, User as NextAuthUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import axiosInstance from "@/lib/web-api/http-common";
+import { loginAPI, verifyEmail } from "../web-api/auth";
 
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -15,25 +16,27 @@ const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          let response;
+          let response: any;
           if (credentials?.otp) {
             // Handle OTP login
-            response = await axiosInstance.post("/auth/login", {
+            response = await verifyEmail({
               email: credentials?.username,
-              otp: credentials?.otp,
+              otpCode: credentials?.otp,
             });
           } else if (credentials?.password) {
             // Handle password login
-            response = await axiosInstance.post("/auth/login", {
+            response = await loginAPI({
               email: credentials?.username,
               password: credentials?.password,
             });
           }
 
-          if (response?.data?.data) {
+          console.log("repsosneeee-->>", response);
+
+          if (response?.data) {
             return {
-              ...response?.data?.data,
-              accessToken: response?.data?.data?.token,
+              ...response?.data,
+              accessToken: response?.data?.token,
             };
           }
           return null;

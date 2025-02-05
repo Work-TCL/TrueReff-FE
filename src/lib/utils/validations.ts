@@ -5,7 +5,22 @@ export const loginSchema = Yup.object().shape({
   email: Yup.string()
     .email("Email must be a valid email address")
     .required("Email is required"),
-  password: Yup.string().required("Password is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .matches(/(?=.*[0-9])/, "Password must contain at least one number")
+    .matches(
+      /(?=.*[a-z])/,
+      "Password must contain at least one lowercase letter"
+    )
+    .matches(
+      /(?=.*[A-Z])/,
+      "Password must contain at least one uppercase letter"
+    )
+    .matches(
+      /(?=.*[!@#\$%\^&\*])/,
+      "Password must contain at least one special character"
+    ),
 });
 
 export interface ILoginSchema extends Yup.Asserts<typeof loginSchema> {}
@@ -103,7 +118,7 @@ export const registerSchema = Yup.object().shape({
   // confirmPassword: Yup.string()
   //   .required("Confirm Password is required")
   //   .oneOf([Yup.ref("password")], "Passwords must match"),
-  // terms: Yup.boolean().default(false),
+  terms: Yup.boolean().oneOf([true]),
   // subscribe: Yup.boolean().default(true),
 });
 
@@ -186,7 +201,7 @@ export const preFormSchema = Yup.object().shape({
   omni_channels: Yup.array().of(
     Yup.object().shape({
       label: Yup.string().required("Label is required"),
-      value: Yup.string().required("Value is required")
+      value: Yup.string().required("Value is required"),
     })
   ),
 });
@@ -195,9 +210,11 @@ export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
 
 export const contactSchema = Yup.object().shape({
   firstName: Yup.string().required("First Name is required"),
-  email: Yup.string().email('Email must be a valid email address').required("Email is required"),
+  email: Yup.string()
+    .email("Email must be a valid email address")
+    .required("Email is required"),
   type: Yup.string().required("Type is required"),
-  message: Yup.string().required("Message is required")
+  message: Yup.string().required("Message is required"),
 });
 
-export interface IContactSchema extends Yup.Asserts<typeof contactSchema> { }
+export interface IContactSchema extends Yup.Asserts<typeof contactSchema> {}

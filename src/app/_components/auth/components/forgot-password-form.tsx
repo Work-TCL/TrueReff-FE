@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import Input from "@/lib/ui/form/Input";
 import Button from "@/lib/ui/button";
 import { forgotPassword } from "@/lib/web-api/auth";
+import { MdOutlineEmail } from "react-icons/md";
 
 export default function ForgotPasswordForm() {
   const router = useRouter();
@@ -24,33 +25,43 @@ export default function ForgotPasswordForm() {
     setLoading(true);
     try {
       ("use server");
-        const payload: IForgotSchema = {
-            email: data?.email
-        };
-        const response: any = await forgotPassword(payload);
+      const payload: IForgotSchema = {
+        email: data?.email,
+      };
+      const response: any = await forgotPassword(payload);
 
-        if (response?.status === 200) {
-            toast.success(response?.data?.message);
-            methods?.reset();
-            router.push(`/send-otp?email=${data?.email}`)
-            return true;
-        }
+      if (response?.status === 200) {
+        toast.success(response?.data?.message);
+        methods?.reset();
+        router.push(`/send-otp?email=${data?.email}`);
+        return true;
+      }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     } finally {
       setLoading(false);
-    }
-  };
+    }
+  };
   return (
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-3"
       >
-        <Input name="email" type="email" placeholder="Email" />    
-        <Button type="submit" className="mt-3" loading={loading}>
-            Send OTP
+        <Input
+          name="email"
+          type="email"
+          placeholder="Email"
+          Icon={MdOutlineEmail}
+        />
+        <Button
+          type="submit"
+          className="mt-3"
+          loading={loading}
+          disabled={!methods.formState.isValid || loading}
+        >
+          Send OTP
         </Button>
       </form>
     </FormProvider>

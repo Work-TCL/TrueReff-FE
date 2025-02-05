@@ -15,7 +15,9 @@ export default function AuthLayoutPage({
         className="h-full w-full text-center bg-black bg-center bg-no-repeat bg-cover lg:block hidden"
         style={{ backgroundImage: `url('/assets/auth/${authImage}')` }}
       />
-      <div className="sm:p-12 p-4 overflow-auto my-auto">{children}</div>
+      <div className="sm:p-12 p-4 overflow-auto my-auto bg-white h-full">
+        {children}
+      </div>
     </div>
   );
 }

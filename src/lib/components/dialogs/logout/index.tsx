@@ -12,10 +12,10 @@ export default function Logout() {
   const { status } = useSession();
   const navigate = useRouter();
   const auth = useSearchParams().get("auth");
-  const dialogPath = status !== "authenticated" && auth === LOGOUT;
+  const dialogPath = status === "authenticated" && auth === LOGOUT;
 
-  // if (auth === LOGOUT && status !== 'authenticated') {
-  //     navigate.push('?')
+  // if (auth === LOGOUT && status !== "authenticated") {
+  //   navigate.push("?");
   // }
 
   return (

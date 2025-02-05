@@ -17,11 +17,8 @@ export default function AuthLayout({ children }: Props) {
     setIsPromptPassWordAdded(storedPasswordStatus);
 
     if (!storedPasswordStatus) {
-      // const password = prompt("Enter Password");
-      // if (password === "8965") {
       localStorage.setItem("isPromptPassWordAdded", "true");
       setIsPromptPassWordAdded("true");
-      // }
     }
   }, []);
 

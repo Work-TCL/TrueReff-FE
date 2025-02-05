@@ -15,10 +15,10 @@ interface IRedirectPaths {
   [key: string]: string;
 }
 const redirectPaths: IRedirectPaths = {
-  "user": '/dashboard',
-  "vendor": '/dashboard',
-  "creator": '/'
-}
+  user: "/dashboard",
+  vendor: "/dashboard",
+  creator: "/",
+};
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -36,14 +36,21 @@ export default function RegisterForm() {
       ("use server");
       const payload: IRegisterSchema = {
         email: data?.email,
-        password: data.password
+        password: data.password,
       };
-      const response: any = await signUpAPI({...payload,type: 'vendor'});
-      if (response?.status === 201) {
-          toast.success("Registered Successfully.");
-          methods?.reset();
-          router.push(redirectPaths[response?.data?.type])
+      const response: any = await signUpAPI({ ...payload, type: "vendor" });
+      console.log("res---vendor--", response);
+
+      if (response?.status === 201 || response?.status === 200) {
+        if (response?.data?.otpSent) {
+          toast.success("Sent Email Successfully.");
+          router?.push(`/email-verify?email=${data?.email}`);
           return true;
+        }
+        toast.success("Registered Successfully.");
+        methods?.reset();
+        router.push(redirectPaths[response?.data?.type]);
+        return true;
       }
       throw response;
     } catch (error) {
@@ -60,11 +67,25 @@ export default function RegisterForm() {
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-3"
       >
-        <Input name="email" type="email" placeholder="Email"/>
-        <Input name="password" type="password" placeholder="Password" />
+        <Input
+          name="email"
+          type="email"
+          placeholder="Email"
+          Icon={MdOutlineEmail}
+        />
+        <Input
+          name="password"
+          type="password"
+          placeholder="Password"
+          Icon={PiLockKey}
+        />
 
-        <div className="mt-3 text-xs flex align-middle gap-2 text-gray-600">
-          <input type="checkbox" className="w-4 h-4" />
+        <label className="mt-3 text-xs flex align-middle gap-2 text-gray-600">
+          <input
+            type="checkbox"
+            className="w-4 h-4"
+            {...methods.register("terms")}
+          />
           <span className="text-sm">
             By Signing up, you agree to our{" "}
             <span className="text-primary-color font-medium">
@@ -75,8 +96,13 @@ export default function RegisterForm() {
               Terms of Use.
             </span>
           </span>
-        </div>
-        <Button type="submit" className="mt-3" loading={loading}>
+        </label>
+        <Button
+          type="submit"
+          className="mt-3"
+          loading={loading}
+          disabled={!methods.formState.isValid || loading}
+        >
           Sign up
         </Button>
       </form>

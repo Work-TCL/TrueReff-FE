@@ -55,7 +55,9 @@ export default function Input({
   const getError = () => {
     return (
       Boolean(errors[name]) && (
-        <span className="text-red-500 text-sm">{getErrorMessage(name)}</span>
+        <span className="text-red-600 text-sm p-2">
+          {getErrorMessage(name)}
+        </span>
       )
     );
   };

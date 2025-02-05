@@ -12,6 +12,7 @@ import Button from "@/lib/ui/button";
 import Link from "next/link";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
+import { loginAPI } from "@/lib/web-api/auth";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -27,25 +28,43 @@ export default function LoginForm() {
     setLoading(true);
     try {
       ("use server");
-      const res = await signIn("credentials", {
-        username: data?.email,
+      const res: any = await loginAPI({
+        email: data?.email,
         password: data?.password,
-        redirect: false,
+        x,
       });
 
-      if (res?.ok) {
-        toast.success("Login Successfully.");
-        methods?.reset();
-        router.push("/dashboard");
+      console.log("res--login-", res);
+
+      if (res?.status === 200 || res?.status === 201) {
+        if (res?.data?.otpSent) {
+          toast.success("Sent Email Successfully.");
+          router?.push(`/email-verify?email=${data?.email}`);
+          return true;
+        }
+        const response = await signIn("credentials", {
+          username: data?.email,
+          password: data?.password,
+          redirect: false,
+        });
+
+        if (response?.ok) {
+          toast.success("Login Successfully.");
+          router?.push("/dashboard");
+          methods?.reset();
+          return true;
+        }
         return true;
       }
+      throw "Internal server error";
     } catch (error) {
       const errorMessage = getErrorMessage(error);
+      console.log("error--->>", errorMessage);
       toast.error(errorMessage);
     } finally {
       setLoading(false);
-    }
-  };
+    }
+  };
   return (
     <FormProvider {...methods}>
       <form
@@ -65,17 +84,22 @@ export default function LoginForm() {
           Icon={PiLockKey}
         />
         <div className="mt-3 text-[16px] flex align-middle justify-between  text-gray-600">
-          <div className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" className="w-4 h-4" />
             <span className="">Remember Me</span>
-          </div>
+          </label>
           <Link href="/forgot-password" className="cursor-pointer text-sm">
             <span className="text-primary-color font-medium">
               Forgot password?
             </span>
           </Link>
         </div>
-        <Button type="submit" className="mt-3" loading={loading}>
+        <Button
+          type="submit"
+          className="mt-3"
+          loading={loading}
+          disabled={!methods.formState.isValid || loading}
+        >
           Login
         </Button>
       </form>

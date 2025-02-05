@@ -55,14 +55,21 @@ export const verifyOtp = async (params: IVerifyOtp): Promise<IResponse> => {
   }
 };
 
+export const verifyEmail = async (params: IVerifyOtp): Promise<IResponse> => {
+  try {
+    const response = await axiosInstance.post("/auth/email-verify", params);
+    return response?.data;
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Invalid OTP");
+  }
+};
+
 export const forgotPassword = async (
   params: IResendOtp
 ): Promise<IResponse> => {
   try {
-    const response = await axiosInstance.post(
-      "/auth/forgot-password",
-      params
-    );
+    const response = await axiosInstance.post("/auth/forgot-password", params);
     return response;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -97,11 +104,12 @@ export const contactUsAPI = async (
   }
 };
 
-export const venderRegister = async (
-  params: any
-): Promise<IResponse> => {
+export const venderRegister = async (params: any): Promise<IResponse> => {
   try {
-    const response = await axiosInstance.post("/vendor/add-vendor-details", params);
+    const response = await axiosInstance.post(
+      "/vendor/add-vendor-details",
+      params
+    );
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);

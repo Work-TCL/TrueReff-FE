@@ -8,10 +8,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
-import { verifyOtp } from "@/lib/web-api/auth";
+import { verifyEmail, verifyOtp } from "@/lib/web-api/auth";
 import { useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 
-export default function VerifyOTPForm() {
+export default function EmailVerifyOTPForm() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   console.log("email", email);
@@ -29,18 +30,22 @@ export default function VerifyOTPForm() {
   }, [otp, methods]);
   const onSubmit = async (data: IOtpSchema) => {
     console.log("data", data);
+    if (!email || email == null) {
+      return true;
+    }
     setLoading(true);
     try {
       ("use server");
-      const payload: IOtpSchema = {
-        otpCode: data?.otpCode,
-      };
-      const response: any = await verifyOtp({ ...payload, email: email });
+      const response: any = await signIn("credentials", {
+        username: email,
+        otp: data?.otpCode,
+        redirect: false,
+      });
 
-      if (response?.status === 200) {
-        toast.success(response?.data?.message);
+      if (response?.status === 200 || response?.status === 201) {
+        toast.success("Email Verified Successfully.");
         methods?.reset();
-        router.push(`/reset-password?email=${email}`);
+        router.push("/dashboard");
         return true;
       }
     } catch (error) {
