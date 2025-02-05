@@ -8,15 +8,15 @@ interface IAuthenticatedLayout {
     redirectPath?: string;
 }
 
-export default async function AuthenticatedLayout({ children, redirectPath = '/dashboard' }: IAuthenticatedLayout) {
+export default async function AuthenticatedLayout({ children, redirectPath = '' }: IAuthenticatedLayout) {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
-        redirect("/register");
-    } 
-    // else if (redirectPath && session) {
-    //     redirect(redirectPath);
-    // }
+    // if (!session) {
+    //     redirect("/register");
+    // } 
+     if (redirectPath) {
+        redirect(redirectPath);
+    }
 
     return <div>{children}</div>;
 }

@@ -10,7 +10,7 @@ import { FaPlus } from "react-icons/fa";
 interface IAddProductDetailProps {
     isDetailView?: boolean;
 }
-export default function AddProductDetails(props: IAddProductDetailProps) {
+export default function CreateProduct(props: IAddProductDetailProps) {
     let { isDetailView } = props;
     const [variants, setVariants] = useState([
         { variationType: "", variation: "" }
@@ -31,20 +31,20 @@ export default function AddProductDetails(props: IAddProductDetailProps) {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                        <BreadcrumbPage>View Product</BreadcrumbPage>
+                            <BreadcrumbPage>View Product</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb> : "Add New Product Details"}</div>
                 <div className="flex gap-[10px]">
                     <Button variant="outline" className="w-[140px] rounded-[12px]">Cancel</Button>
-                    <Button variant="secondary" className="text-white w-[140px] rounded-[12px]">{isDetailView ? "Edit" :"Save"}</Button>
+                    <Button variant="secondary" className="text-white w-[140px] rounded-[12px]">{isDetailView ? "Edit" : "Save"}</Button>
                 </div>
             </div>
             <div className="flex flex-col lg:flex-row gap-5 w-full">
                 <div className="flex flex-col lg:w-3/4 gap-5">
                     <div className="bg-white rounded-xl p-[24px] flex flex-col gap-2">
                         <div className="text-[16px]">Product Image</div>
-                        {isDetailView ? <div className="flex gap-2">{[1,2,3,4].map((ele,index)=> <img src="/assets/product/image-square.svg" className="w-[80px] h-[100px]" key={index}/>)}</div> : <div className="flex flex-col gap-1">
+                        {isDetailView ? <div className="flex gap-2">{[1, 2, 3, 4].map((ele, index) => <img src="/assets/product/image-square.svg" className="w-[80px] h-[100px]" key={index} />)}</div> : <div className="flex flex-col gap-1">
                             <label className="text-[12px] text-[#7E7E80]">Photo</label>
                             <div className="flex justify-center items-center border border-dashed rounded-lg p-5">
                                 <div className="flex flex-col items-center gap-4">

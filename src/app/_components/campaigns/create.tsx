@@ -1,5 +1,4 @@
 "use client";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -10,7 +9,7 @@ import { FaPlus } from "react-icons/fa";
 interface IAddProductDetailProps {
     isDetailView?: boolean;
 }
-export default function AddCampaign(props: IAddProductDetailProps) {
+export default function CreateCampaign(props: IAddProductDetailProps) {
     let { isDetailView } = props;
     const [variants, setVariants] = useState([
         { variationType: "", variation: "" }

@@ -1,6 +1,6 @@
+import CreatorList from "@/app/_components/creator/list";
 import React from "react";
-import CreatorList from "./CreatorList";
 
 export default function CreatorPage(){
-    return <CreatorList/>
+    return <CreatorList />
 }

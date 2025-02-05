@@ -16,84 +16,87 @@ import { useRouter } from "next/navigation";
 
 
 // Sample Data
-const products = [
+const campaigns = [
     {
-        productId: "#15646",
+        campaignName: "Summer Boost",
         productImageUrl: "/monica.png",
-        productName: "Tiffany Diamond Ring",
-        category: "Jewelry",
-        tags: "Elegant, Timeless",
-        SKU: "TDR-3050",
+        productName: "Sneakers",
+        category: "Fashion",
+        creatorName: "Sophia Taylor",
+        totalSales: "2,500",
+        totalViews: "1.2M",
         sellingPrice: "$850",
-        discount: "15%",
-        status: "Inactive",
+        omniChannel: "IG, YT",
+        status: "Running",
     },
     {
-        productId: "#15647",
-        productImageUrl: "/omega_watch.png",
-        productName: "Omega Seamaster",
-        category: "Watches",
-        tags: "Luxury, Classic",
-        SKU: "OSM-1248",
-        sellingPrice: "$4,200",
-        discount: "10%",
-        status: "Active",
+        campaignName: "Winter Essentials",
+        productImageUrl: "/winter_jacket.png",
+        productName: "Winter Jacket",
+        category: "Apparel",
+        creatorName: "Liam Johnson",
+        totalSales: "1,800",
+        totalViews: "850K",
+        sellingPrice: "$320",
+        omniChannel: "FB, IG",
+        status: "Completed",
     },
     {
-        productId: "#15648",
-        productImageUrl: "/leather_bag.png",
-        productName: "Louis Vuitton Leather Bag",
-        category: "Bags",
-        tags: "Stylish, Premium",
-        SKU: "LVL-7890",
-        sellingPrice: "$3,150",
-        discount: "20%",
-        status: "Active",
+        campaignName: "Tech Explosion",
+        productImageUrl: "/smartwatch.png",
+        productName: "Smartwatch",
+        category: "Gadgets",
+        creatorName: "Olivia Brown",
+        totalSales: "3,200",
+        totalViews: "2.4M",
+        sellingPrice: "$199",
+        omniChannel: "YT, FB",
+        status: "Hold",
     },
     {
-        productId: "#15649",
-        productImageUrl: "/airpods_pro.png",
-        productName: "Apple AirPods Pro",
-        category: "Electronics",
-        tags: "Wireless, Noise-cancelling",
-        SKU: "AAP-9988",
-        sellingPrice: "$249",
-        discount: "5%",
-        status: "Inactive",
+        campaignName: "Fitness Frenzy",
+        productImageUrl: "/fitness_gear.png",
+        productName: "Fitness Gear",
+        category: "Sports",
+        creatorName: "Noah Davis",
+        totalSales: "4,500",
+        totalViews: "3.1M",
+        sellingPrice: "$120",
+        omniChannel: "IG, TT",
+        status: "Running",
     },
     {
-        productId: "#15650",
-        productImageUrl: "/sneakers.png",
-        productName: "Nike Air Max 270",
-        category: "Footwear",
-        tags: "Comfort, Sporty",
-        SKU: "NAM-270X",
-        sellingPrice: "$150",
-        discount: "12%",
-        status: "Active",
+        campaignName: "Glam Up",
+        productImageUrl: "/makeup_kit.png",
+        productName: "Makeup Kit",
+        category: "Beauty",
+        creatorName: "Emma Wilson",
+        totalSales: "2,100",
+        totalViews: "1.8M",
+        sellingPrice: "$99",
+        omniChannel: "YT, FB, IG",
+        status: "Completed",
     }
 ];
 
 
-
-
-export default function ProductList() {
+export default function CampaignList() {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 10;
-    const totalPages = Math.ceil(products.length / pageSize);
+    const totalPages = Math.ceil(campaigns.length / pageSize);
 
-    const paginatedData = products.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const paginatedData = campaigns.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     return (
         <div className="p-4 rounded-lg flex flex-col gap-4">
             <div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">
-                    <Input placeholder="Search product..."/>
+                    <Input placeholder="Search campaign..." />
                 </div>
                 <div className="flex items-center gap-[10px]">
-                    <PiListChecksLight size={35}/>
-                    <IoGridOutline size={30}/>
+                    <PiListChecksLight size={35} />
+                    <IoGridOutline size={30} />
                     <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
                         <FaSlidersH /> Filters
                     </Button>
@@ -115,28 +118,28 @@ export default function ProductList() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {paginatedData.map((product, index) => (
+                        {paginatedData.map((campaign, index) => (
                             <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-                                <CustomTableCell >{product.productId}</CustomTableCell>
+                                <CustomTableCell >{campaign.campaignName}</CustomTableCell>
                                 <CustomTableCell>
                                     <div className="flex items-center gap-2">
                                         <Avatar className="w-8 h-8">
                                             <AvatarImage src={'/assets/product/image-square.svg'} />
                                         </Avatar>
-                                        {product.productName}
+                                        {campaign.productName}
                                     </div>
                                 </CustomTableCell>
-                                <CustomTableCell >{product.category}</CustomTableCell>
-                                <CustomTableCell>{product.tags}</CustomTableCell>
-                                <CustomTableCell>{product.SKU}</CustomTableCell>
-                                <CustomTableCell>{product.sellingPrice}</CustomTableCell>
-                                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell>
+                                <CustomTableCell >{campaign.category}</CustomTableCell>
+                                <CustomTableCell>{campaign.creatorName}</CustomTableCell>
+                                <CustomTableCell>{campaign.totalSales}</CustomTableCell>
+                                <CustomTableCell>{campaign.totalViews}</CustomTableCell>
+                                <CustomTableCell>{campaign.omniChannel}</CustomTableCell>
+                                <CustomTableCell><div className={`${campaign.status === "Running" ? "bg-[#5856D61A] text[#5856D6]" : campaign.status === "Completed" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF95001A] text-[#FF9500]"} p-2 rounded-md text-center`}>{campaign.status}</div></CustomTableCell>
                                 <CustomTableCell>
                                     <div className="flex justify-center gap-3">
-                                    <Eye color="#FF4979" className="cursor-pointer" onClick={()=> router.push(`/product/list/${index}`)}/>
-                                    <PencilLine className="cursor-pointer"/>
-                                    <Trash2 color="#FF3B30" className="cursor-pointer"/>
+                                        <Eye color="#FF4979" className="cursor-pointer" onClick={() => router.push(`/product/${index}?view=true`)} />
+                                        <PencilLine className="cursor-pointer" onClick={() => router.push(`/product/${index}`)} />
+                                        <Trash2 color="#FF3B30" className="cursor-pointer" />
                                     </div>
                                 </CustomTableCell>
                             </TableRow>

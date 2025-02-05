@@ -1,5 +1,5 @@
+import ProductList from "@/app/_components/products/list";
 import React from "react";
-import ProductList from "./ProductList";
 
 
 export default function ProductListPage (){

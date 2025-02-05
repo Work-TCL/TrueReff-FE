@@ -46,7 +46,7 @@ export default function Logout() {
           <AnchorButton
             href="?"
             size="medium"
-            className="bg-transparent border-gray-300 text-center"
+            className="bg-transparent text-secondary-color"
           >
             Cancel
           </AnchorButton>
