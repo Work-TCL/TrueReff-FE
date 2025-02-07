@@ -14,7 +14,7 @@ const data = [
 
 const MostSellingBrands = () => {
   return (
-    <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-2xl shadow-md">
+    <div className="w-full  p-4 bg-white rounded-2xl">
       <h3 className="text-xl text-text font-medium mb-3">Most Selling Brands</h3>
       <ul className="space-y-4">
         {data.map((item, index) => (

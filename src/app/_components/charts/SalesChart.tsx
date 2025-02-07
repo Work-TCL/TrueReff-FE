@@ -36,7 +36,7 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({ active, payload
 
 export default function SalesChart() {
     return (
-        <div className="w-full h-[410px] bg-white p-5 rounded-20">
+        <div className="w-full md:w-2/3 h-[410px] bg-white p-5 rounded-20">
             <div className="flex justify-between items-center mb-3">
                 <h3 className="text-xl font-medium text-text">Sales Performance</h3>
                 <div className="flex items-center space-x-4">

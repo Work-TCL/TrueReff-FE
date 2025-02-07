@@ -1,5 +1,5 @@
+import Overview from "@/app/_components/overview";
+
 export default function Dashboard() {
-    return <div>
-        <h1>Dashboard</h1>
-    </div>
+    return <Overview/>
 }

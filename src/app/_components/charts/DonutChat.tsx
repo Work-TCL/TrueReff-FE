@@ -10,7 +10,7 @@ const data = [
 
 const DonutChart: React.FC = () => {
   return (
-    <div className="w-full max-w-sm p-4 border border-gray-300 rounded-20 shadow-md bg-white ">
+    <div className="w-full md:w-1/3 p-4 rounded-20 bg-white ">
       <h2 className=" text-text text-xl font-medium ">Product Updates</h2>
       <div className=' relative h-[240px]'>
 

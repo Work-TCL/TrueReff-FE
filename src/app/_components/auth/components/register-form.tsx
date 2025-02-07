@@ -15,10 +15,10 @@ interface IRedirectPaths {
   [key: string]: string;
 }
 const redirectPaths: IRedirectPaths = {
-  user: "/dashboard",
-  vendor: "/dashboard",
-  creator: "/",
-};
+  "user": '/dashboard',
+  "vendor": '/pre-form',
+  "creator": '/'
+}
 
 export default function RegisterForm() {
   const router = useRouter();

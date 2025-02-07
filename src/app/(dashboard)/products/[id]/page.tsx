@@ -7,6 +7,6 @@ interface IProps {
 }
 
 export default async function ProductDetail({ params }: IProps) {
-    const { id } = await params
-    return <CreateProduct isDetailView={true} />
+    // const { id } = await params
+    return <CreateProduct isDetailView={false} />
 }

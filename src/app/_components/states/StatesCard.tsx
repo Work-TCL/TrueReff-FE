@@ -14,10 +14,10 @@ const data = [
 
 const StatsCard = ({ title, value, growth, borderColor, bgColor }:{ title:string; value:number; growth:number; borderColor: string; bgColor: string }) => {
   return (
-    <Card className={`w-[300px] h-[120px] border border-${borderColor} ${bgColor} rounded-2xl`}>
+    <Card className={`w-full h-[120px] border ${borderColor} ${bgColor} rounded-2xl`}>
       <CardContent className="p-5 flex flex-col justify-between h-full">
         <div className="flex justify-between items-start">
-          <h3 className=" text-secondary">{title}</h3>
+          <h3 className=" text-secondary  md:text-[14px] lg:text-[14px]">{title}</h3>
           <div className="text-success bg-success-light text-sm px-2 py-1 rounded-sm">
             +{growth}%
           </div>
@@ -39,9 +39,12 @@ const StatsCard = ({ title, value, growth, borderColor, bgColor }:{ title:string
 
 export default function StatesCards() {
   return (
-    <div className="flex gap-4">
-      <StatsCard title="Active Collaborations" value={120} growth={5} bgColor="bg-white bg-[linear-gradient(0deg,#FFFFFF,#FFFFFF),linear-gradient(0deg,rgba(120,119,238,0.1),rgba(120,119,238,0.1))]" borderColor="#7877EE" />
-      <StatsCard title="Total Products" value={200} growth={5} borderColor="border-orange-400" bgColor="bg-orange-50" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-4 col-span-3">
+      <StatsCard title="Active Collaborations" value={120} growth={5} bgColor="bg-white bg-[#f2f1fd]" borderColor={"border-[#7877EE]"} />
+      <StatsCard title="Total Products" value={200} growth={5} borderColor="border-[#EB815B]" bgColor="bg-[#fdf2ef]" />
+      <StatsCard title="Total Products" value={200} growth={5} borderColor="border-[#77EE8D]" bgColor="bg-[#f1fdf4]" />
+      <StatsCard title="Total Products" value={200} growth={5} borderColor="border-[#9773C8]" bgColor="bg-[#f5f1fa]" />
+      <StatsCard title="Total Products" value={200} growth={5} borderColor="border-[#C861A0]" bgColor="bg-[#faeff6]" />
     </div>
   );
 }

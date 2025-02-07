@@ -16,6 +16,7 @@ import ChannelForm from "./components/channel-form";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { venderRegister } from "@/lib/web-api/auth";
+import { useRouter } from "next/navigation";
 
 let allTabs: {
   id: string;
@@ -46,6 +47,7 @@ const TABS_STATUS = {
 };
 
 export default function PreFormPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
   const methods = useForm<IPreFormSchema>({
@@ -82,8 +84,9 @@ export default function PreFormPage() {
       };
       const response: any = await venderRegister(payload);
 
-      if (response?.status === 200) {
-        toast.success("Vendor successfully registerd.");
+      if (response?.status === 201) {
+        toast.success("Vendor successfully registered.");
+        router.push('/product/list')
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);

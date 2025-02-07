@@ -1,5 +1,6 @@
+"use client"
 import Sidebar from "@/lib/components/layout/dashboard/sidebar"
-import React from 'react'
+import React, { useState } from 'react'
 import Header from "./header"
 
 interface IDashboardLayout {
@@ -8,11 +9,15 @@ interface IDashboardLayout {
 
 
 export default function DashboardLayout({ children }: IDashboardLayout) {
+    const [expanded,setExpanded] = useState(false);
+    const handleExpandSidebar = () => {
+     setExpanded(prev =>!prev);   
+    }
     return (
         <div className="flex h-screen overflow-hidden">
-            <Sidebar />
+            <Sidebar handleExpandSidebar={handleExpandSidebar} expanded={expanded}/>
             <main className="flex-1 w-full h-full overflow-hidden flex flex-col">
-                <Header />
+                <Header handleExpandSidebar={handleExpandSidebar}/>
                 <div className="flex-1 overflow-auto">
                     {children}
                 </div>

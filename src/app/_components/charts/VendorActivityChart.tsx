@@ -74,7 +74,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 
 const VendorActivity: React.FC = () => {
     return (
-        <Card className="p-5 w-full max-w-lg bg-white rounded-xl shadow-md">
+        <Card className="p-5 w-full bg-white rounded-xl">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-20 text-text  font-semibold">Vendor Activity</h2>
                 <DropdownMenu>

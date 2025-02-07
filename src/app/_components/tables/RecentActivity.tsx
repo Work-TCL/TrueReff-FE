@@ -42,7 +42,7 @@ export default function RecentActivities() {
                 <Table className="min-w-full border border-gray-200 rounded-2xl">
                     <TableHeader className="bg-gray-100">
                         <TableRow>
-                        <CustomTableHead className="p-3 text-text text-left text-sm">Creator Name</CustomTableHead>
+                            <CustomTableHead className="p-3 text-text text-left text-sm">Creator Name</CustomTableHead>
                             <CustomTableHead className="p-3 text-text text-left text-sm">Product Name</CustomTableHead>
                             <CustomTableHead className="p-3 text-text text-left text-sm">Categories</CustomTableHead>
                             <CustomTableHead className="p-3 text-text text-left text-sm">Proposed Bid</CustomTableHead>

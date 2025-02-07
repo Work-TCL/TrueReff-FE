@@ -31,7 +31,7 @@ export default function LoginForm() {
       const res: any = await loginAPI({
         email: data?.email,
         password: data?.password,
-        x,
+        // x,
       });
 
       console.log("res--login-", res);
@@ -54,10 +54,14 @@ export default function LoginForm() {
           methods?.reset();
           return true;
         }
+      if (res?.ok) {
+        toast.success("Login Successfully.");
+        methods?.reset();
+        router.push("/products");
         return true;
       }
       throw "Internal server error";
-    } catch (error) {
+    } }catch (error) {
       const errorMessage = getErrorMessage(error);
       console.log("error--->>", errorMessage);
       toast.error(errorMessage);
