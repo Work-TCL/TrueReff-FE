@@ -4,6 +4,7 @@ import HeaderAuth from "./components/header-auth";
 import Link from "next/link";
 import LoginForm from "./components/login-form";
 import SocialAuth from "./components/social-auth";
+import { translate } from "@/lib/utils/translate";
 
 export default function LoginPage() {
   return (
@@ -12,7 +13,7 @@ export default function LoginPage() {
         <HeaderAuth />
         <div className="w-full pt-6">
           <div className="flex justify-center text-[32px] font-semibold text-gray-darken">
-            Welcome Back!
+            {translate('Welcome Back!')}
           </div>
           <div className="mt-5">
             <LoginForm />
