@@ -8,8 +8,8 @@ import ResetPasswordForm from "./components/reset-password-form";
 export default function ResetPasswordPage() {
   return (
     <AuthLayoutPage authImage="forgot-pass-image.svg">
-      <div className="mt-6 flex flex-col justify-center mx-auto max-w-lg w-full h-full">
-        <div className="w-full flex-1">
+      <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
+        <div className="w-full">
           <BackButton className="mb-5" />
           <AuthTitle text="Reset Password" />
           <AuthDescription

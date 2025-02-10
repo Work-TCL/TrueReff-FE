@@ -46,4 +46,5 @@ export const MENU = {
   "/payments": { label: "Payments", icon: DollarSign, link: "/payments" },
   "/support": { label: "Support", icon: LifeBuoy, link: "/support" },
   "/settings": { label: "Settings", icon: Settings, link: "/settings" },
+  "/logout": { label: "Logout", icon: Settings, link: "?auth=logout" },
 };

@@ -18,9 +18,8 @@ export default async function AuthenticatedLayout({
   if (!session) {
     redirect("/register");
   }
-  // if (redirectPath) {
-  //   redirect(redirectPath);
-  // }
-
+  if (redirectPath && session) {
+    redirect(redirectPath);
+  }
   return <div>{children}</div>;
 }

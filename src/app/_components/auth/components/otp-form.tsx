@@ -65,13 +65,15 @@ export default function VerifyOTPForm() {
             renderInput={(props) => (
               <input
                 {...props}
-                className="min-w-10 min-h-10 max-w-10 max-h-10 mx-2 border border-gray-dark rounded focus:outline-none focus:border-gray-color"
+                className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] rounded focus:outline-none focus:border-black text-lg ${
+                  props?.value ? "border-black" : "border-gray-dark"
+                }`}
               />
             )}
           />
           <Button
             type="submit"
-            className="mt-3"
+            className="mt-8"
             loading={loading}
             disabled={!otp || otp?.split("").length != 6 || loading}
           >

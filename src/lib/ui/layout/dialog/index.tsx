@@ -33,7 +33,7 @@ export default function DialogLayout({
   return (
     open && (
       <Fragment>
-        <div className="fixed inset-0 z-[23] sm:w-screen h-screen overflow-hidden">
+        <div className="fixed inset-0 z-[40] sm:w-screen h-screen overflow-hidden">
           <div className="flex min-h-full items-center justify-center text-center sm:items-center sm:py-0 cursor-pointer relative">
             <Link
               href="?"
@@ -43,7 +43,7 @@ export default function DialogLayout({
 
             <div
               className={`max-h-[90vh] pb-10 rounded-lg overflow-hidden ${
-                props.isCustomDesign ? "max-w-screen-xl" : "sm:max-w-[90vh]"
+                props.isCustomDesign ? "max-w-screen-xl" : "sm:max-w-[90vw]"
               }`}
             >
               {skipClose ? null : (
