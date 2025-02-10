@@ -9,7 +9,7 @@ interface IDashboardLayout {
 
 
 export default function DashboardLayout({ children }: IDashboardLayout) {
-    const [expanded,setExpanded] = useState(false);
+    const [expanded,setExpanded] = useState(true);
     const handleExpandSidebar = () => {
      setExpanded(prev =>!prev);   
     }

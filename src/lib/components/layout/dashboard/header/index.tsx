@@ -19,6 +19,7 @@ export default function Header({handleExpandSidebar}: IHeaderProps) {
     "/creator/details": "Creator Details",
     "/campaign/add": "Add New Campaign",
     "/campaign": "Campaign List",
+    "/settings": "Settings",
   };
   return (
     <header className="bg-white px-4 py-3 flex items-center">

@@ -20,15 +20,15 @@ export default function LoginPage() {
           </div>
           <div className="my-6 border-b text-center">
             <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-              Or Continue with
+              {translate("Or Continue with")}
             </div>
           </div>
           <SocialAuth />
           <div className="my-6 text-center">
             <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-              Don’t have an account?{" "}
+              {translate("Don’t have an account?")}{" "}
               <Link href="/register" className="text-primary-color font-medium">
-                Sign up here
+                {translate("Sign up here")}
               </Link>
             </div>
           </div>

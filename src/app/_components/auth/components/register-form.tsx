@@ -11,6 +11,7 @@ import Input from "@/lib/ui/form/Input";
 import Button from "@/lib/ui/button";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
+import { translate } from "@/lib/utils/translate";
 interface IRedirectPaths {
   [key: string]: string;
 }
@@ -70,13 +71,13 @@ export default function RegisterForm() {
         <Input
           name="email"
           type="email"
-          placeholder="Email"
+          placeholder={translate("Email")}
           Icon={MdOutlineEmail}
         />
         <Input
           name="password"
           type="password"
-          placeholder="Password"
+          placeholder={translate("Password")}
           Icon={PiLockKey}
         />
 
@@ -87,13 +88,13 @@ export default function RegisterForm() {
             {...methods.register("terms")}
           />
           <span className="text-sm">
-            By Signing up, you agree to our{" "}
+            {translate("By Signing up, you agree to our")}{" "}
             <span className="text-primary-color font-medium">
-              Privacy Policy
+              {translate("Privacy Policy")}
             </span>{" "}
             &{" "}
             <span className="text-primary-color font-medium">
-              Terms of Use.
+              {translate("Terms of Use")}.
             </span>
           </span>
         </label>
@@ -103,7 +104,7 @@ export default function RegisterForm() {
           loading={loading}
           disabled={!methods.formState.isValid || loading}
         >
-          Sign up
+          {translate("Sign up")}
         </Button>
       </form>
     </FormProvider>

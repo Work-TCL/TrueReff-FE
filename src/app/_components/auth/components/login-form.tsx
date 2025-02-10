@@ -13,6 +13,7 @@ import Link from "next/link";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
 import { loginAPI } from "@/lib/web-api/auth";
+import { translate } from "@/lib/utils/translate";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -78,23 +79,23 @@ export default function LoginForm() {
         <Input
           name="email"
           type="email"
-          placeholder="Email"
+          placeholder={translate("Email")}
           Icon={MdOutlineEmail}
         />
         <Input
           name="password"
           type="password"
-          placeholder="Password"
+          placeholder={translate("Password")}
           Icon={PiLockKey}
         />
         <div className="mt-3 text-[16px] flex align-middle justify-between  text-gray-600">
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" className="w-4 h-4" />
-            <span className="">Remember Me</span>
+            <span className="">{translate("Remember Me")}</span>
           </label>
           <Link href="/forgot-password" className="cursor-pointer text-sm">
             <span className="text-primary-color font-medium">
-              Forgot password?
+              {translate("Forgot password?")}
             </span>
           </Link>
         </div>
@@ -104,7 +105,7 @@ export default function LoginForm() {
           loading={loading}
           disabled={!methods.formState.isValid || loading}
         >
-          Login
+          {translate("Login")}
         </Button>
       </form>
     </FormProvider>

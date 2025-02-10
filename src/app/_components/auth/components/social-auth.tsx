@@ -1,4 +1,5 @@
 import LightButton from "@/lib/ui/button/variant/light-button";
+import { translate } from "@/lib/utils/translate";
 import React from "react";
 import { FaApple } from "react-icons/fa";
 
@@ -24,11 +25,11 @@ export default function SocialAuth() {
             fill="#ea4335"
           />
         </svg>
-        <span>Continue with Google</span>
+        <span>{translate("Continue with Google")}</span>
       </LightButton>
       <LightButton className="w-full flex justify-center items-center gap-2">
         <FaApple className="text-xl" />
-        <span>Continue with Apple</span>
+        <span>{translate("Continue with Apple")}</span>
       </LightButton>
     </div>
   );

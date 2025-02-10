@@ -1,0 +1,48 @@
+"use client";
+import Button from "@/lib/ui/button";
+import React, { useState } from "react";
+
+export default function Profile() {
+
+    return (
+        <div className="flex flex-col w-full lg:w-1/2 bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md">
+            <div className="flex justify-between items-center border-b border-gray-300 pb-4">
+                <h2 className="text-sm xl:text-lg font-semibold">Personal Information</h2>
+                <button className="text-sm text-primary">Edit profile</button>
+            </div>
+            <div className="flex gap-3 xl:gap-4">
+                <div className="flex flex-col gap-2 text-[14px] xl:text-[16px] text-gray-500">
+                    <span>Name:</span>
+                    <span>Email:</span>
+                    <span>Mobile:</span>
+                </div>
+                <div className="flex flex-col text-[14px] xl:text-[16px] gap-2">
+                    <span className="font-medium">Robert Fox</span>
+                    <span className="font-medium">robertfox@example.com</span>
+                    <span className="font-medium">123-456-7890</span>
+                </div>
+            </div>
+            <div className="flex justify-between items-center border-b border-gray-300 pb-4 mt-6">
+                <h2 className="text-sm xl:text-lg font-semibold">Saved Address</h2>
+                <button className="text-sm text-primary">+ Add new address</button>
+            </div>
+            <div className="flex flex-col w-full xl:w-2/3  border border-gray-300 rounded-xl p-4 xl:p-6 gap-3">
+                <div className="flex items-center gap-4">
+                    <span className="text-sm xl:text-lg font-semibold">Robert Fox</span>
+                    <span className="bg-[#0663C91A] text-primary text-[10px] xl:text-sm px-3 py-1 rounded-2xl">Default</span>
+                </div>
+
+                <div className="flex flex-col text-[14px] xl:text-[16px] text-gray-500">
+                    <span>2464 Royal Ln. Mesa, New Jersey 45463</span>
+                    <span>(480) 555-0103</span>
+                </div>
+                <div className="flex gap-4 mt-4 xl:mt-6">
+                    <Button className="w-24 h-10 rounded-xl border border-gray-300 bg-white text-black">
+                        Remove
+                    </Button>
+                    <Button className="w-24 h-10 rounded-xl">Edit</Button>
+                </div>
+            </div>
+        </div>
+    )
+}
