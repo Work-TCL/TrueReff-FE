@@ -20,7 +20,10 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const schema = loginSchema;
   const methods = useForm<ILoginSchema>({
-    defaultValues: {},
+    defaultValues: {
+      email: '',
+      password: ''
+    },
     resolver: yupResolver(schema),
     mode: "onSubmit",
   });
@@ -55,14 +58,15 @@ export default function LoginForm() {
           methods?.reset();
           return true;
         }
-      if (res?.ok) {
-        toast.success("Login Successfully.");
-        methods?.reset();
-        router.push("/products");
-        return true;
+        if (res?.ok) {
+          toast.success("Login Successfully.");
+          methods?.reset();
+          router.push("/products");
+          return true;
+        }
+        throw "Internal server error";
       }
-      throw "Internal server error";
-    } }catch (error) {
+    } catch (error) {
       const errorMessage = getErrorMessage(error);
       console.log("error--->>", errorMessage);
       toast.error(errorMessage);

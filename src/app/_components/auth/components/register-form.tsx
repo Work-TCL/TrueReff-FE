@@ -26,7 +26,10 @@ export default function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const schema = registerSchema;
   const methods = useForm<IRegisterSchema>({
-    defaultValues: {},
+    defaultValues: {
+      email: "",
+      password: "",
+    },
     resolver: yupResolver(schema),
     mode: "onSubmit",
   });
