@@ -1,5 +1,6 @@
 'use client';
 
+import { translate } from '@/lib/utils/translate';
 import React from 'react';
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid,
@@ -38,15 +39,15 @@ export default function SalesChart() {
     return (
         <div className="w-full md:w-2/3 h-[410px] bg-white p-5 rounded-20">
             <div className="flex justify-between items-center mb-3">
-                <h3 className="text-xl font-medium text-text">Sales Performance</h3>
+                <h3 className="text-xl font-medium text-text">{translate("Sales Performance")}</h3>
                 <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-1">
                         <span className="w-3 h-3 bg-secondary rounded-full"></span>
-                        <span className="text-font-grey text-sm font-medium">Revenue</span>
+                        <span className="text-font-grey text-sm font-medium">{translate("Revenue")}</span>
                     </div>
                     <div className="flex items-center space-x-1">
                         <span className="w-3 h-3 bg-primary rounded-full"></span>
-                        <span className="text-font-grey text-sm font-medium">Profit</span>
+                        <span className="text-font-grey text-sm font-medium">{translate("Profit")}</span>
                     </div>
                 </div>
             </div>

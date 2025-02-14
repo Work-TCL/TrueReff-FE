@@ -11,6 +11,7 @@ import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
 import { verifyEmail, verifyOtp } from "@/lib/web-api/auth";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { translate } from "@/lib/utils/translate";
 
 export default function EmailVerifyOTPForm() {
   const searchParams = useSearchParams();
@@ -71,7 +72,7 @@ export default function EmailVerifyOTPForm() {
             renderInput={(props) => (
               <input
                 {...props}
-                className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] rounded focus:outline-none focus:border-black text-lg ${
+                className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] focus:outline-none focus:border-black text-lg ${
                   props?.value ? "border-black" : "border-gray-dark"
                 }`}
               />
@@ -83,7 +84,7 @@ export default function EmailVerifyOTPForm() {
             loading={loading}
             disabled={!otp || otp?.split("").length != 6 || loading}
           >
-            Verify
+            {translate("Verify")}
           </Button>
         </div>
       </form>

@@ -13,6 +13,8 @@ import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
 import { Eye, PencilLine, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import * as React from "react";
+import {translate} from "../../../lib/utils/translate";
 
 
 // Sample Data
@@ -92,13 +94,13 @@ export default function CampaignList() {
         <div className="p-4 rounded-lg flex flex-col gap-4">
             <div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">
-                    <Input placeholder="Search campaign..." />
+                    <Input placeholder={translate("Search campaign...")} />
                 </div>
                 <div className="flex items-center gap-[10px]">
                     <PiListChecksLight size={35} />
                     <IoGridOutline size={30} />
                     <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
-                        <FaSlidersH /> Filters
+                        <FaSlidersH /> {translate("Filters")}
                     </Button>
                 </div>
             </div>
@@ -106,15 +108,15 @@ export default function CampaignList() {
                 <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
                     <TableHeader className="bg-stroke">
                         <TableRow >
-                            <CustomTableHead className="w-1/6">Product ID</CustomTableHead>
-                            <CustomTableHead className="w-1/4">Product Name</CustomTableHead>
-                            <CustomTableHead className="w-1/6">Categories</CustomTableHead>
-                            <CustomTableHead className="w-1/4">Tags</CustomTableHead>
-                            <CustomTableHead className="w-1/4">SKU</CustomTableHead>
-                            <CustomTableHead className="w-1/6">Selling Price</CustomTableHead>
-                            <CustomTableHead className="w-1/8">Discount</CustomTableHead>
-                            <CustomTableHead className="w-1/4">Status</CustomTableHead>
-                            <CustomTableHead className="w-1/6 text-center">Action</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Product ID")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Product Name")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Creator Name")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Total Sales")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Total Views")}</CustomTableHead>
+                            <CustomTableHead className="w-1/8">{translate("Omni Channel")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6 text-center">{translate("Action")}</CustomTableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>

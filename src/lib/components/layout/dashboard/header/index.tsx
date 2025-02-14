@@ -2,6 +2,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation'
 import { GoSidebarCollapse, GoSidebarExpand } from 'react-icons/go';
+import {translate} from "../../../../utils/translate";
 interface IPageName {
   [key: string]: string;
 }
@@ -11,15 +12,15 @@ interface IHeaderProps {
 export default function Header({handleExpandSidebar}: IHeaderProps) {
   const pathName = usePathname();
   const pageNames: IPageName = {
-    "/dashboard": "Overview",
-    "/products/add": "Add New Product",
-    "/products/list": "Product Catalog",
-    "/products/list/view": "View Product",
-    "/creator": "Creator & Collaboration",
-    "/creator/details": "Creator Details",
-    "/campaign/add": "Add New Campaign",
-    "/campaign": "Campaign List",
-    "/settings": "Settings",
+    "/dashboard": translate("Overview"),
+    "/products/add": translate("Add New Product"),
+    "/products/list": translate("Product Catalog"),
+    "/products/list/view": translate("View Product"),
+    "/creator": translate("Creator & Collaboration"),
+    "/creator/details": translate("Creator Details"),
+    "/campaign/add": translate("Add New Campaign"),
+    "/campaign": translate("Campaign List"),
+    "/settings": translate("Settings"),
   };
   return (
     <header className="bg-white px-4 py-3 flex items-center">

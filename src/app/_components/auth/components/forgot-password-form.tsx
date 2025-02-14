@@ -10,6 +10,7 @@ import Input from "@/lib/ui/form/Input";
 import Button from "@/lib/ui/button";
 import { forgotPassword } from "@/lib/web-api/auth";
 import { MdOutlineEmail } from "react-icons/md";
+import { translate } from "@/lib/utils/translate";
 
 export default function ForgotPasswordForm() {
   const router = useRouter();
@@ -52,7 +53,7 @@ export default function ForgotPasswordForm() {
         <Input
           name="email"
           type="email"
-          placeholder="Email"
+          placeholder={translate("Email")}
           Icon={MdOutlineEmail}
         />
         <Button
@@ -61,7 +62,7 @@ export default function ForgotPasswordForm() {
           loading={loading}
           disabled={!methods.formState.isValid || loading}
         >
-          Send OTP
+          {translate("Send OTP")}
         </Button>
       </form>
     </FormProvider>

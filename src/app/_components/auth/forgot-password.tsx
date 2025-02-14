@@ -4,6 +4,7 @@ import BackButton from "@/lib/ui/back-button";
 import AuthTitle from "./components/auth-title";
 import AuthDescription from "./components/auth-desc";
 import ForgotPasswordForm from "./components/forgot-password-form";
+import { translate } from "@/lib/utils/translate";
 
 export default function ForgotPasswordPage() {
   return (
@@ -11,11 +12,10 @@ export default function ForgotPasswordPage() {
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
         <div className="w-full">
           <BackButton className="mb-5" />
-          <AuthTitle text="Forgot Password" />
+          <AuthTitle text={translate("Forgot Password")} />
           <AuthDescription
             className="mt-2"
-            text="Enter your registered email address. we’ll send you a code to reset
-            your password."
+            text={translate("Enter your registered email address. we’ll send you a code to reset your password.")}
           />
           <div className="mt-5">
             <ForgotPasswordForm />

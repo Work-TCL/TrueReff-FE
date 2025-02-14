@@ -10,11 +10,11 @@ import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
 import { verifyOtp } from "@/lib/web-api/auth";
 import { useSearchParams } from "next/navigation";
+import { translate } from "@/lib/utils/translate";
 
 export default function VerifyOTPForm() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
-  console.log("email", email);
   const [otp, setOtp] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -65,7 +65,7 @@ export default function VerifyOTPForm() {
             renderInput={(props) => (
               <input
                 {...props}
-                className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] rounded focus:outline-none focus:border-black text-lg ${
+                className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] focus:outline-none focus:border-black text-lg ${
                   props?.value ? "border-black" : "border-gray-dark"
                 }`}
               />
@@ -77,7 +77,7 @@ export default function VerifyOTPForm() {
             loading={loading}
             disabled={!otp || otp?.split("").length != 6 || loading}
           >
-            Verify
+            {translate("Verify")}
           </Button>
         </div>
       </form>

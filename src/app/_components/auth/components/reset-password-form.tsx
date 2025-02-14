@@ -10,6 +10,7 @@ import Input from "@/lib/ui/form/Input";
 import Button from "@/lib/ui/button";
 import { resetPasswordAPI } from "@/lib/web-api/auth";
 import { PiLockKey } from "react-icons/pi";
+import { translate } from "@/lib/utils/translate";
 
 export default function ResetPasswordForm() {
   const searchParams = useSearchParams();
@@ -58,13 +59,13 @@ export default function ResetPasswordForm() {
         <Input
           name="password"
           type="password"
-          placeholder="Password"
+          placeholder={translate("Password")}
           Icon={PiLockKey}
         />
         <Input
           name="confirmPassword"
           type="password"
-          placeholder="Confirm Password"
+          placeholder={translate("Confirm Password")}
           Icon={PiLockKey}
         />
         <Button
@@ -73,7 +74,7 @@ export default function ResetPasswordForm() {
           loading={loading}
           disabled={!methods.formState.isValid || loading}
         >
-          Verify
+          {translate("Verify")}
         </Button>
       </form>
     </FormProvider>

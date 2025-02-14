@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GoSidebarExpand } from "react-icons/go";
+import {translate} from "../../../../utils/translate";
 
 type MenuItem = {
   label: string;
@@ -92,7 +93,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
 
   const toggleMenu = (label: string, isSubMenu: boolean) => {
     let keys = Object.keys(expandedMenus).filter(
-      (key) => expandedMenus[key] === true
+      (key) => expandedMenus[key]
     );
     const obj = Object.fromEntries(keys.map((key) => [key, false]));
     setExpandedMenus((prev) => ({
@@ -102,31 +103,31 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   };
 
   const menuItems: MenuItem[] = [
-    { label: "Overview", icon: Home, link: "/dashboard" },
+    { label: translate("Overview"), icon: Home, link: "/dashboard" },
     {
-      label: "Product Catalog",
+      label: translate("Product Catalog"),
       icon: Box,
       children: [
-        { label: "Add New Product", link: "/products/add" },
-        { label: "Product List", link: "/products" },
+        { label: translate("Add New Product"), link: "/products/add" },
+        { label: translate("Product List"), link: "/products" },
       ],
     },
-    { label: "Creator & Collaboration", icon: User, link: "/creator" },
+    { label: translate("Creator & Collaboration"), icon: User, link: "/creator" },
     {
-      label: "Campaign",
+      label: translate("Campaign"),
       icon: Megaphone,
       children: [
-        { label: "Add New Campaign", link: "/campaign/add" },
-        { label: "Campaign List", link: "/campaign" },
+        { label: translate("Add New Campaign"), link: "/campaign/add" },
+        { label: translate("Campaign List"), link: "/campaign" },
         // { label: 'Campaign Metrics', link: '/campaign/metrics' },
       ],
     },
-    { label: "Bids", icon: BarChart, link: "/bids" },
-    { label: "Brand Analysis", icon: BarChart, link: "/brand-analysis" },
-    { label: "Account Recharge", icon: DollarSign, link: "/recharge" },
-    { label: "Payments", icon: DollarSign, link: "/payments" },
-    { label: "Support", icon: LifeBuoy, link: "/support" },
-    { label: "Settings", icon: Settings, link: "/settings" },
+    { label: translate("Bids"), icon: BarChart, link: "/bids" },
+    { label: translate("Brand Analysis"), icon: BarChart, link: "/brand-analysis" },
+    { label: translate("Account Recharge"), icon: DollarSign, link: "/recharge" },
+    { label: translate("Payments"), icon: DollarSign, link: "/payments" },
+    { label: translate("Support"), icon: LifeBuoy, link: "/support" },
+    { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(

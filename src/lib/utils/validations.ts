@@ -1,33 +1,36 @@
 import * as Yup from "yup";
+// import { translate } from "./translate";
 // import { phone } from "phone";
-
+function translate(value: string){
+  return value;
+}
 export const loginSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Email must be a valid email address")
-    .required("Email is required"),
+    .email(translate("Email must be a valid email address"))
+    .required(translate("Email is required")),
   password: Yup.string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters")
-    .matches(/(?=.*[0-9])/, "Password must contain at least one number")
+    .required(translate("Password is required"))
+    .min(8, translate("Password must be at least 8 characters"))
+    .matches(/(?=.*[0-9])/, translate("Password must contain at least one number"))
     .matches(
       /(?=.*[a-z])/,
-      "Password must contain at least one lowercase letter"
+      translate("Password must contain at least one lowercase letter")
     )
     .matches(
       /(?=.*[A-Z])/,
-      "Password must contain at least one uppercase letter"
+     translate( "Password must contain at least one uppercase letter")
     )
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
-      "Password must contain at least one special character"
+      translate("Password must contain at least one special character")
     ),
 });
 
 export interface ILoginSchema extends Yup.Asserts<typeof loginSchema> {}
 export const loginWithOtpSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Email must be a valid email address")
-    .required("Email is required"),
+    .email(translate("Email must be a valid email address"))
+    .required(translate("Email is required")),
   password: Yup.string().optional(),
 });
 
@@ -36,40 +39,40 @@ export interface ILoginWithOtpSchema
 
 export const forgotSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Email must be a valid email address")
-    .required("Email is required"),
+    .email(translate("Email must be a valid email address"))
+    .required(translate("Email is required")),
 });
 
 export interface IForgotSchema extends Yup.Asserts<typeof forgotSchema> {}
 
 export const otpSchema = Yup.object().shape({
   otpCode: Yup.string()
-    .matches(/^\d+$/, "OTP must be a number")
-    .length(6, "OTP must be exactly 6 digits")
-    .required("OTP is required"),
+    .matches(/^\d+$/, translate("OTP must be a number"))
+    .length(6, translate("OTP must be exactly 6 digits"))
+    .required(translate("OTP is required")),
 });
 export interface IOtpSchema extends Yup.Asserts<typeof otpSchema> {}
 
 export const resetPasswordSchema = Yup.object().shape({
   password: Yup.string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters")
-    .matches(/(?=.*[0-9])/, "Password must contain at least one number")
+    .required(translate("Password is required"))
+    .min(8, translate("Password must be at least 8 characters"))
+    .matches(/(?=.*[0-9])/, translate("Password must contain at least one number"))
     .matches(
       /(?=.*[a-z])/,
-      "Password must contain at least one lowercase letter"
+      translate("Password must contain at least one lowercase letter")
     )
     .matches(
       /(?=.*[A-Z])/,
-      "Password must contain at least one uppercase letter"
+      translate("Password must contain at least one uppercase letter")
     )
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
-      "Password must contain at least one special character"
+      translate("Password must contain at least one special character")
     ),
   confirmPassword: Yup.string()
-    .required("Confirm Password is required")
-    .oneOf([Yup.ref("password")], "Passwords must match"),
+    .required(translate("Confirm Password is required"))
+    .oneOf([Yup.ref("password")], translate("Passwords must match")),
 });
 
 export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> {}
@@ -97,23 +100,23 @@ export const registerSchema = Yup.object().shape({
   //         });
   //     }),
   email: Yup.string()
-    .email("Email must be a valid email address")
-    .required("Email is required"),
+    .email(translate("Email must be a valid email address"))
+    .required(translate("Email is required")),
   password: Yup.string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters")
-    .matches(/(?=.*[0-9])/, "Password must contain at least one number")
+    .required(translate("Password is required"))
+    .min(8, translate("Password must be at least 8 characters"))
+    .matches(/(?=.*[0-9])/, translate("Password must contain at least one number"))
     .matches(
       /(?=.*[a-z])/,
-      "Password must contain at least one lowercase letter"
+      translate("Password must contain at least one lowercase letter")
     )
     .matches(
       /(?=.*[A-Z])/,
-      "Password must contain at least one uppercase letter"
+      translate("Password must contain at least one uppercase letter")
     )
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
-      "Password must contain at least one special character"
+      translate("Password must contain at least one special character")
     ),
   // confirmPassword: Yup.string()
   //   .required("Confirm Password is required")

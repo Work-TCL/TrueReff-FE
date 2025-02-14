@@ -5,6 +5,7 @@ import PackageDetails from "./package-details";
 import PaymentOptions from "./payment-options";
 import BillingDetails from "./billing-details";
 import StoreConnects from "./store-connects";
+import {translate} from "../../../lib/utils/translate";
 
 const settingMenus: string[] = [
   "Profile",
@@ -31,13 +32,13 @@ export default function Settings() {
             key={menu + "-" + index}
             onClick={() => handleActiveMenu(menu)}
           >
-            {menu}
+            {translate(menu)}
           </div>
         ))}
       </div>
       <div className="flex-1">
         {{
-          Profile: <Profile />,
+          "Profile": <Profile />,
           "Package details": <PackageDetails/>,
           "Store connects": <StoreConnects/>,
           "Payment Options": <PaymentOptions/>,

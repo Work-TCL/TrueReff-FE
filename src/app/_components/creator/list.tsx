@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
+import { translate } from "@/lib/utils/translate";
 
 
 // Sample Data
@@ -149,13 +150,13 @@ export default function CreatorList() {
         <div className="p-4 rounded-lg flex flex-col gap-4">
             <div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">
-                    <Input placeholder="Search creator..." />
+                    <Input placeholder={translate("Search creator...")} />
                 </div>
                 <div className="flex items-center gap-[10px]">
                     <PiListChecksLight size={35} />
                     <IoGridOutline size={30} />
                     <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
-                        <FaSlidersH /> Filters
+                        <FaSlidersH /> {translate("Filters")}
                     </Button>
                 </div>
             </div>
@@ -163,14 +164,14 @@ export default function CreatorList() {
                 <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
                     <TableHeader className="bg-stroke">
                         <TableRow >
-                            <CustomTableHead className="w-1/6">Creator Name</CustomTableHead>
-                            <CustomTableHead className="w-1/4">Creator Bio</CustomTableHead>
-                            <CustomTableHead className="w-1/6">Categories</CustomTableHead>
-                            <CustomTableHead className="w-1/8">Instagram View</CustomTableHead>
-                            <CustomTableHead className="w-1/8">YouTube View</CustomTableHead>
-                            <CustomTableHead className="w-1/6">Past Sales</CustomTableHead>
-                            <CustomTableHead className="w-1/4">Tags/Collaboration</CustomTableHead>
-                            <CustomTableHead className="w-1/6 text-center">Action</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Creator Name")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Creator Bio")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
+                            <CustomTableHead className="w-1/8">{translate("Instagram View")}</CustomTableHead>
+                            <CustomTableHead className="w-1/8">{translate("YouTube View")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Past Sales")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Tags/Collaboration")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6 text-center">{translate("Action")}</CustomTableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -192,7 +193,7 @@ export default function CreatorList() {
                                 <CustomTableCell>{creator.collaboration}</CustomTableCell>
                                 <CustomTableCell>
                                     <Button variant="outline" className="whitespace-nowrap  bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm">
-                                        Collaborate Now
+                                        {translate("Collaborate Now")}
                                     </Button>
                                 </CustomTableCell>
                             </TableRow>

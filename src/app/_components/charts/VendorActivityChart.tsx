@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Card } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { translate } from '@/lib/utils/translate';
 
 // Data Type
 interface ChartData {
@@ -76,17 +77,17 @@ const VendorActivity: React.FC = () => {
     return (
         <Card className="p-5 w-full bg-white rounded-xl">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-20 text-text  font-semibold">Vendor Activity</h2>
+                <h2 className="text-20 text-text  font-semibold">{translate("Vendor Activity")}</h2>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="text-gray-600 bg-gray-100 px-3 py-1 rounded-md">
-                            This week ▼
+                            {translate("This week")} ▼
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem>This week</DropdownMenuItem>
-                        <DropdownMenuItem>Last week</DropdownMenuItem>
-                        <DropdownMenuItem>This month</DropdownMenuItem>
+                        <DropdownMenuItem>{translate("This week")}</DropdownMenuItem>
+                        <DropdownMenuItem>{translate("Last week")}</DropdownMenuItem>
+                        <DropdownMenuItem>{translate("This month")}</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>

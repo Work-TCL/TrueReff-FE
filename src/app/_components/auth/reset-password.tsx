@@ -4,6 +4,7 @@ import AuthDescription from "./components/auth-desc";
 import AuthTitle from "./components/auth-title";
 import BackButton from "@/lib/ui/back-button";
 import ResetPasswordForm from "./components/reset-password-form";
+import { translate } from "@/lib/utils/translate";
 
 export default function ResetPasswordPage() {
   return (
@@ -11,10 +12,10 @@ export default function ResetPasswordPage() {
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
         <div className="w-full">
           <BackButton className="mb-5" />
-          <AuthTitle text="Reset Password" />
+          <AuthTitle text={translate("Reset Password")} />
           <AuthDescription
             className="mt-2"
-            text="Enter new password to secure your account."
+            text={`${translate("Enter new password to secure your account.")}`}
           />
           <div className="mt-5">
             <ResetPasswordForm />
