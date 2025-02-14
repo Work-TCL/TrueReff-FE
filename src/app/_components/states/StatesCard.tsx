@@ -1,17 +1,6 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
+import StatesCardGraph from "./StatesCardGraph";
 import { translate } from "@/lib/utils/translate";
-import { LineChart, Line, ResponsiveContainer } from "recharts";
-
-const data = [
-  { value: 10 },
-  { value: 80 },
-  { value: 30 },
-  { value: 140 },
-  { value: 130 },
-  { value: 160 },
-];
 
 const StatsCard = ({ title, value, growth, borderColor, bgColor }:{ title:string; value:number; growth:number; borderColor: string; bgColor: string }) => {
   return (
@@ -26,11 +15,7 @@ const StatsCard = ({ title, value, growth, borderColor, bgColor }:{ title:string
         <div className="flex justify-between items-center">
           <span className="text-3xl font-medium text-text">{value}</span>
           <div className="w-20 h-10">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data}>
-                <Line type="monotone" dataKey="value" stroke="green"  dot={false}/>
-              </LineChart>
-            </ResponsiveContainer>
+            <StatesCardGraph />
           </div>
         </div>
       </CardContent>
