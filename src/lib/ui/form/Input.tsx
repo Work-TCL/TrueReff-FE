@@ -77,10 +77,6 @@ export default function Input({
               placeholder={placeholder}
               {...field}
               autoComplete="off"
-              onBlur={() => {
-                field.onBlur();
-                trigger(name);
-              }}
             />
             {Icon ? (
               <Icon
@@ -110,10 +106,6 @@ export default function Input({
               placeholder={placeholder}
               {...field}
               autoComplete="off"
-              onBlur={() => {
-                field.onBlur();
-                trigger(name);
-              }}
             />
             {Icon ? (
               <Icon
@@ -154,11 +146,6 @@ export default function Input({
             placeholder={placeholder}
             rows={4}
             {...field}
-            onBlur={() => {
-              field.onBlur();
-              trigger(name);
-            }}
-            onChange={(e) => field.onChange(e.target.value)} // Ensure onChange is correctly typed
           />
           {getError()}
         </div>
@@ -175,14 +162,7 @@ export default function Input({
         <div className="flex flex-col">
           {label && <label className={cn(labelStyle)}>{label}</label>}
           <div className="relative">
-            <select
-              className={cn(inputStyle, "appearance-none")}
-              {...field}
-              onBlur={() => {
-                field.onBlur();
-                trigger(name);
-              }}
-            >
+            <select className={cn(inputStyle, "appearance-none")} {...field}>
               <option selected>{placeholder || "Select..."}</option>
               {options?.map((item) => (
                 <option key={item?.value} value={item?.value}>
@@ -245,10 +225,6 @@ export default function Input({
                     className="mr-2"
                     checked={field?.value}
                     {...field}
-                    onBlur={() => {
-                      field.onBlur();
-                      trigger(name);
-                    }}
                   />
                   {label}
                 </label>
@@ -276,10 +252,6 @@ export default function Input({
                     className="mr-3 mt-1"
                     checked={field?.value}
                     {...field}
-                    onBlur={() => {
-                      field.onBlur();
-                      trigger(name);
-                    }}
                   />
                   {label}
                 </label>

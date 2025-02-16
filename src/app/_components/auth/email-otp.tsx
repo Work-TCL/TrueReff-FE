@@ -6,7 +6,12 @@ import AuthDescription from "./components/auth-desc";
 import EmailVerifyOTPForm from "./components/email-verify";
 import { translate } from "@/lib/utils/translate";
 
-export default function EmailVerifyOtpPage() {
+export default function EmailVerifyOtpPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) {
+  const email = searchParams?.email || "";
   return (
     <AuthLayoutPage authImage="forgot-pass-image.svg">
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
@@ -15,8 +20,10 @@ export default function EmailVerifyOtpPage() {
           <AuthTitle text={translate("Enter OTP")} />
           <AuthDescription
             className="mt-2"
-            text={`${translate("We have share a code of your registered email address")}
-            robertfox@example.com`}
+            text={`${translate(
+              "We have share a code of your registered email address"
+            )}
+             ${email}`}
           />
           <div className="mt-5">
             <EmailVerifyOTPForm />

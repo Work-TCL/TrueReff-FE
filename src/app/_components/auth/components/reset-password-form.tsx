@@ -21,7 +21,7 @@ export default function ResetPasswordForm() {
   const methods = useForm<IResetSchema>({
     defaultValues: {},
     resolver: yupResolver(schema),
-    mode: "onSubmit",
+    mode: "onChange",
   });
 
   const onSubmit = async (data: IResetSchema) => {

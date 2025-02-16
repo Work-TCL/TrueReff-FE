@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 // import { translate } from "./translate";
 // import { phone } from "phone";
-function translate(value: string){
+function translate(value: string) {
   return value;
 }
 export const loginSchema = Yup.object().shape({
@@ -11,14 +11,17 @@ export const loginSchema = Yup.object().shape({
   password: Yup.string()
     .required(translate("Password is required"))
     .min(8, translate("Password must be at least 8 characters"))
-    .matches(/(?=.*[0-9])/, translate("Password must contain at least one number"))
+    .matches(
+      /(?=.*[0-9])/,
+      translate("Password must contain at least one number")
+    )
     .matches(
       /(?=.*[a-z])/,
       translate("Password must contain at least one lowercase letter")
     )
     .matches(
       /(?=.*[A-Z])/,
-     translate( "Password must contain at least one uppercase letter")
+      translate("Password must contain at least one uppercase letter")
     )
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
@@ -57,7 +60,10 @@ export const resetPasswordSchema = Yup.object().shape({
   password: Yup.string()
     .required(translate("Password is required"))
     .min(8, translate("Password must be at least 8 characters"))
-    .matches(/(?=.*[0-9])/, translate("Password must contain at least one number"))
+    .matches(
+      /(?=.*[0-9])/,
+      translate("Password must contain at least one number")
+    )
     .matches(
       /(?=.*[a-z])/,
       translate("Password must contain at least one lowercase letter")
@@ -105,7 +111,10 @@ export const registerSchema = Yup.object().shape({
   password: Yup.string()
     .required(translate("Password is required"))
     .min(8, translate("Password must be at least 8 characters"))
-    .matches(/(?=.*[0-9])/, translate("Password must contain at least one number"))
+    .matches(
+      /(?=.*[0-9])/,
+      translate("Password must contain at least one number")
+    )
     .matches(
       /(?=.*[a-z])/,
       translate("Password must contain at least one lowercase letter")
@@ -201,12 +210,9 @@ export const preFormSchema = Yup.object().shape({
         .required("Email is required"),
     })
   ),
-  omni_channels: Yup.array().of(
-    Yup.object().shape({
-      label: Yup.string().required("Label is required"),
-      value: Yup.string().required("Value is required"),
-    })
-  ),
+  omni_channels: Yup.array()
+    .of(Yup.string().required("Channel is required"))
+    .min(1, "At least one channel is required"),
 });
 
 export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
@@ -221,3 +227,14 @@ export const contactSchema = Yup.object().shape({
 });
 
 export interface IContactSchema extends Yup.Asserts<typeof contactSchema> {}
+
+export const profileUpdateSchema = Yup.object().shape({
+  name: Yup.string().required(translate("Name is required")),
+  email: Yup.string()
+    .email(translate("Email must be a valid email address"))
+    .required(translate("Email is required")),
+  phone: Yup.string().required("Phone is required"),
+});
+
+export interface IProfileUpdateSchema
+  extends Yup.Asserts<typeof profileUpdateSchema> {}

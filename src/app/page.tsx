@@ -1,5 +1,5 @@
-import AuthenticatedLayout from "@/lib/components/authenticated-layout";
+import { redirect } from "next/navigation";
 
 export default function App() {
-  return <AuthenticatedLayout redirectPath="/dashboard" />
-} 
+  return redirect("/dashboard");
+}

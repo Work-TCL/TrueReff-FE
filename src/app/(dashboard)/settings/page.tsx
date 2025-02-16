@@ -1,6 +1,8 @@
-import Settings from "@/app/_components/settings";
+import Profile from "@/app/_components/settings/profile";
+import { getProfileAPI } from "@/lib/web-api/user";
 import React from "react";
 
-export default function SettingsPage(){
-    return <Settings/>;
+export default async function SettingsPage() {
+  const profile = await getProfileAPI();
+  return <Profile profile={profile} />;
 }

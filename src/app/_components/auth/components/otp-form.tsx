@@ -22,7 +22,7 @@ export default function VerifyOTPForm() {
   const methods = useForm<IOtpSchema>({
     defaultValues: { otpCode: "" },
     resolver: yupResolver(schema),
-    mode: "onSubmit",
+    mode: "onChange",
   });
   useEffect(() => {
     methods.setValue("otpCode", otp);

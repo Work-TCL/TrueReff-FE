@@ -1,0 +1,37 @@
+.drop-down__list-item {
+  padding-left: 5px;
+  /* height: 30px; */
+  display: flex;
+  align-items: center;
+}
+
+.drop-down__list-item > input {
+  margin: 0.3rem;
+}
+
+.new-drop-down__button {
+  position: relative;
+}
+
+.drop-down-icon {
+  position: absolute;
+  width: 30px;
+  height: 29px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  right: 0;
+}
+
+.new-drop-down {
+  position: relative;
+  z-index: 1;
+}
+
+.new-drop-down__list-wrapper {
+  /* border: 1px solid var(--col-separator); */
+  width: 100%;
+  background: white;
+  position: absolute;
+}

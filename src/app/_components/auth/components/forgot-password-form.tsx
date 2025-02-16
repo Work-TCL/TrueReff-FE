@@ -19,7 +19,7 @@ export default function ForgotPasswordForm() {
   const methods = useForm<IForgotSchema>({
     defaultValues: {},
     resolver: yupResolver(schema),
-    mode: "onSubmit",
+    mode: "onChange",
   });
 
   const onSubmit = async (data: IForgotSchema) => {

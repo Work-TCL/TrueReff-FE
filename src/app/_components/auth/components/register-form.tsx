@@ -16,10 +16,10 @@ interface IRedirectPaths {
   [key: string]: string;
 }
 const redirectPaths: IRedirectPaths = {
-  "user": '/dashboard',
-  "vendor": '/pre-form',
-  "creator": '/'
-}
+  user: "/dashboard",
+  vendor: "/pre-form",
+  creator: "/",
+};
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function RegisterForm() {
       password: "",
     },
     resolver: yupResolver(schema),
-    mode: "onSubmit",
+    mode: "onChange",
   });
 
   const onSubmit = async (data: IRegisterSchema) => {

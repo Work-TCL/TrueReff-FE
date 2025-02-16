@@ -17,6 +17,8 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { venderRegister } from "@/lib/web-api/auth";
 import { useRouter } from "next/navigation";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import { translate } from "@/lib/utils/translate";
 
 let allTabs: {
   id: string;
@@ -49,6 +51,7 @@ const TABS_STATUS = {
 export default function PreFormPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const axios = useAxiosAuth();
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
   const methods = useForm<IPreFormSchema>({
     defaultValues: {
@@ -80,13 +83,12 @@ export default function PreFormPage() {
     try {
       const payload = {
         ...data,
-        omni_channels: data.omni_channels?.map((item: any) => item.value),
       };
       const response: any = await venderRegister(payload);
 
       if (response?.status === 201) {
         toast.success("Vendor successfully registered.");
-        router.push('/product/list')
+        router.push("/dashboard");
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -96,8 +98,7 @@ export default function PreFormPage() {
     }
   };
 
-  console.log("errors-->>", methods.formState.errors, methods.watch());
-
+  // console.log("errors-->>", methods.formState.errors, methods.watch());
 
   const handleTriggerStepper = async () => {
     setLoading(true);
@@ -111,8 +112,14 @@ export default function PreFormPage() {
         "type_of_business",
       ];
       const isValid = await methods.trigger(basicInfoField);
-
-      if (isValid) {
+      const response: any = await axios.get(
+        `/vendor/check-exist/${methods.watch("company_email")}`
+      );
+      const alreadyExists = response?.data?.data?.alreadyExists;
+      if (alreadyExists) {
+        toast.error(translate("Email already used"));
+      }
+      if (isValid && !alreadyExists) {
         setActiveTab(TABS_STATUS.CONTACT_INFO); // Move to next tab
       }
     } else if (TABS_STATUS.CONTACT_INFO === activeTab) {
@@ -146,10 +153,11 @@ export default function PreFormPage() {
             ) : null}
             {TABS_STATUS.BASIC_INFO === activeTab ? <BasicInfoForm /> : null}
             <div className="bg-white">
-              {TABS_STATUS.OMNI_CHANNEL === activeTab ? (
+              {TABS_STATUS.OMNI_CHANNEL === activeTab && !loading ? (
                 <Button
                   type="submit"
                   loading={loading}
+                  disabled={loading}
                   className="w-fit font-medium px-8"
                   size="small"
                 >
@@ -160,6 +168,7 @@ export default function PreFormPage() {
                   type="button"
                   size="small"
                   loading={loading}
+                  disabled={loading}
                   className="w-fit font-medium px-8 md:text-base text-sm"
                   onClick={handleTriggerStepper}
                 >

@@ -48,3 +48,8 @@ export const MENU = {
   "/settings": { label: "Settings", icon: Settings, link: "/settings" },
   "/logout": { label: "Logout", icon: Settings, link: "?auth=logout" },
 };
+
+export const USER_TYPE = {
+  USER: "user",
+  Vendor: "vendor",
+};

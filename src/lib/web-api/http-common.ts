@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
       const session: any = await getServerSession(authOptions);
       const token = session?.accessToken;
       if (token && request.headers) {
-        request.headers["Authorization"] = `Bearer ${token}`;
+        request.headers["Authorization"] = `${token}`;
       }
     } catch (error) {
       console.error("Error retrieving token", error);

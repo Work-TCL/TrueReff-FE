@@ -10,8 +10,8 @@ import { useSearchParams } from "next/navigation";
 import { translate } from "@/lib/utils/translate";
 
 export default function SendOtpPage() {
-   const searchParams = useSearchParams();
-    const email = searchParams.get("email");
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
   return (
     <AuthLayoutPage authImage="forgot-pass-image.svg">
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
@@ -20,8 +20,9 @@ export default function SendOtpPage() {
           <AuthTitle text={translate("Enter OTP")} />
           <AuthDescription
             className="mt-2"
-            text={`${translate("We have share a code of your registered email address")}
-            ${email}`}
+            text={`${translate(
+              "We have share a code of your registered email address"
+            )} ${email}`}
           />
           <div className="mt-5">
             <VerifyOTPForm />

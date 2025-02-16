@@ -21,11 +21,11 @@ export default function LoginForm() {
   const schema = loginSchema;
   const methods = useForm<ILoginSchema>({
     defaultValues: {
-      email: '',
-      password: ''
+      email: "",
+      password: "",
     },
     resolver: yupResolver(schema),
-    mode: "onSubmit",
+    mode: "onChange",
   });
 
   const onSubmit = async (data: ILoginSchema) => {

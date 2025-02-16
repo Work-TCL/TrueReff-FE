@@ -8,7 +8,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
-import { verifyEmail, verifyOtp } from "@/lib/web-api/auth";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { translate } from "@/lib/utils/translate";
@@ -24,7 +23,7 @@ export default function EmailVerifyOTPForm() {
   const methods = useForm<IOtpSchema>({
     defaultValues: { otpCode: "" },
     resolver: yupResolver(schema),
-    mode: "onSubmit",
+    mode: "onChange",
   });
   useEffect(() => {
     methods.setValue("otpCode", otp);
