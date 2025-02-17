@@ -48,3 +48,12 @@ export const getFirstLetterOfFirstName = (name: string | undefined): string => {
     }
     return name.trim().charAt(0).toUpperCase();
 }
+
+
+// Function to generate consistent keys
+export const formatKey = (text: string): string => {
+    return text
+        .toLowerCase() // Convert to lowercase
+        .replace(/\s+/g, '_') // Replace spaces with underscores
+        .replace(/[^\w]/g, '').trim(); // Remove special characters
+};
