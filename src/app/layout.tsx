@@ -2,7 +2,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import type { Metadata } from "next";
 import NextAuthProvider from "@/lib/context/auth-session-provider";
-import Dialogs from "@/lib/components/dialogs";
+import Dialogs from "@/app/_components/components-common/dialogs";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 

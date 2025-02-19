@@ -1,13 +1,6 @@
 import React from "react";
-import CreateCampaign from "@/app/_components/campaigns/create";
-import { Params } from "next/dist/server/request/params";
+import CreateCampaign from "@/app/_components/pages/campaigns/create";
 
-interface IProps {
-    params: Params
-}
-
-export default async function DetailsPage({ params }: IProps) {
-    const { id } = await params
-
+export default function DetailsPage() {
     return <CreateCampaign />
 }

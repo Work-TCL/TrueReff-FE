@@ -1,10 +1,7 @@
-import EmailVerifyOtpPage from "@/app/_components/auth/email-otp";
+import EmailVerifyOtpPage from "@/app/_components/pages/auth/email-otp";
 import React from "react";
 
-export default function page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) {
+export default function Page({ searchParams }:any) {
   return <EmailVerifyOtpPage searchParams={searchParams} />;
-}
+};
+

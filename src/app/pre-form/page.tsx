@@ -1,6 +1,6 @@
 import React from "react";
-import PreFormPage from "../_components/pre-form";
-import AuthenticatedLayout from "@/lib/components/authenticated-layout";
+import PreFormPage from "../_components/pages/pre-form";
+import AuthenticatedLayout from "@/app/_components/components-common/authenticated-layout";
 
 export default function page() {
   return (

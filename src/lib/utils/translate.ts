@@ -1,11 +1,12 @@
 import { useTranslations } from 'next-intl';
+import { formatKey } from "./commonUtils";
 
 // Prevent duplicate API calls for missing translations
 const missingTranslations = new Set<string>();
 
-function addIfNotExist(word: string) {
-  if (!missingTranslations.has(word) && process.env.NODE_ENV === 'development') {
-    missingTranslations.add(word);
+function addIfNotExist(key: string, word: string) {
+  if (!missingTranslations.has(key) && process.env.NODE_ENV === 'development') {
+    missingTranslations.add(key);
     const BASE_URL = process.env.FRONTEND_URL || "http://localhost:3000"
     // Ensure the API URL is correctly formatted
     const apiUrl = `${BASE_URL}/api/add-translation`;
@@ -16,7 +17,7 @@ function addIfNotExist(word: string) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        key: word,
+        key: key,
         value: word, // Placeholder
       }),
     }).catch((error) => console.error("Error adding translation:", error));
@@ -24,16 +25,20 @@ function addIfNotExist(word: string) {
 }
 
 export function translate(
-  word: string,
+  tKey: string,
+  word?: string,
   dynamicVariables?: { [key: string]: string }
 ): string {
+  const key = formatKey(tKey)
   const t = useTranslations();
-
+  if (!word) {
+    word = tKey
+  }
   try {
-    let translation = t(word);
+    let translation = t(key);
 
-    if (translation === word) {
-      addIfNotExist(word)
+    if (translation === key) {
+    // addIfNotExist(key,word)
       return word.replace(/_/g, ' ')
     }
 
@@ -44,7 +49,7 @@ export function translate(
     }
     return translation
   } catch (error) {
-    addIfNotExist(word)
+    // addIfNotExist(key,word)
     return word.replace(/_/g, ' ');
   }
 }

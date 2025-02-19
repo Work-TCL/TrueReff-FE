@@ -1,5 +1,5 @@
-import AuthenticatedLayout from "@/lib/components/authenticated-layout";
-import DashboardLayout from "@/lib/components/layout/dashboard";
+import AuthenticatedLayout from "@/app/_components/components-common/authenticated-layout";
+import DashboardLayout from "@/app/_components/components-common/layout/dashboard";
 
 export default function PrivateLayout({
   children,

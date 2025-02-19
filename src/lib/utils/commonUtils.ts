@@ -1,3 +1,7 @@
+
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
 interface AxiosError {
     response?: {
         data?: {
@@ -57,3 +61,7 @@ export const formatKey = (text: string): string => {
         .replace(/\s+/g, '_') // Replace spaces with underscores
         .replace(/[^\w]/g, '').trim(); // Remove special characters
 };
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs))
+}
