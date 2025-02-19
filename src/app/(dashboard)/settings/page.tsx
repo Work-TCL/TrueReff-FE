@@ -2,7 +2,8 @@ import Profile from "@/app/_components/pages/settings/profile";
 import { getProfileAPI } from "@/lib/web-api/user";
 import React from "react";
 
-export default async function SettingsPage() {
+export default async function SettingsPage({ searchParams }: any) {
   const profile = await getProfileAPI();
-  return <Profile profile={profile} />;
+  const editKey = await searchParams;
+  return <Profile profile={profile} editKey={editKey?.edit} />;
 }

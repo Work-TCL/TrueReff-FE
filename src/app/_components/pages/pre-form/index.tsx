@@ -9,7 +9,6 @@ import { IPreFormSchema, preFormSchema } from "@/lib/utils/validations";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/app/_components/ui/button";
-import Input from "@/app/_components/ui/form/Input";
 import BasicInfoForm from "./components/basic-form";
 import ContactDetailsForm from "./components/contact-form";
 import ChannelForm from "./components/channel-form";
@@ -55,24 +54,25 @@ export default function PreFormPage() {
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
   const methods = useForm<IPreFormSchema>({
     defaultValues: {
-      business_name: "YASH",
-      company_email: "yash@gmail.com",
-      company_phone: "9558411111",
+      business_name: "",
+      company_email: "",
+      company_phone: "",
       contacts: [
         {
-          name: "contact1",
-          phone: "9558996325",
-          email: "contact1@yopmail.com",
+          name: "",
+          phone: "",
+          email: "",
         },
         {
-          name: "contact2",
-          phone: "7418529630",
-          email: "contact2@yopmail.com",
+          name: "",
+          phone: "",
+          email: "",
         },
       ],
-      gst_number: "HYSGBIUYKBH827JHVH",
-      type_of_business: "business type 1",
-      website: "https://www.youtube.com/watch?v=uE2dQHjHpvY",
+      gst_number: "",
+      type_of_business: "",
+      website: "",
+      omni_channels: []
     },
     resolver: yupResolver(preFormSchema),
     mode: "onChange",
@@ -97,8 +97,6 @@ export default function PreFormPage() {
       setLoading(false);
     }
   };
-
-  // console.log("errors-->>", methods.formState.errors, methods.watch());
 
   const handleTriggerStepper = async () => {
     setLoading(true);

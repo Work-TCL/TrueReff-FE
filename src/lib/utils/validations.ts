@@ -238,3 +238,18 @@ export const profileUpdateSchema = Yup.object().shape({
 
 export interface IProfileUpdateSchema
   extends Yup.Asserts<typeof profileUpdateSchema> {}
+
+export const vendorProfileUpdateSchema = Yup.object().shape({
+  company_email: Yup.string()
+    .email(translate("Company Email must be a valid email address"))
+    .required(translate("Company Email is required")),
+  company_phone: Yup.string()
+    .required(translate("Company Phone is required")),
+  gst_number: Yup.string().required("GST Number is required"),
+  website: Yup.string()
+    .url(translate("Website must be a valid URL"))
+    .required(translate("Website is required")),
+  business_name: Yup.string().required(translate("Business Name is required")),
+});
+export interface IVendorProfileUpdateSchema
+  extends Yup.Asserts<typeof vendorProfileUpdateSchema> { }

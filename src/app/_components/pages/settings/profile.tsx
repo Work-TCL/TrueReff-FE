@@ -1,13 +1,10 @@
-"use client";
 import Button from "@/app/_components/ui/button";
-import React, { useState } from "react";
+import React from "react";
 import { translate } from "../../../../lib/utils/translate";
 import EditProfile from "@/app/_components/components-common/dialogs/edit-profile";
 import Link from "next/link";
 
-export default function Profile({ profile }: any) {
-  console.log("profile", profile);
-
+export default function Profile({ profile, editKey }: any) {
   return (
     <div className="flex flex-col w-full lg:w-1/2 bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md">
       <div className="flex justify-between items-center border-b border-gray-300 pb-4">
@@ -57,7 +54,7 @@ export default function Profile({ profile }: any) {
           <Button className="w-24 h-10 rounded-xl">{translate("Edit")}</Button>
         </div>
       </div>
-      <EditProfile profile={profile} />
+      <EditProfile profile={profile} editKey={editKey} />
     </div>
   );
 }

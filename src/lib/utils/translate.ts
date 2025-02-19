@@ -38,7 +38,7 @@ export function translate(
     let translation = t(key);
 
     if (translation === key) {
-    // addIfNotExist(key,word)
+      // addIfNotExist(key, word)
       return word.replace(/_/g, ' ')
     }
 
@@ -49,7 +49,7 @@ export function translate(
     }
     return translation
   } catch (error) {
-    // addIfNotExist(key,word)
+    // addIfNotExist(key, word)
     return word.replace(/_/g, ' ');
   }
 }
