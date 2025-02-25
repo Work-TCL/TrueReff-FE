@@ -28,14 +28,14 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                 <div className="text-[20px] text-500">{isDetailView ? <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/product/list">{translate("Product List")}</BreadcrumbLink>
+                            <BreadcrumbLink href="/product/list">{translate("Product_List")}</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbPage>{translate("View Product")}</BreadcrumbPage>
+                            <BreadcrumbPage>{translate("View_Product")}</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
-                </Breadcrumb> : translate("Add New Product Details")}</div>
+                </Breadcrumb> : translate("Add_New_Product_Details")}</div>
                 <div className="flex gap-[10px]">
                     <Button variant="outline" className="w-[140px] rounded-[12px]">{translate("Cancel")}</Button>
                     <Button variant="secondary" className="text-white w-[140px] rounded-[12px]">{translate(isDetailView ? "Edit" : "Save")}</Button>
@@ -44,41 +44,41 @@ export default function CreateProduct(props: IAddProductDetailProps) {
             <div className="flex flex-col lg:flex-row gap-5 w-full">
                 <div className="flex flex-col lg:w-3/4 gap-5">
                     <div className="bg-white rounded-xl p-[24px] flex flex-col gap-2">
-                        <div className="text-[16px]">{translate("Product Image")}</div>
+                        <div className="text-[16px]">{translate("Product_Image")}</div>
                         {isDetailView ? <div className="flex gap-2">{[1, 2, 3, 4].map((ele, index) => <img src="/assets/product/image-square.svg" className="w-[80px] h-[100px]" key={index} />)}</div> : <div className="flex flex-col gap-1">
                             <label className="text-[12px] text-[#7E7E80]">{translate("Photo")}</label>
                             <div className="flex justify-center items-center border border-dashed rounded-lg p-5">
                                 <div className="flex flex-col items-center gap-4">
                                     <img src="/assets/product/image-square.svg" className="w-[50px] h-[50px]" />
-                                    <div>{translate("Drag and drop image here, or click add image")}</div>
-                                    <Button variant="outline">{translate("Add Image")}</Button>
+                                    <div>{translate("Drag_and_drop_image_here,_or_click_Add_Image")}</div>
+                                    <Button variant="outline">{translate("Add_Image")}</Button>
                                 </div>
                             </div>
                         </div>}
                     </div>
                     <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
-                        <div className="text-[16px]">{translate("General Information")}</div>
+                        <div className="text-[16px]">{translate("General_Information")}</div>
                         <div className="flex flex-col gap-1">
-                            <label className="text-[12px] text-[#7E7E80]">{translate("Product Name")}</label>
-                            <Input placeholder={translate("Type product name here...")} />
+                            <label className="text-[12px] text-[#7E7E80]">{translate("Product_Name")}</label>
+                            <Input placeholder={translate("Type_product_name_ here...")} />
                         </div>
                         <div className="flex flex-col gap-1">
                             <label className="text-[12px] text-[#7E7E80]">{translate("Description")}</label>
-                            <Textarea placeholder={translate("Type product description here...")} rows={5} />
+                            <Textarea placeholder={translate("Type_product_description_here...")} rows={5} />
                         </div>
                     </div>
                     <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
                         <div className="text-[16px]">{translate("Pricing")}</div>
                         <div className="flex flex-col gap-1">
-                            <label className="text-[12px] text-[#7E7E80]">{translate("Base Price")}</label>
-                            <Input placeholder={translate("Type base price here...")} />
+                            <label className="text-[12px] text-[#7E7E80]">{translate("Base_Price")}</label>
+                            <Input placeholder={translate("Type_base_price_here...")} />
                         </div>
                         <div className="flex flex-col lg:flex-row gap-2">
                             <div className="flex flex-col w-full lg:w-1/2 gap-1">
-                                <label className="text-[12px] text-[#7E7E80]">{translate("Discount Type")}</label>
+                                <label className="text-[12px] text-[#7E7E80]">{translate("Discount_Type")}</label>
                                 <Select>
                                     <SelectTrigger className="w-full">
-                                        <SelectValue placeholder={translate("Select a discount type")} />
+                                        <SelectValue placeholder={translate("Select_a_discount_type")} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
@@ -93,16 +93,16 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                                 </Select>
                             </div>
                             <div className="flex flex-col w-full lg:w-1/2 gap-1">
-                                <label className="text-[12px] text-[#7E7E80]">{translate("Discount Percentage (%)")}</label>
-                                <Input placeholder={translate("Type discount percentage...")} />
+                                <label className="text-[12px] text-[#7E7E80]">{translate("Discount_Percentage_(%)")}</label>
+                                <Input placeholder={translate("Type_discount_percentage...")} />
                             </div>
                         </div>
                         <div className="flex flex-col lg:flex-row gap-2">
                             <div className="flex flex-col w-full lg:w-1/2 gap-1">
-                                <label className="text-[12px] text-[#7E7E80]">{translate("Tax Class")}</label>
+                                <label className="text-[12px] text-[#7E7E80]">{translate("Tax_Class")}</label>
                                 <Select>
                                     <SelectTrigger className="w-full">
-                                        <SelectValue placeholder={translate("Select a tax class")} />
+                                        <SelectValue placeholder={translate("Select_a_Tax_Class")} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
@@ -117,8 +117,8 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                                 </Select>
                             </div>
                             <div className="flex flex-col w-full lg:w-1/2 gap-1">
-                                <label className="text-[12px] text-[#7E7E80]">{translate("VAT Amount (%)")}</label>
-                                <Input placeholder={translate("Type VAT amount...")} />
+                                <label className="text-[12px] text-[#7E7E80]">{translate("VAT_Amount_(%)")}</label>
+                                <Input placeholder={translate("Type_VAT_amount...")} />
                             </div>
                         </div>
                     </div>
@@ -127,15 +127,15 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                         <div className="flex flex-col md:flex-row gap-2">
                             <div className="flex flex-col w-full md:w-1/3 gap-1">
                                 <label className="text-[12px] text-[#7E7E80]">{translate("SKU")}</label>
-                                <Input placeholder={translate("Type product SKU here...")} />
+                                <Input placeholder={translate("Type_product_SKU_here...")} />
                             </div>
                             <div className="flex flex-col w-full md:w-1/3 gap-1">
                                 <label className="text-[12px] text-[#7E7E80]">{translate("Barcode")}</label>
-                                <Input placeholder={translate("Product barcode...")} />
+                                <Input placeholder={translate("Product_barcode...")} />
                             </div>
                             <div className="flex flex-col w-full md:w-1/3 gap-1">
                                 <label className="text-[12px] text-[#7E7E80]">{translate("Quantity")}</label>
-                                <Input placeholder={translate("Type product quantity here...")} />
+                                <Input placeholder={translate("Type_product_quantity_here...")} />
                             </div>
                         </div>
                     </div>
@@ -145,10 +145,10 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                             <div className="flex flex-col gap-2" key={index}>
                                 <div className="flex flex-col md:flex-row gap-2">
                                     <div className="flex flex-col w-full md:w-1/2 gap-1">
-                                        <label className="text-[12px] text-[#7E7E80]">{translate("Variation Type")}</label>
+                                        <label className="text-[12px] text-[#7E7E80]">{translate("Variation_Type")}</label>
                                         <Select>
                                             <SelectTrigger className="w-full">
-                                                <SelectValue placeholder={translate("Select a variation type")} />
+                                                <SelectValue placeholder={translate("Select_a_variation_type")} />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
@@ -174,7 +174,7 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                         ))}
                         <div className="flex">
                             <Button variant="outline" onClick={handleAddVariant}>
-                                <FaPlus /> {translate("Add variant")}
+                                <FaPlus /> {translate("Add_variant")}
                             </Button>
                         </div>
                     </div>
@@ -183,10 +183,10 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                     <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
                         <div className="text-[16px]">{translate("Category")}</div>
                         <div className="flex flex-col gap-1">
-                            <label className="text-[12px] text-[#7E7E80]">{translate("Product Category")}</label>
+                            <label className="text-[12px] text-[#7E7E80]">{translate("Product_Category")}</label>
                             <Select>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={translate("Select a category")} />
+                                    <SelectValue placeholder={translate("Select_a_category")} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
@@ -201,10 +201,10 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                             </Select>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <label className="text-[12px] text-[#7E7E80]">{translate("Product Tags")}</label>
+                            <label className="text-[12px] text-[#7E7E80]">{translate("Product_Tags")}</label>
                             <Select>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={translate("Select tags")} />
+                                    <SelectValue placeholder={translate("Select_tags")} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>

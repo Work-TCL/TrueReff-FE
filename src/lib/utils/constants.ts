@@ -12,15 +12,15 @@ import {
 export const MENU = {
   "/dashboard": { label: "Overview", icon: Home, link: "/dashboard" },
   "/product": {
-    label: "Product Catalog",
+    label: "Product_Catalog",
     icon: Box,
     children: [
-      { label: "Add New Product", link: "/product/add" },
-      { label: "Product List", link: "/product" },
+      { label: "Add_New_Product", link: "/product/add" },
+      { label: "Product_List", link: "/product" },
     ],
   },
   "/creator": {
-    label: "Creator & Collaboration",
+    label: "Creator&Collaboration",
     icon: User,
     link: "/creator",
   },
@@ -28,18 +28,18 @@ export const MENU = {
     label: "Campaign",
     icon: Megaphone,
     children: [
-      { label: "Add New Campaign", link: "/campaign/add" },
+      { label: "Add_New_Campaign", link: "/campaign/add" },
       { label: "List of campaigns", link: "/campaign" },
     ],
   },
   "/bids": { label: "Bids", icon: BarChart, link: "/bids" },
   "/brand-analysis": {
-    label: "Brand Analysis",
+    label: "Brand_Analysis",
     icon: BarChart,
     link: "/brand-analysis",
   },
   "/recharge": {
-    label: "Account Recharge",
+    label: "Account_Recharge",
     icon: DollarSign,
     link: "/recharge",
   },

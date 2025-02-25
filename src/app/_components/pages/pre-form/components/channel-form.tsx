@@ -26,7 +26,7 @@ export default function ChannelForm() {
       <div className="col-span-2">
         <MultiSelectPreForm
           options={Options}
-          label={translate("Choose Your Selling Platforms")}
+          label={translate("choose_your_selling_platforms")}
           name={`omni_channels`}
           placeholder="Select"
         />

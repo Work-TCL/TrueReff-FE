@@ -65,7 +65,7 @@ export default function ResetPasswordForm() {
         <Input
           name="confirmPassword"
           type="password"
-          placeholder={translate("Confirm Password")}
+          placeholder={translate("Confirm_Password")}
           Icon={PiLockKey}
         />
         <Button

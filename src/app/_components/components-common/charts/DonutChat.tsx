@@ -8,12 +8,12 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const DonutChart: React.FC = () => {
   const data = [
-    { name: translate('Most selling products'), value: 76, color: '#BEDBFC' },
-    { name: translate('Low-Performing products'), value: 24, color: '#FED6AF' },
+    { name: translate('Most_selling_products'), value: 76, color: '#BEDBFC' },
+    { name: translate('Low-Performing_products'), value: 24, color: '#FED6AF' },
   ];
   return (
     <div className="w-full md:w-1/3 p-4 rounded-20 bg-white ">
-      <h2 className=" text-text text-xl font-medium ">{translate("Product Updates")}</h2>
+      <h2 className=" text-text text-xl font-medium ">{translate("Product_Updates")}</h2>
       <div className=' relative h-[240px]'>
 
       <ResponsiveContainer width="100%" height={'100%'}>
@@ -38,7 +38,7 @@ const DonutChart: React.FC = () => {
         </PieChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="text-sm text-gray-desc">{translate("This month")}</p>
+          <p className="text-sm text-gray-desc">{translate("This_month")}</p>
           <p className="text-2xl font-medium text-gray-darken">1000</p>
         </div>
       </div>

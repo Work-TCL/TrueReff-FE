@@ -150,7 +150,7 @@ export default function CreatorList() {
         <div className="p-4 rounded-lg flex flex-col gap-4">
             <div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">
-                    <Input placeholder={translate("Search creator...")} />
+                    <Input placeholder={translate("Search_creator...")} />
                 </div>
                 <div className="flex items-center gap-[10px]">
                     <PiListChecksLight size={35} />
@@ -164,12 +164,12 @@ export default function CreatorList() {
                 <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
                     <TableHeader className="bg-stroke">
                         <TableRow >
-                            <CustomTableHead className="w-1/6">{translate("Creator Name")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Creator Bio")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Creator_Name")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Creator_Bio")}</CustomTableHead>
                             <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
-                            <CustomTableHead className="w-1/8">{translate("Instagram View")}</CustomTableHead>
-                            <CustomTableHead className="w-1/8">{translate("YouTube View")}</CustomTableHead>
-                            <CustomTableHead className="w-1/6">{translate("Past Sales")}</CustomTableHead>
+                            <CustomTableHead className="w-1/8">{translate("Instagram_View")}</CustomTableHead>
+                            <CustomTableHead className="w-1/8">{translate("YouTube_View")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Past_Sales")}</CustomTableHead>
                             <CustomTableHead className="w-1/4">{translate("Tags/Collaboration")}</CustomTableHead>
                             <CustomTableHead className="w-1/6 text-center">{translate("Action")}</CustomTableHead>
                         </TableRow>
@@ -193,7 +193,7 @@ export default function CreatorList() {
                                 <CustomTableCell>{creator.collaboration}</CustomTableCell>
                                 <CustomTableCell>
                                     <Button variant="outline" className="whitespace-nowrap  bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm">
-                                        {translate("Collaborate Now")}
+                                        {translate("Collaborate_Now")}
                                     </Button>
                                 </CustomTableCell>
                             </TableRow>

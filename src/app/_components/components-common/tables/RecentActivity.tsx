@@ -36,17 +36,17 @@ export default function RecentActivities() {
     return (
         <div className="p-4 bg-white shadow-sm rounded-[20px]">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl text-text font-semibold">{translate("Recent Activities")}</h2>
-                <Button variant="link" className="text-primary">{translate("View all")}</Button>
+                <h2 className="text-xl text-text font-semibold">{translate("Recent_Activities")}</h2>
+                <Button variant="link" className="text-primary">{translate("View_all")}</Button>
             </div>
             <div className="overflow-auto">
                 <Table className="min-w-full border border-gray-200 rounded-2xl">
                     <TableHeader className="bg-gray-100">
                         <TableRow>
-                            <CustomTableHead className="p-3 text-text text-left text-sm">{translate("Creator Name")}</CustomTableHead>
-                            <CustomTableHead className="p-3 text-text text-left text-sm">{translate("Product Name")}</CustomTableHead>
+                            <CustomTableHead className="p-3 text-text text-left text-sm">{translate("Creator_Name")}</CustomTableHead>
+                            <CustomTableHead className="p-3 text-text text-left text-sm">{translate("Product_Name")}</CustomTableHead>
                             <CustomTableHead className="p-3 text-text text-left text-sm">{translate("Categories")}</CustomTableHead>
-                            <CustomTableHead className="p-3 text-text text-left text-sm">{translate("Proposed Bid")}</CustomTableHead>
+                            <CustomTableHead className="p-3 text-text text-left text-sm">{translate("Proposed_Bid")}</CustomTableHead>
                             <CustomTableHead className="p-3 text-text text-left text-sm">{translate("Timeline")}</CustomTableHead>
                             <CustomTableHead className="p-3 text-center font-medium">{translate("Action")}</CustomTableHead>
                         </TableRow>

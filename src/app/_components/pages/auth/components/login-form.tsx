@@ -95,11 +95,11 @@ export default function LoginForm() {
         <div className="mt-3 text-[16px] flex align-middle justify-between  text-gray-600">
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" className="w-4 h-4" />
-            <span className="">{translate("Remember Me")}</span>
+            <span className="">{translate("Remember_Me")}</span>
           </label>
           <Link href="/forgot-password" className="cursor-pointer text-sm">
             <span className="text-primary-color font-medium">
-              {translate("Forgot password?")}
+              {translate("Forgot_Password?")}
             </span>
           </Link>
         </div>

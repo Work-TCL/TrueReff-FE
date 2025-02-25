@@ -69,7 +69,7 @@ const NewDropDown: React.FC<NewDropDownProps> = ({
   toggleChangeListItem,
   uniqueKey,
   shouldHaveSelectAll = false,
-  label = "Choose Your Selling Platforms ",
+  label = "choose_your_selling_platforms ",
   placeholder = "Select planforms ",
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);

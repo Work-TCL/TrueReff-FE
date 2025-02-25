@@ -14,19 +14,19 @@ const settingMenus: any[] = [
     path: "/settings",
   },
   {
-    label: "Package details",
+    label: "package_details",
     path: "/settings/package",
   },
   {
-    label: "Store connects",
+    label: "store_connects",
     path: "/settings/store",
   },
   {
-    label: "Payment Options",
+    label: "payment_options",
     path: "/settings/payment",
   },
   {
-    label: "Billing Details",
+    label: "billing_details",
     path: "/settings/billing",
   },
 ];

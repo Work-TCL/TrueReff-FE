@@ -19,11 +19,11 @@ export default function EmailVerifyOtpPage({
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
         <div className="w-full">
           <BackButton className="mb-5" />
-          <AuthTitle text={translate("Enter OTP")} />
+          <AuthTitle text={translate("Enter_OTP")} />
           <AuthDescription
             className="mt-2"
             text={`${translate(
-              "We have share a code of your registered email address"
+              "We_have_share_a_code_of_your_registered_email_address"
             )}
              ${email}`}
           />

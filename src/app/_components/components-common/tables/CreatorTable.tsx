@@ -147,12 +147,12 @@ export default function CreatorTable() {
                 <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
                     <TableHeader className="bg-stroke">
                         <TableRow >
-                            <CustomTableHead className="w-1/6">Creator Name</CustomTableHead>
-                            <CustomTableHead className="w-1/4">Creator Bio</CustomTableHead>
+                            <CustomTableHead className="w-1/6">Creator_Name</CustomTableHead>
+                            <CustomTableHead className="w-1/4">Creator_Bio</CustomTableHead>
                             <CustomTableHead className="w-1/6">Categories</CustomTableHead>
-                            <CustomTableHead className="w-1/8">Instagram View</CustomTableHead>
-                            <CustomTableHead className="w-1/8">YouTube View</CustomTableHead>
-                            <CustomTableHead className="w-1/6">Past Sales</CustomTableHead>
+                            <CustomTableHead className="w-1/8">Instagram_View</CustomTableHead>
+                            <CustomTableHead className="w-1/8">YouTube_View</CustomTableHead>
+                            <CustomTableHead className="w-1/6">Past_Sales</CustomTableHead>
                             <CustomTableHead className="w-1/4">Tags/Collaboration</CustomTableHead>
                             <CustomTableHead className="w-1/6 text-center">Action</CustomTableHead>
                         </TableRow>
@@ -176,7 +176,7 @@ export default function CreatorTable() {
                                 <CustomTableCell>{creator.collaboration}</CustomTableCell>
                                 <CustomTableCell>
                                     <Button variant="outline" className="whitespace-nowrap  bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm">
-                                        Collaborate Now
+                                        Collaborate_Now
                                     </Button>
                                 </CustomTableCell>
                             </TableRow>

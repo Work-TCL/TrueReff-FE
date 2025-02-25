@@ -12,10 +12,10 @@ export default function ResetPasswordPage() {
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
         <div className="w-full">
           <BackButton className="mb-5" />
-          <AuthTitle text={translate("Reset Password")} />
+          <AuthTitle text={translate("Reset_Password")} />
           <AuthDescription
             className="mt-2"
-            text={`${translate("Enter new password to secure your account.")}`}
+            text={`${translate("Enter_new_password_to_secure_your_account.")}`}
           />
           <div className="mt-5">
             <ResetPasswordForm />

@@ -91,13 +91,13 @@ export default function RegisterForm() {
             {...methods.register("terms")}
           />
           <span className="text-sm">
-            {translate("By Signing up, you agree to our")}{" "}
+            {translate("By_Signing_up,_you_agree_to_our")}{" "}
             <span className="text-primary-color font-medium">
-              {translate("Privacy Policy")}
+              {translate("Privacy_Policy")}
             </span>{" "}
             &{" "}
             <span className="text-primary-color font-medium">
-              {translate("Terms of Use")}.
+              {translate("Terms_of_Use")}.
             </span>
           </span>
         </label>
@@ -107,7 +107,7 @@ export default function RegisterForm() {
           loading={loading}
           disabled={!methods.formState.isValid || loading}
         >
-          {translate("Sign up")}
+          {translate("Sign_up")}
         </Button>
       </form>
     </FormProvider>

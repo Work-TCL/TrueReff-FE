@@ -9,10 +9,10 @@ export default function Profile({ profile, editKey }: any) {
     <div className="flex flex-col w-full lg:w-1/2 bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md">
       <div className="flex justify-between items-center border-b border-gray-300 pb-4">
         <h2 className="text-sm xl:text-lg font-semibold">
-          {translate("Personal Information")}
+          {translate("Personal_Information")}
         </h2>
         <Link href="?edit=profile" className="text-sm text-primary">
-          {translate("Edit profile")}
+          {translate("edit_profile")}
         </Link>
       </div>
       <div className="flex gap-3 xl:gap-4">
@@ -29,10 +29,10 @@ export default function Profile({ profile, editKey }: any) {
       </div>
       <div className="flex justify-between items-center border-b border-gray-300 pb-4 mt-6">
         <h2 className="text-sm xl:text-lg font-semibold">
-          {translate("Saved Address")}
+          {translate("saved_address")}
         </h2>
         <button className="text-sm text-primary">
-          + {translate("Add new address")}
+          + {translate("add_new_address")}
         </button>
       </div>
       <div className="flex flex-col w-full xl:w-2/3  border border-gray-300 rounded-xl p-4 xl:p-6 gap-3">

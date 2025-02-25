@@ -31,7 +31,7 @@ export default function BasicInfoForm() {
       </div>
       <div className="md:col-span-1 col-span-2">
         <Input
-          label="GST Number"
+          label="gst_number"
           placeholder="24GE61811151"
           name="gst_number"
           type="phone"

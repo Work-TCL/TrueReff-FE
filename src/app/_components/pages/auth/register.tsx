@@ -15,22 +15,22 @@ export default function RegisterPage() {
         <HeaderAuth />
         <div className="w-full pt-6">
           <div className="flex justify-center text-[32px] font-semibold text-gray-darken">
-            {translate("Sign up to get started")}
+            {translate("Sign_up_to_get_started")}
           </div>
           <div className="mt-5">
             <RegisterForm />
           </div>
           <div className="my-6 border-b text-center">
             <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-              {translate("Or Continue with")}
+              {translate("Or_Continue_with")}
             </div>
           </div>
           <SocialAuth />
           <div className="my-6 text-center">
             <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-              {translate("Already have an account?")}{" "}
+              {translate("Log_inAlready_have_an_account?")}{" "}
               <Link href="/login" className="text-primary-color font-medium">
-                {translate("Log in")}
+                {translate("Log_in")}
               </Link>
             </div>
           </div>

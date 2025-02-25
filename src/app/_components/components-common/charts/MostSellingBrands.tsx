@@ -16,7 +16,7 @@ const data = [
 const MostSellingBrands = () => {
   return (
     <div className="w-full  p-4 bg-white rounded-2xl">
-      <h3 className="text-xl text-text font-medium mb-3">{translate("Most Selling Brands")}</h3>
+      <h3 className="text-xl text-text font-medium mb-3">{translate("Most_Selling_Brands")}</h3>
       <ul className="space-y-4">
         {data.map((item, index) => (
           <li key={index} className="flex flex-col">

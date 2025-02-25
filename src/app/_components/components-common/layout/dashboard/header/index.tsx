@@ -15,13 +15,13 @@ export default function Header({handleExpandSidebar}: IHeaderProps) {
   const pathName = usePathname();
   const pageNames: IPageName = {
     "/dashboard": translate("Overview"),
-    "/products/add": translate("Add New Product"),
-    "/products/list": translate("Product Catalog"),
-    "/products/list/view": translate("View Product"),
-    "/creator": translate("Creator & Collaboration"),
+    "/products/add": translate("Add_New_Product"),
+    "/products/list": translate("Product_Catalog"),
+    "/products/list/view": translate("View_Product"),
+    "/creator": translate("Creator&Collaboration"),
     "/creator/details": translate("Creator Details"),
-    "/campaign/add": translate("Add New Campaign"),
-    "/campaign": translate("Campaign List"),
+    "/campaign/add": translate("Add_New_Campaign"),
+    "/campaign": translate("Campaign_List"),
     "/settings": translate("Settings"),
   };
   return (

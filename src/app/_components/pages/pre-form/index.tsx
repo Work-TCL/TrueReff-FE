@@ -115,7 +115,7 @@ export default function PreFormPage() {
       );
       const alreadyExists = response?.data?.data?.alreadyExists;
       if (alreadyExists) {
-        toast.error(translate("Email already used"));
+        toast.error(translate("email_already_used"));
       }
       if (isValid && !alreadyExists) {
         setActiveTab(TABS_STATUS.CONTACT_INFO); // Move to next tab

@@ -25,11 +25,11 @@ export default function SocialAuth() {
             fill="#ea4335"
           />
         </svg>
-        <span>{translate("Continue with Google")}</span>
+        <span>{translate("Continue_with_Google")}</span>
       </LightButton>
       <LightButton className="w-full flex justify-center items-center gap-2">
         <FaApple className="text-xl" />
-        <span>{translate("Continue with Apple")}</span>
+        <span>{translate("Continue_with_Apple")}</span>
       </LightButton>
     </div>
   );

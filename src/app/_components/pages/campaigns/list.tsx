@@ -94,7 +94,7 @@ export default function CampaignList() {
         <div className="p-4 rounded-lg flex flex-col gap-4">
             <div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">
-                    <Input placeholder={translate("Search campaign...")} />
+                    <Input placeholder={translate("Search_campaign...")} />
                 </div>
                 <div className="flex items-center gap-[10px]">
                     <PiListChecksLight size={35} />
@@ -108,13 +108,13 @@ export default function CampaignList() {
                 <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
                     <TableHeader className="bg-stroke">
                         <TableRow >
-                            <CustomTableHead className="w-1/6">{translate("Product ID")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Product Name")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Product_ID")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Product_Name")}</CustomTableHead>
                             <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Creator Name")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Total Sales")}</CustomTableHead>
-                            <CustomTableHead className="w-1/6">{translate("Total Views")}</CustomTableHead>
-                            <CustomTableHead className="w-1/8">{translate("Omni Channel")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Creator_Name")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Total_Sales")}</CustomTableHead>
+                            <CustomTableHead className="w-1/6">{translate("Total_Views")}</CustomTableHead>
+                            <CustomTableHead className="w-1/8">{translate("Omni_Channel")}</CustomTableHead>
                             <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead>
                             <CustomTableHead className="w-1/6 text-center">{translate("Action")}</CustomTableHead>
                         </TableRow>

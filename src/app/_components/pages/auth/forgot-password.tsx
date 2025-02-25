@@ -12,10 +12,10 @@ export default function ForgotPasswordPage() {
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
         <div className="w-full">
           <BackButton className="mb-5" />
-          <AuthTitle text={translate("Forgot Password")} />
+          <AuthTitle text={translate("Forgot_Password")} />
           <AuthDescription
             className="mt-2"
-            text={translate("Enter your registered email address. we’ll send you a code to reset your password.")}
+            text={translate("Enter_your_registered_email_address._well_send_you_a_code_to_reset_your_password.")}
           />
           <div className="mt-5">
             <ForgotPasswordForm />

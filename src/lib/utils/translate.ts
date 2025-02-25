@@ -1,55 +1,21 @@
 import { useTranslations } from 'next-intl';
-import { formatKey } from "./commonUtils";
 
-// Prevent duplicate API calls for missing translations
-const missingTranslations = new Set<string>();
-
-function addIfNotExist(key: string, word: string) {
-  if (!missingTranslations.has(key) && process.env.NODE_ENV === 'development') {
-    missingTranslations.add(key);
-    const BASE_URL = process.env.FRONTEND_URL || "http://localhost:3000"
-    // Ensure the API URL is correctly formatted
-    const apiUrl = `${BASE_URL}/api/add-translation`;
-
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        key: key,
-        value: word, // Placeholder
-      }),
-    }).catch((error) => console.error("Error adding translation:", error));
-  }
-}
-
+// This function can be used to fetch translations
 export function translate(
-  tKey: string,
-  word?: string,
+  word: string,
   dynamicVariables?: { [key: string]: string }
 ): string {
-  const key = formatKey(tKey)
   const t = useTranslations();
-  if (!word) {
-    word = tKey
-  }
+
   try {
-    let translation = t(key);
-
-    if (translation === key) {
-      // addIfNotExist(key, word)
-      return word.replace(/_/g, ' ')
-    }
-
+    let translation = t(word);
     if (dynamicVariables) {
       Object.entries(dynamicVariables).forEach((variable) => {
         translation = translation.replace(`{${variable[0]}}`, variable[1]);
       });
     }
-    return translation
+    return translation !== word ? translation : word.replace(/_/g, ' ');
   } catch (error) {
-    // addIfNotExist(key, word)
     return word.replace(/_/g, ' ');
   }
 }

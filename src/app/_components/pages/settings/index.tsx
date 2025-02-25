@@ -10,10 +10,10 @@ import Link from "next/link";
 
 const settingMenus: string[] = [
   "Profile",
-  "Package details",
-  "Store connects",
-  "Payment Options",
-  "Billing Details",
+  "package_details",
+  "store_connects",
+  "payment_options",
+  "billing_details",
 ];
 
 export default function Settings() {
@@ -28,10 +28,10 @@ export default function Settings() {
       {
         {
           Profile: <Profile />,
-          // "Package details": <PackageDetails />,
-          // "Store connects": <StoreConnects />,
-          // "Payment Options": <PaymentOptions />,
-          // "Billing Details": <BillingDetails />,
+          // "package_details": <PackageDetails />,
+          // "store_connects": <StoreConnects />,
+          // "payment_options": <PaymentOptions />,
+          // "billing_details": <BillingDetails />,
         }[active]
       }
     </div>

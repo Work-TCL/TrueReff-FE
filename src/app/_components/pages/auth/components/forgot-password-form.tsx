@@ -62,7 +62,7 @@ export default function ForgotPasswordForm() {
           loading={loading}
           disabled={!methods.formState.isValid || loading}
         >
-          {translate("Send OTP")}
+          {translate("Send_OTP")}
         </Button>
       </form>
     </FormProvider>
