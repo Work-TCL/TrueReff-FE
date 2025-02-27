@@ -5,5 +5,5 @@ import React from "react";
 export default async function SettingsPage({ searchParams }: any) {
   const profile = await getProfileAPI();
   const editKey = await searchParams;
-  return <Profile profile={profile} editKey={editKey?.edit} />;
+  return <Profile profile={profile?.vendorId} editKey={editKey?.edit} />;
 }

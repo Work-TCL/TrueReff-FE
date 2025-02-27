@@ -1,10 +1,14 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import {
+  addAddressVendorSchema,
+  addContactVendorSchema,
+  IAddAddressVendorSchema,
+  IAddContactVendorSchema,
   IVendorProfileUpdateSchema,
   vendorProfileUpdateSchema,
 } from "@/lib/utils/validations";
@@ -14,41 +18,53 @@ import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 
-export default function EditVendorForm({ profile }: { profile: any }) {
-  console.log("profile", profile);
+export default function EditContactVendorForm({
+  profile,
+  id,
+  onClose,
+}: {
+  profile: any;
+  id: any;
+  onClose: any;
+}) {
   const router = useRouter();
   const axios = useAxiosAuth();
   const [loading, setLoading] = useState(false);
-  const schema = vendorProfileUpdateSchema;
-  const methods = useForm<IVendorProfileUpdateSchema>({
+  const schema = addContactVendorSchema;
+  const methods = useForm<IAddContactVendorSchema>({
     defaultValues: {
-      company_email: profile?.company_email || "",
-      company_phone: profile?.company_phone || "",
-      gst_number: profile?.gst_number || "",
-      website: profile?.website || "",
-      business_name: profile?.business_name || "",
+      name: profile?.name || "",
+      phone: profile?.phone || "",
+      email: profile?.email || "",
+      isDefault: profile?.isDefault || false,
     },
     resolver: yupResolver(schema),
     mode: "onChange",
   });
-  const onSubmit = async (data: IVendorProfileUpdateSchema) => {
+  const onSubmit = async (data: IAddContactVendorSchema) => {
     setLoading(true);
     console.log("data", data);
     try {
       const payload = data;
-      //   delete payload.company_email
-      //   delete payload.company_phone
-      let response: any = await axios.patch("/vendor", payload);
+      let response: any;
+
+      if (profile) {
+        response = await axios.put(`/vendor/contact/${id}`, payload);
+      } else {
+        response = await axios.post("/vendor/contact", payload);
+      }
       if (response?.data) {
         response = response?.data;
       }
       console.log("response", response);
-      if (response?.status === 200) {
+      if (response?.status === 201 || response?.status === 200) {
         toast.success(response?.message);
         router.push("?");
         methods?.reset();
+        onClose && onClose();
         return true;
       }
+      throw response;
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
@@ -64,40 +80,30 @@ export default function EditVendorForm({ profile }: { profile: any }) {
           className="grid grid-cols-2 text-left gap-3 w-full relative"
         >
           <div className="col-span-2">
+            <Input name="name" type="name" placeholder={translate("Name")} />
+          </div>
+          <div className="col-span-2">
             <Input
-              name="company_email"
-              label={translate("Company_Email")}
-              type="email"
-              placeholder={translate("Company_Email")}
+              name="phone"
+              type="phone"
+              placeholder={translate("Mobile_Number")}
             />
           </div>
-          <Input
-            name="company_phone"
-            label={translate("Company_Phone")}
-            type="phone"
-            placeholder={translate("Company_Phone")}
-          />
-          <Input
-            name="gst_number"
-            label={translate("GST_Number")}
-            type="text"
-            placeholder={translate("GST_Number")}
-          />
-          <Input
-            name="website"
-            label={translate("Website")}
-            type="url"
-            placeholder={translate("Website")}
-          />
-          <Input
-            name="business_name"
-            label={translate("Business_Name")}
-            type="text"
-            placeholder={translate("Business_Name")}
-          />
+          <div className="col-span-2">
+            <Input name="email" type="email" placeholder={translate("Email")} />
+          </div>
+          <div className="col-span-2">
+            <Input
+              label={translate("Set_as_default_address")}
+              name="isDefault"
+              type="checkbox"
+              className=""
+            />
+          </div>
+
           <div className="mt-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
-              Save
+              {translate("Save")}
             </Button>
           </div>
         </form>

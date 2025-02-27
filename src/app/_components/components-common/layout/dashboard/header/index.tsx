@@ -1,8 +1,8 @@
 "use client";
-import React from 'react';
-import { usePathname } from 'next/navigation'
-import { GoSidebarCollapse, GoSidebarExpand } from 'react-icons/go';
-import {translate} from "../../../../../../lib/utils/translate";
+import React from "react";
+import { usePathname } from "next/navigation";
+import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
+import { translate } from "../../../../../../lib/utils/translate";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
 interface IPageName {
@@ -11,7 +11,7 @@ interface IPageName {
 interface IHeaderProps {
   handleExpandSidebar: () => void;
 }
-export default function Header({handleExpandSidebar}: IHeaderProps) {
+export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const pathName = usePathname();
   const pageNames: IPageName = {
     "/dashboard": translate("Overview"),
@@ -19,20 +19,28 @@ export default function Header({handleExpandSidebar}: IHeaderProps) {
     "/products/list": translate("Product_Catalog"),
     "/products/list/view": translate("View_Product"),
     "/creator": translate("Creator&Collaboration"),
-    "/creator/details": translate("Creator Details"),
+    "/creator/details": translate("Creator_Details"),
     "/campaign/add": translate("Add_New_Campaign"),
     "/campaign": translate("Campaign_List"),
     "/settings": translate("Settings"),
   };
   return (
     <header className="bg-white px-4 py-3 flex items-center">
-      <GoSidebarCollapse size={20} className="cursor-pointer lg:hidden" onClick={handleExpandSidebar}/>
-      <h2 className="text-2xl font-medium text-gray-black">{pageNames[pathName]}</h2>
+      <GoSidebarCollapse
+        size={20}
+        className="cursor-pointer lg:hidden"
+        onClick={handleExpandSidebar}
+      />
+      <h2 className="text-2xl font-medium text-gray-black">
+        {pageNames[pathName]}
+      </h2>
       <div className="ml-auto flex items-center gap-3">
         <div className="w-8 h-8 bg-background rounded-full"></div>
         <p className="text-gray-black">John Bing</p>
       </div>
-      <Link href="?auth=logout" className="mx-4 block"><IoLogOutOutline className="text-2xl" /></Link>
+      <Link href="?auth=logout" className="mx-4 block">
+        <IoLogOutOutline className="text-2xl" />
+      </Link>
     </header>
   );
 }

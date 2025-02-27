@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@/lib/utils/commonUtils";
 import Link from "next/link";
 import React, { Fragment, ReactNode, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
@@ -16,7 +17,7 @@ interface IDialogLayout {
 export default function DialogLayout({
   children,
   open,
-  size,
+  size = "",
   skipClose,
   title = "",
   ...props
@@ -44,7 +45,10 @@ export default function DialogLayout({
             ></Link>
 
             <div
-              className={`bg-white relative rounded-lg text-left transition-all w-fit h-fit max-h-[90vh] overflow-hidden flex flex-col`}
+              className={cn(
+                `bg-white relative rounded-lg text-left transition-all w-fit h-fit max-h-[90vh] overflow-hidden flex flex-col`,
+                size
+              )}
             >
               {title || !skipClose ? (
                 <div className="flex items-center justify-between px-4 sm:px-10 pt-6 sm:pt-6  ">

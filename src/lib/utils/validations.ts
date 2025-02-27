@@ -172,10 +172,7 @@ export const changePasswordSchema = Yup.object().shape({
       /(?=.*[a-z])/,
       "Password_must_contain_at_least_one_lowercase_letter"
     )
-    .matches(
-      /(?=.*[A-Z])/,
-      "Password_contain_at_least_one_uppercase_letter"
-    )
+    .matches(/(?=.*[A-Z])/, "Password_contain_at_least_one_uppercase_letter")
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
       "Password_must_contain_at_least_one_special_character"
@@ -243,8 +240,7 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
   company_email: Yup.string()
     .email(translate("Company Email must be a valid email address"))
     .required(translate("Company Email is required")),
-  company_phone: Yup.string()
-    .required(translate("Company Phone is required")),
+  company_phone: Yup.string().required(translate("Company Phone is required")),
   gst_number: Yup.string().required("GST Number is required"),
   website: Yup.string()
     .url(translate("Website must be a valid URL"))
@@ -252,4 +248,28 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
   business_name: Yup.string().required(translate("Business Name is required")),
 });
 export interface IVendorProfileUpdateSchema
-  extends Yup.Asserts<typeof vendorProfileUpdateSchema> { }
+  extends Yup.Asserts<typeof vendorProfileUpdateSchema> {}
+
+export const addAddressVendorSchema = Yup.object().shape({
+  name: Yup.string().required(translate("Name is required")),
+  phone: Yup.string().required(translate("Phone is required")),
+  zip_code: Yup.string().required(translate("Zip is required")),
+  city: Yup.string().required(translate("City is required")),
+  state: Yup.string().required(translate("State is required")),
+  house_no: Yup.string().required(translate("House No is required")),
+  address: Yup.string().required(translate("Address is required")),
+  isDefault: Yup.boolean().optional().default(false),
+});
+export interface IAddAddressVendorSchema
+  extends Yup.Asserts<typeof addAddressVendorSchema> {}
+
+export const addContactVendorSchema = Yup.object().shape({
+  name: Yup.string().required(translate("Name is required")),
+  phone: Yup.string().required(translate("Phone is required")),
+  email: Yup.string()
+    .email(translate("Email must be a valid email address"))
+    .required(translate("Email is required")),
+  isDefault: Yup.boolean().optional().default(false),
+});
+export interface IAddContactVendorSchema
+  extends Yup.Asserts<typeof addContactVendorSchema> {}

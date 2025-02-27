@@ -249,7 +249,7 @@ export default function Input({
                 >
                   <input
                     type="checkbox"
-                    className="mr-3 mt-1"
+                    className="mr-3 mt-1 w-4 h-4"
                     checked={field?.value}
                     {...field}
                   />
