@@ -13,6 +13,9 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  LayoutGrid,
+  Store,
+  UserRound
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -35,12 +38,13 @@ const NavLink = ({
   handleToggle = () => {},
   expended = false,
   isChild = false,
+  childIndex
 }: any) => {
   const childLinkClasses = `relative block px-4 py-2 rounded-md ${
     isActive
       ? "bg-primary-color text-white"
       : "text-gray-500 hover:text-gray-700"
-  } before:absolute before:-left-4 before:top-1/2 before:h-0.5 before:w-4 before:bg-gray-300 before:rounded-xl text-nowrap text-[14px]`;
+  } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:${childIndex === 0 ? "h-7":"h-16"} before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl text-nowrap text-[14px]`;
 
   const classNames = isChild
     ? childLinkClasses
@@ -84,8 +88,9 @@ const NavLink = ({
 interface ISidebarProps {
   handleExpandSidebar: () => void;
   expanded: boolean;
+  role: string
 }
-const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
+const Sidebar = ({ expanded, handleExpandSidebar,role, }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
     {}
@@ -129,6 +134,28 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
+  const creatorMenuItem: MenuItem[] = [
+    { label: translate("Dashboard"), icon: LayoutGrid, link: "/dashboard" },
+    {
+      label: translate("My_Store"),
+      icon: Store,
+      children: [
+        { label: translate("Store_set-up"), link: "/campaign/add" },
+        { label: translate("Product_List"), link: "/campaign" },
+      ],
+    },
+    { label: translate("Product_Management"), icon: Box, link: "/bids" },
+    { label: translate("Bidding_Management"), icon: BarChart, link: "/brand-analysis" },
+    { label: translate("Creator_Analysis"), icon: BarChart, link: "/recharge" },
+    { label: translate("Collaboration"), icon: UserRound, link: "/payments" },
+    { label: translate("Payment & Earnings"), icon: DollarSign, link: "/support" },
+    { label: translate("Support"), icon: LifeBuoy, link: "/support" },
+    { label: translate("Settings"), icon: Settings, link: "/settings" },
+  ];
+  const menu = {
+    "Vendor": menuItems,
+    "Creator": creatorMenuItem
+  }[role]
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
       (key) => expandedMenus[key] === true
@@ -155,7 +182,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
           />
         </div>
         <nav className="flex flex-col space-y-2 px-3 overflow-auto flex-1">
-          {menuItems.map((item, idx) => (
+          {(menu??[]).map((item, idx) => (
             <div key={idx} className="group">
               {item.children ? (
                 <div>
@@ -172,7 +199,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                   />
                   {expandedMenus[item.label] && (
                     <div className="ml-6 px-4">
-                      <div className="flex flex-col gap-3 px-4 border-l border-gray-300 pt-2">
+                      <div className="flex flex-col gap-3 px-4 pt-2">
                         {item.children.map((child, idx) => (
                           <NavLink
                             key={idx}
@@ -181,6 +208,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                             isActive={pathname === child.link}
                             label={child.label}
                             isChild
+                            childIndex={idx}
                           />
                         ))}
                       </div>

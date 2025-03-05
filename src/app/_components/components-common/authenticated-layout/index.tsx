@@ -21,14 +21,14 @@ export default async function AuthenticatedLayout({
     redirect("/register");
   }
   if (session) {
-    const user = await getProfileAPI();
-    if (user?.type === USER_TYPE.Vendor && !user?.vendorId) {
-      if (!isPreForm) redirect("/pre-form");
-    } else if (user?.type === USER_TYPE.Vendor && user?.vendorId && isPreForm) {
-      redirect("/dashboard");
-    } else if (user && redirectPath) {
-      redirect(redirectPath);
-    }
+    // const user = await getProfileAPI();
+    // if (user?.type === USER_TYPE.Vendor && !user?.vendorId) {
+    //   if (!isPreForm) redirect("/pre-form");
+    // } else if (user?.type === USER_TYPE.Vendor && user?.vendorId && isPreForm) {
+    //   redirect("/dashboard");
+    // } else if (user && redirectPath) {
+    //   redirect(redirectPath);
+    // }
   }
   return <div>{children}</div>;
 }

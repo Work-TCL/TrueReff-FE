@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }: IDashboardLayout) {
     }
     return (
         <div className="flex h-screen overflow-hidden">
-            <Sidebar handleExpandSidebar={handleExpandSidebar} expanded={expanded}/>
+            <Sidebar handleExpandSidebar={handleExpandSidebar} expanded={expanded} role="Creator"/>
             <main className="flex-1 w-full h-full overflow-hidden flex flex-col">
                 <Header handleExpandSidebar={handleExpandSidebar}/>
                 <div className="flex-1 overflow-auto">

@@ -37,10 +37,10 @@ export const SlidingTabBar = ({
   }, [activeTabIndex]);
 
   return (
-    <div className="relative grid grid-cols-3">
+    <div className="relative grid grid-cols-4">
       <span
         className="absolute bottom-0 top-0 -z-10 flex overflow-hidden  py-2 transition-all duration-300"
-        style={{ left: tabUnderlineLeft - 0, width: "28%" }}
+        style={{ left: tabUnderlineLeft - 0, width: "22%" }}
       >
         <span className="h-full w-full border-b-2 border-primary-color " />
       </span>
