@@ -14,6 +14,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
 import { loginAPI } from "@/lib/web-api/auth";
 import { translate } from "@/lib/utils/translate";
+import { IPostLoginResponse } from "@/lib/types-api/auth";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -32,10 +33,9 @@ export default function LoginForm() {
     setLoading(true);
     try {
       ("use server");
-      const res: any = await loginAPI({
+      const res: IPostLoginResponse = await loginAPI({
         email: data?.email,
         password: data?.password,
-        // x,
       });
 
       console.log("res--login-", res);
@@ -58,7 +58,7 @@ export default function LoginForm() {
           methods?.reset();
           return true;
         }
-        if (res?.ok) {
+        if (res?.status === 200) {
           toast.success("Login Successfully.");
           methods?.reset();
           router.push("/products");

@@ -1,21 +1,32 @@
 //write all the api functions here
 //always add suffix at the end of the function
-
 import {
-  ILogin,
-  IResendOtp,
-  IResetPassword,
-  IResponse,
-  ISignupAPIParams,
-  IVerifyOtp,
+  IPostContactUsRequest,
+  IPostContactUsResponse,
+  IPostForgotPasswordRequest,
+  IPostForgotPasswordResponse,
+  IPostLoginRequest,
+  IPostLoginResponse,
+  IPostResendOtpRequest,
+  IPostResendOtpResponse,
+  IPostResetPasswordRequest,
+  IPostResetPasswordResponse,
+  IPostSignupRequest,
+  IPostSignupResponse,
+  IPostVendorRegisterRequest,
+  IPostVendorRegisterResponse,
+  IPostVerifyEmailRequest,
+  IPostVerifyEmailResponse,
+  IPostVerifyOTPRequest,
+  IPostVerifyOTPResponse,
 } from "../types-api/auth";
 import { getErrorMessage } from "../utils/commonUtils";
 import { IContactSchema } from "../utils/validations";
 import axiosInstance from "./http-common";
 
 export const signUpAPI = async (
-  params: ISignupAPIParams
-): Promise<IResponse> => {
+  params: IPostSignupRequest
+): Promise<IPostSignupResponse> => {
   try {
     const response = await axiosInstance.post("/auth/register", params);
     return response?.data;
@@ -25,7 +36,7 @@ export const signUpAPI = async (
   }
 };
 
-export const loginAPI = async (params: ILogin): Promise<IResponse> => {
+export const loginAPI = async (params: IPostLoginRequest): Promise<IPostLoginResponse> => {
   try {
     const response = await axiosInstance.post("/auth/login", params);
     return response?.data;
@@ -35,7 +46,7 @@ export const loginAPI = async (params: ILogin): Promise<IResponse> => {
   }
 };
 
-export const resendOtp = async (params: IResendOtp): Promise<IResponse> => {
+export const resendOtp = async (params: IPostResendOtpRequest): Promise<IPostResendOtpResponse> => {
   try {
     const response = await axiosInstance.post("/user/auth/resend-otp", params);
     return response?.data;
@@ -45,7 +56,7 @@ export const resendOtp = async (params: IResendOtp): Promise<IResponse> => {
   }
 };
 
-export const verifyOtp = async (params: IVerifyOtp): Promise<IResponse> => {
+export const verifyOtp = async (params: IPostVerifyOTPRequest): Promise<IPostVerifyOTPResponse> => {
   try {
     const response = await axiosInstance.post("/auth/reset-password", params);
     return response;
@@ -55,7 +66,7 @@ export const verifyOtp = async (params: IVerifyOtp): Promise<IResponse> => {
   }
 };
 
-export const verifyEmail = async (params: IVerifyOtp): Promise<IResponse> => {
+export const verifyEmail = async (params: IPostVerifyEmailRequest): Promise<IPostVerifyEmailResponse> => {
   try {
     const response = await axiosInstance.post("/auth/email-verify", params);
     return response?.data;
@@ -66,8 +77,8 @@ export const verifyEmail = async (params: IVerifyOtp): Promise<IResponse> => {
 };
 
 export const forgotPassword = async (
-  params: IResendOtp
-): Promise<IResponse> => {
+  params: IPostForgotPasswordRequest
+): Promise<IPostForgotPasswordResponse> => {
   try {
     const response = await axiosInstance.post("/auth/forgot-password", params);
     return response;
@@ -78,8 +89,8 @@ export const forgotPassword = async (
 };
 
 export const resetPasswordAPI = async (
-  params: IResetPassword
-): Promise<IResponse> => {
+  params: IPostResetPasswordRequest
+): Promise<IPostResetPasswordResponse> => {
   try {
     const response = await axiosInstance.post(
       "/auth/reset-password/confirm",
@@ -93,8 +104,8 @@ export const resetPasswordAPI = async (
 };
 
 export const contactUsAPI = async (
-  params: IContactSchema
-): Promise<IResponse> => {
+  params: IPostContactUsRequest
+): Promise<IPostContactUsResponse> => {
   try {
     const response = await axiosInstance.post("/user/contact", params);
     return response?.data;
@@ -104,7 +115,7 @@ export const contactUsAPI = async (
   }
 };
 
-export const venderRegister = async (params: any): Promise<IResponse> => {
+export const venderRegister = async (params: IPostVendorRegisterRequest): Promise<IPostVendorRegisterResponse> => {
   try {
     const response = await axiosInstance.post(
       "/vendor/add-vendor-details",

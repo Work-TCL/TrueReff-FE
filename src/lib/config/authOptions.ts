@@ -3,6 +3,14 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import axiosInstance from "@/lib/web-api/http-common";
 import { loginAPI, verifyEmail } from "../web-api/auth";
+import { IPostLoginResponse, IPostVerifyEmailRequest, IPostVerifyEmailResponse } from "../types-api/auth";
+
+interface AuthorizeCredentials {
+  username: string;
+  otp?: string;
+  password?: string;
+  redirect?: boolean;
+}
 
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -14,31 +22,34 @@ const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password", optional: true },
         otp: { label: "OTP", type: "text", optional: true }, // Add OTP field
       },
-      async authorize(credentials) {
+      async authorize(credentials: AuthorizeCredentials | any) {
         try {
-          let response: any;
           if (credentials?.otp) {
             // Handle OTP login
-            response = await verifyEmail({
+            const response: IPostVerifyEmailResponse = await verifyEmail({
               email: credentials?.username,
               otpCode: credentials?.otp,
             });
+            if (response?.data) {
+              return {
+                ...response?.data,
+                accessToken: response?.data?.token,
+              };
+            }
           } else if (credentials?.password) {
             // Handle password login
-            response = await loginAPI({
+            const response: IPostLoginResponse = await loginAPI({
               email: credentials?.username,
               password: credentials?.password,
             });
+            if (response?.data) {
+              return {
+                ...response?.data,
+                accessToken: response?.data?.token,
+              };
+            }
           }
 
-          console.log("repsosneeee-->>", response);
-
-          if (response?.data) {
-            return {
-              ...response?.data,
-              accessToken: response?.data?.token,
-            };
-          }
           return null;
         } catch (error) {
           throw error || new Error("Invalid credentials");

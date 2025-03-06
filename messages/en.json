@@ -235,5 +235,8 @@
   "GST_Number": "GST Number",
   "Website": "Website",
   "Business_Name": "Business Name",
-  "Creator_Details": "Creator Details"
+  "Creator_Details": "Creator Details",
+  "Select_category": "Select Category",
+  "Sub_category": "Sub Category",
+  "Select_sub_category": "Select sub category"
 }

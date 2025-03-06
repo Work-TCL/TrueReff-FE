@@ -12,6 +12,7 @@ import Button from "@/app/_components/ui/button";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
 import { translate } from "@/lib/utils/translate";
+import { IPostSignupRequest, IPostSignupResponse } from "@/lib/types-api/auth";
 interface IRedirectPaths {
   [key: string]: string;
 }
@@ -38,12 +39,12 @@ export default function RegisterForm() {
     setLoading(true);
     try {
       ("use server");
-      const payload: IRegisterSchema = {
+      const payload: IPostSignupRequest = {
         email: data?.email,
         password: data.password,
+        type: "vendor"
       };
-      const response: any = await signUpAPI({ ...payload, type: "vendor" });
-      console.log("res---vendor--", response);
+      const response: IPostSignupResponse = await signUpAPI(payload);
 
       if (response?.status === 201 || response?.status === 200) {
         if (response?.data?.otpSent) {

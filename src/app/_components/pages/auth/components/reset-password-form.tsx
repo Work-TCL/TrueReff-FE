@@ -11,10 +11,11 @@ import Button from "@/app/_components/ui/button";
 import { resetPasswordAPI } from "@/lib/web-api/auth";
 import { PiLockKey } from "react-icons/pi";
 import { translate } from "@/lib/utils/translate";
+import { IPostResetPasswordResponse } from "@/lib/types-api/auth";
 
 export default function ResetPasswordForm() {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const email: string = searchParams.get("email") || '';
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = resetPasswordSchema;
@@ -28,12 +29,8 @@ export default function ResetPasswordForm() {
     setLoading(true);
     try {
       ("use server");
-      const payload: IResetSchema = {
+      const response: IPostResetPasswordResponse = await resetPasswordAPI({
         password: data?.password,
-        confirmPassword: data?.confirmPassword,
-      };
-      const response: any = await resetPasswordAPI({
-        password: payload?.password,
         email,
       });
 

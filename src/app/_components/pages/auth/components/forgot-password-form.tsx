@@ -11,6 +11,7 @@ import Button from "@/app/_components/ui/button";
 import { forgotPassword } from "@/lib/web-api/auth";
 import { MdOutlineEmail } from "react-icons/md";
 import { translate } from "@/lib/utils/translate";
+import { IPostForgotPasswordResponse } from "@/lib/types-api/auth";
 
 export default function ForgotPasswordForm() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function ForgotPasswordForm() {
       const payload: IForgotSchema = {
         email: data?.email,
       };
-      const response: any = await forgotPassword(payload);
+      const response: IPostForgotPasswordResponse = await forgotPassword(payload);
 
       if (response?.status === 200) {
         toast.success(response?.data?.message);

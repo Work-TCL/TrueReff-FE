@@ -18,6 +18,7 @@ import { venderRegister } from "@/lib/web-api/auth";
 import { useRouter } from "next/navigation";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { translate } from "@/lib/utils/translate";
+import { IPostVendorRegisterRequest, IPostVendorRegisterResponse } from "@/lib/types-api/auth";
 
 let allTabs: {
   id: string;
@@ -81,10 +82,17 @@ export default function PreFormPage() {
   const onSubmit = async (data: IPreFormSchema) => {
     setLoading(true);
     try {
-      const payload = {
-        ...data,
+      const payload: IPostVendorRegisterRequest = {
+        business_name:data.business_name,
+        company_email:data.company_email,
+        company_phone:data.company_phone,
+        contacts: Array.isArray(data.contacts) ? data.contacts : [],
+        gst_number:data.gst_number,
+        omni_channels: Array.isArray(data.omni_channels) ? data.omni_channels : [],
+        type_of_business:data.type_of_business,
+        website:data.website,
       };
-      const response: any = await venderRegister(payload);
+      const response: IPostVendorRegisterResponse = await venderRegister(payload);
 
       if (response?.status === 201) {
         toast.success("Vendor successfully registered.");

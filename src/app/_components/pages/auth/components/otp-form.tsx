@@ -11,10 +11,11 @@ import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
 import { verifyOtp } from "@/lib/web-api/auth";
 import { useSearchParams } from "next/navigation";
 import { translate } from "@/lib/utils/translate";
+import { IPostVerifyOTPRequest, IPostVerifyOTPResponse } from "@/lib/types-api/auth";
 
 export default function VerifyOTPForm() {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const email: string = searchParams.get("email") || '';
   const [otp, setOtp] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -32,10 +33,11 @@ export default function VerifyOTPForm() {
     setLoading(true);
     try {
       ("use server");
-      const payload: IOtpSchema = {
+      const payload: IPostVerifyOTPRequest = {
+        email: email,
         otpCode: data?.otpCode,
       };
-      const response: any = await verifyOtp({ ...payload, email: email });
+      const response: IPostVerifyOTPResponse = await verifyOtp(payload);
 
       if (response?.status === 200) {
         toast.success(response?.data?.message);
