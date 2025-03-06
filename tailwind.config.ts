@@ -26,6 +26,10 @@ export default {
         success: "#038A00",
         "success-light": "#038A000D",
         background: "#F2F4F5",
+        orange: "#FFBD80",
+        "light-blue": "#BBEEED",
+        blue: "#808EFF",
+        purple:"#978FED",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
