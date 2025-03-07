@@ -44,7 +44,7 @@ const NavLink = ({
     isActive
       ? "bg-primary-color text-white"
       : "text-gray-500 hover:text-gray-700"
-  } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:${childIndex === 0 ? "h-7":"h-16"} before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl text-nowrap text-[14px]`;
+  } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${childIndex === 0 ? "before:h-7":"before:h-16"} text-nowrap text-[14px]`;
 
   const classNames = isChild
     ? childLinkClasses
@@ -140,15 +140,15 @@ const Sidebar = ({ expanded, handleExpandSidebar,role, }: ISidebarProps) => {
       label: translate("My_Store"),
       icon: Store,
       children: [
-        { label: translate("Store_set-up"), link: "/campaign/add" },
-        { label: translate("Product_List"), link: "/campaign" },
+        { label: translate("Store_set-up"), link: "/my-store/store-setup" },
+        { label: translate("Product_List"), link: "/my-store" },
       ],
     },
-    { label: translate("Product_Management"), icon: Box, link: "/bids" },
+    { label: translate("Product_Management"), icon: Box, link: "/product-management" },
     { label: translate("Bidding_Management"), icon: BarChart, link: "/brand-analysis" },
-    { label: translate("Creator_Analysis"), icon: BarChart, link: "/recharge" },
+    { label: translate("Creator_Analysis"), icon: BarChart, link: "/creator_analysis" },
     { label: translate("Collaboration"), icon: UserRound, link: "/payments" },
-    { label: translate("Payment & Earnings"), icon: DollarSign, link: "/support" },
+    { label: translate("Payment & Earnings"), icon: DollarSign, link: "/payment-earnings" },
     { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];

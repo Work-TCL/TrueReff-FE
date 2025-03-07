@@ -5,7 +5,7 @@ import { Facebook, Instagram, Youtube, Link, X } from 'lucide-react';
 
 export default function InfluencerProfile() {
   return (
-    <Card className="mx-auto bg-white rounded-[20PX] shadow-lg overflow-hidden border border-gray-200 ">
+    <Card className="bg-white rounded-[20PX] shadow-lg overflow-hidden border border-gray-200 ">
       <div className="relative w-full h-40 md:h-48 bg-blue-100 rounded-b-[20px]">
         <img
           src="/background-image.jpg"
