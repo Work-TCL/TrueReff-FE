@@ -108,7 +108,7 @@ const Sidebar = ({ expanded, handleExpandSidebar,role, }: ISidebarProps) => {
   };
 
   const menuItems: MenuItem[] = [
-    { label: translate("Overview"), icon: Home, link: "/dashboard" },
+    { label: translate("Overview"), icon: Home, link: "/overview" },
     {
       label: translate("Product_Catalog"),
       icon: Box,

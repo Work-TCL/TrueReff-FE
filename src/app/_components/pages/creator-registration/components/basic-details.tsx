@@ -16,7 +16,7 @@ export default function BasicInfoForm() {
         <div className="col-span-1">
           <Input
             label="Username"
-            name="username"
+            name="user_name"
             type="text"
             placeholder="ABC"
           />
@@ -34,7 +34,7 @@ export default function BasicInfoForm() {
           <Input
             label="Phone Number"
             name="phone_number"
-            type="text"
+            type="number"
             placeholder="ABC"
           />
         </div>

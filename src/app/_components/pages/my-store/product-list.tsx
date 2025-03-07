@@ -143,7 +143,7 @@ export default function ProductList() {
             </div>
             <div className="overflow-auto">
                 <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-                    <TableHeader className="bg-stroke">z
+                    <TableHeader className="bg-stroke">
                         <TableRow >
                             <CustomTableHead className="w-1/6">{translate("Product_Image")}</CustomTableHead>
                             <CustomTableHead className="w-1/4">{translate("Products_Name")}</CustomTableHead>

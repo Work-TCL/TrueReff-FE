@@ -214,6 +214,44 @@ export const preFormSchema = Yup.object().shape({
 
 export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
 
+export const creatorFormSchema = Yup.object().shape({
+  full_name: Yup.string()
+    .required("Full_Name_is_required")
+    .min(2, "Full_Name_must_be_at_least_2_characters"),
+    user_name: Yup.string()
+    .required("User_Name_is_required")
+    .min(2, "User_Name_must_be_at_least_2_characters"),
+  email: Yup.string()
+    .email()
+    .lowercase()
+    .required("Email_is_required"),
+  phone_number: Yup.string()
+  .required("Phone_number_is_required")
+  .min(10, "Full_Name_must_be_at_least_10_digits"),
+  profile_title: Yup.string()
+  .required("Profile_title_is_required")
+  .min(2, "Profile_title_must_be_at_least_2_characters"),
+  long_description: Yup.string()
+  .required("Long_Description_is_required")
+  .min(100, "Long_Description_must_be_at_least_100_characters"),
+  short_description: Yup.string()
+  .required("Short_Description_is_required")
+  .min(10, "Short_Description_must_be_at_least_10_characters"),
+  tags: Yup.array().of(
+    Yup.string().required("Tags_is_required"),
+  ),
+  category: Yup.array().of(
+    Yup.string().required("Category_is_required"),
+  ),
+  sub_category: Yup.array().of(
+    Yup.string().required("sub_Category_is_required"),
+  ),
+  profile_image: Yup.string().required("Profile_Image_is_required"),
+  banner_image: Yup.string().required("Banner_Image_is_required"),
+});
+
+export interface ICreatorFormSchema extends Yup.Asserts<typeof creatorFormSchema> {}
+
 export const contactSchema = Yup.object().shape({
   firstName: Yup.string().required("First_Name_is_required"),
   email: Yup.string()

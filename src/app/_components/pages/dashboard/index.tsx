@@ -9,16 +9,18 @@ import PerformanceSummaryChart from "../../components-common/charts/PerformanceC
 import DonutChart from "../../components-common/charts/DonutChat";
 import CollaborationAchievements from "./CollaborationAchievements";
 import ProductInsights from "./product-insights";
+import EarningsPayments from "./earnings-payments";
+import TrendingInsights from "./trending-insights";
 
 export default function Dashboard() {
     return <div className="flex flex-col gap-4 p-6 w-full">
         <div className="flex flex-col xl:flex-row gap-5 w-full">
             <div className="flex flex-col xl:w-1/2 gap-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[white] rounded-2xl p-4">
-                    <StatsCard title={translate("Active_Collaborations")} value={120} growth={5} bgColor="bg-white bg-[#f2f1fd]" borderColor={"border-[#7877EE]"} />
-                    <StatsCard title={translate("Active_Collaborations")} value={120} growth={5} bgColor="bg-white bg-[#f2f1fd]" borderColor={"border-[#7877EE]"} />
-                    <StatsCard title={translate("Active_Collaborations")} value={120} growth={5} bgColor="bg-white bg-[#f2f1fd]" borderColor={"border-[#7877EE]"} />
-                    <StatsCard title={translate("Active_Collaborations")} value={120} growth={5} bgColor="bg-white bg-[#f2f1fd]" borderColor={"border-[#7877EE]"} />
+                    <StatsCard title={translate("Total Earnings")} value={"$5,230"} growth={5} bgColor="bg-white bg-[#F1F1FD]" borderColor={"border-[#F1F1FD]"} />
+                    <StatsCard title={translate("Total Store Followers")} value={"12,500"} growth={5} bgColor="bg-white bg-[#FDF2EF]" borderColor={"border-[#FDF2EF]"} />
+                    <StatsCard title={translate("Total Store Clicks")} value={"34,780"} growth={5} bgColor="bg-white bg-[#F1FDF4]" borderColor={"border-[#F1FDF4]"} />
+                    <StatsCard title={translate("Diverted to Brand Pages")} value={"8420"} growth={5} bgColor="bg-white bg-[#F5F1F9]" borderColor={"border-[#F5F1F9]"} />
                 </div>
                 <div className="flex flex-col md:flex-row gap-4">
                     <PerformanceSummaryChart />
@@ -44,8 +46,8 @@ export default function Dashboard() {
                 </div>
                 <ProductInsights />
                 <div className="flex gap-4">
-                    <VendorActivity />
-                    <VendorActivity />
+                    <EarningsPayments />
+                    <TrendingInsights />
                 </div>
             </div>
         </div>

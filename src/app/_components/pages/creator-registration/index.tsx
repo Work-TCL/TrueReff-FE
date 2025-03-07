@@ -5,7 +5,7 @@ import HeaderAuth from "../auth/components/header-auth";
 import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
 import { GrDocumentText } from "react-icons/gr";
 import { FaRegUserCircle } from "react-icons/fa";
-import { IPreFormSchema, preFormSchema } from "@/lib/utils/validations";
+import { ICreatorFormSchema, creatorFormSchema } from "@/lib/utils/validations";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/app/_components/ui/button";
@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { translate } from "@/lib/utils/translate";
 import PaymentDetails from "./components/payment-details";
-import { IPostVendorRegisterRequest, IPostVendorRegisterResponse } from "@/lib/types-api/auth";
+import { IPostCreatorRegisterRequest, IPostVendorRegisterRequest, IPostVendorRegisterResponse } from "@/lib/types-api/auth";
 
 let allTabs: {
   id: string;
@@ -60,51 +60,46 @@ export default function CreatorRegistrationPage() {
   const [loading, setLoading] = useState(false);
   const axios = useAxiosAuth();
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_DETAILS);
-  const methods = useForm<IPreFormSchema>({
+  const methods = useForm<ICreatorFormSchema>({
     defaultValues: {
-      business_name: "",
-      company_email: "",
-      company_phone: "",
-      contacts: [
-        {
-          name: "",
-          phone: "",
-          email: "",
-        },
-        {
-          name: "",
-          phone: "",
-          email: "",
-        },
-      ],
-      gst_number: "",
-      type_of_business: "",
-      website: "",
-      omni_channels: []
+      full_name: "",
+      user_name: "",
+      email: "",
+      phone_number: "",
+      profile_title: "",
+      long_description: "",
+      short_description: "",
+      tags: [],
+      category:[],
+      sub_category:[]
     },
-    resolver: yupResolver(preFormSchema),
+    resolver: yupResolver(creatorFormSchema),
     mode: "onChange",
   });
 
-  const onSubmit = async (data: IPreFormSchema) => {
+  const onSubmit = async (data: ICreatorFormSchema) => {
     setLoading(true);
     try {
-      const payload: IPostVendorRegisterRequest = {
-        business_name: data.business_name,
-        company_email: data.company_email,
-        company_phone: data.company_phone,
-        contacts: Array.isArray(data.contacts) ? data.contacts : [],
-        gst_number: data.gst_number,
-        omni_channels: Array.isArray(data.omni_channels) ? data.omni_channels : [],
-        type_of_business: data.type_of_business,
-        website: data.website,
+      const payload: IPostCreatorRegisterRequest = {
+        full_name: data?.full_name,
+        user_name: data?.user_name,
+        email: data?.email,
+        phone_number: data?.phone_number,
+        profile_title: data?.profile_title,
+        long_description: data?.long_description,
+        short_description: data?.short_description,
+        tags: data?.tags,
+        category: data?.category,
+        sub_category: data?.sub_category,
+        profile_image: data?.profile_image,
+        banner_image: data?.banner_image
       };
-      const response: IPostVendorRegisterResponse = await venderRegister(payload);
+      // const response: IPostVendorRegisterResponse = await venderRegister(payload);
 
-      if (response?.status === 201) {
-        toast.success("Vendor successfully registered.");
-        router.push("/dashboard");
-      }
+      // if (response?.status === 201) {
+      //   toast.success("Vendor successfully registered.");
+      //   router.push("/dashboard");
+      // }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
@@ -116,15 +111,13 @@ export default function CreatorRegistrationPage() {
   const handleTriggerStepper = async () => {
     setLoading(true);
     if (TABS_STATUS.BASIC_DETAILS === activeTab) {
-    //   const basicInfoField: any = [
-    //     "business_name",
-    //     "company_email",
-    //     "company_phone",
-    //     "gst_number",
-    //     "website",
-    //     "type_of_business",
-    //   ];
-    //   const isValid = await methods.trigger(basicInfoField);
+      const basicInfoField: any = [
+        "full_name",
+        "user_name",
+        "email",
+        "phone_number"
+      ];
+      const isValid = await methods.trigger(basicInfoField);
     //   const response: any = await axios.get(
     //     `/vendor/check-exist/${methods.watch("company_email")}`
     //   );
@@ -132,16 +125,16 @@ export default function CreatorRegistrationPage() {
     //   if (alreadyExists) {
     //     toast.error(translate("email_already_used"));
     //   }
-    //   if (isValid && !alreadyExists) {
-    //     setActiveTab(TABS_STATUS.CONTACT_INFO); // Move to next tab
-    //   }
-    // } else if (TABS_STATUS.CONTACT_INFO === activeTab) {
-    //   const contactInfoField: any = ["contacts"];
-    //   const isValid = await methods.trigger(contactInfoField);
+      if (isValid ) {
+        setActiveTab(TABS_STATUS.PROFILE_SETUP); // Move to next tab
+      }
+    } else if (TABS_STATUS.PROFILE_SETUP === activeTab) {
+      const contactInfoField: any = ["contacts"];
+      const isValid = await methods.trigger(contactInfoField);
 
-    //   if (isValid) {
-    //     setActiveTab(TABS_STATUS.OMNI_CHANNEL); // Move to next tab
-    //   }
+      if (isValid) {
+        setActiveTab(TABS_STATUS.SOCIAL_MEDIA); // Move to next tab
+      }
     }
     setLoading(false);
   };
@@ -175,7 +168,8 @@ export default function CreatorRegistrationPage() {
             }[activeTab]}
             <div className="flex bg-white">
               {(activeTab !== TABS_STATUS.BASIC_DETAILS && activeTab !== TABS_STATUS.PROFILE_SETUP) && <Button type="button" className="w-fit bg-white text-black font-medium px-8" size="small" onClick={()=> activeTab < 3 && setActiveTab(activeTab+1)}>{"Skip"}</Button>}
-              <Button type="button" className="w-fit font-medium px-8" size="small" onClick={()=> activeTab < 3 && setActiveTab(activeTab+1)}>{"Save & Continue"}</Button>
+              {activeTab === TABS_STATUS.BASIC_DETAILS && <Button type="button" className="w-fit font-medium px-8" size="small" onClick={handleTriggerStepper}>{"Save & Continue"}</Button>}
+              {activeTab === TABS_STATUS.PROFILE_SETUP && <Button type="submit" className="w-fit font-medium px-8" size="small" >{"Save & Continue"}</Button>}
             </div>
           </form>
         </FormProvider>

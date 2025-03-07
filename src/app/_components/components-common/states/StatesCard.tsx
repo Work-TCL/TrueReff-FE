@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import StatesCardGraph from "./StatesCardGraph";
 import { translate } from "@/lib/utils/translate";
 
-export const StatsCard = ({ title, value, growth, borderColor, bgColor }:{ title:string; value:number; growth:number; borderColor: string; bgColor: string }) => {
+export const StatsCard = ({ title, value, growth, borderColor, bgColor }:{ title:string; value:number|string; growth:number; borderColor: string; bgColor: string }) => {
   return (
     <Card className={`w-full h-[120px] border ${borderColor} ${bgColor} rounded-2xl`}>
       <CardContent className="p-5 flex flex-col justify-between h-full">
