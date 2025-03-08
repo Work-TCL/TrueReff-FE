@@ -14,7 +14,7 @@ interface IHeaderProps {
 export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const pathName = usePathname();
   const pageNames: IPageName = {
-    "/dashboard": translate("Overview"),
+    "/overview": translate("Overview"),
     "/products/add": translate("Add_New_Product"),
     "/products/list": translate("Product_Catalog"),
     "/products/list/view": translate("View_Product"),
@@ -23,6 +23,12 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/campaign/add": translate("Add_New_Campaign"),
     "/campaign": translate("Campaign_List"),
     "/settings": translate("Settings"),
+    "/dashboard": translate("Overview"),
+    "/my-store/store-setup": translate("Store set-up"),
+    "/my-store": translate("Product_List"),
+    "/product-management": translate("Product_Management"),
+    "/creator_analysis": translate("Creator_Analysis"),
+    "/payment-earnings": translate("Payment & Earnings"),
   };
   return (
     <header className="bg-white px-4 py-3 flex items-center">

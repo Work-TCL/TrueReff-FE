@@ -18,7 +18,7 @@ export default function ProfileSetup() {
       <div className="col-span-2">
         <Input
           label="Long Description"
-          name="long-description"
+          name="long_description"
           type="textarea"
           rows={2}
           placeholder="ABC"
@@ -27,7 +27,7 @@ export default function ProfileSetup() {
       <div className="col-span-2">
         <Input
           label="Short Description"
-          name="short-description"
+          name="short_description"
           type="text"
           placeholder="ABC"
         />
@@ -128,7 +128,12 @@ export default function ProfileSetup() {
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
         <div className="text-sm">{translate("Banner_Image")}</div>
         <div className="flex flex-col gap-1">
-          <div className="flex justify-center items-center border border-dashed rounded-lg p-5">
+          <div
+            className="flex justify-center items-center border border-dashed rounded-lg p-5"
+            onClick={() => {
+              document.getElementById("banner_image")?.click();
+            }}
+          >
             <div className="flex flex-col items-center gap-4">
               <img
                 src="/assets/product/image-square.svg"

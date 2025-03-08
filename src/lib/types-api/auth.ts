@@ -119,6 +119,21 @@ export interface IPostVendorRegisterRequest {
   }[];
   omni_channels: string[];
 }
+// POST Creator Register
+export interface IPostCreatorRegisterRequest {
+    full_name: string,
+    user_name: string,
+    email: string,
+    phone_number: string,
+    profile_title: string,
+    long_description: string,
+    short_description: string,
+    tags?: string[],
+    category?: string[],
+    sub_category?: string[],
+    profile_image: string,
+    banner_image: string
+}
 export interface IPostVendorRegisterResponse {
   status: number;
   data: {
