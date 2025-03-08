@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { Locale } from '@/i18n/config';
-import { setUserLocale } from '@/lib/services/locale';
-import * as Select from '@radix-ui/react-select';
-import clsx from 'clsx';
-import { CheckIcon, LanguagesIcon } from 'lucide-react';
-import {useTransition} from 'react';
+import { Locale } from "@/i18n/config";
+import { setUserLocale } from "@/lib/services/locale";
+import * as Select from "@radix-ui/react-select";
+import clsx from "clsx";
+import { CheckIcon, LanguagesIcon } from "lucide-react";
+import { useTransition } from "react";
 
 type Props = {
   defaultValue: string;
-  items: Array<{value: string; label: string}>;
+  items: Array<{ value: string; label: string }>;
   label: string;
 };
 
 export default function LocaleSwitcherSelect({
   defaultValue,
   items,
-  label
+  label,
 }: Props) {
   const [isPending, startTransition] = useTransition();
 
@@ -29,12 +29,12 @@ export default function LocaleSwitcherSelect({
 
   return (
     <div className="relative">
-      <Select.Root defaultValue={defaultValue} onValueChange={onChange}>
+      <Select.Root defaultValue={defaultValue || ""} onValueChange={onChange}>
         <Select.Trigger
           aria-label={label}
           className={clsx(
-            'rounded-sm p-2 transition-colors hover:bg-slate-200',
-            isPending && 'pointer-events-none opacity-60'
+            "rounded-sm p-2 transition-colors hover:bg-slate-200",
+            isPending && "pointer-events-none opacity-60"
           )}
         >
           <Select.Icon>

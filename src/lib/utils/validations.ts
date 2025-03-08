@@ -1,39 +1,33 @@
 import * as Yup from "yup";
-// import { translate } from "./translate";
-// import { phone } from "phone";
-function translate(value: string) {
-  return value;
-}
+
 export const loginSchema = Yup.object().shape({
   email: Yup.string()
-    .email(translate("Email_must_be_a_valid_email_address"))
-    .required(translate("Email_is_required")),
+    .email("Email must be a valid email address")
+    .required("Email is required"),
   password: Yup.string()
-    .required(translate("Password_is_required"))
-    .min(8, translate("Password_must_be_at_least_8_characters"))
-    .matches(
-      /(?=.*[0-9])/,
-      translate("Password_must_contain_at_least_one_number")
-    )
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .matches(/(?=.*[0-9])/, "Password must contain at least one number")
     .matches(
       /(?=.*[a-z])/,
-      translate("Password_must_contain_at_least_one_lowercase_letter")
+      "Password must contain at least one lowercase letter"
     )
     .matches(
       /(?=.*[A-Z])/,
-      translate("Password_contain_at_least_one_uppercase_letter")
+      "Password must contain at least one uppercase letter"
     )
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
-      translate("Password_must_contain_at_least_one_special_character")
+      "Password must contain at least one special character"
     ),
 });
 
 export interface ILoginSchema extends Yup.Asserts<typeof loginSchema> {}
+
 export const loginWithOtpSchema = Yup.object().shape({
   email: Yup.string()
-    .email(translate("Email_must_be_a_valid_email_address"))
-    .required(translate("Email_is_required")),
+    .email("Email must be a valid email address")
+    .required("Email is required"),
   password: Yup.string().optional(),
 });
 
@@ -42,96 +36,66 @@ export interface ILoginWithOtpSchema
 
 export const forgotSchema = Yup.object().shape({
   email: Yup.string()
-    .email(translate("Email_must_be_a_valid_email_address"))
-    .required(translate("Email_is_required")),
+    .email("Email must be a valid email address")
+    .required("Email is required"),
 });
 
 export interface IForgotSchema extends Yup.Asserts<typeof forgotSchema> {}
 
 export const otpSchema = Yup.object().shape({
   otpCode: Yup.string()
-    .matches(/^\d+$/, translate("OTP_must_be_a_number"))
-    .length(6, translate("OTP_must_be_exactly_6_digits"))
-    .required(translate("OTP_is_required")),
+    .matches(/^\d+$/, "OTP must be a number")
+    .length(6, "OTP must be exactly 6 digits")
+    .required("OTP is required"),
 });
+
 export interface IOtpSchema extends Yup.Asserts<typeof otpSchema> {}
 
 export const resetPasswordSchema = Yup.object().shape({
   password: Yup.string()
-    .required(translate("Password_is_required"))
-    .min(8, translate("Password_must_be_at_least_8_characters"))
-    .matches(
-      /(?=.*[0-9])/,
-      translate("Password_must_contain_at_least_one_number")
-    )
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .matches(/(?=.*[0-9])/, "Password must contain at least one number")
     .matches(
       /(?=.*[a-z])/,
-      translate("Password_must_contain_at_least_one_lowercase_letter")
+      "Password must contain at least one lowercase letter"
     )
     .matches(
       /(?=.*[A-Z])/,
-      translate("Password_contain_at_least_one_uppercase_letter")
+      "Password must contain at least one uppercase letter"
     )
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
-      translate("Password_must_contain_at_least_one_special_character")
+      "Password must contain at least one special character"
     ),
   confirmPassword: Yup.string()
-    .required(translate("Confirm_Password_is_required"))
-    .oneOf([Yup.ref("password")], translate("Passwords_must_match")),
+    .required("Confirm Password is required")
+    .oneOf([Yup.ref("password")], "Passwords must match"),
 });
 
 export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> {}
 
 export const registerSchema = Yup.object().shape({
-  // firstName: Yup.string()
-  //   .required("First_Name_is_required")
-  //   .min(2, "First Name must be at least 2 characters")
-  //   .max(50, "First Name must be less than 50 characters"),
-  // lastName: Yup.string()
-  //   .required("Last Name_is_required")
-  //   .min(2, "Last Name must be at least 2 characters")
-  //   .max(50, "Last Name must be less than 50 characters"),
-  // countryCode: Yup.string().optional(),
-  // phone: Yup.string()
-  //     .nullable()
-  //     .defined().when('countryCode', (countryCode, schema) => {
-  //         return schema.test('is-valid-phone', 'Phone number is not valid', function (value) {
-  //             if (!value || value?.length <= 3) return true;
-  //             if (countryCode?.length > 0) {
-  //                 // const valid = phone(value, { country: countryCode[0] })
-  //                 return valid?.isValid || false
-  //             }
-  //             return false
-  //         });
-  //     }),
   email: Yup.string()
-    .email(translate("Email_must_be_a_valid_email_address"))
-    .required(translate("Email_is_required")),
+    .email("Email must be a valid email address")
+    .required("Email is required"),
   password: Yup.string()
-    .required(translate("Password_is_required"))
-    .min(8, translate("Password_must_be_at_least_8_characters"))
-    .matches(
-      /(?=.*[0-9])/,
-      translate("Password_must_contain_at_least_one_number")
-    )
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .matches(/(?=.*[0-9])/, "Password must contain at least one number")
     .matches(
       /(?=.*[a-z])/,
-      translate("Password_must_contain_at_least_one_lowercase_letter")
+      "Password must contain at least one lowercase letter"
     )
     .matches(
       /(?=.*[A-Z])/,
-      translate("Password_contain_at_least_one_uppercase_letter")
+      "Password must contain at least one uppercase letter"
     )
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
-      translate("Password_must_contain_at_least_one_special_character")
+      "Password must contain at least one special character"
     ),
-  // confirmPassword: Yup.string()
-  //   .required("Confirm_Password_is_required")
-  //   .oneOf([Yup.ref("password")], "Passwords_must_match"),
   terms: Yup.boolean().oneOf([true]),
-  // subscribe: Yup.boolean().default(true),
 });
 
 export interface IRegisterSchema extends Yup.Asserts<typeof registerSchema> {}
@@ -149,62 +113,65 @@ export const _validatePhone = (number: string, format: string) => {
 
 export const changePasswordSchema = Yup.object().shape({
   currentPassword: Yup.string()
-    .required("Current_Password_is_required")
-    .min(8, "Current_Password_must_be_at_least_8_characters")
-    .matches(/(?=.*[0-9])/, "Current_Password_must_contain_at_least_one_number")
+    .required("Current Password is required")
+    .min(8, "Current Password must be at least 8 characters")
+    .matches(/(?=.*[0-9])/, "Current Password must contain at least one number")
     .matches(
       /(?=.*[a-z])/,
-      "Current_Password_must_contain_at_least_one_lowercase_letter"
+      "Current Password must contain at least one lowercase letter"
     )
     .matches(
       /(?=.*[A-Z])/,
-      "Current_Password_contain_at_least_one_uppercase_letter"
+      "Current Password must contain at least one uppercase letter"
     )
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
-      "Current_Password_must_contain_at_least_one_special_character"
+      "Current Password must contain at least one special character"
     ),
   password: Yup.string()
-    .required("Password_is_required")
-    .min(8, "Password_must_be_at_least_8_characters")
-    .matches(/(?=.*[0-9])/, "Password_must_contain_at_least_one_number")
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .matches(/(?=.*[0-9])/, "Password must contain at least one number")
     .matches(
       /(?=.*[a-z])/,
-      "Password_must_contain_at_least_one_lowercase_letter"
+      "Password must contain at least one lowercase letter"
     )
-    .matches(/(?=.*[A-Z])/, "Password_contain_at_least_one_uppercase_letter")
+    .matches(
+      /(?=.*[A-Z])/,
+      "Password must contain at least one uppercase letter"
+    )
     .matches(
       /(?=.*[!@#\$%\^&\*])/,
-      "Password_must_contain_at_least_one_special_character"
+      "Password must contain at least one special character"
     ),
   confirmPassword: Yup.string()
-    .required("Confirm_Password_is_required")
-    .oneOf([Yup.ref("password")], "Passwords_must_match"),
+    .required("Confirm Password is required")
+    .oneOf([Yup.ref("password")], "Passwords must match"),
 });
 
 export interface IChangePasswordSchema
   extends Yup.Asserts<typeof changePasswordSchema> {}
 
-// add to wishlist
+// Add to wishlist
 export const preFormSchema = Yup.object().shape({
   business_name: Yup.string()
-    .required("Business_Name_is_required")
-    .min(2, "Business_Name_must_be_at_least_2_characters"),
+    .required("Business Name is required")
+    .min(2, "Business Name must be at least 2 characters"),
   company_email: Yup.string()
     .email()
     .lowercase()
-    .required("Company_Email_is_required"),
-  company_phone: Yup.string().required("Company_Phone_is_required"),
-  gst_number: Yup.string().required("gst_number_is_required"),
-  website: Yup.string().url().required("Website_is_required"),
-  type_of_business: Yup.string().required("Type_of_business_is_required"),
+    .required("Company Email is required"),
+  company_phone: Yup.string().required("Company Phone is required"),
+  gst_number: Yup.string().required("GST Number is required"),
+  website: Yup.string().url().required("Website is required"),
+  type_of_business: Yup.string().required("Type of business is required"),
   contacts: Yup.array().of(
     Yup.object().shape({
-      name: Yup.string().required("Name_is_required"),
-      phone: Yup.string().required("Phone_number_is_required"),
+      name: Yup.string().required("Name is required"),
+      phone: Yup.string().required("Phone number is required"),
       email: Yup.string()
-        .email("Invalid_email_format")
-        .required("Email_is_required"),
+        .email("Invalid email format")
+        .required("Email is required"),
     })
   ),
   omni_channels: Yup.array()
@@ -215,21 +182,21 @@ export const preFormSchema = Yup.object().shape({
 export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
 
 export const contactSchema = Yup.object().shape({
-  firstName: Yup.string().required("First_Name_is_required"),
+  firstName: Yup.string().required("First Name is required"),
   email: Yup.string()
-    .email("Email_must_be_a_valid_email_address")
-    .required("Email_is_required"),
-  type: Yup.string().required("Type_is_required"),
-  message: Yup.string().required("Message_is_required"),
+    .email("Email must be a valid email address")
+    .required("Email is required"),
+  type: Yup.string().required("Type is required"),
+  message: Yup.string().required("Message is required"),
 });
 
 export interface IContactSchema extends Yup.Asserts<typeof contactSchema> {}
 
 export const profileUpdateSchema = Yup.object().shape({
-  name: Yup.string().required(translate("Name_is_required")),
+  name: Yup.string().required("Name is required"),
   email: Yup.string()
-    .email(translate("Email_must_be_a_valid_email_address"))
-    .required(translate("Email_is_required")),
+    .email("Email must be a valid email address")
+    .required("Email is required"),
   phone: Yup.string().required("Phone is required"),
 });
 
@@ -238,38 +205,64 @@ export interface IProfileUpdateSchema
 
 export const vendorProfileUpdateSchema = Yup.object().shape({
   company_email: Yup.string()
-    .email(translate("Company Email must be a valid email address"))
-    .required(translate("Company Email is required")),
-  company_phone: Yup.string().required(translate("Company Phone is required")),
+    .email("Company Email must be a valid email address")
+    .required("Company Email is required"),
+  company_phone: Yup.string().required("Company Phone is required"),
   gst_number: Yup.string().required("GST Number is required"),
   website: Yup.string()
-    .url(translate("Website must be a valid URL"))
-    .required(translate("Website is required")),
-  business_name: Yup.string().required(translate("Business Name is required")),
+    .url("Website must be a valid URL")
+    .required("Website is required"),
+  business_name: Yup.string().required("Business Name is required"),
 });
+
 export interface IVendorProfileUpdateSchema
   extends Yup.Asserts<typeof vendorProfileUpdateSchema> {}
 
 export const addAddressVendorSchema = Yup.object().shape({
-  name: Yup.string().required(translate("Name is required")),
-  phone: Yup.string().required(translate("Phone is required")),
-  zip_code: Yup.string().required(translate("Zip is required")),
-  city: Yup.string().required(translate("City is required")),
-  state: Yup.string().required(translate("State is required")),
-  house_no: Yup.string().required(translate("House No is required")),
-  address: Yup.string().required(translate("Address is required")),
+  name: Yup.string().required("Name is required"),
+  phone: Yup.string().required("Phone is required"),
+  zip_code: Yup.string().required("Zip is required"),
+  city: Yup.string().required("City is required"),
+  state: Yup.string().required("State is required"),
+  house_no: Yup.string().required("House No is required"),
+  address: Yup.string().required("Address is required"),
   isDefault: Yup.boolean().optional().default(false),
 });
+
 export interface IAddAddressVendorSchema
   extends Yup.Asserts<typeof addAddressVendorSchema> {}
 
 export const addContactVendorSchema = Yup.object().shape({
-  name: Yup.string().required(translate("Name is required")),
-  phone: Yup.string().required(translate("Phone is required")),
+  name: Yup.string().required("Name is required"),
+  phone: Yup.string().required("Phone is required"),
   email: Yup.string()
-    .email(translate("Email must be a valid email address"))
-    .required(translate("Email is required")),
+    .email("Email must be a valid email address")
+    .required("Email is required"),
   isDefault: Yup.boolean().optional().default(false),
 });
+
 export interface IAddContactVendorSchema
   extends Yup.Asserts<typeof addContactVendorSchema> {}
+
+// Add to wishlist
+export const creatorOnBoardingSchema = Yup.object().shape({
+  full_name: Yup.string().required("Full name is required"),
+  user_name: Yup.string().required("User name is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  phone: Yup.string().required("Phone number is required"),
+
+  // Profile
+  title: Yup.string().required("Title is required"),
+  short_description: Yup.string().required("Short description is required"),
+  long_description: Yup.string().required("Long description is required"),
+  tags: Yup.array().of(Yup.string()).required("Tags are required"),
+  category: Yup.string().required("Category is required"),
+  sub_category: Yup.string().required("Sub-category is required"),
+  profile_image: Yup.string().nullable(),
+  banner_image: Yup.string().nullable(),
+});
+
+export interface ICreatorOnBoardingSchema
+  extends Yup.Asserts<typeof creatorOnBoardingSchema> {}

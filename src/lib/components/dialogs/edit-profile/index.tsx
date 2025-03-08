@@ -1,9 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import DialogLayout from "@/lib/ui/layout/dialog";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
-import Input from "@/lib/ui/form/Input";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import {
@@ -12,8 +10,10 @@ import {
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { translate } from "@/lib/utils/translate";
-import Button from "@/lib/ui/button";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import DialogLayout from "@/app/_components/ui/layout/dialog";
+import Input from "@/app/_components/ui/form/Input";
+import Button from "@/app/_components/ui/button";
 
 const key = "profile";
 
@@ -70,7 +70,7 @@ export default function EditProfile({ profile }: any) {
       size="!max-w-[638px] w-full overflow-auto"
       title="edit_profile"
     >
-      <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full sm:w-[300px] md:w-[500px] text-center overflow-y-auto">
+      <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 text-left gap-3">

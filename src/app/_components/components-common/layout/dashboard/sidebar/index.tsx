@@ -15,12 +15,12 @@ import {
   ChevronUp,
   LayoutGrid,
   Store,
-  UserRound
+  UserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GoSidebarExpand } from "react-icons/go";
-import {translate} from "../../../../../../lib/utils/translate";
+import { translate } from "../../../../../../lib/utils/translate";
 
 type MenuItem = {
   label: string;
@@ -38,13 +38,15 @@ const NavLink = ({
   handleToggle = () => {},
   expended = false,
   isChild = false,
-  childIndex
+  childIndex,
 }: any) => {
   const childLinkClasses = `relative block px-4 py-2 rounded-md ${
     isActive
       ? "bg-primary-color text-white"
       : "text-gray-500 hover:text-gray-700"
-  } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${childIndex === 0 ? "before:h-7":"before:h-16"} text-nowrap text-[14px]`;
+  } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${
+    childIndex === 0 ? "before:h-7" : "before:h-16"
+  } text-nowrap text-[14px]`;
 
   const classNames = isChild
     ? childLinkClasses
@@ -88,18 +90,16 @@ const NavLink = ({
 interface ISidebarProps {
   handleExpandSidebar: () => void;
   expanded: boolean;
-  role: string
+  role: string;
 }
-const Sidebar = ({ expanded, handleExpandSidebar,role, }: ISidebarProps) => {
+const Sidebar = ({ expanded, handleExpandSidebar, role }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
     {}
   );
 
   const toggleMenu = (label: string, isSubMenu: boolean) => {
-    let keys = Object.keys(expandedMenus).filter(
-      (key) => expandedMenus[key]
-    );
+    let keys = Object.keys(expandedMenus).filter((key) => expandedMenus[key]);
     const obj = Object.fromEntries(keys.map((key) => [key, false]));
     setExpandedMenus((prev) => ({
       ...(isSubMenu ? obj : prev),
@@ -128,8 +128,16 @@ const Sidebar = ({ expanded, handleExpandSidebar,role, }: ISidebarProps) => {
       ],
     },
     { label: translate("Bids"), icon: BarChart, link: "/bids" },
-    { label: translate("Brand_Analysis"), icon: BarChart, link: "/brand-analysis" },
-    { label: translate("Account_Recharge"), icon: DollarSign, link: "/recharge" },
+    {
+      label: translate("Brand_Analysis"),
+      icon: BarChart,
+      link: "/brand-analysis",
+    },
+    {
+      label: translate("Account_Recharge"),
+      icon: DollarSign,
+      link: "/recharge",
+    },
     { label: translate("Payments"), icon: DollarSign, link: "/payments" },
     { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     { label: translate("Settings"), icon: Settings, link: "/settings" },
@@ -144,18 +152,34 @@ const Sidebar = ({ expanded, handleExpandSidebar,role, }: ISidebarProps) => {
         { label: translate("Product_List"), link: "/my-store" },
       ],
     },
-    { label: translate("Product_Management"), icon: Box, link: "/product-management" },
-    { label: translate("Bidding_Management"), icon: BarChart, link: "/brand-analysis" },
-    { label: translate("Creator_Analysis"), icon: BarChart, link: "/creator_analysis" },
+    {
+      label: translate("Product_Management"),
+      icon: Box,
+      link: "/product-management",
+    },
+    {
+      label: translate("Bidding_Management"),
+      icon: BarChart,
+      link: "/brand-analysis",
+    },
+    {
+      label: translate("Creator_Analysis"),
+      icon: BarChart,
+      link: "/creator_analysis",
+    },
     { label: translate("Collaboration"), icon: UserRound, link: "/payments" },
-    { label: translate("Payment & Earnings"), icon: DollarSign, link: "/payment-earnings" },
+    {
+      label: translate("Payment_Earnings"),
+      icon: DollarSign,
+      link: "/payment-earnings",
+    },
     { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
   const menu = {
-    "Vendor": menuItems,
-    "Creator": creatorMenuItem
-  }[role]
+    Vendor: menuItems,
+    Creator: creatorMenuItem,
+  }[role];
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
       (key) => expandedMenus[key] === true
@@ -182,7 +206,7 @@ const Sidebar = ({ expanded, handleExpandSidebar,role, }: ISidebarProps) => {
           />
         </div>
         <nav className="flex flex-col space-y-2 px-3 overflow-auto flex-1">
-          {(menu??[]).map((item, idx) => (
+          {(menu ?? []).map((item, idx) => (
             <div key={idx} className="group">
               {item.children ? (
                 <div>

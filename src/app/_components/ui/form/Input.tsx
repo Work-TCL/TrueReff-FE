@@ -42,7 +42,26 @@ export default function Input({
     trigger,
     register,
     setValue,
+    watch,
   } = useFormContext();
+  const tags = watch(name, []);
+
+  const [inputValue, setInputValue] = useState("");
+
+  const addTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && inputValue.trim()) {
+      event.preventDefault();
+      setValue(name, [...tags, inputValue.trim()]); // Update form state
+      setInputValue(""); // Clear input
+    }
+  };
+
+  const removeTag = (index: number) => {
+    setValue(
+      name,
+      tags.filter((_, i) => i !== index)
+    );
+  };
 
   const getErrorMessage = (name: string) => {
     const error = errors[name];
@@ -77,6 +96,7 @@ export default function Input({
               placeholder={placeholder}
               {...field}
               autoComplete="off"
+              {...props}
             />
             {Icon ? (
               <Icon
@@ -86,6 +106,43 @@ export default function Input({
             ) : null}
           </div>
           {getError()}
+        </div>
+      )}
+    />
+  );
+  const renderTagInput = () => (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {label && <label className="mb-1 font-medium">{label}</label>}
+          <div className="border p-2 rounded flex flex-wrap gap-2">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={addTag}
+              placeholder={placeholder}
+              className="flex-1 outline-none"
+            />
+          </div>
+          {tags.length > 0 && (
+            <div className="flex items-center py-2 mt-2 gap-4">
+              {tags.map((tag: string, index: number) => (
+                <span key={index} className="bg-gray-small-light py-3 px-4">
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => removeTag(index)}
+                    className="ml-1 text-sm"
+                  >
+                    ✖
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       )}
     />
@@ -105,6 +162,7 @@ export default function Input({
               className={cn(inputStyle, Icon ? "!pl-12" : "")}
               placeholder={placeholder}
               {...field}
+              {...props}
               autoComplete="off"
             />
             {Icon ? (
@@ -146,6 +204,7 @@ export default function Input({
             placeholder={placeholder}
             rows={4}
             {...field}
+            {...props}
           />
           {getError()}
         </div>
@@ -271,6 +330,9 @@ export default function Input({
 
       case "password":
         return renderPasswordInput();
+
+      case "tag":
+        return renderTagInput();
 
       default:
         return renderTextInput();

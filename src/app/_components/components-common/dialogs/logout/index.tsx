@@ -23,7 +23,7 @@ export default function Logout() {
       open={Boolean(dialogPath)}
       size="!max-w-[638px] w-full overflow-auto"
     >
-      <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full sm:w-[300px] md:w-[500px] text-center overflow-y-auto">
+      <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto">
         <span className="mb-4 inline-flex justify-center items-center w-[62px] h-[62px] rounded-full border-4 border-yellow-50 bg-yellow-100 text-yellow-500">
           <svg
             className="w-5 h-5"

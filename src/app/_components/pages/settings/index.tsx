@@ -27,7 +27,17 @@ export default function Settings() {
     <div className="flex-1">
       {
         {
-          Profile: <Profile />,
+          Profile: (
+            <Profile
+              profile={{
+                business_name: "",
+                company_email: "",
+                company_phone: "",
+                addresses: [],
+                contacts: [],
+              }}
+            />
+          ),
           // "package_details": <PackageDetails />,
           // "store_connects": <StoreConnects />,
           // "payment_options": <PaymentOptions />,
