@@ -2,15 +2,15 @@
 export interface IPostSignupRequest {
   email: string;
   password: string;
-  type: 'vendor'
+  type: "vendor";
 }
 export interface IPostSignupResponse {
   status: number;
   data: {
     id: string;
     otpSent?: boolean;
-    type: 'user' | 'vendor' | 'creator';
-  }
+    type: "user" | "vendor" | "creator";
+  };
 }
 
 // POST Login
@@ -24,8 +24,8 @@ export interface IPostLoginResponse {
     id: string;
     token?: string;
     otpSent?: boolean;
-    type: 'user' | 'vendor' | 'creator';
-  }
+    type: "user" | "vendor" | "creator";
+  };
 }
 
 // POST Verify Email
@@ -38,8 +38,8 @@ export interface IPostVerifyEmailResponse {
   data: {
     id: string;
     token: string;
-    type: 'user' | 'vendor' | 'creator';
-  }
+    type: "user" | "vendor" | "creator";
+  };
 }
 
 // POST Verify OTP
@@ -52,7 +52,7 @@ export interface IPostVerifyOTPResponse {
   data: {
     id: string;
     message: string;
-  }
+  };
 }
 
 // POST Forgot Password
@@ -64,7 +64,7 @@ export interface IPostForgotPasswordResponse {
   data: {
     id: string;
     message: string;
-  }
+  };
 }
 
 // POST Resend OTP
@@ -73,8 +73,7 @@ export interface IPostResendOtpRequest {
 }
 export interface IPostResendOtpResponse {
   status: number;
-  data: {
-  }
+  data: {};
 }
 
 // POST Reset Password
@@ -85,8 +84,8 @@ export interface IPostResetPasswordRequest {
 export interface IPostResetPasswordResponse {
   status: number;
   data: {
-    message: string
-  }
+    message: string;
+  };
 }
 
 // POST Contact US
@@ -100,8 +99,8 @@ export interface IPostContactUsRequest {
 export interface IPostContactUsResponse {
   status: number;
   data: {
-    message: string
-  }
+    message: string;
+  };
 }
 
 // POST Vendor Register
@@ -121,22 +120,45 @@ export interface IPostVendorRegisterRequest {
 }
 // POST Creator Register
 export interface IPostCreatorRegisterRequest {
-    full_name: string,
-    user_name: string,
-    email: string,
-    phone_number: string,
-    profile_title: string,
-    long_description: string,
-    short_description: string,
-    tags?: string[],
-    category?: string[],
-    sub_category?: string[],
-    profile_image: string,
-    banner_image: string
+  full_name: string;
+  user_name: string;
+  email: string;
+  phone_number: string;
+  profile_title: string;
+  long_description: string;
+  short_description: string;
+  tags: string[];
+  category: string;
+  sub_category: string;
+  profile_image: string;
+  banner_image: string;
 }
 export interface IPostVendorRegisterResponse {
   status: number;
   data: {
-    message: string
-  }
+    message: string;
+  };
+}
+
+// POST Creator Register
+export interface IPostCreatorRegisterRequest {
+  business_name: string;
+  company_email: string;
+  company_phone: string;
+  gst_number: string;
+  website: string;
+  type_of_business: string;
+  contacts: {
+    name: string;
+    phone: string;
+    email: string;
+  }[];
+  omni_channels: string[];
+}
+
+export interface IPostCreatorRegisterResponse {
+  status: number;
+  data: {
+    message: string;
+  };
 }

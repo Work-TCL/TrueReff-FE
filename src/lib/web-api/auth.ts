@@ -3,6 +3,8 @@
 import {
   IPostContactUsRequest,
   IPostContactUsResponse,
+  IPostCreatorRegisterRequest,
+  IPostCreatorRegisterResponse,
   IPostForgotPasswordRequest,
   IPostForgotPasswordResponse,
   IPostLoginRequest,
@@ -36,7 +38,9 @@ export const signUpAPI = async (
   }
 };
 
-export const loginAPI = async (params: IPostLoginRequest): Promise<IPostLoginResponse> => {
+export const loginAPI = async (
+  params: IPostLoginRequest
+): Promise<IPostLoginResponse> => {
   try {
     const response = await axiosInstance.post("/auth/login", params);
     return response?.data;
@@ -46,7 +50,9 @@ export const loginAPI = async (params: IPostLoginRequest): Promise<IPostLoginRes
   }
 };
 
-export const resendOtp = async (params: IPostResendOtpRequest): Promise<IPostResendOtpResponse> => {
+export const resendOtp = async (
+  params: IPostResendOtpRequest
+): Promise<IPostResendOtpResponse> => {
   try {
     const response = await axiosInstance.post("/user/auth/resend-otp", params);
     return response?.data;
@@ -56,7 +62,9 @@ export const resendOtp = async (params: IPostResendOtpRequest): Promise<IPostRes
   }
 };
 
-export const verifyOtp = async (params: IPostVerifyOTPRequest): Promise<IPostVerifyOTPResponse> => {
+export const verifyOtp = async (
+  params: IPostVerifyOTPRequest
+): Promise<IPostVerifyOTPResponse> => {
   try {
     const response = await axiosInstance.post("/auth/reset-password", params);
     return response;
@@ -66,7 +74,9 @@ export const verifyOtp = async (params: IPostVerifyOTPRequest): Promise<IPostVer
   }
 };
 
-export const verifyEmail = async (params: IPostVerifyEmailRequest): Promise<IPostVerifyEmailResponse> => {
+export const verifyEmail = async (
+  params: IPostVerifyEmailRequest
+): Promise<IPostVerifyEmailResponse> => {
   try {
     const response = await axiosInstance.post("/auth/email-verify", params);
     return response?.data;
@@ -115,7 +125,9 @@ export const contactUsAPI = async (
   }
 };
 
-export const venderRegister = async (params: IPostVendorRegisterRequest): Promise<IPostVendorRegisterResponse> => {
+export const venderRegister = async (
+  params: IPostVendorRegisterRequest
+): Promise<IPostVendorRegisterResponse> => {
   try {
     const response = await axiosInstance.post(
       "/vendor/add-vendor-details",
@@ -125,5 +137,17 @@ export const venderRegister = async (params: IPostVendorRegisterRequest): Promis
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While Signup");
+  }
+};
+
+export const creatorRegister = async (
+  params: IPostCreatorRegisterRequest
+): Promise<IPostCreatorRegisterResponse> => {
+  try {
+    const response = await axiosInstance.post("/creator/add", params);
+    return response?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While Creator Registered.");
   }
 };

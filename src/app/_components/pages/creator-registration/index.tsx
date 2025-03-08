@@ -20,6 +20,11 @@ import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { useRouter } from "next/navigation";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import PaymentDetails from "./components/payment-details";
+import {
+  IPostCreatorRegisterRequest,
+  IPostCreatorRegisterResponse,
+} from "@/lib/types-api/auth";
+import { creatorRegister } from "@/lib/web-api/auth";
 
 let allTabs: {
   id: string;
@@ -86,25 +91,27 @@ export default function CreatorRegistrationPage({ profile }: IProps) {
     console.log("data", data);
 
     try {
-      // const payload: IPostVendorRegisterRequest = {
-      //   business_name: data.business_name,
-      //   company_email: data.company_email,
-      //   company_phone: data.company_phone,
-      //   contacts: Array.isArray(data.contacts) ? data.contacts : [],
-      //   gst_number: data.gst_number,
-      //   omni_channels: Array.isArray(data.omni_channels)
-      //     ? data.omni_channels
-      //     : [],
-      //   type_of_business: data.type_of_business,
-      //   website: data.website,
-      // };
-      // const response: IPostVendorRegisterResponse = await venderRegister(
-      //   payload
-      // );
-      // if (response?.status === 201) {
-      //   toast.success("Vendor successfully registered.");
-      //   router.push;("/dashboard");
-      // }
+      const payload: IPostCreatorRegisterRequest = {
+        full_name: data.full_name,
+        email: data.email,
+        phone: data.phone,
+        user_name: data.user_name,
+        title: data.title,
+        long_description: data.long_description,
+        short_description: data.short_description,
+        category: data.category,
+        sub_category: data.sub_category,
+        tags: data.tags || [],
+        banner_image: data.banner_image || "",
+        profile_image: data.profile_image || "",
+      };
+      const response: IPostCreatorRegisterResponse = await creatorRegister(
+        payload
+      );
+      if (response?.status === 201) {
+        toast.success("Creator successfully registered.");
+        router.push("/dashboard");
+      }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
@@ -186,6 +193,8 @@ export default function CreatorRegistrationPage({ profile }: IProps) {
                   className="w-fit font-medium px-8"
                   size="small"
                   onClick={handleTriggerStepper}
+                  loading={loading}
+                  disabled={loading}
                 >
                   {"Save & Continue"}
                 </Button>
