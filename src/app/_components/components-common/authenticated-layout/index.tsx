@@ -23,11 +23,7 @@ export default async function AuthenticatedLayout({
   if (session) {
     try {
       const user = await getProfileAPI();
-      console.log(
-        "user",
-        user?.type === USER_TYPE.Vendor && !user?.vendorId && !isPreForm
-      );
-
+      
       if (user?.type === USER_TYPE.Vendor && !user?.vendorId && !isPreForm) {
         redirect("/pre-form");
       } else if (
@@ -35,10 +31,18 @@ export default async function AuthenticatedLayout({
         user?.vendorId &&
         isPreForm
       ) {
+        redirect("/overview");
+      } else if (user?.type === USER_TYPE.Creator && !isPreForm) {
+        redirect("/creator-registration");
+      } else if (
+        user?.type === USER_TYPE.Creator &&
+        // user?.creatorId &&
+        isPreForm
+      ) {
         redirect("/dashboard");
       } else if (user && redirectPath) {
         redirect(redirectPath);
-      } else if (getUser && user) {
+      } else if (user) {
         <div>{children(user)}</div>;
       }
     } catch (e) {

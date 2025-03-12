@@ -36,11 +36,6 @@ export default function ProfileSetup() {
         <Input label="Tags" name="tags" type="tag" placeholder="#ABC" />
         {/* <Input label="Tags" name="tags" type="text" placeholder="#ABC" /> */}
       </div>
-      <div className="flex col-span-2 gap-5 text-[18px]">
-        {[1, 2, 3, 4].map((ele) => (
-          <div>#MensFashion</div>
-        ))}
-      </div>
       <div className="col-span-1">
         <Input
           label={translate("Category")}
@@ -119,7 +114,10 @@ export default function ProfileSetup() {
                 className="w-[50px] h-[50px]"
               />
             </div>
-            <Button variant="outline" className="w-full">
+            <input type="file" id="profile-image" className="hidden"/>
+            <Button variant="outline" className="w-full" onClick={() => {
+              document.getElementById("profile-image")?.click()
+            }}>
               {translate("Upload_your_photo")}
             </Button>
           </div>
@@ -139,6 +137,7 @@ export default function ProfileSetup() {
                 src="/assets/product/image-square.svg"
                 className="w-[50px] h-[50px]"
               />
+               <input type="file" id="banner_image" className="hidden"/>
               <div className="text-[#656466]">
                 {translate("Upload_Documents")}
               </div>

@@ -96,6 +96,7 @@ export const registerSchema = Yup.object().shape({
       "Password must contain at least one special character"
     ),
   terms: Yup.boolean().oneOf([true]),
+  // type: Yup.string().required("Type is required")
 });
 
 export interface IRegisterSchema extends Yup.Asserts<typeof registerSchema> {}
@@ -289,13 +290,13 @@ export const creatorOnBoardingSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),
-  phone: Yup.string().required("Phone number is required"),
+  phone_number: Yup.string().required("Phone number is required"),
 
   // Profile
-  title: Yup.string().required("Title is required"),
+  profile_title: Yup.string().required("Title is required"),
   short_description: Yup.string().required("Short description is required"),
   long_description: Yup.string().required("Long description is required"),
-  tags: Yup.array().of(Yup.string()).required("Tags are required"),
+  tags: Yup.string().required("Tags are required"),
   category: Yup.string().required("Category is required"),
   sub_category: Yup.string().required("Sub-category is required"),
   profile_image: Yup.string().nullable(),

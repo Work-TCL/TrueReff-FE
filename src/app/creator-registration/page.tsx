@@ -4,15 +4,9 @@ import AuthenticatedLayout from "@/app/_components/components-common/authenticat
 import { getProfileAPI } from "@/lib/web-api/user";
 
 export default async function page() {
-  try {
-    const user = await getProfileAPI();
     return (
       <AuthenticatedLayout isPreForm={true}>
-        <CreatorRegistration profile={user} />
+        <CreatorRegistration profile={{}} />
       </AuthenticatedLayout>
     );
-  } catch (e) {
-    console.log("while onboarding of creator");
-    return null;
-  }
 }

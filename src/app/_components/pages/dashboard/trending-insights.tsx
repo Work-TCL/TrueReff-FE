@@ -13,7 +13,7 @@ const TrendingInsights: React.FC = () => {
   ];
   return (
     <div className="w-full p-4 rounded-20 bg-white ">
-      <h2 className=" text-text text-20 font-semibold ">{translate("Trending Insights & Discoverability")}</h2>
+      <h2 className=" text-text text-20 font-semibold ">{translate("Trending_Insights_Discoverability")}</h2>
       <div className=' relative h-[240px]'>
 
       <ResponsiveContainer width="100%" height={'100%'}>

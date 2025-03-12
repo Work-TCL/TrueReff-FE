@@ -52,4 +52,5 @@ export const MENU = {
 export const USER_TYPE = {
   USER: "user",
   Vendor: "vendor",
+  Creator: "creator",
 };

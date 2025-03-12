@@ -72,7 +72,7 @@ export default function PerformanceSummaryChart() {
               {translate("Followers")}
             </span>
           </div>
-          <div className="flex justify-between items-center mb-4">
+          {/* <div className="flex justify-between items-center mb-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -88,7 +88,7 @@ export default function PerformanceSummaryChart() {
                 <DropdownMenuItem>{translate("This_month")}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
+          </div> */}
         </div>
       </div>
 

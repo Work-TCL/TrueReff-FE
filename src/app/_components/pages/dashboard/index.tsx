@@ -7,7 +7,7 @@ import VendorActivity from "../../components-common/charts/VendorActivityChart";
 import { translate } from "@/lib/utils/translate";
 import PerformanceSummaryChart from "../../components-common/charts/PerformanceChart";
 import DonutChart from "../../components-common/charts/DonutChat";
-import CollaborationAchievements from "./CollaborationAchievements";
+import CollaborationAchievements from "./collaboration-achievements";
 import ProductInsights from "./product-insights";
 import EarningsPayments from "./earnings-payments";
 import TrendingInsights from "./trending-insights";
@@ -17,10 +17,10 @@ export default function Dashboard() {
         <div className="flex flex-col xl:flex-row gap-5 w-full">
             <div className="flex flex-col xl:w-1/2 gap-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[white] rounded-2xl p-4">
-                    <StatsCard title={translate("Total Earnings")} value={"$5,230"} growth={5} bgColor="bg-white bg-[#F1F1FD]" borderColor={"border-[#F1F1FD]"} />
-                    <StatsCard title={translate("Total Store Followers")} value={"12,500"} growth={5} bgColor="bg-white bg-[#FDF2EF]" borderColor={"border-[#FDF2EF]"} />
-                    <StatsCard title={translate("Total Store Clicks")} value={"34,780"} growth={5} bgColor="bg-white bg-[#F1FDF4]" borderColor={"border-[#F1FDF4]"} />
-                    <StatsCard title={translate("Diverted to Brand Pages")} value={"8420"} growth={5} bgColor="bg-white bg-[#F5F1F9]" borderColor={"border-[#F5F1F9]"} />
+                    <StatsCard title={translate("Total_Earnings")} value={"$5,230"} growth={5} bgColor="bg-white bg-[#F1F1FD]" borderColor={"border-[#F1F1FD]"} />
+                    <StatsCard title={translate("Total_Store_Followers")} value={"12,500"} growth={5} bgColor="bg-white bg-[#FDF2EF]" borderColor={"border-[#FDF2EF]"} />
+                    <StatsCard title={translate("Total_Store_Clicks")} value={"34,780"} growth={5} bgColor="bg-white bg-[#F1FDF4]" borderColor={"border-[#F1FDF4]"} />
+                    <StatsCard title={translate("Diverted_to_Brand_Pages")} value={"8420"} growth={5} bgColor="bg-white bg-[#F5F1F9]" borderColor={"border-[#F5F1F9]"} />
                 </div>
                 <div className="flex flex-col md:flex-row gap-4">
                     <PerformanceSummaryChart />
@@ -30,7 +30,7 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className="flex flex-col w-full xl:flex-col md:flex-row xl:w-1/2 gap-4">
-                <div className=" rounded-lg bg-[white]">
+                {/* <div className=" rounded-lg bg-[white]">
                     <div className="p-6 bg-gradient-to-r from-[#9B5FE9] via-[#6684F0] via-[#DE598E] to-[#FBB11E] rounded-xl shadow flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                             <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-xl font-bold text-black">
@@ -43,7 +43,7 @@ export default function Dashboard() {
                         </div>
                         <div className="text-2xl text-black">➜</div>
                     </div>
-                </div>
+                </div> */}
                 <ProductInsights />
                 <div className="flex gap-4">
                     <EarningsPayments />

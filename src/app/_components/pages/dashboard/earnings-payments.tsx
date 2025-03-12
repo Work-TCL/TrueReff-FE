@@ -77,7 +77,7 @@ const EarningsPayments: React.FC = () => {
     return (
         <Card className="p-5 w-full bg-white rounded-xl">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-20 text-text  font-semibold">{translate("Earning_&_Payments")}</h2>
+                <h2 className="text-20 text-text  font-semibold">{translate("Earning_payments")}</h2>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="text-gray-600 bg-gray-100 px-3 py-1 rounded-md">

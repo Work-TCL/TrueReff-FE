@@ -13,6 +13,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
 import { translate } from "@/lib/utils/translate";
 import { IPostSignupRequest, IPostSignupResponse } from "@/lib/types-api/auth";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 interface IRedirectPaths {
   [key: string]: string;
 }
@@ -25,11 +26,12 @@ const redirectPaths: IRedirectPaths = {
 export default function RegisterForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [userType, setUserType] = useState("");
   const schema = registerSchema;
   const methods = useForm<IRegisterSchema>({
     defaultValues: {
       email: "",
-      password: "",
+      password: ""
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -42,21 +44,21 @@ export default function RegisterForm() {
       const payload: IPostSignupRequest = {
         email: data?.email,
         password: data.password,
-        type: "vendor"
+        type: userType
       };
       const response: IPostSignupResponse = await signUpAPI(payload);
 
       if (response?.status === 201 || response?.status === 200) {
         if (response?.data?.otpSent) {
           toast.success("Sent Email Successfully.");
-          router?.push(`/email-verify?email=${data?.email}`);
+          router?.push(`/email-verify?email=${data?.email}&type=${userType}`);
           return true;
         }
         toast.success("Registered Successfully.");
         methods?.reset();
         router.push(redirectPaths[response?.data?.type]);
         return true;
-      }
+      } 
       throw response;
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -84,6 +86,11 @@ export default function RegisterForm() {
           placeholder={translate("Password")}
           Icon={PiLockKey}
         />
+        <select className="border border-gray-light rounded-xl p-3" name="type" value={userType} onChange={(e) => setUserType(e.target.value)}>
+          <option value="">select</option>
+          <option value="vendor">vendor</option>
+          <option value="creator">creator</option>
+        </select>
 
         <label className="mt-3 text-xs flex align-middle gap-2 text-gray-600">
           <input
@@ -106,7 +113,7 @@ export default function RegisterForm() {
           type="submit"
           className="mt-3"
           loading={loading}
-          disabled={!methods.formState.isValid || loading}
+          disabled={!methods.formState.isValid || !userType || loading}
         >
           {translate("Sign_up")}
         </Button>

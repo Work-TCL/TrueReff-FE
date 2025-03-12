@@ -96,7 +96,7 @@ export default function PreFormPage() {
 
       if (response?.status === 201) {
         toast.success("Vendor successfully registered.");
-        router.push("/dashboard");
+        router.push("/overview");
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);

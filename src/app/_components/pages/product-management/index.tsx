@@ -180,7 +180,7 @@ export default function ProductManagement() {
         <div className="p-4 rounded-lg flex flex-col gap-4">
             <div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">
-                    <Input placeholder={translate("Search_product...")} />
+                    <Input placeholder={translate("Search_product")} />
                 </div>
                 <div className="flex items-center gap-[10px]">
                     <PiListChecksLight size={35} />

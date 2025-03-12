@@ -9,10 +9,22 @@ interface IRegisterInitialState {
     password: string;
     type: string;
 }
-
+interface IUserInitialState {
+    createdAt: string,
+    detailsFilled: boolean,
+    email: string,
+    isActive: boolean,
+    isEmailVerified: boolean,
+    name: string,
+    token: string | undefined,
+    type: string,
+    updatedAt: string
+    _id: string,
+}
 interface IAuthDataState {
     loginObj: ILoginInitialState,
     register: IRegisterInitialState,
+    user: IUserInitialState,
     forgotPasswordEmail: string;
     otp: string;
 }
@@ -30,6 +42,18 @@ export const useAuthStore = create<IAuthDataState & IAuthStoreSetterState>((set)
         email: "",
         password: "",
         type: "user"
+    },
+    user: {
+        createdAt: "",
+        detailsFilled: false,
+        email: "",
+        isActive: false,
+        isEmailVerified: false,
+        name: "",
+        token: "",
+        type: "",
+        updatedAt: "",
+        _id: "",
     },
     forgotPasswordEmail: '',
     otp: '',

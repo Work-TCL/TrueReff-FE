@@ -15,6 +15,7 @@ import { translate } from "@/lib/utils/translate";
 export default function EmailVerifyOTPForm() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const userType = searchParams.get("type")??"vendor";
   console.log("email", email);
   const [otp, setOtp] = useState("");
   const router = useRouter();
@@ -45,7 +46,13 @@ export default function EmailVerifyOTPForm() {
       if (response?.status === 200 || response?.status === 201) {
         toast.success("Email Verified Successfully.");
         methods?.reset();
-        router.push("/dashboard");
+        if(userType === "vendor"){
+          router.push("/pre-form")
+        } else if(userType === "creator"){
+          router.push('/creator-registration')
+        }
+        localStorage.setItem("userType",userType)
+        // router.push("/dashboard");
         return true;
       }
       throw "Invalid OTP";

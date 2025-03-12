@@ -2,7 +2,7 @@
 export interface IPostSignupRequest {
   email: string;
   password: string;
-  type: "vendor";
+  type: string;
 }
 export interface IPostSignupResponse {
   status: number;
@@ -24,7 +24,7 @@ export interface IPostLoginResponse {
     id: string;
     token?: string;
     otpSent?: boolean;
-    type: "user" | "vendor" | "creator";
+    type: string;
   };
 }
 
@@ -127,7 +127,7 @@ export interface IPostCreatorRegisterRequest {
   profile_title: string;
   long_description: string;
   short_description: string;
-  tags: string[];
+  tags: string;
   category: string;
   sub_category: string;
   profile_image: string;
@@ -141,20 +141,20 @@ export interface IPostVendorRegisterResponse {
 }
 
 // POST Creator Register
-export interface IPostCreatorRegisterRequest {
-  business_name: string;
-  company_email: string;
-  company_phone: string;
-  gst_number: string;
-  website: string;
-  type_of_business: string;
-  contacts: {
-    name: string;
-    phone: string;
-    email: string;
-  }[];
-  omni_channels: string[];
-}
+// export interface IPostCreatorRegisterRequest {
+//   business_name: string;
+//   company_email: string;
+//   company_phone: string;
+//   gst_number: string;
+//   website: string;
+//   type_of_business: string;
+//   contacts: {
+//     name: string;
+//     phone: string;
+//     email: string;
+//   }[];
+//   omni_channels: string[];
+// }
 
 export interface IPostCreatorRegisterResponse {
   status: number;

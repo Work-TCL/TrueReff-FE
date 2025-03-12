@@ -25,7 +25,7 @@ export default function StoreSetUp(props: IAddProductDetailProps) {
     return (
         <div className="flex flex-col gap-5 h-full px-4 py-3">
             <div className="flex justify-between items-center flex-wrap gap-2">
-                <div className="text-[20px] text-500">{translate("Add_Details_For_Store_Set-Up")}</div>
+                <div className="text-[20px] text-500">{translate("Add_Details_For_Store_Set_Up")}</div>
                 <div className="flex gap-[10px]">
                     <Button variant="outline" className="w-[140px] rounded-[12px]">{translate("Cancel")}</Button>
                     <Button variant="secondary" className="text-white w-[140px] rounded-[12px]">{translate("Save")}</Button>
@@ -99,16 +99,16 @@ export default function StoreSetUp(props: IAddProductDetailProps) {
                 <div className="flex flex-col lg:flex-row gap-4">
                     <div className="flex flex-col lg:w-1/2 gap-1">
                         <label className="text-[12px] text-[#7E7E80]">{translate("Store_Name")}</label>
-                        <Input placeholder={translate("Type_product_category_here...")} />
+                        <Input placeholder={translate("Type_product_category_here")} />
                     </div>
                     <div className="flex flex-col lg:w-1/2 gap-1">
                         <label className="text-[12px] text-[#7E7E80]">{translate("Store_Link")}</label>
-                        <Input placeholder={translate("Type_product_tags_ here...")} />
+                        <Input placeholder={translate("Type_product_tags_here")} />
                     </div>
                 </div>
                 <div className="flex flex-col gap-1">
                     <label className="text-[12px] text-[#7E7E80]">{translate("Store_Description")}</label>
-                    <Textarea placeholder={translate("Type_product_description_here...")} rows={3} />
+                    <Textarea placeholder={translate("Type_product_description_here")} rows={3} />
                 </div>
             </div>
         </div>

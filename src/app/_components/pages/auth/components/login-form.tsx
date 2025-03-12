@@ -15,11 +15,13 @@ import { PiLockKey } from "react-icons/pi";
 import { loginAPI } from "@/lib/web-api/auth";
 import { translate } from "@/lib/utils/translate";
 import { IPostLoginResponse } from "@/lib/types-api/auth";
+import { useAuthStore } from "@/lib/store/auth";
 
 export default function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = loginSchema;
+  const {setAuthData} = useAuthStore();
   const methods = useForm<ILoginSchema>({
     defaultValues: {
       email: "",
@@ -37,9 +39,6 @@ export default function LoginForm() {
         email: data?.email,
         password: data?.password,
       });
-
-      console.log("res--login-", res);
-
       if (res?.status === 200 || res?.status === 201) {
         if (res?.data?.otpSent) {
           toast.success("Sent Email Successfully.");
@@ -54,7 +53,7 @@ export default function LoginForm() {
 
         if (response?.ok) {
           toast.success("Login Successfully.");
-          router?.push("/dashboard");
+          res?.data?.type === "vendor" ? router?.push("/overview"): router?.push("/dashboard");
           methods?.reset();
           return true;
         }

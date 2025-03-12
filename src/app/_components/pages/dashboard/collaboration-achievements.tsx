@@ -18,7 +18,7 @@ export default function CollaborationAchievements() {
     return (
         <div className="p-4 bg-white shadow-sm rounded-[20px]">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl text-text font-semibold">{translate("Collaborations_&_Achievements")}</h2>
+                <h2 className="text-xl text-text font-semibold">{translate("Collaborations_Achievements")}</h2>
                 <Button variant="link" className="text-primary">{translate("View_all")}</Button>
             </div>
             <div className="overflow-auto">

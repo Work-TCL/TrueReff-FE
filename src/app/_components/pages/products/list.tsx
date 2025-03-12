@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -14,6 +14,8 @@ import { FaSlidersH } from "react-icons/fa";
 import { Eye, PencilLine, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { translate } from "@/lib/utils/translate";
+import axiosInstance from "@/lib/web-api/http-common";
+import axios from "axios";
 
 
 // Sample Data
@@ -79,16 +81,33 @@ const products = [
 export default function ProductList() {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(1);
+    const [productList, setProductList] = useState<{handle:string;id:string;image:string;title:string}[]>([]);
     const pageSize = 10;
     const totalPages = Math.ceil(products.length / pageSize);
 
     const paginatedData = products.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+    const fetProductsList = async () => {
+        try {
+            const response = await axios.post(`http://localhost:5002/shopify/list`)
+            console.log("response", response)
+            if(response.data.data.products){
+                setProductList(response.data.data.products)
+            }
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        fetProductsList()
+    }, [])
+
     return (
         <div className="p-4 rounded-lg flex flex-col gap-4">
             <div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">
-                    <Input placeholder={translate("Search_product...")} />
+                    <Input placeholder={translate("Search_product")} />
                 </div>
                 <div className="flex items-center gap-[10px]">
                     <PiListChecksLight size={35} />
@@ -104,17 +123,17 @@ export default function ProductList() {
                         <TableRow >
                             <CustomTableHead className="w-1/6">{translate("Product_ID")}</CustomTableHead>
                             <CustomTableHead className="w-1/4">{translate("Product_Name")}</CustomTableHead>
-                            <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
+                            {/* <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
                             <CustomTableHead className="w-1/4">{translate("Tags")}</CustomTableHead>
                             <CustomTableHead className="w-1/4">{translate("SKU")}</CustomTableHead>
                             <CustomTableHead className="w-1/6">Selling {translate("Price")}</CustomTableHead>
                             <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
                             <CustomTableHead className="w-1/6 text-center">{translate("Action")}</CustomTableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {paginatedData.map((product, index) => (
+                        {/* {paginatedData.map((product, index) => (
                             <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
                                 <CustomTableCell >{product.productId}</CustomTableCell>
                                 <CustomTableCell>
@@ -131,6 +150,32 @@ export default function ProductList() {
                                 <CustomTableCell>{product.sellingPrice}</CustomTableCell>
                                 <CustomTableCell>{product.discount}</CustomTableCell>
                                 <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell>
+                                <CustomTableCell>
+                                    <div className="flex justify-center gap-3">
+                                        <Eye color="#FF4979" className="cursor-pointer" onClick={() => router.push(`/product/${index}?view=true`)} />
+                                        <PencilLine className="cursor-pointer" onClick={() => router.push(`/product/${index}`)} />
+                                        <Trash2 color="#FF3B30" className="cursor-pointer" />
+                                    </div>
+                                </CustomTableCell>
+                            </TableRow>
+                        ))} */}
+                         {productList.map((product, index) => (
+                            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
+                                <CustomTableCell >{product.id.split("/").pop()}</CustomTableCell>
+                                <CustomTableCell>
+                                    <div className="flex items-center gap-2">
+                                        <Avatar className="w-8 h-8">
+                                            <AvatarImage src={product.image} />
+                                        </Avatar>
+                                        {product.title}
+                                    </div>
+                                </CustomTableCell>
+                                {/* <CustomTableCell >{product.category}</CustomTableCell>
+                                <CustomTableCell>{product.tags}</CustomTableCell>
+                                <CustomTableCell>{product.SKU}</CustomTableCell>
+                                <CustomTableCell>{product.sellingPrice}</CustomTableCell>
+                                <CustomTableCell>{product.discount}</CustomTableCell>
+                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
                                 <CustomTableCell>
                                     <div className="flex justify-center gap-3">
                                         <Eye color="#FF4979" className="cursor-pointer" onClick={() => router.push(`/product/${index}?view=true`)} />

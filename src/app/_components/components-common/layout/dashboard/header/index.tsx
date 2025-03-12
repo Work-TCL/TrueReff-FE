@@ -24,11 +24,11 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/campaign": translate("Campaign_List"),
     "/settings": translate("Settings"),
     "/dashboard": translate("Overview"),
-    "/my-store/store-setup": translate("Store set-up"),
+    "/my-store/store-setup": translate("Store_set_up"),
     "/my-store": translate("Product_List"),
     "/product-management": translate("Product_Management"),
     "/creator_analysis": translate("Creator_Analysis"),
-    "/payment-earnings": translate("Payment & Earnings"),
+    "/payment-earnings": translate("Payment_Earnings"),
   };
   return (
     <header className="bg-white px-4 py-3 flex items-center">

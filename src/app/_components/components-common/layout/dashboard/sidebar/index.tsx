@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Home,
   Box,
@@ -21,6 +21,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GoSidebarExpand } from "react-icons/go";
 import { translate } from "../../../../../../lib/utils/translate";
+import { getProfileAPI } from "@/lib/web-api/user";
+import { getServerSession } from "next-auth";
+import authOptions from "@/lib/config/authOptions";
+import { useAuthStore } from "@/lib/store/auth";
 
 type MenuItem = {
   label: string;
@@ -90,10 +94,11 @@ const NavLink = ({
 interface ISidebarProps {
   handleExpandSidebar: () => void;
   expanded: boolean;
-  role: string;
+  // role: string;
 }
-const Sidebar = ({ expanded, handleExpandSidebar, role }: ISidebarProps) => {
+const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
+  const {user} = useAuthStore();
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
     {}
   );
@@ -106,7 +111,6 @@ const Sidebar = ({ expanded, handleExpandSidebar, role }: ISidebarProps) => {
       [label]: !(isSubMenu ? obj : prev)[label],
     }));
   };
-
   const menuItems: MenuItem[] = [
     { label: translate("Overview"), icon: Home, link: "/overview" },
     {
@@ -127,19 +131,19 @@ const Sidebar = ({ expanded, handleExpandSidebar, role }: ISidebarProps) => {
         // { label: 'Campaign Metrics', link: '/campaign/metrics' },
       ],
     },
-    { label: translate("Bids"), icon: BarChart, link: "/bids" },
-    {
-      label: translate("Brand_Analysis"),
-      icon: BarChart,
-      link: "/brand-analysis",
-    },
-    {
-      label: translate("Account_Recharge"),
-      icon: DollarSign,
-      link: "/recharge",
-    },
-    { label: translate("Payments"), icon: DollarSign, link: "/payments" },
-    { label: translate("Support"), icon: LifeBuoy, link: "/support" },
+    // { label: translate("Bids"), icon: BarChart, link: "/bids" },
+    // {
+    //   label: translate("Brand_Analysis"),
+    //   icon: BarChart,
+    //   link: "/brand-analysis",
+    // },
+    // {
+    //   label: translate("Account_Recharge"),
+    //   icon: DollarSign,
+    //   link: "/recharge",
+    // },
+    // { label: translate("Payments"), icon: DollarSign, link: "/payments" },
+    // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
   const creatorMenuItem: MenuItem[] = [
@@ -148,7 +152,7 @@ const Sidebar = ({ expanded, handleExpandSidebar, role }: ISidebarProps) => {
       label: translate("My_Store"),
       icon: Store,
       children: [
-        { label: translate("Store_set-up"), link: "/my-store/store-setup" },
+        { label: translate("Store_set_up"), link: "/my-store/store-setup" },
         { label: translate("Product_List"), link: "/my-store" },
       ],
     },
@@ -157,29 +161,30 @@ const Sidebar = ({ expanded, handleExpandSidebar, role }: ISidebarProps) => {
       icon: Box,
       link: "/product-management",
     },
-    {
-      label: translate("Bidding_Management"),
-      icon: BarChart,
-      link: "/brand-analysis",
-    },
+    // {
+    //   label: translate("Bidding_Management"),
+    //   icon: BarChart,
+    //   link: "/brand-analysis",
+    // },
     {
       label: translate("Creator_Analysis"),
       icon: BarChart,
       link: "/creator_analysis",
     },
-    { label: translate("Collaboration"), icon: UserRound, link: "/payments" },
+    // { label: translate("Collaboration"), icon: UserRound, link: "/payments" },
     {
       label: translate("Payment_Earnings"),
       icon: DollarSign,
       link: "/payment-earnings",
     },
-    { label: translate("Support"), icon: LifeBuoy, link: "/support" },
-    { label: translate("Settings"), icon: Settings, link: "/settings" },
+    // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
+    // { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
+  
   const menu = {
-    Vendor: menuItems,
-    Creator: creatorMenuItem,
-  }[role];
+    vendor: menuItems,
+    creator: creatorMenuItem,
+  }[user?.type];
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
       (key) => expandedMenus[key] === true

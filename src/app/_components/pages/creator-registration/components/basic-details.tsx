@@ -33,7 +33,7 @@ export default function BasicInfoForm() {
       <div className="col-span-1">
         <Input
           label="Phone Number"
-          name="phone"
+          name="phone_number"
           type="phone"
           placeholder="+949895198489181"
         />
