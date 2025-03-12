@@ -162,3 +162,25 @@ export interface IPostCreatorRegisterResponse {
     message: string;
   };
 }
+
+export interface IGetCategoryParams {
+  page?: string | number,
+  limit?: string | number
+}
+
+export interface ICategoryData {
+    _id: string,
+    name: string,
+    parentId: string,
+    createdAt: string,
+    updatedAt: string
+}
+export interface IGetCategoryResponse {
+  status: number;
+  message: string,
+  data: {
+    data: ICategoryData[],
+    count: number
+  };
+  error: string
+}

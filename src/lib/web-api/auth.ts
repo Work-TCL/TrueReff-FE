@@ -1,6 +1,8 @@
 //write all the api functions here
 //always add suffix at the end of the function
 import {
+  IGetCategoryParams,
+  IGetCategoryResponse,
   IPostContactUsRequest,
   IPostContactUsResponse,
   IPostCreatorRegisterRequest,
@@ -149,5 +151,17 @@ export const creatorRegister = async (
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While Creator Registered.");
+  }
+};
+
+export const getCategories = async (
+  params: IGetCategoryParams
+): Promise<IGetCategoryResponse> => {
+  try {
+    const response = await axiosInstance.get("/product/category/list");
+    return response?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While fetching categories.");
   }
 };

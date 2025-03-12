@@ -1,10 +1,36 @@
 "use client";
 import Input from "@/app/_components/ui/form/Input";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { translate } from "@/lib/utils/translate";
 import { Button } from "@/components/ui/button";
-
+import { getCategories } from "@/lib/web-api/auth";
+export interface ICategoryData {
+  _id: string,
+  name: string,
+  parentId: string,
+  createdAt: string,
+  updatedAt: string
+}
 export default function ProfileSetup() {
+  const [categories,setCategories] = useState<ICategoryData[]>([]);
+  const [parentCategory,setParentCategory] = useState<ICategoryData[]>([]);
+  const [subCategory,setSubCategory] = useState<ICategoryData[]>([]);
+  useEffect(() => {
+    fetchCategory()
+  },[])
+  const fetchCategory = async () => {
+    try{
+      ("use server");
+        const response = await getCategories({page:0,limit: 0});
+        let data = response?.data?.data;
+        setCategories(data);
+        setParentCategory(data?.filter(ele => ele?.parentId === null));
+        setSubCategory(data?.filter(ele => ele?.parentId !== null))
+
+     } catch (error) {
+ 
+     }
+  }
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="col-span-2">
@@ -42,32 +68,7 @@ export default function ProfileSetup() {
           placeholder={translate("Select_category")}
           name="category"
           type="select"
-          options={[
-            {
-              label: "Tags",
-              value: "",
-            },
-            {
-              label: "Apple",
-              value: "Apple",
-            },
-            {
-              label: "Banana",
-              value: "Banana",
-            },
-            {
-              label: "Blueberry",
-              value: "Blueberry",
-            },
-            {
-              label: "Grapes",
-              value: "Grapes",
-            },
-            {
-              label: "Pineapple",
-              value: "Pineapple",
-            },
-          ]}
+          options={parentCategory?.map(ele => ({value:ele?.name,label:ele?.name}))}
         />
       </div>
       <div className="col-span-1">
@@ -76,32 +77,7 @@ export default function ProfileSetup() {
           placeholder={translate("Select_sub_category")}
           name="sub_category"
           type="select"
-          options={[
-            {
-              label: "Tags",
-              value: "",
-            },
-            {
-              label: "Apple",
-              value: "Apple",
-            },
-            {
-              label: "Banana",
-              value: "Banana",
-            },
-            {
-              label: "Blueberry",
-              value: "Blueberry",
-            },
-            {
-              label: "Grapes",
-              value: "Grapes",
-            },
-            {
-              label: "Pineapple",
-              value: "Pineapple",
-            },
-          ]}
+          options={subCategory?.map(ele => ({value:ele?.name,label:ele?.name}))}
         />
       </div>
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">

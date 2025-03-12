@@ -17,7 +17,7 @@ import SocialMedia from "./components/social-media";
 import ProfileSetup from "./components/profile-setup";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import PaymentDetails from "./components/payment-details";
 import {
@@ -63,6 +63,8 @@ interface IProps {
   profile: any;
 }
 export default function CreatorRegistrationPage({ profile }: IProps) {
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email")??"";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const axios = useAxiosAuth();
@@ -71,7 +73,7 @@ export default function CreatorRegistrationPage({ profile }: IProps) {
     defaultValues: {
       full_name: "",
       user_name: "",
-      email: profile.email,
+      email: email,
       phone_number: "",
       profile_title: "",
       short_description: "",

@@ -98,7 +98,7 @@ interface ISidebarProps {
 }
 const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
-  const {user} = useAuthStore();
+  const account = useAuthStore(s => s.account);
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
     {}
   );
@@ -184,7 +184,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const menu = {
     vendor: menuItems,
     creator: creatorMenuItem,
-  }[user?.type];
+  }[account?.role];
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
       (key) => expandedMenus[key] === true
