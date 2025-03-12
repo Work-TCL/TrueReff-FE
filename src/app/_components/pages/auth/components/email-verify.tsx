@@ -58,7 +58,7 @@ export default function EmailVerifyOTPForm() {
         localStorage.setItem("userType", userType);
 
         if (userType === "vendor") {
-          router.push("/vendor-register");
+          router.push("/pre-form");
         } else if (userType === "creator") {
           router.push("/creator-registration");
         } else {

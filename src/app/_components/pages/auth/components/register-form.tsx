@@ -19,7 +19,7 @@ interface IRedirectPaths {
 }
 const redirectPaths: IRedirectPaths = {
   user: "/dashboard",
-  vendor: "/vendor-register",
+  vendor: "/pre-form",
   creator: "/",
 };
 

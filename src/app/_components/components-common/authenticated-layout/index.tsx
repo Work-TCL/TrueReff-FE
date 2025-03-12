@@ -53,7 +53,7 @@ export default function AuthenticatedLayout({
   }
 
   if (account.role === USER_TYPE.Vendor) {
-    redirect("/vendor-register");
+    redirect("/pre-form");
     return null;
   }
 
