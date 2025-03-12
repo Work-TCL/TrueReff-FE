@@ -9,31 +9,37 @@ interface IRegisterInitialState {
     password: string;
     type: string;
 }
-interface IUserInitialState {
-    createdAt: string,
-    detailsFilled: boolean,
-    email: string,
-    isActive: boolean,
-    isEmailVerified: boolean,
-    name: string,
-    token: string | undefined,
-    type: string,
-    updatedAt: string
-    _id: string,
-}
+
+const USER_TYPE = {
+    USER: "user",
+    Vendor: "vendor",
+    Creator: "creator",
+};
+
 interface IAuthDataState {
     loginObj: ILoginInitialState,
     register: IRegisterInitialState,
-    user: IUserInitialState,
     forgotPasswordEmail: string;
     otp: string;
+    account: {
+        email: string;
+        id: string;
+        role: typeof USER_TYPE[keyof typeof USER_TYPE]
+    },
+    isLoading: boolean,
 }
 
 interface IAuthStoreSetterState {
     setAuthData: <K extends keyof IAuthDataState>(key: K, value: IAuthDataState[K]) => void;
+    setAccountData: (data: {
+        email: string;
+        id: string;
+        role: typeof USER_TYPE[keyof typeof USER_TYPE]
+    }) => void;
+    setIsLoading: (isLoading: boolean) => void;
 }
 
-export const useAuthStore = create<IAuthDataState & IAuthStoreSetterState>((set) => ({
+export const useAuthStore = create<IAuthDataState & IAuthStoreSetterState>((set, get) => ({
     loginObj: {
         email: "",
         password: ""
@@ -43,19 +49,15 @@ export const useAuthStore = create<IAuthDataState & IAuthStoreSetterState>((set)
         password: "",
         type: "user"
     },
-    user: {
-        createdAt: "",
-        detailsFilled: false,
-        email: "",
-        isActive: false,
-        isEmailVerified: false,
-        name: "",
-        token: "",
-        type: "",
-        updatedAt: "",
-        _id: "",
-    },
     forgotPasswordEmail: '',
     otp: '',
-    setAuthData: (key, value) => set({ [key]: value } as Pick<IAuthDataState, typeof key>)
+    account: {
+        email: "",
+        id: "",
+        role: USER_TYPE.USER,
+    },
+    isLoading: true,
+    setAuthData: (key, value) => set({ [key]: value } as Pick<IAuthDataState, typeof key>),
+    setAccountData: (data) => set({ account: data }),
+    setIsLoading: (isLoading) => set({ isLoading })
 }));

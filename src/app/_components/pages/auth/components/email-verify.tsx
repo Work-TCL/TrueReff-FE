@@ -1,42 +1,50 @@
 "use client";
 import Button from "@/app/_components/ui/button";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import OtpInput from "react-otp-input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
-import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { translate } from "@/lib/utils/translate";
 
 export default function EmailVerifyOTPForm() {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
-  const userType = searchParams.get("type")??"vendor";
-  console.log("email", email);
-  const [otp, setOtp] = useState("");
   const router = useRouter();
+
+  const [otp, setOtp] = useState("");
+  const [email, setEmail] = useState<string | null>(null);
+  const [userType, setUserType] = useState<string>("vendor");
   const [loading, setLoading] = useState(false);
-  let schema = otpSchema;
+
   const methods = useForm<IOtpSchema>({
     defaultValues: { otpCode: "" },
-    resolver: yupResolver(schema),
+    resolver: yupResolver(otpSchema),
     mode: "onChange",
   });
+
+  // ✅ Fetch search params safely inside `useEffect`
+  useEffect(() => {
+    setEmail(searchParams.get("email"));
+    setUserType(searchParams.get("type") ?? "vendor");
+  }, [searchParams]);
+
+  // ✅ Sync OTP state with react-hook-form
   useEffect(() => {
     methods.setValue("otpCode", otp);
   }, [otp, methods]);
+
   const onSubmit = async (data: IOtpSchema) => {
-    console.log("data", data);
-    if (!email || email == null) {
-      return true;
+    if (!email) {
+      toast.error("Email is required.");
+      return;
     }
+
     setLoading(true);
     try {
-      ("use server");
       const response: any = await signIn("credentials", {
         username: email,
         otp: data?.otpCode,
@@ -45,30 +53,31 @@ export default function EmailVerifyOTPForm() {
 
       if (response?.status === 200 || response?.status === 201) {
         toast.success("Email Verified Successfully.");
-        methods?.reset();
-        if(userType === "vendor"){
-          router.push("/pre-form")
-        } else if(userType === "creator"){
-          router.push('/creator-registration')
+        methods.reset();
+
+        localStorage.setItem("userType", userType);
+
+        if (userType === "vendor") {
+          router.push("/vendor-register");
+        } else if (userType === "creator") {
+          router.push("/creator-registration");
+        } else {
+          router.push("/dashboard");
         }
-        localStorage.setItem("userType",userType)
-        // router.push("/dashboard");
-        return true;
+        return;
       }
-      throw "Invalid OTP";
+
+      throw new Error("Invalid OTP");
     } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <FormProvider {...methods}>
-      <form
-        onSubmit={methods.handleSubmit(onSubmit)}
-        className="w-full flex flex-col gap-3"
-      >
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="w-full flex flex-col gap-3">
         <div>
           <OtpInput
             value={otp}
@@ -78,9 +87,10 @@ export default function EmailVerifyOTPForm() {
             renderInput={(props) => (
               <input
                 {...props}
-                className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] focus:outline-none focus:border-black text-lg ${
-                  props?.value ? "border-black" : "border-gray-dark"
-                }`}
+                className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] 
+                  focus:outline-none focus:border-black text-lg ${
+                    props?.value ? "border-black" : "border-gray-dark"
+                  }`}
               />
             )}
           />
@@ -88,7 +98,7 @@ export default function EmailVerifyOTPForm() {
             type="submit"
             className="mt-8"
             loading={loading}
-            disabled={!otp || otp?.split("").length != 6 || loading}
+            disabled={!otp || otp.length !== 6 || loading}
           >
             {translate("Verify")}
           </Button>

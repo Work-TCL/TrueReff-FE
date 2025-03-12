@@ -1,53 +1,71 @@
-import { ReactNode } from "react";
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import authOptions from "@/lib/config/authOptions";
-import { getProfileAPI } from "@/lib/web-api/user";
-import { USER_TYPE } from "@/lib/utils/constants";
+"use client";
 
-interface IAuthenticatedLayout {
-  children?: ReactNode | any;
+import { ReactNode, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { useAuthStore } from "@/lib/store/auth";
+import { USER_TYPE } from "@/lib/utils/constants";
+import { useSession } from "next-auth/react";
+import { getProfileAPI } from "@/lib/web-api/user";
+
+interface IAuthenticatedLayoutProps {
+  children: ReactNode;
   redirectPath?: string;
   isPreForm?: boolean;
 }
 
-export default async function AuthenticatedLayout({
+export default function AuthenticatedLayout({
   children,
   redirectPath = "",
   isPreForm = false,
-}: IAuthenticatedLayout) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    redirect("/register");
-  }
-  if (session) {
-    try {
-      const user = await getProfileAPI();
-      
-      if (user?.type === USER_TYPE.Vendor && !user?.vendorId && !isPreForm) {
-        redirect("/pre-form");
-      } else if (
-        user?.type === USER_TYPE.Vendor &&
-        user?.vendorId &&
-        isPreForm
-      ) {
-        redirect("/overview");
-      } else if (user?.type === USER_TYPE.Creator && !isPreForm) {
-        redirect("/creator-registration");
-      } else if (
-        user?.type === USER_TYPE.Creator &&
-        // user?.creatorId &&
-        isPreForm
-      ) {
-        redirect("/dashboard");
-      } else if (user && redirectPath) {
-        redirect(redirectPath);
-      } else if (user) {
-        <div>{children(user)}</div>;
+}: IAuthenticatedLayoutProps) {
+  const { setAccountData, account } = useAuthStore();
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAccount = async () => {
+      if (status === "loading" || !session) return;
+
+      setLoading(true);
+      try {
+        const accountData = await getProfileAPI();
+        console.log("Fetched account data:", accountData);
+        setAccountData(accountData);
+      } catch (error) {
+        console.error("Error fetching account profile", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (e) {
-      console.log("errror whille get profile", e);
-    }
+    };
+
+    fetchAccount();
+  }, [session, status, setAccountData]);
+
+  // ✅ Wait until `loading` is false & account is updated
+  if (loading || !account.email) {
+    return <div>Loading...</div>;
   }
-  return <div>{children}</div>;
+
+  // 🚀 Ensure redirection only happens after account data is available
+  if (!account.email) {
+    redirect("/register");
+    return null;
+  }
+
+  if (account.role === USER_TYPE.Vendor) {
+    redirect("/vendor-register");
+    return null;
+  }
+
+  if (account.role === USER_TYPE.Creator) {
+    redirect("/creator-registration");
+    return null;
+  }
+
+  if (redirectPath) {
+    redirect(redirectPath);
+    return null;
+  }
+
+  return <>{children}</>;
 }

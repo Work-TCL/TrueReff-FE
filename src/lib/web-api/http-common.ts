@@ -10,8 +10,9 @@ import authOptions from "../config/authOptions";
 type AxiosError = { config: { _retry: boolean } } & OriginalAxiosError;
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-
 export const axiosInstance = axios;
+
+const isServer = typeof window === "undefined"; // ✅ Check if it's a server environment
 
 // Add a request interceptor to include the Authorization header
 axiosInstance.interceptors.request.use(
@@ -19,8 +20,21 @@ axiosInstance.interceptors.request.use(
     request: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> => {
     try {
-      const session: any = await getServerSession(authOptions);
-      const token = session?.accessToken;
+      let token: string | undefined;
+
+      if (isServer) {
+        // ✅ Use server-side session retrieval
+        const session: any = await getServerSession(authOptions);
+        token = session?.accessToken;
+      } else {
+        // ✅ Use client-side session retrieval (inside a function)
+        const getClientSession = async () => {
+          const session = await import("next-auth/react").then((mod) => mod.getSession());
+          return session?.accessToken;
+        };
+        token = await getClientSession();
+      }
+
       if (token && request.headers) {
         request.headers["Authorization"] = `${token}`;
       }
@@ -36,9 +50,7 @@ axiosInstance.interceptors.request.use(
 
 // Add a response interceptor to handle retries for unauthorized requests
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
+  (response: AxiosResponse) => response,
   async (error: AxiosError) => {
     if (error.code === "ERR_NETWORK") return;
     const originalConfig = error.config;
@@ -47,7 +59,6 @@ axiosInstance.interceptors.response.use(
         originalConfig._retry = true;
         try {
           // Logic to handle token refresh or redirect to login
-          // e.g., fetch a new token and retry the request
         } catch (e) {
           return Promise.reject(e);
         }

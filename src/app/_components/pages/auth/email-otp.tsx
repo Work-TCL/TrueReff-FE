@@ -1,19 +1,24 @@
+"use client"; // This ensures it's a Client Component
+
 import React from "react";
+import { useSearchParams } from "next/navigation";
 import AuthLayoutPage from "./auth-layout";
 import BackButton from "@/app/_components/ui/back-button";
 import AuthTitle from "./components/auth-title";
 import AuthDescription from "./components/auth-desc";
 import EmailVerifyOTPForm from "./components/email-verify";
 import { translate } from "@/lib/utils/translate";
+import authOptions from "@/lib/config/authOptions";
+import { getServerSession } from "next-auth";
+import { useSession } from "next-auth/react";
 
-interface IProps {
-  searchParams: { email?: string };
-}
+export default function EmailVerifyOtpPage() {
+  const searchParams = useSearchParams(); // ✅ Correct way to access search params in a Client Component
+  const { data: session, status } = useSession();
+console.log("session----->", status,session)
+  // Ensure safe access to search parameters
+  const email = searchParams.get("email") || "";
 
-export default function EmailVerifyOtpPage({
-  searchParams,
-}: IProps) {
-  const email = searchParams?.email || "";
   return (
     <AuthLayoutPage authImage="forgot-pass-image.svg">
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full">
@@ -24,8 +29,7 @@ export default function EmailVerifyOtpPage({
             className="mt-2"
             text={`${translate(
               "We_have_share_a_code_of_your_registered_email_address"
-            )}
-             ${email}`}
+            )} ${email}`}
           />
           <div className="mt-5">
             <EmailVerifyOTPForm />
