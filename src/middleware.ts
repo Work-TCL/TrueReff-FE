@@ -1,28 +1,71 @@
-import { NextResponse } from "next/server";
-import { withAuth } from "next-auth/middleware";
+import { NextRequest, NextResponse } from "next/server";
 
-export default withAuth(
-  function middleware(req) {
-    const { pathname } = req.nextUrl;
-    const token = req.nextauth.token;
+export type MiddlewareFactory = (
+  next: (request: NextRequest) => Promise<NextResponse> | NextResponse
+) => (request: NextRequest) => Promise<NextResponse> | NextResponse;
 
-    // ✅ Redirect Unauthenticated Users Trying to Access Protected Pages
-    if (!token && pathname.startsWith("/dashboard")) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-
-    // ✅ Redirect Authenticated Users Away from Login/Register Pages
-    if (token && ["/login", "/register"].includes(pathname)) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => !!token, // Check if user is authenticated
-    },
+// Function to stack middlewares
+export function stackMiddlewares(
+  functions: MiddlewareFactory[] = [],
+  index = 0
+): (request: NextRequest) => Promise<NextResponse> | NextResponse {
+  const current = functions[index];
+  if (current) {
+    const next = stackMiddlewares(functions, index + 1);
+    return current(next);
   }
-);
+  return () => NextResponse.next();
+}
+
+// Helper function to check if a request matches a path
+const match = (matcher: string[], request: NextRequest) =>
+  matcher.some((path) => request.nextUrl.pathname.startsWith(path));
+
+// Define public (non-authenticated) routes
+const PUBLIC_ROUTES = ["/aboutus", "/contact", "/help","/login","/register","/email-verify"];
+
+// Middleware for authentication handling
+const withAuthMiddleware: MiddlewareFactory = (next) => {
+  return async (request: NextRequest) => {
+    const { pathname } = request.nextUrl;
+    const token =
+      request.cookies.get("next-auth.session-token") ||
+      request.cookies.get("__Secure-next-auth.session-token");
+
+    console.log("Token:", token, pathname);
+
+    // Skip middleware for Next.js API, static, and public files
+    if (
+      pathname.startsWith("/_next") || // Next.js internals
+      pathname.startsWith("/api") || // API routes
+      pathname.startsWith("/public") || // Public assets
+      match(PUBLIC_ROUTES, request) // Allow public routes
+    ) {
+      return next(request);
+    }
+
+    // Redirect Unauthenticated Users Trying to Access Protected Pages
+    if (!token && !PUBLIC_ROUTES.includes(pathname)) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // Redirect Authenticated Users Away from Auth Pages
+    if (token && match(["/login", "/register"], request)) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    return next(request);
+  };
+};
+
+// Combine all middlewares using stack
+const middlewares = [withAuthMiddleware];
+
+export default stackMiddlewares(middlewares);
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/register"], // Define routes to protect
+  matcher: [
+    "/((?!_next|api|public|favicon.ico|robots.txt|sitemap.xml|images|static|assets).*)",
+  ],
 };
+

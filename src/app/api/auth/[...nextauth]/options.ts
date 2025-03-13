@@ -68,41 +68,47 @@ const authOptions: NextAuthOptions = {
           const res = await axiosInstance.post("/user/auth/social-login", {
             accessToken: account?.access_token,
           });
-          token.accessToken = res?.data?.data?.token;
-          token.user = res?.data?.data;
+          token.accessToken = res?.data?.data?.token ?? null; // Ensure token is not undefined
+          token.user = res?.data?.data ?? {};
         } else {
-          token._id = user?._id;
-        token.name = user?.name;
-        token.email = user?.email;
-        token.type = user?.type;
-        token.isActive = user?.isActive;
-        token.isEmailVerified = user?.isEmailVerified;
-        token.createdAt = user?.createdAt;
-        token.updatedAt = user?.updatedAt;
-        token.token = user?.token;
-
-          token.accessToken = (user as any).accessToken;
+          token._id = user?._id || null;
+          token.name = user?.name || null;
+          token.email = user?.email || null;
+          token.type = user?.type || null;
+          token.isActive = user?.isActive || false;
+          token.isEmailVerified = user?.isEmailVerified || false;
+          token.createdAt = user?.createdAt || null;
+          token.updatedAt = user?.updatedAt || null;
+          token.token = user?.token || null;
+  
+          token.accessToken = user?.token || null; // ✅ Ensure accessToken is set
         }
       }
+  
       return token;
     },
-    async session({ session, token }: any) {
-      session.user._id = token?._id; 
-        session.user.name = token?.name;
-        session.user.email = token?.email;
-        session.user.type = token?.type;
-        session.user.isActive = token?.isActive;
-        session.user.isEmailVerified = token?.isEmailVerified;
-        session.user.createdAt = token?.createdAt;
-        session.user.updatedAt = token?.updatedAt;
-        session.user.token = token?.token;
-
-      session.accessToken = (
-        token as unknown as { accessToken: string }
-      ).accessToken;
+  
+    async session({ session, token }: { session: any, token: any }) {
+      if (!token) {
+        session = null; // Ensure session clears on logout
+      }
+      session.user = {
+        _id: token?._id || "",
+        name: token?.name || "",
+        email: token?.email || "",
+        type: token?.type || "",
+        isActive: token?.isActive ?? false,
+        isEmailVerified: token?.isEmailVerified ?? false,
+        createdAt: token?.createdAt || "",
+        updatedAt: token?.updatedAt || "",
+        token: token?.token || "",
+      };
+  
+      session.accessToken = token.accessToken || ""; // ✅ Make sure accessToken is always there
       return session;
     },
   },
+
   pages: {
     signIn: "/",
     error: "/",
