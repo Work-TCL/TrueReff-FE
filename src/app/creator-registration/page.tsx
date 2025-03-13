@@ -5,8 +5,8 @@ import { getProfileAPI } from "@/lib/web-api/user";
 
 export default async function page() {
     return (
-      <AuthenticatedLayout isPreForm={true}>
+      // <AuthenticatedLayout isPreForm={true}>
         <CreatorRegistration profile={{}} />
-      </AuthenticatedLayout>
+      // </AuthenticatedLayout>
     );
 }

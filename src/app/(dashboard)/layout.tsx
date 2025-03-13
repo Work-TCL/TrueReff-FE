@@ -1,4 +1,4 @@
-import AuthenticatedLayout from "@/app/_components/components-common/authenticated-layout";
+
 import DashboardLayout from "@/app/_components/components-common/layout/dashboard";
 
 export default function PrivateLayout({
@@ -6,5 +6,5 @@ export default function PrivateLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <AuthenticatedLayout><DashboardLayout>{children}</DashboardLayout></AuthenticatedLayout>;
+  return <DashboardLayout>{children}</DashboardLayout>;
 }

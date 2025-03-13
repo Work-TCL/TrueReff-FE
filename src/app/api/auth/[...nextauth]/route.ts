@@ -1,15 +1,16 @@
-import authOptions from "@/lib/config/authOptions";
+// import authOptions from "@/lib/config/authOptions";
 import NextAuth from "next-auth";
+import authOptions from "./options";
 
 // Extend the types for the Session and JWT
-declare module "next-auth" {
-  interface Session {
-    accessToken: string;
-  }
-  interface JWT {
-    accessToken: string;
-  }
-}
+// declare module "next-auth" {
+//   interface Session {
+//     accessToken: string;
+//   }
+//   interface JWT {
+//     accessToken: string;
+//   }
+// }
 
 const handler = NextAuth(authOptions);
 

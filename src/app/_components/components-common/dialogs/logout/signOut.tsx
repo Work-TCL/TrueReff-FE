@@ -6,7 +6,7 @@ import React from "react";
 export default function SignOut() {
   const handleLogout = async () => {
     await signOut({
-      callbackUrl: "/",
+      callbackUrl: "/login",
       redirect: true,
     });
   };

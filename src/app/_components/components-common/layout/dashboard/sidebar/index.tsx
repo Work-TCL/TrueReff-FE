@@ -25,6 +25,7 @@ import { getProfileAPI } from "@/lib/web-api/user";
 import { getServerSession } from "next-auth";
 import authOptions from "@/lib/config/authOptions";
 import { useAuthStore } from "@/lib/store/auth";
+import { useSession } from "next-auth/react";
 
 type MenuItem = {
   label: string;
@@ -98,7 +99,8 @@ interface ISidebarProps {
 }
 const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
-  const account = useAuthStore(s => s.account);
+  const { data: session } = useSession();
+  let user = session?.user??{type:'vendor'};
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
     {}
   );
@@ -184,7 +186,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const menu = {
     vendor: menuItems,
     creator: creatorMenuItem,
-  }[account?.role];
+  }[user?.type];
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
       (key) => expandedMenus[key] === true

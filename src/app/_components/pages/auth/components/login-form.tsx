@@ -39,6 +39,7 @@ export default function LoginForm() {
         email: data?.email,
         password: data?.password,
       });
+      console.log("res",res)
       if (res?.status === 200 || res?.status === 201) {
         if (res?.data?.otpSent) {
           toast.success("Sent Email Successfully.");

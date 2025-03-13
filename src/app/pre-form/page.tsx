@@ -4,8 +4,8 @@ import AuthenticatedLayout from "@/app/_components/components-common/authenticat
 
 export default function page() {
   return (
-    <AuthenticatedLayout isPreForm={true}>
+    // <AuthenticatedLayout isPreForm={true}>
       <PreFormPage />
-    </AuthenticatedLayout>
+    // </AuthenticatedLayout>
   );
 }
