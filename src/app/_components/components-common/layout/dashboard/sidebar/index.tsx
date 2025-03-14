@@ -186,7 +186,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
 
   console.log("account", session);
 
-  const menus = {
+  const menu = {
     vendor: menuItems,
     creator: creatorMenuItem,
   }[user?.type];

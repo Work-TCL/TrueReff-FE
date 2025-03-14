@@ -16,12 +16,13 @@ import { loginAPI } from "@/lib/web-api/auth";
 import { translate } from "@/lib/utils/translate";
 import { IPostLoginResponse } from "@/lib/types-api/auth";
 import { useAuthStore } from "@/lib/store/auth";
+import { USER_TYPE } from "@/lib/utils/constants";
 
 export default function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = loginSchema;
-  const {setAuthData} = useAuthStore();
+  const { setAuthData } = useAuthStore();
   const methods = useForm<ILoginSchema>({
     defaultValues: {
       email: "",
@@ -39,7 +40,7 @@ export default function LoginForm() {
         email: data?.email,
         password: data?.password,
       });
-      console.log("res",res)
+      console.log("res", res);
       if (res?.status === 200 || res?.status === 201) {
         if (res?.data?.otpSent) {
           toast.success("Sent Email Successfully.");
@@ -54,7 +55,18 @@ export default function LoginForm() {
 
         if (response?.ok) {
           toast.success("Login Successfully.");
-          res?.data?.type === "vendor" ? router?.push("/overview"): router?.push("/dashboard");
+          if (
+            !res?.data?.detailsFilled &&
+            [USER_TYPE.Creator, USER_TYPE.Vendor].includes(res?.data?.type)
+          ) {
+            res?.data?.type === USER_TYPE.Vendor
+              ? router?.push("/pre-form")
+              : router?.push(`/creator-registration?email=${data?.email}`);
+          } else {
+            res?.data?.type === "vendor"
+              ? router?.push("/overview")
+              : router?.push("/dashboard");
+          }
           methods?.reset();
           return true;
         }

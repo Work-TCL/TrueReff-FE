@@ -60,7 +60,7 @@ export default function EmailVerifyOTPForm() {
         if (userType === "vendor") {
           router.push("/pre-form");
         } else if (userType === "creator") {
-          router.push("/creator-registration");
+          router.push(`/creator-registration?email=${email}`);
         } else {
           router.push("/dashboard");
         }
@@ -77,7 +77,10 @@ export default function EmailVerifyOTPForm() {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)} className="w-full flex flex-col gap-3">
+      <form
+        onSubmit={methods.handleSubmit(onSubmit)}
+        className="w-full flex flex-col gap-3"
+      >
         <div>
           <OtpInput
             value={otp}

@@ -25,6 +25,7 @@ export interface IPostLoginResponse {
     token?: string;
     otpSent?: boolean;
     type: string;
+    detailsFilled?: boolean;
   };
 }
 
@@ -130,8 +131,8 @@ export interface IPostCreatorRegisterRequest {
   tags: string[];
   category: string;
   sub_category: string;
-  profile_image: string;
-  banner_image: string;
+  profile_image?: string;
+  banner_image?: string;
 }
 export interface IPostVendorRegisterResponse {
   status: number;
