@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import {
   Home,
   Box,
@@ -8,32 +8,19 @@ import {
   Megaphone,
   BarChart,
   DollarSign,
-  LifeBuoy,
   Settings,
   ChevronDown,
-  ChevronRight,
   ChevronUp,
   LayoutGrid,
   Store,
-  UserRound,
-  CirclePlus,
-  List,
-  MicVocal,
   PackageOpen,
-  Menu,
   X,
   StepForward,
   StepBack,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GoSidebarExpand } from "react-icons/go";
 import { translate } from "../../../../../../lib/utils/translate";
-import { getProfileAPI } from "@/lib/web-api/user";
-import { getServerSession } from "next-auth";
-import authOptions from "@/lib/config/authOptions";
-import { useAuthStore } from "@/lib/store/auth";
-import { USER_TYPE } from "@/lib/utils/constants";
 import { useSession } from "next-auth/react";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import { cn } from "@sohanemon/utils";
@@ -117,7 +104,6 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const { data: session } = useSession();
   let user = session?.user ?? { type: "vendor" };
   const lg = useMediaQuery("(min-width: 1024px)");
-  // const { user } = useAuthStore();
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
     {}
   );

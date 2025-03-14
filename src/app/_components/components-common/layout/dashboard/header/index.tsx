@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { translate } from "../../../../../../lib/utils/translate";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
