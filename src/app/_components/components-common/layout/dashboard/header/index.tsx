@@ -5,6 +5,7 @@ import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { translate } from "../../../../../../lib/utils/translate";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
+import { Menu } from "lucide-react";
 interface IPageName {
   [key: string]: string;
 }
@@ -31,17 +32,16 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/payment-earnings": translate("Payment_Earnings"),
   };
   return (
-    <header className="bg-white px-4 py-3 flex items-center">
-      <GoSidebarCollapse
-        size={20}
-        className="cursor-pointer lg:hidden"
+    <header className="bg-white px-3 py-3 flex items-center gap-1">
+      <Menu
+        className="size-5 shrink-0 cursor-pointer lg:hidden"
         onClick={handleExpandSidebar}
       />
       <h2 className="text-2xl font-medium text-gray-black">
         {pageNames[pathName]}
       </h2>
       <div className="ml-auto flex items-center gap-3">
-        <div className="w-8 h-8 bg-background rounded-full"></div>
+        <div className="w-8 h-8 bg-background rounded-full shrink-0"></div>
         <p className="text-gray-black">John Bing</p>
       </div>
       <Link href="?auth=logout" className="mx-4 block">
