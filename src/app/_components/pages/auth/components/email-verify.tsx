@@ -58,11 +58,11 @@ export default function EmailVerifyOTPForm() {
         localStorage.setItem("userType", userType);
 
         if (userType === "vendor") {
-          router.push("/pre-form");
+          router.push("/vendor-register");
         } else if (userType === "creator") {
           router.push(`/creator-registration?email=${email}`);
         } else {
-          router.push("/dashboard");
+          router.push("/");
         }
         return;
       }

@@ -45,7 +45,6 @@ export default function EditAddressVendorForm({
   });
   const onSubmit = async (data: IAddAddressVendorSchema) => {
     setLoading(true);
-    console.log("data", data);
     try {
       const payload = data;
       let response: any;
@@ -58,7 +57,6 @@ export default function EditAddressVendorForm({
       if (response?.data) {
         response = response?.data;
       }
-      console.log("response", response);
       if (response?.status === 201 || response?.status === 200) {
         toast.success(response?.message);
         router.push("?");

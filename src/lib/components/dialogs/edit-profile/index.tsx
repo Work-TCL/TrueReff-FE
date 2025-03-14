@@ -34,11 +34,8 @@ export default function EditProfile({ profile }: any) {
     mode: "onChange",
   });
 
-  console.log("methods errors", methods.formState.errors);
-
   const onSubmit = async (data: IProfileUpdateSchema) => {
     setLoading(true);
-    console.log("data", data);
 
     try {
       //  ("use server");
@@ -49,7 +46,6 @@ export default function EditProfile({ profile }: any) {
       if (response?.data) {
         response = response?.data;
       }
-      console.log("response", response);
 
       if (response?.status === 200) {
         toast.success(response?.message);

@@ -1,3 +1,4 @@
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export type MiddlewareFactory = (
@@ -22,24 +23,22 @@ const match = (matcher: string[], request: NextRequest) =>
   matcher.some((path) => request.nextUrl.pathname.startsWith(path));
 
 // Define public (non-authenticated) routes
-const PUBLIC_ROUTES = ["/aboutus", "/contact", "/help","/login","/register","/email-verify"];
+const PUBLIC_ROUTES = ["/aboutus", "/contact", "/help","/login","/register","/email-verify","/reset-password","/forgot-password","/send-otp"];
 
 // Middleware for authentication handling
 const withAuthMiddleware: MiddlewareFactory = (next) => {
   return async (request: NextRequest) => {
     const { pathname } = request.nextUrl;
+    const user = await getToken({req: request});
     const token =
       request.cookies.get("next-auth.session-token") ||
       request.cookies.get("__Secure-next-auth.session-token");
-
-    console.log("Token:", token, pathname);
-
     // Skip middleware for Next.js API, static, and public files
     if (
       pathname.startsWith("/_next") || // Next.js internals
       pathname.startsWith("/api") || // API routes
-      pathname.startsWith("/public") || // Public assets
-      match(PUBLIC_ROUTES, request) // Allow public routes
+      pathname.startsWith("/public")  // Public assets
+    //   match(PUBLIC_ROUTES, request) // Allow public routes
     ) {
       return next(request);
     }
@@ -50,8 +49,16 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     }
 
     // Redirect Authenticated Users Away from Auth Pages
-    if (token && match(["/login", "/register"], request)) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+    if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp","/dashboard"], request)) {
+      return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
+    }
+
+    if(token && user?.type === "vendor" && pathname.startsWith("/creator")){
+        return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
+    }
+
+    if(token && user?.type === "creator" && pathname.startsWith("/vendor")){
+        return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
     return next(request);

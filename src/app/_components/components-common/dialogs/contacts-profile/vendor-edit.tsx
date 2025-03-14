@@ -43,7 +43,6 @@ export default function EditContactVendorForm({
   });
   const onSubmit = async (data: IAddContactVendorSchema) => {
     setLoading(true);
-    console.log("data", data);
     try {
       const payload = data;
       let response: any;
@@ -56,7 +55,6 @@ export default function EditContactVendorForm({
       if (response?.data) {
         response = response?.data;
       }
-      console.log("response", response);
       if (response?.status === 201 || response?.status === 200) {
         toast.success(response?.message);
         router.push("?");

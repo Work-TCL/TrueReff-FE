@@ -5,7 +5,8 @@ import {
 } from "axios";
 import axios from "./axios";
 import { getServerSession } from "next-auth";
-import authOptions from "../config/authOptions";
+import authOptions from "@/app/api/auth/[...nextauth]/options";
+
 
 type AxiosError = { config: { _retry: boolean } } & OriginalAxiosError;
 
