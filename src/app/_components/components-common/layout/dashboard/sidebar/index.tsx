@@ -25,6 +25,7 @@ import { getProfileAPI } from "@/lib/web-api/user";
 import { getServerSession } from "next-auth";
 import authOptions from "@/lib/config/authOptions";
 import { useAuthStore } from "@/lib/store/auth";
+import { USER_TYPE } from "@/lib/utils/constants";
 import { useSession } from "next-auth/react";
 
 type MenuItem = {
@@ -100,7 +101,7 @@ interface ISidebarProps {
 const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
   const { data: session } = useSession();
-  let user = session?.user??{type:'vendor'};
+  let user = session?.user ?? { type: "vendor" };
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
     {}
   );
@@ -182,8 +183,10 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     // { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
-  
-  const menu = {
+
+  console.log("account", session);
+
+  const menus = {
     vendor: menuItems,
     creator: creatorMenuItem,
   }[user?.type];

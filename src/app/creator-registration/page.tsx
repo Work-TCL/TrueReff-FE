@@ -4,9 +4,9 @@ import AuthenticatedLayout from "@/app/_components/components-common/authenticat
 import { getProfileAPI } from "@/lib/web-api/user";
 
 export default async function page() {
-    return (
-      // <AuthenticatedLayout isPreForm={true}>
-        <CreatorRegistration profile={{}} />
-      // </AuthenticatedLayout>
-    );
+  return (
+    // <AuthenticatedLayout isPreForm={true}>
+    <CreatorRegistration profile={{}} />
+    // </AuthenticatedLayout>
+  );
 }
