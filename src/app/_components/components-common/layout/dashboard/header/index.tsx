@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { translate } from "../../../../../../lib/utils/translate";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
+import { Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
 interface IPageName {
   [key: string]: string;
@@ -34,10 +34,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   };
 
   return (
-    <header className="bg-white px-4 py-3 flex items-center">
-      <GoSidebarCollapse
-        size={20}
-        className="cursor-pointer lg:hidden"
+    <header className="bg-white px-3 py-3 flex items-center gap-1">
+      <Menu
+        className="size-5 shrink-0 cursor-pointer lg:hidden"
         onClick={handleExpandSidebar}
       />
       <h2 className="text-2xl font-medium text-gray-black">
