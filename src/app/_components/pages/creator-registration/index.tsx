@@ -62,7 +62,7 @@ const TABS_STATUS = {
 interface IProps {
   profile: any;
 }
-export default function CreatorRegistrationPage({ profile }: IProps) {
+export default function CreatorRegistrationPage() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
   const router = useRouter();
@@ -90,7 +90,6 @@ export default function CreatorRegistrationPage({ profile }: IProps) {
 
   const onSubmit = async (data: ICreatorOnBoardingSchema) => {
     setLoading(true);
-    console.log("data", data);
 
     try {
       const payload: IPostCreatorRegisterRequest = {
@@ -141,7 +140,6 @@ export default function CreatorRegistrationPage({ profile }: IProps) {
     setLoading(false);
   };
 
-  console.log("methods-errors", methods.formState.errors);
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">

@@ -18,7 +18,6 @@ export default function AddressesProfile(props: any) {
   const handleRemoveAddress = async (index: number) => {
     try {
       let response: any = await axios.delete(`/vendor/address/${index}`);
-      console.log("response", response);
 
       if (response?.status === 200) {
         // setAddresses(addresses.filter((_: any, i: number) => i != index));

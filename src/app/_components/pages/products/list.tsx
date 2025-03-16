@@ -90,7 +90,6 @@ export default function ProductList() {
     const fetProductsList = async () => {
         try {
             const response = await axios.post(`http://localhost:5002/shopify/list`)
-            console.log("response", response)
             if(response.data.data.products){
                 setProductList(response.data.data.products)
             }

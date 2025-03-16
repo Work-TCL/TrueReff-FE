@@ -8,14 +8,9 @@ import AuthTitle from "./components/auth-title";
 import AuthDescription from "./components/auth-desc";
 import EmailVerifyOTPForm from "./components/email-verify";
 import { translate } from "@/lib/utils/translate";
-import authOptions from "@/lib/config/authOptions";
-import { getServerSession } from "next-auth";
-import { useSession } from "next-auth/react";
 
 export default function EmailVerifyOtpPage() {
   const searchParams = useSearchParams(); // ✅ Correct way to access search params in a Client Component
-  const { data: session, status } = useSession();
-console.log("session----->", status,session)
   // Ensure safe access to search parameters
   const email = searchParams.get("email") || "";
 

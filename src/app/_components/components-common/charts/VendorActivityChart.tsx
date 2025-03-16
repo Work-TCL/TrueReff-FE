@@ -52,7 +52,6 @@ interface CustomizedAxisTickProps {
 }
 
 const CustomizedAxisTick: React.FC<CustomizedAxisTickProps> = ({ x = 100, y = 40, payload }) => {
-    console.log(payload,x,y)
     return (
         <g transform={`translate(${x},${y})`}>
             <text className={`text-[10px] text-font-grey p-2 px-3 bg-primary`}>

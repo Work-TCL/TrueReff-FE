@@ -15,7 +15,6 @@ import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 
 export default function EditVendorForm({ profile }: { profile: any }) {
-  console.log("profile", profile);
   const router = useRouter();
   const axios = useAxiosAuth();
   const [loading, setLoading] = useState(false);
@@ -33,7 +32,6 @@ export default function EditVendorForm({ profile }: { profile: any }) {
   });
   const onSubmit = async (data: IVendorProfileUpdateSchema) => {
     setLoading(true);
-    console.log("data", data);
     try {
       const payload = data;
       //   delete payload.company_email
@@ -42,7 +40,6 @@ export default function EditVendorForm({ profile }: { profile: any }) {
       if (response?.data) {
         response = response?.data;
       }
-      console.log("response", response);
       if (response?.status === 200) {
         toast.success(response?.message);
         router.push("?");

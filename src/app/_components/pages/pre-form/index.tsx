@@ -18,7 +18,10 @@ import { venderRegister } from "@/lib/web-api/auth";
 import { useRouter } from "next/navigation";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { translate } from "@/lib/utils/translate";
-import { IPostVendorRegisterRequest, IPostVendorRegisterResponse } from "@/lib/types-api/auth";
+import {
+  IPostVendorRegisterRequest,
+  IPostVendorRegisterResponse,
+} from "@/lib/types-api/auth";
 
 let allTabs: {
   id: string;
@@ -73,7 +76,7 @@ export default function PreFormPage() {
       gst_number: "",
       type_of_business: "",
       website: "",
-      omni_channels: []
+      omni_channels: [],
     },
     resolver: yupResolver(preFormSchema),
     mode: "onChange",
@@ -83,16 +86,20 @@ export default function PreFormPage() {
     setLoading(true);
     try {
       const payload: IPostVendorRegisterRequest = {
-        business_name:data.business_name,
-        company_email:data.company_email,
-        company_phone:data.company_phone,
+        business_name: data.business_name,
+        company_email: data.company_email,
+        company_phone: data.company_phone,
         contacts: Array.isArray(data.contacts) ? data.contacts : [],
-        gst_number:data.gst_number,
-        omni_channels: Array.isArray(data.omni_channels) ? data.omni_channels : [],
-        type_of_business:data.type_of_business,
-        website:data.website,
+        gst_number: data.gst_number,
+        omni_channels: Array.isArray(data.omni_channels)
+          ? data.omni_channels
+          : [],
+        type_of_business: data.type_of_business,
+        website: data.website,
       };
-      const response: IPostVendorRegisterResponse = await venderRegister(payload);
+      const response: IPostVendorRegisterResponse = await venderRegister(
+        payload
+      );
 
       if (response?.status === 201) {
         toast.success("Vendor successfully registered.");
@@ -108,35 +115,41 @@ export default function PreFormPage() {
 
   const handleTriggerStepper = async () => {
     setLoading(true);
-    if (TABS_STATUS.BASIC_INFO === activeTab) {
-      const basicInfoField: any = [
-        "business_name",
-        "company_email",
-        "company_phone",
-        "gst_number",
-        "website",
-        "type_of_business",
-      ];
-      const isValid = await methods.trigger(basicInfoField);
-      const response: any = await axios.get(
-        `/vendor/check-exist/${methods.watch("company_email")}`
-      );
-      const alreadyExists = response?.data?.data?.alreadyExists;
-      if (alreadyExists) {
-        toast.error(translate("email_already_used"));
-      }
-      if (isValid && !alreadyExists) {
-        setActiveTab(TABS_STATUS.CONTACT_INFO); // Move to next tab
-      }
-    } else if (TABS_STATUS.CONTACT_INFO === activeTab) {
-      const contactInfoField: any = ["contacts"];
-      const isValid = await methods.trigger(contactInfoField);
+    try {
+      if (TABS_STATUS.BASIC_INFO === activeTab) {
+        const basicInfoField: any = [
+          "business_name",
+          "company_email",
+          "company_phone",
+          "gst_number",
+          "website",
+          "type_of_business",
+        ];
 
-      if (isValid) {
-        setActiveTab(TABS_STATUS.OMNI_CHANNEL); // Move to next tab
+        const isValid = await methods.trigger(basicInfoField);
+        const response: any = await axios.get(
+          `/auth/vendor/check-exist/${methods.watch("company_email")}`
+        );
+
+        const alreadyExists = response?.data?.data?.alreadyExists;
+        if (alreadyExists) {
+          toast.error(translate("email_already_used"));
+        } else if (isValid && !alreadyExists) {
+          setActiveTab(TABS_STATUS.CONTACT_INFO); // Move to next tab
+        }
+      } else if (TABS_STATUS.CONTACT_INFO === activeTab) {
+        const contactInfoField: any = ["contacts"];
+        const isValid = await methods.trigger(contactInfoField);
+
+        if (isValid) {
+          setActiveTab(TABS_STATUS.OMNI_CHANNEL); // Move to next tab
+        }
       }
+    } catch (error) {
+      toast.error(translate("try_again"));
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">

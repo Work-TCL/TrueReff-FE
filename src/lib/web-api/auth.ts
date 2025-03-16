@@ -132,7 +132,7 @@ export const venderRegister = async (
 ): Promise<IPostVendorRegisterResponse> => {
   try {
     const response = await axiosInstance.post(
-      "/vendor/add-vendor-details",
+      "/auth/vendor/add-vendor-details",
       params
     );
     return response?.data;

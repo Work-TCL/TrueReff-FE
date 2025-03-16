@@ -18,7 +18,6 @@ export default function ContactsProfile(props: any) {
   const handleRemoveContact = async (index: number) => {
     try {
       let response: any = await axios.delete(`/vendor/contact/${index}`);
-      console.log("response", response);
 
       if (response?.status === 200) {
         // setAddresses(addresses.filter((_: any, i: number) => i != index));

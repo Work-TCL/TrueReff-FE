@@ -15,6 +15,7 @@ export default function ProfileSetup() {
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
+  const [selectedParentCategory,setSelectedParentCategory] = useState([])
 
   const fetchCategory = async () => {
     try {
@@ -79,7 +80,7 @@ export default function ProfileSetup() {
           placeholder={translate("Select_sub_category")}
           name="sub_category"
           type="select"
-          options={subCategory?.map((ele) => ({
+          options={subCategory.filter(ele => parentCategory.map(ele => ele?._id).includes(ele?.parentId))?.map((ele) => ({
             value: ele?.name,
             label: ele?.name,
           }))}

@@ -121,22 +121,22 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     }));
   };
   const menuItems: MenuItem[] = [
-    { label: translate("Overview"), icon: Home, link: "/overview" },
+    { label: translate("Overview"), icon: Home, link: "/vendor/dashboard" },
     {
       label: translate("Product_Catalog"),
       icon: Box,
       children: [
-        { label: translate("Add_New_Product"), link: "/products/add" },
-        { label: translate("Product_List"), link: "/products" },
+        { label: translate("Add_New_Product"), link: "/vendor/products/add" },
+        { label: translate("Product_List"), link: "/vendor/products" },
       ],
     },
-    { label: translate("Creator&Collaboration"), icon: User, link: "/creator" },
+    { label: translate("Creator&Collaboration"), icon: User, link: "/vendor/creator" },
     {
       label: translate("Campaign"),
       icon: Megaphone,
       children: [
-        { label: translate("Add_New_Campaign"), link: "/campaign/add" },
-        { label: translate("Campaign_List"), link: "/campaign" },
+        { label: translate("Add_New_Campaign"), link: "/vendor/campaign/add" },
+        { label: translate("Campaign_List"), link: "/vendor/campaign" },
         // { label: 'Campaign Metrics', link: '/campaign/metrics' },
       ],
     },
@@ -153,22 +153,22 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     // },
     // { label: translate("Payments"), icon: DollarSign, link: "/payments" },
     // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
-    { label: translate("Settings"), icon: Settings, link: "/settings" },
+    { label: translate("Settings"), icon: Settings, link: "/vendor/settings" },
   ];
   const creatorMenuItem: MenuItem[] = [
-    { label: translate("Dashboard"), icon: LayoutGrid, link: "/dashboard" },
+    { label: translate("Dashboard"), icon: LayoutGrid, link: "/creator/dashboard" },
     {
       label: translate("My_Store"),
       icon: Store,
       children: [
-        { label: translate("Store_set_up"), link: "/my-store/store-setup" },
-        { label: translate("Product_List"), link: "/my-store" },
+        { label: translate("Store_set_up"), link: "/creator/my-store/store-setup" },
+        { label: translate("Product_List"), link: "/creator/my-store" },
       ],
     },
     {
       label: translate("Product_Management"),
       icon: Box,
-      link: "/product-management",
+      link: "/creator/product-management",
     },
     // {
     //   label: translate("Bidding_Management"),
@@ -183,19 +183,17 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     {
       label: translate("Creator_Analysis"),
       icon: BarChart,
-      link: "/creator_analysis",
+      link: "/creator/creator_analysis",
     },
     // { label: translate("Collaboration"), icon: UserRound, link: "/payments" },
     {
       label: translate("Payment_Earnings"),
       icon: DollarSign,
-      link: "/payment-earnings",
+      link: "/creator/payment-earnings",
     },
     // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     // { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
-
-  console.log("account", session);
 
   const menu = {
     vendor: menuItems,

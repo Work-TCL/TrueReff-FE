@@ -29,7 +29,6 @@ export default function VerifyOTPForm() {
     methods.setValue("otpCode", otp);
   }, [otp, methods]);
   const onSubmit = async (data: IOtpSchema) => {
-    console.log("data", data);
     setLoading(true);
     try {
       ("use server");

@@ -40,7 +40,6 @@ export default function LoginForm() {
         email: data?.email,
         password: data?.password,
       });
-      console.log("res", res);
       if (res?.status === 200 || res?.status === 201) {
         if (res?.data?.otpSent) {
           toast.success("Sent Email Successfully.");
@@ -60,12 +59,10 @@ export default function LoginForm() {
             [USER_TYPE.Creator, USER_TYPE.Vendor].includes(res?.data?.type)
           ) {
             res?.data?.type === USER_TYPE.Vendor
-              ? router?.push("/pre-form")
+              ? router?.push("/vendor-register")
               : router?.push(`/creator-registration?email=${data?.email}`);
           } else {
-            res?.data?.type === "vendor"
-              ? router?.push("/overview")
-              : router?.push("/dashboard");
+            router?.push(`/${res?.data?.type}/dashboard`);
           }
           methods?.reset();
           return true;
@@ -80,7 +77,6 @@ export default function LoginForm() {
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
-      console.log("error--->>", errorMessage);
       toast.error(errorMessage);
     } finally {
       setLoading(false);
