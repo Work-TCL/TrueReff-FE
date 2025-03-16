@@ -29,6 +29,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/product-management": translate("Product_Management"),
     "/creator_analysis": translate("Creator_Analysis"),
     "/payment-earnings": translate("Payment_Earnings"),
+    "/brandsList": translate("Brands_List"),
   };
   return (
     <header className="bg-white px-3 py-3 flex items-center gap-1">

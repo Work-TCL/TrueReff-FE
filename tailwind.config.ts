@@ -21,6 +21,7 @@ export default {
         "gray-dark": "#C7C1CC",
         "gray-desc": "#656466",
         "font-grey": "#7E7E80",
+        "dark-orange": "#FF9500",
         text: "#262626",
         stroke: "#E6E6E6",
         success: "#038A00",
@@ -29,7 +30,7 @@ export default {
         orange: "#FFBD80",
         "light-blue": "#BBEEED",
         blue: "#808EFF",
-        purple:"#978FED",
+        purple: "#978FED",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

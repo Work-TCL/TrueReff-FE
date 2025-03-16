@@ -1,6 +1,6 @@
 "use client";
 
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import {
   Home,
   Box,
@@ -88,9 +88,9 @@ const NavLink = ({
   }
 
   return (
-    <Link href={link} className={classNames} onClick={handleToggle}>
+    <Link href={link} className={`${classNames} gap-3`} onClick={handleToggle}>
       {Icon && <Icon className={iconClassNames} />}
-      <span>{label}</span>
+      {label && <span>{label}</span>}
     </Link>
   );
 };
@@ -176,6 +176,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     //   link: "/brand-analysis",
     // },
     {
+      label: translate("Brands_List"),
+      icon: Store,
+      link: "/brandsList",
+    },
+    {
       label: translate("Creator_Analysis"),
       icon: BarChart,
       link: "/creator_analysis",
@@ -206,182 +211,24 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   };
   return (
     <>
-      {lg ? (
-        <aside
-          id="sidebar-multi-level-sidebar"
-          className={`max-w-[300px] h-screen bg-white flex flex-col fixed lg:relative top-0 left-0 z-40 transition-all duration-300 ease-in-out  ${
-            isSidebarExpanded ? "w-[300px]" : "w-[75px]"
-          }`}
-        >
-          <div className="flex justify-end items-baseline lg:justify-center gap-10  ">
-            <div
-              className={`p-4 pb-8 text-primary-color font-bold text-4xl text-center`}
-            >
-              {!isSidebarExpanded ? <PackageOpen /> : "truereff"}
-            </div>
-          </div>
-          <nav className="flex flex-col space-y-2 px-3 overflow-auto flex-1">
-            {(menu ?? []).map((item, idx) => (
-              <div key={idx} className="group">
-                {isSidebarExpanded ? (
-                  item.children ? (
-                    <div>
-                      <NavLink
-                        key={idx}
-                        isActive={item.children.some(
-                          (child) => pathname === child.link
-                        )}
-                        handleToggle={() => toggleMenu(item.label, false)}
-                        label={isSidebarExpanded && item.label}
-                        Icon={item.icon}
-                        hasSubmenu
-                        expended={expandedMenus[item.label]}
-                      />
-                      {expandedMenus[item.label] && (
-                        <div className="ml-6 px-4">
-                          <div className="flex flex-col gap-3 px-4 pt-2">
-                            {item.children.map((child, idx) => (
-                              <NavLink
-                                key={idx}
-                                link={child.link}
-                                handleToggle={() =>
-                                  toggleMenu(item.label, true)
-                                }
-                                isActive={pathname === child.link}
-                                label={
-                                  !lg
-                                    ? child.label
-                                    : isSidebarExpanded
-                                    ? child.label
-                                    : ""
-                                }
-                                isChild
-                                childIndex={idx}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <NavLink
-                      key={idx}
-                      handleToggle={() => {
-                        handleToggleMenu();
-                      }}
-                      link={item.link}
-                      isActive={pathname === item.link}
-                      Icon={item.icon}
-                      label={isSidebarExpanded && item.label}
-                    />
-                  )
-                ) : item.children ? (
-                  <ToolTipProvider delayDuration={0}>
-                    <Tooltip>
-                      <Tooltip.Trigger>
-                        <NavLink
-                          key={idx}
-                          isActive={item.children.some(
-                            (child) => pathname === child.link
-                          )}
-                          handleToggle={() => toggleMenu(item.label, false)}
-                          label={isSidebarExpanded && item.label}
-                          Icon={item.icon}
-                        />
-                      </Tooltip.Trigger>
-                      <Tooltip.Content
-                        className="bg-white rounded-r-md  min-w-[230px] w-full px-2 py-[9px] text-gray-500 hover:text-gray-700"
-                        side="right"
-                      >
-                        {item.children && item.children.length > 0 && (
-                          <div className="flex flex-col gap-1 pl-4 ">
-                            {item.children.map((child) => (
-                              <Link
-                                key={child.link}
-                                href={child.link}
-                                className={cn(
-                                  "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ",
-                                  pathname === child.link
-                                    ? "bg-primary-color text-white"
-                                    : "text-gray-500 hover:text-gray-700",
-                                  pathname !== child.link && "hover:bg-pink-100"
-                                )}
-                              >
-                                {child.label}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </Tooltip.Content>
-                    </Tooltip>
-                  </ToolTipProvider>
-                ) : (
-                  <ToolTipProvider delayDuration={0}>
-                    <Tooltip>
-                      <Tooltip.Trigger>
-                        <NavLink
-                          key={idx}
-                          handleToggle={() => {
-                            handleToggleMenu();
-                          }}
-                          link={item.link}
-                          isActive={pathname === item.link}
-                          Icon={item.icon}
-                          label={isSidebarExpanded && item.label}
-                        />
-                      </Tooltip.Trigger>
-                      <Tooltip.Content
-                        className="bg-white rounded-r-md px-2 py-[9px] text-gray-500 hover:text-gray-700"
-                        side="right"
-                      >
-                        <p className={`${"text-gray-500 hover:text-gray-700"}`}>
-                          {item.label}
-                        </p>
-                      </Tooltip.Content>
-                    </Tooltip>
-                  </ToolTipProvider>
-                )}
-              </div>
-            ))}
-          </nav>
+      <aside
+        id="sidebar-multi-level-sidebar"
+        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white  flex-col fixed top-0 left-0 z-40 transition-all duration-300 ease-in-out  ${
+          isSidebarExpanded ? "w-[300px]" : "w-[75px]"
+        }`}
+      >
+        <div className="flex justify-end justify-center gap-10  ">
           <div
-            className={cn(
-              "flex w-full shrink-0 cursor-pointer items-center p-1",
-              isSidebarExpanded ? "justify-end pr-4" : "justify-center"
-            )}
+            className={`p-4 pb-8 text-primary-color font-bold text-4xl text-center`}
           >
-            <button className="flex items-center justify-center rounded-full bg-primary-color text-white transition-all duration-300 w-10 h-10">
+            {!isSidebarExpanded ? <PackageOpen /> : "truereff"}
+          </div>
+        </div>
+        <nav className="flex flex-col space-y-2 px-3 overflow-auto flex-1">
+          {(menu ?? []).map((item, idx) => (
+            <div key={idx} className="group">
               {isSidebarExpanded ? (
-                <StepBack className="cursor-pointer" onClick={toggleSidebar} />
-              ) : (
-                <StepForward
-                  className="cursor-pointer"
-                  onClick={toggleSidebar}
-                />
-              )}
-            </button>
-          </div>
-        </aside>
-      ) : (
-        <aside
-          id="sidebar-multi-level-sidebar"
-          className={`max-w-[300px] w-full h-screen bg-white flex flex-col  fixed lg:relative top-0 left-0 z-40 transition-transform ${
-            expanded ? "-translate-x-full" : ""
-          } lg:translate-x-0`}
-        >
-          <div className="flex justify-end lg:justify-center gap-10">
-            <div className="p-4 pb-8 text-primary-color font-bold text-4xl text-center">
-              truereff
-            </div>
-            <X
-              className="size-6 shrink-0 mt-5 mr-2 cursor-pointer lg:hidden"
-              onClick={handleExpandSidebar}
-            />
-          </div>
-          <nav className="flex flex-col space-y-2 px-3 overflow-auto flex-1">
-            {(menu ?? []).map((item, idx) => (
-              <div key={idx} className="group">
-                {item.children ? (
+                item.children ? (
                   <div>
                     <NavLink
                       key={idx}
@@ -389,7 +236,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                         (child) => pathname === child.link
                       )}
                       handleToggle={() => toggleMenu(item.label, false)}
-                      label={item.label}
+                      label={isSidebarExpanded && item.label}
                       Icon={item.icon}
                       hasSubmenu
                       expended={expandedMenus[item.label]}
@@ -403,7 +250,13 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                               link={child.link}
                               handleToggle={() => toggleMenu(item.label, true)}
                               isActive={pathname === child.link}
-                              label={child.label}
+                              label={
+                                !lg
+                                  ? child.label
+                                  : isSidebarExpanded
+                                  ? child.label
+                                  : ""
+                              }
                               isChild
                               childIndex={idx}
                             />
@@ -421,14 +274,162 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                     link={item.link}
                     isActive={pathname === item.link}
                     Icon={item.icon}
-                    label={item.label}
+                    label={isSidebarExpanded && item.label}
                   />
-                )}
-              </div>
-            ))}
-          </nav>
-        </aside>
-      )}
+                )
+              ) : item.children ? (
+                <ToolTipProvider delayDuration={0}>
+                  <Tooltip>
+                    <Tooltip.Trigger>
+                      <NavLink
+                        key={idx}
+                        isActive={item.children.some(
+                          (child) => pathname === child.link
+                        )}
+                        handleToggle={() => toggleMenu(item.label, false)}
+                        label={isSidebarExpanded && item.label}
+                        Icon={item.icon}
+                      />
+                    </Tooltip.Trigger>
+                    <Tooltip.Content
+                      className="bg-white rounded-r-md  min-w-[230px] w-full px-2 py-[9px] text-gray-500 hover:text-gray-700"
+                      side="right"
+                    >
+                      {item.children && item.children.length > 0 && (
+                        <div className="flex flex-col gap-1 pl-4 ">
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.link}
+                              href={child.link}
+                              className={cn(
+                                "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ",
+                                pathname === child.link
+                                  ? "bg-primary-color text-white"
+                                  : "text-gray-500 hover:text-gray-700",
+                                pathname !== child.link && "hover:bg-pink-100"
+                              )}
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </Tooltip.Content>
+                  </Tooltip>
+                </ToolTipProvider>
+              ) : (
+                <ToolTipProvider delayDuration={0}>
+                  <Tooltip>
+                    <Tooltip.Trigger>
+                      <NavLink
+                        key={idx}
+                        handleToggle={() => {
+                          handleToggleMenu();
+                        }}
+                        link={item.link}
+                        isActive={pathname === item.link}
+                        Icon={item.icon}
+                        label={isSidebarExpanded && item.label}
+                      />
+                    </Tooltip.Trigger>
+                    <Tooltip.Content
+                      className="bg-white rounded-r-md px-2 py-[9px] text-gray-500 hover:text-gray-700"
+                      side="right"
+                    >
+                      <p className={`${"text-gray-500 hover:text-gray-700"}`}>
+                        {item.label}
+                      </p>
+                    </Tooltip.Content>
+                  </Tooltip>
+                </ToolTipProvider>
+              )}
+            </div>
+          ))}
+        </nav>
+        <div
+          className={cn(
+            "flex w-full shrink-0 cursor-pointer items-center p-1",
+            isSidebarExpanded ? "justify-end pr-4" : "justify-center"
+          )}
+        >
+          <button
+            className="flex items-center justify-center rounded-full bg-primary-color text-white transition-all duration-300 w-10 h-10"
+            onClick={toggleSidebar}
+          >
+            {isSidebarExpanded ? (
+              <StepBack className="cursor-pointer" />
+            ) : (
+              <StepForward className="cursor-pointer" />
+            )}
+          </button>
+        </div>
+      </aside>
+
+      <aside
+        id="sidebar-multi-level-sidebar"
+        className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-40 transition-transform ${
+          expanded ? "-translate-x-full" : ""
+        }`}
+      >
+        <div className="flex justify-end  gap-10">
+          <div className="p-4 pb-8 text-primary-color font-bold text-4xl text-center">
+            truereff
+          </div>
+          <X
+            className="size-6 shrink-0 mt-5 mr-2 cursor-pointer"
+            onClick={handleExpandSidebar}
+          />
+        </div>
+        <nav className="flex flex-col space-y-2 px-3 overflow-auto flex-1">
+          {(menu ?? []).map((item, idx) => (
+            <div key={idx} className="group">
+              {item.children ? (
+                <div>
+                  <NavLink
+                    key={idx}
+                    isActive={item.children.some(
+                      (child) => pathname === child.link
+                    )}
+                    handleToggle={() => toggleMenu(item.label, false)}
+                    label={item.label}
+                    Icon={item.icon}
+                    hasSubmenu
+                    expended={expandedMenus[item.label]}
+                  />
+                  {expandedMenus[item.label] && (
+                    <div className="ml-6 px-4">
+                      <div className="flex flex-col gap-3 px-4 pt-2">
+                        {item.children.map((child, idx) => (
+                          <NavLink
+                            key={idx}
+                            link={child.link}
+                            handleToggle={() => toggleMenu(item.label, true)}
+                            isActive={pathname === child.link}
+                            label={child.label}
+                            isChild
+                            childIndex={idx}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <NavLink
+                  key={idx}
+                  handleToggle={() => {
+                    handleToggleMenu();
+                  }}
+                  link={item.link}
+                  isActive={pathname === item.link}
+                  Icon={item.icon}
+                  label={item.label}
+                />
+              )}
+            </div>
+          ))}
+        </nav>
+      </aside>
     </>
   );
 };
