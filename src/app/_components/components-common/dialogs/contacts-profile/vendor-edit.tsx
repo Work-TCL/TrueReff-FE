@@ -48,9 +48,9 @@ export default function EditContactVendorForm({
       let response: any;
 
       if (profile) {
-        response = await axios.put(`/vendor/contact/${id}`, payload);
+        response = await axios.put(`/auth/vendor/contact/${id}`, payload);
       } else {
-        response = await axios.post("/vendor/contact", payload);
+        response = await axios.post("/auth/vendor/contact", payload);
       }
       if (response?.data) {
         response = response?.data;

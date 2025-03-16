@@ -103,7 +103,7 @@ export default function PreFormPage() {
 
       if (response?.status === 201) {
         toast.success("Vendor successfully registered.");
-        router.push("/overview");
+        router.push("/vendor/dashboard");
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -133,7 +133,7 @@ export default function PreFormPage() {
 
         const alreadyExists = response?.data?.data?.alreadyExists;
         if (alreadyExists) {
-          toast.error(translate("email_already_used"));
+          toast.error("Company Email Already Registered.");
         } else if (isValid && !alreadyExists) {
           setActiveTab(TABS_STATUS.CONTACT_INFO); // Move to next tab
         }
@@ -151,6 +151,7 @@ export default function PreFormPage() {
       setLoading(false);
     }
   };
+
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
       <HeaderAuth />
@@ -160,6 +161,7 @@ export default function PreFormPage() {
           tabs={allTabs}
           setActiveTabIndex={setActiveTab}
           activeTabIndex={activeTab}
+          grid={3}
         />
         <FormProvider {...methods}>
           <form

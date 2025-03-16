@@ -14,20 +14,25 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const locale = await getLocale();
-  const messages = await getMessages();
+  try {
+    const locale = (await getLocale()) || "en";
+    const messages = (await getMessages()) || { locale: "en" };
 
-  return (
-    <html lang={locale}>
-      <body>
-        <NextAuthProvider>
-          <NextIntlClientProvider messages={messages}>
-            {children}
-            <Dialogs />
-            <Toaster position="top-right" />
-          </NextIntlClientProvider>
-        </NextAuthProvider>
-      </body>
-    </html>
-  );
+    return (
+      <html lang={locale}>
+        <body>
+          <NextAuthProvider>
+            <NextIntlClientProvider messages={messages}>
+              {children}
+              <Dialogs />
+              <Toaster position="top-right" />
+            </NextIntlClientProvider>
+          </NextAuthProvider>
+        </body>
+      </html>
+    );
+  } catch (e) {
+    console.log("main layout error:", e);
+    return null;
+  }
 }

@@ -31,7 +31,7 @@ export default function ContactDetailsForm() {
       </div>
       <div className="col-span-2">
         <Input
-          label="Contact Person 1"
+          label="Contact Person 2"
           name={`contacts[1].name`}
           type="text"
           placeholder="ABC"

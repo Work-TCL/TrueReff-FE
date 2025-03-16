@@ -42,7 +42,7 @@ export default function EditProfile({ profile }: any) {
       //  const payload: IForgotSchema = {
       //    email: data?.email,
       //  };
-      let response: any = await axios.patch("/user", data);
+      let response: any = await axios.patch("/auth/user", data);
       if (response?.data) {
         response = response?.data;
       }

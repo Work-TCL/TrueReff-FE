@@ -159,22 +159,26 @@ export const preFormSchema = Yup.object().shape({
     .required("Business Name is required")
     .min(2, "Business Name must be at least 2 characters"),
   company_email: Yup.string()
-    .email()
-    .lowercase()
+    .email("Company Email must be a valid email")
+    .lowercase("Company Email must be a valid email")
     .required("Company Email is required"),
   company_phone: Yup.string().required("Company Phone is required"),
   gst_number: Yup.string().required("GST Number is required"),
   website: Yup.string().url().required("Website is required"),
   type_of_business: Yup.string().required("Type of business is required"),
-  contacts: Yup.array().of(
-    Yup.object().shape({
-      name: Yup.string().required("Name is required"),
-      phone: Yup.string().required("Phone number is required"),
-      email: Yup.string()
-        .email("Invalid email format")
-        .required("Email is required"),
-    })
-  ),
+  contacts: Yup.array()
+    .of(
+      Yup.object()
+        .shape({
+          name: Yup.string().required("Name is required"),
+          phone: Yup.string().required("Phone number is required"),
+          email: Yup.string()
+            .email("Invalid email format")
+            .required("Email is required"),
+        })
+        .required()
+    )
+    .required(),
   omni_channels: Yup.array()
     .of(Yup.string().required("Channel is required"))
     .min(1, "At least one channel is required"),
@@ -294,11 +298,33 @@ export const creatorOnBoardingSchema = Yup.object().shape({
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
     .required("Tags are required"),
-  category: Yup.string().required("Category is required"),
-  sub_category: Yup.string().required("Sub-category is required"),
+  category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().required("Label is required"),
+        value: Yup.string().required("Value is required"),
+      })
+    )
+    .min(1, "Category is required")
+    .required("Category is required"), // Ensure at least one category is selected
+  sub_category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().required("Label is required"),
+        value: Yup.string().required("Value is required"),
+      })
+    )
+    .min(1, "Sub-category is required")
+    .required("Sub-Category is required"), // Ensure at least one sub-category is selected
   profile_image: Yup.string().nullable(),
   banner_image: Yup.string().nullable(),
 });
 
 export interface ICreatorOnBoardingSchema
   extends Yup.Asserts<typeof creatorOnBoardingSchema> {}
+
+export const shopifyConnectSchema = Yup.object().shape({
+  id_string: Yup.string().required("Shopify ID is required"),
+});
+export interface IShopifyConnectSchema
+  extends Yup.Asserts<typeof shopifyConnectSchema> {}
