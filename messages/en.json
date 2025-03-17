@@ -279,5 +279,16 @@
   "Earning_payments": "Earning & Payments",
   "Trending_Insights_Discoverability": "Trending Insights & Discoverability",
   "Brands_List": "Brands List",
-  "try_again": "Please try again"
+  "try_again": "Please try again",
+  "Search_Product": "Search product...",
+  "No_Brands_Available_Title": "No Brands Available",
+  "No_Brands_Available_Description": "It seems there are currently no brands to display. Please check back later.",
+  "Brand_Name": "Brand_Name",
+  "SubCategory": "SubCategory",
+  "Total_Sale": "Total_Sale",
+  "Brand_Rating":"Brand_Rating",
+  "reviews":"reviews",
+  "Fashion":"Fashion",
+  "Rating":"Rating"
+
 }

@@ -5,11 +5,14 @@ import BrandCard from "./_components/brandCard";
 import { Info, Search } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
+// import BrandListView from "./_components/brandList";
+import { translate } from "@/lib/utils/translate";
+import BrandListView from "./_components/brandList";
 
-interface Brand {
+export interface Brand {
   id: number;
   name: string;
   category: string;
@@ -33,7 +36,7 @@ export default function BrandList() {
       const response: any = await axios.get(
         `product/brand-product/brand/list?page=${page}&limit=${limit}`
       );
-      if (response?.status === 200) {
+      if (response.status === 200) {
         const brandData = response.data.data;
         if (typeof brandData === "object" && brandData !== null) {
           const brandsArray = brandData.items || brandData.data || [];
@@ -67,26 +70,30 @@ export default function BrandList() {
       toast.error(errorMessage);
     }
   };
+
   useEffect(() => {
     getBrandList(1, 20);
   }, []);
 
   return (
     <div
-      className={`flex flex-col p-6 gap-6 ${brands.length === 0 && "h-full"}`}
+      className={`flex flex-col p-6 gap-6 ${
+        Boolean(brands.length === 0) ? "h-full" : ""
+      }`}
     >
-      {brands.length < 0 && (
-        <div className="relative">
-          <Input
-            placeholder="Search product..."
-            className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
-          />
-          <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-        </div>
-      )}
+      <div
+        className={`relative ${Boolean(brands.length === 0) ? "hidden" : ""} `}
+      >
+        <Input
+          placeholder={translate("Search_Product")}
+          className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+        />
+        <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
+      </div>
 
-      {brands.length > 0 ? (
+      {brands && brands.length > 0 ? (
         <>
+          {/* <BrandListView brand={brands} /> */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
             {brands.map((brand: any) => (
               <BrandCard key={brand.id} {...brand} />
@@ -106,15 +113,19 @@ export default function BrandList() {
           )}
         </>
       ) : (
-        <div className=" flex items-center justify-center flex-col flex-1 col-span-full text-center text-gray-500 p-4 bg-white rounded-[20px] ">
-          <Info className="mx-auto mb-2 text-gray-400" />
-          <h2 className="text-lg font-semibold">No Brands Available</h2>
-          <p className="text-sm">
-            It seems there are currently no brands to display. Please check back
-            later.
-          </p>
-        </div>
+        <EmptyPlaceHolde />
       )}
+    </div>
+  );
+}
+export function EmptyPlaceHolde() {
+  return (
+    <div className=" flex items-center justify-center flex-col flex-1 col-span-full text-center text-gray-500 p-4 bg-white rounded-[20px] ">
+      <Info className="mx-auto mb-2 text-gray-400" />
+      <h2 className="text-lg font-semibold">
+        {translate("No_Brands_Available_Title")}
+      </h2>
+      <p className="text-sm">{translate("No_Brands_Available_Description")}</p>
     </div>
   );
 }

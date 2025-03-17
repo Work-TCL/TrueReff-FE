@@ -178,7 +178,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     {
       label: translate("Brands_List"),
       icon: Store,
-      link: "/brandsList",
+      link: "/creator/brandsList",
     },
     {
       label: translate("Creator_Analysis"),

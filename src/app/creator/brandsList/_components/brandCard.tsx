@@ -1,5 +1,6 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
+import { translate } from "@/lib/utils/translate";
 import { Star, TrendingUp } from "lucide-react";
 
 interface BrandCardProps {
@@ -31,7 +32,7 @@ export default function BrandCard({
         <div className="flex flex-col w-full gap-1">
           <div className="flex flex-1 item-center w-full text-start gap-[6px]">
             <p className="text-lg font-medium text-gray-black">{name}</p>
-            <p className="text-font-grey">(Fashion)</p>
+            <p className="text-font-grey">{`(${translate("Fashion")})`}</p>
           </div>
           <p className="text-secondary text-base font-normal text-start">
             {category}
@@ -39,7 +40,9 @@ export default function BrandCard({
         </div>
         <div className="flex flex-col gap-1 w-full">
           <div className="flex flex-1 item-center justify-between w-full text-start gap-[6px]">
-            <p className="text-primary-color text-xs font-normal">Total Sale</p>
+            <p className="text-primary-color text-xs font-normal">
+              {translate("Total_Sale")}
+            </p>
             <p className=" flex gap-1 item-center">
               <span className="text-primary-color text-xs font-normal">
                 {" "}
@@ -62,7 +65,9 @@ export default function BrandCard({
             <p className="text-sm font-normal text-gray-black">
               {totalProducts}
             </p>
-            <p className="text-gray-color font-normal">Total Products</p>
+            <p className="text-gray-color font-normal">
+              {translate("Total_Products")}
+            </p>
           </div>
           <div className="h-full w-px bg-stroke mx-2"></div>{" "}
           <div className="flex flex-1 flex-col flex-col item-center w-full">
@@ -71,7 +76,7 @@ export default function BrandCard({
               <p className="text-sm font-normal"> {rating} </p>
               <p>({reviews})</p>
             </div>
-            <p className="text-gray-color font-normal">Rating</p>
+            <p className="text-gray-color font-normal">{translate("Rating")}</p>
           </div>
         </div>
       </CardContent>

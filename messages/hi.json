@@ -273,5 +273,17 @@
   "Trending_Tag": "ट्रेंडिंग टैग",
   "Affiliate_Link": "संबद्ध लिंक",
   "Earning_payments": "कमाई और भुगतान",
-  "Trending_Insights_Discoverability": "ट्रेंडिंग अंतर्दृष्टि और खोज क्षमता"
+  "Trending_Insights_Discoverability": "ट्रेंडिंग अंतर्दृष्टि और खोज क्षमता",
+  "Brands_List": "ब्रांड सूची",
+  "try_again": "कृपया पुनः प्रयास करें",
+  "Search_Product": "उत्पाद खोजें...",
+  "No_Brands_Available_Title": "कोई ब्रांड उपलब्ध नहीं",
+  "No_Brands_Available_Description": "ऐसा लगता है कि फिलहाल प्रदर्शित करने के लिए कोई ब्रांड नहीं हैं। कृपया बाद में जांचें।",
+  "Brand_Name": "ब्रांड नाम",
+  "SubCategory": "उपश्रेणी",
+  "Total_Sale": "कुल बिक्री",
+  "Brand_Rating": "ब्रांड रेटिंग",
+  "reviews": "समीक्षाएं",
+  "Fashion": "फैशन",
+  "Rating": "रेटिंग"
 }
