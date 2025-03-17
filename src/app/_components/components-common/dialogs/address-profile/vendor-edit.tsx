@@ -50,9 +50,9 @@ export default function EditAddressVendorForm({
       let response: any;
 
       if (profile) {
-        response = await axios.put(`/vendor/address/${id}`, payload);
+        response = await axios.put(`/auth/vendor/address/${id}`, payload);
       } else {
-        response = await axios.post("/vendor/address", payload);
+        response = await axios.post("/auth/vendor/address", payload);
       }
       if (response?.data) {
         response = response?.data;

@@ -16,7 +16,7 @@ import BasicInfoForm from "./components/basic-details";
 import SocialMedia from "./components/social-media";
 import ProfileSetup from "./components/profile-setup";
 import toast from "react-hot-toast";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { useRouter, useSearchParams } from "next/navigation";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import PaymentDetails from "./components/payment-details";
@@ -71,21 +71,21 @@ export default function CreatorRegistrationPage() {
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_DETAILS);
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
-      full_name: "YASH",
-      user_name: "yash_creators",
+      full_name: "",
+      user_name: "",
       email: email,
-      phone_number: "+9848784545787",
-      profile_title: "The Creator",
-      short_description: "SHORT DESCRIPTIONS",
-      long_description: "LONG DESCRIPTIONS",
-      tags: ["YASH"],
-      category: "",
-      sub_category: "",
+      phone_number: "",
+      profile_title: "",
+      short_description: "",
+      long_description: "",
+      tags: [],
+      category: [],
+      sub_category: [],
       profile_image: null,
       banner_image: null,
     },
     resolver: yupResolver(creatorOnBoardingSchema),
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   const onSubmit = async (data: ICreatorOnBoardingSchema) => {
@@ -100,8 +100,8 @@ export default function CreatorRegistrationPage() {
         title: data.profile_title,
         long_description: data.long_description,
         short_description: data.short_description,
-        category: data.category,
-        sub_category: data.sub_category,
+        category: data.category.map((v) => v.value),
+        sub_category: data.sub_category.map((v) => v.value),
         tags: data.tags || [],
       };
 
@@ -127,19 +127,32 @@ export default function CreatorRegistrationPage() {
     }
   };
 
-  const handleTriggerStepper = async () => {
+  const handleTriggerStepper = async (e) => {
     setLoading(true);
     if (TABS_STATUS.BASIC_DETAILS === activeTab) {
-      const basicInfoField: any = ["full_name", "user_name", "email", "phone"];
+      const basicInfoField: any = [
+        "full_name",
+        "user_name",
+        "email",
+        "phone_number",
+      ];
       const isValid = await methods.trigger(basicInfoField);
 
       if (isValid) {
+        // methods.clearErrors([
+        //   "profile_title",
+        //   "long_description",
+        //   "short_description",
+        //   "category",
+        //   "sub_category",
+        //   "tags",
+        // ]);
         setActiveTab(TABS_STATUS.PROFILE_SETUP); // Move to next tab
       }
     }
     setLoading(false);
   };
-
+  console.log("errors=>>", activeTab, methods.formState.errors);
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
@@ -159,6 +172,7 @@ export default function CreatorRegistrationPage() {
           tabs={allTabs}
           setActiveTabIndex={setActiveTab}
           activeTabIndex={activeTab}
+          grid={4}
         />
         <FormProvider {...methods}>
           <form
@@ -187,26 +201,30 @@ export default function CreatorRegistrationPage() {
                   </Button>
                 )}
 
-              {activeTab === TABS_STATUS.PROFILE_SETUP ? (
-                <Button
-                  type="submit"
-                  className="w-fit font-medium px-8"
-                  size="small"
-                >
-                  {"Save & Continue"}
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  className="w-fit font-medium px-8"
-                  size="small"
-                  onClick={handleTriggerStepper}
-                  loading={loading}
-                  disabled={loading}
-                >
-                  {"Save & Continue"}
-                </Button>
-              )}
+              <Button
+                type="submit"
+                className={cn(
+                  "w-fit font-medium px-8",
+                  activeTab === TABS_STATUS.PROFILE_SETUP ? "block" : "hidden"
+                )}
+                size="small"
+                loading={loading}
+                disabled={loading || activeTab !== TABS_STATUS.PROFILE_SETUP}
+              >
+                {"Save & Continue"}
+              </Button>
+              <Button
+                className={cn(
+                  "w-fit font-medium px-8",
+                  activeTab === TABS_STATUS.PROFILE_SETUP ? "hidden" : "block"
+                )}
+                size="small"
+                onClick={handleTriggerStepper}
+                loading={loading}
+                disabled={loading}
+              >
+                {"Save & Continue"}
+              </Button>
             </div>
           </form>
         </FormProvider>

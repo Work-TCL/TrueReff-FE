@@ -11,10 +11,10 @@ import { translate } from "@/lib/utils/translate";
 export default function RegisterPage() {
   return (
     <AuthLayoutPage authImage="sign-up-image.svg">
-      <div className="flex flex-col justify-center h-full w-full mx-auto max-w-lg">
+      <div className="flex flex-col sm:justify-center sm:h-full w-full mx-auto max-w-lg">
         <HeaderAuth />
         <div className="w-full pt-6">
-          <div className="flex justify-center text-[32px] font-semibold text-gray-darken">
+          <div className="flex justify-center text-[32px] font-semibold text-gray-darken text-center">
             {translate("Sign_up_to_get_started")}
           </div>
           <div className="mt-5">

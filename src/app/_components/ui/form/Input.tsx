@@ -5,6 +5,7 @@ import { useState } from "react";
 import { cn } from "@sohanemon/utils";
 import { GoChevronDown } from "react-icons/go";
 import Select from "react-select";
+import { get } from "lodash";
 
 interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -64,7 +65,7 @@ export default function Input({
   };
 
   const getErrorMessage = (name: string) => {
-    const error = errors[name];
+    const error = get(errors, name);
     if (error && error.message) {
       return error.message as string;
     }
@@ -73,13 +74,21 @@ export default function Input({
 
   const getError = () => {
     return (
-      Boolean(errors[name]) && (
+      Boolean(get(errors, name)) && (
         <span className="text-red-600 text-sm p-2">
           {getErrorMessage(name)}
         </span>
       )
     );
   };
+
+  const getLabel = () =>
+    label && (
+      <label className={cn(labelStyle)}>
+        {label}
+        {required && <span className="text-red-500">*</span>}
+      </label>
+    );
 
   const renderTextInput = () => (
     <Controller
@@ -88,7 +97,7 @@ export default function Input({
       rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col">
-          {label && <label className={cn(labelStyle)}>{label}</label>}
+          {getLabel()}
           <div className="relative">
             <input
               type={type}
@@ -114,15 +123,17 @@ export default function Input({
     <Controller
       name={name}
       control={control}
+      rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col">
-          {label && <label className="mb-1 font-medium">{label}</label>}
-          <div className="border p-2 rounded flex flex-wrap gap-2">
+          {getLabel()}
+          <div className="w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={addTag}
+              onBlur={field.onBlur}
               placeholder={placeholder}
               className="flex-1 outline-none"
             />
@@ -155,7 +166,7 @@ export default function Input({
       rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col relative">
-          {label && <label className={cn(labelStyle)}>{label}</label>}
+          {getLabel()}
           <div className="w-full relative">
             <input
               type={showPassword ? "text" : type}
@@ -198,7 +209,7 @@ export default function Input({
       rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col">
-          {label && <label className={cn(labelStyle)}>{label}</label>}
+          {getLabel()}
           <textarea
             className={cn(inputStyle)}
             placeholder={placeholder}
@@ -219,7 +230,7 @@ export default function Input({
       rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col">
-          {label && <label className={cn(labelStyle)}>{label}</label>}
+          {getLabel()}
           <div className="relative">
             <select className={cn(inputStyle, "appearance-none")} {...field}>
               <option selected>{placeholder || "Select..."}</option>
@@ -247,7 +258,7 @@ export default function Input({
       rules={{ required: required ? `${label} is required` : false }}
       render={({ field }) => (
         <div className="flex flex-col">
-          {label && <label className={cn(labelStyle)}>{label}</label>}
+          {getLabel()}
           <div className="relative">
             <Select
               defaultValue={field?.value || []}

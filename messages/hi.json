@@ -203,8 +203,8 @@
   "add_new_address": "नया पता जोड़ें",
   "Remove": "हटाएं",
   "store_integration": "स्टोर एकीकरण",
-  "store_ID": "स्टोर आईडी",
-  "enter_shopify_or_wordpress_store_ID": "Shopify या WordPress स्टोर आईडी दर्ज करें",
+  "shopify_id": "Shopify आईडी",
+  "enter_shopify_shopify_id": "Shopify स्टोर आईडी दर्ज करें",
   "connect_now": "अभी कनेक्ट करें",
   "Profile": "प्रोफ़ाइल",
   "package_details": "पैकेज विवरण",
@@ -273,8 +273,7 @@
   "Trending_Tag": "ट्रेंडिंग टैग",
   "Affiliate_Link": "संबद्ध लिंक",
   "Earning_payments": "कमाई और भुगतान",
-  "Trending_Insights_Discoverability": "ट्रेंडिंग अंतर्दृष्टि और खोज क्षमता",
-  "Brands_List": "ब्रांड सूची",
+   "Brands_List": "ब्रांड सूची",
   "try_again": "कृपया पुनः प्रयास करें",
   "Search_Product": "उत्पाद खोजें...",
   "No_Brands_Available_Title": "कोई ब्रांड उपलब्ध नहीं",
@@ -285,5 +284,6 @@
   "Brand_Rating": "ब्रांड रेटिंग",
   "reviews": "समीक्षाएं",
   "Fashion": "फैशन",
-  "Rating": "रेटिंग"
+  "Rating": "रेटिंग",
+  "Trending_Insights_Discoverability": "ट्रेंडिंग अंतर्दृष्टि और खोज क्षमता"
 }

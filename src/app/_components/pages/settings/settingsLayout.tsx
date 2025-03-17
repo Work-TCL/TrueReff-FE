@@ -11,23 +11,23 @@ interface ISettingsLayout {
 const settingMenus: any[] = [
   {
     label: "Profile",
-    path: "/settings",
+    path: "/vendor/settings",
   },
   {
     label: "package_details",
-    path: "/settings/package",
+    path: "/vendor/settings/package",
   },
   {
     label: "store_connects",
-    path: "/settings/store",
+    path: "/vendor/settings/store",
   },
   {
     label: "payment_options",
-    path: "/settings/payment",
+    path: "/vendor/settings/payment",
   },
   {
     label: "billing_details",
-    path: "/settings/billing",
+    path: "/vendor/settings/billing",
   },
 ];
 

@@ -129,8 +129,8 @@ export interface IPostCreatorRegisterRequest {
   long_description: string;
   short_description: string;
   tags: string[];
-  category: string;
-  sub_category: string;
+  category: string[];
+  sub_category: string[];
   profile_image?: string;
   banner_image?: string;
 }

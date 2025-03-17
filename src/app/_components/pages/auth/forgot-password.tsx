@@ -15,7 +15,9 @@ export default function ForgotPasswordPage() {
           <AuthTitle text={translate("Forgot_Password")} />
           <AuthDescription
             className="mt-2"
-            text={translate("Enter_your_registered_email_address._well_send_you_a_code_to_reset_your_password.")}
+            text={translate(
+              "Enter_your_registered_email_address_well_send_you_a_code_to_reset_your_password"
+            )}
           />
           <div className="mt-5">
             <ForgotPasswordForm />

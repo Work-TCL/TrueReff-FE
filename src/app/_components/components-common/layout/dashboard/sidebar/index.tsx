@@ -101,7 +101,7 @@ interface ISidebarProps {
 }
 const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
-  const { data: session } = useSession();
+  const { data: session, ...sessionData } = useSession();
   let user = session?.user ?? { type: "vendor" };
   const lg = useMediaQuery("(min-width: 1024px)");
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -130,7 +130,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
         { label: translate("Product_List"), link: "/vendor/products" },
       ],
     },
-    { label: translate("Creator&Collaboration"), icon: User, link: "/vendor/creator" },
+    {
+      label: translate("Creator&Collaboration"),
+      icon: User,
+      link: "/vendor/creator",
+    },
     {
       label: translate("Campaign"),
       icon: Megaphone,
@@ -156,12 +160,19 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     { label: translate("Settings"), icon: Settings, link: "/vendor/settings" },
   ];
   const creatorMenuItem: MenuItem[] = [
-    { label: translate("Dashboard"), icon: LayoutGrid, link: "/creator/dashboard" },
+    {
+      label: translate("Dashboard"),
+      icon: LayoutGrid,
+      link: "/creator/dashboard",
+    },
     {
       label: translate("My_Store"),
       icon: Store,
       children: [
-        { label: translate("Store_set_up"), link: "/creator/my-store/store-setup" },
+        {
+          label: translate("Store_set_up"),
+          link: "/creator/my-store/store-setup",
+        },
         { label: translate("Product_List"), link: "/creator/my-store" },
       ],
     },

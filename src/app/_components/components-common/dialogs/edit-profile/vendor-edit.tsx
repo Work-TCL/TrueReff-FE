@@ -36,7 +36,7 @@ export default function EditVendorForm({ profile }: { profile: any }) {
       const payload = data;
       //   delete payload.company_email
       //   delete payload.company_phone
-      let response: any = await axios.patch("/vendor", payload);
+      let response: any = await axios.patch("/auth/vendor", payload);
       if (response?.data) {
         response = response?.data;
       }
