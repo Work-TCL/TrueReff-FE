@@ -7,7 +7,6 @@ import axios from "./axios";
 import { getServerSession } from "next-auth";
 import authOptions from "@/app/api/auth/[...nextauth]/options";
 
-
 type AxiosError = { config: { _retry: boolean } } & OriginalAxiosError;
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -30,14 +29,16 @@ axiosInstance.interceptors.request.use(
       } else {
         // ✅ Use client-side session retrieval (inside a function)
         const getClientSession = async () => {
-          const session = await import("next-auth/react").then((mod) => mod.getSession());
+          const session = await import("next-auth/react").then((mod) =>
+            mod.getSession()
+          );
           return session?.accessToken;
         };
         token = await getClientSession();
       }
 
       if (token && request.headers) {
-        request.headers["Authorization"] = `${token}`;
+        request.headers["Authorization"] = `Bearer ${token}`;
       }
     } catch (error) {
       console.error("Error retrieving token", error);

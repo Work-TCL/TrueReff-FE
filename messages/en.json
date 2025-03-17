@@ -286,9 +286,9 @@
   "Brand_Name": "Brand_Name",
   "SubCategory": "SubCategory",
   "Total_Sale": "Total_Sale",
-  "Brand_Rating":"Brand_Rating",
-  "reviews":"reviews",
-  "Fashion":"Fashion",
-  "Rating":"Rating"
-
+  "Brand_Rating": "Brand_Rating",
+  "reviews": "reviews",
+  "Fashion": "Fashion",
+  "channels_connected": "Store Channels",
+  "Rating": "Rating"
 }

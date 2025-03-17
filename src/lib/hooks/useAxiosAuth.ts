@@ -21,7 +21,7 @@ const useAxiosAuth = () => {
         try {
           const token = session?.accessToken;
           if (token && request.headers) {
-            request.headers["Authorization"] = `${token}`;
+            request.headers["Authorization"] = `Bearer ${token}`;
           }
         } catch (error) {
           console.error("Error retrieving token", error);
