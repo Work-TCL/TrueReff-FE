@@ -222,11 +222,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     <>
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white  flex-col fixed top-0 left-0 z-40 transition-all duration-300 ease-in-out  ${
-          isSidebarExpanded ? "w-[300px]" : "w-[75px]"
+        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-40 transition-all duration-300 ease-in-out  ${
+          isSidebarExpanded ? "w-[300px]" : "w-[75px]"  
         }`}
       >
-        <div className="flex justify-end justify-center gap-10  ">
+        <div className="flex justify-center gap-10  ">
           <div
             className={`p-4 pb-8 text-primary-color font-bold text-4xl text-center`}
           >
@@ -301,7 +301,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                       />
                     </Tooltip.Trigger>
                     <Tooltip.Content
-                      className="bg-white rounded-r-md  min-w-[230px] w-full px-2 py-[9px] text-gray-500 hover:text-gray-700"
+                      className="bg-white rounded-r-md min-w-[230px] w-full px-2 py-[9px] text-gray-500 hover:text-gray-700"
                       side="right"
                     >
                       {item.children && item.children.length > 0 && (
