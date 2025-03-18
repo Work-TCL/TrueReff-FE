@@ -15,7 +15,7 @@ export default function ResetPasswordPage() {
           <AuthTitle text={translate("Reset_Password")} />
           <AuthDescription
             className="mt-2"
-            text={`${translate("Enter_new_password_to_secure_your_account.")}`}
+            text={`${translate("Enter_new_password_to_secure_your_account")}`}
           />
           <div className="mt-5">
             <ResetPasswordForm />

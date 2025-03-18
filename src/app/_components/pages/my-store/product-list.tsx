@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch"
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";

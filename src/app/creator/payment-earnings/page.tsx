@@ -1,6 +1,8 @@
 import PaymentEarnings from "@/app/_components/pages/payment-earnings";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default function PaymentEarningsPage(){
-    return <PaymentEarnings/>
+    return <Suspense fallback={<div>Loading...</div>}>
+        <PaymentEarnings/>
+    </Suspense>
 }

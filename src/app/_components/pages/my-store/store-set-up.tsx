@@ -4,24 +4,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import React, { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import React from "react";
 import { translate } from "../../../../lib/utils/translate";
 
 interface IAddProductDetailProps {
     isDetailView?: boolean;
 }
 export default function StoreSetUp(props: IAddProductDetailProps) {
-    let { isDetailView } = props;
-    const [variants, setVariants] = useState([
-        { variationType: "", variation: "" }
-    ]);
-    const handleAddVariant = () => {
-        setVariants([...variants, { variationType: "", variation: "" }])
-    }
-    const handleDelete = (ind: number) => {
-        setVariants([...variants.filter((ele, index) => index !== ind)])
-    };
+    // const [variants, setVariants] = useState([
+    //     { variationType: "", variation: "" }
+    // ]);
+    // const handleAddVariant = () => {
+    //     setVariants([...variants, { variationType: "", variation: "" }])
+    // }
+    // const handleDelete = (ind: number) => {
+    //     setVariants([...variants.filter((ele, index) => index !== ind)])
+    // };
     return (
         <div className="flex flex-col gap-5 h-full px-4 py-3">
             <div className="flex justify-between items-center flex-wrap gap-2">

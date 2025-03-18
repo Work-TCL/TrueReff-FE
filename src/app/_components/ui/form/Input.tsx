@@ -7,7 +7,7 @@ import { GoChevronDown } from "react-icons/go";
 import Select from "react-select";
 import { get } from "lodash";
 
-interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
+interface IInput extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
   name: string;
   type?: string;
@@ -60,7 +60,7 @@ export default function Input({
   const removeTag = (index: number) => {
     setValue(
       name,
-      tags.filter((_, i) => i !== index)
+      tags.filter((_: any, i: number) => i !== index)
     );
   };
 

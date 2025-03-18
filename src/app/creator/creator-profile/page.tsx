@@ -1,7 +1,9 @@
 import CreatorProfile from "@/app/_components/pages/creator-profile";
-import React from "react";
+import React, { Suspense } from "react";
 
 
 export default function CreatorProfilePage(){
-    return <CreatorProfile/>
+    return <Suspense fallback={<div>Loading...</div>}>
+        <CreatorProfile/>
+    </Suspense>
 }

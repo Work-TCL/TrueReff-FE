@@ -3,10 +3,8 @@ import React from "react";
 import { StatsCard } from "../../components-common/states/StatesCard";
 import RecentActivities from "../../components-common/tables/RecentActivity";
 import MostSellingBrands from "../../components-common/charts/MostSellingBrands";
-import VendorActivity from "../../components-common/charts/VendorActivityChart";
 import { translate } from "@/lib/utils/translate";
 import PerformanceSummaryChart from "../../components-common/charts/PerformanceChart";
-import DonutChart from "../../components-common/charts/DonutChat";
 
 export default function CreatorAnalysis() {
     return <div className="flex flex-col gap-4 p-6 w-full">

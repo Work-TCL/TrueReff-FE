@@ -127,7 +127,7 @@ export default function CreatorRegistrationPage() {
     }
   };
 
-  const handleTriggerStepper = async (e) => {
+  const handleTriggerStepper = async () => {
     setLoading(true);
     if (TABS_STATUS.BASIC_DETAILS === activeTab) {
       const basicInfoField: any = [

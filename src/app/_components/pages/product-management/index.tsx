@@ -207,16 +207,16 @@ export default function ProductManagement() {
                             <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
                                 <CustomTableCell>
                                     <div className="flex items-center gap-2">
-                                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="32" height="32" rx="4" fill="#F2F4F5"/>
-<rect width="32" height="32" rx="4" fill="url(#pattern0_1206_3031)"/>
-<defs>
-<pattern id="pattern0_1206_3031" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use transform="scale(0.000520833)"/>
-</pattern>
-<image id="image0_1206_3031" width="1920" height="1920" preserveAspectRatio="none"/>
-</defs>
-</svg>
+                                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect width="32" height="32" rx="4" fill="#F2F4F5" />
+                                            <rect width="32" height="32" rx="4" fill="url(#pattern0_1206_3031)" />
+                                            <defs>
+                                                <pattern id="pattern0_1206_3031" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                                    <use transform="scale(0.000520833)" />
+                                                </pattern>
+                                                <image id="image0_1206_3031" width="1920" height="1920" preserveAspectRatio="none" />
+                                            </defs>
+                                        </svg>
 
                                         {/* <Avatar className="w-8 h-8">
                                             <AvatarImage src={creator.productImage} />
@@ -228,7 +228,7 @@ export default function ProductManagement() {
                                 <CustomTableCell>{creator.trendingTag}</CustomTableCell>
                                 <CustomTableCell><span className="text-[#007AFF]">{creator.affiliateLink}</span></CustomTableCell>
                                 <CustomTableCell>
-                                    <PencilLine color="#FF4979"/>
+                                    <PencilLine color="#FF4979" />
                                 </CustomTableCell>
                             </TableRow>
                         ))}

@@ -1,6 +1,8 @@
 import CreatorList from "@/app/_components/pages/creator/list";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default function CreatorPage(){
-    return <CreatorList />
+    return <Suspense fallback={<div>Loading...</div>}>
+        <CreatorList />
+    </Suspense>
 }

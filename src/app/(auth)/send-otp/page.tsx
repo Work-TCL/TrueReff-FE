@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Suspense } from "react";
 import SendOtpPage from "@/app/_components/pages/auth/send-otp";
 
 export default function page() {
-  return <SendOtpPage />;
+  return <Suspense fallback={<div>Loading...</div>}>
+    <SendOtpPage />
+  </Suspense>
 }

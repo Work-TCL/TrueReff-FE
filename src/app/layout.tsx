@@ -5,6 +5,7 @@ import NextAuthProvider from "@/lib/context/auth-session-provider";
 import Dialogs from "@/app/_components/components-common/dialogs";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,6 +22,7 @@ export default async function RootLayout({
     return (
       <html lang={locale}>
         <body>
+              <Suspense fallback={<div>Loading...</div>}>
           <NextAuthProvider>
             <NextIntlClientProvider messages={messages}>
               {children}
@@ -28,6 +30,7 @@ export default async function RootLayout({
               <Toaster position="top-right" />
             </NextIntlClientProvider>
           </NextAuthProvider>
+              </Suspense>
         </body>
       </html>
     );

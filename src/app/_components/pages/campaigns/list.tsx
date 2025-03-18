@@ -13,7 +13,6 @@ import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
 import { Eye, PencilLine, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import * as React from "react";
 import {translate} from "../../../../lib/utils/translate";
 
 
