@@ -136,7 +136,7 @@ export default function ProductList() {
 
   // Update useEffect to fetch the initial product list
   useEffect(() => {
-    fetProductsList(2);
+    fetProductsList(20);
   }, []);
 
   // Update the onClick handlers for pagination buttons
