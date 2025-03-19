@@ -1,12 +1,5 @@
-import { SessionProvider } from "next-auth/react"
+import { redirect } from "next/navigation";
 
-export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
-}: any) {
-  return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
-  )
+export default function App() {
+  return redirect("/dashboard");
 }
