@@ -1,20 +1,17 @@
+"use client";
 import React from "react";
 import ShopifyStoreConnects from "./components/shopify-connect-form";
-import { getConnectedChannelsList } from "@/lib/web-api/channel";
-import { translateServer } from "@/lib/utils/server-translate";
 import Link from "next/link";
+import { translate } from "@/lib/utils/translate";
 
-export default async function StoreConnects() {
-  const channels = await getConnectedChannelsList();
-  const title = await translateServer("store_integration");
-  const channelTitle = await translateServer("channels_connected");
+export default async function StoreConnects({ channels = [] }: any) {
   return (
     <div className="flex flex-col w-full md:w-2/3 lg:w-1/2 bg-white rounded-xl p-4 xl:p-6 gap-2 shadow-md">
       <div className="flex justify-between items-center pb-4">
         <h2 className="text-sm xl:text-lg font-semibold">
           {Array.isArray(channels) && channels.length > 0
-            ? channelTitle
-            : title}
+            ? translate("channels_connected")
+            : translate("store_integration")}
         </h2>
       </div>
       {Array.isArray(channels) && channels.length > 0 ? (
