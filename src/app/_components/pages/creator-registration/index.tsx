@@ -25,6 +25,7 @@ import {
   IPostCreatorRegisterResponse,
 } from "@/lib/types-api/auth";
 import { creatorRegister } from "@/lib/web-api/auth";
+import axiosInstance from "@/lib/web-api/http-common";
 
 let allTabs: {
   id: string;
@@ -83,6 +84,18 @@ export default function CreatorRegistrationPage() {
       sub_category: [],
       profile_image: null,
       banner_image: null,
+      channels: [
+        {
+          account_name: "",
+          handle_name: "",
+          account_link: "",
+        },
+        {
+          account_name: "",
+          handle_name: "",
+          account_link: "",
+        }
+      ]
     },
     resolver: yupResolver(creatorOnBoardingSchema),
     mode: "onSubmit",
@@ -103,6 +116,7 @@ export default function CreatorRegistrationPage() {
         category: data.category.map((v) => v.value),
         sub_category: data.sub_category.map((v) => v.value),
         tags: data.tags || [],
+        channels: data.channels
       };
 
       if (data.banner_image) {
@@ -150,15 +164,43 @@ export default function CreatorRegistrationPage() {
         setActiveTab(TABS_STATUS.PROFILE_SETUP); // Move to next tab
       }
     }
+    else if (TABS_STATUS.PROFILE_SETUP === activeTab) {
+      const profileSetUpFields: any = [
+        "title",
+        "long_description",
+        "short_description",
+        "category",
+        "sub_category",
+        "tags"
+      ];
+      const isValid = await methods.trigger(profileSetUpFields);
+
+      if (isValid) {
+        // methods.clearErrors([
+        //   "profile_title",
+        //   "long_description",
+        //   "short_description",
+        //   "category",
+        //   "sub_category",
+        //   "tags",
+        // ]);
+        setActiveTab(TABS_STATUS.SOCIAL_MEDIA); // Move to next tab
+      }
+    } else if(TABS_STATUS.SOCIAL_MEDIA === activeTab){
+
+    }
     setLoading(false);
   };
-  console.log("errors=>>", activeTab, methods.formState.errors);
+  const handleDisableConnect = async () => {
+    const channels: any = ["channels[1].handle_name"];
+    return await methods.trigger(channels);
+  }
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
       <HeaderAuth />
       <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
-        <div className="flex justify-center md:text-[38px] text-2xl md:py-0 py-5 font-semibold">
+        <div className="flex justify-center md:text-[38px] text-2xl md:py-0 py-5 px-4 font-semibold">
           {
             {
               [TABS_STATUS.BASIC_DETAILS]: "Creator Registration",
@@ -183,7 +225,7 @@ export default function CreatorRegistrationPage() {
               {
                 [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm />,
                 [TABS_STATUS.PROFILE_SETUP]: <ProfileSetup />,
-                [TABS_STATUS.SOCIAL_MEDIA]: <SocialMedia />,
+                [TABS_STATUS.SOCIAL_MEDIA]: <SocialMedia methods={methods}/>,
                 [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
               }[activeTab]
             }
@@ -194,8 +236,8 @@ export default function CreatorRegistrationPage() {
                     type="button"
                     className="w-fit bg-white text-black font-medium px-8"
                     size="small"
-                    // onClick={() => activeTab < 3 && setActiveTab(activeTab + 1)}
-                    onClick={() => {}}
+                    onClick={() => activeTab < 3 && setActiveTab(activeTab + 1)}
+                    // onClick={() => {}}
                   >
                     {"Skip"}
                   </Button>
@@ -205,18 +247,18 @@ export default function CreatorRegistrationPage() {
                 type="submit"
                 className={cn(
                   "w-fit font-medium px-8",
-                  activeTab === TABS_STATUS.PROFILE_SETUP ? "block" : "hidden"
+                  activeTab === TABS_STATUS.SOCIAL_MEDIA ? "block" : "hidden"
                 )}
                 size="small"
                 loading={loading}
-                disabled={loading || activeTab !== TABS_STATUS.PROFILE_SETUP}
+                disabled={loading}
               >
                 {"Save & Continue"}
               </Button>
               <Button
                 className={cn(
                   "w-fit font-medium px-8",
-                  activeTab === TABS_STATUS.PROFILE_SETUP ? "hidden" : "block"
+                  activeTab === TABS_STATUS.SOCIAL_MEDIA ? "hidden" : "block"
                 )}
                 size="small"
                 onClick={handleTriggerStepper}

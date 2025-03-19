@@ -20,9 +20,7 @@ export const SlidingTabBar = ({
 }: ISlidingTabBar) => {
   return (
     <div
-      className={`relative grid ${
-        grid ? `grid-cols-${grid}` : "grid-cols-3"
-      } flex`}
+      className={`relative flex`}
     >
       <span
         className="absolute bottom-0 top-0 -z-10 flex overflow-hidden  py-2 transition-all duration-300"

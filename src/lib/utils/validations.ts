@@ -318,6 +318,30 @@ export const creatorOnBoardingSchema = Yup.object().shape({
     .required("Sub-Category is required"), // Ensure at least one sub-category is selected
   profile_image: Yup.string().nullable(),
   banner_image: Yup.string().nullable(),
+  channels: Yup.array()
+    .of(
+      Yup.object().shape({
+        account_name: Yup.string().required("Account Name is required"),
+        handle_name: Yup.string().required("Handle Name is required"),
+        account_link: Yup.string().url("Account Link is Invalid").required("Account Link is required"),
+      })
+    )
+    .min(1, "At least one channel is required") // Ensures at least one object exists
+    .test(
+      "at-least-one-non-empty-channel",
+      "At least one valid channel is required",
+      (channels) => {
+        if (!channels || channels.length === 0) return false; // No channels at all
+
+        return channels.some(
+          (channel) =>
+            !!channel.account_name?.trim() &&
+            !!channel.handle_name?.trim() &&
+            !!channel.account_link?.trim()
+        );
+      }
+    )
+    .required("At least one channel is required"),
 });
 
 export interface ICreatorOnBoardingSchema
