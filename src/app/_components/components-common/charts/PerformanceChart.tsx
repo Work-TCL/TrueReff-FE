@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { translate } from "@/lib/utils/translate";
 import React from "react";
 import {
@@ -12,6 +18,7 @@ import {
   ResponsiveContainer,
   TooltipProps,
 } from "recharts";
+import Button from "../../ui/button";
 
 const data = [
   { month: "Jan", revenue: 120000, profit: 80000 },
@@ -64,11 +71,11 @@ export default function PerformanceSummaryChart() {
               {translate("Followers")}
             </span>
           </div>
-          {/* <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  variant="outline"
+                  // variant="outline"
                   className="text-gray-600 bg-gray-100 px-3 py-1 rounded-md"
                 >
                   {translate("This_week")} ▼
@@ -80,7 +87,7 @@ export default function PerformanceSummaryChart() {
                 <DropdownMenuItem>{translate("This_month")}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div> */}
+          </div>
         </div>
       </div>
 

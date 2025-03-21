@@ -11,6 +11,9 @@ const data = [
   { name: 'Adidas', percentage: 50 },
   { name: 'Campus', percentage: 45 },
   { name: 'Michel Kaur', percentage: 90 },
+  { name: 'Nike', percentage: 80 },
+  { name: 'Adidas', percentage: 50 },
+  { name: 'Campus', percentage: 45 },
 ];
 
 const MostSellingBrands = () => {
