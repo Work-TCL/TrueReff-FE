@@ -290,8 +290,9 @@
   "reviews": "reviews",
   "Fashion": "Fashion",
   "channels_connected": "Store Channels",
-  "Rating": "Rating",
   "Channels": "Channels",
   "Creator_List": "Creator List",
-  "Available_Creators": "Available Creators"
+  "Available_Creators": "Available Creators",
+  "Yearly": "Yearly",
+  "Rating": "Rating"
 }

@@ -52,13 +52,13 @@ export default function PerformanceSummaryChartDashBoard() {
       {/* Header Section */}
       <div className="flex md:flex-row flex-col justify-between items-center mb-4">
         <p className="text-lg font-semibold whitespace-nowrap">
-          {translate("Performance Summary")}
+          {translate("Performance_Summary")}
         </p>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
             <span className="w-3 h-3 shrink-0 bg-[#7877EE] rounded-full"></span>
             <span className="text-gray-600 text-sm whitespace-nowrap    ">
-              {translate("Earnings ($)")}
+              {translate("Earnings")}
             </span>
           </div>
           <div className="flex items-center gap-1">
@@ -75,9 +75,9 @@ export default function PerformanceSummaryChartDashBoard() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>{translate("This Week")}</DropdownMenuItem>
-              <DropdownMenuItem>{translate("Last Week")}</DropdownMenuItem>
-              <DropdownMenuItem>{translate("This Month")}</DropdownMenuItem>
+              <DropdownMenuItem>{translate("This_week")}</DropdownMenuItem>
+              <DropdownMenuItem>{translate("Last_week")}</DropdownMenuItem>
+              <DropdownMenuItem>{translate("This_month")}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
