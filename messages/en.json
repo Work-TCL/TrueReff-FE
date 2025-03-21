@@ -141,7 +141,7 @@
   "Instagram_View": "Instagram View",
   "YouTube_View": "YouTube View",
   "Past_Sales": "Past Sales",
-  "Tags/Collaboration": "Tags/Collaboration",
+  "Tags_Collaboration": "Tags/Collaboration",
   "Collaborate_Now": "Collaborate Now",
   "Creator_Lists": "Creator Lists",
   "Total_Collaboration_through_platform": "Total Collaboration through platform",
@@ -182,7 +182,7 @@
   "Overview": "Overview",
   "Product_Catalog": "Product Catalog",
   "Add_New_Product": "Add New Product",
-  "Creator&Collaboration": "Creator & Collaboration",
+  "Creators": "Creators",
   "Campaign": "Campaign",
   "Add_New_Campaign": "Add New Campaign",
   "Campaign_List": "Campaign List",
@@ -290,5 +290,8 @@
   "reviews": "reviews",
   "Fashion": "Fashion",
   "channels_connected": "Store Channels",
-  "Rating": "Rating"
+  "Rating": "Rating",
+  "Channels": "Channels",
+  "Creator_List": "Creator List",
+  "Available_Creators": "Available Creators"
 }

@@ -4,6 +4,7 @@ import React from "react";
 import StatesCards from "../../components-common/states/StatesCard";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import {translate} from "../../../../lib/utils/translate";
+import CreatorProfile from "./creator-profile";
 
 export default function ViewCreatorDetail() {
     return (
@@ -24,9 +25,7 @@ export default function ViewCreatorDetail() {
             <StatesCards />
             <div className="flex flex-col xl:flex-row gap-5 w-full">
                 <div className="flex flex-col gap-5 w-full xl:w-1/2">
-                    <div className="border bg-white rounded-2xl h-[400px] p-6">
-                        Monica Bing
-                    </div>
+                    <CreatorProfile />
                     <div className="border bg-white rounded-2xl h-[400px] p-6">
                         <h2 className="font-semibold">{translate("Total_Collaboration_through_platform")}</h2>
                     </div>
