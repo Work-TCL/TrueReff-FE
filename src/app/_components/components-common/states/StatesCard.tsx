@@ -41,7 +41,7 @@ export const StatsCard = ({
 
 export default function StatesCards() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 col-span-3 p-4 bg-white rounded-[20px] lg:max-w-[774px] w-full">
+    <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 gap-4 rounded-[20px] w-full">
       <StatsCard
         title={translate("Active_Collaborations")}
         value={120}
@@ -70,7 +70,7 @@ export default function StatesCards() {
         borderColor="border-[#9773C8]"
         bgColor="bg-[#f5f1fa]"
       />
-      {/* <StatsCard title={translate("New_Brands")} value={200} growth={5} borderColor="border-[#C861A0]" bgColor="bg-[#faeff6]" /> */}
+      <StatsCard title={translate("New_Brands")} value={200} growth={5} borderColor="border-[#C861A0]" bgColor="bg-[#faeff6]" />
     </div>
   );
 }

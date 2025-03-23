@@ -13,7 +13,7 @@ export default function ViewCreatorDetail() {
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/product/list">{translate("Creator_Lists")}</BreadcrumbLink>
+                            <BreadcrumbLink href="/vendor/creators">{translate("Creator_Lists")}</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>

@@ -188,31 +188,31 @@ export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
 
 export const creatorFormSchema = Yup.object().shape({
   full_name: Yup.string()
-    .required("Full_Name_is_required")
-    .min(2, "Full_Name_must_be_at_least_2_characters"),
+    .required("Full Name is required")
+    .min(2, "Full Name must be at least 2 characters"),
   user_name: Yup.string()
-    .required("User_Name_is_required")
-    .min(2, "User_Name_must_be_at_least_2_characters"),
-  email: Yup.string().email().lowercase().required("Email_is_required"),
+    .required("User Name is required")
+    .min(2, "User Name must be at least 2 characters"),
+  email: Yup.string().email().lowercase().required("Email is required"),
   phone_number: Yup.string()
-    .required("Phone_number_is_required")
-    .min(10, "Full_Name_must_be_at_least_10_digits"),
+    .required("Phone number is required")
+    .min(10, "Full Name must be at least 10 digits"),
   profile_title: Yup.string()
-    .required("Profile_title_is_required")
-    .min(2, "Profile_title_must_be_at_least_2_characters"),
+    .required("Profile title is required")
+    .min(2, "Profile title must be at least 2 characters"),
   long_description: Yup.string()
-    .required("Long_Description_is_required")
-    .min(100, "Long_Description_must_be_at_least_100_characters"),
+    .required("Long Description is required")
+    .min(100, "Long Description must be at least 100 characters"),
   short_description: Yup.string()
-    .required("Short_Description_is_required")
-    .min(10, "Short_Description_must_be_at_least_10_characters"),
-  tags: Yup.array().of(Yup.string().required("Tags_is_required")),
-  category: Yup.array().of(Yup.string().required("Category_is_required")),
+    .required("Short Description is required")
+    .min(10, "Short Description must be at least 10characters"),
+  tags: Yup.array().of(Yup.string().required("Tags is required")),
+  category: Yup.array().of(Yup.string().required("Category is required")),
   sub_category: Yup.array().of(
-    Yup.string().required("sub_Category_is_required")
+    Yup.string().required("sub Category is required")
   ),
-  profile_image: Yup.string().required("Profile_Image_is_required"),
-  banner_image: Yup.string().required("Banner_Image_is_required"),
+  profile_image: Yup.string().required("Profile Image is required"),
+  banner_image: Yup.string().required("Banner Image is required"),
 });
 
 export interface ICreatorFormSchema
@@ -330,27 +330,28 @@ export interface IShopifyConnectSchema
   extends Yup.Asserts<typeof shopifyConnectSchema> {}
 
 export const creatorSocialConnectSchema = Yup.object().shape({
-  channels: Yup.array().of(
-    Yup.object()
-      .shape({
-        account_name: Yup.string().required("Account Name is required"),
-        handle_name: Yup.string().required("Handle Name is required"),
-        account_link: Yup.string()
-          .url("Account Link is Invalid")
-          .required("Account Link is required"),
-      })
-      .test(
-        "at-least-one-non-empty-channel",
-        "At least one valid channel is required",
-        (channel) => {
-          return (
-            !!channel.account_name?.trim() &&
-            !!channel.handle_name?.trim() &&
-            !!channel.account_link?.trim()
-          );
-        }
-      )
-  ),
+  channels: Yup.array()
+  // .of(
+  //   Yup.object()
+  //     .shape({
+  //       account_name: Yup.string().required("Account Name is required"),
+  //       handle_name: Yup.string().required("Handle Name is required"),
+  //       account_link: Yup.string()
+  //         .url("Account Link is Invalid")
+  //         .required("Account Link is required"),
+  //     })
+  //     .test(
+  //       "at-least-one-non-empty-channel",
+  //       "At least one valid channel is required",
+  //       (channel) => {
+  //         return (
+  //           !!channel.account_name?.trim() &&
+  //           !!channel.handle_name?.trim() &&
+  //           !!channel.account_link?.trim()
+  //         );
+  //       }
+  //     )
+  // ),
 });
 
 export interface ICreatorSocialConnectSchema

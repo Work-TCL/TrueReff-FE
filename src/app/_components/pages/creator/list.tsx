@@ -59,8 +59,6 @@ export default function CreatorList() {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(20);
 
-  const itemsPerPage = 2;
-
   // Get Creator list
   const getCreatorList = useCallback(async () => {
     try {
@@ -78,7 +76,7 @@ export default function CreatorList() {
               return {...ele}
             })
             setCreators([...result]);
-            setTotalPages(Math.ceil(creatorsCount / itemsPerPage));
+            setTotalPages(Math.ceil(creatorsCount / pageSize));
           } else {
             setCreators([]);
             setCurrentPage(1);
@@ -92,7 +90,7 @@ export default function CreatorList() {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     }
-  }, [axios, itemsPerPage]);
+  }, [axios, pageSize]);
 
   useEffect(() => {
     getCreatorList();

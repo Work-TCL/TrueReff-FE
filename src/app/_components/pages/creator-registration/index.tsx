@@ -71,7 +71,7 @@ export default function CreatorRegistrationPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const axios = useAxiosAuth();
-  const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.SOCIAL_MEDIA);
+  const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_DETAILS);
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -152,7 +152,6 @@ export default function CreatorRegistrationPage() {
   };
   const onSubmitSocial = async (data: ICreatorSocialConnectSchema) => {
     setLoading(true);
-    console.log("data---social----->>>>>>>", data);
     try {
       // const payload: IPostCreatorRegisterRequest = {
       //   channels: data.channels,
@@ -232,7 +231,6 @@ export default function CreatorRegistrationPage() {
       setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
     }
   }, [searchParams]);
-  console.log("-0-0-0-0-0-0-0-", methodsSocial.formState.errors);
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">

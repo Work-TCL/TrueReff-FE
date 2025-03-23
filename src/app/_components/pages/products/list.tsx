@@ -86,7 +86,7 @@ const products = [
   },
 ];
 
-export default function ChannelProductList() {
+export default function ProductList() {
   const router = useRouter();
   const axios = useAxiosAuth();
   const [currentPage, setCurrentPage] = useState(1);

@@ -9,13 +9,13 @@ import { CustomTableCell } from "@/app/_components/components-common/tables/Cust
 import { translate } from "@/lib/utils/translate";
 import { IChannel, ICreator } from "./list";
 import { useRouter } from "next/navigation";
-function formatNumber(num:number) {
+function formatNumber(num:number = 0) {
     if (num >= 1_000_000) {
       return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
     } else if (num >= 1_000) {
       return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
     }
-    return num.toString();
+    return num === 0 ? "": num.toString();
 }
 
 interface ICreatorTableProps {

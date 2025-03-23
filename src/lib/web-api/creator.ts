@@ -18,7 +18,6 @@ export const connectYoutubeChannel = async (
 ): Promise<IConnectYoutubeChannelResponse> => {
     try {
       const response = await axiosInstance.post("/channel/creator/youtube/validate/channel",params);
-      console.log("response",response)
       if(response?.data?.status === 200){
         toast.success(response?.data?.message)
       }

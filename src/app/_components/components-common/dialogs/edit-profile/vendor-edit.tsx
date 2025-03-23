@@ -42,7 +42,7 @@ export default function EditVendorForm({ profile }: { profile: any }) {
       }
       if (response?.status === 200) {
         toast.success(response?.message);
-        router.push("?");
+        router.push("/vendor/settings");
         methods?.reset();
         return true;
       }

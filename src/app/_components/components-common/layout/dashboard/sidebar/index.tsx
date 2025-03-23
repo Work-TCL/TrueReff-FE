@@ -103,7 +103,6 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
   const { data: session, ...sessionData } = useSession();
   let user = session?.user ?? { type: "vendor" };
-  console.log("user", user, sessionData);
 
   const lg = useMediaQuery("(min-width: 1024px)");
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(

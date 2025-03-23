@@ -35,7 +35,6 @@ export default async function RootLayout({
       </html>
     );
   } catch (e) {
-    console.log("main layout error:", e);
     return null;
   }
 }
