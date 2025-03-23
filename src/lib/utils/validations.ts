@@ -168,17 +168,45 @@ export const preFormSchema = Yup.object().shape({
   type_of_business: Yup.string().required("Type of business is required"),
   contacts: Yup.array()
     .of(
-      Yup.object()
-        .shape({
-          name: Yup.string().required("Name is required"),
-          phone: Yup.string().required("Phone number is required"),
-          email: Yup.string()
-            .email("Invalid email format")
-            .required("Email is required"),
-        })
-        .required()
+      Yup.object().shape({
+        name: Yup.string().test(
+          "test-name",
+          "Name is required",
+          function (value) {
+            const { path, createError } = this;
+            // Check if this is the first contact
+            if (path === "contacts[0].name" && !value) {
+              return createError({ path, message: "Name is required" });
+            }
+            return true; // No error
+          }
+        ),
+        phone: Yup.string().test(
+          "test-phone",
+          "Phone number is required",
+          function (value) {
+            const { path, createError } = this;
+            // Check if this is the first contact
+            if (path === "contacts[0].phone" && !value) {
+              return createError({ path, message: "Phone number is required" });
+            }
+            return true; // No error
+          }
+        ),
+        email: Yup.string()
+          .email("Invalid email format")
+          .test("test-email", "Email is required", function (value) {
+            const { path, createError } = this;
+            // Check if this is the first contact
+            if (path === "contacts[0].email" && !value) {
+              return createError({ path, message: "Email is required" });
+            }
+            return true; // No error
+          }),
+      })
     )
-    .required(),
+    .required("At least one contact is required") // Ensure at least one contact
+    .min(1, "At least one contact is required"), // Ensure at least one contact
   omni_channels: Yup.array()
     .of(Yup.string().required("Channel is required"))
     .min(1, "At least one channel is required"),
@@ -330,7 +358,7 @@ export interface IShopifyConnectSchema
   extends Yup.Asserts<typeof shopifyConnectSchema> {}
 
 export const creatorSocialConnectSchema = Yup.object().shape({
-  channels: Yup.array()
+  channels: Yup.array(),
   // .of(
   //   Yup.object()
   //     .shape({

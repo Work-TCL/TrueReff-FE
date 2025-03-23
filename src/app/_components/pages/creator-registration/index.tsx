@@ -63,15 +63,21 @@ const TABS_STATUS = {
   PAYMENT_DETAILS: 3,
 };
 interface IProps {
-  profile: any;
+  creatorDetails: any;
 }
-export default function CreatorRegistrationPage() {
+export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const axios = useAxiosAuth();
-  const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_DETAILS);
+  const [activeTab, setActiveTab] = useState<number>(
+    !Boolean(creatorDetails?.creatorFilled)
+      ? TABS_STATUS.BASIC_DETAILS
+      : !Boolean(creatorDetails?.channelesFilled)
+      ? TABS_STATUS.SOCIAL_MEDIA
+      : TABS_STATUS.BASIC_DETAILS
+  );
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -150,6 +156,7 @@ export default function CreatorRegistrationPage() {
     }
     setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
   };
+
   const onSubmitSocial = async (data: ICreatorSocialConnectSchema) => {
     setLoading(true);
     try {
@@ -248,7 +255,23 @@ export default function CreatorRegistrationPage() {
         </div>
         <SlidingTabBar
           tabs={allTabs}
-          setActiveTabIndex={setActiveTab}
+          setActiveTabIndex={(v) => {
+            if (
+              [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(activeTab) &&
+              [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(v)
+            ) {
+              setActiveTab(v);
+            }
+
+            if (
+              [TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(
+                activeTab
+              ) &&
+              [TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(v)
+            ) {
+              setActiveTab(v);
+            }
+          }}
           activeTabIndex={activeTab}
           grid={4}
         />

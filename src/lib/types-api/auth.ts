@@ -190,3 +190,8 @@ export interface IGetCategoryResponse {
   };
   error: string;
 }
+
+export interface IGetCreatorProgressResponse {
+  channelesFilled: boolean;
+  creatorFilled: boolean;
+}
