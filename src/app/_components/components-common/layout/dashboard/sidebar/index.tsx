@@ -103,6 +103,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
   const { data: session, ...sessionData } = useSession();
   let user = session?.user ?? { type: "vendor" };
+
   const lg = useMediaQuery("(min-width: 1024px)");
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
     {}
@@ -128,12 +129,17 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       children: [
         { label: translate("Add_New_Product"), link: "/vendor/products/add" },
         { label: translate("Product_List"), link: "/vendor/products" },
+        { label: translate("Channels"), link: "/vendor/products/channels" },
       ],
     },
     {
-      label: translate("Creator&Collaboration"),
+      label: translate("Creators"),
       icon: User,
-      link: "/vendor/creator",
+      children: [
+        { label: translate("Creator_List"), link: "/vendor/creators" },
+        { label: translate("Available_Creators"), link: "/vendor/creators/available-creators" },
+        { label: translate("Collaboration"), link: "/vendor/creators/collaboration" },
+      ],
     },
     {
       label: translate("Campaign"),
@@ -209,7 +215,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const menu = {
     vendor: menuItems,
     creator: creatorMenuItem,
-  }[user?.type];
+  }[user?.type || "vendor"];
 
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
@@ -223,7 +229,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       <aside
         id="sidebar-multi-level-sidebar"
         className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-40 transition-all duration-300 ease-in-out  ${
-          isSidebarExpanded ? "w-[300px]" : "w-[75px]"  
+          isSidebarExpanded ? "w-[300px]" : "w-[75px]"
         }`}
       >
         <div className="flex justify-center gap-10  ">
@@ -242,7 +248,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                     <NavLink
                       key={idx}
                       isActive={item.children.some(
-                        (child) => pathname === child.link
+                        (child) => pathname.includes(child.link)
                       )}
                       handleToggle={() => toggleMenu(item.label, false)}
                       label={isSidebarExpanded && item.label}

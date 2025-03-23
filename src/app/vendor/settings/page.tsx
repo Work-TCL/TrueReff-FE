@@ -1,18 +1,11 @@
-import React, { Suspense } from "react";
+import Profile from "@/app/_components/pages/settings/profile";
+import React from "react";
 
 export default async function SettingsPage({ searchParams }: any) {
-  // const profile = await getProfileAPI();
-  // const editKey = searchParams?.edit; // Ensure editKey is correctly extracted
-
-  // // Check if profile data is available before rendering
-  // if (!profile) {
-  //   return <div>Error loading profile data</div>;
-  // }
+  
+  const editKey = searchParams?.edit; // Ensure editKey is correctly extracted
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <h1>hello</h1>
-      {/* <Profile profile={profile?.vendor} editKey={editKey} /> */}
-    </Suspense>
+      <Profile editKey={editKey} />
   );
 }

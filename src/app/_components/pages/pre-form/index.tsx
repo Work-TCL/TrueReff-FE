@@ -89,7 +89,13 @@ export default function PreFormPage() {
         business_name: data.business_name,
         company_email: data.company_email,
         company_phone: data.company_phone,
-        contacts: Array.isArray(data.contacts) ? data.contacts : [],
+        contacts: Array.isArray(data.contacts)
+          ? data.contacts.map((contact) => ({
+              name: contact.name || "", // Ensure name is a string
+              phone: contact.phone || "", // Ensure phone is a string
+              email: contact.email || "", // Ensure email is a string
+            }))
+          : [],
         gst_number: data.gst_number,
         omni_channels: Array.isArray(data.omni_channels)
           ? data.omni_channels

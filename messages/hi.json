@@ -141,7 +141,7 @@
   "Instagram_View": "इंस्टाग्राम व्यू",
   "YouTube_View": "यूट्यूब व्यू",
   "Past_Sales": "पिछली बिक्री",
-  "Tags/Collaboration": "टैग/सहयोग",
+  "Tags_Collaboration": "टैग/सहयोग",
   "Collaborate_Now": "अब सहयोग करें",
   "Creator_Lists": "निर्माता सूची",
   "Total_Collaboration_through_platform": "प्लेटफ़ॉर्म के माध्यम से कुल सहयोग",
@@ -182,7 +182,7 @@
   "Overview": "अवलोकन",
   "Product_Catalog": "उत्पाद कैटलॉग",
   "Add_New_Product": "नया उत्पाद जोड़ें",
-  "Creator&Collaboration": "निर्माता और सहयोग",
+  "Creato": "निर्माता",
   "Campaign": "अभियान",
   "Add_New_Campaign": "नया अभियान जोड़ें",
   "Campaign_List": "अभियान सूची",
@@ -285,5 +285,8 @@
   "reviews": "समीक्षाएं",
   "Fashion": "फैशन",
   "Rating": "रेटिंग",
-  "Trending_Insights_Discoverability": "ट्रेंडिंग अंतर्दृष्टि और खोज क्षमता"
+  "Trending_Insights_Discoverability": "ट्रेंडिंग अंतर्दृष्टि और खोज क्षमता",
+  "Channels": "चैनल",
+  "Creator_List": "निर्माता सूची",
+  "Available_Creators": "उपलब्ध निर्माता"
 }

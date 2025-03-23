@@ -29,13 +29,13 @@ export default function Settings() {
         {
           Profile: (
             <Profile
-              profile={{
-                business_name: "",
-                company_email: "",
-                company_phone: "",
-                addresses: [],
-                contacts: [],
-              }}
+              // profile={{
+              //   business_name: "",
+              //   company_email: "",
+              //   company_phone: "",
+              //   addresses: [],
+              //   contacts: [],
+              // }}
             />
           ),
           // "package_details": <PackageDetails />,

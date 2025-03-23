@@ -5,7 +5,6 @@ export const getConnectedChannelsList = async () => {
     const response = await axiosInstance.get(`/channel/vendor/channel/list`);
     return response?.data?.data || [];
   } catch (error) {
-    console.log("get Connected Channels List get failed", error);
     return [];
   }
 };

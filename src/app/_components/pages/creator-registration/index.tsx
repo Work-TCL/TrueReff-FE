@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SlidingTabBar } from "../../components-common/tabs/sllidingTabs";
 import HeaderAuth from "../auth/components/header-auth";
 import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
@@ -7,7 +7,9 @@ import { GrDocumentText } from "react-icons/gr";
 import { FaRegUserCircle } from "react-icons/fa";
 import {
   creatorOnBoardingSchema,
+  creatorSocialConnectSchema,
   ICreatorOnBoardingSchema,
+  ICreatorSocialConnectSchema,
 } from "@/lib/utils/validations";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -25,6 +27,7 @@ import {
   IPostCreatorRegisterResponse,
 } from "@/lib/types-api/auth";
 import { creatorRegister } from "@/lib/web-api/auth";
+import axiosInstance from "@/lib/web-api/http-common";
 
 let allTabs: {
   id: string;
@@ -60,15 +63,21 @@ const TABS_STATUS = {
   PAYMENT_DETAILS: 3,
 };
 interface IProps {
-  profile: any;
+  creatorDetails: any;
 }
-export default function CreatorRegistrationPage() {
+export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const axios = useAxiosAuth();
-  const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_DETAILS);
+  const [activeTab, setActiveTab] = useState<number>(
+    !Boolean(creatorDetails?.creatorFilled)
+      ? TABS_STATUS.BASIC_DETAILS
+      : !Boolean(creatorDetails?.channelesFilled)
+      ? TABS_STATUS.SOCIAL_MEDIA
+      : TABS_STATUS.BASIC_DETAILS
+  );
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -85,6 +94,25 @@ export default function CreatorRegistrationPage() {
       banner_image: null,
     },
     resolver: yupResolver(creatorOnBoardingSchema),
+    mode: "onSubmit",
+  });
+
+  const methodsSocial = useForm<ICreatorSocialConnectSchema>({
+    defaultValues: {
+      channels: [
+        {
+          account_name: "",
+          handle_name: "",
+          account_link: "",
+        },
+        {
+          account_name: "",
+          handle_name: "",
+          account_link: "",
+        },
+      ],
+    },
+    resolver: yupResolver(creatorSocialConnectSchema),
     mode: "onSubmit",
   });
 
@@ -116,9 +144,33 @@ export default function CreatorRegistrationPage() {
         payload
       );
       if (response?.status === 201) {
-        toast.success("Creator successfully registered.");
-        router.push("/dashboard");
+        // toast.success("Creator successfully registered.");
+        // router.push("/dashboard");
+        setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
       }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+    setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
+  };
+
+  const onSubmitSocial = async (data: ICreatorSocialConnectSchema) => {
+    setLoading(true);
+    try {
+      // const payload: IPostCreatorRegisterRequest = {
+      //   channels: data.channels,
+      // };
+      // const response: IPostCreatorRegisterResponse = await creatorRegister(
+      //   payload
+      // );
+      // if (response?.status === 201) {
+      //   // toast.success("Creator successfully registered.");
+      //   // router.push("/dashboard");
+      //   setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
+      // }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
@@ -149,16 +201,49 @@ export default function CreatorRegistrationPage() {
         // ]);
         setActiveTab(TABS_STATUS.PROFILE_SETUP); // Move to next tab
       }
+    } else if (TABS_STATUS.PROFILE_SETUP === activeTab) {
+      const profileSetUpFields: any = [
+        "title",
+        "long_description",
+        "short_description",
+        "category",
+        "sub_category",
+        "tags",
+      ];
+      const isValid = await methods.trigger(profileSetUpFields);
+
+      if (isValid) {
+        // methods.clearErrors([
+        //   "profile_title",
+        //   "long_description",
+        //   "short_description",
+        //   "category",
+        //   "sub_category",
+        //   "tags",
+        // ]);
+        setActiveTab(TABS_STATUS.SOCIAL_MEDIA); // Move to next tab
+      }
+    } else if (TABS_STATUS.SOCIAL_MEDIA === activeTab) {
     }
     setLoading(false);
   };
-  console.log("errors=>>", activeTab, methods.formState.errors);
+  const handleDisableConnect = async () => {
+    const channels: any = ["channels[1].handle_name"];
+    return await methods.trigger(channels);
+  };
+
+  useEffect(() => {
+    const code = searchParams.get("code"); // ✅ Correct way to get query parameters
+    if (code) {
+      setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
+    }
+  }, [searchParams]);
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
       <HeaderAuth />
       <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
-        <div className="flex justify-center md:text-[38px] text-2xl md:py-0 py-5 font-semibold">
+        <div className="flex justify-center md:text-[38px] text-2xl md:py-0 py-5 px-4 font-semibold">
           {
             {
               [TABS_STATUS.BASIC_DETAILS]: "Creator Registration",
@@ -170,64 +255,126 @@ export default function CreatorRegistrationPage() {
         </div>
         <SlidingTabBar
           tabs={allTabs}
-          setActiveTabIndex={setActiveTab}
+          setActiveTabIndex={(v) => {
+            if (
+              [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(activeTab) &&
+              [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(v)
+            ) {
+              setActiveTab(v);
+            }
+
+            if (
+              [TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(
+                activeTab
+              ) &&
+              [TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(v)
+            ) {
+              setActiveTab(v);
+            }
+          }}
           activeTabIndex={activeTab}
           grid={4}
         />
-        <FormProvider {...methods}>
-          <form
-            onSubmit={methods.handleSubmit(onSubmit)}
-            className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
-          >
-            {
+        {[TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(
+          activeTab
+        ) && (
+          <FormProvider {...methods}>
+            <form
+              onSubmit={methods.handleSubmit(onSubmit)}
+              className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
+            >
               {
-                [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm />,
-                [TABS_STATUS.PROFILE_SETUP]: <ProfileSetup />,
-                [TABS_STATUS.SOCIAL_MEDIA]: <SocialMedia />,
-                [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
-              }[activeTab]
-            }
-            <div className="flex bg-white">
-              {activeTab !== TABS_STATUS.BASIC_DETAILS &&
-                activeTab !== TABS_STATUS.PROFILE_SETUP && (
+                {
+                  [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm />,
+                  [TABS_STATUS.PROFILE_SETUP]: <ProfileSetup />,
+                }[activeTab]
+              }
+              <div className="flex bg-white">
+                <Button
+                  type="submit"
+                  className={cn(
+                    "w-fit font-medium px-8",
+                    activeTab === TABS_STATUS.PROFILE_SETUP ? "block" : "hidden"
+                  )}
+                  size="small"
+                  loading={loading}
+                  disabled={loading}
+                >
+                  {"Save & Continue"}
+                </Button>
+                <Button
+                  className={cn(
+                    "w-fit font-medium px-8",
+                    activeTab === TABS_STATUS.PROFILE_SETUP ? "hidden" : "block"
+                  )}
+                  size="small"
+                  onClick={handleTriggerStepper}
+                  loading={loading}
+                  disabled={loading}
+                >
+                  {"Save & Continue"}
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
+        )}
+        {[TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS.PAYMENT_DETAILS].includes(
+          activeTab
+        ) && (
+          <FormProvider {...methodsSocial}>
+            <form
+              onSubmit={methodsSocial.handleSubmit(onSubmitSocial)}
+              className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
+            >
+              {
+                {
+                  [TABS_STATUS.SOCIAL_MEDIA]: (
+                    <SocialMedia code={searchParams.get("code") || ""} />
+                  ),
+                  [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
+                }[activeTab]
+              }
+              <div className="flex bg-white">
+                {activeTab !== TABS_STATUS.PROFILE_SETUP && (
                   <Button
                     type="button"
                     className="w-fit bg-white text-black font-medium px-8"
                     size="small"
-                    // onClick={() => activeTab < 3 && setActiveTab(activeTab + 1)}
-                    onClick={() => {}}
+                    onClick={() => activeTab < 3 && setActiveTab(activeTab + 1)}
+                    // onClick={() => {}}
                   >
                     {"Skip"}
                   </Button>
                 )}
 
-              <Button
-                type="submit"
-                className={cn(
-                  "w-fit font-medium px-8",
-                  activeTab === TABS_STATUS.PROFILE_SETUP ? "block" : "hidden"
-                )}
-                size="small"
-                loading={loading}
-                disabled={loading || activeTab !== TABS_STATUS.PROFILE_SETUP}
-              >
-                {"Save & Continue"}
-              </Button>
-              <Button
-                className={cn(
-                  "w-fit font-medium px-8",
-                  activeTab === TABS_STATUS.PROFILE_SETUP ? "hidden" : "block"
-                )}
-                size="small"
-                onClick={handleTriggerStepper}
-                loading={loading}
-                disabled={loading}
-              >
-                {"Save & Continue"}
-              </Button>
-            </div>
-          </form>
-        </FormProvider>
+                <Button
+                  type="submit"
+                  className={cn(
+                    "w-fit font-medium px-8",
+                    activeTab === TABS_STATUS.SOCIAL_MEDIA ? "block" : "hidden"
+                  )}
+                  size="small"
+                  loading={loading}
+                  disabled={loading}
+                >
+                  {"Save & Continue"}
+                </Button>
+                <Button
+                  className={cn(
+                    "w-fit font-medium px-8",
+                    activeTab === TABS_STATUS.SOCIAL_MEDIA ? "hidden" : "block"
+                  )}
+                  size="small"
+                  onClick={handleTriggerStepper}
+                  loading={loading}
+                  disabled={loading}
+                >
+                  {"Save & Continue"}
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
+        )}
       </div>
     </div>
   );

@@ -133,6 +133,11 @@ export interface IPostCreatorRegisterRequest {
   sub_category: string[];
   profile_image?: string;
   banner_image?: string;
+  // channels: {
+  //   account_name: string;
+  //   handle_name: string;
+  //   account_link: string;
+  // }[]
 }
 export interface IPostVendorRegisterResponse {
   status: number;
@@ -184,4 +189,9 @@ export interface IGetCategoryResponse {
     count: number;
   };
   error: string;
+}
+
+export interface IGetCreatorProgressResponse {
+  channelesFilled: boolean;
+  creatorFilled: boolean;
 }

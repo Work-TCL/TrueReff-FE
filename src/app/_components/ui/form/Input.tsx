@@ -7,7 +7,8 @@ import { GoChevronDown } from "react-icons/go";
 import Select from "react-select";
 import { get } from "lodash";
 
-interface IInput extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+interface IInput
+  extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
   name: string;
   type?: string;
@@ -138,6 +139,7 @@ export default function Input({
               className="flex-1 outline-none"
             />
           </div>
+          {tags?.length > 0 ? "" : getError()}
           {tags.length > 0 && (
             <div className="flex items-center py-2 mt-2 gap-4">
               {tags.map((tag: string, index: number) => (

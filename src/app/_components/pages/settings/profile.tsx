@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/app/_components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { translate } from "../../../../lib/utils/translate";
 import EditProfile from "@/app/_components/components-common/dialogs/edit-profile";
 import Link from "next/link";
@@ -12,9 +12,13 @@ import AnchorButton from "../../ui/button/variant";
 import { useRouter } from "next/navigation";
 import AddressesProfile from "./components/addresses";
 import ContactsProfile from "./components/contacts";
+import { getProfileAPI } from "@/lib/web-api/user";
 
 interface IProps {
-  profile: {
+  editKey?: string;
+}
+
+interface IProfile  {
     business_name: string;
     company_email: string;
     company_phone: string;
@@ -26,11 +30,46 @@ interface IProps {
       isDefault: boolean;
     }[];
   };
-  editKey?: string;
-}
 
-export default function Profile({ profile, editKey }: IProps) {
-  const vendor = profile;
+export default function Profile({ editKey }: IProps) {
+  const [profile,setProfile] = useState<IProfile>({
+    business_name: "",
+    company_email: "",
+    company_phone: "",
+    addresses: [],
+    contacts: [{
+      name: "",
+      phone: "",
+      email: "",
+      isDefault: false,
+    }]
+  })
+  const [loading,setLoading] = useState(false);
+  const getProfile = async () => {
+    setLoading(true);
+    const response = await getProfileAPI();
+    if(response?.vendor){
+      setLoading(false);
+      setProfile({...response?.vendor});
+    } else {
+      setLoading(false);
+      setProfile({
+        business_name: "",
+        company_email: "",
+        company_phone: "",
+        addresses: [],
+        contacts: [{
+          name: "",
+          phone: "",
+          email: "",
+          isDefault: false,
+        }]
+      })
+    }
+  }
+  useEffect(()=> {
+    getProfile()
+  },[editKey])
   return (
     <div className="flex flex-col w-fit lg:min-w-[562px] bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md flex-wrap">
       <div className="flex justify-between items-center border-b border-gray-300 pb-4">
@@ -48,13 +87,13 @@ export default function Profile({ profile, editKey }: IProps) {
           <span>{translate("Mobile")}:</span>
         </div>
         <div className="flex flex-col text-[14px] xl:text-[16px] gap-2">
-          <span className="font-medium">{vendor.business_name || "-"}</span>
-          <span className="font-medium">{vendor.company_email || "-"}</span>
-          <span className="font-medium">{vendor.company_phone || "-"}</span>
+          <span className="font-medium">{profile.business_name || "-"}</span>
+          <span className="font-medium">{profile.company_email || "-"}</span>
+          <span className="font-medium">{profile.company_phone || "-"}</span>
         </div>
       </div>
-      <AddressesProfile editKey={editKey} addresses={profile?.addresses} />
-      <ContactsProfile editKey={editKey} contacts={profile?.contacts} />
+      {profile?.addresses?.length > 0 && !loading && <AddressesProfile editKey={editKey} addresses={profile?.addresses} />}
+      {profile?.contacts?.length > 0 && !loading && <ContactsProfile editKey={editKey} contacts={profile?.contacts} />}
       <EditProfile
         profile={profile}
         editKey={editKey}

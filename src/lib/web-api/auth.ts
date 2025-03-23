@@ -3,6 +3,7 @@
 import {
   IGetCategoryParams,
   IGetCategoryResponse,
+  IGetCreatorProgressResponse,
   IPostContactUsRequest,
   IPostContactUsResponse,
   IPostCreatorRegisterRequest,
@@ -165,3 +166,17 @@ export const getCategories = async (
     throw errorMessage || new Error("Error While fetching categories.");
   }
 };
+export const getCreatorProgress =
+  async (): Promise<IGetCreatorProgressResponse> => {
+    try {
+      const response = await axiosInstance.get(`/auth/creator`);
+      return response?.data?.data;
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error);
+      // throw errorMessage || new Error("Error While fetching creator progress.");
+      return {
+        creatorFilled: false,
+        channelesFilled: false,
+      };
+    }
+  };

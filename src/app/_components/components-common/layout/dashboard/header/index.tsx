@@ -20,7 +20,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor/products/add": translate("Add_New_Product"),
     "/vendor/products/list": translate("Product_Catalog"),
     "/vendor/products/list/view": translate("View_Product"),
-    "/vendor/creator": translate("Creator&Collaboration"),
+    "/vendor/creator": translate("Creators"),
     "/vendor/creator/details": translate("Creator_Details"),
     "/vendor/campaign/add": translate("Add_New_Campaign"),
     "/vendor/campaign": translate("Campaign_List"),
