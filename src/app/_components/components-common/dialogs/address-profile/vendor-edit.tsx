@@ -1,14 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import {
   addAddressVendorSchema,
   IAddAddressVendorSchema,
-  IVendorProfileUpdateSchema,
-  vendorProfileUpdateSchema,
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { translate } from "@/lib/utils/translate";
@@ -21,11 +18,10 @@ export default function EditAddressVendorForm({
   id,
   onClose,
 }: {
-  profile: any;
+  profile?: any;
   id: any;
   onClose: any;
 }) {
-  const router = useRouter();
   const axios = useAxiosAuth();
   const [loading, setLoading] = useState(false);
   const schema = addAddressVendorSchema;
@@ -59,9 +55,8 @@ export default function EditAddressVendorForm({
       }
       if (response?.status === 201 || response?.status === 200) {
         toast.success(response?.message);
-        router.push("?");
         methods?.reset();
-        onClose && onClose();
+        onClose && onClose(true);
         return true;
       }
       throw response;

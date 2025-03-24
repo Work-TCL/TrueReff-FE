@@ -14,8 +14,13 @@ import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 
-export default function EditVendorForm({ profile }: { profile: any }) {
-  const router = useRouter();
+export default function EditVendorForm({
+  profile,
+  onClose,
+}: {
+  profile: any;
+  onClose: any;
+}) {
   const axios = useAxiosAuth();
   const [loading, setLoading] = useState(false);
   const schema = vendorProfileUpdateSchema;
@@ -42,8 +47,8 @@ export default function EditVendorForm({ profile }: { profile: any }) {
       }
       if (response?.status === 200) {
         toast.success(response?.message);
-        router.push("/vendor/settings");
         methods?.reset();
+        onClose && onClose(true);
         return true;
       }
     } catch (error) {

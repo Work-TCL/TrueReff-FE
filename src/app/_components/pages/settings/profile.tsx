@@ -1,56 +1,48 @@
 "use client";
-import Button from "@/app/_components/ui/button";
 import React, { useEffect, useState } from "react";
 import { translate } from "../../../../lib/utils/translate";
 import EditProfile from "@/app/_components/components-common/dialogs/edit-profile";
-import Link from "next/link";
-import EditAddressProfile from "../../components-common/dialogs/address-profile";
-import toast from "react-hot-toast";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
-import AnchorButton from "../../ui/button/variant";
-import { useRouter } from "next/navigation";
 import AddressesProfile from "./components/addresses";
 import ContactsProfile from "./components/contacts";
 import { getProfileAPI } from "@/lib/web-api/user";
-
-interface IProps {
-  editKey?: string;
+import Loader from "../../components-common/layout/loader";
+interface IProfile {
+  business_name: string;
+  company_email: string;
+  company_phone: string;
+  addresses: any[];
+  contacts: {
+    name: string;
+    phone: string;
+    email: string;
+    isDefault: boolean;
+  }[];
 }
 
-interface IProfile  {
-    business_name: string;
-    company_email: string;
-    company_phone: string;
-    addresses: any[];
-    contacts: {
-      name: string;
-      phone: string;
-      email: string;
-      isDefault: boolean;
-    }[];
-  };
-
-export default function Profile({ editKey }: IProps) {
-  const [profile,setProfile] = useState<IProfile>({
+export default function Profile() {
+  const [profile, setProfile] = useState<IProfile>({
     business_name: "",
     company_email: "",
     company_phone: "",
     addresses: [],
-    contacts: [{
-      name: "",
-      phone: "",
-      email: "",
-      isDefault: false,
-    }]
-  })
-  const [loading,setLoading] = useState(false);
+    contacts: [
+      {
+        name: "",
+        phone: "",
+        email: "",
+        isDefault: false,
+      },
+    ],
+  });
+  const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
   const getProfile = async () => {
     setLoading(true);
     const response = await getProfileAPI();
-    if(response?.vendor){
+    if (response?.vendor) {
       setLoading(false);
-      setProfile({...response?.vendor});
+      setProfile({ ...response?.vendor });
     } else {
       setLoading(false);
       setProfile({
@@ -58,50 +50,68 @@ export default function Profile({ editKey }: IProps) {
         company_email: "",
         company_phone: "",
         addresses: [],
-        contacts: [{
-          name: "",
-          phone: "",
-          email: "",
-          isDefault: false,
-        }]
-      })
+        contacts: [
+          {
+            name: "",
+            phone: "",
+            email: "",
+            isDefault: false,
+          },
+        ],
+      });
     }
-  }
-  useEffect(()=> {
-    getProfile()
-  },[editKey])
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
   return (
-    <div className="flex flex-col w-fit lg:min-w-[562px] bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md flex-wrap">
-      <div className="flex justify-between items-center border-b border-gray-300 pb-4">
-        <h2 className="text-sm xl:text-xl font-medium">
-          {translate("Personal_Information")}
-        </h2>
-        <Link href="?edit=profile" className="text-sm text-primary">
-          {translate("edit_profile")}
-        </Link>
-      </div>
-      <div className="flex gap-3 xl:gap-4">
-        <div className="flex flex-col gap-2 text-[14px] xl:text-[16px] text-gray-500">
-          <span>{translate("Name")}:</span>
-          <span>{translate("Email")}:</span>
-          <span>{translate("Mobile")}:</span>
+    <>
+      <div className="flex flex-col w-fit lg:min-w-[562px] bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md flex-wrap">
+        <div className="flex justify-between items-center border-b border-gray-300 pb-4">
+          <h2 className="text-sm xl:text-xl font-medium">
+            {translate("Personal_Information")}
+          </h2>
+          <div
+            onClick={() => setIsOpen(true)}
+            className="text-sm text-primary cursor-pointer"
+          >
+            {translate("edit_profile")}
+          </div>
         </div>
-        <div className="flex flex-col text-[14px] xl:text-[16px] gap-2">
-          <span className="font-medium">{profile.business_name || "-"}</span>
-          <span className="font-medium">{profile.company_email || "-"}</span>
-          <span className="font-medium">{profile.company_phone || "-"}</span>
+        <div className="flex gap-3 xl:gap-4">
+          <div className="flex flex-col gap-2 text-[14px] xl:text-[16px] text-gray-500">
+            <span>{translate("Name")}:</span>
+            <span>{translate("Email")}:</span>
+            <span>{translate("Mobile")}:</span>
+          </div>
+          <div className="flex flex-col text-[14px] xl:text-[16px] gap-2">
+            <span className="font-medium">{profile.business_name || "-"}</span>
+            <span className="font-medium">{profile.company_email || "-"}</span>
+            <span className="font-medium">{profile.company_phone || "-"}</span>
+          </div>
         </div>
+        <AddressesProfile
+          addresses={
+            Array.isArray(profile?.addresses) ? profile?.addresses : []
+          }
+          refreshCentral={() => getProfile()}
+        />
+        <ContactsProfile
+          contacts={Array.isArray(profile?.contacts) ? profile?.contacts : []}
+          refreshCentral={() => getProfile()}
+        />
+        <EditProfile
+          open={isOpen}
+          profile={profile}
+          onClose={() => {
+            setIsOpen(false);
+            getProfile();
+          }}
+        />
       </div>
-      {profile?.addresses?.length > 0 && !loading && <AddressesProfile editKey={editKey} addresses={profile?.addresses} />}
-      {profile?.contacts?.length > 0 && !loading && <ContactsProfile editKey={editKey} contacts={profile?.contacts} />}
-      <EditProfile
-        profile={profile}
-        editKey={editKey}
-        onClose={() => {
-          // setCurrentAddress(null);
-          if (typeof window !== undefined) window.location.reload();
-        }}
-      />
-    </div>
+      {loading && <Loader />}
+    </>
   );
 }

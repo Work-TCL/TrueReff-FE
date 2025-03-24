@@ -18,62 +18,82 @@ import toast from "react-hot-toast";
 
 interface IProps {
   code?: string;
+  setYoutubeConnected: any;
+  youtubeConnected: any;
 }
 
-export default function SocialMedia({ code = "" }: IProps) {
+export default function SocialMedia({
+  code = "",
+  setYoutubeConnected,
+  youtubeConnected,
+}: IProps) {
   const methods = useFormContext();
-  const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     fetchConnectedChannel();
   }, []);
   const fetchConnectedChannel = async () => {
-    const response: IGetYTConnectChannelResponse = await getConnectedChannel();
-    if (response?.data?.length) {
-      let youtube = response?.data.findLast(
-        (ele) => ele?.channelType === "youtube"
-      );
-      if (youtube) {
-        methods.setValue(`channels[1].account_name`, youtube?.channelName);
-        methods.setValue(
-          `channels[1].account_link`,
-          `https://youtube.com/${youtube?.handleName}`
+    setIsLoading(true);
+    try {
+      const response: IGetYTConnectChannelResponse =
+        await getConnectedChannel();
+      if (response?.data?.length) {
+        let youtube = response?.data.findLast(
+          (ele) => ele?.channelType === "youtube"
         );
-        methods.setValue(`channels[1].handle_name`, youtube?.handleName);
-        setYoutubeConnected(true);
-      } else setYoutubeConnected(false);
+        if (youtube) {
+          methods.setValue(`channels[1].account_name`, youtube?.channelName);
+          methods.setValue(
+            `channels[1].account_link`,
+            `https://youtube.com/${youtube?.handleName}`
+          );
+          methods.setValue(`channels[1].handle_name`, youtube?.handleName);
+          setYoutubeConnected(true);
+        } else setYoutubeConnected(false);
+      }
+    } catch (error) {
+      console.log("while fetching conncted channels");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleConnectChannel = async () => {
-    const channels: any = ["channels[1].handle_name"];
-    const isValid = await methods.trigger(channels);
-    const values = methods.getValues();
-    if (isValid) {
-      try {
-        const response = await axiosInstance.post(
-          "/channel/creator/youtube/validate/channel",
-          { channelName: values.channels[1].handle_name }
-        );
-        if (response?.data?.status === 200) {
-          toast.success(response?.data?.message);
+    setIsLoading(true);
+    try {
+      const channels: any = ["channels[1].handle_name"];
+      const isValid = await methods.trigger(channels);
+      const values = methods.getValues();
+      if (isValid) {
+        try {
+          const response = await axiosInstance.post(
+            "/channel/creator/youtube/validate/channel",
+            { channelName: values.channels[1].handle_name }
+          );
+          if (response?.data?.status === 200) {
+            toast.success(response?.data?.message);
+          }
+          methods.setValue(
+            `channels[1].account_name`,
+            response?.data?.data?.channelName
+          );
+          methods.setValue(
+            `channels[1].account_link`,
+            `https://youtube.com/${values.channels[1].handle_name}`
+          );
+          setYoutubeConnected(true);
+        } catch (error: unknown) {
+          const errorMessage = getErrorMessage(error);
+          if (errorMessage) {
+            toast.error(errorMessage);
+            setYoutubeConnected(false);
+          } else throw new Error("Error While validating youtube channel");
         }
-        methods.setValue(
-          `channels[1].account_name`,
-          response?.data?.data?.channelName
-        );
-        methods.setValue(
-          `channels[1].account_link`,
-          `https://youtube.com/${values.channels[1].handle_name}`
-        );
-        setYoutubeConnected(true);
-      } catch (error: unknown) {
-        const errorMessage = getErrorMessage(error);
-        if (errorMessage) {
-          toast.error(errorMessage);
-          setYoutubeConnected(false);
-        } else throw new Error("Error While validating youtube channel");
       }
+    } catch (error) {
+      console.log("while youtube connecting");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -149,14 +169,27 @@ export default function SocialMedia({ code = "" }: IProps) {
             />
           </div>
           <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
-            <AnchorButton
-              href="https://www.instagram.com/oauth/authorize?client_id=9535212806541456&redirect_uri=https://trurereff-new.vercel.app/creator-registration&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish"
+            {/* main button */}
+            {/* <AnchorButton
+              loading={isLoading}
+              href="https://www.instagram.com/oauth/authorize?client_id=9535212806541456&redirect_uri=https://192.168.235.236:3000/creator-registration&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish"
               className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
               size="small"
+              
               // onClick={handleConnectInstagram}
             >
               {"Connect"}
-            </AnchorButton>
+            </AnchorButton> */}
+
+            {/* temporary */}
+            <Button
+              // loading={isLoading}
+              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
+              size="small"
+              disabled
+            >
+              {"Connect"}
+            </Button>
           </div>
         </div>
       </div>
@@ -200,6 +233,8 @@ export default function SocialMedia({ code = "" }: IProps) {
               className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
               size="small"
               onClick={handleConnectChannel}
+              loading={isLoading}
+              disabled={isLoading}
             >
               {"Connect"}
             </Button>
