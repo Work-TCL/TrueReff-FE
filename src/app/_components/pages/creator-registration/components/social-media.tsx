@@ -1,4 +1,5 @@
 "use client";
+import Loader from "@/app/_components/components-common/layout/loader";
 import Button from "@/app/_components/ui/button";
 import AnchorButton from "@/app/_components/ui/button/variant";
 import Input from "@/app/_components/ui/form/Input";
@@ -29,11 +30,12 @@ export default function SocialMedia({
 }: IProps) {
   const methods = useFormContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   useEffect(() => {
     fetchConnectedChannel();
   }, []);
   const fetchConnectedChannel = async () => {
-    setIsLoading(true);
+    setIsPageLoading(true);
     try {
       const response: IGetYTConnectChannelResponse =
         await getConnectedChannel();
@@ -54,7 +56,7 @@ export default function SocialMedia({
     } catch (error) {
       console.log("while fetching conncted channels");
     } finally {
-      setIsLoading(false);
+      setIsPageLoading(false);
     }
   };
 
@@ -137,40 +139,42 @@ export default function SocialMedia({
   }, [code]);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="col-span-2">
-        <div className="flex gap-4 items-center">
-          <img
-            src="/assets/creator/Instagram-icon.svg"
-            width={40}
-            height={40}
-          />
-          <div>Instagram</div>
-        </div>
-      </div>
-      <div className="col-span-2 lg:col-span-1">
-        <Input
-          label="Account Name"
-          name="channels[0].account_name"
-          type="text"
-          placeholder="Account_name"
-          disabled
-        />
-      </div>
-      <div className="col-span-2 lg:col-span-1">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="w-full">
-            <Input
-              label="Handle Name"
-              name="channels[0].handle_name"
-              type="text"
-              placeholder="@Handle_name"
-              disabled
+    <>
+      {isPageLoading && <Loader />}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="col-span-2">
+          <div className="flex gap-4 items-center">
+            <img
+              src="/assets/creator/Instagram-icon.svg"
+              width={40}
+              height={40}
             />
+            <div>Instagram</div>
           </div>
-          <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
-            {/* main button */}
-            {/* <AnchorButton
+        </div>
+        <div className="col-span-2 lg:col-span-1">
+          <Input
+            label="Account Name"
+            name="channels[0].account_name"
+            type="text"
+            placeholder="Account_name"
+            disabled
+          />
+        </div>
+        <div className="col-span-2 lg:col-span-1">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="w-full">
+              <Input
+                label="Handle Name"
+                name="channels[0].handle_name"
+                type="text"
+                placeholder="@Handle_name"
+                disabled
+              />
+            </div>
+            <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
+              {/* main button */}
+              {/* <AnchorButton
               loading={isLoading}
               href="https://www.instagram.com/oauth/authorize?client_id=9535212806541456&redirect_uri=https://192.168.235.236:3000/creator-registration&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish"
               className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
@@ -181,75 +185,80 @@ export default function SocialMedia({
               {"Connect"}
             </AnchorButton> */}
 
-            {/* temporary */}
-            <Button
-              // loading={isLoading}
-              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
-              size="small"
-              disabled
-            >
-              {"Connect"}
-            </Button>
+              {/* temporary */}
+              <Button
+                // loading={isLoading}
+                className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
+                size="small"
+                disabled
+              >
+                {"Connect"}
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="col-span-2">
-        <Input
-          label="Account Link"
-          name="channels[0].account_link"
-          type="text"
-          placeholder="https://instagram.com/Account_name"
-          disabled
-        />
-      </div>
-      <div className="col-span-2">
-        <div className="flex gap-4 items-center">
-          <img src="/assets/creator/Youtube-icon.svg" width={40} height={40} />
-          <div>Youtube</div>
+        <div className="col-span-2">
+          <Input
+            label="Account Link"
+            name="channels[0].account_link"
+            type="text"
+            placeholder="https://instagram.com/Account_name"
+            disabled
+          />
         </div>
-      </div>
-      <div className="col-span-2 lg:col-span-1">
-        <Input
-          label="Account Name"
-          name="channels[1].account_name"
-          type="text"
-          placeholder="Account name"
-          disabled
-        />
-      </div>
-      <div className="col-span-2 lg:col-span-1">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="w-full">
-            <Input
-              label="Handle Name"
-              name="channels[1].handle_name"
-              disabled={youtubeConnected}
-              type="text"
-              placeholder="Handlename"
+        <div className="col-span-2">
+          <div className="flex gap-4 items-center">
+            <img
+              src="/assets/creator/Youtube-icon.svg"
+              width={40}
+              height={40}
             />
-          </div>
-          <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
-            <Button
-              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
-              size="small"
-              onClick={handleConnectChannel}
-              loading={isLoading}
-              disabled={isLoading}
-            >
-              {"Connect"}
-            </Button>
+            <div>Youtube</div>
           </div>
         </div>
+        <div className="col-span-2 lg:col-span-1">
+          <Input
+            label="Account Name"
+            name="channels[1].account_name"
+            type="text"
+            placeholder="Account name"
+            disabled
+          />
+        </div>
+        <div className="col-span-2 lg:col-span-1">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="w-full">
+              <Input
+                label="Handle Name"
+                name="channels[1].handle_name"
+                disabled={youtubeConnected}
+                type="text"
+                placeholder="Handlename"
+              />
+            </div>
+            <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
+              <Button
+                className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
+                size="small"
+                onClick={handleConnectChannel}
+                loading={isLoading}
+                disabled={isLoading}
+              >
+                {"Connect"}
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="col-span-2">
+          <Input
+            label="Account Link"
+            name="channels[1].account_link"
+            type="text"
+            disabled
+            placeholder="https://youtube.com/@Handle_name"
+          />
+        </div>
       </div>
-      <div className="col-span-2">
-        <Input
-          label="Account Link"
-          name="channels[1].account_link"
-          type="text"
-          disabled
-          placeholder="https://youtube.com/@Handle_name"
-        />
-      </div>
-    </div>
+    </>
   );
 }

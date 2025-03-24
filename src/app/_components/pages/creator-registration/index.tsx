@@ -211,6 +211,8 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
     } else if (TABS_STATUS.SOCIAL_MEDIA === activeTab) {
       if (youtubeConnected) {
         router.push("/creator/dashboard");
+      } else {
+        toast.error("at least one channel connect required.");
       }
     }
     setLoading(false);
