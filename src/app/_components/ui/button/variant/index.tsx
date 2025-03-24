@@ -7,11 +7,13 @@ export interface IButton extends Omit<LinkProps, "href"> {
   size?: "small" | "medium" | "large";
   className?: string;
   href: string;
+  loading?: boolean;
 }
 
 const AnchorButton = ({
   children,
   size = "medium",
+  loading = false,
   href,
   className = "",
   ...props
@@ -23,7 +25,7 @@ const AnchorButton = ({
   return (
     <Link href={href} legacyBehavior>
       <a className={cn(baseStyles, sizeStyles, className)} {...props}>
-        {children}
+        {loading ? "loading..." : children}
       </a>
     </Link>
   );

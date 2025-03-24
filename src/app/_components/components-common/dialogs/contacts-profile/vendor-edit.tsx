@@ -59,7 +59,7 @@ export default function EditContactVendorForm({
         toast.success(response?.message);
         router.push("?");
         methods?.reset();
-        onClose && onClose();
+        onClose && onClose(true);
         return true;
       }
       throw response;

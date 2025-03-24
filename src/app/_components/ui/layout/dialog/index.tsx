@@ -9,7 +9,7 @@ interface IDialogLayout {
   open: boolean;
   skipClose?: boolean;
   size?: string;
-  handleClose?: () => void;
+  onClose?: () => void;
   isCustomDesign?: boolean;
   title?: string;
 }
@@ -19,6 +19,7 @@ export default function DialogLayout({
   open,
   size = "",
   skipClose,
+  onClose = undefined,
   title = "",
   ...props
 }: IDialogLayout) {
@@ -38,11 +39,19 @@ export default function DialogLayout({
       <Fragment>
         <div className="fixed inset-0 z-[40] sm:w-screen h-screen overflow-hidden">
           <div className="flex h-full items-center justify-center text-center sm:items-center sm:py-0 cursor-pointer relative">
-            <Link
-              href="?"
-              className="block fixed inset-0 bg-black bg-opacity-60 transition-opacity z-1 lg:backdrop-blur-none backdrop-blur-sm"
-              aria-hidden="true"
-            ></Link>
+            {onClose ? (
+              <div
+                onClick={() => onClose()}
+                className="block fixed inset-0 bg-black bg-opacity-60 transition-opacity z-1 lg:backdrop-blur-none backdrop-blur-sm"
+                aria-hidden="true"
+              ></div>
+            ) : (
+              <Link
+                href="?"
+                className="block fixed inset-0 bg-black bg-opacity-60 transition-opacity z-1 lg:backdrop-blur-none backdrop-blur-sm"
+                aria-hidden="true"
+              ></Link>
+            )}
 
             <div
               className={cn(
@@ -57,7 +66,15 @@ export default function DialogLayout({
                       {title}
                     </h3>
                   )}
-                  {skipClose ? null : (
+                  {skipClose ? null : onClose ? (
+                    <div onClick={() => onClose()} className="block ml-auto">
+                      <IoClose
+                        fontSize={25}
+                        color="#000"
+                        className="text-white"
+                      />
+                    </div>
+                  ) : (
                     <Link href="?" className="block ml-auto">
                       <IoClose
                         fontSize={25}

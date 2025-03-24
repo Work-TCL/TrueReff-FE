@@ -67,8 +67,9 @@ interface IProps {
 }
 export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") ?? "";
   const router = useRouter();
+  const email = searchParams.get("email") ?? "";
+  const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const axios = useAxiosAuth();
   const [activeTab, setActiveTab] = useState<number>(
@@ -191,14 +192,6 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
       const isValid = await methods.trigger(basicInfoField);
 
       if (isValid) {
-        // methods.clearErrors([
-        //   "profile_title",
-        //   "long_description",
-        //   "short_description",
-        //   "category",
-        //   "sub_category",
-        //   "tags",
-        // ]);
         setActiveTab(TABS_STATUS.PROFILE_SETUP); // Move to next tab
       }
     } else if (TABS_STATUS.PROFILE_SETUP === activeTab) {
@@ -213,17 +206,12 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
       const isValid = await methods.trigger(profileSetUpFields);
 
       if (isValid) {
-        // methods.clearErrors([
-        //   "profile_title",
-        //   "long_description",
-        //   "short_description",
-        //   "category",
-        //   "sub_category",
-        //   "tags",
-        // ]);
         setActiveTab(TABS_STATUS.SOCIAL_MEDIA); // Move to next tab
       }
     } else if (TABS_STATUS.SOCIAL_MEDIA === activeTab) {
+      if (youtubeConnected) {
+        router.push("/creator/dashboard");
+      }
     }
     setLoading(false);
   };
@@ -329,41 +317,32 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
               {
                 {
                   [TABS_STATUS.SOCIAL_MEDIA]: (
-                    <SocialMedia code={searchParams.get("code") || ""} />
+                    <SocialMedia
+                      code={searchParams.get("code") || ""}
+                      setYoutubeConnected={setYoutubeConnected}
+                      youtubeConnected={youtubeConnected}
+                    />
                   ),
                   [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
                 }[activeTab]
               }
               <div className="flex bg-white">
-                {activeTab !== TABS_STATUS.PROFILE_SETUP && (
-                  <Button
-                    type="button"
-                    className="w-fit bg-white text-black font-medium px-8"
-                    size="small"
-                    onClick={() => activeTab < 3 && setActiveTab(activeTab + 1)}
-                    // onClick={() => {}}
-                  >
-                    {"Skip"}
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  className="w-fit bg-white text-black font-medium px-8"
+                  size="small"
+                  onClick={() => {
+                    activeTab < 3 && setActiveTab(activeTab + 1);
+                    if (activeTab === TABS_STATUS.PAYMENT_DETAILS) {
+                      router.push("/creator/dashboard");
+                    }
+                  }}
+                >
+                  {"Skip"}
+                </Button>
 
                 <Button
-                  type="submit"
-                  className={cn(
-                    "w-fit font-medium px-8",
-                    activeTab === TABS_STATUS.SOCIAL_MEDIA ? "block" : "hidden"
-                  )}
-                  size="small"
-                  loading={loading}
-                  disabled={loading}
-                >
-                  {"Save & Continue"}
-                </Button>
-                <Button
-                  className={cn(
-                    "w-fit font-medium px-8",
-                    activeTab === TABS_STATUS.SOCIAL_MEDIA ? "hidden" : "block"
-                  )}
+                  className={cn("w-fit font-medium px-8", "block")}
                   size="small"
                   onClick={handleTriggerStepper}
                   loading={loading}
