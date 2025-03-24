@@ -25,6 +25,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import Loading from "@/app/vendor/loading";
 // import axios from "axios";
 
 // Sample Data
@@ -89,6 +90,7 @@ const products = [
 export default function ProductList() {
   const router = useRouter();
   const axios = useAxiosAuth();
+  const [loading,setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [productList, setProductList] = useState<
     { handle: string; id: string; image: string; title: string }[]
@@ -116,6 +118,7 @@ export default function ProductList() {
     ItemPerPage: number,
     cursor: string | null = null
   ) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `channel/shopify/product/list?per_page=${ItemPerPage}${
@@ -131,7 +134,10 @@ export default function ProductList() {
           hasPreviousPage: response.data.data.page_info.has_previous_page,
         });
       }
-    } catch (error) {}
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   // Update useEffect to fetch the initial product list
@@ -168,6 +174,7 @@ export default function ProductList() {
           </Button>
         </div>
       </div>
+      {loading && <Loading/>}
       <div className="overflow-auto flex-1">
         <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
           <TableHeader className="bg-stroke">

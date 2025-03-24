@@ -11,6 +11,7 @@ import { translate } from "@/lib/utils/translate";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import CreatorTable from "./creator-table";
+import Loading from "@/app/vendor/loading";
 export interface ICategory {
   _id: string,
   name: string
@@ -52,6 +53,7 @@ export interface ICreator {
 
 export default function CreatorList() {
   const axios = useAxiosAuth();
+  const [loading,setLoading] = useState<boolean>(false);
   const [creators,setCreators] = useState<ICreator[]>([]);
   const [filter,setFilter] = useState<string>("5");
   const [search,setSearch] = useState<string>("");
@@ -61,6 +63,7 @@ export default function CreatorList() {
 
   // Get Creator list
   const getCreatorList = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`/auth/creator/list?page=${currentPage}&limit=${pageSize}`);
       if (response.status === 200) {
@@ -81,14 +84,17 @@ export default function CreatorList() {
             setCreators([]);
             setCurrentPage(1);
           }
+          setLoading(false);
         } else {
           setCreators([]);
           setCurrentPage(1);
+          setLoading(false);
         }
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
+      setLoading(false);
     }
   }, [axios, pageSize]);
 
@@ -136,6 +142,7 @@ export default function CreatorList() {
                     </select>
                 </div>
             </div>
+            {loading && <Loading/>}
             {creators?.length >0 && <CreatorTable data={creators} filter={filter}/>}
             {/* Pagination */}
             <div className="flex justify-end items-center mt-4">

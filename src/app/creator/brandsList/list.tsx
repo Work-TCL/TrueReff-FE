@@ -11,6 +11,7 @@ import { TablePagination } from "@/app/_components/components-common/tables/Pagi
 // import BrandListView from "./_components/brandList";
 import { translate } from "@/lib/utils/translate";
 import BrandListView from "./_components/brandList";
+import Loading from "../loading";
 
 export interface Brand {
   id: number;
@@ -24,6 +25,7 @@ export interface Brand {
 }
 export default function BrandList() {
   const axios = useAxiosAuth();
+  const [loading,setLoading] = useState<boolean>(false);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -32,6 +34,7 @@ export default function BrandList() {
 
   // Get Brand list
   const getBrandList = async (page: number, limit: number) => {
+    setLoading(true);
     try {
       const response: any = await axios.get(
         `product/brand-product/brand/list?page=${page}&limit=${limit}`
@@ -62,12 +65,15 @@ export default function BrandList() {
           console.error("Expected an object but got:", brandData);
           setBrands([]);
         }
+        setLoading(false)
       } else {
+        setLoading(false)
         console.error("Error fetching brands:", response.statusText);
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
+      setLoading(false)
     }
   };
 
@@ -90,7 +96,7 @@ export default function BrandList() {
         />
         <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
       </div>
-
+      {loading && <Loading /> }
       {brands && brands.length > 0 ? (
         <>
           {/* <BrandListView brand={brands} /> */}
