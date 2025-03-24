@@ -118,7 +118,7 @@ export default function BrandList() {
             </div>
           )}
         </>
-      ) : (
+      ) : !loading && (
         <EmptyPlaceHolde />
       )}
     </div>
