@@ -66,9 +66,9 @@ const VideoWiseRevenueChart = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-white">
-            <DropdownMenuItem>{translate("This Week")}</DropdownMenuItem>
-            <DropdownMenuItem>{translate("Last Week")}</DropdownMenuItem>
-            <DropdownMenuItem>{translate("This Month")}</DropdownMenuItem>
+            <DropdownMenuItem>{translate("This_week")}</DropdownMenuItem>
+            <DropdownMenuItem>{translate("Last_week")}</DropdownMenuItem>
+            <DropdownMenuItem>{translate("This_month")}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>{" "}
       </div>

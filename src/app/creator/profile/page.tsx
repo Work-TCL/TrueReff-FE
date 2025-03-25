@@ -1,11 +1,11 @@
 import Loader from "@/app/_components/components-common/layout/loader";
-import CreatorAnalysis from "@/app/_components/pages/creator_analysis";
+import CreatorProfile from "@/app/_components/pages/creator-profile";
 import React, { Suspense } from "react";
 
-export default function CreatorAnalysisPage() {
+export default function CreatorProfilePage() {
   return (
     <Suspense fallback={<Loader />}>
-      <CreatorAnalysis />
+      <CreatorProfile />
     </Suspense>
   );
 }
