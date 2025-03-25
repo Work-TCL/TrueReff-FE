@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
-import StatesCards, { StatsCard } from "../../components-common/states/StatesCard";
+import StatesCards, {
+  StatsCard,
+} from "../../components-common/states/StatesCard";
 import RecentActivities from "../../components-common/tables/RecentActivity";
 import MostSellingBrands from "../../components-common/charts/MostSellingBrands";
 import VendorActivity from "../../components-common/charts/VendorActivityChart";
@@ -14,6 +16,7 @@ import TrendingInsights from "./trending-insights";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import ProfileCompletionCard from "../../components-common/charts/profileComplete";
 import PerformanceSummaryChartDashBoard from "../../components-common/charts/performanceSummary";
+import TrendingInsightsDiscoverability from "../../components-common/charts/trendingInsightsDiscoverability";
 
 export default function Dashboard() {
   const lg = useMediaQuery("(min-width: 1024px)");
@@ -27,35 +30,35 @@ export default function Dashboard() {
         <div className="flex flex-col gap-6 w-full lg:max-w-[774px]">
           {!lg && <ProfileCompletionCard />}
           <div className="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-3 gap-4 rounded-[20px] w-full bg-white p-4">
-      <StatsCard
-        title={translate("Active_Collaborations")}
-        value={120}
-        growth={5}
-        bgColor="bg-white bg-[#f2f1fd]"
-        borderColor={"border-[#7877EE]"}
-      />
-      <StatsCard
-        title={translate("Total_Products")}
-        value={200}
-        growth={5}
-        borderColor="border-[#EB815B]"
-        bgColor="bg-[#fdf2ef]"
-      />
-      <StatsCard
-        title={translate("Active_Campaigns")}
-        value={200}
-        growth={5}
-        borderColor="border-[#77EE8D]"
-        bgColor="bg-[#f1fdf4]"
-      />
-      <StatsCard
-        title={translate("Pending_Bids")}
-        value={200}
-        growth={5}
-        borderColor="border-[#9773C8]"
-        bgColor="bg-[#f5f1fa]"
-      />
-    </div>
+            <StatsCard
+              title={translate("Active_Collaborations")}
+              value={120}
+              growth={5}
+              bgColor="bg-white bg-[#f2f1fd]"
+              borderColor={"border-[#7877EE]"}
+            />
+            <StatsCard
+              title={translate("Total_Products")}
+              value={200}
+              growth={5}
+              borderColor="border-[#EB815B]"
+              bgColor="bg-[#fdf2ef]"
+            />
+            <StatsCard
+              title={translate("Active_Campaigns")}
+              value={200}
+              growth={5}
+              borderColor="border-[#77EE8D]"
+              bgColor="bg-[#f1fdf4]"
+            />
+            <StatsCard
+              title={translate("Pending_Bids")}
+              value={200}
+              growth={5}
+              borderColor="border-[#9773C8]"
+              bgColor="bg-[#f5f1fa]"
+            />
+          </div>
           <PerformanceSummaryChartDashBoard />
         </div>
         <div className="flex flex-col gap-6 w-full">
@@ -69,7 +72,8 @@ export default function Dashboard() {
         </div>
         <div className="flex gap-4 sm:flex-row flex-col w-full">
           <VendorActivity />
-          <DonutChart />
+          {/* <DonutChart /> */}
+          <TrendingInsightsDiscoverability />
         </div>
       </div>
     </div>

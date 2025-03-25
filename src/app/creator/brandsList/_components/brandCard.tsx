@@ -70,7 +70,7 @@ export default function BrandCard({
             </p>
           </div>
           <div className="h-full w-px bg-stroke mx-2"></div>{" "}
-          <div className="flex flex-1 flex-col flex-col item-center w-full">
+          <div className="flex flex-1 flex-col item-center w-full">
             <div className="flex item-center w-full gap-1 justify-center">
               <Star className="w-4 h-4 fill-current text-dark-orange" />
               <p className="text-sm font-normal"> {rating} </p>
