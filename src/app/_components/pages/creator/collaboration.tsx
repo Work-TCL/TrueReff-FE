@@ -12,6 +12,7 @@ import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
+import CollaborationTable from "./collaboration-table";
 export interface ICategory {
   _id: string,
   name: string
@@ -51,7 +52,7 @@ export interface ICreator {
   tag?: string
 }
 
-export default function CreatorList() {
+export default function CollaborationList() {
   const axios = useAxiosAuth();
   const [loading,setLoading] = useState<boolean>(false);
   const [creators,setCreators] = useState<ICreator[]>([]);
@@ -127,7 +128,7 @@ export default function CreatorList() {
     <div className="p-4 rounded-lg flex flex-col gap-4">
             <div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">
-                    <Input value={search} onChange={handleSearch} placeholder={translate("Search_creator")} />
+                    <Input value={search} onChange={handleSearch} placeholder={translate("Search_product")} />
                 </div>
                 <div className="flex items-center gap-[10px]">
                     <PiListChecksLight size={35} />
@@ -135,15 +136,15 @@ export default function CreatorList() {
                     {/* <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
                         <FaSlidersH /> {translate("Filters")}
                     </Button> */}
-                    <select className="bg-white rounded-sm border border-black h-[30px]" value={filter} onChange={handleFilterValue}>
+                    {/* <select className="bg-white rounded-sm border border-black h-[30px]" value={filter} onChange={handleFilterValue}>
                         <option value="" disabled>Filters</option>
                         <option value={5}>Last 5 Videos</option>
                         <option value={1}>Last 1 Month</option>
-                    </select>
+                    </select> */}
                 </div>
             </div>
             {loading && <Loading/>}
-            {creators?.length >0 && <CreatorTable data={creators} filter={filter}/>}
+            {creators?.length >0 && <CollaborationTable data={creators} filter={filter}/>}
             {/* Pagination */}
             <div className="flex justify-end items-center mt-4">
                 <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={setCurrentPage} />
@@ -151,3 +152,4 @@ export default function CreatorList() {
         </div>
   );
 }
+

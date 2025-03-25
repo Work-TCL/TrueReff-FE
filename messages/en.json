@@ -296,5 +296,14 @@
   "Yearly": "Yearly",
   "Fashion_Beauty": "Fashion & Beauty",
   "Men_Fashion": "Men’s Fashion",
-  "Rating": "Rating"
+  "Rating": "Rating",
+  "No_Products_Available_Title": "No Products Available",
+  "No_Products_Available_Description": "It seems there are currently no products to display. Please check back later.",
+  "Search_collaboration": "Search collaboration",
+  "No_Collaborations_Available_Title": "No Collaborations Available",
+  "No_Collaborations_Available_Description":"It seems there are currently no collaborations to display. Please check back later.",
+  "Units_Sold": "Units Sold",
+  "Collab_Last_Date": "Collab Last Date",
+  "No_Creators_Available_Title": "No Creators Available",
+  "No_Creators_Available_Description": "It seems there are currently no creators to display. Please check back later."
 }

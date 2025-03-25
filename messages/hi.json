@@ -288,5 +288,14 @@
   "Trending_Insights_Discoverability": "ट्रेंडिंग अंतर्दृष्टि और खोज क्षमता",
   "Channels": "चैनल",
   "Creator_List": "निर्माता सूची",
-  "Available_Creators": "उपलब्ध निर्माता"
+  "Available_Creators": "उपलब्ध निर्माता",
+  "No_Products_Available_Title": "कोई उत्पाद उपलब्ध नहीं",
+  "No_Products_Available_Description": "ऐसा लगता है कि फिलहाल प्रदर्शित करने के लिए कोई उत्पाद नहीं हैं। कृपया बाद में जांचें।",
+  "Search_collaboration": "सहयोग खोजें",
+  "Units_Sold": "बिकी हुई इकाइयाँ",
+"Collab_Last_Date": "सहयोग अंतिम तिथि",
+"No_Collaborations_Available_Title": "कोई सहयोग उपलब्ध नहीं",
+  "No_Collaborations_Available_Description": "ऐसा लगता है कि फिलहाल प्रदर्शित करने के लिए कोई सहयोग नहीं हैं। कृपया बाद में जांचें।",
+  "No_Creators_Available_Title": "कोई निर्माता उपलब्ध नहीं",
+  "No_Creators_Available_Description": "ऐसा लगता है कि फिलहाल प्रदर्शित करने के लिए कोई निर्माता नहीं हैं। कृपया बाद में जांचें।"
 }
