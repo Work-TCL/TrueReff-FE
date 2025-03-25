@@ -272,8 +272,16 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
   company_email: Yup.string()
     .email("Company Email must be a valid email address")
     .required("Company Email is required"),
-  company_phone: Yup.string().required("Company Phone is required"),
-  gst_number: Yup.string().required("GST Number is required"),
+  company_phone: Yup.string()
+    .matches(/^[0-9]{10}$/, "Company Phone must be a valid 10-digit number")
+    .required("Company Phone is required"),
+
+  gst_number: Yup.string()
+    .matches(
+      /^[0-9A-Z]{15}$/,
+      "GST Number must be a valid 15-character alphanumeric code"
+    )
+    .required("GST Number is required"),
   website: Yup.string()
     .url("Website must be a valid URL")
     .required("Website is required"),

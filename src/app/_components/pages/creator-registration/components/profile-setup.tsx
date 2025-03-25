@@ -70,7 +70,7 @@ export default function ProfileSetup() {
           label="Profile Title"
           name="profile_title"
           type="text"
-          placeholder="ABC"
+          placeholder="Men’s Style Guide & Trends"
         />
       </div>
       <div className="col-span-2">
@@ -79,7 +79,7 @@ export default function ProfileSetup() {
           name="long_description"
           type="textarea"
           rows={2}
-          placeholder="ABC"
+          placeholder="I'm John, a fashion influencer sharing style tips, outfit inspiration, and grooming advice for men. Follow me for daily fashion insights!"
         />
       </div>
       <div className="col-span-2">
@@ -87,17 +87,22 @@ export default function ProfileSetup() {
           label="Short Description"
           name="short_description"
           type="text"
-          placeholder="ABC"
+          placeholder="Helping men stay stylish with the latest fashion trends."
         />
       </div>
       <div className="col-span-2">
-        <Input label="Tags" name="tags" type="tag" placeholder="#ABC" />
+        <Input
+          label="Tags"
+          name="tags"
+          type="tag"
+          placeholder="Enter your tags"
+        />
         {/* <Input label="Tags" name="tags" type="text" placeholder="#ABC" /> */}
       </div>
       <div className="md:col-span-1 col-span-2">
         <Input
           label={translate("Category")}
-          placeholder={translate("Select_category")}
+          placeholder={translate("Fashion_Beauty")}
           name="category"
           type="select-multiple"
           options={parentCategory?.map((ele) => ({
@@ -109,7 +114,7 @@ export default function ProfileSetup() {
       <div className="md:col-span-1 col-span-2">
         <Input
           label={translate("Sub_category")}
-          placeholder={translate("Select_sub_category")}
+          placeholder={translate("Men_Fashion")}
           name="sub_category"
           type="select-multiple"
           options={subCategory.map((ele) => ({

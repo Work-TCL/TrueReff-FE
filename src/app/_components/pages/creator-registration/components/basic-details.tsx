@@ -10,7 +10,7 @@ export default function BasicInfoForm() {
           label="Full Name"
           name="full_name"
           type="text"
-          placeholder="ABC"
+          placeholder="John Doe"
         />
       </div>
       <div className="col-span-1">
@@ -18,7 +18,7 @@ export default function BasicInfoForm() {
           label="Username"
           name="user_name"
           type="text"
-          placeholder="ABC"
+          placeholder="john_doe_90"
         />
       </div>
       <div className="col-span-1">
@@ -26,7 +26,7 @@ export default function BasicInfoForm() {
           label="Email"
           name="email"
           type="email"
-          placeholder="ABC"
+          placeholder="johndoe@gmail.com"
           disabled
         />
       </div>
@@ -35,7 +35,7 @@ export default function BasicInfoForm() {
           label="Phone Number"
           name="phone_number"
           type="phone"
-          placeholder="+949895198489181"
+          placeholder="+91 864 542 2548 "
         />
       </div>
     </div>

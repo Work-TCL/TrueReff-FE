@@ -107,7 +107,7 @@ export default function ContactsProfile(props: any) {
       <EditContactProfile
         open={isOpen}
         contact={currentContact !== null && contacts[currentContact]}
-        id={currentContact || "new-contacts"}
+        id={currentContact ?? "new-contacts"}
         onClose={(refresh = false) => {
           setCurrentContact(null);
           setIsOpen(false);

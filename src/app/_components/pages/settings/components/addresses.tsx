@@ -108,7 +108,7 @@ export default function AddressesProfile(props: any) {
       <EditAddressProfile
         open={isOpen}
         address={currentAddress !== null && addresses[currentAddress]}
-        id={currentAddress || "new-address"}
+        id={currentAddress ?? "new-address"}
         onClose={(refresh = false) => {
           setIsOpen(false);
           setCurrentAddress(null);

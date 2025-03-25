@@ -157,7 +157,7 @@ export default function SocialMedia({
             label="Account Name"
             name="channels[0].account_name"
             type="text"
-            placeholder="Account_name"
+            placeholder="JohnDoe_Style"
             disabled
           />
         </div>
@@ -168,7 +168,7 @@ export default function SocialMedia({
                 label="Handle Name"
                 name="channels[0].handle_name"
                 type="text"
-                placeholder="@Handle_name"
+                placeholder="@JohnDoe_Style"
                 disabled
               />
             </div>
@@ -202,7 +202,7 @@ export default function SocialMedia({
             label="Account Link"
             name="channels[0].account_link"
             type="text"
-            placeholder="https://instagram.com/Account_name"
+            placeholder="https://instagram.com/JohnDoe_Style"
             disabled
           />
         </div>
@@ -221,7 +221,7 @@ export default function SocialMedia({
             label="Account Name"
             name="channels[1].account_name"
             type="text"
-            placeholder="Account name"
+            placeholder="John Doe Fashion"
             disabled
           />
         </div>
@@ -233,7 +233,7 @@ export default function SocialMedia({
                 name="channels[1].handle_name"
                 disabled={youtubeConnected}
                 type="text"
-                placeholder="Handlename"
+                placeholder="@JohnDoeFashion"
               />
             </div>
             <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
@@ -255,7 +255,7 @@ export default function SocialMedia({
             name="channels[1].account_link"
             type="text"
             disabled
-            placeholder="https://youtube.com/@Handle_name"
+            placeholder="https://youtube.com/@JohnDoeFashion"
           />
         </div>
       </div>
