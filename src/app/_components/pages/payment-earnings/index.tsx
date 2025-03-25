@@ -13,7 +13,7 @@ import TrendingInsights from "../dashboard/trending-insights";
 export default function PaymentEarnings() {
   const chartData = [
     { name: translate("Revenue"), value: 76, color: "#BEDBFC" },
-    { name: translate("Total Views"), value: 24, color: "#FED6AF" },
+    { name: translate("Total_Views"), value: 24, color: "#FED6AF" },
   ];
 
   return (
@@ -64,7 +64,7 @@ export default function PaymentEarnings() {
         <div className="flex flex-col w-full xl:flex-col md:flex-row xl:w-1/4 gap-4">
           {/* <PerformanceSummaryChart /> */}
           <TrendingInsights
-            header={translate("Product View Revenue")}
+            header={translate("Product_View_Revenue")}
             data={chartData}
             legendClassName="flex-row whitespace-nowrap "
           />

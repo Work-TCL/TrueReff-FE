@@ -76,6 +76,17 @@ export default {
         sm: "calc(var(--radius) - 4px)",
         20: "20px",
       },
+      backgroundImage: {
+        "custom-gradient": `
+          linear-gradient(0deg, #ffffff00, #ffffff00),
+          linear-gradient(87.38deg, 
+            rgba(155, 95, 233, 0.4) -35.64%, 
+            rgba(102, 132, 240, 0.4) 13.71%, 
+            rgba(222, 89, 142, 0.4) 77.99%, 
+            rgba(251, 177, 30, 0.4) 129.39%
+          )
+        `,
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

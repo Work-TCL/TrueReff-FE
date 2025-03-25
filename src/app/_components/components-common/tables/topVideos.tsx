@@ -8,90 +8,107 @@ import { CustomTableCell } from "./CustomTableCell";
 import { translate } from "@/lib/utils/translate";
 
 // Sample Data
-const activities = [
+const videos = [
   {
-    name: "Jane Doe",
-    product: "Luxury Watch X",
-    categories: "Accessories, Watches",
-    bid: "$500",
-    timeline: "30 Days",
+    thumbnail: "/assets/creator/profile/videoThumbnail1.png",
+    title: "Best Grooming Tips for Men",
+    platform: "YouTube",
+    views: "520K",
+    likes: "18K",
+    comments: "900",
+    watchTime: "4,500",
   },
   {
-    name: "John Smith",
-    product: "Designer Sunglasses Y",
-    categories: "Accessories, Sunglasses",
-    bid: "$300",
-    timeline: "45 Days",
+    thumbnail: "/assets/creator/profile/videoThumbnail1.png",
+    title: "Winter Skincare Hacks",
+    platform: "Instagram",
+    views: "410K",
+    likes: "22K",
+    comments: "1.2K",
+    watchTime: "NA",
   },
   {
-    name: "Alice Johnson",
-    product: "Leather Wallet Z",
-    categories: "Accessories, Wallet",
-    bid: "$100",
-    timeline: "60 Days",
+    thumbnail: "/assets/creator/profile/videoThumbnail1.png",
+    title: "Affordable vs. Luxury Watches",
+    platform: "TikTok",
+    views: "1,700",
+    likes: "25K",
+    comments: "1.5K",
+    watchTime: "NA",
+  },
+  {
+    thumbnail: "/assets/creator/profile/videoThumbnail1.png",
+    title: "Affordable vs. Luxury Watches",
+    platform: "TikTok",
+    views: "1,700",
+    likes: "25K",
+    comments: "1.5K",
+    watchTime: "NA",
   },
 ];
-
-export default function RecentActivities() {
+export default function TopVideosCraetor() {
   return (
     <div className="p-4 bg-white rounded-[20px]">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl text-text font-semibold">
-          {translate("Recent_Activities")}
+          {translate("top_10_videos")}
         </h2>
-        <Button variant="link" className="text-primary">
-          {translate("View_all")}
-        </Button>
       </div>
       <div className="overflow-auto">
         <Table className="min-w-full border border-gray-200 rounded-2xl">
           <TableHeader className="bg-gray-100">
             <TableRow>
               <CustomTableHead className="p-3 text-text text-left text-sm">
-                {translate("Creator_Name")}
+                {translate("Thumbnail")}
               </CustomTableHead>
               <CustomTableHead className="p-3 text-text text-left text-sm">
-                {translate("Product_Name")}
+                {translate("Video_Title")}
               </CustomTableHead>
               <CustomTableHead className="p-3 text-text text-left text-sm">
-                {translate("Categories")}
+                {translate("Platform")}
               </CustomTableHead>
               <CustomTableHead className="p-3 text-text text-left text-sm">
-                {translate("Proposed_Bid")}
+                {translate("Views")}
               </CustomTableHead>
               <CustomTableHead className="p-3 text-text text-left text-sm">
-                {translate("Timeline")}
+                {translate("Likes")}
+              </CustomTableHead>
+              <CustomTableHead className="p-3 text-text text-left text-sm">
+                {translate("Comments")}
               </CustomTableHead>
               <CustomTableHead className="p-3 text-center font-medium">
-                {translate("Action")}
+                {translate("Watch_Time")}
               </CustomTableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {activities.map((activity, index) => (
+            {videos.map((video, index) => (
               <TableRow key={index} className="even:bg-gray-50">
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.name}
-                </CustomTableCell>
-                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.product}
-                </CustomTableCell>
-                <CustomTableCell parentClassName="p-13 text-font-grey text-sm">
-                  {activity.categories}
-                </CustomTableCell>
-                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.bid}
-                </CustomTableCell>
-                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.timeline}
-                </CustomTableCell>
-                <td className="p-3 flex justify-center gap-3">
-                  <CheckCircle
-                    className="text-green-500 cursor-pointer"
-                    size={20}
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="w-10 h-10"
                   />
-                  <XCircle className="text-red-500 cursor-pointer" size={20} />
-                </td>
+                </CustomTableCell>
+                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
+                  {video.title}
+                </CustomTableCell>
+                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
+                  {video.platform}
+                </CustomTableCell>
+                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
+                  {video.views}
+                </CustomTableCell>
+                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
+                  {video.likes}
+                </CustomTableCell>
+                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
+                  {video.comments}
+                </CustomTableCell>
+                <CustomTableCell parentClassName="p-3 text-font-grey text-sm text-center">
+                  {video.watchTime}
+                </CustomTableCell>
               </TableRow>
             ))}
           </TableBody>

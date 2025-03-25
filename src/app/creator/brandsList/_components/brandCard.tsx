@@ -43,7 +43,7 @@ export default function BrandCard({
             <p className="text-primary-color text-xs font-normal">
               {translate("Total_Sale")}
             </p>
-            <p className=" flex gap-1 item-center">
+            <div className=" flex gap-1 item-center">
               <span className="text-primary-color text-xs font-normal">
                 {" "}
                 {totalSale}
@@ -51,7 +51,7 @@ export default function BrandCard({
               <div className="flex items-center justify-center size-4">
                 <TrendingUp className="shrink-0 text-success size-[10px]" />
               </div>
-            </p>
+            </div>
           </div>
           <div className="w-full h-1 bg-gray-300 rounded-full mt-1">
             <div

@@ -4,19 +4,27 @@ import InfluencerProfile from "./InfluencerProfile";
 import CollabsWithCompanies from "./CollabsWithCompanies";
 import RecentActivities from "../../components-common/tables/RecentActivity";
 import PerformanceSummaryChart from "../../components-common/charts/PerformanceChart";
+import ProfileCompletionCard from "../../components-common/charts/profileComplete";
+import TopVideosCraetor from "../../components-common/tables/topVideos";
 
-export default function CreatorProfile(){
-    return <div className="flex flex-col p-4 gap-4"><div className="flex gap-4">
-        <InfluencerProfile/>
-        <CollabsWithCompanies/>
+export default function CreatorProfile() {
+  return (
+    <div className="flex flex-col p-4 gap-5">
+      <div className="grid grid-cols-2 gap-5 w-full">
+        <InfluencerProfile />
+        <div className="flex flex-col gap-5">
+          <ProfileCompletionCard />
+          <CollabsWithCompanies />
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-5 w-full">
+        <div className="col-span-2 h-full">
+          <TopVideosCraetor />
+        </div>
+        <div className="h-full">
+          <PerformanceSummaryChart />
+        </div>
+      </div>
     </div>
-    <div className="flex flex-col xl:flex-row gap-5 w-full">
-                <div className="flex flex-col xl:w-3/4 gap-5">
-                <RecentActivities />
-                </div>
-                <div className="flex flex-col w-full xl:flex-col md:flex-row xl:w-1/4 gap-4">
-                <PerformanceSummaryChart />
-                </div>
-            </div>
-    </div>
+  );
 }
