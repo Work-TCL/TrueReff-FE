@@ -166,6 +166,7 @@ export interface IPostCreatorRegisterResponse {
   status: number;
   data: {
     message: string;
+    _id:string;
   };
 }
 

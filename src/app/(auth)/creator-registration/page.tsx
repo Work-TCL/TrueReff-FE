@@ -7,12 +7,12 @@ import Loader from "@/app/_components/components-common/layout/loader";
 export default async function page() {
   const creatorDetails = await getCreatorProgress();
 
-  if (
-    Boolean(creatorDetails?.creatorFilled) &&
-    Boolean(creatorDetails?.channelesFilled)
-  ) {
-    redirect("/creator/dashboard");
-  }
+  // if (
+  //   Boolean(creatorDetails?.creatorFilled) &&
+  //   Boolean(creatorDetails?.channelesFilled)
+  // ) {
+  //   redirect("/creator/dashboard");
+  // }
   return (
     <Suspense fallback={<Loader />}>
       <CreatorRegistration creatorDetails={creatorDetails} />

@@ -13,6 +13,7 @@ import {
   getConnectedChannel,
 } from "@/lib/web-api/creator";
 import axiosInstance from "@/lib/web-api/http-common";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -31,9 +32,31 @@ export default function SocialMedia({
   const methods = useFormContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+    const router = useRouter();
+    const creatorId = searchParams.get("creatorId") ?? "";
+    const message = searchParams.get("message") ?? "";
+    const error = searchParams.get("error") ?? "";
   useEffect(() => {
     fetchConnectedChannel();
   }, []);
+  useEffect(()=> {
+    if(message){
+      toast.success(message);
+      removeQueryParam("message");
+    }
+    else if(error){
+      toast.error(error);
+      removeQueryParam("error");
+    }
+  },[message,error]);
+  const removeQueryParam = (key: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+  
+    params.delete(key);
+  
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
   const fetchConnectedChannel = async () => {
     setIsPageLoading(true);
     try {
@@ -98,7 +121,14 @@ export default function SocialMedia({
       setIsLoading(false);
     }
   };
+  const handleGoogleLogin = () => {
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    const redirectUri = `http://localhost:3030/api/channel/creator/youtube/auth/callback`; // Backend endpoint
+    const scope = encodeURIComponent("https://www.googleapis.com/auth/youtube.readonly");
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${creatorId}`;
 
+    window.location.href = authUrl; // Redirect user to Google login
+  };
   const handleConnectInstagram = async () => {
     setIsLoading(true);
     try {
@@ -231,7 +261,7 @@ export default function SocialMedia({
               <Input
                 label="Handle Name"
                 name="channels[1].handle_name"
-                disabled={youtubeConnected}
+                disabled
                 type="text"
                 placeholder="@JohnDoeFashion"
               />
@@ -240,7 +270,7 @@ export default function SocialMedia({
               <Button
                 className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
                 size="small"
-                onClick={handleConnectChannel}
+                onClick={handleGoogleLogin}
                 loading={isLoading}
                 disabled={isLoading}
               >

@@ -69,16 +69,10 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email") ?? "";
+  const tab = searchParams.get("tab") ?? "0";
+  const activeTab = parseInt(tab);
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const axios = useAxiosAuth();
-  const [activeTab, setActiveTab] = useState<number>(
-    !Boolean(creatorDetails?.creatorFilled)
-      ? TABS_STATUS.BASIC_DETAILS
-      : !Boolean(creatorDetails?.channelesFilled)
-      ? TABS_STATUS.SOCIAL_MEDIA
-      : TABS_STATUS.BASIC_DETAILS
-  );
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -144,10 +138,10 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
       const response: IPostCreatorRegisterResponse = await creatorRegister(
         payload
       );
+      console.log("response",response)
       if (response?.status === 201) {
         // toast.success("Creator successfully registered.");
-        // router.push("/dashboard");
-        setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
+        router.push(`?tab=2&creatorId=${response?.data?._id}`);
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -155,7 +149,6 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
     } finally {
       setLoading(false);
     }
-    setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
   };
 
   const onSubmitSocial = async (data: ICreatorSocialConnectSchema) => {
@@ -192,7 +185,7 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
       const isValid = await methods.trigger(basicInfoField);
 
       if (isValid) {
-        setActiveTab(TABS_STATUS.PROFILE_SETUP); // Move to next tab
+        router.push(`?tab=1&email=${email}`); // Move to next tab
       }
     } else if (TABS_STATUS.PROFILE_SETUP === activeTab) {
       const profileSetUpFields: any = [
@@ -206,7 +199,7 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
       const isValid = await methods.trigger(profileSetUpFields);
 
       if (isValid) {
-        setActiveTab(TABS_STATUS.SOCIAL_MEDIA); // Move to next tab
+        router.push(`?tab=2`); // Move to next tab
       }
     } else if (TABS_STATUS.SOCIAL_MEDIA === activeTab) {
       if (youtubeConnected) {
@@ -225,7 +218,7 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
   useEffect(() => {
     const code = searchParams.get("code"); // ✅ Correct way to get query parameters
     if (code) {
-      setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
+      router.push(`?tab=2`);
     }
   }, [searchParams]);
 
@@ -250,7 +243,7 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
               [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(activeTab) &&
               [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(v)
             ) {
-              setActiveTab(v);
+              router.push(`?tab=${v}`);
             }
 
             if (
@@ -259,7 +252,7 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
               ) &&
               [TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(v)
             ) {
-              setActiveTab(v);
+              router.push(`?tab=${v}`);
             }
           }}
           activeTabIndex={activeTab}
@@ -334,7 +327,7 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
                   className="w-fit bg-white text-black font-medium px-8"
                   size="small"
                   onClick={() => {
-                    activeTab < 3 && setActiveTab(activeTab + 1);
+                    activeTab < 3 && router.push(`?tab=${activeTab + 1}`);;
                     if (activeTab === TABS_STATUS.PAYMENT_DETAILS) {
                       router.push("/creator/dashboard");
                     }
