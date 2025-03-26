@@ -6,6 +6,7 @@ import RecentActivities from "../../components-common/tables/RecentActivity";
 import PerformanceSummaryChart from "../../components-common/charts/PerformanceChart";
 import ProfileCompletionCard from "../../components-common/charts/profileComplete";
 import TopVideosCraetor from "../../components-common/tables/topVideos";
+import TopViewAcrossPlatforms from "../../components-common/charts/topViewAcrossPlatforms";
 
 export default function CreatorProfile() {
   return (
@@ -22,7 +23,7 @@ export default function CreatorProfile() {
           <TopVideosCraetor />
         </div>
         <div className="h-full">
-          <PerformanceSummaryChart />
+          <TopViewAcrossPlatforms />
         </div>
       </div>
     </div>
