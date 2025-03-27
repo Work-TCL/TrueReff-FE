@@ -6,95 +6,46 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { Input } from "@/components/ui/input";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
-import { Eye, PencilLine, Trash2 } from "lucide-react";
+import { CircleFadingPlus, Eye, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { translate } from "@/lib/utils/translate";
-import axiosInstance from "@/lib/web-api/http-common";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-// import axios from "axios";
+import Loading from "@/app/vendor/loading";
+import Link from "next/link";
+import ChannleToProduct from "@/lib/components/dialogs/channel-to-product";
 
-// Sample Data
-const products = [
-  {
-    productId: "#15646",
-    productImageUrl: "/monica.png",
-    productName: "Tiffany Diamond Ring",
-    category: "Jewelry",
-    tags: "Elegant, Timeless",
-    SKU: "TDR-3050",
-    sellingPrice: "$850",
-    discount: "15%",
-    status: "Inactive",
-  },
-  {
-    productId: "#15647",
-    productImageUrl: "/omega_watch.png",
-    productName: "Omega Seamaster",
-    category: "Watches",
-    tags: "Luxury, Classic",
-    SKU: "OSM-1248",
-    sellingPrice: "$4,200",
-    discount: "10%",
-    status: "Active",
-  },
-  {
-    productId: "#15648",
-    productImageUrl: "/leather_bag.png",
-    productName: "Louis Vuitton Leather Bag",
-    category: "Bags",
-    tags: "Stylish, Premium",
-    SKU: "LVL-7890",
-    sellingPrice: "$3,150",
-    discount: "20%",
-    status: "Active",
-  },
-  {
-    productId: "#15649",
-    productImageUrl: "/airpods_pro.png",
-    productName: "Apple AirPods Pro",
-    category: "Electronics",
-    tags: "Wireless, Noise-cancelling",
-    SKU: "AAP-9988",
-    sellingPrice: "$249",
-    discount: "5%",
-    status: "Inactive",
-  },
-  {
-    productId: "#15650",
-    productImageUrl: "/sneakers.png",
-    productName: "Nike Air Max 270",
-    category: "Footwear",
-    tags: "Comfort, Sporty",
-    SKU: "NAM-270X",
-    sellingPrice: "$150",
-    discount: "12%",
-    status: "Active",
-  },
-];
-
-export default function ChannelProductList() {
+interface IProduct {
+  handle: string;
+  id: string;
+  image: string;
+  title: string;
+  category: string;
+  tags: string[];
+  sku: string;
+  price: string;
+}
+interface IProps {
+  channelName: string;
+}
+export default function ChannelProductList({
+  channelName = "shopify",
+}: IProps) {
   const router = useRouter();
   const axios = useAxiosAuth();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productList, setProductList] = useState<
-    { handle: string; id: string; image: string; title: string }[]
-  >([]);
-  const pageSize = 10;
-  const totalPages = Math.ceil(products.length / pageSize);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [currentData, setCurrentData] = useState<IProduct | null>(null);
+  const [productList, setProductList] = useState<IProduct[]>([]);
   const [cursors, setCursors] = useState<{
     next: string | null;
     previous: string | null;
@@ -106,16 +57,13 @@ export default function ChannelProductList() {
     hasNextPage: false,
     hasPreviousPage: false,
   });
-  const paginatedData = products.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
 
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
     ItemPerPage: number,
     cursor: string | null = null
   ) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `channel/shopify/product/list?per_page=${ItemPerPage}${
@@ -131,7 +79,10 @@ export default function ChannelProductList() {
           hasPreviousPage: response.data.data.page_info.has_previous_page,
         });
       }
-    } catch (error) {}
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   // Update useEffect to fetch the initial product list
@@ -141,13 +92,13 @@ export default function ChannelProductList() {
 
   // Update the onClick handlers for pagination buttons
   const handleNextPage = () => {
-    if (cursors.next) {
+    if (cursors.next && cursors.hasNextPage) {
       fetProductsList(2, cursors.next);
     }
   };
 
   const handlePreviousPage = () => {
-    if (cursors.previous) {
+    if (cursors.previous && cursors.hasPreviousPage) {
       fetProductsList(2, cursors.previous);
     }
   };
@@ -168,6 +119,7 @@ export default function ChannelProductList() {
           </Button>
         </div>
       </div>
+      {loading && <Loading />}
       <div className="overflow-auto flex-1">
         <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
           <TableHeader className="bg-stroke">
@@ -178,11 +130,19 @@ export default function ChannelProductList() {
               <CustomTableHead className="w-1/4">
                 {translate("Product_Name")}
               </CustomTableHead>
-              {/* <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Tags")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("SKU")}</CustomTableHead>
-                            <CustomTableHead className="w-1/6">Selling {translate("Price")}</CustomTableHead>
-                            <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
+              <CustomTableHead className="w-1/6">
+                {translate("Categories")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/4">
+                {translate("Tags")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/4">
+                {translate("SKU")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/6">
+                Selling {translate("Price")}
+              </CustomTableHead>
+              {/*              <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
                             <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
               <CustomTableHead className="w-1/6 text-center">
                 {translate("Action")}
@@ -190,72 +150,82 @@ export default function ChannelProductList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* {paginatedData.map((product, index) => (
-                            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-                                <CustomTableCell >{product.productId}</CustomTableCell>
-                                <CustomTableCell>
-                                    <div className="flex items-center gap-2">
-                                        <Avatar className="w-8 h-8">
-                                            <AvatarImage src={'/assets/product/image-square.svg'} />
-                                        </Avatar>
-                                        {product.productName}
-                                    </div>
-                                </CustomTableCell>
-                                <CustomTableCell >{product.category}</CustomTableCell>
-                                <CustomTableCell>{product.tags}</CustomTableCell>
-                                <CustomTableCell>{product.SKU}</CustomTableCell>
-                                <CustomTableCell>{product.sellingPrice}</CustomTableCell>
-                                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell>
-                                <CustomTableCell>
-                                    <div className="flex justify-center gap-3">
-                                        <Eye color="#FF4979" className="cursor-pointer" onClick={() => router.push(`/product/${index}?view=true`)} />
-                                        <PencilLine className="cursor-pointer" onClick={() => router.push(`/product/${index}`)} />
-                                        <Trash2 color="#FF3B30" className="cursor-pointer" />
-                                    </div>
-                                </CustomTableCell>
-                            </TableRow>
-                        ))} */}
-            {productList.map((product, index) => (
-              <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-                <CustomTableCell>{product.id.split("/").pop()}</CustomTableCell>
-                <CustomTableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={product.image} />
-                    </Avatar>
-                    {product.title}
-                  </div>
-                </CustomTableCell>
-                {/* <CustomTableCell >{product.category}</CustomTableCell>
-                                <CustomTableCell>{product.tags}</CustomTableCell>
-                                <CustomTableCell>{product.SKU}</CustomTableCell>
-                                <CustomTableCell>{product.sellingPrice}</CustomTableCell>
-                                <CustomTableCell>{product.discount}</CustomTableCell>
+            {!loading && productList?.length > 0 ? (
+              productList.map((product, index) => (
+                <TableRow key={index} className=" bg-white">
+                  <CustomTableCell>
+                    {product.id.split("/").pop()}
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={product.image} />
+                      </Avatar>
+                      {product.title}
+                    </div>
+                  </CustomTableCell>
+                  <CustomTableCell>{product.category}</CustomTableCell>
+                  <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
+                  <CustomTableCell>{product.sku}</CustomTableCell>
+                  <CustomTableCell>{product.price}</CustomTableCell>
+                  {/*                <CustomTableCell>{product.discount}</CustomTableCell>
                                 <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
-                <CustomTableCell>
-                  <div className="flex justify-center gap-3">
-                    <Eye
-                      color="#FF4979"
-                      className="cursor-pointer"
-                      onClick={() => router.push(`/product/${index}?view=true`)}
-                    />
-                    <PencilLine
-                      className="cursor-pointer"
-                      onClick={() => router.push(`/product/${index}`)}
-                    />
-                    <Trash2 color="#FF3B30" className="cursor-pointer" />
-                  </div>
-                </CustomTableCell>
-              </TableRow>
-            ))}
+                  <CustomTableCell>
+                    <div className="flex justify-center gap-3">
+                      <Link href={`shopify/view?id=${product.id}`} className="">
+                        <Eye color="#FF4979" className="cursor-pointer" />
+                      </Link>
+                      <div
+                        onClick={() => {
+                          setCurrentData(product);
+                        }}
+                        className=""
+                      >
+                        <CircleFadingPlus
+                          color="#3b82f680"
+                          className="cursor-pointer"
+                        />
+                      </div>
+                    </div>
+                  </CustomTableCell>
+                </TableRow>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={8}>
+                  <EmptyPlaceHolder />
+                </td>
+              </tr>
+            )}
           </TableBody>
         </Table>
       </div>
+      {currentData !== null && (
+        <ChannleToProduct
+          product={{
+            productId: currentData.id,
+            channelName: channelName,
+            handle: currentData.handle,
+            id: currentData.id,
+            image: currentData.image,
+            title: currentData.title,
+            category: currentData.category,
+            tags: currentData.tags,
+            sku: currentData.sku,
+            price: currentData.price,
+          }}
+          onClose={(refresh = false) => {
+            setCurrentData(null);
+            if (refresh) {
+              fetProductsList(20);
+            }
+          }}
+        />
+      )}
       {/* Pagination */}
       {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
-        <div className="flex justify-end items-center mt-4">
-          <Pagination className="flex justify-end mt-4">
+        <div className="flex justify-end items-center mt-1">
+          <Pagination className="flex justify-end mt-1">
             <PaginationContent className="flex items-center gap-2">
               <PaginationItem>
                 <PaginationPrevious
@@ -282,6 +252,19 @@ export default function ChannelProductList() {
           </Pagination>{" "}
         </div>
       ) : null}
+    </div>
+  );
+}
+export function EmptyPlaceHolder() {
+  return (
+    <div className=" flex items-center justify-center flex-col flex-1 text-center h-[200px] text-gray-500 p-4 bg-white ">
+      <Info className="mx-auto mb-2 text-gray-400" />
+      <h2 className="text-lg font-semibold">
+        {translate("No_Products_Available_Title")}
+      </h2>
+      <p className="text-sm">
+        {translate("No_Products_Available_Description")}
+      </p>
     </div>
   );
 }

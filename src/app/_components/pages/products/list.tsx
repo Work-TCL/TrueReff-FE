@@ -10,8 +10,7 @@ import { Input } from "@/components/ui/input";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
-import { CircleFadingPlus, Eye, Info } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Eye, Info } from "lucide-react";
 import { translate } from "@/lib/utils/translate";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import {
@@ -22,21 +21,22 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import Loading from "@/app/vendor/loading";
+import Link from "next/link";
 
-interface IProduct { 
-  handle: string; 
-  id: string; 
-  image: string; 
+interface IProduct {
+  channelName: string;
+  handle: string;
+  id: string;
+  image: string;
   title: string;
   category: string;
   tags: string[];
   sku: string;
-  price: string; 
+  price: string;
 }
 export default function ProductList() {
-  const router = useRouter();
   const axios = useAxiosAuth();
-  const [loading,setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [cursors, setCursors] = useState<{
     next: string | null;
@@ -58,18 +58,33 @@ export default function ProductList() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product/list?per_page=${ItemPerPage}${
+        `product/vendor-product/product/list?per_page=${ItemPerPage}${
           cursor ? `&cursor=${cursor}` : ""
         }`
       );
-      if (response.data.data.products) {
-        setProductList(response.data.data.products);
-        setCursors({
-          next: response.data.data.page_info.next_cursor,
-          previous: response.data.data.page_info.previous_cursor,
-          hasNextPage: response.data.data.page_info.has_next_page,
-          hasPreviousPage: response.data.data.page_info.has_previous_page,
-        });
+
+      if (response.data.data?.data) {
+        setProductList(
+          response.data.data?.data?.map((v: any) => ({
+            channelName: v.channelName,
+            id: v?.productId?._id,
+            title: v?.productId?.title,
+            image:
+              v?.productId?.media?.length > 0 ? v?.productId?.media[0] : "",
+            category: v?.productId?.category,
+            price: v?.productId?.price,
+            tags: v?.productId?.tags,
+            sku: v?.productId?.sku,
+          }))
+        );
+        if (response.data.data?.count >= ItemPerPage) {
+          // setCursors({
+          //   next: response.data.data.page_info.next_cursor,
+          //   previous: response.data.data.page_info.previous_cursor,
+          //   hasNextPage: response.data.data.page_info.has_next_page,
+          //   hasPreviousPage: response.data.data.page_info.has_previous_page,
+          // });
+        }
       }
       setLoading(false);
     } catch (error) {
@@ -111,21 +126,29 @@ export default function ProductList() {
           </Button>
         </div>
       </div>
-      {loading && <Loading/>}
+      {loading && <Loading />}
       <div className="overflow-auto flex-1">
         <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
           <TableHeader className="bg-stroke">
             <TableRow>
               <CustomTableHead className="w-1/6">
-                {translate("Product_ID")}
+                {translate("Channel")}
               </CustomTableHead>
               <CustomTableHead className="w-1/4">
                 {translate("Product_Name")}
               </CustomTableHead>
-               <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Tags")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("SKU")}</CustomTableHead>
-                            <CustomTableHead className="w-1/6">Selling {translate("Price")}</CustomTableHead>
+              <CustomTableHead className="w-1/6">
+                {translate("Categories")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/4">
+                {translate("Tags")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/4">
+                {translate("SKU")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/6">
+                Selling {translate("Price")}
+              </CustomTableHead>
               {/*              <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
                             <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
               <CustomTableHead className="w-1/6 text-center">
@@ -134,35 +157,41 @@ export default function ProductList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {(!loading && productList?.length > 0) ? productList.map((product, index) => (
-              <TableRow key={index} className=" bg-white">
-                <CustomTableCell>{product.id.split("/").pop()}</CustomTableCell>
-                <CustomTableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={product.image} />
-                    </Avatar>
-                    {product.title}
-                  </div>
-                </CustomTableCell>
-                 <CustomTableCell >{product.category}</CustomTableCell>
-                                <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
-                                <CustomTableCell>{product.sku}</CustomTableCell>
-                                <CustomTableCell>{product.price}</CustomTableCell>
-                {/*                <CustomTableCell>{product.discount}</CustomTableCell>
+            {!loading && productList?.length > 0 ? (
+              productList.map((product, index) => (
+                <TableRow key={index} className=" bg-white">
+                  <CustomTableCell>{product.channelName}</CustomTableCell>
+                  <CustomTableCell>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={product.image} />
+                      </Avatar>
+                      {product.title}
+                    </div>
+                  </CustomTableCell>
+                  <CustomTableCell>{product.category}</CustomTableCell>
+                  <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
+                  <CustomTableCell>{product.sku}</CustomTableCell>
+                  <CustomTableCell>{product.price}</CustomTableCell>
+                  {/*                <CustomTableCell>{product.discount}</CustomTableCell>
                                 <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
-                <CustomTableCell>
-                  <div className="flex justify-center gap-3">
-                    <Eye
-                      color="#FF4979"
-                      className="cursor-pointer"
-                      onClick={() => router.push(`/product/${index}?view=true`)}
-                    />
-                    <CircleFadingPlus className="cursor-pointer" color="#3b82f680"/>                    
-                  </div>
-                </CustomTableCell>
-              </TableRow>
-            )): <tr><td colSpan={8}><EmptyPlaceHolder/></td></tr>}
+                  <CustomTableCell>
+                    <Link
+                      href={`/vendor/products/view?id=${product.id}`}
+                      className="flex justify-center gap-3"
+                    >
+                      <Eye color="#FF4979" className="cursor-pointer" />
+                    </Link>
+                  </CustomTableCell>
+                </TableRow>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={8}>
+                  <EmptyPlaceHolder />
+                </td>
+              </tr>
+            )}
           </TableBody>
         </Table>
       </div>
@@ -206,7 +235,9 @@ export function EmptyPlaceHolder() {
       <h2 className="text-lg font-semibold">
         {translate("No_Products_Available_Title")}
       </h2>
-      <p className="text-sm">{translate("No_Products_Available_Description")}</p>
+      <p className="text-sm">
+        {translate("No_Products_Available_Description")}
+      </p>
     </div>
   );
 }

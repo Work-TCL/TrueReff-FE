@@ -392,3 +392,62 @@ export const creatorSocialConnectSchema = Yup.object().shape({
 
 export interface ICreatorSocialConnectSchema
   extends Yup.Asserts<typeof creatorSocialConnectSchema> {}
+
+// Add to wishlist
+export const productSchema = Yup.object().shape({
+  images: Yup.array().of(Yup.string().url("Invalid image URL")).required(),
+  name: Yup.string().required("Product name is required"),
+  description: Yup.string().required("Description is required"),
+  price: Yup.number()
+    .min(0, "Price must be a positive number")
+    .required("Price is required"),
+  sku: Yup.string().required("SKU is required"),
+  barcode: Yup.string().required("Barcode is required"),
+  quantity: Yup.number()
+    .min(0, "Quantity must be a positive number")
+    .required("Quantity is required"),
+  discount: Yup.number()
+    .min(0, "Quantity must be a positive number")
+    .required("Quantity is required"),
+  totalInventory: Yup.number()
+    .min(0, "Total inventory must be a positive number")
+    .required("Total inventory is required"),
+  variants: Yup.array()
+    .of(
+      Yup.object().shape({
+        variationType: Yup.string().required("Variation type is required"),
+        variation: Yup.string().required("Variation value is required"),
+      })
+    )
+    .required("Variants are required"),
+  category: Yup.array()
+    .of(Yup.string())
+    .required("At least one category is required"),
+  tags: Yup.array().of(Yup.string()).required("At least one tag is required"),
+});
+
+export interface IProductSchema extends Yup.Asserts<typeof productSchema> {}
+
+export const channlesToProduct = Yup.object().shape({
+  category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().required("Label is required"),
+        value: Yup.string().required("Value is required"),
+      })
+    )
+    .min(1, "Category is required")
+    .required("Category is required"), // Ensure at least one category is selected
+  subCategory: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().required("Label is required"),
+        value: Yup.string().required("Value is required"),
+      })
+    )
+    .min(1, "Sub-category is required")
+    .required("Sub-Category is required"), // Ensure at least one sub-category is selected
+});
+
+export interface IChannelsToProduct
+  extends Yup.Asserts<typeof channlesToProduct> {}
