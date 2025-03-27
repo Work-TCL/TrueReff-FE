@@ -138,7 +138,6 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
       const response: IPostCreatorRegisterResponse = await creatorRegister(
         payload
       );
-      console.log("response",response)
       if (response?.status === 201) {
         // toast.success("Creator successfully registered.");
         router.push(`?tab=2&creatorId=${response?.data?._id}`);
@@ -327,7 +326,7 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
                   className="w-fit bg-white text-black font-medium px-8"
                   size="small"
                   onClick={() => {
-                    activeTab < 3 && router.push(`?tab=${activeTab + 1}`);;
+                    activeTab < 3 && router.push(`?tab=${activeTab + 1}`);
                     if (activeTab === TABS_STATUS.PAYMENT_DETAILS) {
                       router.push("/creator/dashboard");
                     }

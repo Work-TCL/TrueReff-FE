@@ -1,5 +1,5 @@
 import React from "react";
-import CreateProduct from "@/app/_components/pages/products/create";
+import CreateProduct from "@/app/_components/pages/products/channels/create";
 export default async function ProductDetail() {
-    return <CreateProduct isDetailView={false} />
+  return <CreateProduct type="create" />;
 }

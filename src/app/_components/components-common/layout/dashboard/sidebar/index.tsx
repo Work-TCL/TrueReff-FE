@@ -137,8 +137,14 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       icon: User,
       children: [
         { label: translate("Creator_List"), link: "/vendor/creators" },
-        { label: translate("Available_Creators"), link: "/vendor/creators/available-creators" },
-        { label: translate("Collaboration"), link: "/vendor/creators/collaboration" },
+        {
+          label: translate("Available_Creators"),
+          link: "/vendor/creators/available-creators",
+        },
+        {
+          label: translate("Collaboration"),
+          link: "/vendor/creators/collaboration",
+        },
       ],
     },
     {
@@ -247,8 +253,8 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                   <div>
                     <NavLink
                       key={idx}
-                      isActive={item.children.some(
-                        (child) => pathname.includes(child.link)
+                      isActive={item.children.some((child) =>
+                        pathname.includes(child.link)
                       )}
                       handleToggle={() => toggleMenu(item.label, false)}
                       label={isSidebarExpanded && item.label}

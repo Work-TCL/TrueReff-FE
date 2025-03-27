@@ -128,7 +128,7 @@ export default function Input({
       render={({ field }) => (
         <div className="flex flex-col">
           {getLabel()}
-          <div className="w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white">
+          <div className="w-full ">
             <input
               type="text"
               value={inputValue}
@@ -136,12 +136,13 @@ export default function Input({
               onKeyDown={addTag}
               onBlur={field.onBlur}
               placeholder={placeholder}
-              className="flex-1 outline-none"
+              className={inputStyle}
+              {...props}
             />
           </div>
           {tags?.length > 0 ? "" : getError()}
           {tags.length > 0 && (
-            <div className="flex items-center py-2 mt-2 gap-4">
+            <div className="flex items-center py-2 mt-2 gap-4 flex-wrap">
               {tags.map((tag: string, index: number) => (
                 <span key={index} className="bg-gray-small-light py-3 px-4">
                   {tag}
@@ -234,7 +235,11 @@ export default function Input({
         <div className="flex flex-col">
           {getLabel()}
           <div className="relative">
-            <select className={cn(inputStyle, "appearance-none")} {...field}>
+            <select
+              className={cn(inputStyle, "appearance-none")}
+              {...field}
+              disabled={props?.disabled}
+            >
               <option selected>{placeholder || "Select..."}</option>
               {options?.map((item) => (
                 <option key={item?.value} value={item?.value}>
@@ -269,6 +274,7 @@ export default function Input({
               className="basic-multi-select focus:outline-none focus:shadow-none"
               classNamePrefix="select"
               {...field}
+              isDisabled={props?.disabled}
             />
           </div>
           {getError()}
