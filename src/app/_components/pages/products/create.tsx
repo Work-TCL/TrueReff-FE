@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { translate } from "@/lib/utils/translate";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
@@ -12,6 +13,7 @@ interface IAddProductDetailProps {
     isDetailView?: boolean;
 }
 export default function CreateProduct(props: IAddProductDetailProps) {
+    const params = useParams()
     let { isDetailView } = props;
     const [variants, setVariants] = useState([
         { variationType: "", variation: "" }
@@ -22,13 +24,16 @@ export default function CreateProduct(props: IAddProductDetailProps) {
     const handleDelete = (ind: number) => {
         setVariants([...variants.filter((ele, index) => index !== ind)])
     };
+
+    console.log("params", params);
+
     return (
         <div className="flex flex-col gap-5 h-full px-4 py-3">
             <div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">{isDetailView ? <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/product/list">{translate("Product_List")}</BreadcrumbLink>
+                            <BreadcrumbLink href={`/vendor/products/channels/${params?.channelType}`}>{translate("Product_List")}</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
@@ -60,18 +65,18 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                         <div className="text-[16px]">{translate("General_Information")}</div>
                         <div className="flex flex-col gap-1">
                             <label className="text-[12px] text-[#7E7E80]">{translate("Product_Name")}</label>
-                            <Input placeholder={translate("Type_product_name_ here...")} />
+                            <Input placeholder={translate("Type_product_name_ here")} />
                         </div>
                         <div className="flex flex-col gap-1">
                             <label className="text-[12px] text-[#7E7E80]">{translate("Description")}</label>
-                            <Textarea placeholder={translate("Type_product_description_here...")} rows={5} />
+                            <Textarea placeholder={translate("Type_product_description_here")} rows={5} />
                         </div>
                     </div>
                     <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
                         <div className="text-[16px]">{translate("Pricing")}</div>
                         <div className="flex flex-col gap-1">
                             <label className="text-[12px] text-[#7E7E80]">{translate("Base_Price")}</label>
-                            <Input placeholder={translate("Type_base_price_here...")} />
+                            <Input placeholder={translate("Type_base_price_here")} />
                         </div>
                         <div className="flex flex-col lg:flex-row gap-2">
                             <div className="flex flex-col w-full lg:w-1/2 gap-1">
@@ -94,7 +99,7 @@ export default function CreateProduct(props: IAddProductDetailProps) {
                             </div>
                             <div className="flex flex-col w-full lg:w-1/2 gap-1">
                                 <label className="text-[12px] text-[#7E7E80]">{translate("Discount_Percentage_(%)")}</label>
-                                <Input placeholder={translate("Type_discount_percentage...")} />
+                                <Input placeholder={translate("Type_discount_percentage")} />
                             </div>
                         </div>
                         <div className="flex flex-col lg:flex-row gap-2">
