@@ -37,7 +37,7 @@ export default function BrandList() {
     setLoading(true);
     try {
       const response: any = await axios.get(
-        `product/brand-product/brand/list?page=${page}&limit=${limit}`
+        `/product/vendor-product/vendor/list??page=${page}&limit=${limit}`
       );
       if (response.status === 200) {
         const brandData = response.data.data;

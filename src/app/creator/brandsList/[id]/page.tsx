@@ -1,11 +1,11 @@
 import Loader from "@/app/_components/components-common/layout/loader";
-import ProductList from "@/app/_components/pages/my-store/list";
 import React, { Suspense } from "react";
+import BrandProductList from "./_components/list";
 
-export default function MyStorePage() {
+export default function BrandProductListPage() {
   return (
     <Suspense fallback={<Loader />}>
-      <ProductList />
+      <BrandProductList/>
     </Suspense>
   );
 }

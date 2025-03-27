@@ -2,8 +2,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { translate } from "@/lib/utils/translate";
 import { Star, TrendingUp } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface BrandCardProps {
+  id: string;
   name: string;
   category: string;
   totalSale: string;
@@ -14,6 +16,7 @@ interface BrandCardProps {
 }
 
 export default function BrandCard({
+  id,
   name,
   category,
   totalSale,
@@ -22,8 +25,12 @@ export default function BrandCard({
   reviews,
   logo,
 }: BrandCardProps) {
+  const router = useRouter();
+  const handleBrand = (brandId: string,brandName: string) => {
+    router.push(`/creator/brandsList/${brandId}?brandName=${brandName}`)
+  }
   return (
-    <Card className="xl:w-[300px] w-full h-auto xl:max-h-[304px] border border-stroke rounded-xl shadow-md p-4 flex flex-col items-center text-center">
+    <Card className="xl:w-[300px] w-full h-auto xl:max-h-[304px] border border-stroke rounded-xl shadow-md p-4 flex flex-col items-center text-center" onClick={()=>handleBrand(id,name)}>
       <CardContent className="w-full p-0 flex flex-col items-center gap-4">
         <div className="bg-background rounded-lg xl:max-w-[258px] max-w-full min-h-[96px] w-full h-full flex items-center justify-center">
           {/* <img src={logo} alt={name} className="max-h-12" /> */}
