@@ -13,7 +13,13 @@ import ProductTable from "./product-table";
 import Loading from "@/app/vendor/loading";
 import { Button } from "@/components/ui/button";
 import { FaSlidersH } from "react-icons/fa";
-
+export interface ICategory {
+  _id: string,
+  name: string,
+  parentId: string|null,
+  createdAt: string,
+  updatedAt: string
+}
 export interface IProduct {
   _id: string,
   title: string,
@@ -26,6 +32,7 @@ export interface IProduct {
   createdAt: string,
   updatedAt: string,
   tag: string,
+  category?:ICategory,
 }
 
 export default function ProductList() {

@@ -8,7 +8,7 @@ import { CustomTableHead } from "@/app/_components/components-common/tables/Cust
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
 import { IBrand } from "./list";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Eye, Info } from "lucide-react";
 
 interface ICreatorTableProps {
@@ -17,8 +17,9 @@ interface ICreatorTableProps {
 }
 export default function BrandProductTable({ data,brandName }: ICreatorTableProps) {
     const router = useRouter();
-    const handleViewCreatorDetails = (id: string) => {
-        router.push(`/vendor/brands/${id}`)
+    const params = useParams();
+    const handleDetailView = (id: string) => {
+        router.push(`/creator/brandsList/${params.id}/${id}?brandName=${brandName}`);
     }
     return (
         <div className="overflow-auto">
@@ -28,9 +29,9 @@ export default function BrandProductTable({ data,brandName }: ICreatorTableProps
                         <CustomTableHead className="w-1/6">{translate("Product_Image")}</CustomTableHead>
                         <CustomTableHead className="w-1/4">{translate("Product_Name")}</CustomTableHead>
                         <CustomTableHead className="w-1/6">{translate("Brand_Name")}</CustomTableHead>
-                        {/* <CustomTableHead className="w-1/8">{translate("Category")}</CustomTableHead>
-                        <CustomTableHead className="w-1/8">{translate("Subcategory")}</CustomTableHead>
-                        <CustomTableHead className="w-1/6">{translate("Total_Sale")}</CustomTableHead>
+                        <CustomTableHead className="w-1/8">{translate("Category")}</CustomTableHead>
+                         <CustomTableHead className="w-1/8">{translate("Tags")}</CustomTableHead>
+                        {/*<CustomTableHead className="w-1/6">{translate("Total_Sale")}</CustomTableHead>
                         <CustomTableHead className="w-1/4">{translate("Brand_Rating")}</CustomTableHead> */}
                         <CustomTableHead className="w-1/6 text-center">{translate("Action")}</CustomTableHead>
                     </TableRow>
@@ -49,8 +50,8 @@ export default function BrandProductTable({ data,brandName }: ICreatorTableProps
                                 </CustomTableCell>
                                 <CustomTableCell>{brand.productId.title}</CustomTableCell>
                                 <CustomTableCell>{brandName}</CustomTableCell>
-                                {/* <CustomTableCell>{getInstagramView(brand.channels)}</CustomTableCell>
-                                <CustomTableCell>{getYoutubeView(brand.channels)}</CustomTableCell> */}
+                                 <CustomTableCell>{brand.productId?.category?.name}</CustomTableCell>
+                                <CustomTableCell>{brand.productId.tags.join(", ")}</CustomTableCell>
                                 {/* <CustomTableCell>{brand.pastSales??''}</CustomTableCell> */}
                                 {/* <CustomTableCell>{brand.tag}</CustomTableCell> */}
                                 <CustomTableCell>
@@ -58,7 +59,7 @@ export default function BrandProductTable({ data,brandName }: ICreatorTableProps
                                         <Eye
                                             color="#FF4979"
                                             className="cursor-pointer"
-                                            onClick={() => router.push(`/product/${index}?view=true`)}
+                                            onClick={() => handleDetailView(brand.productId._id)}
                                         />
                                         <Button variant="outline" className="whitespace-nowrap  bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm">
                                             {translate("Collaborate_Now")}

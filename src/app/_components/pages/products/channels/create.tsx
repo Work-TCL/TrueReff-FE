@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { translate } from "@/lib/utils/translate";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import Loader from "../../../components-common/layout/loader";
@@ -44,8 +44,11 @@ export default function CreateProduct({
 }: IAddProductDetailProps) {
   const axios = useAxiosAuth();
   const params = useParams();
+  const router = useRouter();
+  const productId = params?.productId;
   const searchParams = useSearchParams();
   const shopifyId = searchParams.get("id");
+  const brandName = searchParams.get("brandName");
   const status = {
     edit: type === "edit",
     create: type === "create",
@@ -146,12 +149,65 @@ export default function CreateProduct({
     }
   };
 
+  const fetchProductById = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `/product/${productId}`
+      );
+
+      const product: any = response?.data?.data?.data;
+      const images = product.media;
+      setProductData({
+        productId: product._id,
+        images: images,
+        name: product.title,
+        description: product.description,
+        price: 0,
+        sku: product.sku,
+        barcode: "",
+        quantity: 0,
+        totalInventory: product?.totalInventory,
+        tags: product?.tags || [],
+        variants: product?.variants?.nodes,
+      });
+      // ✅ Update product state
+      const updatedProduct = {
+        productId: product.id,
+        images: images,
+        name: product.title,
+        tags: product?.tags || [],
+        description: product?.description || "", // Add description if available
+        price: product?.price || 0,
+        sku: product?.sku || "",
+        barcode: product?.variants?.nodes[0]?.barcode || "",
+        quantity: product?.quantity || 0,
+        totalInventory: product?.totalInventory || 0,
+        variants: product?.variants?.nodes || [],
+      };
+
+      setProductData(updatedProduct);
+
+      methods.reset(updatedProduct);
+    } catch (error: any) {
+      toast.error(error?.message || "Product Fetch Failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Update useEffect to fetch the initial product list
   useEffect(() => {
     if (shopifyId) {
       fetchShopifyProductById();
     }
   }, [shopifyId]);
+
+  useEffect(()=> {
+    if(productId){
+      fetchProductById()
+    }
+  },[productId])
 
   const onSubmit = (data: IProductSchema) => {
     setLoading(true);
@@ -173,12 +229,12 @@ export default function CreateProduct({
             {status.view ? (
               <Breadcrumb>
                 <BreadcrumbList>
+                <BreadcrumbItem>
+                <BreadcrumbPage className="cursor-pointer hover:text-[grey]" onClick={()=> router.push("/creator/brandsList/")}>{brandName}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbLink
-                      href={`/vendor/products/${params?.channelType}`}
-                    >
-                      {translate("Product_List")}
-                    </BreadcrumbLink>
+                  <BreadcrumbPage className="cursor-pointer hover:text-[grey]" onClick={() => router.push(productId ? `/creator/brandsList/${params.id}?brandName=${brandName}` : `/vendor/products/${params?.channelType}`)}>{translate("Product_List")}</BreadcrumbPage>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>

@@ -39,7 +39,7 @@ export default function BrandProductTable  ({data}: IProductTableProps) {
                         {/* <CustomTableHead className="w-1/8">{translate("Price")}</CustomTableHead> */}
                         {/* <CustomTableHead className="w-1/8">{translate("YouTube_View")}</CustomTableHead> */}
                         {/* <CustomTableHead className="w-1/6">{translate("Discount")}</CustomTableHead> */}
-                        {/* <CustomTableHead className="w-1/4">{translate("Category")}</CustomTableHead> */}
+                        <CustomTableHead className="w-1/4">{translate("Category")}</CustomTableHead>
                         {/* <CustomTableHead className="w-1/6 text-center">{translate("Sold_Last_Week")}</CustomTableHead> */}
                         <CustomTableHead className="w-1/6 text-center">{translate("Trending_Tag")}</CustomTableHead>
                         {/* <CustomTableHead className="w-1/6 text-center">{translate("Action")}</CustomTableHead> */}
@@ -48,7 +48,7 @@ export default function BrandProductTable  ({data}: IProductTableProps) {
                 <TableBody>
                     {data.length > 0 ? (<>
                         {data.map((product:IProduct, index:number) => (
-                            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
+                            <TableRow key={index} className="bg-white">
                                 <CustomTableCell>
                                     <div className="flex items-center gap-2" onClick={()=> handleViewCreatorDetails(product._id)}>
                                         <Avatar className="w-8 h-8">
@@ -57,7 +57,7 @@ export default function BrandProductTable  ({data}: IProductTableProps) {
                                     </div>
                                 </CustomTableCell>
                                 <CustomTableCell>{product.title}</CustomTableCell>
-                                {/* <CustomTableCell>{product.categories}</CustomTableCell> */}
+                                <CustomTableCell>{product?.category?.name}</CustomTableCell>
                                 {/* <CustomTableCell>{getInstagramView(product.channels)}</CustomTableCell>
                                 <CustomTableCell>{getYoutubeView(product.channels)}</CustomTableCell> */}
                                 {/* <CustomTableCell>{product.pastSales??''}</CustomTableCell> */}

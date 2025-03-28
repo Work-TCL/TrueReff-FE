@@ -11,45 +11,49 @@ import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import BrandProductTable from "./BrandProductTable";
 import Loading from "@/app/vendor/loading";
-import { useParams, useSearchParams } from "next/navigation";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { FaSlidersH } from "react-icons/fa";
 export interface ICategory {
   _id: string,
-  name: string
+  name: string,
+  parentId: string | null,
+  createdAt: string,
+  updatedAt: string
 }
 
 export interface IProduct {
-    _id: string,
-    title: string,
-    channelProductId: string,
-    sku: string,
-    description: string,
-    media: string[],
-    channelName: string,
-    tags: string[],
-    createdAt: string,
-    updatedAt: string
+  _id: string,
+  title: string,
+  channelProductId: string,
+  sku: string,
+  description: string,
+  media: string[],
+  channelName: string,
+  tags: string[],
+  createdAt: string,
+  updatedAt: string,
+  category?: ICategory;
 }
 export interface IBrand {
-    _id: string,
-    vendorId: string,
-    productId: IProduct,
-    channelName: string,
-    createdAt: string,
-    updatedAt: string
+  _id: string,
+  vendorId: string,
+  productId: IProduct,
+  channelName: string,
+  createdAt: string,
+  updatedAt: string
 }
 
 export default function CreatorList() {
-    const params = useParams();
-    const searchParams = useSearchParams();
-    const brandName = searchParams.get("brandName")??"";
+  const params = useParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const brandName = searchParams.get("brandName") ?? "";
   const axios = useAxiosAuth();
-  const [loading,setLoading] = useState<boolean>(false);
-  const [brands,setBrands] = useState<IBrand[]>([]);
-  const [filter,setFilter] = useState<string>("5");
-  const [search,setSearch] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [brands, setBrands] = useState<IBrand[]>([]);
+  const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(20);
@@ -95,42 +99,39 @@ export default function CreatorList() {
     let value = e.target.value;
     setSearch(value)
   }
-  const handleFilterValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilter(e.target.value)
-  }
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
+      <div className="text-[20px] text-500">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+                <BreadcrumbPage className="cursor-pointer hover:text-[grey]" onClick={()=> router.push(`/creator/brandsList`)}>{brandName}</BreadcrumbPage>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{translate("Product_Lists")}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+      <div className="flex justify-between items-center flex-wrap gap-2">
         <div className="text-[20px] text-500">
-                <Breadcrumb>
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                        <BreadcrumbPage>{brandName}</BreadcrumbPage>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>{translate("Product_Lists")}</BreadcrumbPage>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
-            </div>
-            <div className="flex justify-between items-center flex-wrap gap-2">
-                <div className="text-[20px] text-500">
-                    <Input value={search} onChange={handleSearch} placeholder={translate("Search_product")} />
-                </div>
-                <div className="flex items-center gap-[10px]">
-                    <PiListChecksLight size={35} />
-                    <IoGridOutline size={30} />
-                    <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
-                        <FaSlidersH /> {translate("Filters")}
-                    </Button>
-                </div>
-            </div>
-            {loading && <Loading/>}
-            {!loading && <BrandProductTable data={brands} brandName={brandName}/>}
-            {/* Pagination */}
-            <div className="flex justify-end items-center mt-4">
-                <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={setCurrentPage} />
-            </div>
+          <Input value={search} onChange={handleSearch} placeholder={translate("Search_product")} />
         </div>
+        <div className="flex items-center gap-[10px]">
+          <PiListChecksLight size={35} />
+          <IoGridOutline size={30} />
+          <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
+            <FaSlidersH /> {translate("Filters")}
+          </Button>
+        </div>
+      </div>
+      {loading && <Loading />}
+      {!loading && <BrandProductTable data={brands} brandName={brandName} />}
+      {/* Pagination */}
+      <div className="flex justify-end items-center mt-4">
+        <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={setCurrentPage} />
+      </div>
+    </div>
   );
 }
