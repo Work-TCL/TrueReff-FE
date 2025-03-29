@@ -22,10 +22,9 @@ export default function AddressesProfile(props: any) {
   const handleRemoveAddress = async (index: number) => {
     try {
       let response: any = await axios.delete(`/auth/vendor/address/${index}`);
-
       if (response?.status === 200) {
         setAddresses(addresses.filter((_: any, i: number) => i != index));
-        toast.success(response?.message);
+        toast.success(response?.data?.message);
         props.refreshCentral && props.refreshCentral();
         return true;
       }

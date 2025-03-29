@@ -322,5 +322,7 @@
   "Discount_Percentage_Doller": "Discount Percentage (%)",
   "VAT_Amount_Doller": "VAT Amount (%)",
   "No_Creators_Available_Description": "It seems there are currently no creators to display. Please check back later.",
-  "Product_Lists": "Product List"
+  "Product_Lists": "Product Lists",
+  "No_Channels_Available_Title": "No Channels Available",
+  "No_Channels_Available_Description": "Please connect to the store to view available channels."
 }

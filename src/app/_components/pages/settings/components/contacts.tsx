@@ -22,7 +22,7 @@ export default function ContactsProfile(props: any) {
       let response: any = await axios.delete(`/auth/vendor/contact/${index}`);
 
       if (response?.status === 200) {
-        toast.success(response?.message);
+        toast.success(response?.data?.message);
         props.refreshCentral && props.refreshCentral();
         return true;
       }

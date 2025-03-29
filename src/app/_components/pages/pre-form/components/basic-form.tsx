@@ -10,7 +10,7 @@ export default function BasicInfoForm() {
           label="Business Name"
           name="business_name"
           type="text"
-          placeholder="ABC"
+          placeholder="business"
         />
       </div>
       <div className="col-span-2">
@@ -18,7 +18,7 @@ export default function BasicInfoForm() {
           label="Company email"
           name="company_email"
           type="email"
-          placeholder="abc@gmail.com"
+          placeholder="business@example.com"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -32,7 +32,7 @@ export default function BasicInfoForm() {
       <div className="md:col-span-1 col-span-2">
         <Input
           label="GST Number"
-          placeholder="24GE61811151"
+          placeholder="27ABCDE1234F1Z5"
           name="gst_number"
           type="phone"
         />

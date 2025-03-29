@@ -162,8 +162,16 @@ export const preFormSchema = Yup.object().shape({
     .email("Company Email must be a valid email")
     .lowercase("Company Email must be a valid email")
     .required("Company Email is required"),
-  company_phone: Yup.string().required("Company Phone is required"),
-  gst_number: Yup.string().required("GST Number is required"),
+  company_phone: Yup.string().required("Company Phone is required").matches(/^[0-9]{10}$/, "Company Phone must be a valid 10-digit number"),
+  gst_number: Yup
+  .string()
+  .required("GST Number is required")
+  .min(15, "GST Number should be exactly 15 characters")
+  .max(15, "GST Number should be exactly 15 characters")
+  .matches(/^[0-9A-Z]+$/, "GST Number should contain only alphanumeric characters (A-Z & 0-9)")
+  .matches(/^[0-9]{2}/, "First two characters should be numeric (State Code)")
+  .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/, "Middle 10 characters should be a valid PAN format (ABCDE1234F)")
+  .matches(/[1-9A-Z]{1}Z[0-9A-Z]{1}$/, "Last three characters should follow GSTIN format"),
   website: Yup.string().url().required("Website is required"),
   type_of_business: Yup.string().required("Type of business is required"),
   contacts: Yup.array()
@@ -189,6 +197,9 @@ export const preFormSchema = Yup.object().shape({
             // Check if this is the first contact
             if (path === "contacts[0].phone" && !value) {
               return createError({ path, message: "Phone number is required" });
+            }
+            if (value && !/^\d{10}$/.test(value)) {
+              return createError({ path, message: "Phone number must be exactly 10 digits" });
             }
             return true; // No error
           }
@@ -276,12 +287,15 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
     .matches(/^[0-9]{10}$/, "Company Phone must be a valid 10-digit number")
     .required("Company Phone is required"),
 
-  gst_number: Yup.string()
-    .matches(
-      /^[0-9A-Z]{15}$/,
-      "GST Number must be a valid 15-character alphanumeric code"
-    )
-    .required("GST Number is required"),
+  gst_number: Yup
+  .string()
+  .required("GST Number is required")
+  .min(15, "GST Number should be exactly 15 characters")
+  .max(15, "GST Number should be exactly 15 characters")
+  .matches(/^[0-9A-Z]+$/, "GST Number should contain only alphanumeric characters (A-Z & 0-9)")
+  .matches(/^[0-9]{2}/, "First two characters should be numeric (State Code)")
+  .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/, "Middle 10 characters should be a valid PAN format (ABCDE1234F)")
+  .matches(/[1-9A-Z]{1}Z[0-9A-Z]{1}$/, "Last three characters should follow GSTIN format"),
   website: Yup.string()
     .url("Website must be a valid URL")
     .required("Website is required"),
@@ -293,8 +307,8 @@ export interface IVendorProfileUpdateSchema
 
 export const addAddressVendorSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
-  phone: Yup.string().required("Phone is required"),
-  zip_code: Yup.string().required("Zip is required"),
+  phone: Yup.string().required("Phone is required").matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+  zip_code: Yup.string().required("Zip is required").matches(/^\d{6}$/, "ZIP code must be exactly 6 digits (e.g., 110001)"),
   city: Yup.string().required("City is required"),
   state: Yup.string().required("State is required"),
   house_no: Yup.string().required("House No is required"),
@@ -307,7 +321,7 @@ export interface IAddAddressVendorSchema
 
 export const addContactVendorSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
-  phone: Yup.string().required("Phone is required"),
+  phone: Yup.string().required("Phone is required").matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
   email: Yup.string()
     .email("Email must be a valid email address")
     .required("Email is required"),

@@ -10,7 +10,7 @@ export default function ContactDetailsForm() {
           label="Contact Person 1"
           name={`contacts[0].name`}
           type="text"
-          placeholder="ABC"
+          placeholder="John doe"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -24,7 +24,7 @@ export default function ContactDetailsForm() {
       <div className="md:col-span-1 col-span-2">
         <Input
           label="Email Address"
-          placeholder="abc@gmail.com"
+          placeholder="johndoe@gmail.com"
           name={`contacts[0].email`}
           type="email"
         />
@@ -34,21 +34,21 @@ export default function ContactDetailsForm() {
           label="Contact Person 2"
           name={`contacts[1].name`}
           type="text"
-          placeholder="ABC"
+          placeholder="john doe"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
         <Input
           label="Phone Number"
           name={`contacts[1].phone`}
-          type="tel"
+          type="number"
           placeholder="+91 958 624 7482"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
         <Input
           label="Email Address"
-          placeholder="abc@gmail.com"
+          placeholder="johndoe@gmail.com"
           name={`contacts[1].email`}
           type="email"
         />
