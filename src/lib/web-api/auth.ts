@@ -155,6 +155,18 @@ export const creatorRegister = async (
   }
 };
 
+export const socialMediaAdded = async (
+  params: any
+): Promise<IPostCreatorRegisterResponse> => {
+  try {
+    const response = await axiosInstance.put("/auth/creator/channel-add", params);
+    return response?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While Creator Registered.");
+  }
+};
+
 export const getCategories = async (
   params: IGetCategoryParams
 ): Promise<IGetCategoryResponse> => {
@@ -170,13 +182,12 @@ export const getCreatorProgress =
   async (): Promise<IGetCreatorProgressResponse> => {
     try {
       const response = await axiosInstance.get(`/auth/creator`);
-      return response?.data?.data;
+      return response?.data?.data?.creator;
     } catch (error: unknown) {
       const errorMessage = getErrorMessage(error);
       // throw errorMessage || new Error("Error While fetching creator progress.");
       return {
-        creatorFilled: false,
-        channelesFilled: false,
+        completed: 0
       };
     }
   };

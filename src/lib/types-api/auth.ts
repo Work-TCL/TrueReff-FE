@@ -193,6 +193,19 @@ export interface IGetCategoryResponse {
 }
 
 export interface IGetCreatorProgressResponse {
-  channelesFilled: boolean;
-  creatorFilled: boolean;
+  completed: number;
+  accountId?: string;
+  banner_image?: string;
+  profile_image?: string;
+  long_description?: string;
+  short_description?: string;
+  title?: string;
+  user_name?: string;
+  _id?: string;
+  phone?: string;
+  full_name?: string;
+  category?: string[];
+  sub_category?: string[];
+  channels?: string[];
+  tags?: string[];
 }

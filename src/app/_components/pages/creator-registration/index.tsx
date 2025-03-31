@@ -20,14 +20,13 @@ import ProfileSetup from "./components/profile-setup";
 import toast from "react-hot-toast";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { useRouter, useSearchParams } from "next/navigation";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import PaymentDetails from "./components/payment-details";
 import {
   IPostCreatorRegisterRequest,
   IPostCreatorRegisterResponse,
 } from "@/lib/types-api/auth";
-import { creatorRegister } from "@/lib/web-api/auth";
-import axiosInstance from "@/lib/web-api/http-common";
+import { creatorRegister, getCreatorProgress, socialMediaAdded } from "@/lib/web-api/auth";
+import Loader from "../../components-common/layout/loader";
 
 let allTabs: {
   id: string;
@@ -62,17 +61,16 @@ const TABS_STATUS = {
   SOCIAL_MEDIA: 2,
   PAYMENT_DETAILS: 3,
 };
-interface IProps {
-  creatorDetails: any;
-}
-export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
+export default function CreatorRegistrationPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email") ?? "";
   const tab = searchParams.get("tab") ?? "0";
   const activeTab = parseInt(tab);
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
+  const [isCreatorLoading, setIsCreatorLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [creatorDetails, setCreatorDetails] = useState({ completed: 0 });
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -150,20 +148,15 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
     }
   };
 
-  const onSubmitSocial = async (data: ICreatorSocialConnectSchema) => {
+  const onSubmitSocial = async () => {
     setLoading(true);
     try {
-      // const payload: IPostCreatorRegisterRequest = {
-      //   channels: data.channels,
-      // };
-      // const response: IPostCreatorRegisterResponse = await creatorRegister(
-      //   payload
-      // );
-      // if (response?.status === 201) {
-      //   // toast.success("Creator successfully registered.");
-      //   // router.push("/dashboard");
-      //   setActiveTab(TABS_STATUS.SOCIAL_MEDIA);
-      // }
+      const response = await socialMediaAdded(
+        {}
+      );
+      if (response?.status === 200) {
+        router.push('/creator/dashboard')
+      }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
@@ -202,13 +195,24 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
       }
     } else if (TABS_STATUS.SOCIAL_MEDIA === activeTab) {
       if (youtubeConnected) {
-        router.push("/creator/dashboard");
-      } else {
-        toast.error("at least one channel connect required.");
+        onSubmitSocial()
       }
     }
     setLoading(false);
   };
+
+  const getCreator = async () => {
+    setIsCreatorLoading(true)
+    try {
+      const creator = await getCreatorProgress();
+      setCreatorDetails(creator)
+    } catch (e) {
+      console.log("error while getting creator");
+    } finally {
+      setIsCreatorLoading(false)
+    }
+  }
+
   const handleDisableConnect = async () => {
     const channels: any = ["channels[1].handle_name"];
     return await methods.trigger(channels);
@@ -220,10 +224,27 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
       router.push(`?tab=2`);
     }
   }, [searchParams]);
+  useEffect(() => {
+    if (creatorDetails) {
+      if (
+        Boolean(creatorDetails?.completed === 25 && creatorDetails?._id)
+      ) {
+        router.push(`/creator-registration?tab=2&creatorId=${creatorDetails?._id}`);
+      } else if (Boolean(creatorDetails?.completed === 50 && creatorDetails?._id)) {
+        router.push(`/creator/dashboard`);
+      }
+    }
+  }, [creatorDetails]);
+  useEffect(() => {
+    (async () => {
+      await getCreator()
+    })()
+  }, []);
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
-      <HeaderAuth />
+      {isCreatorLoading && <Loader />}
+      {!isCreatorLoading && <><HeaderAuth />
       <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
         <div className="flex justify-center md:text-[38px] text-2xl md:py-0 py-5 px-4 font-semibold">
           {
@@ -348,7 +369,7 @@ export default function CreatorRegistrationPage({ creatorDetails }: IProps) {
             </form>
           </FormProvider>
         )}
-      </div>
+        </div> </>}
     </div>
   );
 }
