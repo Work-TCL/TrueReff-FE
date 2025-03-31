@@ -25,7 +25,12 @@ import {
   IPostCreatorRegisterRequest,
   IPostCreatorRegisterResponse,
 } from "@/lib/types-api/auth";
-import { checkCreatorUserNameExist, creatorRegister, getCreatorProgress, socialMediaAdded } from "@/lib/web-api/auth";
+import {
+  checkCreatorUserNameExist,
+  creatorRegister,
+  getCreatorProgress,
+  socialMediaAdded,
+} from "@/lib/web-api/auth";
 import Loader from "../../components-common/layout/loader";
 
 let allTabs: {
@@ -68,6 +73,7 @@ export default function CreatorRegistrationPage() {
   const tab = searchParams.get("tab") ?? "0";
   const activeTab = parseInt(tab);
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
+  const [instagramConnected, setInstagramConnected] = useState<boolean>(false);
   const [isCreatorLoading, setIsCreatorLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [creatorDetails, setCreatorDetails] = useState<any>({ completed: 0 });
@@ -151,11 +157,9 @@ export default function CreatorRegistrationPage() {
   const onSubmitSocial = async () => {
     setLoading(true);
     try {
-      const response = await socialMediaAdded(
-        {}
-      );
+      const response = await socialMediaAdded({});
       if (response?.status === 200) {
-        router.push('/creator/dashboard')
+        router.push("/creator/dashboard");
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -175,10 +179,12 @@ export default function CreatorRegistrationPage() {
         "phone_number",
       ];
       const isValid = await methods.trigger(basicInfoField);
-      const isExist = await checkCreatorUserNameExist({ user_name: methods.watch('user_name') })
-      
+      const isExist = await checkCreatorUserNameExist({
+        user_name: methods.watch("user_name"),
+      });
+
       if (isExist) {
-        toast.error('user_name already exists')
+        toast.error("user_name already exists");
       } else if (isValid) {
         router.push(`?tab=1&email=${email}`); // Move to next tab
       }
@@ -197,24 +203,24 @@ export default function CreatorRegistrationPage() {
         router.push(`?tab=2`); // Move to next tab
       }
     } else if (TABS_STATUS.SOCIAL_MEDIA === activeTab) {
-      if (youtubeConnected) {
-        onSubmitSocial()
+      if (youtubeConnected || instagramConnected) {
+        await onSubmitSocial();
       }
     }
     setLoading(false);
   };
 
   const getCreator = async () => {
-    setIsCreatorLoading(true)
+    setIsCreatorLoading(true);
     try {
       const creator = await getCreatorProgress();
-      setCreatorDetails(creator)
+      setCreatorDetails(creator);
     } catch (e) {
       console.log("error while getting creator");
     } finally {
-      setIsCreatorLoading(false)
+      setIsCreatorLoading(false);
     }
-  }
+  };
 
   const handleDisableConnect = async () => {
     const channels: any = ["channels[1].handle_name"];
@@ -229,150 +235,166 @@ export default function CreatorRegistrationPage() {
   }, [searchParams]);
   useEffect(() => {
     if (creatorDetails) {
-      if (
-        Boolean(creatorDetails?.completed === 25 && creatorDetails?._id)
+      if (Boolean(creatorDetails?.completed === 25 && creatorDetails?._id)) {
+        router.push(
+          `/creator-registration?tab=2&creatorId=${creatorDetails?._id}`
+        );
+      } else if (
+        Boolean(creatorDetails?.completed === 50 && creatorDetails?._id)
       ) {
-        router.push(`/creator-registration?tab=2&creatorId=${creatorDetails?._id}`);
-      } else if (Boolean(creatorDetails?.completed === 50 && creatorDetails?._id)) {
         router.push(`/creator/dashboard`);
       }
     }
   }, [creatorDetails]);
   useEffect(() => {
     (async () => {
-      await getCreator()
-    })()
+      await getCreator();
+    })();
   }, []);
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
       {isCreatorLoading && <Loader />}
-      {!isCreatorLoading && <><HeaderAuth />
-      <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
-        <div className="flex justify-center md:text-[38px] text-2xl md:py-0 py-5 px-4 font-semibold">
-          {
-            {
-              [TABS_STATUS.BASIC_DETAILS]: "Creator Registration",
-              [TABS_STATUS.PROFILE_SETUP]: "Complete Your Profile",
-              [TABS_STATUS.SOCIAL_MEDIA]: "Connect Your Social Accounts",
-              [TABS_STATUS.PAYMENT_DETAILS]: "Set Up Your Payment Info",
-            }[activeTab]
-          }
-        </div>
-        <SlidingTabBar
-          tabs={allTabs}
-          setActiveTabIndex={(v) => {
-            if (
-              [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(activeTab) &&
-              [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(v)
-            ) {
-              router.push(`?tab=${v}`);
-            }
-
-            if (
-              [TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(
-                activeTab
-              ) &&
-              [TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(v)
-            ) {
-              router.push(`?tab=${v}`);
-            }
-          }}
-          activeTabIndex={activeTab}
-          grid={4}
-        />
-        {[TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(
-          activeTab
-        ) && (
-          <FormProvider {...methods}>
-            <form
-              onSubmit={methods.handleSubmit(onSubmit)}
-              className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
-            >
+      {!isCreatorLoading && (
+        <>
+          <HeaderAuth />
+          <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
+            <div className="flex justify-center md:text-[38px] text-2xl md:py-0 py-5 px-4 font-semibold">
               {
                 {
-                  [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm />,
-                  [TABS_STATUS.PROFILE_SETUP]: <ProfileSetup />,
+                  [TABS_STATUS.BASIC_DETAILS]: "Creator Registration",
+                  [TABS_STATUS.PROFILE_SETUP]: "Complete Your Profile",
+                  [TABS_STATUS.SOCIAL_MEDIA]: "Connect Your Social Accounts",
+                  [TABS_STATUS.PAYMENT_DETAILS]: "Set Up Your Payment Info",
                 }[activeTab]
               }
-              <div className="flex bg-white">
-                <Button
-                  type="submit"
-                  className={cn(
-                    "w-fit font-medium px-8",
-                    activeTab === TABS_STATUS.PROFILE_SETUP ? "block" : "hidden"
-                  )}
-                  size="small"
-                  loading={loading}
-                  disabled={loading}
-                >
-                  {"Save & Continue"}
-                </Button>
-                <Button
-                  className={cn(
-                    "w-fit font-medium px-8",
-                    activeTab === TABS_STATUS.PROFILE_SETUP ? "hidden" : "block"
-                  )}
-                  size="small"
-                  onClick={handleTriggerStepper}
-                  loading={loading}
-                  disabled={loading}
-                >
-                  {"Save & Continue"}
-                </Button>
-              </div>
-            </form>
-          </FormProvider>
-        )}
-        {[TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS.PAYMENT_DETAILS].includes(
-          activeTab
-        ) && (
-          <FormProvider {...methodsSocial}>
-            <form
-              onSubmit={methodsSocial.handleSubmit(onSubmitSocial)}
-              className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
-            >
-              {
-                {
-                  [TABS_STATUS.SOCIAL_MEDIA]: (
-                    <SocialMedia
-                      code={searchParams.get("code") || ""}
-                      setYoutubeConnected={setYoutubeConnected}
-                      youtubeConnected={youtubeConnected}
-                    />
-                  ),
-                  [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
-                }[activeTab]
-              }
-              <div className="flex bg-white">
-                <Button
-                  type="button"
-                  className="w-fit bg-white text-black font-medium px-8"
-                  size="small"
-                  onClick={() => {
-                    activeTab < 3 && router.push(`?tab=${activeTab + 1}`);
-                    if (activeTab === TABS_STATUS.PAYMENT_DETAILS) {
-                      router.push("/creator/dashboard");
-                    }
-                  }}
-                >
-                  {"Skip"}
-                </Button>
+            </div>
+            <SlidingTabBar
+              tabs={allTabs}
+              setActiveTabIndex={(v) => {
+                if (
+                  [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(activeTab) &&
+                  [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(v)
+                ) {
+                  router.push(`?tab=${v}`);
+                }
 
-                <Button
-                  className={cn("w-fit font-medium px-8", "block")}
-                  size="small"
-                  onClick={handleTriggerStepper}
-                  loading={loading}
-                  disabled={loading}
+                if (
+                  [
+                    TABS_STATUS.BASIC_DETAILS,
+                    TABS_STATUS.PROFILE_SETUP,
+                  ].includes(activeTab) &&
+                  [
+                    TABS_STATUS.BASIC_DETAILS,
+                    TABS_STATUS.PROFILE_SETUP,
+                  ].includes(v)
+                ) {
+                  router.push(`?tab=${v}`);
+                }
+              }}
+              activeTabIndex={activeTab}
+              grid={4}
+            />
+            {[TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(
+              activeTab
+            ) && (
+              <FormProvider {...methods}>
+                <form
+                  onSubmit={methods.handleSubmit(onSubmit)}
+                  className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
                 >
-                  {"Save & Continue"}
-                </Button>
-              </div>
-            </form>
-          </FormProvider>
-        )}
-        </div> </>}
+                  {
+                    {
+                      [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm />,
+                      [TABS_STATUS.PROFILE_SETUP]: <ProfileSetup />,
+                    }[activeTab]
+                  }
+                  <div className="flex bg-white">
+                    <Button
+                      type="submit"
+                      className={cn(
+                        "w-fit font-medium px-8",
+                        activeTab === TABS_STATUS.PROFILE_SETUP
+                          ? "block"
+                          : "hidden"
+                      )}
+                      size="small"
+                      loading={loading}
+                      disabled={loading}
+                    >
+                      {"Save & Continue"}
+                    </Button>
+                    <Button
+                      className={cn(
+                        "w-fit font-medium px-8",
+                        activeTab === TABS_STATUS.PROFILE_SETUP
+                          ? "hidden"
+                          : "block"
+                      )}
+                      size="small"
+                      onClick={handleTriggerStepper}
+                      loading={loading}
+                      disabled={loading}
+                    >
+                      {"Save & Continue"}
+                    </Button>
+                  </div>
+                </form>
+              </FormProvider>
+            )}
+            {[TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS.PAYMENT_DETAILS].includes(
+              activeTab
+            ) && (
+              <FormProvider {...methodsSocial}>
+                <form
+                  onSubmit={methodsSocial.handleSubmit(onSubmitSocial)}
+                  className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
+                >
+                  {
+                    {
+                      [TABS_STATUS.SOCIAL_MEDIA]: (
+                        <SocialMedia
+                          code={searchParams.get("code") || ""}
+                          setYoutubeConnected={setYoutubeConnected}
+                          youtubeConnected={youtubeConnected}
+                          setInstagramConnected={setInstagramConnected}
+                          instagramConnected={instagramConnected}
+                        />
+                      ),
+                      [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
+                    }[activeTab]
+                  }
+                  <div className="flex bg-white">
+                    <Button
+                      type="button"
+                      className="w-fit bg-white text-black font-medium px-8"
+                      size="small"
+                      onClick={() => {
+                        activeTab < 3 && router.push(`?tab=${activeTab + 1}`);
+                        if (activeTab === TABS_STATUS.PAYMENT_DETAILS) {
+                          router.push("/creator/dashboard");
+                        }
+                      }}
+                    >
+                      {"Skip"}
+                    </Button>
+
+                    <Button
+                      className={cn("w-fit font-medium px-8", "block")}
+                      size="small"
+                      onClick={handleTriggerStepper}
+                      loading={loading}
+                      disabled={loading}
+                    >
+                      {"Save & Continue"}
+                    </Button>
+                  </div>
+                </form>
+              </FormProvider>
+            )}
+          </div>{" "}
+        </>
+      )}
     </div>
   );
 }

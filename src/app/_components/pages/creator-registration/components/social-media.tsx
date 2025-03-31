@@ -22,41 +22,45 @@ interface IProps {
   code?: string;
   setYoutubeConnected: any;
   youtubeConnected: any;
+  setInstagramConnected: any;
+  instagramConnected: any;
 }
 
 export default function SocialMedia({
   code = "",
   setYoutubeConnected,
   youtubeConnected,
+  instagramConnected,
+  setInstagramConnected,
 }: IProps) {
   const methods = useFormContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const searchParams = useSearchParams();
-    const router = useRouter();
-    const creatorId = searchParams.get("creatorId") ?? "";
-    const message = searchParams.get("message") ?? "";
-    const error = searchParams.get("error") ?? "";
+  const router = useRouter();
+  const creatorId = searchParams.get("creatorId") ?? "";
+  const message = searchParams.get("message") ?? "";
+  const error = searchParams.get("error") ?? "";
   useEffect(() => {
     fetchConnectedChannel();
   }, []);
-  useEffect(()=> {
-    if(message){
+  useEffect(() => {
+    if (message) {
       toast.success(message);
       removeQueryParam("message");
-    }
-    else if(error){
+    } else if (error) {
       toast.error(error);
       removeQueryParam("error");
     }
-  },[message,error]);
+  }, [message, error]);
   const removeQueryParam = (key: string) => {
     const params = new URLSearchParams(searchParams.toString());
-  
+
     params.delete(key);
-  
+
     router.push(`?${params.toString()}`, { scroll: false });
   };
+
   const fetchConnectedChannel = async () => {
     setIsPageLoading(true);
     try {
@@ -75,6 +79,20 @@ export default function SocialMedia({
           methods.setValue(`channels[1].handle_name`, youtube?.handleName);
           setYoutubeConnected(true);
         } else setYoutubeConnected(false);
+
+        let instagram = response?.data.findLast(
+          (ele) => ele?.channelType === "instagram"
+        );
+
+        if (instagram) {
+          methods.setValue(`channels[0].account_name`, instagram?.channelName);
+          methods.setValue(
+            `channels[0].account_link`,
+            `https://instagram.com/${instagram?.handleName}`
+          );
+          methods.setValue(`channels[0].handle_name`, instagram?.handleName);
+          setInstagramConnected(true);
+        } else setInstagramConnected(false);
       }
     } catch (error) {
       console.log("while fetching conncted channels");
@@ -83,90 +101,25 @@ export default function SocialMedia({
     }
   };
 
-  const handleConnectChannel = async () => {
-    setIsLoading(true);
-    try {
-      const channels: any = ["channels[1].handle_name"];
-      const isValid = await methods.trigger(channels);
-      const values = methods.getValues();
-      if (isValid) {
-        try {
-          const response = await axiosInstance.post(
-            "/channel/creator/youtube/validate/channel",
-            { channelName: values.channels[1].handle_name }
-          );
-          if (response?.data?.status === 200) {
-            toast.success(response?.data?.message);
-          }
-          methods.setValue(
-            `channels[1].account_name`,
-            response?.data?.data?.channelName
-          );
-          methods.setValue(
-            `channels[1].account_link`,
-            `https://youtube.com/${values.channels[1].handle_name}`
-          );
-          setYoutubeConnected(true);
-        } catch (error: unknown) {
-          const errorMessage = getErrorMessage(error);
-          if (errorMessage) {
-            toast.error(errorMessage);
-            setYoutubeConnected(false);
-          } else throw new Error("Error While validating youtube channel");
-        }
-      }
-    } catch (error) {
-      console.log("while youtube connecting");
-    } finally {
-      setIsLoading(false);
-    }
-  };
   const handleGoogleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const redirectUri = `http://localhost:3030/api/channel/creator/youtube/auth/callback`; // Backend endpoint
-    const scope = encodeURIComponent("https://www.googleapis.com/auth/youtube.readonly");
+    const redirectUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/channel/creator/youtube/auth/callback`; // Backend endpoint
+    const scope = encodeURIComponent(
+      "https://www.googleapis.com/auth/youtube.readonly"
+    );
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${creatorId}`;
 
     window.location.href = authUrl; // Redirect user to Google login
-  };
-  const handleConnectInstagram = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axiosInstance.get(
-        `/channel/creator/instagram/auth/callback/?code=${code}`
-      );
-      if (response?.data?.status === 200) {
-        toast.success(response?.data?.message);
-      }
-      methods.setValue(
-        `channels[0].account_name`,
-        response?.data?.data?.channelName
-      );
-      methods.setValue(
-        `channels[0].handle_name`,
-        response?.data?.data?.channelName
-      );
-      // methods.setValue(
-      //   `channels[0].account_link`,
-      //   `https://youtube.com/${values.channels[1].handle_name}`
-      // );
-      // setYoutubeConnected(true);
-    } catch (error: unknown) {
-      const errorMessage = getErrorMessage(error);
-      if (errorMessage) {
-        toast.error(errorMessage);
-        // setYoutubeConnected(false);
-      } else throw new Error("Error While validating youtube channel");
-    } finally {
-      setIsLoading(false);
-    }
   };
 
-  useEffect(() => {
-    if (code) {
-      handleConnectInstagram();
-    }
-  }, [code]);
+  const handleInstaLogin = () => {
+    const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID;
+    const callBackUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/channel/creator/instagram/auth/callback`; // Backend endpoint
+    const scope =
+      "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish";
+    const authUrl = `https://www.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${callBackUri}&response_type=code&scope=${scope}&state=${creatorId}`;
+    window.location.href = authUrl; // Redirect user to Google login
+  };
 
   return (
     <>
@@ -204,23 +157,12 @@ export default function SocialMedia({
             </div>
             <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
               {/* main button */}
-              {/* <AnchorButton
-              loading={isLoading}
-              href="https://www.instagram.com/oauth/authorize?client_id=9535212806541456&redirect_uri=https://192.168.235.236:3000/creator-registration&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish"
-              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
-              size="small"
-              
-              // onClick={handleConnectInstagram}
-            >
-              {"Connect"}
-            </AnchorButton> */}
-
-              {/* temporary */}
               <Button
-                // loading={isLoading}
+                loading={isLoading}
                 className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
                 size="small"
-                disabled
+                onClick={handleInstaLogin}
+                disabled={instagramConnected}
               >
                 {"Connect"}
               </Button>
