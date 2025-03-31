@@ -370,8 +370,8 @@ export default function CreatorRegistrationPage() {
                       className="w-fit bg-white text-black font-medium px-8"
                       size="small"
                       onClick={() => {
-                        activeTab < 3 && router.push(`?tab=${activeTab + 1}`);
-                        if (activeTab === TABS_STATUS.PAYMENT_DETAILS) {
+                        activeTab < 2 && router.push(`?tab=${activeTab + 1}`);
+                        if (activeTab === TABS_STATUS.SOCIAL_MEDIA) {
                           router.push("/creator/dashboard");
                         }
                       }}
