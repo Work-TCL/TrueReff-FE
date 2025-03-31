@@ -25,7 +25,7 @@ import {
   IPostCreatorRegisterRequest,
   IPostCreatorRegisterResponse,
 } from "@/lib/types-api/auth";
-import { creatorRegister, getCreatorProgress, socialMediaAdded } from "@/lib/web-api/auth";
+import { checkCreatorUserNameExist, creatorRegister, getCreatorProgress, socialMediaAdded } from "@/lib/web-api/auth";
 import Loader from "../../components-common/layout/loader";
 
 let allTabs: {
@@ -70,7 +70,7 @@ export default function CreatorRegistrationPage() {
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
   const [isCreatorLoading, setIsCreatorLoading] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [creatorDetails, setCreatorDetails] = useState({ completed: 0 });
+  const [creatorDetails, setCreatorDetails] = useState<any>({ completed: 0 });
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -175,8 +175,11 @@ export default function CreatorRegistrationPage() {
         "phone_number",
       ];
       const isValid = await methods.trigger(basicInfoField);
-
-      if (isValid) {
+      const isExist = await checkCreatorUserNameExist({ user_name: methods.watch('user_name') })
+      
+      if (isExist) {
+        toast.error('user_name already exists')
+      } else if (isValid) {
         router.push(`?tab=1&email=${email}`); // Move to next tab
       }
     } else if (TABS_STATUS.PROFILE_SETUP === activeTab) {

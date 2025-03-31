@@ -209,3 +209,9 @@ export interface IGetCreatorProgressResponse {
   channels?: string[];
   tags?: string[];
 }
+export interface IPostCreatorCheckExistRequest {
+  user_name: string;
+}
+export interface IPostCreatorCheckExistResponse {
+  _id?: string;
+}

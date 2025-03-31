@@ -6,6 +6,8 @@ import {
   IGetCreatorProgressResponse,
   IPostContactUsRequest,
   IPostContactUsResponse,
+  IPostCreatorCheckExistRequest,
+  IPostCreatorCheckExistResponse,
   IPostCreatorRegisterRequest,
   IPostCreatorRegisterResponse,
   IPostForgotPasswordRequest,
@@ -189,5 +191,16 @@ export const getCreatorProgress =
       return {
         completed: 0
       };
+    }
+  };
+export const checkCreatorUserNameExist =
+  async (params: IPostCreatorCheckExistRequest): Promise<IPostCreatorCheckExistResponse | null> => {
+    try {
+      const response = await axiosInstance.post(`/auth/creator/check-exists`, params);
+      return response?.data?.error;
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error);
+      // throw errorMessage || new Error("Error While fetching creator progress.");
+      return null;
     }
   };
