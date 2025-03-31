@@ -34,7 +34,8 @@ export interface IProduct {
   tags: string[],
   createdAt: string,
   updatedAt: string,
-  category?: ICategory;
+  category?: ICategory[],
+  categories?: string[],
 }
 export interface IBrand {
   _id: string,
@@ -70,7 +71,12 @@ export default function CreatorList() {
           const brandsCount = brandData.count || 0;
 
           if (Array.isArray(brandsArray)) {
-            setBrands([...brandsArray]);
+            let result = brandsArray.map(ele => {
+              let productId = ele?.productId
+              let category = (productId?.category && productId?.category?.length > 0) ? productId?.category.filter((cat: ICategory) => cat.parentId === null).map((cat: ICategory) => cat?.name):[]
+              return {...ele,productId: {...productId,categories: category}}
+            })
+            setBrands([...result]);
             setTotalPages(Math.ceil(brandsCount / pageSize));
           } else {
             setBrands([]);

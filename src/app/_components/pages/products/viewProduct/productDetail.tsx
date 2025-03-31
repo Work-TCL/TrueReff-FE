@@ -1,45 +1,45 @@
 "use client";
-
-import Input from "@/app/_components/ui/form/Input";
 import { translate } from "@/lib/utils/translate";
-import { useFormContext } from "react-hook-form";
+import { IProduct } from "./viewDetailProduct";
 
-export function ProductInfo() {
-  const { register } = useFormContext();
+interface IProductInfoProps {
+  productData: IProduct
+}
+export function ProductInfo({productData}:IProductInfoProps) {
 
   return (
     <div className="flex flex-1 flex-col gap-5">
       <p className="text-text font-medium text-xl">Product Image</p>
-      <form className="space-y-4">
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-col w-full gap-1">
             <label className="text-[16px] text-font-grey">
-              {translate("Product Name")}
+              {translate("Product_Name")}
             </label>
             <input
+            name="product_name"
               className="p-2 border rounded-md w-full"
-              {...register("productName")}
-              readOnly
+              value={productData?.name}
+              disabled
             />
           </div>
           <div className="flex flex-col w-full gap-1">
             <label className="text-[16px] text-font-grey">
-              {translate("Product Category")}
+              {translate("Product_Category")}
             </label>
             <input
               className="p-2 border rounded-md w-full"
-              {...register("category")}
-              readOnly
+              value={productData?.category}
+              disabled
             />
           </div>
           <div className="flex flex-col w-full gap-1">
             <label className="text-[16px] text-font-grey">
-              {translate("Product Tags")}
+              {translate("Product_Tags")}
             </label>
             <input
               className="p-2 border rounded-md w-full"
-              {...register("tags")}
-              readOnly
+              value={productData?.tags?.join(", ")}
+              disabled
             />
           </div>
         </div>
@@ -50,8 +50,8 @@ export function ProductInfo() {
           <textarea
             rows={4}
             className="p-2 border rounded-md w-full"
-            value="Lorem ipsum dolor sit amet..."
-            readOnly
+            value={productData?.description}
+            disabled
           />
         </div>
 
@@ -59,7 +59,7 @@ export function ProductInfo() {
           <div className="flex flex-1 flex-col gap-3">
             <p className="flex text-font-grey text-base">
               <span className="w-[53%]">Base Price:</span>{" "}
-              <span className="text-lg font-normal text-text">${400}</span>
+              <span className="text-lg font-normal text-text">${productData?.price}</span>
             </p>
 
             <p className="flex text-font-grey text-base">
@@ -91,7 +91,6 @@ export function ProductInfo() {
             </p>
           </div>
         </div>
-      </form>
     </div>
   );
 }

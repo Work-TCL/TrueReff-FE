@@ -368,8 +368,7 @@ export const creatorOnBoardingSchema = Yup.object().shape({
     .email("Invalid email format")
     .required("Email is required"),
   phone_number: Yup.string()
-    .required("Phone is required")
-    .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+    .required("Phone is required").matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
 
   // Profile
   profile_title: Yup.string().required("Title is required"),

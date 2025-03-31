@@ -13,6 +13,7 @@ import { IoGridOutline } from "react-icons/io5";
 import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import CollaborationTable from "./collaboration-table";
+import { useSession } from "next-auth/react";
 export interface ICategory {
   _id: string,
   name: string
@@ -54,6 +55,8 @@ export interface ICreator {
 
 export default function CollaborationList() {
   const axios = useAxiosAuth();
+  const session = useSession();
+  const user = session?.data?.user??{type:'vendor'};
   const [loading,setLoading] = useState<boolean>(false);
   const [creators,setCreators] = useState<ICreator[]>([]);
   const [filter,setFilter] = useState<string>("5");
@@ -62,6 +65,10 @@ export default function CollaborationList() {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(20);
 
+  // get user role 
+  const getUserType = () => {
+    return {vendor:"Creator",creator:"Brand"}[user?.type]??"";
+  }
   // Get Creator list
   const getCreatorList = useCallback(async () => {
     setLoading(true);
@@ -144,7 +151,7 @@ export default function CollaborationList() {
                 </div>
             </div>
             {loading && <Loading/>}
-            {creators?.length >0 && <CollaborationTable data={creators} filter={filter}/>}
+            {creators?.length >0 && <CollaborationTable data={creators} filter={filter} user={getUserType()}/>}
             {/* Pagination */}
             <div className="flex justify-end items-center mt-4">
                 <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={setCurrentPage} />

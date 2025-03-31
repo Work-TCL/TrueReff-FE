@@ -50,7 +50,7 @@ export default function BrandProductTable({ data,brandName }: ICreatorTableProps
                                 </CustomTableCell>
                                 <CustomTableCell>{brand.productId.title}</CustomTableCell>
                                 <CustomTableCell>{brandName}</CustomTableCell>
-                                 <CustomTableCell>{brand.productId?.category?.name}</CustomTableCell>
+                                 <CustomTableCell>{brand.productId?.categories?.join(", ")}</CustomTableCell>
                                 <CustomTableCell>{brand.productId.tags.join(", ")}</CustomTableCell>
                                 {/* <CustomTableCell>{brand.pastSales??''}</CustomTableCell> */}
                                 {/* <CustomTableCell>{brand.tag}</CustomTableCell> */}

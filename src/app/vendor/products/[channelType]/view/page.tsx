@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import dynamic from "next/dynamic";
+import ViewProductDetail from "@/app/_components/pages/products/viewProduct/viewDetailProduct";
 
 const CreateProduct = dynamic(
   () => import("@/app/_components/pages/products/channels/create"),
@@ -8,5 +9,5 @@ const CreateProduct = dynamic(
 );
 
 export default function ProductDetail() {
-  return <CreateProduct type={"view"} />;
+  return <ViewProductDetail />;
 }

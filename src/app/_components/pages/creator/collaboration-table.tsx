@@ -21,18 +21,13 @@ function formatNumber(num:number = 0) {
 
 interface ICreatorTableProps {
     data: ICreator[],
-    filter: string
+    filter: string,
+    user: string,
 }
-const CollaborationTable = ({data,filter}: ICreatorTableProps) => {
+const CollaborationTable = ({data,filter,user}: ICreatorTableProps) => {
     const router = useRouter();
-    const getInstagramView: (channels:IChannel[]) => string = (channels:IChannel[]) => {
-        let instagram = channels.find((ele: {channelType:string}) => ele.channelType === "instagram")
-        return ""
-    }
-    const getYoutubeView: (channels:IChannel[]) => string = (channels:IChannel[]) => {
-        let youtube = channels.find((ele: {channelType:string}) => ele.channelType === "youtube");
-        return youtube ? formatNumber(filter === "5" ? youtube?.lastFiveVideoViews: youtube?.lastMonthViews) :"-"
-    }
+    
+    const badgeColor = {Live:"bg-[#098228] text-[#098228]",Paused:"bg-[#FF9500] text-[#FF9500]",Expired:"bg-[#FF3B30] text-[#FF3B30]"}
     const handleViewCreatorDetails = (id: string) => {
         router.push(`/vendor/collaboration/${id}`)
     }
@@ -44,7 +39,7 @@ const CollaborationTable = ({data,filter}: ICreatorTableProps) => {
                         <CustomTableHead className="w-1/6">{translate("Product_Image")}</CustomTableHead>
                         <CustomTableHead className="w-1/4">{translate("Product_Name")}</CustomTableHead>
                         <CustomTableHead className="w-1/6">{translate("Product_Category")}</CustomTableHead>
-                        <CustomTableHead className="w-1/8">{translate("Creator_Name")}</CustomTableHead>
+                        <CustomTableHead className="w-1/8">{translate(`${user}_Name`)}</CustomTableHead>
                         <CustomTableHead className="w-1/8">{translate("Units_Sold")}</CustomTableHead>
                         <CustomTableHead className="w-1/6">{translate("Collab_Last_Date")}</CustomTableHead>
                         <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead>
@@ -64,10 +59,12 @@ const CollaborationTable = ({data,filter}: ICreatorTableProps) => {
                                 </CustomTableCell>
                                 <CustomTableCell>{creator.full_name}</CustomTableCell>
                                 <CustomTableCell>{creator.categories}</CustomTableCell>
-                                <CustomTableCell>{getInstagramView(creator.channels)}</CustomTableCell>
-                                <CustomTableCell>{getYoutubeView(creator.channels)}</CustomTableCell>
+                                <CustomTableCell>{""}</CustomTableCell>
+                                <CustomTableCell>{""}</CustomTableCell>
                                 <CustomTableCell>{creator.pastSales??''}</CustomTableCell>
-                                <CustomTableCell>{creator.tag}</CustomTableCell>
+                                <CustomTableCell className="w-[80px]">
+                                    <div className={`rounded-[6px] bg-opacity-10 text-center p-2 ${badgeColor[index === 0 ? "Paused" : "Live"]}`}>{index === 0 ? "Paused" : "Live"}</div>
+                                </CustomTableCell>
                             </TableRow>
                         ))}</>) : <tr><td colSpan={7}><EmptyPlaceHolder/></td></tr>}
                 </TableBody>

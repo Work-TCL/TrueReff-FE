@@ -17,6 +17,7 @@ import {
   X,
   StepForward,
   StepBack,
+  UserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -208,7 +209,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       icon: BarChart,
       link: "/creator/creator_analysis",
     },
-    // { label: translate("Collaboration"), icon: UserRound, link: "/payments" },
+    { label: translate("Collaboration"), icon: UserRound, link: "/creator/collaboration" },
     {
       label: translate("Payment_Earnings"),
       icon: DollarSign,

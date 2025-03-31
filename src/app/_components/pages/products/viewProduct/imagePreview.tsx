@@ -10,18 +10,18 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
       <p className="text-text font-medium text-xl">Product Image</p>
       <div className="flex flex-col gap-3">
         <div className="w-full max-h-[303px]">
-          <Image
+          {images?.length > 0 && <img
             src={images[0]}
             alt="Main product"
             width={620}
             height={303}
             className="rounded-md object-cover w-full h-full"
-          />
+          />}
         </div>
 
         <div className="grid grid-cols-3 gap-3 overflow-auto max-h-[170px] pr-2">
-          {images.slice(1).map((img, index) => (
-            <Image
+          {images?.length>1 &&  images.slice(1).map((img, index) => (
+            <img
               key={index}
               src={img}
               alt={`Thumbnail ${index}`}
