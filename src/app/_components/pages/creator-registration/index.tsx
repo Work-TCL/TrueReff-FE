@@ -143,7 +143,6 @@ export default function CreatorRegistrationPage() {
         payload
       );
       if (response?.status === 201) {
-        // toast.success("Creator successfully registered.");
         router.push(`?tab=2&creatorId=${response?.data?._id}`);
       }
     } catch (error) {
@@ -222,17 +221,6 @@ export default function CreatorRegistrationPage() {
     }
   };
 
-  const handleDisableConnect = async () => {
-    const channels: any = ["channels[1].handle_name"];
-    return await methods.trigger(channels);
-  };
-
-  useEffect(() => {
-    const code = searchParams.get("code"); // ✅ Correct way to get query parameters
-    if (code) {
-      router.push(`?tab=2`);
-    }
-  }, [searchParams]);
   useEffect(() => {
     if (creatorDetails) {
       if (Boolean(creatorDetails?.completed === 25 && creatorDetails?._id)) {
@@ -354,7 +342,6 @@ export default function CreatorRegistrationPage() {
                     {
                       [TABS_STATUS.SOCIAL_MEDIA]: (
                         <SocialMedia
-                          code={searchParams.get("code") || ""}
                           setYoutubeConnected={setYoutubeConnected}
                           youtubeConnected={youtubeConnected}
                           setInstagramConnected={setInstagramConnected}

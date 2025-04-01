@@ -19,7 +19,6 @@ import { useFormContext } from "react-hook-form";
 import toast from "react-hot-toast";
 
 interface IProps {
-  code?: string;
   setYoutubeConnected: any;
   youtubeConnected: any;
   setInstagramConnected: any;
@@ -27,7 +26,6 @@ interface IProps {
 }
 
 export default function SocialMedia({
-  code = "",
   setYoutubeConnected,
   youtubeConnected,
   instagramConnected,
