@@ -101,7 +101,7 @@ export default function SocialMedia({
 
   const handleGoogleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const redirectUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/channel/creator/youtube/auth/callback`; // Backend endpoint
+    const redirectUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/channel/creator/youtube/auth/callback`; // Backend endpoint
     const scope = encodeURIComponent(
       "https://www.googleapis.com/auth/youtube.readonly"
     );
@@ -153,14 +153,14 @@ export default function SocialMedia({
                 disabled
               />
             </div>
-            <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
+            <div className={`flex mt-5 ${instagramConnected ? "hidden" : ""}`}>
               {/* main button */}
               <Button
                 loading={isLoading}
                 className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
                 size="small"
                 onClick={handleInstaLogin}
-                disabled={instagramConnected}
+                disabled={isLoading}
               >
                 {"Connect"}
               </Button>

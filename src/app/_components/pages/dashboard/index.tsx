@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StatesCards, {
   StatsCard,
 } from "../../components-common/states/StatesCard";
@@ -17,18 +17,32 @@ import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import ProfileCompletionCard from "../../components-common/charts/profileComplete";
 import PerformanceSummaryChartDashBoard from "../../components-common/charts/performanceSummary";
 import TrendingInsightsDiscoverability from "../../components-common/charts/trendingInsightsDiscoverability";
+import { getCreatorProgress } from "@/lib/web-api/auth";
 
 export default function Dashboard() {
   const lg = useMediaQuery("(min-width: 1024px)");
+  const [creatorDetails,setCreatorDetails] = useState<any>({ completed: 0 })
   const data = [
     { name: translate("Most_selling_products"), value: 76, color: "#BEDBFC" },
     { name: translate("Low-Performing_products"), value: 24, color: "#FED6AF" },
   ];
+  const getCreator = async () => {
+      try {
+        const creator = await getCreatorProgress();
+        console.log("creator",creator)
+        setCreatorDetails(creator);
+      } catch (e) {
+
+      }
+    };
+    useEffect(() => {
+      getCreator();
+    },[])
   return (
     <div className="flex flex-col gap-4 p-6 w-full">
       <div className="flex flex-col lg:flex-row w-full gap-6">
         <div className="flex flex-col gap-6 w-full lg:max-w-[774px]">
-          {!lg && <ProfileCompletionCard />}
+          {!lg && <ProfileCompletionCard progress={creatorDetails?.completed}/>}
           <div className="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-3 gap-4 rounded-[20px] w-full bg-white p-4">
             <StatsCard
               title={translate("Active_Collaborations")}
