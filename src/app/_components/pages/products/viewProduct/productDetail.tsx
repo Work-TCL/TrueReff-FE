@@ -10,7 +10,7 @@ export function ProductInfo({productData}:IProductInfoProps) {
   return (
     <div className="flex flex-1 flex-col gap-5">
       <p className="text-text font-medium text-xl">Product Image</p>
-        <div className="grid md:grid-cols-3 grid-cols-1  gap-4">
+        <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
           <div className="flex flex-col w-full gap-1">
             <label className="text-[16px] text-font-grey">
               {translate("Product_Name")}
