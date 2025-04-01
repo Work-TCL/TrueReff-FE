@@ -10,7 +10,7 @@ export function ProductInfo({productData}:IProductInfoProps) {
   return (
     <div className="flex flex-1 flex-col gap-5">
       <p className="text-text font-medium text-xl">Product Image</p>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 grid-cols-1  gap-4">
           <div className="flex flex-col w-full gap-1">
             <label className="text-[16px] text-font-grey">
               {translate("Product_Name")}
@@ -55,8 +55,8 @@ export function ProductInfo({productData}:IProductInfoProps) {
           />
         </div>
 
-        <div className="flex h-[45%] w-full items-start gap-3">
-          <div className="flex flex-1 flex-col gap-3">
+        <div className="flex h-[45%] md:flex-row flex-col w-full items-start gap-3">
+          <div className="flex w-full flex-1 flex-col gap-3">
             <p className="flex text-font-grey text-base">
               <span className="w-[53%]">Base Price:</span>{" "}
               <span className="text-lg font-normal text-text">${productData?.price}</span>
@@ -79,8 +79,8 @@ export function ProductInfo({productData}:IProductInfoProps) {
               <span className="text-lg font-normal text-text">12%</span>
             </p>
           </div>
-          <div className="h-[100%] w-px bg-stroke mx-2"></div>{" "}
-          <div className="flex flex-1 flex-col gap-3">
+          <div className="h-[100%] w-px bg-stroke mx-2 md:block hidden"></div>{" "}
+          <div className="flex w-full flex-1 flex-col gap-3">
             <p className="flex text-font-grey text-base">
               <span className="w-[53%]"> Variation: </span>{" "}
               <span className="text-lg font-normal text-text">Rose Gold</span>
