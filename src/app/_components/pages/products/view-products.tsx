@@ -119,7 +119,7 @@ export default function ProductView({ type = "view" }: IAddProductDetailProps) {
       // ✅ Update product state
       const updatedProduct = {
         productId: product.id,
-        images: product,
+        images: images,
         name: product.title,
         tags: product?.tags || [],
         description: product?.description || "", // Add description if available

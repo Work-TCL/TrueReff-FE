@@ -30,7 +30,7 @@ interface IProduct {
   image: string;
   title: string;
   category: string;
-  tags: string[];
+  tags: string;
   sku: string;
   price: string;
 }
@@ -71,9 +71,13 @@ export default function ProductList() {
             title: v?.productId?.title,
             image:
               v?.productId?.media?.length > 0 ? v?.productId?.media[0] : "",
-            category: v?.productId?.category,
+            category: Array.isArray(v?.productId?.category)
+              ? v?.productId?.category?.map((v: any) => v?.name)?.join(" ,")
+              : "",
             price: v?.productId?.price,
-            tags: v?.productId?.tags,
+            tags: Array.isArray(v?.productId?.tags)
+              ? v?.productId?.tags?.join(" ,")
+              : "",
             sku: v?.productId?.sku,
           }))
         );
@@ -170,7 +174,7 @@ export default function ProductList() {
                     </div>
                   </CustomTableCell>
                   <CustomTableCell>{product.category}</CustomTableCell>
-                  <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
+                  <CustomTableCell>{product.tags}</CustomTableCell>
                   <CustomTableCell>{product.sku}</CustomTableCell>
                   <CustomTableCell>{product.price}</CustomTableCell>
                   {/*                <CustomTableCell>{product.discount}</CustomTableCell>
