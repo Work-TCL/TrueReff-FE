@@ -78,7 +78,7 @@ export default function ViewProductDetail() {
       const product: any = response?.data?.data;
 
       const images = product?.featuredMedia?.preview?.image?.url;
-      const imagess = product?.media?.nodes?.map((ele:any) => ele?.image.url);
+      const imagess = product?.media?.nodes?.map((ele: any) => ele?.image.url);
       // ✅ Update product state
       const updatedProduct = {
         productId: product.id,
@@ -192,13 +192,7 @@ export default function ViewProductDetail() {
         <Button
           variant="secondary"
           className="text-white"
-          onClick={() =>
-            router.push(
-              user?.type === "creator"
-                ? "/creator/collaboration"
-                : "/vendor/creators/collaboration"
-            )
-          }
+          onClick={() => router.push(`view/bargaining`)}
         >
           Start Bargaining
         </Button>

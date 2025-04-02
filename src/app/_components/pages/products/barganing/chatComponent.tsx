@@ -2,38 +2,65 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mic } from "lucide-react";
+import socketService from "@/lib/services/socket-service";
+import { formatTo12Hour } from "@/lib/utils/commonUtils";
+import { getCollobrationConversation } from "@/lib/web-api/collobration";
 
-const messages = [
-  {
-    sender: "User",
-    text: "I was thinking around $100. Would that be possible?",
-    time: "11:02AM",
-    owner: false,
-  },
-  {
-    sender: "Brand Owner",
-    text: "$100 is a bit low. I can do $110 with free shipping!",
-    time: "11:04AM",
-    owner: true,
-  },
-  {
-    sender: "User",
-    text: "Can we make it $105? I'll buy right now!",
-    time: "11:05AM",
-    owner: false,
-  },
-  {
-    sender: "Brand Owner",
-    text: "Alright! $105 it is. Let me update the price for you.",
-    time: "11:06AM",
-    owner: true,
-  },
-];
+const collobrationId = "67ed7899bfe1e50aa282b8f4";
+const vendorId = "67e21fb7726fbf0924e90ef0";
+const creatorId = "67ed5c9589161c38666f705a";
 
 export default function ChatComponent() {
-  const [input, setInput] = useState("");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    socketService.connect();
+    socketService.registerUser(vendorId);
+
+    socketService.joinCollaboration(collobrationId);
+    socketService.joinedCollaborationRoom((data) => {
+      console.log("data--joinedCollaborationRoom-", data);
+    });
+    socketService.joinedCollaborationMessages((data) => {
+      console.log("data--messages-", data);
+      setMessages((prev) => [...prev, data.message]);
+    });
+
+    return () => {
+      socketService.disconnect();
+    };
+  }, [vendorId]);
+
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      try {
+        if (!collobrationId) throw "";
+        const conversations: any[] = await getCollobrationConversation(
+          collobrationId
+        );
+        setMessages(Array.isArray(conversations) ? conversations : []);
+      } catch (error) {
+        console.log("while getting conversations");
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+
+    return () => {};
+  }, [collobrationId]);
+
+  const sendMessage = () => {
+    if (message.trim()) {
+      socketService.sendMessage(collobrationId, message, creatorId, vendorId);
+      setMessage("");
+    }
+  };
+
   return (
     <Card className="bg-white rounded-lg p-4">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
@@ -50,53 +77,70 @@ export default function ChatComponent() {
       </div>
       <div className="h-px w-full bg-stroke mx-2"></div>{" "}
       <CardContent className="space-y-3 h-80 overflow-auto">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`flex items-end gap-2 ${
-              msg.owner ? "justify-start" : "justify-end"
-            }`}
-          >
-            <div className="flex items-end">
-              {msg.owner && (
-                <Avatar>
-                  <AvatarImage
-                    src="/assets/product/diamondRing.webp"
-                    className="rounded-full border border-border size-8"
-                  />
-                </Avatar>
-              )}
+        {isLoading && <p>Loading...</p>}
+        {!isLoading &&
+          messages.map((msg: any, idx) => {
+            const owner = true;
+            const text = msg.messageJson?.message;
+            const messageSentTime = msg?.createdAt
+              ? formatTo12Hour(msg?.createdAt)
+              : "";
+            return (
               <div
-                className={`flex flex-col ${
-                  msg.owner ? "items-start" : "items-end"
-                } `}
+                key={idx}
+                className={`flex items-end gap-2 ${
+                  owner ? "justify-start" : "justify-end"
+                }`}
               >
-                <div
-                  className={`p-3 rounded-lg ${
-                    msg.owner ? "bg-pink-100" : "bg-gray-100"
-                  }`}
-                >
-                  <p className="text-base">{msg.text}</p>
+                <div className="flex items-end">
+                  {owner && (
+                    <Avatar>
+                      <AvatarImage
+                        src="/assets/product/diamondRing.webp"
+                        className="rounded-full border border-border size-8"
+                      />
+                    </Avatar>
+                  )}
+                  <div
+                    className={`flex flex-col ${
+                      owner ? "items-start" : "items-end"
+                    } `}
+                  >
+                    <div
+                      className={`p-3 rounded-lg ${
+                        owner ? "bg-pink-100" : "bg-gray-100"
+                      }`}
+                    >
+                      <p className="text-base">{text}</p>
+                    </div>
+                    <p className="text-xs text-gray-500 text-right">
+                      {messageSentTime}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-xs text-gray-500 text-right">{msg.time}</p>
+                {!owner && (
+                  <Avatar>
+                    <AvatarImage
+                      src="/assets/product/diamondRing.webp"
+                      className="rounded-full border border-border size-8 "
+                    />
+                  </Avatar>
+                )}
               </div>
-            </div>
-            {!msg.owner && (
-              <Avatar>
-                <AvatarImage
-                  src="/assets/product/diamondRing.webp"
-                  className="rounded-full border border-border size-8 "
-                />
-              </Avatar>
-            )}
-          </div>
-        ))}
+            );
+          })}
       </CardContent>
       <div className="mt-3 flex gap-2 border-t pt-3">
         <Input
           placeholder="Message"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault(); // Prevents new line addition
+              sendMessage();
+            }
+          }}
         />
         <Mic />
       </div>
