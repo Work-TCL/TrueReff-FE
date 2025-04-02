@@ -83,6 +83,8 @@ const authOptions: NextAuthOptions = {
         token.createdAt = user?.createdAt;
         token.updatedAt = user?.updatedAt;
         token.token = user?.token;
+        token.creator = user?.creator;
+        token.vendor = user?.vendor,        
           token.accessToken = user?.token || null; // ✅ Ensure accessToken is set
         }
       }
@@ -104,6 +106,8 @@ const authOptions: NextAuthOptions = {
         session.user.createdAt = token?.createdAt;
         session.user.updatedAt = token?.updatedAt;
         session.user.token = token?.token;
+        session.creator = token.creator;
+        session.vendor = token.vendor
 
       session.accessToken = token.accessToken || ""; // ✅ Make sure accessToken is always there
       return session;

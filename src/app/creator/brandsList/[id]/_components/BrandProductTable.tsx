@@ -1,25 +1,54 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
 import { IBrand } from "./list";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Eye, Info } from "lucide-react";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
+import toast from "react-hot-toast";
+import Button from "@/app/_components/ui/button";
 
 interface ICreatorTableProps {
     data: IBrand[],
     brandName: string;
 }
-export default function BrandProductTable({ data,brandName }: ICreatorTableProps) {
+export default function BrandProductTable({ data, brandName }: ICreatorTableProps) {
     const router = useRouter();
     const params = useParams();
+    const axios = useAxiosAuth();
+    const [loading,setLoading] = useState<boolean>(false);
     const handleDetailView = (id: string) => {
         router.push(`/creator/brandsList/${params.id}/${id}?brandName=${brandName}`);
+    }
+    const handleSendRequest = async (productId: string) => {
+        setLoading(true);
+        try {
+            const response: any = await axios.post(
+                `/product/collaboration/creator/request`,{
+                    "productId": productId,
+                    "discountType": "PERCENTAGE", //"PERCENTAGE", "FIXED_AMOUNT"
+                    "discountValue": 10,
+                    "couponCode": "ABCD",
+                    "expiresAt": "2025-12-31T23:59:59Z"
+                }
+            );
+            if (response.status === 201) {
+                toast.success(response.data.message);
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
+        } catch (error) {
+            const errorMessage = getErrorMessage(error);
+            toast.error(errorMessage);
+            setLoading(false)
+        }
     }
     return (
         <div className="overflow-auto">
@@ -30,7 +59,7 @@ export default function BrandProductTable({ data,brandName }: ICreatorTableProps
                         <CustomTableHead className="w-1/4">{translate("Product_Name")}</CustomTableHead>
                         <CustomTableHead className="w-1/6">{translate("Brand_Name")}</CustomTableHead>
                         <CustomTableHead className="w-1/8">{translate("Category")}</CustomTableHead>
-                         <CustomTableHead className="w-1/8">{translate("Tags")}</CustomTableHead>
+                        <CustomTableHead className="w-1/8">{translate("Tags")}</CustomTableHead>
                         {/*<CustomTableHead className="w-1/6">{translate("Total_Sale")}</CustomTableHead>
                         <CustomTableHead className="w-1/4">{translate("Brand_Rating")}</CustomTableHead> */}
                         <CustomTableHead className="w-1/6 text-center">{translate("Action")}</CustomTableHead>
@@ -50,7 +79,7 @@ export default function BrandProductTable({ data,brandName }: ICreatorTableProps
                                 </CustomTableCell>
                                 <CustomTableCell>{brand.productId.title}</CustomTableCell>
                                 <CustomTableCell>{brandName}</CustomTableCell>
-                                 <CustomTableCell>{brand.productId?.categories?.join(", ")}</CustomTableCell>
+                                <CustomTableCell>{brand.productId?.categories?.join(", ")}</CustomTableCell>
                                 <CustomTableCell>{brand.productId.tags.join(", ")}</CustomTableCell>
                                 {/* <CustomTableCell>{brand.pastSales??''}</CustomTableCell> */}
                                 {/* <CustomTableCell>{brand.tag}</CustomTableCell> */}
@@ -61,7 +90,7 @@ export default function BrandProductTable({ data,brandName }: ICreatorTableProps
                                             className="cursor-pointer"
                                             onClick={() => handleDetailView(brand.productId._id)}
                                         />
-                                        <Button variant="outline" className="whitespace-nowrap  bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm">
+                                        <Button loading={loading} className="whitespace-nowrap w-[150px] bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm" onClick={() => handleSendRequest(brand.productId._id)}>
                                             {translate("Collaborate_Now")}
                                         </Button>
                                     </div>

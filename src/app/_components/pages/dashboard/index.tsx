@@ -29,7 +29,6 @@ export default function Dashboard() {
   const getCreator = async () => {
       try {
         const creator = await getCreatorProgress();
-        console.log("creator",creator)
         setCreatorDetails(creator);
       } catch (e) {
 

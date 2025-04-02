@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { translate } from "../../../../../../lib/utils/translate";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
-import { Bell, BellRing, Calendar, Mail, Menu, X } from "lucide-react";
+import { BellRing, Menu, User, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button"
 import {
@@ -12,20 +12,62 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger
 } from "@/components/ui/drawer"
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import toast from "react-hot-toast";
+import socketService from "@/lib/services/socket-service";
 interface IPageName {
   [key: string]: string;
 }
 interface IHeaderProps {
   handleExpandSidebar: () => void;
 }
+
+interface INotification {
+  _id: string,
+  userId: string,
+  message: string,
+  read: boolean,
+  createdAt: string,
+  updatedAt: string
+}
+function formatTimeAgo(date: string) {
+  const now: any = new Date();
+  const past: any = new Date(date);
+  const diffMs = now - past; // Difference in milliseconds
+  const diffSec = Math.floor(diffMs / 1000); // Convert to seconds
+  const diffMin = Math.floor(diffSec / 60); // Convert to minutes
+  const diffHours = Math.floor(diffMin / 60); // Convert to hours
+
+  if (diffMin < 1) {
+    return "Just now";
+  } else if (diffMin < 60) {
+    return `${diffMin} minutes ago`;
+  } else if (diffHours < 2) {
+    return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  } else {
+    return past.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+  }).replace(",", ""); // Show full date & time after 2 hours
+  }
+}
 export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const pathName = usePathname();
+  const axios = useAxiosAuth();
   const { data: session } = useSession();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [notifications, setNotifications] = useState<INotification[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [unreadNotifications, setUnReadNotifications] = useState<number>(0);
+  const [totalNotification, setTotalNotification] = useState<number>(0);
+  const pageLimit: number = 20;
   const pageNames: IPageName = {
     "/vendor/dashboard": translate("Overview"),
     "/vendor/products/add": translate("Add_New_Product"),
@@ -45,26 +87,87 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/creator/payment-earnings": translate("Payment_Earnings"),
     "/creator/brandsList": translate("Brands_List"),
   };
-  const notifications = [
-    {
-      id: 1,
-      icon: <Bell className="w-5 h-5 text-blue-500" />,
-      message: "Your call has been confirmed",
-      time: "5 minutes ago",
-    },
-    {
-      id: 2,
-      icon: <Mail className="w-5 h-5 text-blue-500" />,
-      message: "You have a new message",
-      time: "1 minute ago",
-    },
-    {
-      id: 3,
-      icon: <Calendar className="w-5 h-5 text-blue-500" />,
-      message: "Your subscription is expiring soon",
-      time: "2 hours ago",
-    },
-  ];
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `/message/notification/list?limit=${pageLimit}&page=${page}`
+      );
+      if (response?.status === 200) {
+        const notificationRes: any = response?.data;
+        setUnReadNotifications(notificationRes?.unreadCount);
+        setTotalNotification(notificationRes?.total);
+        setNotifications([...notificationRes?.data]);
+      } else {
+        setUnReadNotifications(0);
+        setTotalNotification(0);
+        setNotifications([]);
+      }
+    } catch (error: any) {
+      toast.error(error?.message || "Notifications Fetch Failed.");
+      setUnReadNotifications(0);
+      setTotalNotification(0);
+      setNotifications([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  useEffect(() => {
+    socketService.connect();
+    if(session?.creator?._id || session?.vendor?._id){
+      let id  = session?.vendor?._id || session?.creator?._id;
+      socketService.registerUser(id);
+    }
+
+    
+    socketService.onNotification((data) => {
+      if(data?.message){
+        setUnReadNotifications(prev => prev + 1);
+        fetchNotifications();
+      }
+    });
+
+    return () => {
+      socketService.disconnect();
+    };
+  }, []);
+
+  const readNotifications = async (notificationId: string|null, isReadAll: boolean = false) => {
+    setLoading(true);
+    try {
+      let payload = isReadAll ? { readAll: true } : { notificationId };
+      const response = await axios.put(
+        `/message/notification/mark-read`, payload
+      );
+      if (response.status === 200) {
+        const notification: INotification = response?.data?.data;
+        let index = notification ? notifications.findIndex(ele => ele?._id === notification?._id):-1;
+        if (index !== -1) {
+          notifications[index] = notification; // Replace object at found index
+          setNotifications([...notifications]);
+          setUnReadNotifications(pre => pre - 1);
+        }
+        if(response?.data?.message === "All notifications marked as read"){
+          const updatedNotifications = notifications.map(notification => ({
+            ...notification,
+            read: true
+          }));
+          setNotifications([...updatedNotifications]);
+          setUnReadNotifications(0);
+        }
+      }
+
+    } catch (error: any) {
+      setNotifications([]);
+      toast.error(error?.message || "Notifications Fetch Failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <header className="bg-white px-3 py-3 flex items-center gap-1">
@@ -82,13 +185,13 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         >
           <div className="relative">
             <DrawerTrigger asChild>
-              <BellRing className="cursor-pointer w-8 h-8" />
+              <BellRing className="cursor-pointer w-8 h-8" onClick={()=> fetchNotifications()}/>
             </DrawerTrigger>
 
             {/* Notification Count */}
-            {notifications?.length > 0 && (
+            {unreadNotifications !== 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1 py-0.5 rounded-full">
-                {notifications?.length}
+                {unreadNotifications}
               </span>
             )}
           </div>
@@ -103,20 +206,23 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
                 <DrawerTitle>
                   <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-lg font-semibold">Notifications</h2>
-                    <DrawerClose asChild>
-                      <X className="w-5 h-5 cursor-pointer text-gray-600 hover:text-gray-800" />
-                    </DrawerClose>
+                    <div className="flex justify-between gap-2">
+                      <div className="cursor-pointer text-sm text-gray-600 hover:text-gray-800" onClick={() => readNotifications(null,true)}>Read All</div>
+                      <DrawerClose asChild>
+                        <X className="w-5 h-5 cursor-pointer text-gray-600 hover:text-gray-800" />
+                      </DrawerClose>
+                    </div>
                   </div>
-                  </DrawerTitle>
-                <DrawerDescription><p className="text-sm text-gray-500 mt-2">You have {notifications.length} unread messages.</p></DrawerDescription>
+                </DrawerTitle>
+                {unreadNotifications !== 0 && <DrawerDescription><p className="text-sm text-gray-500 mt-2">You have {unreadNotifications} unread messages.</p></DrawerDescription>}
               </DrawerHeader>
               <div className="mt-3 m-3 space-y-3">
-                {notifications.map((notification) => (
-                  <div key={notification.id} className="flex items-start gap-3">
-                    {notification.icon}
+                {notifications.map((notification, index) => (
+                  <div key={index} className={`flex items-start hover:border hover:rounded-md gap-3 cursor-pointer ${!notification.read ? 'font-bold' : 'font-normal'}`} onClick={() => !notification.read && readNotifications(notification?._id)}>
+                    <User />
                     <div>
                       <p className="text-sm text-gray-800">{notification.message}</p>
-                      <p className="text-xs text-gray-500">{notification.time}</p>
+                      <p className="text-xs text-gray-500">{formatTimeAgo(notification.createdAt)}</p>
                     </div>
                   </div>
                 ))}
