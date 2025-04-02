@@ -6,6 +6,7 @@ import {
 import axios from "./axios";
 import { getServerSession } from "next-auth";
 import authOptions from "@/app/api/auth/[...nextauth]/options";
+import { signOut } from "next-auth/react";
 
 type AxiosError = { config: { _retry: boolean } } & OriginalAxiosError;
 
@@ -60,6 +61,10 @@ axiosInstance.interceptors.response.use(
       if (error.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
         try {
+          signOut({
+            callbackUrl: "/login",
+            redirect: true,
+          });
           // Logic to handle token refresh or redirect to login
         } catch (e) {
           return Promise.reject(e);

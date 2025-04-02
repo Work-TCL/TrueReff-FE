@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function SignOut() {
-  const nevigate = useRouter();
+  const navigate = useRouter();
   const handleLogout = async () => {
     await signOut({
       callbackUrl: "/login",
-      redirect: true,
+      redirect: false,
     });
-    nevigate.push("/login");
+    navigate.push("/login");
   };
   return (
     <Button
