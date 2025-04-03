@@ -75,7 +75,7 @@ export default function Dashboard() {
           <PerformanceSummaryChartDashBoard />
         </div>
         <div className="flex flex-col gap-6 w-full">
-          {lg && <ProfileCompletionCard />}
+          {lg && <ProfileCompletionCard progress={creatorDetails?.completed}/>}
           <MostSellingBrands />
         </div>
       </div>

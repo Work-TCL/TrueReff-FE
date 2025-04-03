@@ -1,25 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
-import { IBrand } from "./list";
 import { useParams, useRouter } from "next/navigation";
-import { Info } from "lucide-react";
-import Button from "@/app/_components/ui/button";
-
-interface ICreatorTableProps {
-    data: IBrand[],
-    brandName: string;
+import { Eye, Info } from "lucide-react";
+import { IProduct } from "./";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
+import toast from "react-hot-toast";
+import Button from "../../ui/button";
+function formatNumber(num: number = 0) {
+    if (num >= 1_000_000) {
+        return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+    } else if (num >= 1_000) {
+        return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+    }
+    return num === 0 ? "" : num.toString();
 }
-export default function BrandProductTable({ data, brandName }: ICreatorTableProps) {
+
+interface IProductTableProps {
+    data: IProduct[]
+}
+export default function BrandProductTable({ data }: IProductTableProps) {
     const router = useRouter();
-    const params = useParams();
     const handleDetailView = (id: string) => {
-        router.push(`/creator/brandsList/${params.id}/${id}?brandName=${brandName}`);
+        router.push(`/creator/product-management/${id}`);
     }
     return (
         <div className="overflow-auto">
@@ -28,34 +37,31 @@ export default function BrandProductTable({ data, brandName }: ICreatorTableProp
                     <TableRow >
                         <CustomTableHead className="w-1/6">{translate("Product_Image")}</CustomTableHead>
                         <CustomTableHead className="w-1/4">{translate("Product_Name")}</CustomTableHead>
-                        <CustomTableHead className="w-1/6">{translate("Brand_Name")}</CustomTableHead>
-                        <CustomTableHead className="w-1/8">{translate("Category")}</CustomTableHead>
+                        {/* <CustomTableHead className="w-1/6">{translate("Rating")}</CustomTableHead> */}
+                        {/* <CustomTableHead className="w-1/8">{translate("Price")}</CustomTableHead> */}
+                        {/* <CustomTableHead className="w-1/8">{translate("YouTube_View")}</CustomTableHead> */}
+                        {/* <CustomTableHead className="w-1/6">{translate("Discount")}</CustomTableHead> */}
+                        <CustomTableHead className="w-1/4">{translate("Category")}</CustomTableHead>
                         <CustomTableHead className="w-1/8">{translate("Tags")}</CustomTableHead>
-                        {/*<CustomTableHead className="w-1/6">{translate("Total_Sale")}</CustomTableHead>
-                        <CustomTableHead className="w-1/4">{translate("Brand_Rating")}</CustomTableHead> */}
                         <CustomTableHead className="w-1/6">{translate("Action")}</CustomTableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data.length > 0 ? (<>
-                        {data.map((brand: IBrand, index: number) => (
-                            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
+                        {data.map((product: IProduct, index: number) => (
+                            <TableRow key={index} className="bg-white">
                                 <CustomTableCell>
-                                    <div className="flex items-center gap-2">
-                                        <Avatar className="w-8 h-8">
-                                            <AvatarImage src={brand.productId.media[0]} />
-                                            <AvatarImage src={"/assets/brand/brand-image.svg"} />
-                                        </Avatar>
-                                    </div>
+                                    <Avatar className="w-8 h-8">
+                                        <AvatarImage src={product.media[0]} />
+                                    </Avatar>
                                 </CustomTableCell>
-                                <CustomTableCell>{brand.productId.title}</CustomTableCell>
-                                <CustomTableCell>{brandName}</CustomTableCell>
-                                <CustomTableCell>{brand.productId?.categories?.join(", ")}</CustomTableCell>
-                                <CustomTableCell>{brand.productId.tags.join(", ")}</CustomTableCell>
-                                {/* <CustomTableCell>{brand.pastSales??''}</CustomTableCell> */}
-                                {/* <CustomTableCell>{brand.tag}</CustomTableCell> */}
+                                <CustomTableCell>{product.title}</CustomTableCell>
+                                <CustomTableCell>{product?.categories}</CustomTableCell>
+                                {/* <CustomTableCell>{product?.tag}</CustomTableCell> */}
+                                {/* <CustomTableCell>{product.pastSales??''}</CustomTableCell> */}
+                                <CustomTableCell>{product.tag}</CustomTableCell>
                                 <CustomTableCell>
-                                    <Button className="whitespace-nowrap w-[150px] bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm" onClick={() => handleDetailView(brand.productId._id)}>
+                                    <Button type="button" className="whitespace-nowrap w-[150px] bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm" onClick={() => handleDetailView(product._id)}>
                                         {translate("Collaborate_Now")}
                                     </Button>
                                 </CustomTableCell>

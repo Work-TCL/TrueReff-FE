@@ -5,7 +5,7 @@ import { ProductImageGallery } from "./imagePreview";
 import { ProductInfo } from "./productDetail";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Loader from "@/app/_components/components-common/layout/loader";
 import {
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { translate } from "@/lib/utils/translate";
 import { useSession } from "next-auth/react";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
 
 interface ICategory {
   _id: string;
@@ -38,11 +39,13 @@ export interface IProduct {
   variants: any[];
   tags: string[];
   category?: string;
+  vendorId?: string; 
 }
 export default function ViewProductDetail() {
+  const pathName = usePathname();
   const axios = useAxiosAuth();
   const session = useSession();
-  const user = session?.data?.user ?? { type: "vendor" };
+  const creator = session?.data?.creator??{_id: ""};
   const params = useParams();
   const router = useRouter();
   const productId = params?.productId;
@@ -52,6 +55,7 @@ export default function ViewProductDetail() {
   const brandName = searchParams.get("brandName");
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [collaborationStatus, setCollaborationStatus] = useState<string>("");
 
   const [productData, setProductData] = useState<IProduct>({
     productId: "",
@@ -66,6 +70,7 @@ export default function ViewProductDetail() {
     variants: [],
     tags: [],
     category: "",
+    vendorId: "" 
   });
   // Update fetProductsList to set both cursors
   const fetchShopifyProductById = async () => {
@@ -111,7 +116,7 @@ export default function ViewProductDetail() {
       const images = product.media;
       // ✅ Update product state
       const updatedProduct = {
-        productId: product.id,
+        productId: product._id,
         images: images,
         name: product.title,
         tags: product?.tags || [],
@@ -126,6 +131,7 @@ export default function ViewProductDetail() {
           ?.filter((ele: ICategory) => ele?.parentId === null)
           ?.map((ele: ICategory) => ele?.name)
           ?.join(", "),
+          vendorId: product?.vendorId
       };
 
       setProductData(updatedProduct);
@@ -148,7 +154,39 @@ export default function ViewProductDetail() {
       fetchProductById();
     }
   }, [productId]);
-
+  const handleSendRequest = async () => {
+    setLoading(true);
+    try {
+      const response: any = await axios.post(
+        `/product/collaboration/creator/request`, {
+        "productId": productData?.productId,
+        "creatorId": creator?._id,
+        "vendorId": productData?.vendorId,
+        "discountType": "PERCENTAGE", //"PERCENTAGE", "FIXED_AMOUNT"
+        "discountValue": 10,
+        "couponCode": "ABCD",
+        "expiresAt": "2025-12-31T23:59:59Z"
+      }
+      );
+      if(response.status === 200){
+        toast.success(response.data.message);
+      }
+      if (response.status === 201) {
+        let data = response?.data?.data?.newCollaboration;
+        if(data && data?.collaborationStatus){
+          setCollaborationStatus(data?.collaborationStatus)
+        }
+        toast.success(response.data.message);
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+      setLoading(false)
+    }
+  }
   return (
     <div className="flex flex-col w-full p-6 gap-6">
       {loading && <Loader />}
@@ -173,9 +211,7 @@ export default function ViewProductDetail() {
               <BreadcrumbPage
                 className="cursor-pointer hover:text-[grey]"
                 onClick={() =>
-                  router.push(
-                    productId
-                      ? `/creator/brandsList/${params.id}?brandName=${brandName}`
+                  router.push( productId ? pathName.includes("/product-management") ? `/creator/product-management` : `/creator/brandsList/${params.id}?brandName=${brandName}`
                       : `/vendor/products/${params?.channelType}`
                   )
                 }
@@ -190,11 +226,12 @@ export default function ViewProductDetail() {
           </BreadcrumbList>
         </Breadcrumb>
         <Button
+        disabled={collaborationStatus === "REQUESTED"}
           variant="secondary"
           className="text-white"
-          onClick={() => router.push(`view/bargaining`)}
+          onClick={() => handleSendRequest()}
         >
-          Start Bargaining
+          {collaborationStatus === "REQUESTED" ? "Requested" : "Start Bargaining"}
         </Button>
       </div>
 

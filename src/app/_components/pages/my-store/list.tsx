@@ -32,7 +32,9 @@ export interface IProduct {
   createdAt: string,
   updatedAt: string,
   tag: string,
-  category?:ICategory,
+  category?:ICategory[],
+  categories: string,
+  collaborationStatus: string
 }
 
 export default function ProductList() {
@@ -58,7 +60,8 @@ export default function ProductList() {
 
           if (Array.isArray(productsArray)) {
             let result = productsArray.map(ele => {
-              ele.tag = ele.tags.join(", ")
+              ele.tag = ele.tags.join(", ");
+              ele.categories = ele?.category?.length ? ele.category.filter((ele: ICategory)=> ele?.parentId === null).map((ele:ICategory) => ele?.name).join(", "):'';
               return {...ele};
             })
             setProducts([...result]);

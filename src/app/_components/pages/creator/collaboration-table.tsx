@@ -1,15 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
-import { IChannel, ICreator } from "./list";
 import { useRouter } from "next/navigation";
-import { Info } from "lucide-react";
+import { Info, X } from "lucide-react";
+import { ICollaboration } from "./collaboration";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { boolean } from "yup";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 function formatNumber(num:number = 0) {
     if (num >= 1_000_000) {
       return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -20,16 +24,51 @@ function formatNumber(num:number = 0) {
 }
 
 interface ICreatorTableProps {
-    data: ICreator[],
+    data: ICollaboration[],
     filter: string,
     user: string,
 }
 const CollaborationTable = ({data,filter,user}: ICreatorTableProps) => {
     const router = useRouter();
-    
+    const axios = useAxiosAuth();
+    const [loading,setLoading] = useState<boolean>(false);
     const badgeColor = {Live:"bg-[#098228] text-[#098228]",Paused:"bg-[#FF9500] text-[#FF9500]",Expired:"bg-[#FF3B30] text-[#FF3B30]"}
     const handleViewCreatorDetails = (id: string) => {
         router.push(`/vendor/collaboration/${id}`)
+    }
+    const handleRejectRequest = async () => {
+        setLoading(true);
+        try {
+            const response: any = await axios.post(
+                `/product/collaboration/creator/request`, 
+            //     {
+            //     "productId": storeProductId ? storeProductId : productId,
+            //     "creatorId": creator?._id,
+            //     "vendorId": productId ? params?.id : "",
+            //     "discountType": "PERCENTAGE", //"PERCENTAGE", "FIXED_AMOUNT"
+            //     "discountValue": 10,
+            //     "couponCode": "ABCD",
+            //     "expiresAt": "2025-12-31T23:59:59Z"
+            // }
+            );
+            if (response.status === 200) {
+                toast.success(response.data.message);
+            }
+            if (response.status === 201) {
+                let data = response?.data?.data?.newCollaboration;
+                if (data && data?.collaborationStatus) {
+                    // setCollaborationStatus(data?.collaborationStatus)
+                }
+                toast.success(response.data.message);
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
+        } catch (error) {
+            const errorMessage = getErrorMessage(error);
+            toast.error(errorMessage);
+            setLoading(false)
+        }
     }
     return (
         <div className="">
@@ -43,27 +82,31 @@ const CollaborationTable = ({data,filter,user}: ICreatorTableProps) => {
                         <CustomTableHead className="w-1/8">{translate("Units_Sold")}</CustomTableHead>
                         <CustomTableHead className="w-1/6">{translate("Collab_Last_Date")}</CustomTableHead>
                         <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead>
+                        <CustomTableHead className="w-1/4">{translate("Action")}</CustomTableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data.length > 0 ? (<>
-                        {data.map((creator:any, index:number) => (
+                        {data.map((collaboration:ICollaboration, index:number) => (
                             <TableRow key={index} className="bg-white">
                                 <CustomTableCell>
-                                    <div className="flex items-center gap-2" onClick={()=> handleViewCreatorDetails(creator._id)}>
+                                    <div className="flex items-center gap-2" onClick={()=> handleViewCreatorDetails(collaboration._id)}>
                                         <Avatar className="w-8 h-8">
-                                            <AvatarImage src={creator.profile_image} />
-                                            <AvatarImage src={"/assets/creator/creator-image.svg"} />
+                                            <AvatarImage src={collaboration?.productId?.media[0]} />
+                                            <AvatarImage src={"/assets/collaboration/collaboration-image.svg"} />
                                         </Avatar>
                                     </div>
                                 </CustomTableCell>
-                                <CustomTableCell>{creator.full_name}</CustomTableCell>
-                                <CustomTableCell>{creator.categories}</CustomTableCell>
+                                <CustomTableCell>{collaboration?.productId?.title}</CustomTableCell>
+                                <CustomTableCell>{collaboration?.productId?.category.join(", ")}</CustomTableCell>
                                 <CustomTableCell>{""}</CustomTableCell>
                                 <CustomTableCell>{""}</CustomTableCell>
-                                <CustomTableCell>{creator.pastSales??''}</CustomTableCell>
+                                <CustomTableCell>{""}</CustomTableCell>
                                 <CustomTableCell className="w-[80px]">
-                                    <div className={`rounded-[6px] bg-opacity-10 text-center p-2 ${badgeColor[index === 0 ? "Paused" : "Live"]}`}>{index === 0 ? "Paused" : "Live"}</div>
+                                    <div className={`rounded-[6px] bg-opacity-10 text-center p-2 ${badgeColor[index === 0 ? "Paused" : "Live"]}`}>{collaboration?.collaborationStatus                                    }</div>
+                                </CustomTableCell>
+                                <CustomTableCell>
+                                    <X className="cursor-pointer" onClick={() => handleRejectRequest()}/>
                                 </CustomTableCell>
                             </TableRow>
                         ))}</>) : <tr><td colSpan={7}><EmptyPlaceHolder/></td></tr>}

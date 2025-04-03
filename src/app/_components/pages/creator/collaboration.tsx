@@ -19,38 +19,33 @@ export interface ICategory {
   name: string
 }
 
-export interface IChannel {
+export interface IProduct {
+  _id: string,
+  title: string,
+  channelProductId: string,
+  sku: string,
+  description: string,
+  media: string[],
+  channelName: string,
+  category: string[],
+  tags: string[],
+  createdAt: string,
+  updatedAt: string,
+}
+export interface ICollaboration {
   _id: string,
   creatorId: string,
-  channelId: string,
-  channelName: string,
-  handleName: string,
-  token: string,
-  channelType: string,
+  productId: IProduct,
+  vendorId: string,
+  collaborationStatus: string,
+  utmLink: string | null,
+  discountType: string,
+  discountValue: number,
+  couponCode: string,
+  commissionPercentage: number,
+  expiresAt: string,
   createdAt: string,
-  updatedAt: string,
-  lastFiveVideoViews: number,
-  lastMonthViews: number
-}
-export interface ICreator {
-  _id: string,
-  accountId: string,
-  full_name: string,
-  user_name: string,
-  phone: string,
-  title: string,
-  long_description: string,
-  short_description: string,
-  profile_image: string,
-  banner_image: string,
-  createdAt: string,
-  updatedAt: string,
-  tags: string[],
-  sub_category: string[],
-  category: ICategory[],
-  channels: IChannel[],
-  categories?:string,
-  tag?: string
+  updatedAt: string
 }
 
 export default function CollaborationList() {
@@ -58,7 +53,7 @@ export default function CollaborationList() {
   const session = useSession();
   const user = session?.data?.user??{type:'vendor'};
   const [loading,setLoading] = useState<boolean>(false);
-  const [creators,setCreators] = useState<ICreator[]>([]);
+  const [collaborations,setCollaborations] = useState<ICollaboration[]>([]);
   const [filter,setFilter] = useState<string>("5");
   const [search,setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,28 +68,28 @@ export default function CollaborationList() {
   const getCreatorList = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/auth/creator/list?page=${currentPage}&limit=${pageSize}`);
+      const response = await axios.get(`/product/collaboration/list?page=${currentPage}&limit=${pageSize}`);
       if (response.status === 200) {
-        const creatorData = response.data.data;
-        if (creatorData && typeof creatorData === "object") {
-          const creatorsArray = creatorData.list || [];
-          const creatorsCount = creatorData.count || 0;
+        const collaborationData = response.data.data;
+        if (collaborationData && typeof collaborationData === "object") {
+          const collaborationArray = collaborationData.data || [];
+          const collaborationCount = collaborationData.total || 0;
 
-          if (Array.isArray(creatorsArray)) {
-            let result = creatorsArray.map((ele: ICreator) => {
-              ele.categories = ele.category?.map((ele: {name: string}) => ele?.name).join(',');
-              ele.tag = ele.tags?.join(',');
+          if (Array.isArray(collaborationArray)) {
+            let result = collaborationArray.map((ele: ICollaboration) => {
+              // ele.categories = ele.category?.map((ele: {name: string}) => ele?.name).join(',');
+              // ele.tag = ele.tags?.join(',');
               return {...ele}
             })
-            setCreators([...result]);
-            setTotalPages(Math.ceil(creatorsCount / pageSize));
+            setCollaborations([...result]);
+            setTotalPages(Math.ceil(collaborationCount / pageSize));
           } else {
-            setCreators([]);
+            setCollaborations([]);
             setCurrentPage(1);
           }
           setLoading(false);
         } else {
-          setCreators([]);
+          setCollaborations([]);
           setCurrentPage(1);
           setLoading(false);
         }
@@ -114,22 +109,6 @@ export default function CollaborationList() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setSearch(value)
-  }
-  const getFilterData = (data: ICreator[]) => {
-    let result = data;
-    if(search){
-      result = result.filter((ele: ICreator) => {
-        return (ele?.full_name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || 
-        ele?.short_description.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || 
-        ele?.long_description.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || 
-        (ele?.tag??'').toLocaleLowerCase().includes(search.toLocaleLowerCase()) || 
-        (ele?.categories??'').toLocaleLowerCase().includes(search.toLocaleLowerCase()))
-      })
-    }
-    return result
-  }
-  const handleFilterValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilter(e.target.value)
   }
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
@@ -151,7 +130,7 @@ export default function CollaborationList() {
                 </div>
             </div>
             {loading && <Loading/>}
-            {creators?.length >0 && <CollaborationTable data={creators} filter={filter} user={getUserType()}/>}
+            {collaborations?.length >0 && <CollaborationTable data={collaborations} filter={filter} user={getUserType()}/>}
             {/* Pagination */}
             <div className="flex justify-end items-center mt-4">
                 <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={setCurrentPage} />
