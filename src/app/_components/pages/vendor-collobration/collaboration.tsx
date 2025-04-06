@@ -14,49 +14,11 @@ import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import CollaborationTable from "./collaboration-table";
 import { useSession } from "next-auth/react";
-
-interface IVendorContact {
-  name: string;
-  phone: string;
-  email: string;
-  isDefault: boolean;
-  _id: string;
-}
-
-interface IVendorAddress {
-  name: string;
-  phone: string;
-  zip_code: string;
-  city: string;
-  state: string;
-  house_no: string;
-  address: string;
-  isDefault: boolean;
-}
-
-interface IVendor {
-  _id: string;
-  accountId: string;
-  business_name: string;
-  company_email: string;
-  company_phone: string;
-  gst_number: string;
-  website: string;
-  type_of_business: string;
-  contacts: IVendorContact[];
-  omni_channels: string[];
-  brand_documents: any[];
-  addresses: IVendorAddress[];
-  createdAt: string;
-  updatedAt: string;
-}
-interface ICategory {
+export interface ICategory {
   _id: string;
   name: string;
-  parentId: string | null;
-  createdAt: string;
-  updatedAt: string;
 }
+
 export interface IProduct {
   _id: string;
   title: string;
@@ -65,16 +27,23 @@ export interface IProduct {
   description: string;
   media: string[];
   channelName: string;
-  category: ICategory[];
+  category: string[];
   tags: string[];
   createdAt: string;
   updatedAt: string;
-  categories: string;
 }
 export interface ICollaboration {
   _id: string;
-  creatorId: string;
+  creatorId: {
+    _id: string;
+    accountId: string;
+    full_name: string;
+    user_name: string;
+    phone: string;
+    profile_image: string;
+  };
   productId: IProduct;
+  vendorId: string;
   collaborationStatus: string;
   utmLink: string | null;
   discountType: string;
@@ -84,7 +53,6 @@ export interface ICollaboration {
   expiresAt: string;
   createdAt: string;
   updatedAt: string;
-  vendorId: IVendor;
 }
 
 export default function CollaborationList() {
@@ -104,7 +72,7 @@ export default function CollaborationList() {
     return { vendor: "Creator", creator: "Brand" }[user?.type] ?? "";
   };
   // Get Creator list
-  const fetchCollaboration = useCallback(async () => {
+  const getCreatorList = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axios.get(
@@ -118,16 +86,11 @@ export default function CollaborationList() {
 
           if (Array.isArray(collaborationArray)) {
             let result = collaborationArray.map((ele: ICollaboration) => {
-              let category = ele.productId.category
-                .filter((cat: ICategory) => cat?.parentId === null)
-                .map((category: ICategory) => {
-                  return category?.name;
-                })
-                .join(", ");
-              return {
-                ...ele,
-                productId: { ...ele?.productId, categories: category },
-              };
+              ele.productId.category = (
+                ele.productId.category as unknown as { name: string }[]
+              )?.map((cat) => String(cat?.name));
+              ele.productId.tags = ele.productId.tags;
+              return { ...ele };
             });
             setCollaborations([...result]);
             setTotalPages(Math.ceil(collaborationCount / pageSize));
@@ -150,7 +113,7 @@ export default function CollaborationList() {
   }, [axios, pageSize]);
 
   useEffect(() => {
-    fetchCollaboration();
+    getCreatorList();
   }, [currentPage]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,15 +144,15 @@ export default function CollaborationList() {
         </div>
       </div>
       {loading && <Loading />}
-
+      {/* Pagination */}
       <CollaborationTable
         data={collaborations}
         filter={filter}
         user={getUserType()}
-        fetchCollaboration={fetchCollaboration}
+        refreshCentral={() => getCreatorList()}
       />
-      {/* Pagination */}
-      {collaborations.length > 0 && (
+
+      {collaborations?.length > 0 && (
         <div className="flex justify-end items-center mt-4">
           <TablePagination
             totalPages={totalPages}

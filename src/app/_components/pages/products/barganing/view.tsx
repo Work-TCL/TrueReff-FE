@@ -11,16 +11,45 @@ import {
 import { translate } from "@/lib/utils/translate";
 import BargainingDetailView from "./detail";
 import ChatComponent from "./chatComponent";
-import {ICollaboration, IProduct} from "../viewProduct/viewDetailProduct";
-export default function BargainingView({productData,collaborationData}:{productData: IProduct,collaborationData:ICollaboration}) {
+import { ICollaboration, IProduct } from "../viewProduct/viewDetailProduct";
+import UTMForm from "./utmForm";
+export default function BargainingView({
+  productData,
+  collaborationData,
+  openUtmForm,
+  isOpenUtmForm,
+  isVendor,
+}: {
+  productData: IProduct;
+  collaborationData: ICollaboration;
+  openUtmForm: () => void;
+  isOpenUtmForm: boolean;
+  isVendor: boolean;
+}) {
   return (
-      <div className="flex h-full gap-4">
-        <Card className="bg-white rounded-lg overflow-auto w-[40%]">
+    <div className="flex h-full gap-4">
+      <Card className="bg-white rounded-lg overflow-auto w-[60%]">
+        <CardContent>
+          <BargainingDetailView
+            productData={productData}
+            openUtmForm={openUtmForm}
+            isVendor={isVendor}
+          />
+        </CardContent>
+      </Card>
+
+      {isOpenUtmForm ? (
+        <Card className="bg-white rounded-lg overflow-auto w-[60%]">
           <CardContent>
-            <BargainingDetailView productData={productData}/>
+            <UTMForm collaborationId={collaborationData?._id} />
           </CardContent>
         </Card>
-        <ChatComponent productData={productData} collaborationData={collaborationData}/>
-      </div>
+      ) : (
+        <ChatComponent
+          productData={productData}
+          collaborationData={collaborationData}
+        />
+      )}
+    </div>
   );
 }

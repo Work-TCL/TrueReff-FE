@@ -326,5 +326,9 @@
   "No_Channels_Available_Title": "No Channels Available",
   "User_Name": "User Name",
   "Bargaining": "Bargaining",
+  "Generate_UTM": "Generate UTM",
+  "Commission_Percentage": "Commission Percentage",
+  "Coupon_Code": "Coupon Code",
+  "expiresAt": "expiresAt",
   "No_Channels_Available_Description": "Please connect to the store to view available channels."
 }

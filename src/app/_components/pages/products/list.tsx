@@ -181,7 +181,7 @@ export default function ProductList() {
                                 <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
                   <CustomTableCell>
                     <Link
-                      href={`/vendor/products/view?id=${product.id}`}
+                      href={`/vendor/products/view/${product.id}`}
                       className="flex justify-center gap-3"
                     >
                       <Eye color="#FF4979" className="cursor-pointer" />

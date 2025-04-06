@@ -368,7 +368,8 @@ export const creatorOnBoardingSchema = Yup.object().shape({
     .email("Invalid email format")
     .required("Email is required"),
   phone_number: Yup.string()
-    .required("Phone is required").matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+    .required("Phone is required")
+    .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
 
   // Profile
   profile_title: Yup.string().required("Title is required"),
@@ -495,3 +496,28 @@ export const channlesToProduct = Yup.object().shape({
 
 export interface IChannelsToProduct
   extends Yup.Asserts<typeof channlesToProduct> {}
+
+export const utmSchema = Yup.object().shape({
+  discountType: Yup.string()
+    .oneOf(
+      ["PERCENTAGE", "FIXED_AMOUNT"],
+      "Discount type must be PERCENTAGE or FIXED_AMOUNT"
+    )
+    .required("Discount type is required"),
+
+  discountValue: Yup.number()
+    .required("Discount value is required")
+    .min(0, "Discount value must be at least 0"),
+
+  couponCode: Yup.string()
+    .required("Coupon code is required")
+    .min(3, "Coupon code must be at least 3 characters"),
+
+  commissionPercentage: Yup.number()
+    .required("Commission percentage is required")
+    .min(0, "Commission must be at least 0")
+    .max(100, "Commission cannot exceed 100"),
+  expiresAt: Yup.string().required("Expiration date is required"),
+});
+
+export interface IUTMSchema extends Yup.Asserts<typeof utmSchema> {}

@@ -18,6 +18,7 @@ import {
   StepForward,
   StepBack,
   UserRound,
+  UsersRound,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -135,18 +136,19 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     },
     {
       label: translate("Creators"),
-      icon: User,
+      icon: UsersRound,
       children: [
         { label: translate("Creator_List"), link: "/vendor/creators" },
         {
           label: translate("Available_Creators"),
           link: "/vendor/creators/available-creators",
         },
-        {
-          label: translate("Collaboration"),
-          link: "/vendor/creators/collaboration",
-        },
       ],
+    },
+    {
+      label: translate("Collaboration"),
+      icon: UserRound,
+      link: "/vendor/creators/collaboration",
     },
     {
       label: translate("Campaign"),
@@ -209,7 +211,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       icon: BarChart,
       link: "/creator/creator_analysis",
     },
-    { label: translate("Collaboration"), icon: UserRound, link: "/creator/collaboration" },
+    {
+      label: translate("Collaboration"),
+      icon: UserRound,
+      link: "/creator/collaboration",
+    },
     {
       label: translate("Payment_Earnings"),
       icon: DollarSign,

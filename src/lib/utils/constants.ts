@@ -54,3 +54,18 @@ export const USER_TYPE = {
   Vendor: "vendor",
   Creator: "creator",
 };
+
+export type COLLABORATION_STATUS_TYPE =
+  | "PENDING"
+  | "ACTIVE"
+  | "REJECTED"
+  | "REQUESTED"
+  | "EXPIRED";
+
+export const COLLOBRATION_STATUS = {
+  REQUESTED: "REQUESTED",
+  PENDING: "PENDING",
+  ACTIVE: "ACTIVE",
+  REJECTED: "REJECTED",
+  EXPIRED: "EXPIRED",
+};

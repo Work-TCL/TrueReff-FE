@@ -1,7 +1,16 @@
 import { translate } from "@/lib/utils/translate";
 import { IProduct } from "../viewProduct/viewDetailProduct";
+import { Button } from "@/components/ui/button";
 
-export default function BargainingDetailView({productData}:{productData:IProduct}) {
+export default function BargainingDetailView({
+  productData,
+  openUtmForm,
+  isVendor,
+}: {
+  productData: IProduct;
+  openUtmForm: () => void;
+  isVendor: boolean;
+}) {
   const images = [
     "/assets/product/diamondRing.webp",
     "/assets/product/diamondRing.webp",
@@ -95,7 +104,9 @@ export default function BargainingDetailView({productData}:{productData:IProduct
           <div className="flex w-full flex-1 flex-col gap-3">
             <p className="flex text-font-grey text-base">
               <span className="w-[53%]">Base Price:</span>{" "}
-              <span className="text-lg font-normal text-text">${productData?.price}</span>
+              <span className="text-lg font-normal text-text">
+                ${productData?.price}
+              </span>
             </p>
 
             <p className="flex text-font-grey text-base">
@@ -125,6 +136,14 @@ export default function BargainingDetailView({productData}:{productData:IProduct
               <span className="text-lg font-normal text-text">Color</span>
             </p>
           </div>
+          {isVendor && (
+            <Button
+              className="mt-3 w-fit bg-black text-white"
+              onClick={openUtmForm}
+            >
+              {translate("Generate_UTM")}
+            </Button>
+          )}
         </div>
       </div>
     </div>

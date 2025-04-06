@@ -5,7 +5,12 @@ import { ProductImageGallery } from "./imagePreview";
 import { ProductInfo } from "./productDetail";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Loader from "@/app/_components/components-common/layout/loader";
 import {
@@ -40,52 +45,62 @@ export interface IProduct {
   variants: any[];
   tags: string[];
   category?: string;
-  vendorId?: string; 
+  vendorId?: string;
 }
 
 export interface ICollaboration {
-  _id: string,
-  creatorId: string,
-  productId: string,
-  vendorId: string,
-  collaborationStatus: string,
-  utmLink: string | null,
-  discountType: string,
-  discountValue: number,
-  couponCode: string,
-  commissionPercentage: number,
-  expiresAt: string,
-  createdAt: string,
-  updatedAt: string
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  collaborationStatus: string;
+  utmLink: string | null;
+  discountType: string;
+  discountValue: number;
+  couponCode: string;
+  commissionPercentage: number;
+  expiresAt: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-const statusText:{[key: string]: string} = {
+const statusText: { [key: string]: string } = {
   REQUESTED: "Requested",
   REJECTED: "Send Request",
   PENDING: "Start Bargaining",
   LIVE: "Live",
   EXPIRED: "Expired",
-  "": "Send Request"
-}
+  "": "Send Request",
+};
 
-const buttonColor: {[key: string]: string} = {LIVE:"bg-[#098228] text-[#098228]",REQUESTED:"bg-[#FF9500] text-[#FF9500]",EXPIRED:"bg-[#FF3B30] text-[#FF3B30]",REJECTED:"bg-[#000] text-[#FFF]",PENDING:"bg-[#000] text-[#FFF]","":"bg-[#000] text-[#FFF]"}
+const buttonColor: { [key: string]: string } = {
+  LIVE: "bg-[#098228] text-[#098228]",
+  REQUESTED: "bg-[#FF9500] text-[#FF9500]",
+  EXPIRED: "bg-[#FF3B30] text-[#FF3B30]",
+  REJECTED: "bg-[#000] text-[#FFF]",
+  PENDING: "bg-[#000] text-[#FFF]",
+  "": "bg-[#000] text-[#FFF]",
+};
 export default function ViewProductDetail() {
   const pathName = usePathname();
   const axios = useAxiosAuth();
   const session = useSession();
-  const creator = session?.data?.creator??{_id: ""};
+  const creator = session?.data?.creator ?? { _id: "" };
   const params = useParams();
   const router = useRouter();
   const productId = params?.productId;
   const channelType = params?.channelType;
   const searchParams = useSearchParams();
   const shopifyId = searchParams.get("id");
+  const isChatOpen = searchParams.get("isChatView") === "true";
   const brandName = searchParams.get("brandName");
-  const isChatView = searchParams.get("isChatView");
+  const creatorId = searchParams.get("creatorId");
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [isChatView, setIsChatView] = useState<boolean>(false);
+  const [isUTMView, setIsUTMView] = useState<boolean>(false);
   const [collaborationStatus, setCollaborationStatus] = useState<string>("");
-  const [collaborationData,setCollaborationData] = useState<ICollaboration>({
+  const [collaborationData, setCollaborationData] = useState<ICollaboration>({
     _id: "",
     creatorId: "",
     productId: "",
@@ -98,8 +113,8 @@ export default function ViewProductDetail() {
     commissionPercentage: 0,
     expiresAt: "",
     createdAt: "",
-    updatedAt: "string"
-  })
+    updatedAt: "string",
+  });
   const [productData, setProductData] = useState<IProduct>({
     productId: "",
     images: [],
@@ -113,7 +128,7 @@ export default function ViewProductDetail() {
     variants: [],
     tags: [],
     category: "",
-    vendorId: "" 
+    vendorId: "",
   });
   // Update fetProductsList to set both cursors
   const fetchShopifyProductById = async () => {
@@ -174,7 +189,7 @@ export default function ViewProductDetail() {
           ?.filter((ele: ICategory) => ele?.parentId === null)
           ?.map((ele: ICategory) => ele?.name)
           ?.join(", "),
-          vendorId: product?.vendorId
+        vendorId: product?.vendorId,
       };
 
       setProductData(updatedProduct);
@@ -185,13 +200,16 @@ export default function ViewProductDetail() {
     }
   };
 
-  const fetchProductCollaborationStatus = async () => {
+  const fetchProductCollaborationStatus = async (creatorID: string) => {
+    if (!creatorID) return;
     setLoading(true);
     try {
-      const response = await axios.get(`/product/collaboration/status/${productId}`);
+      const response = await axios.get(
+        `/product/collaboration/status/${productId}?creatorId=${creatorID}`
+      );
       const collaboration: any = response?.data?.data?.collaboration;
-      setCollaborationStatus(collaboration?.collaborationStatus??"")
-      setCollaborationData(collaboration)
+      setCollaborationStatus(collaboration?.collaborationStatus ?? "");
+      setCollaborationData(collaboration);
     } catch (error: any) {
       toast.error(error?.message || "Status Fetch Failed.");
     } finally {
@@ -200,61 +218,50 @@ export default function ViewProductDetail() {
   };
 
   // Update useEffect to fetch the initial product list
-  // useEffect(() => {
-  //   if (shopifyId) {
-  //     fetchShopifyProductById();
-  //   }
-  // }, [shopifyId]);
-
-  // useEffect(() => {
-  //   if (productId) {
-  //     fetchProductById();
-  //     fetchProductCollaborationStatus();
-  //   }
-  // }, [productId]);
+  useEffect(() => {
+    if (shopifyId) {
+      fetchShopifyProductById();
+    }
+  }, [shopifyId]);
+  useEffect(() => {
+    if (isChatOpen) {
+      setIsChatView(true);
+    }
+  }, [isChatOpen]);
 
   useEffect(() => {
-    if (!productId && !shopifyId) return;
-  
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        if (shopifyId) {
-          await fetchShopifyProductById();
-        } else if (productId) {
-          await fetchProductById();
-          await fetchProductCollaborationStatus();
-        }
-      } catch (error: any) {
-        toast.error(error?.message || "Failed to fetch product");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchData();
-  }, [productId, shopifyId]);
+    if (productId) {
+      fetchProductById();
+    }
+  }, [productId]);
+  useEffect(() => {
+    const creator_id = session?.data?.creator?._id || creatorId;
+    if (creator_id) {
+      fetchProductCollaborationStatus(creator_id);
+    }
+  }, [session?.data?.creator?._id, creatorId]);
   const handleSendRequest = async () => {
     setLoading(true);
     try {
       const response: any = await axios.post(
-        `/product/collaboration/creator/request`, {
-        "productId": productData?.productId,
-        "creatorId": creator?._id,
-        "vendorId": productData?.vendorId,
-        "discountType": "PERCENTAGE", //"PERCENTAGE", "FIXED_AMOUNT"
-        "discountValue": 10,
-        "couponCode": "ABCDEFG",
-        "expiresAt": "2025-12-31T23:59:59Z"
-      }
+        `/product/collaboration/creator/request`,
+        {
+          productId: productData?.productId,
+          creatorId: creator?._id,
+          vendorId: productData?.vendorId,
+          discountType: "PERCENTAGE", //"PERCENTAGE", "FIXED_AMOUNT"
+          discountValue: 10,
+          couponCode: "ABCDEFG",
+          expiresAt: "2025-12-31T23:59:59Z",
+        }
       );
-      if(response.status === 200){
+      if (response.status === 200) {
         toast.success(response.data.message);
       }
       if (response.status === 201) {
         let data = response?.data?.data?.newCollaboration;
-        if(data && data?.collaborationStatus){
-          setCollaborationStatus(data?.collaborationStatus)
+        if (data && data?.collaborationStatus) {
+          setCollaborationStatus(data?.collaborationStatus);
         }
         toast.success(response.data.message);
         setLoading(false);
@@ -264,30 +271,34 @@ export default function ViewProductDetail() {
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleButtonClick = async (status: string) => {
-    if(status === "" || status === "REJECTED"){
+    if (status === "" || status === "REJECTED") {
       handleSendRequest();
-    } else if(status === "PENDING"){
+    } else if (status === "PENDING") {
       const params = new URLSearchParams(searchParams.toString());
 
-    params.set("isChatView","true");
+      params.set("isChatView", "true");
 
-    router.push(`?${params.toString()}`, { scroll: false });
+      router.push(`?${params.toString()}`, { scroll: false });
+      if (status === "PENDING") {
+        setIsChatView(true);
+      }
     }
-  }
+  };
   const handleProductView = () => {
-    if(isChatView){
+    if (isChatView) {
       const params = new URLSearchParams(searchParams.toString());
 
-    params.delete("isChatView");
+      params.delete("isChatView");
 
-    router.push(`?${params.toString()}`, { scroll: false });
+      router.push(`?${params.toString()}`, { scroll: false });
     }
-  }
+  };
+
   return (
     <div className="flex flex-col w-full p-6 gap-6">
       {loading && <Loader />}
@@ -312,7 +323,13 @@ export default function ViewProductDetail() {
               <BreadcrumbPage
                 className="cursor-pointer hover:text-[grey]"
                 onClick={() =>
-                  router.push( productId ? pathName.includes("/creator/collaboration") ? `/creator/collaboration` : pathName.includes("/product-management") ? `/creator/product-management` : `/creator/brandsList/${params.id}?brandName=${brandName}`
+                  router.push(
+                    productId
+                      ? pathName.includes("/creator/collaboration")
+                        ? `/creator/collaboration`
+                        : pathName.includes("/product-management")
+                        ? `/creator/product-management`
+                        : `/creator/brandsList/${params.id}?brandName=${brandName}`
                       : `/vendor/products/${params?.channelType}`
                   )
                 }
@@ -322,32 +339,63 @@ export default function ViewProductDetail() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className={`cursor-pointer ${isChatView ? "hover:text-[grey]":""}`} onClick={() => handleProductView()}>{translate("View_Product")}</BreadcrumbPage>
+              <BreadcrumbPage
+                className={`cursor-pointer ${
+                  isChatView ? "hover:text-[grey]" : ""
+                }`}
+                onClick={() => handleProductView()}
+              >
+                {translate("View_Product")}
+              </BreadcrumbPage>
             </BreadcrumbItem>
-            {isChatView ? <><BreadcrumbSeparator /><BreadcrumbItem>
-              <BreadcrumbPage>{"Bargaining"}</BreadcrumbPage>
-            </BreadcrumbItem></>:<></>}
+            {isChatView ? (
+              <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{"Bargaining"}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            ) : (
+              <></>
+            )}
           </BreadcrumbList>
         </Breadcrumb>
-        {!isChatView && <Button
-        disabled={collaborationStatus === "REQUESTED"}
-          variant="secondary"
-          className={`${buttonColor[collaborationStatus]} text-white`}
-          onClick={() => handleButtonClick(collaborationStatus)}
-        >
-          {statusText[collaborationStatus]}
-        </Button>}
+        {((creator?._id && !isChatView) ||
+          (collaborationStatus === "PENDING" &&
+            !creator?._id &&
+            !isChatView)) && (
+          <Button
+            disabled={collaborationStatus === "REQUESTED"}
+            variant="secondary"
+            className={`${buttonColor[collaborationStatus]} text-white`}
+            onClick={() => handleButtonClick(collaborationStatus)}
+          >
+            {statusText[collaborationStatus]}
+          </Button>
+        )}
       </div>
 
       {/* Card Section */}
-      {isChatView ? <BargainingView productData={productData} collaborationData={collaborationData}/> : <Card className="bg-white rounded-lg overflow-auto">
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ProductImageGallery images={productData?.images} />
-            <ProductInfo productData={productData} />
-          </div>
-        </CardContent>
-      </Card>}
+      {isChatView ? (
+        <BargainingView
+          productData={productData}
+          isVendor={!Boolean(creator?._id)}
+          collaborationData={collaborationData}
+          openUtmForm={() => {
+            setIsUTMView(true);
+          }}
+          isOpenUtmForm={Boolean(isUTMView && collaborationData)}
+        />
+      ) : (
+        <Card className="bg-white rounded-lg overflow-auto">
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ProductImageGallery images={productData?.images} />
+              <ProductInfo productData={productData} />
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
