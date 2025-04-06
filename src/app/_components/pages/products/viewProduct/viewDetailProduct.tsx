@@ -81,9 +81,9 @@ export default function ViewProductDetail() {
   const searchParams = useSearchParams();
   const shopifyId = searchParams.get("id");
   const brandName = searchParams.get("brandName");
+  const isChatView = searchParams.get("isChatView");
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [isChatView, setIsChatView] = useState<boolean>(false);
   const [collaborationStatus, setCollaborationStatus] = useState<string>("");
   const [collaborationData,setCollaborationData] = useState<ICollaboration>({
     _id: "",
@@ -200,18 +200,40 @@ export default function ViewProductDetail() {
   };
 
   // Update useEffect to fetch the initial product list
-  useEffect(() => {
-    if (shopifyId) {
-      fetchShopifyProductById();
-    }
-  }, [shopifyId]);
+  // useEffect(() => {
+  //   if (shopifyId) {
+  //     fetchShopifyProductById();
+  //   }
+  // }, [shopifyId]);
+
+  // useEffect(() => {
+  //   if (productId) {
+  //     fetchProductById();
+  //     fetchProductCollaborationStatus();
+  //   }
+  // }, [productId]);
 
   useEffect(() => {
-    if (productId) {
-      fetchProductById();
-      fetchProductCollaborationStatus();
-    }
-  }, [productId]);
+    if (!productId && !shopifyId) return;
+  
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (shopifyId) {
+          await fetchShopifyProductById();
+        } else if (productId) {
+          await fetchProductById();
+          await fetchProductCollaborationStatus();
+        }
+      } catch (error: any) {
+        toast.error(error?.message || "Failed to fetch product");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, [productId, shopifyId]);
   const handleSendRequest = async () => {
     setLoading(true);
     try {
@@ -250,7 +272,20 @@ export default function ViewProductDetail() {
     if(status === "" || status === "REJECTED"){
       handleSendRequest();
     } else if(status === "PENDING"){
-      setIsChatView(true);
+      const params = new URLSearchParams(searchParams.toString());
+
+    params.set("isChatView","true");
+
+    router.push(`?${params.toString()}`, { scroll: false });
+    }
+  }
+  const handleProductView = () => {
+    if(isChatView){
+      const params = new URLSearchParams(searchParams.toString());
+
+    params.delete("isChatView");
+
+    router.push(`?${params.toString()}`, { scroll: false });
     }
   }
   return (
@@ -277,7 +312,7 @@ export default function ViewProductDetail() {
               <BreadcrumbPage
                 className="cursor-pointer hover:text-[grey]"
                 onClick={() =>
-                  router.push( productId ? pathName.includes("/product-management") ? `/creator/product-management` : `/creator/brandsList/${params.id}?brandName=${brandName}`
+                  router.push( productId ? pathName.includes("/creator/collaboration") ? `/creator/collaboration` : pathName.includes("/product-management") ? `/creator/product-management` : `/creator/brandsList/${params.id}?brandName=${brandName}`
                       : `/vendor/products/${params?.channelType}`
                   )
                 }
@@ -287,18 +322,21 @@ export default function ViewProductDetail() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{translate("View_Product")}</BreadcrumbPage>
+              <BreadcrumbPage className={`cursor-pointer ${isChatView ? "hover:text-[grey]":""}`} onClick={() => handleProductView()}>{translate("View_Product")}</BreadcrumbPage>
             </BreadcrumbItem>
+            {isChatView ? <><BreadcrumbSeparator /><BreadcrumbItem>
+              <BreadcrumbPage>{"Bargaining"}</BreadcrumbPage>
+            </BreadcrumbItem></>:<></>}
           </BreadcrumbList>
         </Breadcrumb>
-        <Button
+        {!isChatView && <Button
         disabled={collaborationStatus === "REQUESTED"}
           variant="secondary"
           className={`${buttonColor[collaborationStatus]} text-white`}
           onClick={() => handleButtonClick(collaborationStatus)}
         >
           {statusText[collaborationStatus]}
-        </Button>
+        </Button>}
       </div>
 
       {/* Card Section */}

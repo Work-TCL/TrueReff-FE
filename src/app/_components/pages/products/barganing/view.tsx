@@ -14,8 +14,8 @@ import ChatComponent from "./chatComponent";
 import {ICollaboration, IProduct} from "../viewProduct/viewDetailProduct";
 export default function BargainingView({productData,collaborationData}:{productData: IProduct,collaborationData:ICollaboration}) {
   return (
-      <div className="flex h-full gap-[40px]">
-        <Card className="bg-white rounded-lg overflow-auto w-[60%]">
+      <div className="flex h-full gap-4">
+        <Card className="bg-white rounded-lg overflow-auto w-[40%]">
           <CardContent>
             <BargainingDetailView productData={productData}/>
           </CardContent>

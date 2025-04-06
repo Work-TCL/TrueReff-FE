@@ -14,10 +14,6 @@ import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import CollaborationTable from "./collaboration-table";
 import { useSession } from "next-auth/react";
-export interface ICategory {
-  _id: string,
-  name: string
-}
 
 interface IVendorContact {
   name: string,
@@ -54,7 +50,13 @@ interface IVendor {
   createdAt: string,
   updatedAt: string
 }
-
+interface ICategory {
+  _id: string,
+  name: string,
+  parentId: string | null,
+  createdAt: string,
+  updatedAt: string
+}
 export interface IProduct {
   _id: string,
   title: string,
@@ -63,10 +65,11 @@ export interface IProduct {
   description: string,
   media: string[],
   channelName: string,
-  category: string[],
+  category: ICategory[],
   tags: string[],
   createdAt: string,
   updatedAt: string,
+  categories: string
 }
 export interface ICollaboration {
   _id: string,
@@ -101,7 +104,7 @@ export default function CollaborationList() {
     return {vendor:"Creator",creator:"Brand"}[user?.type]??"";
   }
   // Get Creator list
-  const getCreatorList = useCallback(async () => {
+  const fetchCollaboration = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axios.get(`/product/collaboration/list?page=${currentPage}&limit=${pageSize}`);
@@ -113,9 +116,10 @@ export default function CollaborationList() {
 
           if (Array.isArray(collaborationArray)) {
             let result = collaborationArray.map((ele: ICollaboration) => {
-              // ele.categories = ele.category?.map((ele: {name: string}) => ele?.name).join(',');
-              // ele.tag = ele.tags?.join(',');
-              return {...ele}
+              let category = ele.productId.category.filter((cat:ICategory) => cat?.parentId === null).map((category:ICategory) => {
+                return category?.name
+              }).join(", ")
+              return {...ele,productId:{...ele?.productId,categories: category}}
             })
             setCollaborations([...result]);
             setTotalPages(Math.ceil(collaborationCount / pageSize));
@@ -138,7 +142,7 @@ export default function CollaborationList() {
   }, [axios, pageSize]);
 
   useEffect(() => {
-    getCreatorList();
+    fetchCollaboration();
   }, [currentPage]);
 
 
@@ -166,7 +170,7 @@ export default function CollaborationList() {
                 </div>
             </div>
             {loading && <Loading/>}
-            {collaborations?.length >0 && <CollaborationTable data={collaborations} filter={filter} user={getUserType()}/>}
+            {collaborations?.length >0 && <CollaborationTable data={collaborations} filter={filter} user={getUserType()} fetchCollaboration={fetchCollaboration}/>}
             {/* Pagination */}
             <div className="flex justify-end items-center mt-4">
                 <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={setCurrentPage} />
