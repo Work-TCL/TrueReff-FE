@@ -8,7 +8,7 @@ import { CustomTableHead } from "@/app/_components/components-common/tables/Cust
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
 import { useRouter } from "next/navigation";
-import { Info, X } from "lucide-react";
+import { CircleFadingPlus, Info, MessagesSquare, X } from "lucide-react";
 import { ICollaboration } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -23,6 +23,11 @@ function formatNumber(num:number = 0) {
     return num === 0 ? "": num.toString();
 }
 
+function capitalizeFirstLetter(word: string = "") {
+    if (!word) return ""; // Handle empty strings
+    return word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase();
+  }
+
 interface ICreatorTableProps {
     data: ICollaboration[],
     filter: string,
@@ -32,7 +37,7 @@ const CollaborationTable = ({data,filter,user}: ICreatorTableProps) => {
     const router = useRouter();
     const axios = useAxiosAuth();
     const [loading,setLoading] = useState<boolean>(false);
-    const badgeColor = {Live:"bg-[#098228] text-[#098228]",Paused:"bg-[#FF9500] text-[#FF9500]",Expired:"bg-[#FF3B30] text-[#FF3B30]"}
+    const badgeColor: {[key: string]: string} = {LIVE:"bg-[#098228] text-[#098228]",REQUESTED:"bg-[#FF9500] text-[#FF9500]",EXPIRED:"bg-[#FF3B30] text-[#FF3B30]",REJECTED:"bg-[#FF3B30] text-[#FF3B30]",PENDING:"bg-[#FF9500] text-[#FF9500]"}
     const handleViewCreatorDetails = (id: string) => {
         router.push(`/vendor/collaboration/${id}`)
     }
@@ -50,6 +55,40 @@ const CollaborationTable = ({data,filter,user}: ICreatorTableProps) => {
             //     "couponCode": "ABCD",
             //     "expiresAt": "2025-12-31T23:59:59Z"
             // }
+            );
+            if (response.status === 200) {
+                toast.success(response.data.message);
+            }
+            if (response.status === 201) {
+                let data = response?.data?.data?.newCollaboration;
+                if (data && data?.collaborationStatus) {
+                    // setCollaborationStatus(data?.collaborationStatus)
+                }
+                toast.success(response.data.message);
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
+        } catch (error) {
+            const errorMessage = getErrorMessage(error);
+            toast.error(errorMessage);
+            setLoading(false)
+        }
+    }
+    const handleSendRequest = async (collaboration:ICollaboration) => {
+        setLoading(true);
+        try {
+            const response: any = await axios.post(
+                `/product/collaboration/creator/request`, 
+                {
+                "productId": collaboration?.productId?._id,
+                "creatorId": collaboration?.creatorId,
+                "vendorId": collaboration?.vendorId?._id,
+                "discountType": "PERCENTAGE", //"PERCENTAGE", "FIXED_AMOUNT"
+                "discountValue": 10,
+                "couponCode": "ABCD",
+                "expiresAt": "2025-12-31T23:59:59Z"
+            }
             );
             if (response.status === 200) {
                 toast.success(response.data.message);
@@ -99,14 +138,18 @@ const CollaborationTable = ({data,filter,user}: ICreatorTableProps) => {
                                 </CustomTableCell>
                                 <CustomTableCell>{collaboration?.productId?.title}</CustomTableCell>
                                 <CustomTableCell>{collaboration?.productId?.category.join(", ")}</CustomTableCell>
+                                <CustomTableCell>{collaboration?.vendorId?.business_name}</CustomTableCell>
                                 <CustomTableCell>{""}</CustomTableCell>
                                 <CustomTableCell>{""}</CustomTableCell>
-                                <CustomTableCell>{""}</CustomTableCell>
-                                <CustomTableCell className="w-[80px]">
-                                    <div className={`rounded-[6px] bg-opacity-10 text-center p-2 ${badgeColor[index === 0 ? "Paused" : "Live"]}`}>{collaboration?.collaborationStatus                                    }</div>
+                                <CustomTableCell className="w-[100px]">
+                                    <span className={`${badgeColor[collaboration?.collaborationStatus]} bg-opacity-10 text-xs font-medium me-2 px-2 py-2 rounded-xl dark:bg-blue-900 dark:text-blue-300`}>{capitalizeFirstLetter(collaboration?.collaborationStatus)}</span>
                                 </CustomTableCell>
                                 <CustomTableCell>
-                                    <X className="cursor-pointer" onClick={() => handleRejectRequest()}/>
+                                    {{
+                                        "REQUESTED":<X className="cursor-pointer" onClick={() => handleRejectRequest()}/>,
+                                        "PENDING":<MessagesSquare className="cursor-pointer" onClick={() => handleRejectRequest()}/>,
+                                        "REJECTED": <CircleFadingPlus color="#3b82f680" className="cursor-pointer" onClick={() => handleSendRequest(collaboration)}/>
+                                    }[collaboration?.collaborationStatus]}
                                 </CustomTableCell>
                             </TableRow>
                         ))}</>) : <tr><td colSpan={7}><EmptyPlaceHolder/></td></tr>}

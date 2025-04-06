@@ -8,5 +8,5 @@ const BarganingView = dynamic(
 );
 
 export default function page() {
-  return <BarganingView />;
+  return <></>;
 }

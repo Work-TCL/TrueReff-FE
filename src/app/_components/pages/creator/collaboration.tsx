@@ -19,6 +19,42 @@ export interface ICategory {
   name: string
 }
 
+interface IVendorContact {
+  name: string,
+  phone: string,
+  email: string,
+  isDefault: boolean,
+  _id: string
+}
+
+interface IVendorAddress {
+  name: string,
+  phone: string,
+  zip_code: string,
+  city: string,
+  state: string,
+  house_no: string,
+  address: string,
+  isDefault: boolean
+}
+
+interface IVendor {
+  _id: string,
+  accountId: string,
+  business_name: string,
+  company_email: string,
+  company_phone: string,
+  gst_number: string,
+  website: string,
+  type_of_business: string,
+  contacts: IVendorContact[],
+  omni_channels: string[],
+  brand_documents: any[],
+  addresses: IVendorAddress[],
+  createdAt: string,
+  updatedAt: string
+}
+
 export interface IProduct {
   _id: string,
   title: string,
@@ -36,7 +72,6 @@ export interface ICollaboration {
   _id: string,
   creatorId: string,
   productId: IProduct,
-  vendorId: string,
   collaborationStatus: string,
   utmLink: string | null,
   discountType: string,
@@ -45,7 +80,8 @@ export interface ICollaboration {
   commissionPercentage: number,
   expiresAt: string,
   createdAt: string,
-  updatedAt: string
+  updatedAt: string,
+  vendorId: IVendor
 }
 
 export default function CollaborationList() {

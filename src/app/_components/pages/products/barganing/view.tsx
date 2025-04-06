@@ -11,43 +11,16 @@ import {
 import { translate } from "@/lib/utils/translate";
 import BargainingDetailView from "./detail";
 import ChatComponent from "./chatComponent";
-export default function BarganingView() {
+import {ICollaboration, IProduct} from "../viewProduct/viewDetailProduct";
+export default function BargainingView({productData,collaborationData}:{productData: IProduct,collaborationData:ICollaboration}) {
   return (
-    <div className="flex flex-col w-full p-6 gap-6">
-      {/* {loading && <Loader />} */}
-      {/* Breadcrumb and Button */}
-      <div className="flex md:flex-row flex-col items-start justify-between md:items-center gap-2">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbPage className="cursor-pointer hover:text-[grey]">
-                {translate("Product_List")}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-
-            <BreadcrumbItem>
-              <BreadcrumbPage className="cursor-pointer hover:text-[grey]">
-                {translate("View_Product")}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{translate("Bargaining")}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-
-      {/* Card Section */}
       <div className="flex h-full gap-[40px]">
         <Card className="bg-white rounded-lg overflow-auto w-[60%]">
           <CardContent>
-            <BargainingDetailView />
+            <BargainingDetailView productData={productData}/>
           </CardContent>
         </Card>
-        <ChatComponent />
+        <ChatComponent productData={productData} collaborationData={collaborationData}/>
       </div>
-    </div>
   );
 }

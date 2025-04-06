@@ -1,6 +1,7 @@
 import { translate } from "@/lib/utils/translate";
+import { IProduct } from "../viewProduct/viewDetailProduct";
 
-export default function BargainingDetailView() {
+export default function BargainingDetailView({productData}:{productData:IProduct}) {
   const images = [
     "/assets/product/diamondRing.webp",
     "/assets/product/diamondRing.webp",
@@ -25,8 +26,8 @@ export default function BargainingDetailView() {
         <p className="text-text font-medium text-sm">Product Image</p>
         <div className="flex flex-col gap-3">
           <div className="grid grid-cols-3 gap-3 overflow-auto max-h-[210px] pr-2">
-            {images?.length > 0 &&
-              images.map((img, index) => (
+            {productData?.images?.length > 0 &&
+              productData?.images.map((img, index) => (
                 <div
                   key={index}
                   className="border border-border rounded-2xl p-2"
@@ -54,7 +55,7 @@ export default function BargainingDetailView() {
             <input
               name="product_name"
               className="p-2 border text-sm rounded-md w-full"
-              value={"Tiffany Diamond Ring"}
+              value={productData?.name}
               disabled
             />
           </div>
@@ -64,7 +65,7 @@ export default function BargainingDetailView() {
             </label>
             <input
               className="p-2 text-sm border rounded-md w-full"
-              value={"Jewelry"}
+              value={productData?.category}
               disabled
             />
           </div>
@@ -74,7 +75,7 @@ export default function BargainingDetailView() {
             </label>
             <input
               className="p-2 text-sm border rounded-md w-full"
-              value={"Elegant, Timeless"}
+              value={productData?.tags?.join(", ")}
               disabled
             />
           </div>
@@ -86,9 +87,7 @@ export default function BargainingDetailView() {
           <textarea
             rows={4}
             className="p-2 text-sm border rounded-md w-full"
-            value={
-              "Lorem ipsum dolor sit amet consectetur. Morbi laoreet amet et sed laoreet imperdiet euismod sem. Pharetra quis et odio scelerisque nullam. Faucibus faucibus sit orci leo et blandit erat risus. "
-            }
+            value={productData?.description}
             disabled
           />
         </div>
@@ -96,7 +95,7 @@ export default function BargainingDetailView() {
           <div className="flex w-full flex-1 flex-col gap-3">
             <p className="flex text-font-grey text-base">
               <span className="w-[53%]">Base Price:</span>{" "}
-              <span className="text-lg font-normal text-text">${"400"}</span>
+              <span className="text-lg font-normal text-text">${productData?.price}</span>
             </p>
 
             <p className="flex text-font-grey text-base">

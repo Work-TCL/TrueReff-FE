@@ -18,6 +18,7 @@ import {
 import { translate } from "@/lib/utils/translate";
 import { useSession } from "next-auth/react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
+import BargainingView from "../barganing/view";
 
 interface ICategory {
   _id: string;
@@ -41,6 +42,33 @@ export interface IProduct {
   category?: string;
   vendorId?: string; 
 }
+
+export interface ICollaboration {
+  _id: string,
+  creatorId: string,
+  productId: string,
+  vendorId: string,
+  collaborationStatus: string,
+  utmLink: string | null,
+  discountType: string,
+  discountValue: number,
+  couponCode: string,
+  commissionPercentage: number,
+  expiresAt: string,
+  createdAt: string,
+  updatedAt: string
+}
+
+const statusText:{[key: string]: string} = {
+  REQUESTED: "Requested",
+  REJECTED: "Send Request",
+  PENDING: "Start Bargaining",
+  LIVE: "Live",
+  EXPIRED: "Expired",
+  "": "Send Request"
+}
+
+const buttonColor: {[key: string]: string} = {LIVE:"bg-[#098228] text-[#098228]",REQUESTED:"bg-[#FF9500] text-[#FF9500]",EXPIRED:"bg-[#FF3B30] text-[#FF3B30]",REJECTED:"bg-[#000] text-[#FFF]",PENDING:"bg-[#000] text-[#FFF]","":"bg-[#000] text-[#FFF]"}
 export default function ViewProductDetail() {
   const pathName = usePathname();
   const axios = useAxiosAuth();
@@ -55,8 +83,23 @@ export default function ViewProductDetail() {
   const brandName = searchParams.get("brandName");
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [isChatView, setIsChatView] = useState<boolean>(false);
   const [collaborationStatus, setCollaborationStatus] = useState<string>("");
-
+  const [collaborationData,setCollaborationData] = useState<ICollaboration>({
+    _id: "",
+    creatorId: "",
+    productId: "",
+    vendorId: "",
+    collaborationStatus: "",
+    utmLink: "",
+    discountType: "",
+    discountValue: 0,
+    couponCode: "",
+    commissionPercentage: 0,
+    expiresAt: "",
+    createdAt: "",
+    updatedAt: "string"
+  })
   const [productData, setProductData] = useState<IProduct>({
     productId: "",
     images: [],
@@ -142,6 +185,20 @@ export default function ViewProductDetail() {
     }
   };
 
+  const fetchProductCollaborationStatus = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`/product/collaboration/status/${productId}`);
+      const collaboration: any = response?.data?.data?.collaboration;
+      setCollaborationStatus(collaboration?.collaborationStatus??"")
+      setCollaborationData(collaboration)
+    } catch (error: any) {
+      toast.error(error?.message || "Status Fetch Failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Update useEffect to fetch the initial product list
   useEffect(() => {
     if (shopifyId) {
@@ -152,6 +209,7 @@ export default function ViewProductDetail() {
   useEffect(() => {
     if (productId) {
       fetchProductById();
+      fetchProductCollaborationStatus();
     }
   }, [productId]);
   const handleSendRequest = async () => {
@@ -164,7 +222,7 @@ export default function ViewProductDetail() {
         "vendorId": productData?.vendorId,
         "discountType": "PERCENTAGE", //"PERCENTAGE", "FIXED_AMOUNT"
         "discountValue": 10,
-        "couponCode": "ABCD",
+        "couponCode": "ABCDEFG",
         "expiresAt": "2025-12-31T23:59:59Z"
       }
       );
@@ -185,6 +243,14 @@ export default function ViewProductDetail() {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       setLoading(false)
+    }
+  }
+
+  const handleButtonClick = async (status: string) => {
+    if(status === "" || status === "REJECTED"){
+      handleSendRequest();
+    } else if(status === "PENDING"){
+      setIsChatView(true);
     }
   }
   return (
@@ -228,22 +294,22 @@ export default function ViewProductDetail() {
         <Button
         disabled={collaborationStatus === "REQUESTED"}
           variant="secondary"
-          className="text-white"
-          onClick={() => handleSendRequest()}
+          className={`${buttonColor[collaborationStatus]} text-white`}
+          onClick={() => handleButtonClick(collaborationStatus)}
         >
-          {collaborationStatus === "REQUESTED" ? "Requested" : "Start Bargaining"}
+          {statusText[collaborationStatus]}
         </Button>
       </div>
 
       {/* Card Section */}
-      <Card className="bg-white rounded-lg overflow-auto">
+      {isChatView ? <BargainingView productData={productData} collaborationData={collaborationData}/> : <Card className="bg-white rounded-lg overflow-auto">
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ProductImageGallery images={productData?.images} />
             <ProductInfo productData={productData} />
           </div>
         </CardContent>
-      </Card>
+      </Card>}
     </div>
   );
 }
