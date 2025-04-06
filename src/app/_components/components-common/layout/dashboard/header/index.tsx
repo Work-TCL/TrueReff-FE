@@ -219,7 +219,6 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               <div className="mt-3 m-3 space-y-3">
                 {notifications.map((notification, index) => (
                   <div key={index} className={`flex items-start hover:border hover:rounded-md gap-3 cursor-pointer ${!notification.read ? 'font-bold' : 'font-normal'}`} onClick={() => !notification.read && readNotifications(notification?._id)}>
-                    <User />
                     <div>
                       <p className="text-sm text-gray-800">{notification.message}</p>
                       <p className="text-xs text-gray-500">{formatTimeAgo(notification.createdAt)}</p>
@@ -231,7 +230,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
           </DrawerContent>
         </Drawer>
         <div className="w-8 h-8 bg-background rounded-full"></div>
-        <p className="text-gray-black">{session?.user?.name}</p>
+        <p className="text-gray-black">{session?.creator?.full_name||session?.vendor?.business_name}</p>
       </div>
       <Link href="?auth=logout" className="mx-4 block">
         <IoLogOutOutline className="text-2xl" />
