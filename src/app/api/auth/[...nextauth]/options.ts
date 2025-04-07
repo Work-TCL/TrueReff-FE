@@ -6,7 +6,7 @@ import {
   IPostLoginResponse,
   IPostVerifyEmailResponse,
 } from "@/lib/types-api/auth";
-import { loginAPI, verifyEmail } from "@/lib/web-api/auth";
+import { getUserApi, loginAPI, verifyEmail } from "@/lib/web-api/auth";
 
 interface AuthorizeCredentials {
   username: string;
@@ -65,7 +65,32 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger }) {
+      if (trigger === "update") {
+        // ✅ This is triggered from `update()` on client
+        try {
+          const updatedUser = await getUserApi();
+          const user = updatedUser?.data;
+
+          if (user) {
+            token._id = user?._id;
+            token.name = user?.name;
+            token.email = user?.email;
+            token.type = user?.type;
+            token.isActive = user?.isActive;
+            token.isEmailVerified = user?.isEmailVerified;
+            token.createdAt = user?.createdAt;
+            token.updatedAt = user?.updatedAt;
+            token.creator = user?.creator;
+            token.vendor = user?.vendor;
+          }
+
+          return token;
+        } catch (error) {
+          console.error("Failed to fetch updated user:", error);
+          return token; // return current token to avoid breaking session
+        }
+      }
       if (account && user) {
         if (account.provider === "google") {
           const res = await axiosInstance.post("/user/auth/social-login", {
@@ -75,17 +100,17 @@ const authOptions: NextAuthOptions = {
           token.user = res?.data?.data ?? {};
         } else {
           token._id = user?._id;
-        token.name = user?.name;
-        token.email = user?.email;
-        token.type = user?.type;
-        token.isActive = user?.isActive;
-        token.isEmailVerified = user?.isEmailVerified;
-        token.createdAt = user?.createdAt;
-        token.updatedAt = user?.updatedAt;
-        token.token = user?.token;
-        token.creator = user?.creator;
-        token.vendor = user?.vendor,        
-          token.accessToken = user?.token || null; // ✅ Ensure accessToken is set
+          token.name = user?.name;
+          token.email = user?.email;
+          token.type = user?.type;
+          token.isActive = user?.isActive;
+          token.isEmailVerified = user?.isEmailVerified;
+          token.createdAt = user?.createdAt;
+          token.updatedAt = user?.updatedAt;
+          token.token = user?.token;
+          token.creator = user?.creator;
+          token.vendor = user?.vendor,
+            token.accessToken = user?.token || null; // ✅ Ensure accessToken is set
         }
       }
 
@@ -97,17 +122,17 @@ const authOptions: NextAuthOptions = {
         session = null; // Ensure session clears on logout
       }
       // session.user = token;
-      session.user._id = token?._id; 
-        session.user.name = token?.name;
-        session.user.email = token?.email;
-        session.user.type = token?.type;
-        session.user.isActive = token?.isActive;
-        session.user.isEmailVerified = token?.isEmailVerified;
-        session.user.createdAt = token?.createdAt;
-        session.user.updatedAt = token?.updatedAt;
-        session.user.token = token?.token;
-        session.creator = token.creator;
-        session.vendor = token.vendor
+      session.user._id = token?._id;
+      session.user.name = token?.name;
+      session.user.email = token?.email;
+      session.user.type = token?.type;
+      session.user.isActive = token?.isActive;
+      session.user.isEmailVerified = token?.isEmailVerified;
+      session.user.createdAt = token?.createdAt;
+      session.user.updatedAt = token?.updatedAt;
+      session.user.token = token?.token;
+      session.creator = token.creator;
+      session.vendor = token.vendor
 
       session.accessToken = token.accessToken || ""; // ✅ Make sure accessToken is always there
       return session;

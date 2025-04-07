@@ -32,6 +32,7 @@ import {
   socialMediaAdded,
 } from "@/lib/web-api/auth";
 import Loader from "../../components-common/layout/loader";
+import { useSession } from "next-auth/react";
 
 let allTabs: {
   id: string;
@@ -68,6 +69,7 @@ const TABS_STATUS = {
 };
 export default function CreatorRegistrationPage() {
   const searchParams = useSearchParams();
+  const {update} = useSession();
   const router = useRouter();
   const email = searchParams.get("email") ?? "";
   const tab = searchParams.get("tab") ?? "0";
@@ -143,6 +145,7 @@ export default function CreatorRegistrationPage() {
         payload
       );
       if (response?.status === 201) {
+        await update();
         router.push(`?tab=2&creatorId=${response?.data?._id}`);
       }
     } catch (error) {
@@ -158,6 +161,7 @@ export default function CreatorRegistrationPage() {
     try {
       const response = await socialMediaAdded({});
       if (response?.status === 200) {
+        await update();
         router.push("/creator/dashboard");
       }
     } catch (error) {

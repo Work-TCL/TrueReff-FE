@@ -22,6 +22,7 @@ import {
   IPostVendorRegisterRequest,
   IPostVendorRegisterResponse,
 } from "@/lib/types-api/auth";
+import { useSession } from "next-auth/react";
 
 let allTabs: {
   id: string;
@@ -53,6 +54,7 @@ const TABS_STATUS = {
 
 export default function PreFormPage() {
   const router = useRouter();
+  const {update} = useSession();
   const [loading, setLoading] = useState(false);
   const axios = useAxiosAuth();
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
@@ -111,6 +113,7 @@ export default function PreFormPage() {
 
       if (response?.status === 201) {
         toast.success("Vendor successfully registered.");
+        await update();
         router.push("/vendor/dashboard");
       }
     } catch (error) {

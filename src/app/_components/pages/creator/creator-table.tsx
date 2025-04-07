@@ -54,7 +54,7 @@ const CreatorTable = ({data,filter}: ICreatorTableProps) => {
                 <TableBody>
                     {data.length > 0 ? (<>
                         {data.map((creator:any, index:number) => (
-                            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
+                            <TableRow key={index} className="bg-white">
                                 <CustomTableCell>
                                     <div className="flex items-center gap-2" onClick={()=> handleViewCreatorDetails(creator._id)}>
                                         <Avatar className="w-8 h-8">
@@ -71,7 +71,7 @@ const CreatorTable = ({data,filter}: ICreatorTableProps) => {
                                 <CustomTableCell>{creator.pastSales??''}</CustomTableCell>
                                 <CustomTableCell>{creator.tag}</CustomTableCell>
                                 <CustomTableCell>
-                                    <Button variant="outline" className="whitespace-nowrap  bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm">
+                                    <Button variant="outline" className="whitespace-nowrap  border border-[#FFEDF2] bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all py-3 px-[10px] text-sm">
                                         {translate("Collaborate_Now")}
                                     </Button>
                                 </CustomTableCell>

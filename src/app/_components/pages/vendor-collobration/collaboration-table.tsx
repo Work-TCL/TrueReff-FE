@@ -44,7 +44,7 @@ const CollaborationTable = ({
   data,
   filter,
   user,
-  refreshCentral = () => {},
+  refreshCentral = () => { },
 }: ICreatorTableProps) => {
   const router = useRouter();
   const axios = useAxiosAuth();
@@ -83,27 +83,24 @@ const CollaborationTable = ({
         <TableHeader className="bg-stroke">
           <TableRow>
             <CustomTableHead className="w-1/6">
-              {translate("Product_Image")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/4">
               {translate("Product_Name")}
             </CustomTableHead>
             <CustomTableHead className="w-1/6">
               {translate("Product_Category")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8">
+            <CustomTableHead className="w-1/6">
               {translate(`${user}_Name`)}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8">
+            {/* <CustomTableHead className="w-1/8">
               {translate("Units_Sold")}
             </CustomTableHead>
             <CustomTableHead className="w-1/6">
               {translate("Collab_Last_Date")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/4">
+            </CustomTableHead> */}
+            <CustomTableHead className="w-1/6 text-center">
               {translate("Status")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/4">
+            <CustomTableHead className="w-1/6 text-center">
               {translate("Action")}
             </CustomTableHead>
           </TableRow>
@@ -126,10 +123,8 @@ const CollaborationTable = ({
                           src={"/assets/collaboration/collaboration-image.svg"}
                         />
                       </Avatar>
+                      {collaboration?.productId?.title}
                     </div>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    {collaboration?.productId?.title}
                   </CustomTableCell>
                   <CustomTableCell>
                     {collaboration?.productId?.category.join(", ")}
@@ -138,60 +133,53 @@ const CollaborationTable = ({
                     {" "}
                     {collaboration?.creatorId?.user_name}
                   </CustomTableCell>
-                  <CustomTableCell>{""}</CustomTableCell>
-                  <CustomTableCell>{""}</CustomTableCell>
-                  <CustomTableCell className="w-fit">
+                  <CustomTableCell className="flex justify-center">
                     <div
-                      className={`rounded-[6px] bg-opacity-10 text-center p-2`}
+                      className={`${badgeColor[collaboration?.collaborationStatus]
+                        } bg-opacity-10 text-sm font-medium px-3 py-2 rounded-md dark:bg-blue-900 dark:text-blue-300`}
                     >
-                      <span
-                        className={`${
-                          badgeColor[collaboration?.collaborationStatus]
-                        } bg-opacity-10 text-xs font-medium me-2 px-2 py-2 rounded-xl dark:bg-blue-900 dark:text-blue-300`}
-                      >
-                        {capitalizeFirstLetter(
-                          collaboration?.collaborationStatus
-                        )}
-                      </span>
+                      {capitalizeFirstLetter(
+                        collaboration?.collaborationStatus
+                      )}
                     </div>
                   </CustomTableCell>
                   <CustomTableCell>
                     <div className={`flex gap-4 justify-center`}>
                       {collaboration?.collaborationStatus ===
                         COLLOBRATION_STATUS.REQUESTED && (
-                        <Check
-                          className="cursor-pointer"
-                          onClick={() =>
-                            handleStatusChangeRequest(
-                              "accepted",
-                              collaboration?._id
-                            )
-                          }
-                        />
-                      )}
+                          <Check
+                            className="cursor-pointer"
+                            onClick={() =>
+                              handleStatusChangeRequest(
+                                "accepted",
+                                collaboration?._id
+                              )
+                            }
+                          />
+                        )}
                       {collaboration?.collaborationStatus ===
                         COLLOBRATION_STATUS.REQUESTED && (
-                        <X
-                          className="cursor-pointer"
-                          onClick={() =>
-                            handleStatusChangeRequest(
-                              "rejected",
-                              collaboration?._id
-                            )
-                          }
-                        />
-                      )}
+                          <X
+                            className="cursor-pointer"
+                            onClick={() =>
+                              handleStatusChangeRequest(
+                                "rejected",
+                                collaboration?._id
+                              )
+                            }
+                          />
+                        )}
                       {collaboration?.collaborationStatus ===
                         COLLOBRATION_STATUS.PENDING && (
-                        <MessagesSquare
-                          className="cursor-pointer"
-                          onClick={() =>
-                            router.push(
-                              `/vendor/products/view/${collaboration?.productId?._id}?isChatView=true&creatorId=${collaboration?.creatorId?._id}`
-                            )
-                          }
-                        />
-                      )}
+                          <MessagesSquare
+                            className="cursor-pointer"
+                            onClick={() =>
+                              router.push(
+                                `/vendor/products/view/${collaboration?.productId?._id}?isChatView=true&creatorId=${collaboration?.creatorId?._id}`
+                              )
+                            }
+                          />
+                        )}
                     </div>
                   </CustomTableCell>
                 </TableRow>

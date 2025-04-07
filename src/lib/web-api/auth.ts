@@ -4,6 +4,7 @@ import {
   IGetCategoryParams,
   IGetCategoryResponse,
   IGetCreatorProgressResponse,
+  IGetUserResponse,
   IPostContactUsRequest,
   IPostContactUsResponse,
   IPostCreatorCheckExistRequest,
@@ -52,6 +53,17 @@ export const loginAPI = async (
   } catch (error) {
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While Login");
+  }
+};
+
+
+export const getUserApi = async (): Promise<IGetUserResponse> => {
+  try {
+    const response = await axiosInstance.get("/auth/user");
+    return response?.data;
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While getting user");
   }
 };
 

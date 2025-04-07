@@ -51,7 +51,7 @@ export default function LoginForm() {
           password: data?.password,
           redirect: false,
         });
-
+        console.log("response",response)
         if (response?.ok) {
           toast.success("Login Successfully.");
           if (
@@ -60,17 +60,11 @@ export default function LoginForm() {
           ) {
             res?.data?.type === USER_TYPE.Vendor
               ? router?.push("/vendor-register")
-              : router?.push(`/creator-registration?email=${data?.email}`);
+              : res?.data?.creator?.completed === 50 ? router.push('/creator/dashboard') :router?.push(`/creator-registration?email=${data?.email}`);
           } else {
             router?.push(`/${res?.data?.type}/dashboard`);
           }
           methods?.reset();
-          return true;
-        }
-        if (res?.status === 200) {
-          toast.success("Login Successfully.");
-          methods?.reset();
-          router.push("/products");
           return true;
         }
         throw "Internal server error";

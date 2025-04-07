@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -13,6 +12,7 @@ import { translate } from "@/lib/utils/translate";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
+import { useSession } from "next-auth/react";
 
 export default function EditVendorForm({
   profile,
@@ -21,7 +21,8 @@ export default function EditVendorForm({
   profile: any;
   onClose: any;
 }) {
-  const axios = useAxiosAuth();
+  const axios:any = useAxiosAuth();
+  const {update} = useSession();
   const [loading, setLoading] = useState(false);
   const schema = vendorProfileUpdateSchema;
   const methods = useForm<IVendorProfileUpdateSchema>({
@@ -38,6 +39,7 @@ export default function EditVendorForm({
   const onSubmit = async (data: IVendorProfileUpdateSchema) => {
     setLoading(true);
     try {
+      ("use server")
       const payload = data;
       //   delete payload.company_email
       //   delete payload.company_phone
@@ -48,6 +50,8 @@ export default function EditVendorForm({
       if (response?.status === 200) {
         toast.success(response?.message);
         methods?.reset();
+        await update();
+        console.log("response",data)
         onClose && onClose(true);
         return true;
       }

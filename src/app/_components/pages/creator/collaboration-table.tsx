@@ -98,9 +98,6 @@ const CollaborationTable = ({
         <TableHeader className="bg-stroke">
           <TableRow>
             <CustomTableHead className="w-1/6">
-              {translate("Product_Image")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/6">
               {translate("Product_Name")}
             </CustomTableHead>
             <CustomTableHead className="w-1/6">
@@ -111,10 +108,10 @@ const CollaborationTable = ({
             </CustomTableHead>
             {/* <CustomTableHead className="w-1/8">{translate("Units_Sold")}</CustomTableHead> */}
             {/* <CustomTableHead className="w-1/6">{translate("Collab_Last_Date")}</CustomTableHead> */}
-            <CustomTableHead className="w-1/6">
+            <CustomTableHead className="w-1/6 text-center">
               {translate("Status")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/6">
+            <CustomTableHead className="w-1/6 text-center">
               {translate("Action")}
             </CustomTableHead>
           </TableRow>
@@ -137,10 +134,8 @@ const CollaborationTable = ({
                           src={"/assets/collaboration/collaboration-image.svg"}
                         />
                       </Avatar>
+                      {collaboration?.productId?.title}
                     </div>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    {collaboration?.productId?.title}
                   </CustomTableCell>
                   <CustomTableCell>
                     {collaboration?.productId?.categories}
@@ -150,18 +145,18 @@ const CollaborationTable = ({
                   </CustomTableCell>
                   {/* <CustomTableCell>{""}</CustomTableCell> */}
                   {/* <CustomTableCell>{""}</CustomTableCell> */}
-                  <CustomTableCell className="w-[100px]">
-                    <span
+                  <CustomTableCell className="flex justify-center">
+                    <div
                       className={`${
                         badgeColor[collaboration?.collaborationStatus]
-                      } bg-opacity-10 text-xs font-medium me-2 px-2 py-2 rounded-xl dark:bg-blue-900 dark:text-blue-300`}
+                      } bg-opacity-10 text-sm font-medium px-3 py-2 rounded-md dark:bg-blue-900 dark:text-blue-300`}
                     >
                       {capitalizeFirstLetter(
                         collaboration?.collaborationStatus
                       )}
-                    </span>
+                    </div>
                   </CustomTableCell>
-                  <CustomTableCell>
+                  <CustomTableCell className="flex justify-center">
                     {
                       {
                         REQUESTED: (

@@ -26,36 +26,35 @@ export default function BrandProductTable({ data, brandName }: ICreatorTableProp
             <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
                 <TableHeader className="bg-stroke">
                     <TableRow >
-                        <CustomTableHead className="w-1/6">{translate("Product_Image")}</CustomTableHead>
-                        <CustomTableHead className="w-1/4">{translate("Product_Name")}</CustomTableHead>
-                        <CustomTableHead className="w-1/6">{translate("Brand_Name")}</CustomTableHead>
-                        <CustomTableHead className="w-1/8">{translate("Category")}</CustomTableHead>
-                        <CustomTableHead className="w-1/8">{translate("Tags")}</CustomTableHead>
+                        <CustomTableHead className="w-1/5">{translate("Product_Name")}</CustomTableHead>
+                        <CustomTableHead className="w-1/5">{translate("Brand_Name")}</CustomTableHead>
+                        <CustomTableHead className="w-1/5">{translate("Category")}</CustomTableHead>
+                        <CustomTableHead className="w-1/5">{translate("Tags")}</CustomTableHead>
                         {/*<CustomTableHead className="w-1/6">{translate("Total_Sale")}</CustomTableHead>
                         <CustomTableHead className="w-1/4">{translate("Brand_Rating")}</CustomTableHead> */}
-                        <CustomTableHead className="w-1/6">{translate("Action")}</CustomTableHead>
+                        <CustomTableHead className="w-1/5 text-center">{translate("Action")}</CustomTableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data?.length > 0 ? (<>
                         {data.map((brand: IBrand, index: number) => (
-                            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
+                            <TableRow key={index} className="bg-white">
                                 <CustomTableCell>
                                     <div className="flex items-center gap-2">
                                         <Avatar className="w-8 h-8">
                                             {brand.productId.media?.length > 0 && <AvatarImage src={brand.productId.media[0]} />}
                                             <AvatarImage src={"/assets/brand/brand-image.svg"} />
                                         </Avatar>
+                                        {brand.productId.title}
                                     </div>
                                 </CustomTableCell>
-                                <CustomTableCell>{brand.productId.title}</CustomTableCell>
                                 <CustomTableCell>{brandName}</CustomTableCell>
                                 <CustomTableCell>{brand.productId?.categories?.length ? brand.productId?.categories?.join(", "):""}</CustomTableCell>
                                 <CustomTableCell>{brand?.productId?.tags?.length ? brand.productId.tags.join(", "):""}</CustomTableCell>
                                 {/* <CustomTableCell>{brand.pastSales??''}</CustomTableCell> */}
                                 {/* <CustomTableCell>{brand.tag}</CustomTableCell> */}
-                                <CustomTableCell>
-                                    <Button className="whitespace-nowrap w-[150px] bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm" onClick={() => handleDetailView(brand.productId._id)}>
+                                <CustomTableCell className="flex justify-center">
+                                    <Button className="whitespace-nowrap w-[150px] border border-[#FFEDF2] bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all py-3 px-[10px] text-sm" onClick={() => handleDetailView(brand.productId._id)}>
                                         {translate("Collaborate_Now")}
                                     </Button>
                                 </CustomTableCell>
