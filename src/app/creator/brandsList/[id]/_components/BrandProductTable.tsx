@@ -37,21 +37,21 @@ export default function BrandProductTable({ data, brandName }: ICreatorTableProp
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.length > 0 ? (<>
+                    {data?.length > 0 ? (<>
                         {data.map((brand: IBrand, index: number) => (
                             <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
                                 <CustomTableCell>
                                     <div className="flex items-center gap-2">
                                         <Avatar className="w-8 h-8">
-                                            <AvatarImage src={brand.productId.media[0]} />
+                                            {brand.productId.media?.length > 0 && <AvatarImage src={brand.productId.media[0]} />}
                                             <AvatarImage src={"/assets/brand/brand-image.svg"} />
                                         </Avatar>
                                     </div>
                                 </CustomTableCell>
                                 <CustomTableCell>{brand.productId.title}</CustomTableCell>
                                 <CustomTableCell>{brandName}</CustomTableCell>
-                                <CustomTableCell>{brand.productId?.categories?.join(", ")}</CustomTableCell>
-                                <CustomTableCell>{brand.productId.tags.join(", ")}</CustomTableCell>
+                                <CustomTableCell>{brand.productId?.categories?.length ? brand.productId?.categories?.join(", "):""}</CustomTableCell>
+                                <CustomTableCell>{brand?.productId?.tags?.length ? brand.productId.tags.join(", "):""}</CustomTableCell>
                                 {/* <CustomTableCell>{brand.pastSales??''}</CustomTableCell> */}
                                 {/* <CustomTableCell>{brand.tag}</CustomTableCell> */}
                                 <CustomTableCell>

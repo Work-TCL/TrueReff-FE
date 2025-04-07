@@ -66,7 +66,7 @@ export interface ICollaboration {
 
 const statusText: { [key: string]: string } = {
   REQUESTED: "Requested",
-  REJECTED: "Send Request",
+  REJECTED: "Rejected",
   PENDING: "Start Bargaining",
   LIVE: "Live",
   EXPIRED: "Expired",
@@ -77,7 +77,7 @@ const buttonColor: { [key: string]: string } = {
   LIVE: "bg-[#098228] text-[#098228]",
   REQUESTED: "bg-[#FF9500] text-[#FF9500]",
   EXPIRED: "bg-[#FF3B30] text-[#FF3B30]",
-  REJECTED: "bg-[#000] text-[#FFF]",
+  REJECTED: "bg-[#FF3B30] text-[#FF3B30]",
   PENDING: "bg-[#000] text-[#FFF]",
   "": "bg-[#000] text-[#FFF]",
 };
@@ -92,12 +92,11 @@ export default function ViewProductDetail() {
   const channelType = params?.channelType;
   const searchParams = useSearchParams();
   const shopifyId = searchParams.get("id");
-  const isChatOpen = searchParams.get("isChatView") === "true";
+  const isChatView = searchParams.get("isChatView") === "true";
   const brandName = searchParams.get("brandName");
   const creatorId = searchParams.get("creatorId");
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [isChatView, setIsChatView] = useState<boolean>(false);
   const [isUTMView, setIsUTMView] = useState<boolean>(false);
   const [collaborationStatus, setCollaborationStatus] = useState<string>("");
   const [collaborationData, setCollaborationData] = useState<ICollaboration>({
@@ -223,11 +222,6 @@ export default function ViewProductDetail() {
       fetchShopifyProductById();
     }
   }, [shopifyId]);
-  useEffect(() => {
-    if (isChatOpen) {
-      setIsChatView(true);
-    }
-  }, [isChatOpen]);
 
   useEffect(() => {
     if (productId) {
@@ -284,9 +278,6 @@ export default function ViewProductDetail() {
       params.set("isChatView", "true");
 
       router.push(`?${params.toString()}`, { scroll: false });
-      if (status === "PENDING") {
-        setIsChatView(true);
-      }
     }
   };
   const handleProductView = () => {
@@ -296,6 +287,7 @@ export default function ViewProductDetail() {
       params.delete("isChatView");
 
       router.push(`?${params.toString()}`, { scroll: false });
+      setIsUTMView(false)
     }
   };
 
@@ -360,12 +352,12 @@ export default function ViewProductDetail() {
             )}
           </BreadcrumbList>
         </Breadcrumb>
-        {((creator?._id && !isChatView) ||
+        {((!isChatView) ||
           (collaborationStatus === "PENDING" &&
             !creator?._id &&
             !isChatView)) && (
           <Button
-            disabled={collaborationStatus === "REQUESTED"}
+            disabled={collaborationStatus === "REQUESTED" || collaborationStatus === "REJECTED"}
             variant="secondary"
             className={`${buttonColor[collaborationStatus]} text-white`}
             onClick={() => handleButtonClick(collaborationStatus)}

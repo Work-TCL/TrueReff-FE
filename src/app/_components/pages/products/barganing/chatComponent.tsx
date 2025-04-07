@@ -78,7 +78,6 @@ export default function ChatComponent({
       ? session?.creator?.full_name
       : session?.vendor?.business_name;
   };
-  console.log("---messages----", messages);
 
   return (
     <Card className="bg-white flex-1 rounded-lg p-4">
@@ -95,7 +94,7 @@ export default function ChatComponent({
         </div>
       </div>
       <div className="h-px w-full bg-stroke mx-2"></div>{" "}
-      <CardContent className="space-y-3 h-[85%] max-h-[850px] overflow-auto">
+      <CardContent className="space-y-3 h-[83%] max-h-[830px] overflow-auto">
         {isLoading && <Loading />}
         {!isLoading && message?.length === 0 && (
           <p className="opacity-50 text-center">Start your chat now.</p>
@@ -117,14 +116,14 @@ export default function ChatComponent({
                 }`}
               >
                 <div className="flex items-end">
-                  {owner && (
-                    <Avatar>
-                      <AvatarImage
-                        src="/assets/product/diamondRing.webp"
-                        className="rounded-full border border-border size-8"
-                      />
-                    </Avatar>
-                  )}
+                  {!owner && (
+                  <Avatar>
+                    <AvatarImage
+                      src="/assets/product/diamondRing.webp"
+                      className="rounded-full border border-border size-8 "
+                    />
+                  </Avatar>
+                )}
                   <div
                     className={`flex flex-col ${
                       owner ? "items-start" : "items-end"
@@ -142,14 +141,14 @@ export default function ChatComponent({
                     </p>
                   </div>
                 </div>
-                {!owner && (
-                  <Avatar>
-                    <AvatarImage
-                      src="/assets/product/diamondRing.webp"
-                      className="rounded-full border border-border size-8 "
-                    />
-                  </Avatar>
-                )}
+                {owner && (
+                    <Avatar>
+                      <AvatarImage
+                        src="/assets/product/diamondRing.webp"
+                        className="rounded-full border border-border size-8"
+                      />
+                    </Avatar>
+                  )}
               </div>
             );
           })}

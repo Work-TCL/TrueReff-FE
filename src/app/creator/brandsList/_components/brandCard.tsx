@@ -30,7 +30,7 @@ export default function BrandCard({
     router.push(`/creator/brandsList/${brandId}?brandName=${brandName}`)
   }
   return (
-    <Card className="xl:w-[300px] w-full h-auto xl:max-h-[304px] border border-stroke rounded-xl shadow-md p-4 flex flex-col items-center text-center" onClick={()=>handleBrand(id,name)}>
+    <Card className="xl:w-[300px] cursor-pointer w-full h-auto xl:max-h-[304px] border border-stroke rounded-xl shadow-md p-4 flex flex-col items-center text-center" onClick={()=>handleBrand(id,name)}>
       <CardContent className="w-full p-0 flex flex-col items-center gap-4">
         <div className="bg-background rounded-lg xl:max-w-[258px] max-w-full min-h-[96px] w-full h-full flex items-center justify-center">
           {/* <img src={logo} alt={name} className="max-h-12" /> */}

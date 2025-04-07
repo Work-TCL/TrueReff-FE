@@ -28,7 +28,7 @@ export default function BargainingView({
 }) {
   return (
     <div className="flex h-full gap-4">
-      <Card className="bg-white rounded-lg overflow-auto w-[60%]">
+      <Card className="bg-white rounded-lg overflow-auto w-[40%]">
         <CardContent>
           <BargainingDetailView
             productData={productData}

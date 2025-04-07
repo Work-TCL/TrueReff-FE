@@ -70,7 +70,7 @@ export default function CreatorList() {
           const brandsArray = brandData.data || [];
           const brandsCount = brandData.count || 0;
 
-          if (Array.isArray(brandsArray)) {
+          if (Array.isArray(brandsArray) && brandsArray?.length>0) {
             let result = brandsArray.map(ele => {
               let productId = ele?.productId
               let category = (productId?.category && productId?.category?.length > 0) ? productId?.category.filter((cat: ICategory) => cat.parentId === null).map((cat: ICategory) => cat?.name):[]
