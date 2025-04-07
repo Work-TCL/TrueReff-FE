@@ -11,24 +11,6 @@ export default function BargainingDetailView({
   openUtmForm: () => void;
   isVendor: boolean;
 }) {
-  const images = [
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-    "/assets/product/diamondRing.webp",
-  ];
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-5">
@@ -102,38 +84,38 @@ export default function BargainingDetailView({
         </div>
         <div className="flex h-[45%] flex-col w-full items-start gap-3">
           <div className="flex w-full flex-1 flex-col gap-3">
-            <p className="flex text-font-grey text-base">
+            <p className="flex text-font-grey md:text-base text-sm">
               <span className="w-[53%]">Base Price:</span>{" "}
-              <span className="text-lg font-normal text-text">
+              <span className="md:text-lg text-base font-normal text-text">
                 ${productData?.price}
               </span>
             </p>
 
-            <p className="flex text-font-grey text-base">
+            <p className="flex text-font-grey md:text-base text-sm">
               <span className="w-[53%]"> Discount Type: </span>{" "}
-              <span className="text-lg font-normal text-text">No discount</span>
+              <span className="md:text-lg text-base font-normal text-text">No discount</span>
             </p>
-            <p className="flex text-font-grey text-base">
+            <p className="flex text-font-grey md:text-base text-sm">
               <span className="w-[53%]"> Discount Type: </span>{" "}
-              <span className="text-lg font-normal text-text">0</span>
+              <span className="md:text-lg text-base font-normal text-text">0</span>
             </p>
-            <p className="flex text-font-grey text-base">
+            <p className="flex text-font-grey md:text-base text-sm">
               <span className="w-[53%]"> Tax Class: </span>{" "}
-              <span className="text-lg font-normal text-text">Tax Free</span>
+              <span className="md:text-lg text-base font-normal text-text">Tax Free</span>
             </p>
-            <p className="flex text-font-grey text-base">
+            <p className="flex text-font-grey md:text-base text-sm">
               <span className="w-[53%]"> VAT Amount: </span>{" "}
-              <span className="text-lg font-normal text-text">12%</span>
+              <span className="md:text-lg text-base font-normal text-text">12%</span>
             </p>
           </div>
           <div className="flex w-full flex-1 flex-col gap-3">
-            <p className="flex text-font-grey text-base">
+            <p className="flex text-font-grey md:text-base text-sm">
               <span className="w-[53%]"> Variation: </span>{" "}
-              <span className="text-lg font-normal text-text">Rose Gold</span>
+              <span className="md:text-lg text-base font-normal text-text">Rose Gold</span>
             </p>
-            <p className="flex text-font-grey text-base">
+            <p className="flex text-font-grey md:text-base text-sm">
               <span className="w-[53%]"> Variation Type: </span>{" "}
-              <span className="text-lg font-normal text-text">Color</span>
+              <span className="md:text-lg text-base font-normal text-text">Color</span>
             </p>
           </div>
           {isVendor && (

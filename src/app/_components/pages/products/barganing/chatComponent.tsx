@@ -1,16 +1,14 @@
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
-import { Mic, SendHorizontal } from "lucide-react";
+import { SendHorizontal } from "lucide-react";
 import socketService from "@/lib/services/socket-service";
 import { formatTo12Hour } from "@/lib/utils/commonUtils";
 import { getCollobrationConversation } from "@/lib/web-api/collobration";
 import { ICollaboration, IProduct } from "../viewProduct/viewDetailProduct";
 import { useSession } from "next-auth/react";
 import Loading from "@/app/creator/loading";
-import { useSearchParams } from "next/navigation";
 
 export default function ChatComponent({
   productData,
@@ -80,7 +78,7 @@ export default function ChatComponent({
   };
 
   return (
-    <Card className="bg-white flex-1 rounded-lg p-4">
+    <Card className="bg-white flex-1 rounded-lg p-4 overflow-hidden">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
         <Avatar>
           <AvatarImage
@@ -89,14 +87,16 @@ export default function ChatComponent({
           />
         </Avatar>
         <div>
-          <p className="font-medium text-text text-lg">{getUserName()}</p>
-          <p className="text-[#13AD3A] text-sm">Online</p>
+          <p className="font-medium text-text md:text-lg text-base">
+            {getUserName()}
+          </p>
+          <p className="text-[#13AD3A] md:text-sm text-xs">Online</p>
         </div>
       </div>
       <div className="h-px w-full bg-stroke mx-2"></div>{" "}
-      <CardContent className="space-y-3 h-[83%] max-h-[830px] overflow-auto">
+      <CardContent className="flex flex-col-reverse h-[90%] max-h-[900px] overflow-y-auto gap-3">
         {isLoading && <Loading />}
-        {!isLoading && message?.length === 0 && (
+        {!isLoading && message?.length < 0 && (
           <p className="opacity-50 text-center">Start your chat now.</p>
         )}
         {!isLoading &&
@@ -115,40 +115,42 @@ export default function ChatComponent({
                   !owner ? "justify-start" : "justify-end"
                 }`}
               >
-                <div className="flex items-end">
+                <div className="flex items-end overflow-hidden">
                   {!owner && (
-                  <Avatar>
-                    <AvatarImage
-                      src="/assets/product/diamondRing.webp"
-                      className="rounded-full border border-border size-8 "
-                    />
-                  </Avatar>
-                )}
+                    <Avatar>
+                      <AvatarImage
+                        src="/assets/product/diamondRing.webp"
+                        className="rounded-full border border-border md:size-8 size-6 "
+                      />
+                    </Avatar>
+                  )}
                   <div
-                    className={`flex flex-col ${
-                      owner ? "items-start" : "items-end"
+                    className={`flex flex-col overflow-hidden  ${
+                      !owner ? "items-start" : "items-end"
                     } `}
                   >
                     <div
-                      className={`p-3 rounded-lg ${
+                      className={`p-3 rounded-lg w-full ${
                         owner ? "bg-pink-100" : "bg-gray-100"
                       }`}
                     >
-                      <p className="text-base">{text}</p>
+                      <p className="md:text-base text-sm break-words whitespace-pre-wrap">
+                        {text}
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-500 text-right">
+                    <p className="md:text-xs text-[10px] text-gray-500 text-right">
                       {messageSentTime}
                     </p>
                   </div>
                 </div>
                 {owner && (
-                    <Avatar>
-                      <AvatarImage
-                        src="/assets/product/diamondRing.webp"
-                        className="rounded-full border border-border size-8"
-                      />
-                    </Avatar>
-                  )}
+                  <Avatar>
+                    <AvatarImage
+                      src="/assets/product/diamondRing.webp"
+                      className="rounded-full border border-border md:size-8 size-6"
+                    />
+                  </Avatar>
+                )}
               </div>
             );
           })}
@@ -166,7 +168,7 @@ export default function ChatComponent({
           }}
         />
         <SendHorizontal
-          className="cursor-pointer"
+          className="cursor-pointer text-text font-normal"
           onClick={() => sendMessage()}
         />
       </div>

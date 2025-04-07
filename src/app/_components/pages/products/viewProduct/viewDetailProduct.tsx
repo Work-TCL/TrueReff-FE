@@ -287,7 +287,7 @@ export default function ViewProductDetail() {
       params.delete("isChatView");
 
       router.push(`?${params.toString()}`, { scroll: false });
-      setIsUTMView(false)
+      setIsUTMView(false);
     }
   };
 
@@ -297,18 +297,21 @@ export default function ViewProductDetail() {
       {/* Breadcrumb and Button */}
       <div className="flex md:flex-row flex-col items-start justify-between md:items-center gap-2">
         <Breadcrumb>
-          <BreadcrumbList>
+          <BreadcrumbList
+            className="md:text-sm text-xs
+"
+          >
             {(channelType || brandName) && (
               <>
                 <BreadcrumbItem>
                   <BreadcrumbPage
-                    className="cursor-pointer hover:text-[grey]"
+                    className="cursor-pointer hover:text-[grey] "
                     onClick={() => router.push("/creator/brandsList/")}
                   >
                     {channelType || brandName}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator />
+                <BreadcrumbSeparator className="md:size-6 size-4" />
               </>
             )}
             <BreadcrumbItem>
@@ -329,7 +332,7 @@ export default function ViewProductDetail() {
                 {translate("Product_List")}
               </BreadcrumbPage>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
+            <BreadcrumbSeparator className="md:size-6 size-4" />
             <BreadcrumbItem>
               <BreadcrumbPage
                 className={`cursor-pointer ${
@@ -342,7 +345,7 @@ export default function ViewProductDetail() {
             </BreadcrumbItem>
             {isChatView ? (
               <>
-                <BreadcrumbSeparator />
+                <BreadcrumbSeparator className="md:size-6 size-4" />
                 <BreadcrumbItem>
                   <BreadcrumbPage>{"Bargaining"}</BreadcrumbPage>
                 </BreadcrumbItem>
@@ -352,12 +355,15 @@ export default function ViewProductDetail() {
             )}
           </BreadcrumbList>
         </Breadcrumb>
-        {((!isChatView) ||
+        {(!isChatView ||
           (collaborationStatus === "PENDING" &&
             !creator?._id &&
             !isChatView)) && (
           <Button
-            disabled={collaborationStatus === "REQUESTED" || collaborationStatus === "REJECTED"}
+            disabled={
+              collaborationStatus === "REQUESTED" ||
+              collaborationStatus === "REJECTED"
+            }
             variant="secondary"
             className={`${buttonColor[collaborationStatus]} text-white`}
             onClick={() => handleButtonClick(collaborationStatus)}
