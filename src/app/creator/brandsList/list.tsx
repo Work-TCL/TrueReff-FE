@@ -83,7 +83,7 @@ export default function BrandList() {
 
   return (
     <div
-      className={`flex flex-col p-6 gap-6 ${
+      className={`flex flex-col md:p-6 p-4   md:gap-6 gap-4 ${
         Boolean(brands.length === 0) ? "h-full" : ""
       }`}
     >

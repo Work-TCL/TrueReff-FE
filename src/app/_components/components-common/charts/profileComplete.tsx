@@ -9,7 +9,7 @@ const ProfileCompletionCard = ({ progress = 80 }: IProfileCompletionCard) => {
   return (
     <div className="flex gap-6 justify-between p-6 w-full box-border h-fit rounded-[20px] bg-custom-gradient">
       <div className="flex md:gap-6 flex-col md:flex-row">
-        <div className="relative w-28 h-28">
+        <div className="relative w-20 md:w-28 md:h-28 h-20">
           <svg
             className="absolute top-0 left-0 w-full h-full"
             viewBox="0 0 100 100"
@@ -43,15 +43,18 @@ const ProfileCompletionCard = ({ progress = 80 }: IProfileCompletionCard) => {
               </linearGradient>
             </defs>
           </svg>
-          <span className="absolute inset-0 flex items-center justify-center font-bold text-2xl text-gray-900">
+          <span
+            className="absolute inset-0 flex items-center justify-center font-bold md:text-2xl text-lg
+ text-gray-900"
+          >
             {progress}%
           </span>
         </div>
         <div className="flex-1">
-          <h3 className="text-[32px] font-semibold text-gray-black pb-1">
+          <h3 className="md:text-[32px] text-lg font-semibold text-gray-black pb-1">
             Complete your profile
           </h3>
-          <p className="text-xl text-gray-black max-w-[80%]">
+          <p className="md:text-xl text-sm text-gray-black max-w-[80%]">
             Complete your profile to unlock earnings, brand deals, and full
             platform access.
           </p>

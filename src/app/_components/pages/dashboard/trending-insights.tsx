@@ -22,7 +22,7 @@ const TrendingInsights = ({
 }: TrendingInsightsProps) => {
   return (
     <div className="w-full p-4 rounded-20 bg-white ">
-      <h2 className=" text-text text-20 font-semibold ">
+      <h2 className=" text-text  font-semibold ">
         {header ? header : translate("Trending_Insights_Discoverability")}
       </h2>
       <div className=" relative h-[240px]">

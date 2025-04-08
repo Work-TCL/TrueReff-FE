@@ -7,7 +7,7 @@ import { translate } from "@/lib/utils/translate";
 import PerformanceSummaryChart from "../../components-common/charts/PerformanceChart";
 
 export default function CreatorAnalysis() {
-    return <div className="flex flex-col gap-4 p-6 w-full">
+    return <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-4 col-span-3">
             <StatsCard title={translate("Active_Collaborations")} value={120} growth={5} bgColor="bg-white bg-[#f2f1fd]" borderColor={"border-[#7877EE]"} />
             <StatsCard title={translate("Total_Products")} value={200} growth={5} borderColor="border-[#EB815B]" bgColor="bg-[#fdf2ef]" />

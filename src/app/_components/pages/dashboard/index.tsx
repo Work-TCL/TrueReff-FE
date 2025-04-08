@@ -19,7 +19,7 @@ import PerformanceSummaryChartDashBoard from "../../components-common/charts/per
 import TrendingInsightsDiscoverability from "../../components-common/charts/trendingInsightsDiscoverability";
 import { getCreatorProgress } from "@/lib/web-api/auth";
 
-export default function Dashboard() {
+export default function   Dashboard() {
   const lg = useMediaQuery("(min-width: 1024px)");
   const [creatorDetails,setCreatorDetails] = useState<any>({ completed: 0 })
   const data = [
@@ -38,9 +38,9 @@ export default function Dashboard() {
       getCreator();
     },[])
   return (
-    <div className="flex flex-col gap-4 p-6 w-full">
-      <div className="flex flex-col lg:flex-row w-full gap-6">
-        <div className="flex flex-col gap-6 w-full lg:max-w-[774px]">
+    <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
+      <div className="flex flex-col lg:flex-row w-full md:gap-6 gap-4">
+        <div className="flex flex-col md:gap-6 gap-4 w-full lg:max-w-[774px]">
           {!lg && <ProfileCompletionCard progress={creatorDetails?.completed}/>}
           <div className="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-3 gap-4 rounded-[20px] w-full bg-white p-4">
             <StatsCard
@@ -80,7 +80,7 @@ export default function Dashboard() {
         </div>
       </div>
       <div className="flex xl:flex-row flex-col gap-4 w-full">
-        <div className=" bg-white p-4 rounded-lg shadow w-full">
+        <div className=" bg-white rounded-lg shadow w-full">
           <RecentActivities />
         </div>
         <div className="flex gap-4 sm:flex-row flex-col w-full">

@@ -24,12 +24,16 @@ export const StatsCard = ({
           <h3 className=" text-secondary  md:text-[14px] lg:text-[14px]">
             {title}
           </h3>
-          <div className="text-success bg-success-light text-sm px-2 py-1 rounded-sm">
+          <div className="text-success bg-success-light md:text-sm text-xs px-2 py-1 rounded-sm">
             +{growth}%
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-3xl font-medium text-text">{value}</span>
+          <span
+            className="md:text-3xl text-lg font-medium text-text"
+          >
+            {value}
+          </span>
           <div className="w-20 h-8">
             <StatesCardGraph />
           </div>
@@ -70,7 +74,13 @@ export default function StatesCards() {
         borderColor="border-[#9773C8]"
         bgColor="bg-[#f5f1fa]"
       />
-      <StatsCard title={translate("New_Brands")} value={200} growth={5} borderColor="border-[#C861A0]" bgColor="bg-[#faeff6]" />
+      <StatsCard
+        title={translate("New_Brands")}
+        value={200}
+        growth={5}
+        borderColor="border-[#C861A0]"
+        bgColor="bg-[#faeff6]"
+      />
     </div>
   );
 }

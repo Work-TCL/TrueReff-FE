@@ -160,16 +160,17 @@ export default function CollaborationList() {
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
       <div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="text-[20px] text-500">
+        <div className="md:text-[20px] text-base text-500">
           <Input
             value={search}
             onChange={handleSearch}
             placeholder={translate("Search_product")}
+            className="md:h-10 h-8"
           />
         </div>
         <div className="flex items-center gap-[10px]">
-          <PiListChecksLight size={35} />
-          <IoGridOutline size={30} />
+          <PiListChecksLight className="md:size-[30px] size-6" />
+          <IoGridOutline className="md:size-[30px] size-6" />
           {/* <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
                         <FaSlidersH /> {translate("Filters")}
                     </Button> */}
