@@ -7,6 +7,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { Suspense } from "react";
 import Loader from "./_components/components-common/layout/loader";
+import ServiceWorkerRegister from "./_components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,6 +27,7 @@ export default async function RootLayout({
           <Suspense fallback={<Loader />}>
             <NextAuthProvider>
               <NextIntlClientProvider messages={messages}>
+                <ServiceWorkerRegister />
                 {children}
                 <Dialogs />
                 <Toaster position="top-right" />
