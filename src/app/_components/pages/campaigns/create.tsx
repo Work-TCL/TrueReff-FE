@@ -32,16 +32,19 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
   return (
     <div className="flex flex-col gap-5 h-full px-4 py-3">
       <div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="text-[20px] text-500">
+        <div className="md:text-[20px] text-base text-500">
           {translate("Campaign_Details_Form")}
         </div>
         <div className="flex gap-[10px]">
-          <Button variant="outline" className="w-[140px] rounded-[12px]">
+          <Button
+            variant="outline"
+            className="md:w-[140px] rounded-[12px] md:h-10 h-8 md:text-[20px] text-xs "
+          >
             {translate("Cancel")}
           </Button>
           <Button
             variant="secondary"
-            className="text-white w-[140px] rounded-[12px]"
+            className="text-white md:w-[140px] rounded-[12px] md:h-10 h-8 md:text-[20px] text-xs"
           >
             {translate("Start_Campaign")}
           </Button>
@@ -58,6 +61,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                 {translate("Campaign_Name")}
               </label>
               <Input
+                className="placeholder:md:text-sm text-xs"
                 name="campaignName"
                 placeholder={`${translate("Type_campaign_name_here...")}`}
               />
@@ -67,6 +71,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                 {translate("Description")}
               </label>
               <Textarea
+                className="placeholder:md:text-sm text-xs"
                 placeholder={translate("Type_campaign_description_here...")}
                 rows={5}
               />
@@ -96,7 +101,10 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                 <label className="text-[12px] text-[#7E7E80]">
                   {translate("Campaign_End_Date")}
                 </label>
-                <Input placeholder={translate("Select_date")} />
+                <Input
+                  placeholder={translate("Select_date")}
+                  className="placeholder:md:text-sm text-xs"
+                />
               </div>
             </div>
           </div>
@@ -130,6 +138,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                   {translate("Product_SKUs_on_ Brand_Website")}
                 </label>
                 <Input
+                  className="placeholder:md:text-sm text-xs"
                   placeholder={translate("Type_product_SKU_on_brand_website")}
                 />
               </div>
@@ -138,7 +147,10 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
               <label className="text-[12px] text-[#7E7E80]">
                 {translate("Product_Links")}
               </label>
-              <Input placeholder={translate("Add_product_link...")} />
+              <Input
+                className="placeholder:md:text-sm text-xs"
+                placeholder={translate("Add_product_link...")}
+              />
             </div>
             <div className="flex">
               <Button variant="outline" onClick={handleAddVariant}>
@@ -153,19 +165,28 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                 <label className="text-[12px] text-[#7E7E80]">
                   {translate("Instagram")}
                 </label>
-                <Input placeholder={translate("Add_link...")} />
+                <Input
+                  placeholder={translate("Add_link...")}
+                  className="placeholder:md:text-sm text-xs"
+                />
               </div>
               <div className="flex flex-col w-full md:w-1/3 gap-1">
                 <label className="text-[12px] text-[#7E7E80]">
                   {translate("You_tube")}
                 </label>
-                <Input placeholder={translate("Add_link...")} />
+                <Input
+                  placeholder={translate("Add_link...")}
+                  className="placeholder:md:text-sm text-xs"
+                />
               </div>
               <div className="flex flex-col w-full md:w-1/3 gap-1">
                 <label className="text-[12px] text-[#7E7E80]">
                   {translate("Facebook")}
                 </label>
-                <Input placeholder={translate("Add_link...")} />
+                <Input
+                  placeholder={translate("Add_link...")}
+                  className="placeholder:md:text-sm text-xs"
+                />
               </div>
             </div>
           </div>
@@ -179,7 +200,10 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                   <label className="text-[12px] text-[#7E7E80]">
                     {translate("Base_Price")}
                   </label>
-                  <Input placeholder={translate("Type_base_price_here...")} />
+                  <Input
+                    placeholder={translate("Type_base_price_here...")}
+                    className="placeholder:md:text-sm text-xs"
+                  />
                 </div>
                 <div className="flex flex-col w-full md:w-1/2 gap-1">
                   <label className="text-[12px] text-[#7E7E80]">
@@ -187,6 +211,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                   </label>
                   <Input
                     placeholder={translate("Type_discount_percentage...")}
+                    className="placeholder:md:text-sm text-xs"
                   />
                 </div>
               </div>
@@ -197,13 +222,19 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                   <label className="text-[12px] text-[#7E7E80]">
                     {translate("Min._price_range")}
                   </label>
-                  <Input placeholder={translate("Type_min_price...")} />
+                  <Input
+                    placeholder={translate("Type_min_price...")}
+                    className="placeholder:md:text-sm text-xs"
+                  />
                 </div>
                 <div className="flex flex-col w-full md:w-1/2 gap-1">
                   <label className="text-[12px] text-[#7E7E80]">
                     {translate("Max._price_range")}
                   </label>
-                  <Input placeholder={translate("Type_max_price...")} />
+                  <Input
+                    placeholder={translate("Type_max_price...")}
+                    className="placeholder:md:text-sm text-xs"
+                  />
                 </div>
               </div>
             </div>
@@ -213,13 +244,19 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                   <label className="text-[12px] text-[#7E7E80]">
                     {translate("Negotiated_Price")}
                   </label>
-                  <Input placeholder={translate("Type_negotiated_Price...")} />
+                  <Input
+                    placeholder={translate("Type_negotiated_Price...")}
+                    className="placeholder:md:text-sm text-xs"
+                  />
                 </div>
                 <div className="flex flex-col w-full md:w-1/2 gap-1">
                   <label className="text-[12px] text-[#7E7E80]">
                     {translate("Max._price_range")}
                   </label>
-                  <Input placeholder={translate("Type_max_price...")} />
+                  <Input
+                    placeholder={translate("Type_max_price...")}
+                    className="placeholder:md:text-sm text-xs"
+                  />
                 </div>
               </div>
             </div>

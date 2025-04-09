@@ -159,7 +159,7 @@ export default function CollaborationList() {
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
-      <div className="flex justify-between items-center flex-wrap gap-2">
+      <div className="flex justify-between items-center gap-2">
         <div className="md:text-[20px] text-base text-500">
           <Input
             value={search}

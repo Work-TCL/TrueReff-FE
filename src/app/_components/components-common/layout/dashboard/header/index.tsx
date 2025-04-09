@@ -200,7 +200,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
 
             {/* Notification Count */}
             {unreadNotifications !== 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white md:text-[10px] text-[12px] font-bold px-1 py-0 rounded-full">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1 py-0 rounded-full">
                 {unreadNotifications}
               </span>
             )}
