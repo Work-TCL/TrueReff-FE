@@ -5,7 +5,6 @@ export type MiddlewareFactory = (
   next: (request: NextRequest) => Promise<NextResponse> | NextResponse
 ) => (request: NextRequest) => Promise<NextResponse> | NextResponse;
 
-// Function to stack middlewares
 export function stackMiddlewares(
   functions: MiddlewareFactory[] = [],
   index = 0
@@ -25,7 +24,6 @@ const match = (matcher: string[], request: NextRequest) =>
 // Define public (non-authenticated) routes
 const PUBLIC_ROUTES = ["/aboutus", "/contact", "/help","/login","/register","/email-verify","/reset-password","/forgot-password","/send-otp"];
 
-// Middleware for authentication handling
 const withAuthMiddleware: MiddlewareFactory = (next) => {
   return async (request: NextRequest) => {
     const { pathname } = request.nextUrl;
@@ -65,14 +63,12 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
   };
 };
 
-// Combine all middlewares using stack
 const middlewares = [withAuthMiddleware];
 
 export default stackMiddlewares(middlewares);
 
 export const config = {
-  matcher: [
-    "/((?!_next|api|public|favicon.ico|robots.txt|sitemap.xml|images|static|assets).*)",
-  ],
-};
-
+    matcher: [
+      '/((?!_next/static|_next/image|favicon.ico|manifest.json|service-worker.js|icons|assets|web-app-manifest-192x192.png|web-app-manifest-512x512.png|api).*)',
+    ],
+  };

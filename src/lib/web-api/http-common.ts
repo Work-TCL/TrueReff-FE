@@ -61,10 +61,10 @@ axiosInstance.interceptors.response.use(
       if (error.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
         try {
-          signOut({
-            callbackUrl: "/login",
-            redirect: true,
-          });
+          // signOut({
+          //   callbackUrl: "/login",
+          //   redirect: true,
+          // });
           // Logic to handle token refresh or redirect to login
         } catch (e) {
           return Promise.reject(e);

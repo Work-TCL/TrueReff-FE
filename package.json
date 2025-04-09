@@ -27,6 +27,7 @@
     "next": "15.1.4",
     "next-auth": "^4.24.11",
     "next-intl": "^3.26.3",
+    "next-pwa": "^5.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
