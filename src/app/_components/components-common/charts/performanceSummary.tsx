@@ -51,26 +51,26 @@ export default function PerformanceSummaryChartDashBoard() {
     <div className="w-full h-full bg-white p-6 rounded-2xl shadow-md">
       {/* Header Section */}
       <div className="flex md:flex-row flex-col justify-between items-center mb-4">
-        <p className="text-lg font-semibold whitespace-nowrap">
+        <p className="md:text-xl text-base font-semibold whitespace-nowrap">
           {translate("Performance_Summary")}
         </p>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
             <span className="w-3 h-3 shrink-0 bg-[#7877EE] rounded-full"></span>
-            <span className="text-gray-600 text-sm whitespace-nowrap    ">
+            <span className="text-gray-600 md:text-sm text-xs whitespace-nowrap">
               {translate("Earnings")}
             </span>
           </div>
           <div className="flex items-center gap-1">
             <span className="w-3 h-3 shrink-0 bg-black rounded-full"></span>
-            <span className="text-gray-600 text-sm">
+            <span className="text-gray-600 md:text-sm text-xs">
               {translate("Followers")}
             </span>
           </div>
           {/* Dropdown for Time Range */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="text-gray-700 bg-gray-100 px-3 py-0 text-sm rounded-md">
+              <Button className="text-gray-700 bg-gray-100 px-3 py-0 md:text-sm text-xs rounded-md md:h-10 h-7">
                 {translate("Yearly")} ▼
               </Button>
             </DropdownMenuTrigger>
@@ -96,7 +96,7 @@ export default function PerformanceSummaryChartDashBoard() {
 
           <XAxis
             dataKey="month"
-            tick={{ fill: "#6B7280", fontSize: 12 }}
+            tick={{ fill: "#6B7280", fontSize: 12  }}
             stroke="#E5E7EB"
           />
           <YAxis tick={{ fill: "#6B7280", fontSize: 12 }} stroke="#E5E7EB" />

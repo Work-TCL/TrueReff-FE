@@ -36,10 +36,12 @@ export default function RecentActivities() {
   return (
     <div className="p-4 bg-white rounded-[20px]">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl text-text font-semibold">
+        <h2 className="md:text-xl text-base text-text font-semibold">
+          {" "}
           {translate("Recent_Activities")}
         </h2>
-        <Button variant="link" className="text-primary">
+        <Button variant="link" className="text-primary md:h-10 h-7">
+          {" "}
           {translate("View_all")}
         </Button>
       </div>

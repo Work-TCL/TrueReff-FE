@@ -106,53 +106,56 @@ export default function CollaborationList() {
     return { vendor: "Creator", creator: "Brand" }[user?.type] ?? "";
   };
   // Get Creator list
-  const fetchCollaboration = useCallback(async (page:number,isInternalLoader = false) => {
-    isInternalLoader ? setInternalLoader(true) : setLoading(true);
-    try {
-      const response = await axios.get(
-        `/product/collaboration/list?page=${currentPage}&limit=${pageSize}`
-      );
-      if (response.status === 200) {
-        const collaborationData = response.data.data;
-        if (collaborationData && typeof collaborationData === "object") {
-          const collaborationArray = collaborationData.data || [];
-          const collaborationCount = collaborationData.total || 0;
+  const fetchCollaboration = useCallback(
+    async (page: number, isInternalLoader = false) => {
+      isInternalLoader ? setInternalLoader(true) : setLoading(true);
+      try {
+        const response = await axios.get(
+          `/product/collaboration/list?page=${currentPage}&limit=${pageSize}`
+        );
+        if (response.status === 200) {
+          const collaborationData = response.data.data;
+          if (collaborationData && typeof collaborationData === "object") {
+            const collaborationArray = collaborationData.data || [];
+            const collaborationCount = collaborationData.total || 0;
 
-          if (Array.isArray(collaborationArray)) {
-            let result = collaborationArray.map((ele: ICollaboration) => {
-              let category = ele.productId.category
-                .filter((cat: ICategory) => cat?.parentId === null)
-                .map((category: ICategory) => {
-                  return category?.name;
-                })
-                .join(", ");
-              return {
-                ...ele,
-                productId: { ...ele?.productId, categories: category },
-              };
-            });
-            setCollaborations([...result]);
-            setTotalPages(Math.ceil(collaborationCount / pageSize));
+            if (Array.isArray(collaborationArray)) {
+              let result = collaborationArray.map((ele: ICollaboration) => {
+                let category = ele.productId.category
+                  .filter((cat: ICategory) => cat?.parentId === null)
+                  .map((category: ICategory) => {
+                    return category?.name;
+                  })
+                  .join(", ");
+                return {
+                  ...ele,
+                  productId: { ...ele?.productId, categories: category },
+                };
+              });
+              setCollaborations([...result]);
+              setTotalPages(Math.ceil(collaborationCount / pageSize));
+            } else {
+              setCollaborations([]);
+              setCurrentPage(1);
+            }
+            setLoading(false);
+            setInternalLoader(false);
           } else {
             setCollaborations([]);
             setCurrentPage(1);
+            setLoading(false);
+            setInternalLoader(false);
           }
-          setLoading(false);
-          setInternalLoader(false);
-        } else {
-          setCollaborations([]);
-          setCurrentPage(1);
-          setLoading(false);
-          setInternalLoader(false);
         }
+      } catch (error) {
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+        setLoading(false);
+        setInternalLoader(false);
       }
-    } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
-      setLoading(false);
-      setInternalLoader(false);
-    }
-  }, [axios, pageSize]);
+    },
+    [axios, pageSize]
+  );
 
   useEffect(() => {
     fetchCollaboration(currentPage);
@@ -163,48 +166,60 @@ export default function CollaborationList() {
     setSearch(value);
   };
 
-  const handlePageChange = (page:number) => {
-    page !== currentPage && fetchCollaboration(page,true);
+  const handlePageChange = (page: number) => {
+    page !== currentPage && fetchCollaboration(page, true);
     setCurrentPage(page);
-  }
+  };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
-      {loading ? <Loading /> : collaborations?.length > 0 ? <><div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="text-[20px] text-500">
-          <Input
-            value={search}
-            onChange={handleSearch}
-            placeholder={translate("Search_product")}
-          />
-        </div>
-        <div className="flex items-center gap-[10px]">
-          <PiListChecksLight size={35} />
-          <IoGridOutline size={30} />
-          {/* <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
+      {loading ? (
+        <Loading />
+      ) : collaborations?.length > 0 ? (
+        <>
+          <div className="flex justify-between items-center flex-wrap gap-2">
+            <div className="md:text-[20px] text-base text-500">
+              <Input
+                value={search}
+                onChange={handleSearch}
+                placeholder={translate("Search_product")}
+                className="md:h-10 h-8"
+              />
+            </div>
+            <div className="flex items-center gap-[10px]">
+              <PiListChecksLight className="md:size-[30px] size-6" />
+              <IoGridOutline className="md:size-[30px] size-6" />
+              {/* <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
                         <FaSlidersH /> {translate("Filters")}
                     </Button> */}
-          {/* <select className="bg-white rounded-sm border border-black h-[30px]" value={filter} onChange={handleFilterValue}>
+              {/* <select className="bg-white rounded-sm border border-black h-[30px]" value={filter} onChange={handleFilterValue}>
                         <option value="" disabled>Filters</option>
                         <option value={5}>Last 5 Videos</option>
                         <option value={1}>Last 1 Month</option>
                     </select> */}
-        </div>
-      </div>
-      {internalLoader && <Loader />}
-      <CollaborationTable
-        data={collaborations}
-        filter={filter}
-        user={getUserType()}
-        fetchCollaboration={() => fetchCollaboration(currentPage)}
-      />
-      {/* Pagination */}
-        <div className="flex justify-end items-center mt-4">
-          <TablePagination
-            totalPages={totalPages}
-            activePage={currentPage}
-            onPageChange={handlePageChange}
+            </div>
+          </div>
+          {internalLoader && <Loader />}
+          <CollaborationTable
+            data={collaborations}
+            filter={filter}
+            user={getUserType()}
+            fetchCollaboration={() => fetchCollaboration(currentPage)}
           />
-        </div></>: <EmptyPlaceHolder title={"No_Collaborations_Available_Title"} description={"No_Collaborations_Available_Description"}/>}
+          {/* Pagination */}
+          <div className="flex justify-end items-center mt-4">
+            <TablePagination
+              totalPages={totalPages}
+              activePage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </>
+      ) : (
+        <EmptyPlaceHolder
+          title={"No_Collaborations_Available_Title"}
+          description={"No_Collaborations_Available_Description"}
+        />
+      )}
     </div>
   );
 }

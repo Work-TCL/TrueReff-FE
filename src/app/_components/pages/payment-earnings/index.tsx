@@ -17,7 +17,8 @@ export default function PaymentEarnings() {
   ];
 
   return (
-    <div className="flex flex-col gap-4 p-6 w-full">
+    <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
+      {" "}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 gap-4 col-span-3 ">
         <StatsCard
           title={translate("Active_Collaborations")}

@@ -13,7 +13,13 @@ import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
 import { translate } from "@/lib/utils/translate";
 import { IPostSignupRequest, IPostSignupResponse } from "@/lib/types-api/auth";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 interface IRedirectPaths {
   [key: string]: string;
 }
@@ -31,7 +37,7 @@ export default function RegisterForm() {
   const methods = useForm<IRegisterSchema>({
     defaultValues: {
       email: "",
-      password: ""
+      password: "",
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -44,7 +50,7 @@ export default function RegisterForm() {
       const payload: IPostSignupRequest = {
         email: data?.email,
         password: data.password,
-        type: userType
+        type: userType,
       };
       const response: IPostSignupResponse = await signUpAPI(payload);
 
@@ -58,7 +64,7 @@ export default function RegisterForm() {
         methods?.reset();
         router.push(redirectPaths[response?.data?.type]);
         return true;
-      } 
+      }
       throw response;
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -86,7 +92,12 @@ export default function RegisterForm() {
           placeholder={translate("Password")}
           Icon={PiLockKey}
         />
-        <select className="border border-gray-light rounded-xl p-3" name="type" value={userType} onChange={(e) => setUserType(e.target.value)}>
+        <select
+          className="border border-gray-light rounded-xl p-3"
+          name="type"
+          value={userType}
+          onChange={(e) => setUserType(e.target.value)}
+        >
           <option value="">select</option>
           <option value="vendor">vendor</option>
           <option value="creator">creator</option>

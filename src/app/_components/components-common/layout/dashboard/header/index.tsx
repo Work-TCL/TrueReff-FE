@@ -6,7 +6,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
 import { BellRing, Menu, User, X } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -14,8 +14,8 @@ import {
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger
-} from "@/components/ui/drawer"
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import toast from "react-hot-toast";
 import socketService from "@/lib/services/socket-service";
@@ -27,12 +27,12 @@ interface IHeaderProps {
 }
 
 interface INotification {
-  _id: string,
-  userId: string,
-  message: string,
-  read: boolean,
-  createdAt: string,
-  updatedAt: string
+  _id: string;
+  userId: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 function formatTimeAgo(date: string) {
   const now: any = new Date();
@@ -49,13 +49,16 @@ function formatTimeAgo(date: string) {
   } else if (diffHours < 2) {
     return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
   } else {
-    return past.toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",hour: "2-digit",
-      minute: "2-digit",
-      hour12: true
-  }).replace(",", ""); // Show full date & time after 2 hours
+    return past
+      .toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })
+      .replace(",", ""); // Show full date & time after 2 hours
   }
 }
 export default function Header({ handleExpandSidebar }: IHeaderProps) {
@@ -118,15 +121,14 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
 
   useEffect(() => {
     socketService.connect();
-    if(session?.creator?._id || session?.vendor?._id){
-      let id  = session?.vendor?._id || session?.creator?._id;
+    if (session?.creator?._id || session?.vendor?._id) {
+      let id = session?.vendor?._id || session?.creator?._id;
       socketService.registerUser(id);
     }
 
-    
     socketService.onNotification((data) => {
-      if(data?.message){
-        setUnReadNotifications(prev => prev + 1);
+      if (data?.message) {
+        setUnReadNotifications((prev) => prev + 1);
         fetchNotifications();
       }
     });
@@ -136,31 +138,36 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     };
   }, []);
 
-  const readNotifications = async (notificationId: string|null, isReadAll: boolean = false) => {
+  const readNotifications = async (
+    notificationId: string | null,
+    isReadAll: boolean = false
+  ) => {
     setLoading(true);
     try {
       let payload = isReadAll ? { readAll: true } : { notificationId };
       const response = await axios.put(
-        `/message/notification/mark-read`, payload
+        `/message/notification/mark-read`,
+        payload
       );
       if (response.status === 200) {
         const notification: INotification = response?.data?.data;
-        let index = notification ? notifications.findIndex(ele => ele?._id === notification?._id):-1;
+        let index = notification
+          ? notifications.findIndex((ele) => ele?._id === notification?._id)
+          : -1;
         if (index !== -1) {
           notifications[index] = notification; // Replace object at found index
           setNotifications([...notifications]);
-          setUnReadNotifications(pre => pre - 1);
+          setUnReadNotifications((pre) => pre - 1);
         }
-        if(response?.data?.message === "All notifications marked as read"){
-          const updatedNotifications = notifications.map(notification => ({
+        if (response?.data?.message === "All notifications marked as read") {
+          const updatedNotifications = notifications.map((notification) => ({
             ...notification,
-            read: true
+            read: true,
           }));
           setNotifications([...updatedNotifications]);
           setUnReadNotifications(0);
         }
       }
-
     } catch (error: any) {
       setNotifications([]);
       toast.error(error?.message || "Notifications Fetch Failed.");
@@ -175,29 +182,32 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         className="size-5 shrink-0 cursor-pointer lg:hidden"
         onClick={handleExpandSidebar}
       />
-      <h2 className="text-2xl font-medium text-gray-black">
+      <h2 className="md:text-2xl text-lg font-medium text-gray-black">
         {pageNames[pathName]}
       </h2>
-      <div className="ml-auto flex items-center gap-3">
+      <div className="ml-auto flex items-center md:gap-3 gap-2">
         <Drawer
-          //  =====> Add direction  
+          //  =====> Add direction
           direction="right"
         >
           <div className="relative">
             <DrawerTrigger asChild>
-              <BellRing className="cursor-pointer w-8 h-8" onClick={()=> fetchNotifications()}/>
+              <BellRing
+                className="cursor-pointer md:w-6 md:h-6 h-5 w-5 font-normal text-primary"
+                onClick={() => fetchNotifications()}
+              />
             </DrawerTrigger>
 
             {/* Notification Count */}
             {unreadNotifications !== 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1 py-0.5 rounded-full">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white md:text-[10px] text-[12px] font-bold px-1 py-0 rounded-full">
                 {unreadNotifications}
               </span>
             )}
           </div>
 
           <DrawerContent
-            // =======>  Edit drawer className 
+            // =======>  Edit drawer className
             className="  left-auto  right-4 top-2 bottom-2 fixed z-50  outline-none w-[310px] flex  bg-transparent border-none mt-0 "
           >
             {/* =====> Edit DrawerContent first child className  */}
@@ -207,21 +217,42 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
                   <div className="flex justify-between items-center border-b pb-2">
                     <h2 className="text-lg font-semibold">Notifications</h2>
                     <div className="flex justify-between gap-2">
-                      <div className="cursor-pointer text-sm text-gray-600 hover:text-gray-800" onClick={() => readNotifications(null,true)}>Read All</div>
+                      <div
+                        className="cursor-pointer text-sm text-gray-600 hover:text-gray-800"
+                        onClick={() => readNotifications(null, true)}
+                      >
+                        Read All
+                      </div>
                       <DrawerClose asChild>
                         <X className="w-5 h-5 cursor-pointer text-gray-600 hover:text-gray-800" />
                       </DrawerClose>
                     </div>
                   </div>
                 </DrawerTitle>
-                {unreadNotifications !== 0 && <DrawerDescription><p className="text-sm text-gray-500 mt-2">You have {unreadNotifications} unread messages.</p></DrawerDescription>}
+                {unreadNotifications !== 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1 py-0 rounded-full">
+                    {unreadNotifications}
+                  </span>
+                )}
               </DrawerHeader>
               <div className="mt-3 m-3 space-y-3">
                 {notifications.map((notification, index) => (
-                  <div key={index} className={`flex items-start hover:border hover:rounded-md gap-3 cursor-pointer ${!notification.read ? 'font-bold' : 'font-normal'}`} onClick={() => !notification.read && readNotifications(notification?._id)}>
+                  <div
+                    key={index}
+                    className={`flex items-start hover:border hover:rounded-md gap-3 cursor-pointer ${
+                      !notification.read ? "font-bold" : "font-normal"
+                    }`}
+                    onClick={() =>
+                      !notification.read && readNotifications(notification?._id)
+                    }
+                  >
                     <div>
-                      <p className="text-sm text-gray-800">{notification.message}</p>
-                      <p className="text-xs text-gray-500">{formatTimeAgo(notification.createdAt)}</p>
+                      <p className="text-sm text-gray-800">
+                        {notification.message}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {formatTimeAgo(notification.createdAt)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -229,11 +260,13 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             </div>
           </DrawerContent>
         </Drawer>
-        <div className="w-8 h-8 bg-background rounded-full"></div>
-        <p className="text-gray-black">{session?.creator?.full_name||session?.vendor?.business_name}</p>
+        <div className="w-8 h-8  bg-background rounded-full"></div>
+        <p className="text-gray-black md:text-base text-sm md:block hidden">
+          {session?.creator?.full_name || session?.vendor?.business_name}
+        </p>
       </div>
       <Link href="?auth=logout" className="mx-4 block">
-        <IoLogOutOutline className="text-2xl" />
+        <IoLogOutOutline className="text-2xl text-primary" />
       </Link>
     </header>
   );

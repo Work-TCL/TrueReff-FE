@@ -61,7 +61,8 @@ const VideoWiseRevenueChart = () => {
         <h3 className="text-lg font-semibold">Video-Wise Revenue</h3>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="text-gray-700 bg-gray-100 px-3 py-0 text-sm rounded-md">
+            <Button className="text-gray-700 bg-gray-100 px-3 py-0 text-sm rounded-md md:h-10 h-8">
+              {" "}
               {translate("Yearly")} ▼
             </Button>
           </DropdownMenuTrigger>

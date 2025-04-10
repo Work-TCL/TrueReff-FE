@@ -11,9 +11,8 @@ export default function LoginPage() {
     <AuthLayoutPage>
       <div className="flex flex-col justify-center h-full w-full mx-auto max-w-lg min-h-fit">
         <HeaderAuth />
-        <div className="w-full pt-6">
-          <div className="flex justify-center text-[32px] font-semibold text-gray-darken">
-            {translate("Welcome_Back!")}
+        <div className="w-full md:pt-6 pt-4 ">
+          <div className="flex justify-center md:text-[32px] text-2xl font-semibold text-gray-darken">            {translate("Welcome_Back!")}
           </div>
           <div className="mt-5">
             <LoginForm />

@@ -44,7 +44,7 @@ export default function ChannelProductList({
 }: IProps) {
   const axios = useAxiosAuth();
   const [loading, setLoading] = useState<boolean>(false);
-  const [internalLoader,setInternalLoader] = useState<boolean>(false);
+  const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [currentData, setCurrentData] = useState<IProduct | null>(null);
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [cursors, setCursors] = useState<{
@@ -65,9 +65,9 @@ export default function ChannelProductList({
   const fetProductsList = async (
     ItemPerPage: number,
     cursor: string | null = null,
-    isInternalLoader = false,
+    isInternalLoader = false
   ) => {
-    isInternalLoader ? setInternalLoader(true): setLoading(true);
+    isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
         `channel/shopify/product/list?per_page=${ItemPerPage}${
@@ -99,159 +99,176 @@ export default function ChannelProductList({
   // Update the onClick handlers for pagination buttons
   const handleNextPage = () => {
     if (cursors.next && cursors.hasNextPage) {
-      fetProductsList(20, cursors.next,true);
+      fetProductsList(20, cursors.next, true);
     }
   };
 
   const handlePreviousPage = () => {
     if (cursors.previous && cursors.hasPreviousPage) {
-      fetProductsList(20, cursors.previous,true);
+      fetProductsList(20, cursors.previous, true);
     }
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
-      {loading ? <Loading/> : productList?.length > 0 ? <><div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="text-[20px] text-500">
-          <Input placeholder={translate("Search_product")} />
-        </div>
-        <div className="flex items-center gap-[10px]">
-          <PiListChecksLight size={35} />
-          <IoGridOutline size={30} />
-          <Button
-            variant="outline"
-            className="text-black w-[100px] rounded-[4px]"
-          >
-            <FaSlidersH /> {translate("Filters")}
-          </Button>
-        </div>
-      </div>
-      {internalLoader && <Loader />}
-      <div className="overflow-auto flex-1">
-        <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-          <TableHeader className="bg-stroke">
-            <TableRow>
-              <CustomTableHead className="w-1/6">
-                {translate("Product_ID")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/4">
-                {translate("Product_Name")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/6">
-                {translate("Categories")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/4">
-                {translate("Tags")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/4">
-                {translate("SKU")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/6">
-                Selling {translate("Price")}
-              </CustomTableHead>
-              {/*              <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
+      {loading ? (
+        <Loading />
+      ) : productList?.length > 0 ? (
+        <>
+          <div className="flex justify-between items-center gap-2">
+            <div className="md:text-[20px] text-base text-500">
+              <Input
+                placeholder={translate("Search_product")}
+                className="md:h-10 h-8"
+              />
+            </div>
+            <div className="flex items-center gap-[10px]">
+              <PiListChecksLight className="md:size-[30px] size-6" />
+              <IoGridOutline className="md:size-[30px] size-6" />
+              <Button
+                variant="outline"
+                className="text-black w-[100px] rounded-[4px]"
+              >
+                <FaSlidersH /> {translate("Filters")}
+              </Button>
+            </div>
+          </div>
+          {internalLoader && <Loader />}
+          <div className="overflow-auto flex-1">
+            <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
+              <TableHeader className="bg-stroke">
+                <TableRow>
+                  <CustomTableHead className="w-1/6">
+                    {translate("Product_ID")}
+                  </CustomTableHead>
+                  <CustomTableHead className="w-1/4">
+                    {translate("Product_Name")}
+                  </CustomTableHead>
+                  <CustomTableHead className="w-1/6">
+                    {translate("Categories")}
+                  </CustomTableHead>
+                  <CustomTableHead className="w-1/4">
+                    {translate("Tags")}
+                  </CustomTableHead>
+                  <CustomTableHead className="w-1/4">
+                    {translate("SKU")}
+                  </CustomTableHead>
+                  <CustomTableHead className="w-1/6">
+                    Selling {translate("Price")}
+                  </CustomTableHead>
+                  {/*              <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
                             <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
-              <CustomTableHead className="w-1/6 text-center">
-                {translate("Action")}
-              </CustomTableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {
-              productList.map((product, index) => (
-                <TableRow key={index} className=" bg-white">
-                  <CustomTableCell>
-                    {product.id.split("/").pop()}
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage src={product.image} />
-                      </Avatar>
-                      {product.title}
-                    </div>
-                  </CustomTableCell>
-                  <CustomTableCell>{product.category}</CustomTableCell>
-                  <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
-                  <CustomTableCell>{product.sku}</CustomTableCell>
-                  <CustomTableCell>{product.price}</CustomTableCell>
-                  {/*                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
-                  <CustomTableCell>
-                    <div className="flex justify-center gap-3">
-                      <Link href={`shopify/view?id=${product.id}`} className="">
-                        <Eye color="#FF4979" className="cursor-pointer" />
-                      </Link>
-                      <div
-                        onClick={() => {
-                          setCurrentData(product);
-                        }}
-                        className=""
-                      >
-                        <CircleFadingPlus
-                          color="#3b82f680"
-                          className="cursor-pointer"
-                        />
-                      </div>
-                    </div>
-                  </CustomTableCell>
+                  <CustomTableHead className="w-1/6 text-center">
+                    {translate("Action")}
+                  </CustomTableHead>
                 </TableRow>
-              ))
-            }
-          </TableBody>
-        </Table>
-      </div>
-      {currentData !== null && (
-        <ChannleToProduct
-          product={{
-            productId: currentData.id,
-            channelName: channelName,
-            handle: currentData.handle,
-            id: currentData.id,
-            image: currentData.image,
-            title: currentData.title,
-            category: currentData.category,
-            tags: currentData.tags,
-            sku: currentData.sku,
-            price: currentData.price,
-          }}
-          onClose={(refresh = false) => {
-            setCurrentData(null);
-            if (refresh) {
-              fetProductsList(20);
-            }
-          }}
+              </TableHeader>
+              <TableBody>
+                {productList.map((product, index) => (
+                  <TableRow key={index} className=" bg-white">
+                    <CustomTableCell>
+                      {product.id.split("/").pop()}
+                    </CustomTableCell>
+                    <CustomTableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="w-8 h-8">
+                          <AvatarImage src={product.image} />
+                        </Avatar>
+                        {product.title}
+                      </div>
+                    </CustomTableCell>
+                    <CustomTableCell>{product.category}</CustomTableCell>
+                    <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
+                    <CustomTableCell>{product.sku}</CustomTableCell>
+                    <CustomTableCell>{product.price}</CustomTableCell>
+                    {/*                <CustomTableCell>{product.discount}</CustomTableCell>
+                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
+                    <CustomTableCell>
+                      <div className="flex justify-center gap-3">
+                        <Link
+                          href={`shopify/view?id=${product.id}`}
+                          className=""
+                        >
+                          <Eye color="#FF4979" className="cursor-pointer" />
+                        </Link>
+                        <div
+                          onClick={() => {
+                            setCurrentData(product);
+                          }}
+                          className=""
+                        >
+                          <CircleFadingPlus
+                            color="#3b82f680"
+                            className="cursor-pointer"
+                          />
+                        </div>
+                      </div>
+                    </CustomTableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          {currentData !== null && (
+            <ChannleToProduct
+              product={{
+                productId: currentData.id,
+                channelName: channelName,
+                handle: currentData.handle,
+                id: currentData.id,
+                image: currentData.image,
+                title: currentData.title,
+                category: currentData.category,
+                tags: currentData.tags,
+                sku: currentData.sku,
+                price: currentData.price,
+              }}
+              onClose={(refresh = false) => {
+                setCurrentData(null);
+                if (refresh) {
+                  fetProductsList(20);
+                }
+              }}
+            />
+          )}
+          {/* Pagination */}
+          {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
+            <div className="flex justify-end items-center mt-1">
+              <Pagination className="flex justify-end mt-1">
+                <PaginationContent className="flex items-center gap-2">
+                  <PaginationItem>
+                    <PaginationPrevious
+                      className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
+                        !cursors.hasPreviousPage
+                          ? "cursor-not-allowed opacity-50"
+                          : "cursor-pointer"
+                      }`}
+                      showArrow={false}
+                      onClick={handlePreviousPage}
+                    />
+                  </PaginationItem>
+
+                  <PaginationItem>
+                    <PaginationNext
+                      className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
+                        !cursors.hasNextPage
+                          ? "cursor-not-allowed opacity-50"
+                          : "cursor-pointer"
+                      }`}
+                      showArrow={false}
+                      onClick={handleNextPage}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>{" "}
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <EmptyPlaceHolder
+          title={"No_Products_Available_Title"}
+          description={"No_Products_Available_Description"}
         />
       )}
-      {/* Pagination */}
-      {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
-        <div className="flex justify-end items-center mt-1">
-          <Pagination className="flex justify-end mt-1">
-            <PaginationContent className="flex items-center gap-2">
-              <PaginationItem>
-                <PaginationPrevious
-                  className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                    !cursors.hasPreviousPage
-                      ? "cursor-not-allowed opacity-50"
-                      : "cursor-pointer"
-                  }`}
-                  showArrow={false}
-                  onClick={handlePreviousPage}
-                />
-              </PaginationItem>
-
-              <PaginationItem>
-                <PaginationNext
-                  className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                    !cursors.hasNextPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-                  }`}
-                  showArrow={false}
-                  onClick={handleNextPage}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>{" "}
-        </div>
-      ) : null}</>:<EmptyPlaceHolder title={"No_Products_Available_Title"} description={"No_Products_Available_Description"}/>}
     </div>
   );
 }

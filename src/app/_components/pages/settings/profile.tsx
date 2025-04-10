@@ -40,7 +40,7 @@ export default function Profile() {
   const getProfile = async () => {
     setLoading(true);
     const response = await getProfileAPI();
-    
+
     if (response?.vendor) {
       setLoading(false);
       setProfile({ ...response?.vendor });
@@ -69,7 +69,7 @@ export default function Profile() {
 
   return (
     <>
-      <div className="flex flex-col w-fit lg:min-w-[562px] bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md flex-wrap">
+      <div className="flex flex-col  w-full lg:min-w-[562px] bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md flex-wrap">
         <div className="flex justify-between items-center border-b border-gray-300 pb-4">
           <h2 className="text-sm xl:text-xl font-medium">
             {translate("Personal_Information")}

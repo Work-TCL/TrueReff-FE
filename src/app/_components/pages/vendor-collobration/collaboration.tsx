@@ -76,90 +76,104 @@ export default function CollaborationList() {
     return { vendor: "Creator", creator: "Brand" }[user?.type] ?? "";
   };
   // Get Creator list
-  const getCreatorList = useCallback(async (page:number,isInternalLoader?:boolean) => {
-    isInternalLoader ? setInternalLoader(true) : setLoading(true);
-    try {
-      const response = await axios.get(
-        `/product/collaboration/list?page=${page}&limit=${pageSize}`
-      );
-      if (response.status === 200) {
-        const collaborationData = response.data.data;
-        if (collaborationData && typeof collaborationData === "object") {
-          const collaborationArray = collaborationData.data || [];
-          const collaborationCount = collaborationData.total || 0;
+  const getCreatorList = useCallback(
+    async (page: number, isInternalLoader?: boolean) => {
+      isInternalLoader ? setInternalLoader(true) : setLoading(true);
+      try {
+        const response = await axios.get(
+          `/product/collaboration/list?page=${page}&limit=${pageSize}`
+        );
+        if (response.status === 200) {
+          const collaborationData = response.data.data;
+          if (collaborationData && typeof collaborationData === "object") {
+            const collaborationArray = collaborationData.data || [];
+            const collaborationCount = collaborationData.total || 0;
 
-          if (Array.isArray(collaborationArray)) {
-            let result = collaborationArray.map((ele: ICollaboration) => {
-              ele.productId.category = (
-                ele.productId.category as unknown as { name: string }[]
-              )?.map((cat) => String(cat?.name));
-              ele.productId.tags = ele.productId.tags;
-              return { ...ele };
-            });
-            setCollaborations([...result]);
-            setTotalPages(Math.ceil(collaborationCount / pageSize));
+            if (Array.isArray(collaborationArray)) {
+              let result = collaborationArray.map((ele: ICollaboration) => {
+                ele.productId.category = (
+                  ele.productId.category as unknown as { name: string }[]
+                )?.map((cat) => String(cat?.name));
+                ele.productId.tags = ele.productId.tags;
+                return { ...ele };
+              });
+              setCollaborations([...result]);
+              setTotalPages(Math.ceil(collaborationCount / pageSize));
+            } else {
+              setCollaborations([]);
+              setCurrentPage(1);
+            }
+            setLoading(false);
+            setInternalLoader(false);
           } else {
             setCollaborations([]);
             setCurrentPage(1);
+            setLoading(false);
+            setInternalLoader(false);
           }
-          setLoading(false);
-          setInternalLoader(false)
-        } else {
-          setCollaborations([]);
-          setCurrentPage(1);
-          setLoading(false);
-          setInternalLoader(false);
         }
+      } catch (error) {
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+        setLoading(false);
+        setInternalLoader(false);
       }
-    } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
-      setLoading(false);
-      setInternalLoader(false);
-    }
-  }, [axios, pageSize]);
+    },
+    [axios, pageSize]
+  );
 
   useEffect(() => {
     getCreatorList(currentPage);
   }, []);
-  const handlePageChange = (page:number) => {
-    page !== currentPage && getCreatorList(page,true);
+  const handlePageChange = (page: number) => {
+    page !== currentPage && getCreatorList(page, true);
     setCurrentPage(page);
-  }
+  };
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setSearch(value);
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
-      {loading ? <Loading /> : (!loading && collaborations?.length > 0) ? <><div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="text-[20px] text-500">
-          <Input
-            value={search}
-            onChange={handleSearch}
-            placeholder={t("Search_product")}
+      {loading ? (
+        <Loading />
+      ) : !loading && collaborations?.length > 0 ? (
+        <>
+          <div className="flex justify-between items-center gap-2">
+            <div className="md:text-[20px] text-base text-500">
+              <Input
+                value={search}
+                onChange={handleSearch}
+                placeholder={t("Search_product")}
+                className="md:h-10 h-8"
+              />
+            </div>
+            <div className="flex items-center gap-[10px]">
+              <PiListChecksLight className="md:size-[30px] size-6" />
+              <IoGridOutline className="md:size-[30px] size-6" />
+            </div>
+          </div>
+          <CollaborationTable
+            data={collaborations}
+            filter={filter}
+            user={getUserType()}
+            refreshCentral={() => getCreatorList(currentPage)}
+            loader={internalLoader}
           />
-        </div>
-        <div className="flex items-center gap-[10px]">
-          <PiListChecksLight size={35} />
-          <IoGridOutline size={30} />
-        </div>
-      </div>
-      <CollaborationTable
-        data={collaborations}
-        filter={filter}
-        user={getUserType()}
-        refreshCentral={() => getCreatorList(currentPage)}
-        loader={internalLoader}
-      />
-        <div className="flex justify-end items-center mt-4">
-          <TablePagination
-            totalPages={totalPages}
-            activePage={currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
-        </>:<EmptyPlaceHolder title={"No_Collaborations_Available_Title"} description={"No_Collaborations_Available_Description"}/>}
+          <div className="flex justify-end items-center mt-4">
+            <TablePagination
+              totalPages={totalPages}
+              activePage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </>
+      ) : (
+        <EmptyPlaceHolder
+          title={"No_Collaborations_Available_Title"}
+          description={"No_Collaborations_Available_Description"}
+        />
+      )}
     </div>
   );
 }

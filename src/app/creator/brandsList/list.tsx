@@ -35,7 +35,10 @@ export default function BrandList() {
   const itemsPerPage = 20;
 
   // Get Brand list
-  const getBrandList = async (page: number, isInternalLoader: boolean = false) => {
+  const getBrandList = async (
+    page: number,
+    isInternalLoader: boolean = false
+  ) => {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response: any = await axios.get(
@@ -70,7 +73,7 @@ export default function BrandList() {
         setLoading(false);
         setInternalLoader(false);
       } else {
-        setLoading(false)
+        setLoading(false);
         setInternalLoader(false);
       }
     } catch (error) {
@@ -87,36 +90,50 @@ export default function BrandList() {
 
   return (
     <div
-      className={`flex flex-col p-4 gap-6 h-full`}
-    >{loading ? <Loading /> : brands?.length > 0 ? <>
-      <div
-        className={`relative ${Boolean(brands.length === 0) ? "hidden" : ""} `}
-      >
-        <Input
-          placeholder={translate("Search_Product")}
-          className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+      className={`flex flex-col md:p-6 p-4 md:gap-6 gap-4 ${
+        Boolean(brands.length === 0) ? "h-full" : ""
+      }`}
+    >
+      {loading ? (
+        <Loading />
+      ) : brands?.length > 0 ? (
+        <>
+          <div
+            className={`relative ${
+              Boolean(brands.length === 0) ? "hidden" : ""
+            } `}
+          >
+            <Input
+              placeholder={translate("Search_Product")}
+              className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+            />
+            <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
+          </div>
+          {internalLoader && <Loader />}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
+            {brands.map((brand: any) => (
+              <BrandCard key={brand.id} {...brand} />
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <div className="flex justify-end items-center mt-4">
+              <TablePagination
+                totalPages={totalPages}
+                activePage={currentPage}
+                onPageChange={(page) => {
+                  setCurrentPage(page);
+                  page !== currentPage && getBrandList(page, true);
+                }}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <EmptyPlaceHolder
+          title={"No_Brands_Available_Title"}
+          description={"No_Brands_Available_Description"}
         />
-        <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-      </div>
-      {internalLoader && <Loader />}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
-        {brands.map((brand: any) => (
-          <BrandCard key={brand.id} {...brand} />
-        ))}
-      </div>
-      {totalPages > 1 && (
-        <div className="flex justify-end items-center mt-4">
-          <TablePagination
-            totalPages={totalPages}
-            activePage={currentPage}
-            onPageChange={(page) => {
-              setCurrentPage(page);
-              page !== currentPage && getBrandList(page, true);
-            }}
-          />
-        </div>
       )}
-    </>:<EmptyPlaceHolder title={"No_Brands_Available_Title"} description={"No_Brands_Available_Description"} />}
     </div>
   );
 }

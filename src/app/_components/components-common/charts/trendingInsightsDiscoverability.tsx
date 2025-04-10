@@ -13,7 +13,8 @@ const TrendingInsightsDiscoverability: React.FC = () => {
 
   return (
     <div className="w-full p-5 bg-white rounded-lg shadow-sm ">
-      <h2 className="sm:text-xl text-base font-semibold text-gray-900 whitespace-nowrap mb-4">
+      <h2 className="md:text-xl text-base font-semibold text-gray-900 whitespace-nowrap mb-4">
+        {" "}
         Trending Insights & Discoverability
       </h2>
       <div className="flex sm:flex-row flex-col items-center gap-3 h-full">
