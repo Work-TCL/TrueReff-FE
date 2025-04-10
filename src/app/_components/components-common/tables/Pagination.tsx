@@ -56,7 +56,7 @@ export function TablePagination({ totalPages, activePage, onPageChange }: TableP
                 <PaginationItem>
                     <PaginationPrevious
                         // href="#"
-                        className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${currentPage === 1 ? 'cursor-not-allowed opacity-50' : ''
+                        className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${currentPage === 1 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
                             }`}
                         showArrow={false}
                         onClick={(e) => {
@@ -82,7 +82,7 @@ export function TablePagination({ totalPages, activePage, onPageChange }: TableP
                                 className={`text-sm px-3 py-2 rounded-lg ${currentPage === page
                                     ? "bg-black text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                                    }`}
+                                    } cursor-pointer`}
                                 onClick={() => goToPage(Number(page))}
                             >
                                 {page}
@@ -94,7 +94,7 @@ export function TablePagination({ totalPages, activePage, onPageChange }: TableP
                 <PaginationItem>
                     <PaginationNext
                         // href="#"
-                        className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${currentPage === totalPages ? 'cursor-not-allowed opacity-50' : ''
+                        className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${currentPage === totalPages ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
                             }`}
                         showArrow={false}
                         onClick={(e) => {

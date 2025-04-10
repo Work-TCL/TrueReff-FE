@@ -1,19 +1,19 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Info } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { translate } from "@/lib/utils/translate";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
-import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import CollaborationTable from "./collaboration-table";
 import { useSession } from "next-auth/react";
+import Loader from "../../components-common/layout/loader";
+import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import { useTranslations } from "next-intl";
 
 interface IVendorContact {
   name: string;
@@ -90,8 +90,10 @@ export interface ICollaboration {
 export default function CollaborationList() {
   const axios = useAxiosAuth();
   const session = useSession();
+  const translate = useTranslations();
   const user = session?.data?.user ?? { type: "vendor" };
   const [loading, setLoading] = useState<boolean>(false);
+  const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
   const [filter, setFilter] = useState<string>("5");
   const [search, setSearch] = useState<string>("");
@@ -104,8 +106,8 @@ export default function CollaborationList() {
     return { vendor: "Creator", creator: "Brand" }[user?.type] ?? "";
   };
   // Get Creator list
-  const fetchCollaboration = useCallback(async () => {
-    setLoading(true);
+  const fetchCollaboration = useCallback(async (page:number,isInternalLoader = false) => {
+    isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
         `/product/collaboration/list?page=${currentPage}&limit=${pageSize}`
@@ -136,30 +138,38 @@ export default function CollaborationList() {
             setCurrentPage(1);
           }
           setLoading(false);
+          setInternalLoader(false);
         } else {
           setCollaborations([]);
           setCurrentPage(1);
           setLoading(false);
+          setInternalLoader(false);
         }
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       setLoading(false);
+      setInternalLoader(false);
     }
   }, [axios, pageSize]);
 
   useEffect(() => {
-    fetchCollaboration();
-  }, [currentPage]);
+    fetchCollaboration(currentPage);
+  }, []);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setSearch(value);
   };
+
+  const handlePageChange = (page:number) => {
+    page !== currentPage && fetchCollaboration(page,true);
+    setCurrentPage(page);
+  }
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
-      <div className="flex justify-between items-center flex-wrap gap-2">
+      {loading ? <Loading /> : collaborations?.length > 0 ? <><div className="flex justify-between items-center flex-wrap gap-2">
         <div className="text-[20px] text-500">
           <Input
             value={search}
@@ -180,24 +190,21 @@ export default function CollaborationList() {
                     </select> */}
         </div>
       </div>
-      {loading && <Loading />}
-
+      {internalLoader && <Loader />}
       <CollaborationTable
         data={collaborations}
         filter={filter}
         user={getUserType()}
-        fetchCollaboration={fetchCollaboration}
+        fetchCollaboration={() => fetchCollaboration(currentPage)}
       />
       {/* Pagination */}
-      {collaborations.length > 0 && (
         <div className="flex justify-end items-center mt-4">
           <TablePagination
             totalPages={totalPages}
             activePage={currentPage}
-            onPageChange={setCurrentPage}
+            onPageChange={handlePageChange}
           />
-        </div>
-      )}
+        </div></>: <EmptyPlaceHolder title={"No_Collaborations_Available_Title"} description={"No_Collaborations_Available_Description"}/>}
     </div>
   );
 }

@@ -14,6 +14,8 @@ import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import CollaborationTable from "./collaboration-table";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 export interface ICategory {
   _id: string;
   name: string;
@@ -58,25 +60,27 @@ export interface ICollaboration {
 export default function CollaborationList() {
   const axios = useAxiosAuth();
   const session = useSession();
+  const t = useTranslations();
   const user = session?.data?.user ?? { type: "vendor" };
   const [loading, setLoading] = useState<boolean>(false);
+  const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
   const [filter, setFilter] = useState<string>("5");
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [pageSize] = useState(20);
+  const pageSize = 20;
 
   // get user role
   const getUserType = () => {
     return { vendor: "Creator", creator: "Brand" }[user?.type] ?? "";
   };
   // Get Creator list
-  const getCreatorList = useCallback(async () => {
-    setLoading(true);
+  const getCreatorList = useCallback(async (page:number,isInternalLoader?:boolean) => {
+    isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `/product/collaboration/list?page=${currentPage}&limit=${pageSize}`
+        `/product/collaboration/list?page=${page}&limit=${pageSize}`
       );
       if (response.status === 200) {
         const collaborationData = response.data.data;
@@ -99,68 +103,63 @@ export default function CollaborationList() {
             setCurrentPage(1);
           }
           setLoading(false);
+          setInternalLoader(false)
         } else {
           setCollaborations([]);
           setCurrentPage(1);
           setLoading(false);
+          setInternalLoader(false);
         }
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       setLoading(false);
+      setInternalLoader(false);
     }
   }, [axios, pageSize]);
 
   useEffect(() => {
-    getCreatorList();
-  }, [currentPage]);
-
+    getCreatorList(currentPage);
+  }, []);
+  const handlePageChange = (page:number) => {
+    page !== currentPage && getCreatorList(page,true);
+    setCurrentPage(page);
+  }
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setSearch(value);
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
-      <div className="flex justify-between items-center flex-wrap gap-2">
+      {loading ? <Loading /> : (!loading && collaborations?.length > 0) ? <><div className="flex justify-between items-center flex-wrap gap-2">
         <div className="text-[20px] text-500">
           <Input
             value={search}
             onChange={handleSearch}
-            placeholder={translate("Search_product")}
+            placeholder={t("Search_product")}
           />
         </div>
         <div className="flex items-center gap-[10px]">
           <PiListChecksLight size={35} />
           <IoGridOutline size={30} />
-          {/* <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
-                        <FaSlidersH /> {translate("Filters")}
-                    </Button> */}
-          {/* <select className="bg-white rounded-sm border border-black h-[30px]" value={filter} onChange={handleFilterValue}>
-                        <option value="" disabled>Filters</option>
-                        <option value={5}>Last 5 Videos</option>
-                        <option value={1}>Last 1 Month</option>
-                    </select> */}
         </div>
       </div>
-      {loading && <Loading />}
-      {/* Pagination */}
       <CollaborationTable
         data={collaborations}
         filter={filter}
         user={getUserType()}
-        refreshCentral={() => getCreatorList()}
+        refreshCentral={() => getCreatorList(currentPage)}
+        loader={internalLoader}
       />
-
-      {collaborations?.length > 0 && (
         <div className="flex justify-end items-center mt-4">
           <TablePagination
             totalPages={totalPages}
             activePage={currentPage}
-            onPageChange={setCurrentPage}
+            onPageChange={handlePageChange}
           />
         </div>
-      )}
+        </>:<EmptyPlaceHolder title={"No_Collaborations_Available_Title"} description={"No_Collaborations_Available_Description"}/>}
     </div>
   );
 }

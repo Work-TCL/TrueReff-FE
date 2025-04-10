@@ -12,6 +12,7 @@ import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
+import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 export interface ICategory {
   _id: string,
   name: string
@@ -54,6 +55,7 @@ export interface ICreator {
 export default function CreatorList() {
   const axios = useAxiosAuth();
   const [loading,setLoading] = useState<boolean>(false);
+  const [internalLoader,setInternalLoader] = useState<boolean>(false);
   const [creators,setCreators] = useState<ICreator[]>([]);
   const [filter,setFilter] = useState<string>("5");
   const [search,setSearch] = useState<string>("");
@@ -62,10 +64,10 @@ export default function CreatorList() {
   const [pageSize] = useState(20);
 
   // Get Creator list
-  const getCreatorList = useCallback(async () => {
-    setLoading(true);
+  const getCreatorList = useCallback(async (page:number,isInternalLoader?: boolean) => {
+    isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
-      const response = await axios.get(`/auth/creator/list?page=${currentPage}&limit=${pageSize}`);
+      const response = await axios.get(`/auth/creator/list?page=${page}&limit=${pageSize}`);
       if (response.status === 200) {
         const creatorData = response.data.data;
         if (creatorData && typeof creatorData === "object") {
@@ -85,22 +87,29 @@ export default function CreatorList() {
             setCurrentPage(1);
           }
           setLoading(false);
+          setInternalLoader(false)
         } else {
           setCreators([]);
           setCurrentPage(1);
           setLoading(false);
+          setInternalLoader(false)
         }
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       setLoading(false);
+      setInternalLoader(false);
     }
   }, [axios, pageSize]);
 
   useEffect(() => {
-    getCreatorList();
-  }, [currentPage]);
+    getCreatorList(currentPage);
+  }, []);
+  const handlePageChange = (page: number) => {
+    page !== currentPage && getCreatorList(page,true);
+    setCurrentPage(page);
+  }
 
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,9 +134,9 @@ export default function CreatorList() {
   }
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
-            <div className="flex justify-between items-center flex-wrap gap-2">
+            {loading ? <Loading/> : creators?.length >0 ? <><div className="flex justify-between items-center flex-wrap gap-2">
                 <div className="text-[20px] text-500">
-                    <Input value={search} onChange={handleSearch} placeholder={translate("Search_creator")} />
+                    <Input value={search} onChange={handleSearch} placeholder={"Search creator"} />
                 </div>
                 <div className="flex items-center gap-[10px]">
                     <PiListChecksLight size={35} />
@@ -142,12 +151,11 @@ export default function CreatorList() {
                     </select>
                 </div>
             </div>
-            {loading && <Loading/>}
-            {creators?.length >0 && <CreatorTable data={creators} filter={filter}/>}
+            <CreatorTable data={creators} filter={filter} loader={internalLoader}/>
             {/* Pagination */}
             <div className="flex justify-end items-center mt-4">
-                <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={setCurrentPage} />
-            </div>
+                <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={handlePageChange} />
+            </div></>:<EmptyPlaceHolder title={"No_Creators_Available_Title"} description={"No_Creators_Available_Description"}/>}
         </div>
   );
 }

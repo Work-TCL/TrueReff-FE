@@ -8,7 +8,7 @@ import { CustomTableHead } from "@/app/_components/components-common/tables/Cust
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
 import { useRouter } from "next/navigation";
-import { Check, Info, MessagesSquare, Pencil, X } from "lucide-react";
+import { Check, CheckCircle, Info, MessagesSquare, Pencil, X, XCircle } from "lucide-react";
 import { ICollaboration } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -22,7 +22,6 @@ import {
 import {
   badgeColor,
   capitalizeFirstLetter,
-  EmptyPlaceHolder,
 } from "../creator/collaboration-table";
 import Loader from "../../components-common/layout/loader";
 function formatNumber(num: number = 0) {
@@ -39,11 +38,13 @@ interface ICreatorTableProps {
   filter: string;
   user: string;
   refreshCentral: () => void;
+  loader: boolean
 }
 const CollaborationTable = ({
   data,
   filter,
   user,
+  loader = false,
   refreshCentral = () => { },
 }: ICreatorTableProps) => {
   const router = useRouter();
@@ -67,7 +68,7 @@ const CollaborationTable = ({
       );
       if (response.status === 200) {
         toast.success(response.data.message);
-        refreshCentral && refreshCentral();
+        refreshCentral();
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -78,7 +79,7 @@ const CollaborationTable = ({
   };
   return (
     <div className="">
-      {loading && <Loader />}
+      {(loading || loader) && <Loader />}
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
           <TableRow>
@@ -106,8 +107,6 @@ const CollaborationTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.length > 0 ? (
-            <>
               {data.map((collaboration: ICollaboration, index: number) => (
                 <TableRow key={index} className="bg-white">
                   <CustomTableCell>
@@ -147,20 +146,20 @@ const CollaborationTable = ({
                     <div className={`flex gap-4 justify-center`}>
                       {collaboration?.collaborationStatus ===
                         COLLOBRATION_STATUS.REQUESTED && (
-                          <Check
-                            className="cursor-pointer"
-                            onClick={() =>
-                              handleStatusChangeRequest(
-                                "accepted",
-                                collaboration?._id
-                              )
-                            }
-                          />
+                          <CheckCircle color="#22c55e"
+                    className="cursor-pointer"
+                    size={25}
+                    onClick={() =>
+                      handleStatusChangeRequest(
+                        "accepted",
+                        collaboration?._id
+                      )
+                    }
+                  />
                         )}
                       {collaboration?.collaborationStatus ===
                         COLLOBRATION_STATUS.REQUESTED && (
-                          <X
-                            className="cursor-pointer"
+                          <XCircle className="cursor-pointer" size={25} color="#ef4444"
                             onClick={() =>
                               handleStatusChangeRequest(
                                 "rejected",
@@ -172,26 +171,20 @@ const CollaborationTable = ({
                       {collaboration?.collaborationStatus ===
                         COLLOBRATION_STATUS.PENDING && (
                           <MessagesSquare
+                          color="#3b82f6"
                             className="cursor-pointer"
                             onClick={() =>
                               router.push(
                                 `/vendor/products/view/${collaboration?.productId?._id}?isChatView=true&creatorId=${collaboration?.creatorId?._id}`
                               )
                             }
+                            size={25}
                           />
                         )}
                     </div>
                   </CustomTableCell>
                 </TableRow>
               ))}
-            </>
-          ) : (
-            <tr>
-              <td colSpan={8}>
-                <EmptyPlaceHolder />
-              </td>
-            </tr>
-          )}
         </TableBody>
       </Table>
     </div>

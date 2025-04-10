@@ -11,8 +11,6 @@ import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
 import { CircleFadingPlus, Eye, Info } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import {
   Pagination,
@@ -24,6 +22,9 @@ import {
 import Loading from "@/app/vendor/loading";
 import Link from "next/link";
 import ChannleToProduct from "@/lib/components/dialogs/channel-to-product";
+import { useTranslations } from "next-intl";
+import Loader from "@/app/_components/components-common/layout/loader";
+import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 
 interface IProduct {
   handle: string;
@@ -41,9 +42,9 @@ interface IProps {
 export default function ChannelProductList({
   channelName = "shopify",
 }: IProps) {
-  const router = useRouter();
   const axios = useAxiosAuth();
   const [loading, setLoading] = useState<boolean>(false);
+  const [internalLoader,setInternalLoader] = useState<boolean>(false);
   const [currentData, setCurrentData] = useState<IProduct | null>(null);
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [cursors, setCursors] = useState<{
@@ -58,12 +59,15 @@ export default function ChannelProductList({
     hasPreviousPage: false,
   });
 
+  const translate = useTranslations();
+
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
     ItemPerPage: number,
-    cursor: string | null = null
+    cursor: string | null = null,
+    isInternalLoader = false,
   ) => {
-    setLoading(true);
+    isInternalLoader ? setInternalLoader(true): setLoading(true);
     try {
       const response = await axios.get(
         `channel/shopify/product/list?per_page=${ItemPerPage}${
@@ -80,8 +84,10 @@ export default function ChannelProductList({
         });
       }
       setLoading(false);
+      setInternalLoader(false);
     } catch (error) {
       setLoading(false);
+      setInternalLoader(false);
     }
   };
 
@@ -93,18 +99,18 @@ export default function ChannelProductList({
   // Update the onClick handlers for pagination buttons
   const handleNextPage = () => {
     if (cursors.next && cursors.hasNextPage) {
-      fetProductsList(2, cursors.next);
+      fetProductsList(20, cursors.next,true);
     }
   };
 
   const handlePreviousPage = () => {
     if (cursors.previous && cursors.hasPreviousPage) {
-      fetProductsList(2, cursors.previous);
+      fetProductsList(20, cursors.previous,true);
     }
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
-      <div className="flex justify-between items-center flex-wrap gap-2">
+      {loading ? <Loading/> : productList?.length > 0 ? <><div className="flex justify-between items-center flex-wrap gap-2">
         <div className="text-[20px] text-500">
           <Input placeholder={translate("Search_product")} />
         </div>
@@ -119,7 +125,7 @@ export default function ChannelProductList({
           </Button>
         </div>
       </div>
-      {loading && <Loading />}
+      {internalLoader && <Loader />}
       <div className="overflow-auto flex-1">
         <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
           <TableHeader className="bg-stroke">
@@ -150,7 +156,7 @@ export default function ChannelProductList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!loading && productList?.length > 0 ? (
+            {
               productList.map((product, index) => (
                 <TableRow key={index} className=" bg-white">
                   <CustomTableCell>
@@ -190,13 +196,7 @@ export default function ChannelProductList({
                   </CustomTableCell>
                 </TableRow>
               ))
-            ) : (
-              <tr>
-                <td colSpan={8}>
-                  <EmptyPlaceHolder />
-                </td>
-              </tr>
-            )}
+            }
           </TableBody>
         </Table>
       </div>
@@ -232,7 +232,7 @@ export default function ChannelProductList({
                   className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
                     !cursors.hasPreviousPage
                       ? "cursor-not-allowed opacity-50"
-                      : ""
+                      : "cursor-pointer"
                   }`}
                   showArrow={false}
                   onClick={handlePreviousPage}
@@ -242,7 +242,7 @@ export default function ChannelProductList({
               <PaginationItem>
                 <PaginationNext
                   className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                    !cursors.hasNextPage ? "cursor-not-allowed opacity-50" : ""
+                    !cursors.hasNextPage ? "cursor-not-allowed opacity-50" : "cursor-pointer"
                   }`}
                   showArrow={false}
                   onClick={handleNextPage}
@@ -251,20 +251,7 @@ export default function ChannelProductList({
             </PaginationContent>
           </Pagination>{" "}
         </div>
-      ) : null}
-    </div>
-  );
-}
-export function EmptyPlaceHolder() {
-  return (
-    <div className=" flex items-center justify-center flex-col flex-1 text-center h-[200px] text-gray-500 p-4 bg-white ">
-      <Info className="mx-auto mb-2 text-gray-400" />
-      <h2 className="text-lg font-semibold">
-        {translate("No_Products_Available_Title")}
-      </h2>
-      <p className="text-sm">
-        {translate("No_Products_Available_Description")}
-      </p>
+      ) : null}</>:<EmptyPlaceHolder title={"No_Products_Available_Title"} description={"No_Products_Available_Description"}/>}
     </div>
   );
 }

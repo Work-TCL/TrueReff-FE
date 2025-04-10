@@ -36,7 +36,6 @@ export default function BrandProductTable({ data, brandName }: ICreatorTableProp
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.length > 0 ? (<>
                         {data.map((brand: IBrand, index: number) => (
                             <TableRow key={index} className="bg-white">
                                 <CustomTableCell>
@@ -59,20 +58,9 @@ export default function BrandProductTable({ data, brandName }: ICreatorTableProp
                                     </Button>
                                 </CustomTableCell>
                             </TableRow>
-                        ))}</>) : <tr><td colSpan={8}><EmptyPlaceHolder /></td></tr>}
+                        ))}
                 </TableBody>
             </Table>
-        </div>
-    );
-}
-export function EmptyPlaceHolder() {
-    return (
-        <div className=" flex items-center justify-center flex-col flex-1 col-span-full text-center h-[200px] text-gray-500 p-4 bg-white ">
-            <Info className="mx-auto mb-2 text-gray-400" />
-            <h2 className="text-lg font-semibold">
-                {translate("No_Products_Available_Title")}
-            </h2>
-            <p className="text-sm">{translate("No_Products_Available_Description")}</p>
         </div>
     );
 }

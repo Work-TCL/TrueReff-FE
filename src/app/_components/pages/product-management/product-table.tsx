@@ -1,32 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { translate } from "@/lib/utils/translate";
-import { useParams, useRouter } from "next/navigation";
-import { Eye, Info } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { IProduct } from "./";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
-import toast from "react-hot-toast";
 import Button from "../../ui/button";
-function formatNumber(num: number = 0) {
-    if (num >= 1_000_000) {
-        return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
-    } else if (num >= 1_000) {
-        return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
-    }
-    return num === 0 ? "" : num.toString();
-}
-
+import { useTranslations } from "next-intl";
 interface IProductTableProps {
     data: IProduct[]
 }
-export default function BrandProductTable({ data }: IProductTableProps) {
+export default function ProductTable({ data }: IProductTableProps) {
     const router = useRouter();
+    const translate = useTranslations();
     const handleDetailView = (id: string) => {
         router.push(`/creator/product-management/${id}`);
     }
@@ -46,41 +34,29 @@ export default function BrandProductTable({ data }: IProductTableProps) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.length > 0 ? (<>
-                        {data.map((product: IProduct, index: number) => (
-                            <TableRow key={index} className="bg-white">
-                                <CustomTableCell>
-                                    <div className="flex items-center gap-2">
+                    {data.map((product: IProduct, index: number) => (
+                        <TableRow key={index} className="bg-white">
+                            <CustomTableCell>
+                                <div className="flex items-center gap-2">
                                     <Avatar className="w-8 h-8">
                                         <AvatarImage src={product.media[0]} />
                                     </Avatar>
                                     {product.title}
-                                    </div>
-                                </CustomTableCell>
-                                <CustomTableCell>{product?.categories}</CustomTableCell>
-                                {/* <CustomTableCell>{product?.tag}</CustomTableCell> */}
-                                {/* <CustomTableCell>{product.pastSales??''}</CustomTableCell> */}
-                                <CustomTableCell>{product.tag}</CustomTableCell>
-                                <CustomTableCell className="flex justify-center">
-                                    <Button type="button" className="whitespace-nowrap w-[150px]  bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all py-3 px-[10px] text-sm" onClick={() => handleDetailView(product._id)}>
-                                        {translate("Collaborate_Now")}
-                                    </Button>
-                                </CustomTableCell>
-                            </TableRow>
-                        ))}</>) : <tr><td colSpan={8}><EmptyPlaceHolder /></td></tr>}
+                                </div>
+                            </CustomTableCell>
+                            <CustomTableCell>{product?.categories}</CustomTableCell>
+                            {/* <CustomTableCell>{product?.tag}</CustomTableCell> */}
+                            {/* <CustomTableCell>{product.pastSales??''}</CustomTableCell> */}
+                            <CustomTableCell>{product.tag}</CustomTableCell>
+                            <CustomTableCell className="flex justify-center">
+                                <Button type="button" className="whitespace-nowrap w-[150px]  bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all py-3 px-[10px] text-sm" onClick={() => handleDetailView(product._id)}>
+                                    {translate("Collaborate_Now")}
+                                </Button>
+                            </CustomTableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
-        </div>
-    );
-}
-export function EmptyPlaceHolder() {
-    return (
-        <div className=" flex items-center justify-center flex-col flex-1 col-span-full text-center h-[200px] text-gray-500 p-4 bg-white ">
-            <Info className="mx-auto mb-2 text-gray-400" />
-            <h2 className="text-lg font-semibold">
-                {translate("No_Products_Available_Title")}
-            </h2>
-            <p className="text-sm">{translate("No_Products_Available_Description")}</p>
         </div>
     );
 }

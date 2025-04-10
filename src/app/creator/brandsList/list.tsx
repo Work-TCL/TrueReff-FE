@@ -2,16 +2,16 @@
 
 import { Input } from "@/components/ui/input";
 import BrandCard from "./_components/brandCard";
-import { Info, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-// import BrandListView from "./_components/brandList";
-import { translate } from "@/lib/utils/translate";
-import BrandListView from "./_components/brandList";
 import Loading from "../loading";
+import Loader from "@/app/_components/components-common/layout/loader";
+import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
+import { useTranslations } from "next-intl";
 
 export interface Brand {
   id: number;
@@ -25,19 +25,21 @@ export interface Brand {
 }
 export default function BrandList() {
   const axios = useAxiosAuth();
-  const [loading,setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const translate = useTranslations();
 
-  const itemsPerPage = 2;
+  const itemsPerPage = 20;
 
   // Get Brand list
-  const getBrandList = async (page: number, limit: number) => {
-    setLoading(true);
+  const getBrandList = async (page: number, isInternalLoader: boolean = false) => {
+    isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response: any = await axios.get(
-        `/product/vendor-product/vendor/list?page=${page}&limit=${limit}`
+        `/product/vendor-product/vendor/list?page=${page}&limit=${itemsPerPage}`
       );
       if (response.status === 200) {
         const brandData = response.data.data;
@@ -65,28 +67,28 @@ export default function BrandList() {
           console.error("Expected an object but got:", brandData);
           setBrands([]);
         }
-        setLoading(false)
+        setLoading(false);
+        setInternalLoader(false);
       } else {
         setLoading(false)
-        console.error("Error fetching brands:", response.statusText);
+        setInternalLoader(false);
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
-      setLoading(false)
+      setLoading(false);
+      setInternalLoader(false);
     }
   };
 
   useEffect(() => {
-    getBrandList(1, 20);
+    getBrandList(currentPage);
   }, []);
 
   return (
     <div
-      className={`flex flex-col p-6 gap-6 ${
-        Boolean(brands.length === 0) ? "h-full" : ""
-      }`}
-    >
+      className={`flex flex-col p-4 gap-6 h-full`}
+    >{loading ? <Loading /> : brands?.length > 0 ? <>
       <div
         className={`relative ${Boolean(brands.length === 0) ? "hidden" : ""} `}
       >
@@ -96,42 +98,25 @@ export default function BrandList() {
         />
         <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
       </div>
-      {loading && <Loading /> }
-      {brands && brands.length > 0 ? (
-        <>
-          {/* <BrandListView brand={brands} /> */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
-            {brands.map((brand: any) => (
-              <BrandCard key={brand.id} {...brand} />
-            ))}
-          </div>
-          {totalPages > 1 && (
-            <div className="flex justify-end items-center mt-4">
-              <TablePagination
-                totalPages={totalPages}
-                activePage={currentPage}
-                onPageChange={(page) => {
-                  setCurrentPage(page);
-                  getBrandList(page, itemsPerPage);
-                }}
-              />
-            </div>
-          )}
-        </>
-      ) : !loading && (
-        <EmptyPlaceHolde />
+      {internalLoader && <Loader />}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
+        {brands.map((brand: any) => (
+          <BrandCard key={brand.id} {...brand} />
+        ))}
+      </div>
+      {totalPages > 1 && (
+        <div className="flex justify-end items-center mt-4">
+          <TablePagination
+            totalPages={totalPages}
+            activePage={currentPage}
+            onPageChange={(page) => {
+              setCurrentPage(page);
+              page !== currentPage && getBrandList(page, true);
+            }}
+          />
+        </div>
       )}
-    </div>
-  );
-}
-export function EmptyPlaceHolde() {
-  return (
-    <div className=" flex items-center justify-center flex-col flex-1 col-span-full text-center text-gray-500 p-4 bg-white rounded-[20px] ">
-      <Info className="mx-auto mb-2 text-gray-400" />
-      <h2 className="text-lg font-semibold">
-        {translate("No_Brands_Available_Title")}
-      </h2>
-      <p className="text-sm">{translate("No_Brands_Available_Description")}</p>
+    </>:<EmptyPlaceHolder title={"No_Brands_Available_Title"} description={"No_Brands_Available_Description"} />}
     </div>
   );
 }
