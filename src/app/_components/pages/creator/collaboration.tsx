@@ -10,10 +10,10 @@ import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import Loading from "@/app/vendor/loading";
 import CollaborationTable from "./collaboration-table";
-import { useSession } from "next-auth/react";
 import Loader from "../../components-common/layout/loader";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
+import { useAuthStore } from "@/lib/store/auth-user";
 
 interface IVendorContact {
   name: string;
@@ -89,9 +89,8 @@ export interface ICollaboration {
 
 export default function CollaborationList() {
   const axios = useAxiosAuth();
-  const session = useSession();
   const translate = useTranslations();
-  const user = session?.data?.user ?? { type: "vendor" };
+  const { account: user } = useAuthStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
@@ -103,7 +102,7 @@ export default function CollaborationList() {
 
   // get user role
   const getUserType = () => {
-    return { vendor: "Creator", creator: "Brand" }[user?.type] ?? "";
+    return { vendor: "Creator", creator: "Brand" }[user?.role] ?? "";
   };
   // Get Creator list
   const fetchCollaboration = useCallback(

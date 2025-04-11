@@ -5,13 +5,13 @@ import {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { useAuthStore } from "../store/auth-user";
 
 type AxiosError = { config: { _retry: boolean } } & OriginalAxiosError;
 
 const useAxiosAuth = () => {
-  const { data: session }: any = useSession();
+  const { token: authToken }: any = useAuthStore();
 
   useEffect(() => {
     const requestIntercept = axiosAuth.interceptors.request.use(
@@ -19,7 +19,7 @@ const useAxiosAuth = () => {
         request: InternalAxiosRequestConfig
       ): Promise<InternalAxiosRequestConfig> => {
         try {
-          const token = session?.accessToken;
+          const token = authToken;
           if (token && request.headers) {
             request.headers["Authorization"] = `Bearer ${token}`;
           }
@@ -59,7 +59,7 @@ const useAxiosAuth = () => {
       axiosAuth.interceptors.request.eject(requestIntercept);
       axiosAuth.interceptors.response.eject(responseIntercept);
     };
-  }, [session]);
+  }, [authToken]);
 
   return axiosAuth;
 };

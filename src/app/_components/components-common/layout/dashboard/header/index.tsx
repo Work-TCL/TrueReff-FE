@@ -5,8 +5,6 @@ import { translate } from "../../../../../../lib/utils/translate";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
 import { BellRing, Menu, User, X } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -19,6 +17,10 @@ import {
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import toast from "react-hot-toast";
 import socketService from "@/lib/services/socket-service";
+import { useAuthStore } from "@/lib/store/auth-user";
+import { useVendorStore } from "@/lib/store/vendor";
+import { useCreatorStore } from "@/lib/store/creator";
+import { creatorRegister, getUserApi } from "@/lib/web-api/auth";
 interface IPageName {
   [key: string]: string;
 }
@@ -64,7 +66,9 @@ function formatTimeAgo(date: string) {
 export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const pathName = usePathname();
   const axios = useAxiosAuth();
-  const { data: session } = useSession();
+  const { account } = useAuthStore();
+  const { vendor } = useVendorStore();
+  const { creator } = useCreatorStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -115,15 +119,16 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchNotifications();
   }, []);
 
   useEffect(() => {
     socketService.connect();
-    if (session?.creator?._id || session?.vendor?._id) {
-      let id = session?.vendor?._id || session?.creator?._id;
-      socketService.registerUser(id);
+    if (creator.creatorId || vendor.vendorId) {
+      let id: any = creator.creatorId || vendor.vendorId;
+      id && socketService.registerUser(String(id));
     }
 
     socketService.onNotification((data) => {
@@ -262,7 +267,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         </Drawer>
         <div className="w-8 h-8  bg-background rounded-full"></div>
         <p className="text-gray-black md:text-base text-sm md:block hidden">
-          {session?.creator?.full_name || session?.vendor?.business_name}
+          {creator.full_name || vendor.business_name}
         </p>
       </div>
       <Link href="?auth=logout" className="mx-4 block">

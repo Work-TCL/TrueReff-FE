@@ -15,14 +15,18 @@ import { PiLockKey } from "react-icons/pi";
 import { loginAPI } from "@/lib/web-api/auth";
 import { translate } from "@/lib/utils/translate";
 import { IPostLoginResponse } from "@/lib/types-api/auth";
-import { useAuthStore } from "@/lib/store/auth";
+import { useAuthStore } from "@/lib/store/auth-user";
 import { USER_TYPE } from "@/lib/utils/constants";
+import { useCreatorStore } from "@/lib/store/creator";
+import { useVendorStore } from "@/lib/store/vendor";
 
 export default function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = loginSchema;
-  const { setAuthData } = useAuthStore();
+  const { setAccountData, setIsAuthStatus, setToken } = useAuthStore();
+  const { setCreatorData } = useCreatorStore();
+  const { setVendorData } = useVendorStore();
   const methods = useForm<ILoginSchema>({
     defaultValues: {
       email: "",
@@ -34,9 +38,10 @@ export default function LoginForm() {
 
   const onSubmit = async (data: ILoginSchema) => {
     setLoading(true);
+    setIsAuthStatus("loading");
     try {
       ("use server");
-      const res: IPostLoginResponse = await loginAPI({
+      const res: IPostLoginResponse | any = await loginAPI({
         email: data?.email,
         password: data?.password,
       });
@@ -51,16 +56,63 @@ export default function LoginForm() {
           password: data?.password,
           redirect: false,
         });
-        console.log("response",response)
         if (response?.ok) {
           toast.success("Login Successfully.");
+          setIsAuthStatus("authanticated");
+          setToken(res?.data?.token);
           if (
             !res?.data?.detailsFilled &&
             [USER_TYPE.Creator, USER_TYPE.Vendor].includes(res?.data?.type)
           ) {
-            res?.data?.type === USER_TYPE.Vendor
-              ? router?.push("/vendor-register")
-              : res?.data?.creator?.completed === 50 ? router.push('/creator/dashboard') :router?.push(`/creator-registration?email=${data?.email}`);
+            setAccountData({
+              email: res?.data?.email,
+              id: res?.data?._id,
+              role: res?.data?.type,
+              name: res?.data?.name,
+            });
+            if (res?.data?.type === USER_TYPE.Creator) {
+              setCreatorData("creator", {
+                creatorId: res?.data?.creator?._id,
+                accountId: res?.data?._id,
+                full_name: res?.data?.creator?.full_name,
+                user_name: res?.data?.creator?.user_name,
+                title: res?.data?.creator?.title,
+                phone: res?.data?.creator?.phone,
+                banner_image: res?.data?.creator?.banner_image,
+                profile_image: res?.data?.creator?.profile_image,
+                category: res?.data?.creator?.category,
+                sub_category: res?.data?.creator?.sub_category,
+                tags: res?.data?.creator?.tags,
+                channels: res?.data?.creator?.channels,
+                completed: res?.data?.creator?.completed,
+                short_description: res?.data?.creator?.short_description,
+                long_description: res?.data?.creator?.long_description,
+              });
+            }
+            if (res?.data?.type === USER_TYPE.Vendor) {
+              setVendorData("vendor", {
+                vendorId: res?.data?.vendor?._id,
+                accountId: res?.data?._id,
+                business_name: res?.data?.vendor?.business_name,
+                company_email: res?.data?.vendor?.company_email,
+                company_phone: res?.data?.vendor?.company_phone,
+                gst_number: res?.data?.vendor?.gst_number,
+                website: res?.data?.vendor?.website,
+                type_of_business: res?.data?.vendor?.type_of_business,
+                contacts: res?.data?.vendor?.contacts,
+                omni_channels: res?.data?.vendor?.omni_channels,
+                brand_documents: res?.data?.vendor?.brand_documents,
+                addresses: res?.data?.vendor?.addresses,
+              });
+            }
+            setIsAuthStatus("authanticated");
+            if (res?.data?.type === USER_TYPE.Vendor) {
+              router?.push("/vendor-register");
+            } else if (res?.data?.creator?.completed === 50) {
+              router.push("/creator/dashboard");
+            } else {
+              router?.push(`/creator-registration?email=${data?.email}`);
+            }
           } else {
             router?.push(`/${res?.data?.type}/dashboard`);
           }
@@ -70,6 +122,7 @@ export default function LoginForm() {
         throw "Internal server error";
       }
     } catch (error) {
+      setIsAuthStatus("unauthanticated");
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     } finally {

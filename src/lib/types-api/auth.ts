@@ -26,67 +26,67 @@ export interface IPostLoginResponse {
     otpSent?: boolean;
     type: string;
     detailsFilled?: boolean;
-    creator?: ICreator
+    creator?: ICreator;
   };
 }
 interface IContacts {
-  name: string,
-  phone: string,
-  email: string,
-  isDefault: boolean,
-  _id: string
+  name: string;
+  phone: string;
+  email: string;
+  isDefault: boolean;
+  _id: string;
 }
 interface IVendor {
-  _id: string,
-  accountId: string,
-  business_name: string,
-  company_email: string,
-  company_phone: string,
-  gst_number: string,
-  website: string,
-  type_of_business: string,
-  contacts: IContacts[],
-  omni_channels: string[],
-  brand_documents: any[],
-  addresses: any[],
-  createdAt: string,
-  updatedAt: string
+  _id: string;
+  accountId: string;
+  business_name: string;
+  company_email: string;
+  company_phone: string;
+  gst_number: string;
+  website: string;
+  type_of_business: string;
+  contacts: IContacts[];
+  omni_channels: string[];
+  brand_documents: any[];
+  addresses: any[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface ICreator {
-  _id: string,
-  accountId: string,
-  full_name: string,
-  user_name: string,
-  phone: string,
-  title: string,
-  long_description: string,
-  short_description: string,
-  tags: string[],
-  category: string[],
-  sub_category: string[],
-  profile_image: string,
-  banner_image: string,
-  channels: string[],
-  completed: number,
-  createdAt: string,
-  updatedAt: string
+  _id: string;
+  accountId: string;
+  full_name: string;
+  user_name: string;
+  phone: string;
+  title: string;
+  long_description: string;
+  short_description: string;
+  tags: string[];
+  category: string[];
+  sub_category: string[];
+  profile_image: string;
+  banner_image: string;
+  channels: string[];
+  completed: number;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface IGetUserResponse {
-  status: number,
+  status: number;
   data: {
-    _id: string,
-    name: string,
-    email: string,
-    password: string,
-    type: string,
-    isActive: boolean,
-    isEmailVerified: boolean,
-    createdAt: string,
-    updatedAt: string,
-    vendor?: IVendor,
-    creator?: ICreator,
-  }
+    _id: string;
+    name: string;
+    email: string;
+    password: string;
+    type: string;
+    isActive: boolean;
+    isEmailVerified: boolean;
+    createdAt: string;
+    updatedAt: string;
+    vendor?: IVendor;
+    creator?: ICreator;
+  };
 }
 
 // POST Verify Email
@@ -201,9 +201,7 @@ export interface IPostCreatorRegisterRequest {
 }
 export interface IPostVendorRegisterResponse {
   status: number;
-  data: {
-    message: string;
-  };
+  data: IVendor;
 }
 
 // POST Creator Register
@@ -224,10 +222,7 @@ export interface IPostVendorRegisterResponse {
 
 export interface IPostCreatorRegisterResponse {
   status: number;
-  data: {
-    message: string;
-    _id:string;
-  };
+  data: ICreator;
 }
 
 export interface IGetCategoryParams {

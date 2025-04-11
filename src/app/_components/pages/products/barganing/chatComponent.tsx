@@ -7,8 +7,10 @@ import socketService from "@/lib/services/socket-service";
 import { formatTo12Hour } from "@/lib/utils/commonUtils";
 import { getCollobrationConversation } from "@/lib/web-api/collobration";
 import { ICollaboration, IProduct } from "../viewProduct/viewDetailProduct";
-import { useSession } from "next-auth/react";
 import Loading from "@/app/creator/loading";
+import { useAuthStore } from "@/lib/store/auth-user";
+import { useCreatorStore } from "@/lib/store/creator";
+import { useVendorStore } from "@/lib/store/vendor";
 
 export default function ChatComponent({
   productData,
@@ -18,17 +20,19 @@ export default function ChatComponent({
   collaborationData: ICollaboration;
 }) {
   const [message, setMessage] = useState("");
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { account: user } = useAuthStore();
+  const { creator } = useCreatorStore();
+  const { vendor } = useVendorStore();
   const [messages, setMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     socketService.connect();
 
-    socketService.registerUser(
-      user?.type === "creator" ? session?.creator?._id : session?.vendor?._id
-    );
+    if (creator.creatorId || vendor.vendorId) {
+      let id: any = creator.creatorId || vendor.vendorId;
+      id && socketService.registerUser(String(id));
+    }
 
     socketService.joinCollaboration(collaborationData?._id);
     socketService.joinedCollaborationRoom((data) => {});
@@ -39,7 +43,7 @@ export default function ChatComponent({
     return () => {
       // socketService.disconnect();
     };
-  }, [session?.creator?._id, session?.vendor?._id]);
+  }, [creator.creatorId, vendor.vendorId]);
 
   useEffect(() => {
     (async () => {
@@ -65,16 +69,14 @@ export default function ChatComponent({
       socketService.sendMessage(
         collaborationData?._id,
         message,
-        user?.type === "creator" ? session?.creator?._id : undefined,
-        user?.type === "vendor" ? session?.vendor?._id : undefined
+        user?.role === "creator" ? creator.creatorId : undefined,
+        user?.role === "vendor" ? vendor.vendorId : undefined
       );
       setMessage("");
     }
   };
   const getUserName = () => {
-    return user?.type === "creator"
-      ? session?.creator?.full_name
-      : session?.vendor?.business_name;
+    return user?.role === "creator" ? creator.creatorId : vendor.vendorId;
   };
 
   return (
@@ -102,8 +104,8 @@ export default function ChatComponent({
         {!isLoading &&
           messages.map((msg: any, idx) => {
             const owner =
-              msg?.creatorId?._id === session?.creator?._id ||
-              msg?.vendorId?._id === session?.vendor?._id;
+              msg?.creatorId?._id === creator.creatorId ||
+              msg?.vendorId?._id === vendor.vendorId;
             const text = msg.messageJson?.message;
             const messageSentTime = msg?.createdAt
               ? formatTo12Hour(msg?.createdAt)

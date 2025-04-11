@@ -79,7 +79,6 @@ const campaigns = [
   },
 ];
 
-
 export default function CampaignList() {
   const router = useRouter();
   const translate = useTranslations();
@@ -139,7 +138,7 @@ export default function CampaignList() {
     <div className="p-4 rounded-lg flex flex-col gap-4">
       <div className="flex md:flex-row flex-col justify-between items-center gap-2">
         <Input
-          placeholder={translate("Search_campaign...")}
+          placeholder={`${translate("Search_campaign")}...`}
           className="md:h-10 md:w-auto w-full"
         />
         <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
@@ -246,12 +245,13 @@ export default function CampaignList() {
                 <CustomTableCell>{campaign.omniChannel}</CustomTableCell>
                 <CustomTableCell>
                   <div
-                    className={`${campaign.status === "Running"
+                    className={`${
+                      campaign.status === "Running"
                         ? "bg-[#5856D61A] text[#5856D6]"
                         : campaign.status === "Completed"
-                          ? "bg-[#0982281A] text-[#098228]"
-                          : "bg-[#FF95001A] text-[#FF9500]"
-                      } p-2 rounded-md text-center`}
+                        ? "bg-[#0982281A] text-[#098228]"
+                        : "bg-[#FF95001A] text-[#FF9500]"
+                    } p-2 rounded-md text-center`}
                   >
                     {campaign.status}
                   </div>

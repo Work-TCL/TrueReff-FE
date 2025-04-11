@@ -10,12 +10,11 @@ import { TablePagination } from "@/app/_components/components-common/tables/Pagi
 import { translate } from "@/lib/utils/translate";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
-import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import CollaborationTable from "./collaboration-table";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import { useAuthStore } from "@/lib/store/auth-user";
 export interface ICategory {
   _id: string;
   name: string;
@@ -59,9 +58,8 @@ export interface ICollaboration {
 
 export default function CollaborationList() {
   const axios = useAxiosAuth();
-  const session = useSession();
   const t = useTranslations();
-  const user = session?.data?.user ?? { type: "vendor" };
+  const { account: user } = useAuthStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
@@ -73,7 +71,7 @@ export default function CollaborationList() {
 
   // get user role
   const getUserType = () => {
-    return { vendor: "Creator", creator: "Brand" }[user?.type] ?? "";
+    return { vendor: "Creator", creator: "Brand" }[user?.role] ?? "";
   };
   // Get Creator list
   const getCreatorList = useCallback(

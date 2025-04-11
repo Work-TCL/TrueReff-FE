@@ -21,9 +21,9 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { translate } from "@/lib/utils/translate";
-import { useSession } from "next-auth/react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import BargainingView from "../barganing/view";
+import { useCreatorStore } from "@/lib/store/creator";
 
 interface ICategory {
   _id: string;
@@ -84,8 +84,7 @@ const buttonColor: { [key: string]: string } = {
 export default function ViewProductDetail() {
   const pathName = usePathname();
   const axios = useAxiosAuth();
-  const session = useSession();
-  const creator = session?.data?.creator ?? { _id: "" };
+  const { creator } = useCreatorStore();
   const params = useParams();
   const router = useRouter();
   const productId = params?.productId;
@@ -229,11 +228,11 @@ export default function ViewProductDetail() {
     }
   }, [productId]);
   useEffect(() => {
-    const creator_id = session?.data?.creator?._id || creatorId;
+    const creator_id = creator.creatorId || creatorId;
     if (creator_id) {
       fetchProductCollaborationStatus(creator_id);
     }
-  }, [session?.data?.creator?._id, creatorId]);
+  }, [creator.creatorId, creatorId]);
   const handleSendRequest = async () => {
     setLoading(true);
     try {
@@ -241,7 +240,7 @@ export default function ViewProductDetail() {
         `/product/collaboration/creator/request`,
         {
           productId: productData?.productId,
-          creatorId: creator?._id,
+          creatorId: creator.creatorId,
           vendorId: productData?.vendorId,
           discountType: "PERCENTAGE", //"PERCENTAGE", "FIXED_AMOUNT"
           discountValue: 10,
@@ -357,7 +356,7 @@ export default function ViewProductDetail() {
         </Breadcrumb>
         {(!isChatView ||
           (collaborationStatus === "PENDING" &&
-            !creator?._id &&
+            !creator.creatorId &&
             !isChatView)) && (
           <Button
             disabled={
@@ -377,7 +376,7 @@ export default function ViewProductDetail() {
       {isChatView ? (
         <BargainingView
           productData={productData}
-          isVendor={!Boolean(creator?._id)}
+          isVendor={!Boolean(creator.creatorId)}
           collaborationData={collaborationData}
           openUtmForm={() => {
             setIsUTMView(true);

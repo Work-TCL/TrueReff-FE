@@ -12,7 +12,7 @@ import { translate } from "@/lib/utils/translate";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
-import { useSession } from "next-auth/react";
+import { useVendorStore } from "@/lib/store/vendor";
 
 export default function EditVendorForm({
   profile,
@@ -21,8 +21,8 @@ export default function EditVendorForm({
   profile: any;
   onClose: any;
 }) {
-  const axios:any = useAxiosAuth();
-  const {update} = useSession();
+  const axios: any = useAxiosAuth();
+  const { setVendorData } = useVendorStore();
   const [loading, setLoading] = useState(false);
   const schema = vendorProfileUpdateSchema;
   const methods = useForm<IVendorProfileUpdateSchema>({
@@ -39,7 +39,7 @@ export default function EditVendorForm({
   const onSubmit = async (data: IVendorProfileUpdateSchema) => {
     setLoading(true);
     try {
-      ("use server")
+      ("use server");
       const payload = data;
       //   delete payload.company_email
       //   delete payload.company_phone
@@ -48,10 +48,16 @@ export default function EditVendorForm({
         response = response?.data;
       }
       if (response?.status === 200) {
+        setVendorData("vendor", {
+          company_email: data.company_email,
+          company_phone: data.company_phone,
+          gst_number: data.gst_number,
+          website: data.website,
+          business_name: data.business_name,
+        });
         toast.success(response?.message);
         methods?.reset();
-        await update();
-        console.log("response",data)
+        console.log("response", data);
         onClose && onClose(true);
         return true;
       }

@@ -22,7 +22,7 @@ import {
   IPostVendorRegisterRequest,
   IPostVendorRegisterResponse,
 } from "@/lib/types-api/auth";
-import { useSession } from "next-auth/react";
+import { useVendorStore } from "@/lib/store/vendor";
 
 let allTabs: {
   id: string;
@@ -54,8 +54,8 @@ const TABS_STATUS = {
 
 export default function PreFormPage() {
   const router = useRouter();
-  const {update} = useSession();
   const [loading, setLoading] = useState(false);
+  const { setVendorData } = useVendorStore();
   const axios = useAxiosAuth();
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
   const methods = useForm<IPreFormSchema>({
@@ -113,7 +113,20 @@ export default function PreFormPage() {
 
       if (response?.status === 201) {
         toast.success("Vendor successfully registered.");
-        await update();
+        setVendorData("vendor", {
+          vendorId: response?.data?._id,
+          accountId: response?.data?._id,
+          business_name: response?.data?.business_name,
+          company_email: response?.data?.company_email,
+          company_phone: response?.data?.company_phone,
+          gst_number: response?.data?.gst_number,
+          website: response?.data?.website,
+          type_of_business: response?.data?.type_of_business,
+          contacts: response?.data?.contacts,
+          omni_channels: response?.data?.omni_channels,
+          brand_documents: response?.data?.brand_documents,
+          addresses: response?.data?.addresses,
+        });
         router.push("/vendor/dashboard");
       }
     } catch (error) {

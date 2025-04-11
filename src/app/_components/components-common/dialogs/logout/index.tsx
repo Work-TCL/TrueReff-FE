@@ -1,22 +1,18 @@
 "use client";
 import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
-import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AnchorButton from "@/app/_components/ui/button/variant";
 import SignOut from "./signOut";
+import { useAuthStore } from "@/lib/store/auth-user";
 
 const LOGOUT = "logout";
 
 export default function Logout() {
-  const { status } = useSession();
+  const { status } = useAuthStore();
   const navigate = useRouter();
   const auth = useSearchParams().get("auth");
   const dialogPath = status === "authenticated" && auth === LOGOUT;
-
-  // if (auth === LOGOUT && status !== "authenticated") {
-  //   navigate.push("?");
-  // }
 
   return (
     <DialogLayout

@@ -32,7 +32,8 @@ import {
   socialMediaAdded,
 } from "@/lib/web-api/auth";
 import Loader from "../../components-common/layout/loader";
-import { useSession } from "next-auth/react";
+import { useCreatorStore } from "@/lib/store/creator";
+import { useAuthStore } from "@/lib/store/auth-user";
 
 let allTabs: {
   id: string;
@@ -69,7 +70,8 @@ const TABS_STATUS = {
 };
 export default function CreatorRegistrationPage() {
   const searchParams = useSearchParams();
-  const {update} = useSession();
+  const { account } = useAuthStore();
+  const { setCreatorData } = useCreatorStore();
   const router = useRouter();
   const email = searchParams.get("email") ?? "";
   const tab = searchParams.get("tab") ?? "0";
@@ -145,7 +147,23 @@ export default function CreatorRegistrationPage() {
         payload
       );
       if (response?.status === 201) {
-        await update();
+        setCreatorData("creator", {
+          creatorId: response?.data?._id,
+          accountId: response?.data?.accountId,
+          full_name: response?.data?.full_name,
+          user_name: response?.data?.user_name,
+          title: response?.data?.title,
+          phone: response?.data?.phone,
+          banner_image: response?.data?.banner_image,
+          profile_image: response?.data?.profile_image,
+          category: response?.data?.category,
+          sub_category: response?.data?.sub_category,
+          tags: response?.data?.tags,
+          channels: response?.data?.channels,
+          completed: response?.data?.completed,
+          short_description: response?.data?.short_description,
+          long_description: response?.data?.long_description,
+        });
         router.push(`?tab=2&creatorId=${response?.data?._id}`);
       }
     } catch (error) {
@@ -161,7 +179,6 @@ export default function CreatorRegistrationPage() {
     try {
       const response = await socialMediaAdded({});
       if (response?.status === 200) {
-        await update();
         router.push("/creator/dashboard");
       }
     } catch (error) {
@@ -216,8 +233,27 @@ export default function CreatorRegistrationPage() {
   const getCreator = async () => {
     setIsCreatorLoading(true);
     try {
-      const creator = await getCreatorProgress();
+      const creator: any = await getCreatorProgress();
       setCreatorDetails(creator);
+      if (creator?._id) {
+        setCreatorData("creator", {
+          creatorId: creator?._id,
+          accountId: creator?.accountId,
+          full_name: creator?.full_name,
+          user_name: creator?.user_name,
+          title: creator?.title,
+          phone: creator?.phone,
+          banner_image: creator?.banner_image,
+          profile_image: creator?.profile_image,
+          category: creator?.category,
+          sub_category: creator?.sub_category,
+          tags: creator?.tags,
+          channels: creator?.channels,
+          completed: creator?.completed,
+          short_description: creator?.short_description,
+          long_description: creator?.long_description,
+        });
+      }
     } catch (e) {
       console.log("error while getting creator");
     } finally {

@@ -1,27 +1,44 @@
+"use client";
 import ChannelCard from "@/app/_components/components-common/channel-card";
 import ShopifyStoreConnects from "@/app/_components/pages/settings/components/shopify-connect-form";
 import StoreConnects from "@/app/_components/pages/settings/store-connects";
+import LoadingPage from "@/lib/components/loading-page";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { IChannel } from "@/lib/types-api/vendor";
 import { getConnectedChannelsList } from "@/lib/web-api/channel";
-import React from "react";
-export const dynamic = 'force-dynamic';
-export default async function Page() {
-  const channels = await getConnectedChannelsList();
+import React, { useEffect, useState, useTransition } from "react";
+
+export default function Page() {
+  const [isPending, startTransition] = useTransition();
+  const [channels, setChannels] = useState<any[]>([]);
+  const axios = useAxiosAuth();
+
+  useEffect(() => {
+    startTransition(async () => {
+      const res: any[] = await getConnectedChannelsList(axios);
+      if (Array.isArray(res)) {
+        setChannels(res);
+      }
+    });
+  }, []);
   return (
-    <StoreConnects
-      className="md:w-2/3 lg:w-1/2 bg-white rounded-xl shadow-md"
-      channels={Array.isArray(channels) ? channels : []}
-      StoreConnectsComponent={() => <ShopifyStoreConnects />}
-      ChannelCardComponent={(value: IChannel) => (
-        <ChannelCard
-          channelConfig={{
-            name: value?.channelConfig?.name,
-            domain: value?.channelConfig?.domain,
-          }}
-          channelStatus={value?.channelStatus}
-          channelType={value?.channelType}
-        />
-      )}
-    />
+    <>
+      {isPending && <LoadingPage />}
+      <StoreConnects
+        className="md:w-2/3 lg:w-1/2 bg-white rounded-xl shadow-md"
+        channels={Array.isArray(channels) ? channels : []}
+        StoreConnectsComponent={() => <ShopifyStoreConnects />}
+        ChannelCardComponent={(value: IChannel) => (
+          <ChannelCard
+            channelConfig={{
+              name: value?.channelConfig?.name,
+              domain: value?.channelConfig?.domain,
+            }}
+            channelStatus={value?.channelStatus}
+            channelType={value?.channelType}
+          />
+        )}
+      />
+    </>
   );
 }

@@ -23,13 +23,13 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { translate } from "../../../../../../lib/utils/translate";
-import { useSession } from "next-auth/react";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import { cn } from "@sohanemon/utils";
 import {
   Tooltip,
   ToolTipProvider,
 } from "@/app/_components/ui/tooltip/customTooltip";
+import { useAuthStore } from "@/lib/store/auth-user";
 
 type MenuItem = {
   label: string;
@@ -103,8 +103,7 @@ interface ISidebarProps {
 }
 const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
-  const { data: session, ...sessionData } = useSession();
-  let user = session?.user ?? { type: "vendor" };
+  const { account: user } = useAuthStore();
 
   const lg = useMediaQuery("(min-width: 1024px)");
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -228,7 +227,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const menu = {
     vendor: menuItems,
     creator: creatorMenuItem,
-  }[user?.type || "vendor"];
+  }[user?.role || "vendor"];
 
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
