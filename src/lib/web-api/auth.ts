@@ -185,7 +185,7 @@ export const getCategories = async (
   params: IGetCategoryParams
 ): Promise<IGetCategoryResponse> => {
   try {
-    const response = await axiosInstance.get("/product/category/list");
+    const response = await axiosInstance.get("/product/category/list?all=true");
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);

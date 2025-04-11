@@ -283,6 +283,36 @@ export default function Input({
     />
   );
 
+  const renderMultiSelectCategories = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative z-50">
+            <Select
+              defaultValue={field?.value || []}
+              isMulti
+              options={options}
+              className="basic-multi-select focus:outline-none focus:shadow-none"
+              classNamePrefix="select"
+              {...field}
+              isDisabled={props?.disabled}
+              menuPortalTarget={document.body} // render dropdown outside the parent container
+              styles={{
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                menu: (base) => ({ ...base, zIndex: 9999 }),
+              }}
+            />
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
+
   const renderInput = () => {
     switch (type) {
       case "radio":
@@ -352,7 +382,8 @@ export default function Input({
 
       case "tag":
         return renderTagInput();
-
+      case "productCategories":
+        return renderMultiSelectCategories();
       default:
         return renderTextInput();
     }

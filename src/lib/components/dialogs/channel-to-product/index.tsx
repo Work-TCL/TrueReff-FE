@@ -154,7 +154,7 @@ export default function ChannleToProduct({
                   label={translate("Category")}
                   placeholder={translate("Fashion_Beauty")}
                   name="category"
-                  type="select-multiple"
+                  type="productCategories"
                   options={parentCategory?.map((ele) => ({
                     value: ele?._id,
                     label: ele?.name,
@@ -166,7 +166,7 @@ export default function ChannleToProduct({
                   label={translate("Sub_category")}
                   placeholder={translate("Men_Fashion")}
                   name="subCategory"
-                  type="select-multiple"
+                  type="productCategories"
                   options={subCategory.map((ele) => ({
                     value: ele?._id,
                     label: ele?.name,

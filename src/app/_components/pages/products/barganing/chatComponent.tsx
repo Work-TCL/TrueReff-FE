@@ -94,7 +94,7 @@ export default function ChatComponent({
         </div>
       </div>
       <div className="h-px w-full bg-stroke mx-2"></div>{" "}
-      <CardContent className="flex flex-col-reverse h-[90%] max-h-[900px] overflow-y-auto gap-3">
+      <CardContent className="flex flex-col-reverse h-[86%] max-h-[860px] overflow-y-auto gap-3">
         {isLoading && <Loading />}
         {!isLoading && message?.length < 0 && (
           <p className="opacity-50 text-center">Start your chat now.</p>

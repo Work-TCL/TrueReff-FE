@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { Input } from "@/components/ui/input";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
-import { FaSlidersH } from "react-icons/fa";
 import { Eye, PencilLine, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { translate } from "../../../../lib/utils/translate";
+import { getCategories } from "@/lib/web-api/auth";
+import { ICategoryData } from "../creator-registration/components/profile-setup";
+import Select from "react-select";
+import { Input } from "@/components/ui/input";
+import { useTranslations } from "next-intl";
 
 // Sample Data
 const campaigns = [
@@ -79,9 +79,18 @@ const campaigns = [
   },
 ];
 
+
 export default function CampaignList() {
   const router = useRouter();
+  const translate = useTranslations();
   const [currentPage, setCurrentPage] = useState(1);
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
+  const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>(
+    []
+  );
   const pageSize = 10;
   const totalPages = Math.ceil(campaigns.length / pageSize);
 
@@ -90,13 +99,91 @@ export default function CampaignList() {
     currentPage * pageSize
   );
 
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories({ page: 0, limit: 0 });
+      const data = response?.data?.data || [];
+      setCategories(data);
+      setParentCategory(data.filter((ele) => ele?.parentId === null));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
+
+  useEffect(() => {
+    const optionsSubCategory = categories.filter((ele) =>
+      selectedCategories.includes(ele?.parentId || "")
+    );
+    setSubCategory(optionsSubCategory);
+
+    // Filter selected subcategories to only include available ones
+    const availableSubCategoriesIds = optionsSubCategory.map((v) => v._id);
+    setSelectedSubCategories((prev) =>
+      prev.filter((id) => availableSubCategoriesIds.includes(id))
+    );
+  }, [selectedCategories, categories]);
+
+  const customStyles = {
+    placeholder: (base: any) => ({
+      ...base,
+      fontSize: "0.875rem ", // Tailwind text-sm
+      color: "#a1a1aa", // Tailwind slate-400
+    }),
+  };
+
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
-      <div className="flex justify-between items-center gap-2">
-      <div className="md:text-[20px] text-base text-500">
-      <Input placeholder={translate("Search_campaign...")} />
+      <div className="flex md:flex-row flex-col justify-between items-center gap-2">
+        <Input
+          placeholder={translate("Search_campaign...")}
+          className="md:h-10 md:w-auto w-full"
+        />
+        <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
+          <Select
+            styles={customStyles}
+            value={selectedCategories.map((id) => {
+              const match = parentCategory.find((cat) => cat._id === id);
+              return { value: id, label: match?.name || id };
+            })}
+            isMulti
+            onChange={(selectedOptions) => {
+              const selectedIds = selectedOptions.map((opt) => opt.value);
+              setSelectedCategories(selectedIds);
+            }}
+            options={parentCategory.map((ele) => ({
+              value: ele._id,
+              label: ele.name,
+            }))}
+            isOptionDisabled={() => selectedCategories.length >= 3}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            placeholder="Parent Categories (max 3)"
+          />
+          <Select
+            styles={customStyles}
+            placeholder="Subcategories (max 3)"
+            value={selectedSubCategories.map((id) => {
+              const match = subCategory.find((cat) => cat._id === id);
+              return { value: id, label: match?.name || id };
+            })}
+            isMulti
+            onChange={(selectedOptions) => {
+              const selectedIds = selectedOptions.map((opt) => opt.value);
+              setSelectedSubCategories(selectedIds);
+            }}
+            options={subCategory.map((ele) => ({
+              value: ele._id,
+              label: ele.name,
+            }))}
+            isOptionDisabled={() => selectedSubCategories.length >= 3}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            classNamePrefix="select"
+          />
         </div>
-        <div className="flex items-center gap-[10px]">
+        {/* <div className="hidden md:flex items-center gap-[10px]">
           <PiListChecksLight className="md:size-[30px] size-6" />
           <IoGridOutline className="md:size-[30px] size-6" />
           <Button
@@ -105,7 +192,7 @@ export default function CampaignList() {
           >
             <FaSlidersH /> {translate("Filters")}
           </Button>
-        </div>
+        </div> */}
       </div>
       <div className="overflow-auto">
         <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
@@ -159,13 +246,12 @@ export default function CampaignList() {
                 <CustomTableCell>{campaign.omniChannel}</CustomTableCell>
                 <CustomTableCell>
                   <div
-                    className={`${
-                      campaign.status === "Running"
+                    className={`${campaign.status === "Running"
                         ? "bg-[#5856D61A] text[#5856D6]"
                         : campaign.status === "Completed"
-                        ? "bg-[#0982281A] text-[#098228]"
-                        : "bg-[#FF95001A] text-[#FF9500]"
-                    } p-2 rounded-md text-center`}
+                          ? "bg-[#0982281A] text-[#098228]"
+                          : "bg-[#FF95001A] text-[#FF9500]"
+                      } p-2 rounded-md text-center`}
                   >
                     {campaign.status}
                   </div>
