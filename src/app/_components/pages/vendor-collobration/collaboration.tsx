@@ -18,33 +18,50 @@ import { useAuthStore } from "@/lib/store/auth-user";
 export interface ICategory {
   _id: string;
   name: string;
+  parentId: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IProduct {
   _id: string;
   title: string;
   channelProductId: string;
+  vendorId: string;
   sku: string;
   description: string;
-  media: string[];
-  channelName: string;
-  category: string[];
+  media: string[]; // assuming media is an array of URLs or identifiers
+  channelName: string; // e.g., "shopify"
+  category: ICategory[];
+  categories?:string;
   tags: string[];
+  tag?: string;
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ICreator {
+  _id: string;
+  user_name: string;
+}
+
+export interface IRequest {
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  collaborationStatus: string;
+  requestFrom: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ICollaboration {
   _id: string;
-  creatorId: {
-    _id: string;
-    accountId: string;
-    full_name: string;
-    user_name: string;
-    phone: string;
-    profile_image: string;
-  };
+  creatorId: ICreator;
   productId: IProduct;
   vendorId: string;
+  requestId: IRequest;
   collaborationStatus: string;
   utmLink: string | null;
   discountType: string;
@@ -52,6 +69,8 @@ export interface ICollaboration {
   couponCode: string;
   commissionPercentage: number;
   expiresAt: string;
+  agreedByCreator: boolean;
+  agreedByVendor: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -89,10 +108,10 @@ export default function CollaborationList() {
 
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
-                ele.productId.category = (
+                ele.productId.categories = (
                   ele.productId.category as unknown as { name: string }[]
-                )?.map((cat) => String(cat?.name));
-                ele.productId.tags = ele.productId.tags;
+                )?.map((cat) => String(cat?.name)).join(", ");
+                ele.productId.tag = ele.productId.tags.join(", ");
                 return { ...ele };
               });
               setCollaborations([...result]);
@@ -155,7 +174,7 @@ export default function CollaborationList() {
             data={collaborations}
             filter={filter}
             user={getUserType()}
-            refreshCentral={() => getCreatorList(currentPage)}
+            refreshCentral={() => getCreatorList(currentPage,true)}
             loader={internalLoader}
           />
           <div className="flex justify-end items-center mt-4">

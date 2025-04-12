@@ -10,8 +10,7 @@ import { Input } from "@/components/ui/input";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
-import { Eye, Info } from "lucide-react";
-import { translate } from "@/lib/utils/translate";
+import { Eye } from "lucide-react";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import {
   Pagination,
@@ -22,21 +21,41 @@ import {
 } from "@/components/ui/pagination";
 import Loading from "@/app/vendor/loading";
 import Link from "next/link";
+import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import Loader from "../../components-common/layout/loader";
+import { useTranslations } from "next-intl";
 
-interface IProduct {
-  channelName: string;
-  handle: string;
-  id: string;
-  image: string;
-  title: string;
-  category: string;
-  tags: string;
-  sku: string;
-  price: string;
+export interface ICategory {
+  _id: string;
+  name: string;
+  parentId: string | null;
+  createdAt: string; // or Date if parsed
+  updatedAt: string; // or Date
 }
+
+export interface IProduct {
+  _id: string;
+  title: string;
+  channelProductId: string;
+  vendorId: string;
+  sku: string;
+  description: string;
+  media: string[]; // assuming media is an array of image/video URLs or paths
+  channelName: string; // extend as needed
+  category: ICategory[];
+  tags: string[]; // if tags are strings
+  createdAt: string; // or Date
+  updatedAt: string;
+  categories?: string;
+  tag?: string;
+  price?: string;
+}
+
 export default function ProductList() {
   const axios = useAxiosAuth();
+  const translate = useTranslations();
   const [loading, setLoading] = useState<boolean>(false);
+  const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [cursors, setCursors] = useState<{
     next: string | null;
@@ -53,46 +72,29 @@ export default function ProductList() {
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
     ItemPerPage: number,
-    cursor: string | null = null
+    cursor: string | null = null,
+    isInternalLoader: boolean = false
   ) => {
-    setLoading(true);
+    isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
         `product/vendor-product/product/list?per_page=${ItemPerPage}${
           cursor ? `&cursor=${cursor}` : ""
         }`
       );
-
       if (response.data.data?.data) {
-        setProductList(
-          response.data.data?.data?.map((v: any) => ({
-            channelName: v.channelName,
-            id: v?.productId?._id,
-            title: v?.productId?.title,
-            image:
-              v?.productId?.media?.length > 0 ? v?.productId?.media[0] : "",
-            category: Array.isArray(v?.productId?.category)
-              ? v?.productId?.category?.map((v: any) => v?.name)?.join(" ,")
-              : "",
-            price: v?.productId?.price,
-            tags: Array.isArray(v?.productId?.tags)
-              ? v?.productId?.tags?.join(" ,")
-              : "",
-            sku: v?.productId?.sku,
-          }))
-        );
-        if (response.data.data?.count >= ItemPerPage) {
-          // setCursors({
-          //   next: response.data.data.page_info.next_cursor,
-          //   previous: response.data.data.page_info.previous_cursor,
-          //   hasNextPage: response.data.data.page_info.has_next_page,
-          //   hasPreviousPage: response.data.data.page_info.has_previous_page,
-          // });
-        }
+        setProductList(response.data.data?.data.map((product:IProduct) => {
+          let categories = product.category?.length > 0 ? product.category.map((cat:ICategory) => cat?.name)?.join(", "):"";
+          let tag = product.tags?.length > 0 ? product.tags?.join(", "):"";
+          return {...product,categories,tag};
+        }));
       }
       setLoading(false);
+      setInternalLoading(false);
     } catch (error) {
       setLoading(false);
+      setProductList([]);
+      setInternalLoading(false);
     }
   };
 
@@ -104,18 +106,18 @@ export default function ProductList() {
   // Update the onClick handlers for pagination buttons
   const handleNextPage = () => {
     if (cursors.next && cursors.hasNextPage) {
-      fetProductsList(2, cursors.next);
+      fetProductsList(20, cursors.next,true);
     }
   };
 
   const handlePreviousPage = () => {
     if (cursors.previous && cursors.hasPreviousPage) {
-      fetProductsList(2, cursors.previous);
+      fetProductsList(20, cursors.previous,true);
     }
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
-      <div className="flex justify-between items-center  gap-2">
+      {loading ? <Loading/> : productList?.length > 0 ? <><div className="flex justify-between items-center  gap-2">
         <div className="md:text-[20px] text-base text-500">
           {" "}
           <Input
@@ -134,7 +136,7 @@ export default function ProductList() {
           </Button>
         </div>
       </div>
-      {loading && <Loading />}
+      {internalLoading && <Loader />}
       <div className="overflow-auto flex-1">
         <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
           <TableHeader className="bg-stroke">
@@ -165,27 +167,27 @@ export default function ProductList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!loading && productList?.length > 0 ? (
+            {
               productList.map((product, index) => (
                 <TableRow key={index} className=" bg-white">
                   <CustomTableCell>{product.channelName}</CustomTableCell>
                   <CustomTableCell>
                     <div className="flex items-center gap-2">
                       <Avatar className="w-8 h-8">
-                        <AvatarImage src={product.image} />
+                        {product.media?.length > 0 && <AvatarImage src={product.media[0]} />}
                       </Avatar>
                       {product.title}
                     </div>
                   </CustomTableCell>
-                  <CustomTableCell>{product.category}</CustomTableCell>
-                  <CustomTableCell>{product.tags}</CustomTableCell>
+                  <CustomTableCell>{product.categories}</CustomTableCell>
+                  <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
                   <CustomTableCell>{product.sku}</CustomTableCell>
                   <CustomTableCell>{product.price}</CustomTableCell>
                   {/*                <CustomTableCell>{product.discount}</CustomTableCell>
                                 <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
                   <CustomTableCell>
                     <Link
-                      href={`/vendor/products/view/${product.id}`}
+                      href={`/vendor/products/view/${product._id}`}
                       className="flex justify-center gap-3"
                     >
                       <Eye color="#FF4979" className="cursor-pointer" />
@@ -193,13 +195,7 @@ export default function ProductList() {
                   </CustomTableCell>
                 </TableRow>
               ))
-            ) : (
-              <tr>
-                <td colSpan={8}>
-                  <EmptyPlaceHolder />
-                </td>
-              </tr>
-            )}
+            }
           </TableBody>
         </Table>
       </div>
@@ -232,20 +228,7 @@ export default function ProductList() {
             </PaginationContent>
           </Pagination>{" "}
         </div>
-      ) : null}
-    </div>
-  );
-}
-export function EmptyPlaceHolder() {
-  return (
-    <div className=" flex items-center justify-center flex-col flex-1 text-center h-[200px] text-gray-500 p-4 bg-white ">
-      <Info className="mx-auto mb-2 text-gray-400" />
-      <h2 className="text-lg font-semibold">
-        {translate("No_Products_Available_Title")}
-      </h2>
-      <p className="text-sm">
-        {translate("No_Products_Available_Description")}
-      </p>
+      ) : null}</>:<EmptyPlaceHolder title={"No_Products_Available_Title"} description={"No_Products_Available_Description"}/>}
     </div>
   );
 }

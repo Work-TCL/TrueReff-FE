@@ -22,22 +22,62 @@ export interface ICategory {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IVendor {
+  _id: string;
+  business_name: string;
+}
+
+export interface IRequest {
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  collaborationStatus: string;
+  requestFrom: 'CREATOR' | 'VENDOR' | string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ICollaboration {
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  requestId: string;
+  collaborationStatus: string;
+  utmLink: string | null;
+  discountType: string;
+  discountValue: number;
+  couponCode: string;
+  commissionPercentage: number;
+  expiresAt: string;
+  agreedByCreator: boolean;
+  agreedByVendor: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface IProduct {
   _id: string;
   title: string;
   channelProductId: string;
+  vendorId: string;
   sku: string;
   description: string;
-  media: string[];
+  media: any[]; // replace with IMedia[] if you define media type later
   channelName: string;
+  category: ICategory[];
   tags: string[];
   createdAt: string;
   updatedAt: string;
-  tag: string;
-  category?: ICategory[];
-  categories: string;
-  collaborationStatus: string;
+  vendor: IVendor;
+  request: IRequest | null;
+  collaboration: ICollaboration | null;
+  categories?: string;
+  tag?: string;
 }
+
 
 export default function ProductList() {
   const axios = useAxiosAuth();
@@ -116,6 +156,9 @@ export default function ProductList() {
     setCurrentPage(page);
     page !== currentPage && getProductList(page, true);
   };
+  const handleUpdateProduct = () => {
+    getProductList(currentPage, true)
+  }
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
       {loading ? (
@@ -143,7 +186,7 @@ export default function ProductList() {
             </div>
           </div>
           {internalLoader && <Loader />}
-          <ProductTable data={products} />
+          <ProductTable data={products} handleUpdateProduct={handleUpdateProduct}/>
           {/* Pagination */}
           <div className="flex justify-end items-center mt-4">
             <TablePagination

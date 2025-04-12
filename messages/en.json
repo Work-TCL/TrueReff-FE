@@ -330,5 +330,6 @@
   "Commission_Percentage": "Commission Percentage",
   "Coupon_Code": "Coupon Code",
   "expiresAt": "expiresAt",
-  "No_Channels_Available_Description": "Please connect to the store to view available channels."
+  "No_Channels_Available_Description": "Please connect to the store to view available channels.",
+  "View":"View"
 }

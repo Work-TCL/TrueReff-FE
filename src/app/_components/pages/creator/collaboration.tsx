@@ -15,66 +15,56 @@ import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/lib/store/auth-user";
 
-interface IVendorContact {
-  name: string;
-  phone: string;
-  email: string;
-  isDefault: boolean;
-  _id: string;
-}
-
-interface IVendorAddress {
-  name: string;
-  phone: string;
-  zip_code: string;
-  city: string;
-  state: string;
-  house_no: string;
-  address: string;
-  isDefault: boolean;
-}
-
-interface IVendor {
-  _id: string;
-  accountId: string;
-  business_name: string;
-  company_email: string;
-  company_phone: string;
-  gst_number: string;
-  website: string;
-  type_of_business: string;
-  contacts: IVendorContact[];
-  omni_channels: string[];
-  brand_documents: any[];
-  addresses: IVendorAddress[];
-  createdAt: string;
-  updatedAt: string;
-}
-interface ICategory {
+export interface ICategory {
   _id: string;
   name: string;
   parentId: string | null;
   createdAt: string;
   updatedAt: string;
 }
+
 export interface IProduct {
   _id: string;
   title: string;
   channelProductId: string;
+  vendorId: string;
   sku: string;
   description: string;
-  media: string[];
-  channelName: string;
+  media: string[]; // assuming media is an array of URLs or identifiers
+  channelName: string; // e.g., "shopify"
   category: ICategory[];
+  categories?:string;
   tags: string[];
+  tag?: string;
   createdAt: string;
   updatedAt: string;
-  categories: string;
+}
+
+export interface ICreator {
+  _id: string;
+  user_name: string;
+}
+
+export interface IRequest {
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  collaborationStatus: string;
+  requestFrom: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface IVendor {
+  _id: string;
+  business_name: string;
 }
 export interface ICollaboration {
   _id: string;
-  creatorId: string;
+  creatorId: ICreator;
   productId: IProduct;
+  vendorId: IVendor;
+  requestId: IRequest;
   collaborationStatus: string;
   utmLink: string | null;
   discountType: string;
@@ -82,9 +72,10 @@ export interface ICollaboration {
   couponCode: string;
   commissionPercentage: number;
   expiresAt: string;
+  agreedByCreator: boolean;
+  agreedByVendor: boolean;
   createdAt: string;
   updatedAt: string;
-  vendorId: IVendor;
 }
 
 export default function CollaborationList() {
@@ -121,14 +112,14 @@ export default function CollaborationList() {
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
                 let category = ele.productId.category
-                  .filter((cat: ICategory) => cat?.parentId === null)
                   .map((category: ICategory) => {
                     return category?.name;
                   })
                   .join(", ");
+                  let tag = ele.productId.tags.join(", ")
                 return {
                   ...ele,
-                  productId: { ...ele?.productId, categories: category },
+                  productId: { ...ele?.productId, categories: category,tag },
                 };
               });
               setCollaborations([...result]);
@@ -202,7 +193,7 @@ export default function CollaborationList() {
             data={collaborations}
             filter={filter}
             user={getUserType()}
-            fetchCollaboration={() => fetchCollaboration(currentPage)}
+            fetchCollaboration={() => fetchCollaboration(currentPage,true)}
           />
           {/* Pagination */}
           <div className="flex justify-end items-center mt-4">

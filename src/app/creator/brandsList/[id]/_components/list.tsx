@@ -25,7 +25,40 @@ export interface ICategory {
   updatedAt: string
 }
 
-export interface IProduct {
+export interface ICollaboration {
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  collaborationStatus: "REQUESTED" | "APPROVED" | "REJECTED" | "COMPLETED"; // extend if needed
+  utmLink: string | null;
+  discountType: "PERCENTAGE" | "FIXED" | null; // assuming these are the only types
+  discountValue: number;
+  couponCode: string;
+  commissionPercentage: number;
+  expiresAt: string; // ISO date string, can also be `Date` if parsed
+  agreedByCreator: boolean;
+  agreedByVendor: boolean;
+  createdAt: string; // same as above
+  updatedAt: string;
+}
+
+export interface IVendor {
+  _id: string;
+  business_name: string;
+}
+
+export interface IRequest {
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  collaborationStatus: string;
+  requestFrom: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface IBrand {
   _id: string,
   title: string,
   channelProductId: string,
@@ -33,27 +66,20 @@ export interface IProduct {
   description: string,
   media: string[],
   channelName: string,
+  category: ICategory[],
   tags: string[],
   createdAt: string,
   updatedAt: string,
-  category?: ICategory[],
+  collaboration: ICollaboration | null,
   categories?: string[],
-}
-export interface IBrand {
-  _id: string,
-  vendorId: string,
-  productId: IProduct,
-  channelName: string,
-  createdAt: string,
-  updatedAt: string
+  vendor: IVendor,
+  request: IRequest | null
 }
 
 export default function CreatorList() {
   const params = useParams();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const translate = useTranslations();
-  const brandName = searchParams.get("brandName") ?? "";
   const axios = useAxiosAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
@@ -71,17 +97,16 @@ export default function CreatorList() {
       if (response.status === 200) {
         const brandData = response.data.data;
         if (brandData && typeof brandData === "object") {
-          const brandProductsArray = brandData.data || [];
-          const brandProductsCount = brandData.count || 0;
-
-          if (Array.isArray(brandProductsArray) && brandProductsArray?.length>0) {
-            let result = brandProductsArray.map(ele => {
-              let productId = ele?.productId
-              let category = (productId?.category && productId?.category?.length > 0) ? productId?.category.filter((cat: ICategory) => cat.parentId === null).map((cat: ICategory) => cat?.name):[]
-              return {...ele,productId: {...productId,categories: category}}
+          const brandsArray = brandData.data || [];
+          const brandsCount = brandData.count || 0;
+            
+          if (Array.isArray(brandsArray) && brandsArray?.length>0) {
+            let result = brandsArray.map((brand: IBrand) => {
+              let category = (brand?.category && brand?.category?.length > 0) ? brand?.category.filter((cat: ICategory) => cat.parentId === null).map((cat: ICategory) => cat?.name):[]
+              return {...brand,categories: category}
             })
             setBrandProducts([...result]);
-            setTotalPages(Math.ceil(brandProductsCount / pageSize));
+            setTotalPages(Math.ceil(brandsCount / pageSize));
           } else {
             setBrandProducts([]);
             setCurrentPage(1);
@@ -107,7 +132,9 @@ export default function CreatorList() {
     getBrandProductList(currentPage);
   }, []);
 
-
+  const handleUpdateCollaboration = () => {
+    getBrandProductList(currentPage,true);
+  };
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setSearch(value)
@@ -116,13 +143,14 @@ export default function CreatorList() {
     page !== currentPage && getBrandProductList(page,true);
     setCurrentPage(page);
   }
+  
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
       {loading ? <Loading/> : brandProducts?.length > 0 ? <><div className="text-[20px] text-500">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-                <BreadcrumbPage className="cursor-pointer hover:text-[grey]" onClick={()=> router.push(`/creator/brandsList`)}>{brandName}</BreadcrumbPage>
+                <BreadcrumbPage className="cursor-pointer hover:text-[grey]" onClick={()=> router.push(`/creator/brandsList`)}>Brand Lists</BreadcrumbPage>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -144,7 +172,7 @@ export default function CreatorList() {
         </div>
       </div>
       {internalLoader && <Loader />}
-      <BrandProductTable data={brandProducts} brandName={brandName} />
+      <BrandProductTable data={brandProducts} handleUpdateCollaboration={handleUpdateCollaboration} />
       {/* Pagination */}
       <div className="flex justify-end items-center mt-4">
         <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={handlePageChange} />

@@ -69,3 +69,30 @@ export const COLLOBRATION_STATUS = {
   REJECTED: "REJECTED",
   EXPIRED: "EXPIRED",
 };
+
+export const badgeColor: { [key: string]: string } = {
+  LIVE: "bg-[#098228] text-[#098228]",
+  REQUESTED: "bg-[#FF9500] text-[#FF9500]",
+  EXPIRED: "bg-[#FF3B30] text-[#FF3B30]",
+  REJECTED: "bg-[#FF3B30] text-[#FF3B30]",
+  PENDING: "bg-[#5856D6] text-[#5856D6]",
+};
+export const statusMessage: { [key: string]: string } = {
+  "REQUESTED": "Request Sent",
+  "PENDING": "Collaboration Pending",
+  "REJECTED": "Request Rejected",
+  "LIVE": "Collaboration Live",
+  "EXPIRED": "Collaboration Expired",
+  "REQUESTED_CREATOR_TO_VENDOR": "Creator requested to you",
+  "REQUESTED_VENDOR_TO_CREATOR": "You requested to creator",
+  "REQUESTED_CREATOR_FROM_VENDOR": "You requested to vendor",
+  "REQUESTED_VENDOR_FROM_CREATOR": "Vendor requested to you",
+}
+export function formatNumber(num: number = 0) {
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  } else if (num >= 1_000) {
+    return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  }
+  return num === 0 ? "" : num.toString();
+}

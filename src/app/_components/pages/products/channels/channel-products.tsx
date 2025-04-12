@@ -182,70 +182,68 @@ export default function ChannelProductList({
                     <CustomTableCell>{product.price}</CustomTableCell>
                     {/*                <CustomTableCell>{product.discount}</CustomTableCell>
                                 <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
-                    <CustomTableCell>
-                      <div className="flex justify-center gap-3">
-                        <Link
-                          href={`shopify/view?id=${product.id}`}
-                          className=""
-                        >
-                          <Eye color="#FF4979" className="cursor-pointer" />
-                        </Link>
-                        <div
-                          onClick={() => {
-                            setCurrentData(product);
-                          }}
-                          className=""
-                        >
-                          <CircleFadingPlus
-                            color="#3b82f680"
-                            className="cursor-pointer"
-                          />
-                        </div>
+                  <CustomTableCell>
+                    <div className="flex justify-center gap-3">
+                      <Link href={`shopify/view?id=${product.id}`} className="">
+                        <Eye color="#FF4979" className="cursor-pointer" />
+                      </Link>
+                      <div
+                        onClick={() => {
+                          setCurrentData(product);
+                        }}
+                        className=""
+                      >
+                        <CircleFadingPlus
+                          color="#3b82f680"
+                          className="cursor-pointer"
+                        />
                       </div>
-                    </CustomTableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-          {currentData !== null && (
-            <ChannleToProduct
-              product={{
-                productId: currentData.id,
-                channelName: channelName,
-                handle: currentData.handle,
-                id: currentData.id,
-                image: currentData.image,
-                title: currentData.title,
-                category: currentData.category,
-                tags: currentData.tags,
-                sku: currentData.sku,
-                price: currentData.price,
-              }}
-              onClose={(refresh = false) => {
-                setCurrentData(null);
-                if (refresh) {
-                  fetProductsList(20);
-                }
-              }}
-            />
-          )}
-          {/* Pagination */}
-          {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
-            <div className="flex justify-end items-center mt-1">
-              <Pagination className="flex justify-end mt-1">
-                <PaginationContent className="flex items-center gap-2">
-                  <PaginationItem>
-                    <PaginationPrevious
-                      className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                        !cursors.hasPreviousPage
-                          ? "cursor-not-allowed opacity-50"
-                          : "cursor-pointer"
-                      }`}
-                      showArrow={false}
-                      onClick={handlePreviousPage}
-                    />
-                  </PaginationItem>
+                    </div>
+                  </CustomTableCell>
+                </TableRow>
+              ))
+            }
+          </TableBody>
+        </Table>
+      </div>
+      {currentData !== null && (
+        <ChannleToProduct
+          product={{
+            productId: currentData.id,
+            channelName: channelName,
+            handle: currentData.handle,
+            id: currentData.id,
+            image: currentData.image,
+            title: currentData.title,
+            category: currentData.category,
+            tags: currentData.tags,
+            sku: currentData.sku,
+            price: currentData.price,
+          }}
+          onClose={(refresh = false) => {
+            setCurrentData(null);
+            if (refresh) {
+              fetProductsList(20,null,true);
+            }
+          }}
+        />
+      )}
+      {/* Pagination */}
+      {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
+        <div className="flex justify-end items-center mt-1">
+          <Pagination className="flex justify-end mt-1">
+            <PaginationContent className="flex items-center gap-2">
+              <PaginationItem>
+                <PaginationPrevious
+                  className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
+                    !cursors.hasPreviousPage
+                      ? "cursor-not-allowed opacity-50"
+                      : "cursor-pointer"
+                  }`}
+                  showArrow={false}
+                  onClick={handlePreviousPage}
+                />
+              </PaginationItem>
 
                   <PaginationItem>
                     <PaginationNext

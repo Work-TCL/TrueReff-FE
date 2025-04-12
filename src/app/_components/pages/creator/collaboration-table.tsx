@@ -7,12 +7,13 @@ import { CustomTableHead } from "@/app/_components/components-common/tables/Cust
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { useRouter } from "next/navigation";
 import { CheckCircle, Eye, MessagesSquare, X, XCircle } from "lucide-react";
-import { ICollaboration } from "./collaboration";
+import { ICollaboration, IRequest } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import CancelRequest from "../../components-common/dialogs/cancel-request";
 import { useTranslations } from "next-intl";
+import StatusBadge from "../../components-common/status-badge";
 
 export function capitalizeFirstLetter(word: string = "") {
   if (!word) return ""; // Handle empty strings
@@ -33,6 +34,11 @@ interface ICreatorTableProps {
   user: string;
   fetchCollaboration: () => void;
 }
+interface IRequestCancel {
+  collaborationId: string;
+  status: string;
+  show: boolean;
+}
 const CollaborationTable = ({
   data,
   filter,
@@ -43,7 +49,8 @@ const CollaborationTable = ({
   const translate = useTranslations();
   const axios = useAxiosAuth();
   const [loading, setLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState("");
+  const initialValue = {show:false,collaborationId:"",status:""};
+  const [isOpen, setIsOpen] = useState<IRequestCancel>(initialValue);
   const badgeColor: { [key: string]: string } = {
     LIVE: "bg-[#098228] text-[#098228]",
     REQUESTED: "bg-[#FF9500] text-[#FF9500]",
@@ -54,26 +61,53 @@ const CollaborationTable = ({
   const handleViewCreatorDetails = (id: string) => {
     router.push(`/vendor/collaboration/${id}`);
   };
-  const handleRejectRequest = async (collaborationId: string) => {
+  const handleStatusChangeRequest = async (
+    status: "accepted" | "rejected",
+    collaborationId: string
+  ) => {
+    setLoading(true);
+    try {
+      const response: any = await axios.put(
+        `/product/collaboration/request/status`,
+        {
+          status,
+          collaborationId,
+        }
+      );
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        fetchCollaboration();
+        setIsOpen(initialValue);
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+      setIsOpen(initialValue);
+    } finally {
+      setLoading(false);
+      setIsOpen(initialValue);
+    }
+  };
+  const handleCancelRequest = async () => {
     setLoading(true);
     try {
       const response: any = await axios.delete(
-        `/product/collaboration/request/cancel/${collaborationId}`
+        `/product/collaboration/request/cancel/${isOpen?.collaborationId}`
       );
       if (response.status === 200) {
         toast.success(response.data.message);
         fetchCollaboration();
         setLoading(false);
-        setIsOpen("");
+        setIsOpen(initialValue);
       } else {
         setLoading(false);
-        setIsOpen("");
+        setIsOpen(initialValue);
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       setLoading(false);
-      setIsOpen("");
+      setIsOpen(initialValue);
     }
   };
   const handleChatView = (productId: string) => {
@@ -83,6 +117,30 @@ const CollaborationTable = ({
   const handleProductDetail = (productId: string) => {
     router.push(`/creator/collaboration/${productId}`);
   };
+  const handleConfirm = () => {
+      if(isOpen?.status === "cancel"){
+        handleCancelRequest()
+      } else {
+        handleStatusChangeRequest("rejected",isOpen?.collaborationId)
+      }
+    }
+    const getRequestStatus = (collaboration: ICollaboration) => {
+        const { requestId } = collaboration;
+        if (requestId) {
+          if (requestId?.collaborationStatus === "REQUESTED" || requestId?.collaborationStatus === "REJECTED") {
+            return requestId?.collaborationStatus;
+          } else {
+            return collaboration?.collaborationStatus;
+          }
+        } else return "SEND_REQUEST";
+      }
+     const getMessages = (status:string,request:IRequest) => {
+        let userStatus:{[key:string]:string} = {
+          "CREATOR": "REQUESTED_CREATOR_FROM_VENDOR",
+          "VENDOR": "REQUESTED_VENDOR_FROM_CREATOR",
+        }
+        return (status === "REQUESTED" && request?.requestFrom) ? userStatus[request?.requestFrom] : status;
+      }
   return (
     <div className="">
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
@@ -92,13 +150,15 @@ const CollaborationTable = ({
               {translate("Product_Name")}
             </CustomTableHead>
             <CustomTableHead className="w-1/6">
+              {translate("Description")}
+            </CustomTableHead>
+            <CustomTableHead className="w-1/6">
               {translate("Product_Category")}
             </CustomTableHead>
+            <CustomTableHead className="w-1/6">{translate("Product_Tags")}</CustomTableHead>
             <CustomTableHead className="w-1/6">
               {translate(`${user}_Name`)}
             </CustomTableHead>
-            {/* <CustomTableHead className="w-1/8">{translate("Units_Sold")}</CustomTableHead> */}
-            {/* <CustomTableHead className="w-1/6">{translate("Collab_Last_Date")}</CustomTableHead> */}
             <CustomTableHead className="w-1/6 text-center">
               {translate("Status")}
             </CustomTableHead>
@@ -108,7 +168,9 @@ const CollaborationTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((collaboration: ICollaboration, index: number) => (
+          {data.map((collaboration: ICollaboration, index: number) => {
+            let status = getRequestStatus(collaboration)
+            return (
             <TableRow key={index} className="bg-white">
               <CustomTableCell>
                 <div
@@ -130,28 +192,38 @@ const CollaborationTable = ({
                 {collaboration?.productId?.categories}
               </CustomTableCell>
               <CustomTableCell>
+                {collaboration?.productId?.description}
+              </CustomTableCell>
+              <CustomTableCell>
+                {collaboration?.productId?.tag}
+              </CustomTableCell>
+              <CustomTableCell>
                 {collaboration?.vendorId?.business_name}
               </CustomTableCell>
               {/* <CustomTableCell>{""}</CustomTableCell> */}
               {/* <CustomTableCell>{""}</CustomTableCell> */}
               <CustomTableCell className="flex justify-center">
-                <div
-                  className={`${badgeColor[collaboration?.collaborationStatus]
-                    } bg-opacity-10 text-sm font-medium px-3 py-2 rounded-md dark:bg-blue-900 dark:text-blue-300`}
-                >
-                  {capitalizeFirstLetter(
-                    collaboration?.collaborationStatus
-                  )}
-                </div>
+                {status && <StatusBadge status={status} messageStatus={getMessages(status,collaboration?.requestId)}/>}
               </CustomTableCell>
               <CustomTableCell className="flex justify-center">
                 {
                   {
-                    REQUESTED: (
-                      <XCircle className="cursor-pointer" size={25} color="#ef4444"
-                        onClick={() => setIsOpen(collaboration?._id)}
-                      />
-                    ),
+                    REQUESTED: {VENDOR:<div className="flex justify-between gap-3"><CheckCircle color="#22c55e"
+                                            className="cursor-pointer"
+                                            size={25}
+                                            onClick={() =>
+                                              handleStatusChangeRequest(
+                                                "accepted",
+                                                collaboration?._id
+                                              )
+                                            }
+                                          /><XCircle className="cursor-pointer" size={25} color="#ef4444"
+                                            onClick={() =>
+                                              setIsOpen({show:true,collaborationId: collaboration?._id,status:"reject"})
+                                            }
+                                            /></div>,CREATOR:<XCircle className="cursor-pointer" size={25} color="#ef4444"
+                                            onClick={() => setIsOpen({show:true,collaborationId:collaboration?._id,status:"cancel"})}
+                                          />}[collaboration?.requestId?.requestFrom??""],
                     PENDING: (
                       <div className="flex gap-3">
                         <Eye
@@ -165,7 +237,7 @@ const CollaborationTable = ({
                           size={25}
                         />
                         <MessagesSquare
-                        color="#3b82f6"
+                        color="#3b82f680"
                           className="cursor-pointer"
                           onClick={() =>
                             handleChatView(collaboration?.productId?._id)
@@ -175,18 +247,18 @@ const CollaborationTable = ({
                       </div>
                     ),
                     REJECTED: null,
-                  }[collaboration?.collaborationStatus]
+                  }[status]
                 }
               </CustomTableCell>
             </TableRow>
-          ))}
+          )})}
         </TableBody>
       </Table>
-      {isOpen && (
+      {isOpen?.show && (
         <CancelRequest
-          onClose={() => setIsOpen("")}
-          collaborationId={isOpen}
-          handleCancelRequest={handleRejectRequest}
+          onClose={() => setIsOpen(initialValue)}
+          collaborationId={""}
+          handleCancelRequest={handleConfirm}
         />
       )}
     </div>
