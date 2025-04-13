@@ -35,7 +35,7 @@ export default function ChatComponent({
       id && socketService.registerUser(String(id));
     }
 
-    collaborationId &&socketService.joinCollaboration(collaborationId);
+    collaborationId && socketService.joinCollaboration(collaborationId);
     socketService.joinedCollaborationRoom((data) => {});
     socketService.joinedCollaborationMessages((data) => {
       setMessages((prev) => [...prev, data.message]);
@@ -44,7 +44,7 @@ export default function ChatComponent({
     return () => {
       // socketService.disconnect();
     };
-  }, [creator.creatorId, vendor.vendorId,collaborationId]);
+  }, [creator.creatorId, vendor.vendorId, collaborationId]);
 
   useEffect(() => {
     (async () => {
@@ -77,11 +77,13 @@ export default function ChatComponent({
     }
   };
   const getUserName = () => {
-    return user?.role === "creator" ? collaborationData.creatorId?.user_name : collaborationData.vendorId?.business_name;
+    return user?.role === "creator"
+      ? collaborationData.creatorId?.user_name
+      : collaborationData.vendorId?.business_name;
   };
 
   return (
-    <Card className="bg-white flex-1 rounded-lg p-4 overflow-hidden">
+    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden flex flex-col md:h-[100vh] h-[80vh] md:sticky md:top-0">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
         <Avatar>
           <AvatarImage
@@ -97,7 +99,7 @@ export default function ChatComponent({
         </div>
       </div>
       <div className="h-px w-full bg-stroke mx-2"></div>{" "}
-      <CardContent className="flex flex-col-reverse h-[86%] max-h-[860px] overflow-y-auto gap-3">
+      <CardContent className="flex flex-col-reverse overflow-y-auto gap-3 h-full">
         {isLoading && <Loading />}
         {!isLoading && message?.length < 0 && (
           <p className="opacity-50 text-center">Start your chat now.</p>
@@ -158,7 +160,7 @@ export default function ChatComponent({
             );
           })}
       </CardContent>
-      <div className="mt-3 flex gap-2 items-center border-t pt-3">
+      <div className="flex gap-2 items-center border-t pt-3">
         <Input
           placeholder="Message"
           value={message}

@@ -275,6 +275,9 @@ export default function Input({
               classNamePrefix="select"
               {...field}
               isDisabled={props?.disabled}
+              menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
+              menuPosition="fixed" // Makes the dropdown position fixed
+              autoFocus={false} // Prevents focus behavior causing auto-scroll
             />
           </div>
           {getError()}

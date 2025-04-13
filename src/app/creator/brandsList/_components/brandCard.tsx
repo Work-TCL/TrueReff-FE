@@ -1,4 +1,5 @@
 "use client";
+import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
 import { translate } from "@/lib/utils/translate";
 import { Star, TrendingUp } from "lucide-react";
@@ -27,10 +28,13 @@ export default function BrandCard({
 }: BrandCardProps) {
   const router = useRouter();
   const handleBrand = (brandId: string) => {
-    router.push(`/creator/brandsList/${brandId}`)
-  }
+    router.push(`/creator/brandsList/${brandId}`);
+  };
   return (
-    <Card className="xl:w-[300px] cursor-pointer w-full h-auto xl:max-h-[304px] border border-stroke rounded-xl shadow-md p-4 flex flex-col items-center text-center" onClick={()=>handleBrand(id)}>
+    <Card
+      className="xl:w-[300px] cursor-pointer w-full h-auto xl:max-h-[304px] border border-stroke rounded-xl shadow-md p-4 flex flex-col items-center text-center"
+      onClick={() => handleBrand(id)}
+    >
       <CardContent className="w-full p-0 flex flex-col items-center gap-4">
         <div className="bg-background rounded-lg xl:max-w-[258px] max-w-full min-h-[96px] w-full h-full flex items-center justify-center">
           {/* <img src={logo} alt={name} className="max-h-12" /> */}
@@ -38,7 +42,12 @@ export default function BrandCard({
         </div>
         <div className="flex flex-col w-full gap-1">
           <div className="flex flex-1 item-center w-full text-start gap-[6px]">
-            <p className="text-lg font-medium text-gray-black">{name}</p>
+            {/* <p className="text-lg font-medium text-gray-black">{name}</p> */}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={true}
+              className="line-clamp-none truncate text-lg font-medium text-gray-black"
+              text={name}
+            />
             <p className="text-font-grey">{`(${translate("Fashion")})`}</p>
           </div>
           <p className="text-secondary text-base font-normal text-start">

@@ -109,6 +109,7 @@ export default function ProfileSetup() {
             value: ele?._id,
             label: ele?.name,
           }))}
+          autoFocus={false}
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -121,6 +122,7 @@ export default function ProfileSetup() {
             value: ele?._id,
             label: ele?.name,
           }))}
+          autoFocus={false}
         />
       </div>
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
