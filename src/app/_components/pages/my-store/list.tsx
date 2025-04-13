@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { translate } from "@/lib/utils/translate";
 import { PiListChecksLight } from "react-icons/pi";
@@ -13,6 +12,7 @@ import ProductTable from "./product-table";
 import Loading from "@/app/vendor/loading";
 import { Button } from "@/components/ui/button";
 import { FaSlidersH } from "react-icons/fa";
+import axios from "@/lib/web-api/axios";
 export interface ICategory {
   _id: string;
   name: string;
@@ -38,7 +38,6 @@ export interface IProduct {
 }
 
 export default function ProductList() {
-  const axios = useAxiosAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [filter, setFilter] = useState<string>("5");
@@ -89,7 +88,7 @@ export default function ProductList() {
       toast.error(errorMessage);
       setLoading(false);
     }
-  }, [axios, pageSize]);
+  }, [pageSize]);
 
   useEffect(() => {
     getCreatorList();

@@ -6,12 +6,12 @@ import { Search } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import Loading from "../loading";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import { useTranslations } from "next-intl";
+import axios from "@/lib/web-api/axios";
 
 export interface Brand {
   id: number;
@@ -24,7 +24,6 @@ export interface Brand {
   logo: string;
 }
 export default function BrandList() {
-  const axios = useAxiosAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [brands, setBrands] = useState<Brand[]>([]);

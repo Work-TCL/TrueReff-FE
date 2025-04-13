@@ -30,17 +30,18 @@ import {
   IPostVerifyEmailResponse,
   IPostVerifyOTPRequest,
   IPostVerifyOTPResponse,
+  IPutUpdateCreatorRequest,
+  IPutUpdateCreatorResponse,
 } from "../types-api/auth";
 import { getErrorMessage } from "../utils/commonUtils";
 import { USER_TYPE } from "../utils/constants";
-import { IContactSchema } from "../utils/validations";
-import axiosInstance from "./http-common";
+import axios from "./axios";
 
 export const signUpAPI = async (
   params: IPostSignupRequest
 ): Promise<IPostSignupResponse> => {
   try {
-    const response = await axiosInstance.post("/auth/register", params);
+    const response = await axios.post("/auth/register", params);
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
@@ -52,7 +53,7 @@ export const loginAPI = async (
   params: IPostLoginRequest
 ): Promise<IPostLoginResponse> => {
   try {
-    const response = await axiosInstance.post("/auth/login", params);
+    const response = await axios.post("/auth/login", params);
     return response?.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -63,7 +64,7 @@ export const loginAPI = async (
 export const getUserApi = async (): Promise<IGetUserResponse> => {
   useAuthStore.getState().setIsAuthStatus("loading");
   try {
-    const response = await axiosInstance.get("/auth/user");
+    const response = await axios.get("/auth/user");
     // user
     if (response.data?.data) {
       const user = response.data?.data;
@@ -126,7 +127,7 @@ export const resendOtp = async (
   params: IPostResendOtpRequest
 ): Promise<IPostResendOtpResponse> => {
   try {
-    const response = await axiosInstance.post("/user/auth/resend-otp", params);
+    const response = await axios.post("/user/auth/resend-otp", params);
     return response?.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -138,7 +139,7 @@ export const verifyOtp = async (
   params: IPostVerifyOTPRequest
 ): Promise<IPostVerifyOTPResponse> => {
   try {
-    const response = await axiosInstance.post("/auth/reset-password", params);
+    const response = await axios.post("/auth/reset-password", params);
     return response;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -150,7 +151,7 @@ export const verifyEmail = async (
   params: IPostVerifyEmailRequest
 ): Promise<IPostVerifyEmailResponse> => {
   try {
-    const response = await axiosInstance.post("/auth/email-verify", params);
+    const response = await axios.post("/auth/email-verify", params);
     // user
     if (response.data?.data) {
       const user = response.data?.data;
@@ -214,7 +215,7 @@ export const forgotPassword = async (
   params: IPostForgotPasswordRequest
 ): Promise<IPostForgotPasswordResponse> => {
   try {
-    const response = await axiosInstance.post("/auth/forgot-password", params);
+    const response = await axios.post("/auth/forgot-password", params);
     return response;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -226,10 +227,7 @@ export const resetPasswordAPI = async (
   params: IPostResetPasswordRequest
 ): Promise<IPostResetPasswordResponse> => {
   try {
-    const response = await axiosInstance.post(
-      "/auth/reset-password/confirm",
-      params
-    );
+    const response = await axios.post("/auth/reset-password/confirm", params);
     return response;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -241,7 +239,7 @@ export const contactUsAPI = async (
   params: IPostContactUsRequest
 ): Promise<IPostContactUsResponse> => {
   try {
-    const response = await axiosInstance.post("/user/contact", params);
+    const response = await axios.post("/user/contact", params);
     return response?.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -253,7 +251,7 @@ export const venderRegister = async (
   params: IPostVendorRegisterRequest
 ): Promise<IPostVendorRegisterResponse> => {
   try {
-    const response = await axiosInstance.post(
+    const response = await axios.post(
       "/auth/vendor/add-vendor-details",
       params
     );
@@ -268,11 +266,26 @@ export const creatorRegister = async (
   params: IPostCreatorRegisterRequest
 ): Promise<IPostCreatorRegisterResponse> => {
   try {
-    const response = await axiosInstance.post("/auth/creator/add", params);
+    const response = await axios.post("/auth/creator/add", params);
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While Creator Registered.");
+  }
+};
+export const updateCreator = async (
+  params: IPutUpdateCreatorRequest
+): Promise<IPutUpdateCreatorResponse> => {
+  try {
+    const response = await axios.put("/auth/creator/update", params, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While Creator Update.");
   }
 };
 
@@ -280,10 +293,7 @@ export const socialMediaAdded = async (
   params: any
 ): Promise<IPostCreatorRegisterResponse> => {
   try {
-    const response = await axiosInstance.put(
-      "/auth/creator/channel-add",
-      params
-    );
+    const response = await axios.put("/auth/creator/channel-add", params);
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
@@ -295,7 +305,7 @@ export const getCategories = async (
   params: IGetCategoryParams
 ): Promise<IGetCategoryResponse> => {
   try {
-    const response = await axiosInstance.get("/product/category/list?all=true");
+    const response = await axios.get("/product/category/list?all=true");
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
@@ -305,7 +315,7 @@ export const getCategories = async (
 export const getCreatorProgress =
   async (): Promise<IGetCreatorProgressResponse> => {
     try {
-      const response = await axiosInstance.get(`/auth/creator`);
+      const response = await axios.get(`/auth/creator`);
       return response?.data?.data?.creator;
     } catch (error: unknown) {
       const errorMessage = getErrorMessage(error);
@@ -319,10 +329,7 @@ export const checkCreatorUserNameExist = async (
   params: IPostCreatorCheckExistRequest
 ): Promise<IPostCreatorCheckExistResponse | null> => {
   try {
-    const response = await axiosInstance.post(
-      `/auth/creator/check-exists`,
-      params
-    );
+    const response = await axios.post(`/auth/creator/check-exists`, params);
     return response?.data?.error;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);

@@ -1,11 +1,9 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Info } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
@@ -13,6 +11,7 @@ import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
+import axios from "@/lib/web-api/axios";
 export interface ICategory {
   _id: string;
   name: string;
@@ -53,7 +52,6 @@ export interface ICreator {
 }
 
 export default function CreatorList() {
-  const axios = useAxiosAuth();
   const translate = useTranslations();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
@@ -108,7 +106,7 @@ export default function CreatorList() {
         setInternalLoader(false);
       }
     },
-    [axios, pageSize]
+    [pageSize]
   );
 
   useEffect(() => {

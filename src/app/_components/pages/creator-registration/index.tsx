@@ -81,6 +81,10 @@ export default function CreatorRegistrationPage() {
   const [isCreatorLoading, setIsCreatorLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [creatorDetails, setCreatorDetails] = useState<any>({ completed: 0 });
+  const [profileFile, setProfileFile] = useState<File | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [profilePreview, setProfilePreview] = useState<string>("");
+  const [bannerPreview, setBannerPreview] = useState<string>("");
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -134,6 +138,8 @@ export default function CreatorRegistrationPage() {
         category: data.category.map((v) => v.value),
         sub_category: data.sub_category.map((v) => v.value),
         tags: data.tags || [],
+        profile_image: profileFile,
+        banner_image: bannerFile,
       };
 
       if (data.banner_image) {
@@ -280,6 +286,24 @@ export default function CreatorRegistrationPage() {
     })();
   }, []);
 
+  const handleImageSelect = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "profile" | "banner"
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const previewURL = URL.createObjectURL(file);
+
+    if (type === "profile") {
+      setProfileFile(file);
+      setProfilePreview(previewURL);
+    } else {
+      setBannerFile(file);
+      setBannerPreview(previewURL);
+    }
+  };
+
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
       {isCreatorLoading && <Loader />}
@@ -334,7 +358,13 @@ export default function CreatorRegistrationPage() {
                   {
                     {
                       [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm />,
-                      [TABS_STATUS.PROFILE_SETUP]: <ProfileSetup />,
+                      [TABS_STATUS.PROFILE_SETUP]: (
+                        <ProfileSetup
+                          handleImageSelect={handleImageSelect}
+                          profilePreview={profilePreview}
+                          bannerPreview={bannerPreview}
+                        />
+                      ),
                     }[activeTab]
                   }
                   <div className="flex bg-white">

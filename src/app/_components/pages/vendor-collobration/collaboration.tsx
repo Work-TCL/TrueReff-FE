@@ -5,7 +5,6 @@ import { Info } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { translate } from "@/lib/utils/translate";
 import { PiListChecksLight } from "react-icons/pi";
@@ -15,6 +14,7 @@ import CollaborationTable from "./collaboration-table";
 import { useTranslations } from "next-intl";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useAuthStore } from "@/lib/store/auth-user";
+import axios from "@/lib/web-api/axios";
 export interface ICategory {
   _id: string;
   name: string;
@@ -33,7 +33,7 @@ export interface IProduct {
   media: string[]; // assuming media is an array of URLs or identifiers
   channelName: string; // e.g., "shopify"
   category: ICategory[];
-  categories?:string;
+  categories?: string;
   tags: string[];
   tag?: string;
   createdAt: string;
@@ -76,7 +76,6 @@ export interface ICollaboration {
 }
 
 export default function CollaborationList() {
-  const axios = useAxiosAuth();
   const t = useTranslations();
   const { account: user } = useAuthStore();
   const [loading, setLoading] = useState<boolean>(false);
@@ -110,7 +109,9 @@ export default function CollaborationList() {
               let result = collaborationArray.map((ele: ICollaboration) => {
                 ele.productId.categories = (
                   ele.productId.category as unknown as { name: string }[]
-                )?.map((cat) => String(cat?.name)).join(", ");
+                )
+                  ?.map((cat) => String(cat?.name))
+                  .join(", ");
                 ele.productId.tag = ele.productId.tags.join(", ");
                 return { ...ele };
               });
@@ -136,7 +137,7 @@ export default function CollaborationList() {
         setInternalLoader(false);
       }
     },
-    [axios, pageSize]
+    [pageSize]
   );
 
   useEffect(() => {
@@ -174,7 +175,7 @@ export default function CollaborationList() {
             data={collaborations}
             filter={filter}
             user={getUserType()}
-            refreshCentral={() => getCreatorList(currentPage,true)}
+            refreshCentral={() => getCreatorList(currentPage, true)}
             loader={internalLoader}
           />
           <div className="flex justify-end items-center mt-4">

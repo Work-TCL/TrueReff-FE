@@ -220,6 +220,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       icon: DollarSign,
       link: "/creator/payment-earnings",
     },
+    { label: translate("Settings"), icon: Settings, link: "/creator/settings" },
     // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     // { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];

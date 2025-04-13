@@ -1,17 +1,15 @@
 "use client";
 import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import AnchorButton from "@/app/_components/ui/button/variant";
 import SignOut from "./signOut";
-import { useAuthStore } from "@/lib/store/auth-user";
 
 const LOGOUT = "logout";
 
 export default function Logout() {
-  const { status } = useAuthStore();
   const auth = useSearchParams().get("auth");
-  const dialogPath = status === "authenticated" && auth === LOGOUT;
+  const dialogPath = Boolean(auth === LOGOUT);
 
   return (
     <DialogLayout

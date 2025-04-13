@@ -5,7 +5,6 @@ import ChatComponent from "./chatComponent";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { useAuthStore } from "@/lib/store/auth-user";
 import Loader from "@/app/_components/components-common/layout/loader";
 import {
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useTranslations } from "use-intl";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
+import axios from "@/lib/web-api/axios";
 export interface IProduct {
   productId: string;
   images: string[];
@@ -61,7 +61,6 @@ export interface ICollaboration {
 }
 export default function BargainingView() {
   const translate = useTranslations();
-  const axios = useAxiosAuth();
   const { account } = useAuthStore();
   const params = useParams();
   const router = useRouter();

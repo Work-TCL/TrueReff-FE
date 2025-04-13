@@ -11,7 +11,6 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Loader from "@/app/_components/components-common/layout/loader";
 import {
   Breadcrumb,
@@ -24,6 +23,7 @@ import { translate } from "@/lib/utils/translate";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
+import axios from "@/lib/web-api/axios";
 
 interface ICategory {
   _id: string;
@@ -93,8 +93,7 @@ const buttonColor: { [key: string]: string } = {
 };
 export default function ViewProductDetail() {
   const pathName = usePathname();
-  const axios = useAxiosAuth();
-  const {account} = useAuthStore();
+  const { account } = useAuthStore();
   const { creator } = useCreatorStore();
   const params = useParams();
   const router = useRouter();
@@ -130,7 +129,7 @@ export default function ViewProductDetail() {
       requestFrom: "",
       createdAt: "",
       updatedAt: "",
-    }
+    },
   });
   const [productData, setProductData] = useState<IProduct>({
     productId: "",
@@ -219,10 +218,14 @@ export default function ViewProductDetail() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `/product/collaboration/status/${productId}${creatorId ? `?creatorId=${creatorId}`: ``}`
+        `/product/collaboration/status/${productId}${
+          creatorId ? `?creatorId=${creatorId}` : ``
+        }`
       );
       const collaboration: any = response?.data?.data?.collaboration;
-      setCollaborationStatus(collaboration?getRequestStatus(collaboration):"");
+      setCollaborationStatus(
+        collaboration ? getRequestStatus(collaboration) : ""
+      );
       setCollaborationData(collaboration);
     } catch (error: any) {
       toast.error(error?.message || "Status Fetch Failed.");
@@ -244,28 +247,28 @@ export default function ViewProductDetail() {
     }
   }, [productId]);
   useEffect(() => {
-    if(creator?.creatorId || creatorId){
+    if (creator?.creatorId || creatorId) {
       fetchProductCollaborationStatus();
     }
-  }, [creator?.creatorId,]);
+  }, [creator?.creatorId]);
   const handleSendRequest = async () => {
     setLoading(true);
     try {
       const response: any = await axios.post(
         `/product/collaboration/creator/request`,
         {
-          "productIds": [productData?.productId],
-          "creatorId": creator.creatorId,
-          "vendorId": productData?.vendorId
-      }
+          productIds: [productData?.productId],
+          creatorId: creator.creatorId,
+          vendorId: productData?.vendorId,
+        }
       );
       if (response.status === 201) {
         let data = response?.data?.data?.results;
         if (data && data?.length > 0 && data[0]?.data) {
-          fetchProductCollaborationStatus()
+          fetchProductCollaborationStatus();
         }
         if (data && data?.length > 0 && data[0]?.message) {
-            toast.success(data[0]?.message);
+          toast.success(data[0]?.message);
         }
         setLoading(false);
       } else {
@@ -289,13 +292,16 @@ export default function ViewProductDetail() {
   const getRequestStatus = (collaboration: ICollaboration) => {
     const { requestId } = collaboration;
     if (requestId) {
-      if (requestId?.collaborationStatus === "REQUESTED" || requestId?.collaborationStatus === "REJECTED") {
+      if (
+        requestId?.collaborationStatus === "REQUESTED" ||
+        requestId?.collaborationStatus === "REJECTED"
+      ) {
         return requestId?.collaborationStatus;
       } else {
         return collaboration?.collaborationStatus;
       }
     } else return "SEND_REQUEST";
-  }
+  };
 
   return (
     <div className="flex flex-col w-full p-6 gap-6">
@@ -303,19 +309,19 @@ export default function ViewProductDetail() {
       {/* Breadcrumb and Button */}
       <div className="flex md:flex-row flex-col items-start justify-between md:items-center gap-2">
         <Breadcrumb>
-          <BreadcrumbList
-            className="md:text-sm text-xs"
-          >
+          <BreadcrumbList className="md:text-sm text-xs">
             <BreadcrumbItem>
               <BreadcrumbPage
                 className="cursor-pointer hover:text-[grey]"
                 onClick={() =>
                   router.push(
-                    (creator?.creatorId)
+                    creator?.creatorId
                       ? pathName.includes("/product-management")
-                          ? `/creator/product-management`
-                          : `/creator/brandsList/${params.id}`
-                      : channelType ? `/vendor/products/${channelType}` : `/vendor/products`
+                        ? `/creator/product-management`
+                        : `/creator/brandsList/${params.id}`
+                      : channelType
+                      ? `/vendor/products/${channelType}`
+                      : `/vendor/products`
                   )
                 }
               >
@@ -324,27 +330,25 @@ export default function ViewProductDetail() {
             </BreadcrumbItem>
             <BreadcrumbSeparator className="md:size-6 size-4" />
             <BreadcrumbItem>
-              <BreadcrumbPage
-                className={`cursor-pointer`}
-              >
+              <BreadcrumbPage className={`cursor-pointer`}>
                 {translate("View_Product")}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        {(creator?.creatorId || creatorId) &&  
-            <Button
-              disabled={
-                collaborationStatus === "REQUESTED" ||
-                collaborationStatus === "REJECTED"
-              }
-              variant="secondary"
-              className={`${buttonColor[collaborationStatus]} text-white`}
-              onClick={() => handleButtonClick(collaborationStatus)}
-            >
-              {statusText[collaborationStatus]}
-            </Button>
-          }
+        {(creator?.creatorId || creatorId) && (
+          <Button
+            disabled={
+              collaborationStatus === "REQUESTED" ||
+              collaborationStatus === "REJECTED"
+            }
+            variant="secondary"
+            className={`${buttonColor[collaborationStatus]} text-white`}
+            onClick={() => handleButtonClick(collaborationStatus)}
+          >
+            {statusText[collaborationStatus]}
+          </Button>
+        )}
       </div>
 
       {/* Card Section */}

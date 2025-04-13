@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { useAuthStore } from "../store/auth-user";
 
 interface AxiosError {
   response?: {
@@ -76,3 +77,7 @@ export function formatTo12Hour(timeString: string) {
 
   return `${hours}:${minutes}${ampm}`;
 }
+
+export const getToken = () => {
+  return useAuthStore.getState().token;
+};

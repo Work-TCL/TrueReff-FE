@@ -2,11 +2,11 @@ import { useAuthStore } from "../store/auth-user";
 import { useCreatorStore } from "../store/creator";
 import { useVendorStore } from "../store/vendor";
 import { USER_TYPE } from "../utils/constants";
-import axiosInstance from "./http-common";
+import axios from "./axios";
 
 export const getProfileAPI = async () => {
   try {
-    const response = await axiosInstance.get("/auth/user");
+    const response = await axios.get("/auth/user");
     // user
     if (response.data?.data) {
       const user = response.data?.data;
@@ -64,7 +64,7 @@ export const getProfileAPI = async () => {
 
 export const patchProfileAPI = async (data: any) => {
   try {
-    const response = await axiosInstance.patch("/auth/user", data);
+    const response = await axios.patch("/auth/user", data);
     return response?.data?.data;
   } catch (error) {
     throw error || new Error("profile update failed");

@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
@@ -15,6 +14,7 @@ import { FaSlidersH } from "react-icons/fa";
 import Loader from "../../components-common/layout/loader";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
+import axios from "@/lib/web-api/axios";
 export interface ICategory {
   _id: string;
   name: string;
@@ -34,7 +34,7 @@ export interface IRequest {
   productId: string;
   vendorId: string;
   collaborationStatus: string;
-  requestFrom: 'CREATOR' | 'VENDOR' | string;
+  requestFrom: "CREATOR" | "VENDOR" | string;
   createdAt: string;
   updatedAt: string;
 }
@@ -78,9 +78,7 @@ export interface IProduct {
   tag?: string;
 }
 
-
 export default function ProductList() {
-  const axios = useAxiosAuth();
   const translate = useTranslations();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
@@ -138,7 +136,7 @@ export default function ProductList() {
         setInternalLoader(false);
       }
     },
-    [axios, pageSize]
+    [pageSize]
   );
 
   useEffect(() => {
@@ -157,8 +155,8 @@ export default function ProductList() {
     page !== currentPage && getProductList(page, true);
   };
   const handleUpdateProduct = () => {
-    getProductList(currentPage, true)
-  }
+    getProductList(currentPage, true);
+  };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
       {loading ? (
@@ -186,7 +184,10 @@ export default function ProductList() {
             </div>
           </div>
           {internalLoader && <Loader />}
-          <ProductTable data={products} handleUpdateProduct={handleUpdateProduct}/>
+          <ProductTable
+            data={products}
+            handleUpdateProduct={handleUpdateProduct}
+          />
           {/* Pagination */}
           <div className="flex justify-end items-center mt-4">
             <TablePagination

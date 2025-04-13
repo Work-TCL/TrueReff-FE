@@ -1,14 +1,13 @@
 "use client";
 import EditAddressProfile from "@/app/_components/components-common/dialogs/address-profile";
 import { Button } from "@/components/ui/button";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { translate } from "@/lib/utils/translate";
+import axios from "@/lib/web-api/axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function AddressesProfile(props: any) {
-  const axios = useAxiosAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [addresses, setAddresses] = useState<any>([
     ...(props?.addresses || []),
@@ -57,7 +56,7 @@ export default function AddressesProfile(props: any) {
           {translate("add_new_address")}
         </div>
       </div>
-      <div className="items-center gap-4 flex-wrap w-full grid lg:grid-cols-2 grid-cols-1">
+      <div className="items-center gap-4 flex-wrap w-full flex">
         {Array.isArray(addresses) &&
           addresses?.map((value: any, index: number) => {
             return (

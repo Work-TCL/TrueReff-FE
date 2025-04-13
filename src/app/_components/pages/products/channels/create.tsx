@@ -8,7 +8,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { translate } from "@/lib/utils/translate";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -20,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { IProductSchema, productSchema } from "@/lib/utils/validations";
 import Input from "../../../ui/form/Input";
 import AnchorButton from "../../../ui/button/variant";
+import axios from "@/lib/web-api/axios";
 
 interface IAddProductDetailProps {
   type?: "view" | "edit" | "create";
@@ -42,7 +42,6 @@ interface IProduct {
 export default function CreateProduct({
   type = "view",
 }: IAddProductDetailProps) {
-  const axios = useAxiosAuth();
   const params = useParams();
   const router = useRouter();
   const productId = params?.productId;
@@ -152,9 +151,7 @@ export default function CreateProduct({
   const fetchProductById = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `/product/${productId}`
-      );
+      const response = await axios.get(`/product/${productId}`);
 
       const product: any = response?.data?.data?.data;
       const images = product.media;
@@ -203,11 +200,11 @@ export default function CreateProduct({
     }
   }, [shopifyId]);
 
-  useEffect(()=> {
-    if(productId){
-      fetchProductById()
+  useEffect(() => {
+    if (productId) {
+      fetchProductById();
     }
-  },[productId])
+  }, [productId]);
 
   const onSubmit = (data: IProductSchema) => {
     setLoading(true);
@@ -229,12 +226,28 @@ export default function CreateProduct({
             {status.view ? (
               <Breadcrumb>
                 <BreadcrumbList>
-                <BreadcrumbItem>
-                <BreadcrumbPage className="cursor-pointer hover:text-[grey]" onClick={()=> router.push("/creator/brandsList/")}>{brandName}</BreadcrumbPage>
+                  <BreadcrumbItem>
+                    <BreadcrumbPage
+                      className="cursor-pointer hover:text-[grey]"
+                      onClick={() => router.push("/creator/brandsList/")}
+                    >
+                      {brandName}
+                    </BreadcrumbPage>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                  <BreadcrumbPage className="cursor-pointer hover:text-[grey]" onClick={() => router.push(productId ? `/creator/brandsList/${params.id}?brandName=${brandName}` : `/vendor/products/${params?.channelType}`)}>{translate("Product_List")}</BreadcrumbPage>
+                    <BreadcrumbPage
+                      className="cursor-pointer hover:text-[grey]"
+                      onClick={() =>
+                        router.push(
+                          productId
+                            ? `/creator/brandsList/${params.id}?brandName=${brandName}`
+                            : `/vendor/products/${params?.channelType}`
+                        )
+                      }
+                    >
+                      {translate("Product_List")}
+                    </BreadcrumbPage>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>

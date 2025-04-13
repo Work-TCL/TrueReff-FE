@@ -14,13 +14,13 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import toast from "react-hot-toast";
 import socketService from "@/lib/services/socket-service";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { useVendorStore } from "@/lib/store/vendor";
 import { useCreatorStore } from "@/lib/store/creator";
 import { creatorRegister, getUserApi } from "@/lib/web-api/auth";
+import axios from "@/lib/web-api/axios";
 interface IPageName {
   [key: string]: string;
 }
@@ -65,7 +65,6 @@ function formatTimeAgo(date: string) {
 }
 export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const pathName = usePathname();
-  const axios = useAxiosAuth();
   const { account } = useAuthStore();
   const { vendor } = useVendorStore();
   const { creator } = useCreatorStore();

@@ -9,10 +9,10 @@ import {
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { translate } from "@/lib/utils/translate";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 import { useVendorStore } from "@/lib/store/vendor";
+import axios from "@/lib/web-api/axios";
 
 export default function EditVendorForm({
   profile,
@@ -21,7 +21,6 @@ export default function EditVendorForm({
   profile: any;
   onClose: any;
 }) {
-  const axios: any = useAxiosAuth();
   const { setVendorData } = useVendorStore();
   const [loading, setLoading] = useState(false);
   const schema = vendorProfileUpdateSchema;

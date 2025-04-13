@@ -2,9 +2,9 @@
 import EditContactProfile from "@/app/_components/components-common/dialogs/contacts-profile";
 import AnchorButton from "@/app/_components/ui/button/variant";
 import { Button } from "@/components/ui/button";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { translate } from "@/lib/utils/translate";
+import axios from "@/lib/web-api/axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -14,8 +14,6 @@ export default function ContactsProfile(props: any) {
   const [isOpen, setIsOpen] = useState<any>(false);
   const [contacts, setContacts] = useState<any[]>([...(props?.contacts || [])]);
   const [currentContact, setCurrentContact] = useState<any>(null);
-
-  const axios = useAxiosAuth();
 
   const handleRemoveContact = async (index: number) => {
     try {
@@ -61,7 +59,7 @@ export default function ContactsProfile(props: any) {
           {translate("add_new_contact")}
         </div>
       </div>
-      <div className="items-center gap-4 flex-wrap w-full grid lg:grid-cols-2 grid-cols-1">
+      <div className="items-center gap-4 flex-wrap w-full flex">
         {contacts?.map((value, index, array) => {
           return (
             <div

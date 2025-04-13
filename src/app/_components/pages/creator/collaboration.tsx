@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
@@ -14,6 +13,7 @@ import Loader from "../../components-common/layout/loader";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/lib/store/auth-user";
+import axios from "@/lib/web-api/axios";
 
 export interface ICategory {
   _id: string;
@@ -33,7 +33,7 @@ export interface IProduct {
   media: string[]; // assuming media is an array of URLs or identifiers
   channelName: string; // e.g., "shopify"
   category: ICategory[];
-  categories?:string;
+  categories?: string;
   tags: string[];
   tag?: string;
   createdAt: string;
@@ -79,7 +79,6 @@ export interface ICollaboration {
 }
 
 export default function CollaborationList() {
-  const axios = useAxiosAuth();
   const translate = useTranslations();
   const { account: user } = useAuthStore();
   const [loading, setLoading] = useState<boolean>(false);
@@ -116,10 +115,10 @@ export default function CollaborationList() {
                     return category?.name;
                   })
                   .join(", ");
-                  let tag = ele.productId.tags.join(", ")
+                let tag = ele.productId.tags.join(", ");
                 return {
                   ...ele,
-                  productId: { ...ele?.productId, categories: category,tag },
+                  productId: { ...ele?.productId, categories: category, tag },
                 };
               });
               setCollaborations([...result]);
@@ -144,7 +143,7 @@ export default function CollaborationList() {
         setInternalLoader(false);
       }
     },
-    [axios, pageSize]
+    [pageSize]
   );
 
   useEffect(() => {
@@ -193,7 +192,7 @@ export default function CollaborationList() {
             data={collaborations}
             filter={filter}
             user={getUserType()}
-            fetchCollaboration={() => fetchCollaboration(currentPage,true)}
+            fetchCollaboration={() => fetchCollaboration(currentPage, true)}
           />
           {/* Pagination */}
           <div className="flex justify-end items-center mt-4">

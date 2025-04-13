@@ -12,7 +12,17 @@ export interface ICategoryData {
   createdAt: string;
   updatedAt: string;
 }
-export default function ProfileSetup() {
+interface IProps {
+  handleImageSelect: any;
+  profilePreview: any;
+  bannerPreview: any;
+}
+
+export default function ProfileSetup({
+  handleImageSelect,
+  bannerPreview,
+  profilePreview,
+}: IProps) {
   const methods = useFormContext();
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
@@ -127,22 +137,31 @@ export default function ProfileSetup() {
       </div>
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
         <div className="text-sm">{translate("Profile_Image")}</div>
-        <div className="flex justify-center items-center border rounded-lg p-5 cursor-not-allowed opacity-50">
+        <div className="flex justify-center items-center border rounded-lg p-5">
           <div className="flex flex-col w-full gap-4">
             <div className="flex justify-center">
               <img
-                src="/assets/product/image-square.svg"
-                className="w-[50px] h-[50px]"
+                src={
+                  profilePreview ||
+                  methods.watch("profile_image") ||
+                  "/assets/product/image-square.svg"
+                }
+                className="w-[100px] h-[100px] object-cover rounded-full"
               />
             </div>
-            <input type="file" id="profile-image" className="hidden" />
+            <input
+              type="file"
+              id="profile-image"
+              className="hidden"
+              accept="image/*"
+              onChange={(e) => handleImageSelect(e, "profile")}
+            />
             <Button
               variant="outline"
               className="w-full disabled:cursor-not-allowed"
               onClick={() => {
-                // document.getElementById("profile-image")?.click();
+                document.getElementById("profile-image")?.click();
               }}
-              disabled
             >
               {translate("Upload_your_photo")}
             </Button>
@@ -153,17 +172,27 @@ export default function ProfileSetup() {
         <div className="text-sm">{translate("Banner_Image")}</div>
         <div className="flex flex-col gap-1">
           <div
-            className="flex justify-center items-center border border-dashed rounded-lg p-5 cursor-not-allowed opacity-50"
+            className="flex justify-center items-center border border-dashed rounded-lg p-5"
             onClick={() => {
-              // document.getElementById("banner_image")?.click();
+              document.getElementById("banner_image")?.click();
             }}
           >
             <div className="flex flex-col items-center gap-4">
               <img
-                src="/assets/product/image-square.svg"
-                className="w-[50px] h-[50px]"
+                src={
+                  bannerPreview ||
+                  methods.watch("banner_image") ||
+                  "/assets/product/image-square.svg"
+                }
+                className="w-full max-h-[200px] object-cover rounded-lg"
               />
-              <input type="file" id="banner_image" className="hidden" />
+              <input
+                type="file"
+                id="banner_image"
+                className="hidden"
+                accept="image/*"
+                onChange={(e) => handleImageSelect(e, "banner")}
+              />
               <div className="text-[#656466]">
                 {translate("Upload_Documents")}
               </div>

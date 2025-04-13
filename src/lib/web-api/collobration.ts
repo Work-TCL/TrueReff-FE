@@ -3,11 +3,15 @@ import {
   IPostGenerateUTMLinkResponse,
 } from "../types-api/collobration";
 import { getErrorMessage } from "../utils/commonUtils";
-import axiosInstance from "./http-common";
+import axios from "./axios";
 
-export const getCollobrationConversation = async (collobrationId: string,limit:number,page:number) => {
+export const getCollobrationConversation = async (
+  collobrationId: string,
+  limit: number,
+  page: number
+) => {
   try {
-    const response = await axiosInstance.get(
+    const response = await axios.get(
       `/message/collaboration/${collobrationId}?limit=${limit}&page=${page}`
     );
     return response?.data;
@@ -20,7 +24,7 @@ export const generateUTMLink = async (
   params: IPostGenerateUTMLinkRequest
 ): Promise<IPostGenerateUTMLinkResponse> => {
   try {
-    const response = await axiosInstance.post("/product/utm/create", params);
+    const response = await axios.post("/product/utm/create", params);
     return response?.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);

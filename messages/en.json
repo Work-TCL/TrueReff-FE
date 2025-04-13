@@ -331,5 +331,8 @@
   "Coupon_Code": "Coupon Code",
   "expiresAt": "expiresAt",
   "No_Channels_Available_Description": "Please connect to the store to view available channels.",
-  "View":"View"
+  "Creator_Information": "Creator Information",
+  "Short_Description": "Short Description",
+  "Long_Description": "Long Description",
+  "View": "View"
 }

@@ -14,9 +14,9 @@ import {
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { translate } from "@/lib/utils/translate";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
+import axios from "@/lib/web-api/axios";
 
 export default function EditContactVendorForm({
   profile,
@@ -28,7 +28,6 @@ export default function EditContactVendorForm({
   onClose: any;
 }) {
   const router = useRouter();
-  const axios = useAxiosAuth();
   const [loading, setLoading] = useState(false);
   const schema = addContactVendorSchema;
   const methods = useForm<IAddContactVendorSchema>({

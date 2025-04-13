@@ -521,3 +521,43 @@ export const utmSchema = Yup.object().shape({
 });
 
 export interface IUTMSchema extends Yup.Asserts<typeof utmSchema> {}
+
+export const creatorProfileUpdateSchema = Yup.object().shape({
+  full_name: Yup.string().required("Full name is required"),
+  user_name: Yup.string().required("User name is required"),
+  phone: Yup.string()
+    .required("Phone is required")
+    .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+
+  // Profile
+  title: Yup.string().required("Title is required"),
+  short_description: Yup.string().required("Short description is required"),
+  long_description: Yup.string().required("Long description is required"),
+  tags: Yup.array()
+    .of(Yup.string().required("Each tag must be a string"))
+    .min(1, "At least one tag is required")
+    .required("Tags are required"),
+  category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().required("Label is required"),
+        value: Yup.string().required("Value is required"),
+      })
+    )
+    .min(1, "Category is required")
+    .required("Category is required"), // Ensure at least one category is selected
+  sub_category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().required("Label is required"),
+        value: Yup.string().required("Value is required"),
+      })
+    )
+    .min(1, "Sub-category is required")
+    .required("Sub-Category is required"), // Ensure at least one sub-category is selected
+  profile_image: Yup.string().nullable(),
+  banner_image: Yup.string().nullable(),
+});
+
+export interface ICreatorProfileUpdateSchema
+  extends Yup.Asserts<typeof creatorProfileUpdateSchema> {}

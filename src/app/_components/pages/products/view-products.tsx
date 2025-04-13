@@ -8,7 +8,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { translate } from "@/lib/utils/translate";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -20,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { IProductSchema, productSchema } from "@/lib/utils/validations";
 import Input from "../../ui/form/Input";
 import AnchorButton from "../../ui/button/variant";
+import axios from "@/lib/web-api/axios";
 
 interface IAddProductDetailProps {
   type?: "view";
@@ -40,7 +40,6 @@ interface IProduct {
 }
 
 export default function ProductView({ type = "view" }: IAddProductDetailProps) {
-  const axios = useAxiosAuth();
   const searchParams = useSearchParams();
   const productId = searchParams.get("id");
   const status = {

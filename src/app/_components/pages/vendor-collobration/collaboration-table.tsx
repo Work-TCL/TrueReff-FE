@@ -12,17 +12,17 @@ import { CheckCircle, MessagesSquare, XCircle } from "lucide-react";
 import { ICollaboration, IRequest } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Loader from "../../components-common/layout/loader";
 import StatusBadge from "../../components-common/status-badge";
 import CancelRequest from "../../components-common/dialogs/cancel-request";
+import axios from "@/lib/web-api/axios";
 
 interface ICreatorTableProps {
   data: ICollaboration[];
   filter: string;
   user: string;
   refreshCentral: () => void;
-  loader: boolean
+  loader: boolean;
 }
 interface IRequestCancel {
   collaborationId: string;
@@ -34,12 +34,11 @@ const CollaborationTable = ({
   filter,
   user,
   loader = false,
-  refreshCentral = () => { },
+  refreshCentral = () => {},
 }: ICreatorTableProps) => {
   const router = useRouter();
-  const axios = useAxiosAuth();
   const [loading, setLoading] = useState<boolean>(false);
-  const initialValue = {show:false,collaborationId:"",status:""};
+  const initialValue = { show: false, collaborationId: "", status: "" };
   const [isOpen, setIsOpen] = useState<IRequestCancel>(initialValue);
   const handleViewCreatorDetails = (id: string) => {
     router.push(`/vendor/creators/${id}`);
@@ -73,13 +72,16 @@ const CollaborationTable = ({
   const getRequestStatus = (collaboration: ICollaboration) => {
     const { requestId } = collaboration;
     if (requestId) {
-      if (requestId?.collaborationStatus === "REQUESTED" || requestId?.collaborationStatus === "REJECTED") {
+      if (
+        requestId?.collaborationStatus === "REQUESTED" ||
+        requestId?.collaborationStatus === "REJECTED"
+      ) {
         return requestId?.collaborationStatus;
       } else {
         return collaboration?.collaborationStatus;
       }
     } else return "SEND_REQUEST";
-  }
+  };
   const handleCancelRequest = async () => {
     setLoading(true);
     try {
@@ -88,7 +90,7 @@ const CollaborationTable = ({
       );
       if (response.status === 200) {
         toast.success(response.data.message);
-        refreshCentral()
+        refreshCentral();
         setLoading(false);
         setIsOpen(initialValue);
       } else {
@@ -104,19 +106,21 @@ const CollaborationTable = ({
   };
 
   const handleConfirm = () => {
-    if(isOpen?.status === "cancel"){
-      handleCancelRequest()
+    if (isOpen?.status === "cancel") {
+      handleCancelRequest();
     } else {
-      handleStatusChangeRequest("rejected",isOpen?.collaborationId)
+      handleStatusChangeRequest("rejected", isOpen?.collaborationId);
     }
-  }
-  const getMessages = (status:string,request:IRequest) => {
-    let userStatus:{[key:string]:string} = {
-      "CREATOR": "REQUESTED_CREATOR_TO_VENDOR",
-      "VENDOR": "REQUESTED_VENDOR_TO_CREATOR",
-    }
-    return (status === "REQUESTED" && request?.requestFrom) ? userStatus[request?.requestFrom] : status;
-  }
+  };
+  const getMessages = (status: string, request: IRequest) => {
+    let userStatus: { [key: string]: string } = {
+      CREATOR: "REQUESTED_CREATOR_TO_VENDOR",
+      VENDOR: "REQUESTED_VENDOR_TO_CREATOR",
+    };
+    return status === "REQUESTED" && request?.requestFrom
+      ? userStatus[request?.requestFrom]
+      : status;
+  };
   return (
     <div className="">
       {(loading || loader) && <Loader />}
@@ -148,15 +152,13 @@ const CollaborationTable = ({
         </TableHeader>
         <TableBody>
           {data.map((collaboration: ICollaboration, index: number) => {
-            let status = getRequestStatus(collaboration)
+            let status = getRequestStatus(collaboration);
             return (
               <TableRow key={index} className="bg-white">
                 <CustomTableCell>
                   <div
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() =>
-                      handleViewCreatorDetails(collaboration._id)
-                    }
+                    onClick={() => handleViewCreatorDetails(collaboration._id)}
                   >
                     <Avatar className="w-8 h-8">
                       <AvatarImage src={collaboration?.productId?.media[0]} />
@@ -180,52 +182,91 @@ const CollaborationTable = ({
                   {collaboration?.creatorId?.user_name}
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
-                  {status ? <StatusBadge status={status} messageStatus={getMessages(status,collaboration?.requestId)}/> : null}
+                  {status ? (
+                    <StatusBadge
+                      status={status}
+                      messageStatus={getMessages(
+                        status,
+                        collaboration?.requestId
+                      )}
+                    />
+                  ) : null}
                 </CustomTableCell>
                 <CustomTableCell>
                   <div className={`flex gap-4 justify-center`}>
-                    {{
-                      REQUESTED: {CREATOR:<div className="flex justify-between gap-3"><CheckCircle color="#22c55e"
-                        className="cursor-pointer"
-                        size={25}
-                        onClick={() =>
-                          handleStatusChangeRequest(
-                            "accepted",
-                            collaboration?._id
-                          )
-                        }
-                      /><XCircle className="cursor-pointer" size={25} color="#ef4444"
-                        onClick={() =>
-                          setIsOpen({show:true,collaborationId: collaboration?._id,status:"reject"})
-                        }
-                        /></div>,VENDOR:<XCircle className="cursor-pointer" size={25} color="#ef4444"
-                        onClick={() =>
-                          setIsOpen({show:true,collaborationId: collaboration?._id,status:"cancel"})
-                        }
-                        />}[collaboration?.requestId?.requestFrom??""],
-                      PENDING: <MessagesSquare
-                        color="#3b82f680"
-                        className="cursor-pointer"
-                        onClick={() =>
-                          router.push(`/vendor/creators/collaboration/${collaboration?._id}`)
-                        }
-                        size={25}
-                      />
-                    }[status]}
+                    {
+                      {
+                        REQUESTED: {
+                          CREATOR: (
+                            <div className="flex justify-between gap-3">
+                              <CheckCircle
+                                color="#22c55e"
+                                className="cursor-pointer"
+                                size={25}
+                                onClick={() =>
+                                  handleStatusChangeRequest(
+                                    "accepted",
+                                    collaboration?._id
+                                  )
+                                }
+                              />
+                              <XCircle
+                                className="cursor-pointer"
+                                size={25}
+                                color="#ef4444"
+                                onClick={() =>
+                                  setIsOpen({
+                                    show: true,
+                                    collaborationId: collaboration?._id,
+                                    status: "reject",
+                                  })
+                                }
+                              />
+                            </div>
+                          ),
+                          VENDOR: (
+                            <XCircle
+                              className="cursor-pointer"
+                              size={25}
+                              color="#ef4444"
+                              onClick={() =>
+                                setIsOpen({
+                                  show: true,
+                                  collaborationId: collaboration?._id,
+                                  status: "cancel",
+                                })
+                              }
+                            />
+                          ),
+                        }[collaboration?.requestId?.requestFrom ?? ""],
+                        PENDING: (
+                          <MessagesSquare
+                            color="#3b82f680"
+                            className="cursor-pointer"
+                            onClick={() =>
+                              router.push(
+                                `/vendor/creators/collaboration/${collaboration?._id}`
+                              )
+                            }
+                            size={25}
+                          />
+                        ),
+                      }[status]
+                    }
                   </div>
                 </CustomTableCell>
               </TableRow>
-            )
+            );
           })}
         </TableBody>
       </Table>
       {isOpen?.show && (
-                          <CancelRequest
-                            onClose={() => setIsOpen(initialValue)}
-                            collaborationId={""}
-                            handleCancelRequest={handleConfirm}
-                          />
-                        )}
+        <CancelRequest
+          onClose={() => setIsOpen(initialValue)}
+          collaborationId={""}
+          handleCancelRequest={handleConfirm}
+        />
+      )}
     </div>
   );
 };

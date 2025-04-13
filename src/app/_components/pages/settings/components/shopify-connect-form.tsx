@@ -2,7 +2,6 @@
 import Button from "@/app/_components/ui/button";
 import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import {
   IShopifyConnectSchema,
   shopifyConnectSchema,
@@ -14,9 +13,9 @@ import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { translate } from "@/lib/utils/translate";
 import Input from "@/app/_components/ui/form/Input";
 import { useRouter } from "next/navigation";
+import axios from "@/lib/web-api/axios";
 
 export default function ShopifyStoreConnects() {
-  const axios = useAxiosAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = shopifyConnectSchema;

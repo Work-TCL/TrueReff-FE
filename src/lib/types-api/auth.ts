@@ -191,8 +191,32 @@ export interface IPostCreatorRegisterRequest {
   tags: string[];
   category: string[];
   sub_category: string[];
-  profile_image?: string;
-  banner_image?: string;
+  profile_image?: any;
+  banner_image?: any;
+  // channels: {
+  //   account_name: string;
+  //   handle_name: string;
+  //   account_link: string;
+  // }[]
+}
+export interface IPutUpdateCreatorResponse {
+  status: number;
+  data: ICreator;
+}
+// PUT Creator Update
+export interface IPutUpdateCreatorRequest {
+  full_name: string;
+  user_name: string;
+  // email: string;
+  phone: string;
+  title: string;
+  long_description: string;
+  short_description: string;
+  tags: string[];
+  category: string[];
+  sub_category: string[];
+  profile_image: any;
+  banner_image: any;
   // channels: {
   //   account_name: string;
   //   handle_name: string;

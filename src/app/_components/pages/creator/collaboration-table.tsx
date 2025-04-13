@@ -10,10 +10,10 @@ import { CheckCircle, Eye, MessagesSquare, X, XCircle } from "lucide-react";
 import { ICollaboration, IRequest } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import CancelRequest from "../../components-common/dialogs/cancel-request";
 import { useTranslations } from "next-intl";
 import StatusBadge from "../../components-common/status-badge";
+import axios from "@/lib/web-api/axios";
 
 export function capitalizeFirstLetter(word: string = "") {
   if (!word) return ""; // Handle empty strings
@@ -39,9 +39,8 @@ const CollaborationTable = ({
 }: ICreatorTableProps) => {
   const router = useRouter();
   const translate = useTranslations();
-  const axios = useAxiosAuth();
   const [loading, setLoading] = useState<boolean>(false);
-  const initialValue = {show:false,collaborationId:"",status:""};
+  const initialValue = { show: false, collaborationId: "", status: "" };
   const [isOpen, setIsOpen] = useState<IRequestCancel>(initialValue);
   const handleViewCreatorDetails = (id: string) => {
     router.push(`/vendor/collaboration/${id}`);
@@ -103,29 +102,34 @@ const CollaborationTable = ({
     router.push(`/creator/product-management/${productId}`);
   };
   const handleConfirm = () => {
-      if(isOpen?.status === "cancel"){
-        handleCancelRequest()
-      } else {
-        handleStatusChangeRequest("rejected",isOpen?.collaborationId)
-      }
+    if (isOpen?.status === "cancel") {
+      handleCancelRequest();
+    } else {
+      handleStatusChangeRequest("rejected", isOpen?.collaborationId);
     }
-    const getRequestStatus = (collaboration: ICollaboration) => {
-        const { requestId } = collaboration;
-        if (requestId) {
-          if (requestId?.collaborationStatus === "REQUESTED" || requestId?.collaborationStatus === "REJECTED") {
-            return requestId?.collaborationStatus;
-          } else {
-            return collaboration?.collaborationStatus;
-          }
-        } else return "SEND_REQUEST";
+  };
+  const getRequestStatus = (collaboration: ICollaboration) => {
+    const { requestId } = collaboration;
+    if (requestId) {
+      if (
+        requestId?.collaborationStatus === "REQUESTED" ||
+        requestId?.collaborationStatus === "REJECTED"
+      ) {
+        return requestId?.collaborationStatus;
+      } else {
+        return collaboration?.collaborationStatus;
       }
-     const getMessages = (status:string,request:IRequest) => {
-        let userStatus:{[key:string]:string} = {
-          "CREATOR": "REQUESTED_CREATOR_FROM_VENDOR",
-          "VENDOR": "REQUESTED_VENDOR_FROM_CREATOR",
-        }
-        return (status === "REQUESTED" && request?.requestFrom) ? userStatus[request?.requestFrom] : status;
-      }
+    } else return "SEND_REQUEST";
+  };
+  const getMessages = (status: string, request: IRequest) => {
+    let userStatus: { [key: string]: string } = {
+      CREATOR: "REQUESTED_CREATOR_FROM_VENDOR",
+      VENDOR: "REQUESTED_VENDOR_FROM_CREATOR",
+    };
+    return status === "REQUESTED" && request?.requestFrom
+      ? userStatus[request?.requestFrom]
+      : status;
+  };
   return (
     <div className="">
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
@@ -140,7 +144,9 @@ const CollaborationTable = ({
             <CustomTableHead className="w-1/6">
               {translate("Product_Category")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/6">{translate("Product_Tags")}</CustomTableHead>
+            <CustomTableHead className="w-1/6">
+              {translate("Product_Tags")}
+            </CustomTableHead>
             <CustomTableHead className="w-1/6">
               {translate(`${user}_Name`)}
             </CustomTableHead>
@@ -154,89 +160,121 @@ const CollaborationTable = ({
         </TableHeader>
         <TableBody>
           {data.map((collaboration: ICollaboration, index: number) => {
-            let status = getRequestStatus(collaboration)
+            let status = getRequestStatus(collaboration);
             return (
-            <TableRow key={index} className="bg-white">
-              <CustomTableCell>
-                <div
-                  className="flex items-center gap-2"
-                  onClick={() =>
-                    handleViewCreatorDetails(collaboration._id)
-                  }
-                >
-                  <Avatar className="w-8 h-8">
-                    <AvatarImage src={collaboration?.productId?.media[0]} />
-                    <AvatarImage
-                      src={"/assets/collaboration/collaboration-image.svg"}
+              <TableRow key={index} className="bg-white">
+                <CustomTableCell>
+                  <div
+                    className="flex items-center gap-2"
+                    onClick={() => handleViewCreatorDetails(collaboration._id)}
+                  >
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={collaboration?.productId?.media[0]} />
+                      <AvatarImage
+                        src={"/assets/collaboration/collaboration-image.svg"}
+                      />
+                    </Avatar>
+                    {collaboration?.productId?.title}
+                  </div>
+                </CustomTableCell>
+                <CustomTableCell>
+                  {collaboration?.productId?.categories}
+                </CustomTableCell>
+                <CustomTableCell>
+                  {collaboration?.productId?.description}
+                </CustomTableCell>
+                <CustomTableCell>
+                  {collaboration?.productId?.tag}
+                </CustomTableCell>
+                <CustomTableCell>
+                  {collaboration?.vendorId?.business_name}
+                </CustomTableCell>
+                {/* <CustomTableCell>{""}</CustomTableCell> */}
+                {/* <CustomTableCell>{""}</CustomTableCell> */}
+                <CustomTableCell className="flex justify-center">
+                  {status && (
+                    <StatusBadge
+                      status={status}
+                      messageStatus={getMessages(
+                        status,
+                        collaboration?.requestId
+                      )}
                     />
-                  </Avatar>
-                  {collaboration?.productId?.title}
-                </div>
-              </CustomTableCell>
-              <CustomTableCell>
-                {collaboration?.productId?.categories}
-              </CustomTableCell>
-              <CustomTableCell>
-                {collaboration?.productId?.description}
-              </CustomTableCell>
-              <CustomTableCell>
-                {collaboration?.productId?.tag}
-              </CustomTableCell>
-              <CustomTableCell>
-                {collaboration?.vendorId?.business_name}
-              </CustomTableCell>
-              {/* <CustomTableCell>{""}</CustomTableCell> */}
-              {/* <CustomTableCell>{""}</CustomTableCell> */}
-              <CustomTableCell className="flex justify-center">
-                {status && <StatusBadge status={status} messageStatus={getMessages(status,collaboration?.requestId)}/>}
-              </CustomTableCell>
-              <CustomTableCell className="flex justify-center">
-                {
+                  )}
+                </CustomTableCell>
+                <CustomTableCell className="flex justify-center">
                   {
-                    REQUESTED: {VENDOR:<div className="flex justify-between gap-3"><CheckCircle color="#22c55e"
-                                            className="cursor-pointer"
-                                            size={25}
-                                            onClick={() =>
-                                              handleStatusChangeRequest(
-                                                "accepted",
-                                                collaboration?._id
-                                              )
-                                            }
-                                          /><XCircle className="cursor-pointer" size={25} color="#ef4444"
-                                            onClick={() =>
-                                              setIsOpen({show:true,collaborationId: collaboration?._id,status:"reject"})
-                                            }
-                                            /></div>,CREATOR:<XCircle className="cursor-pointer" size={25} color="#ef4444"
-                                            onClick={() => setIsOpen({show:true,collaborationId:collaboration?._id,status:"cancel"})}
-                                          />}[collaboration?.requestId?.requestFrom??""],
-                    PENDING: (
-                      <div className="flex gap-3">
-                        <Eye
-                        color="#FF4979"
-                          className=" cursor-pointer"
-                          onClick={() =>
-                            handleProductDetail(
-                              collaboration?.productId?._id
-                            )
-                          }
-                          size={25}
-                        />
-                        <MessagesSquare
-                        color="#3b82f680"
-                          className="cursor-pointer"
-                          onClick={() =>
-                            handleChatView(collaboration?._id)
-                          }
-                          size={25}
-                        />
-                      </div>
-                    ),
-                    REJECTED: null,
-                  }[status]
-                }
-              </CustomTableCell>
-            </TableRow>
-          )})}
+                    {
+                      REQUESTED: {
+                        VENDOR: (
+                          <div className="flex justify-between gap-3">
+                            <CheckCircle
+                              color="#22c55e"
+                              className="cursor-pointer"
+                              size={25}
+                              onClick={() =>
+                                handleStatusChangeRequest(
+                                  "accepted",
+                                  collaboration?._id
+                                )
+                              }
+                            />
+                            <XCircle
+                              className="cursor-pointer"
+                              size={25}
+                              color="#ef4444"
+                              onClick={() =>
+                                setIsOpen({
+                                  show: true,
+                                  collaborationId: collaboration?._id,
+                                  status: "reject",
+                                })
+                              }
+                            />
+                          </div>
+                        ),
+                        CREATOR: (
+                          <XCircle
+                            className="cursor-pointer"
+                            size={25}
+                            color="#ef4444"
+                            onClick={() =>
+                              setIsOpen({
+                                show: true,
+                                collaborationId: collaboration?._id,
+                                status: "cancel",
+                              })
+                            }
+                          />
+                        ),
+                      }[collaboration?.requestId?.requestFrom ?? ""],
+                      PENDING: (
+                        <div className="flex gap-3">
+                          <Eye
+                            color="#FF4979"
+                            className=" cursor-pointer"
+                            onClick={() =>
+                              handleProductDetail(collaboration?.productId?._id)
+                            }
+                            size={25}
+                          />
+                          <MessagesSquare
+                            color="#3b82f680"
+                            className="cursor-pointer"
+                            onClick={() =>
+                              handleChatView(collaboration?.productId?._id)
+                            }
+                            size={25}
+                          />
+                        </div>
+                      ),
+                      REJECTED: null,
+                    }[status]
+                  }
+                </CustomTableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       {isOpen?.show && (

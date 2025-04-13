@@ -16,13 +16,13 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { venderRegister } from "@/lib/web-api/auth";
 import { useRouter } from "next/navigation";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { translate } from "@/lib/utils/translate";
 import {
   IPostVendorRegisterRequest,
   IPostVendorRegisterResponse,
 } from "@/lib/types-api/auth";
 import { useVendorStore } from "@/lib/store/vendor";
+import axios from "@/lib/web-api/axios";
 
 let allTabs: {
   id: string;
@@ -56,7 +56,6 @@ export default function PreFormPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { setVendorData } = useVendorStore();
-  const axios = useAxiosAuth();
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
   const methods = useForm<IPreFormSchema>({
     defaultValues: {

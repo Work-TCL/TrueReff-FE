@@ -12,7 +12,6 @@ import {
   connectYoutubeChannel,
   getConnectedChannel,
 } from "@/lib/web-api/creator";
-import axiosInstance from "@/lib/web-api/http-common";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";

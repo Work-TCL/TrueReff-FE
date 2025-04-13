@@ -1,12 +1,12 @@
 import { NextAuthOptions, User as NextAuthUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import axiosInstance from "@/lib/web-api/http-common";
 import {
   IPostLoginResponse,
   IPostVerifyEmailResponse,
 } from "@/lib/types-api/auth";
 import { getUserApi, loginAPI, verifyEmail } from "@/lib/web-api/auth";
+import axios from "@/lib/web-api/axios";
 
 interface AuthorizeCredentials {
   username: string;
@@ -93,7 +93,7 @@ const authOptions: NextAuthOptions = {
       }
       if (account && user) {
         if (account.provider === "google") {
-          const res = await axiosInstance.post("/user/auth/social-login", {
+          const res = await axios.post("/user/auth/social-login", {
             accessToken: account?.access_token,
           });
           token.accessToken = res?.data?.data?.token ?? null; // Ensure token is not undefined
@@ -109,8 +109,8 @@ const authOptions: NextAuthOptions = {
           token.updatedAt = user?.updatedAt;
           token.token = user?.token;
           token.creator = user?.creator;
-          token.vendor = user?.vendor,
-            token.accessToken = user?.token || null; // ✅ Ensure accessToken is set
+          (token.vendor = user?.vendor),
+            (token.accessToken = user?.token || null); // ✅ Ensure accessToken is set
         }
       }
 
@@ -132,7 +132,7 @@ const authOptions: NextAuthOptions = {
       session.user.updatedAt = token?.updatedAt;
       session.user.token = token?.token;
       session.creator = token.creator;
-      session.vendor = token.vendor
+      session.vendor = token.vendor;
 
       session.accessToken = token.accessToken || ""; // ✅ Make sure accessToken is always there
       return session;
