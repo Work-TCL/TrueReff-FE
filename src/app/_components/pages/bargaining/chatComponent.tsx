@@ -6,19 +6,20 @@ import { SendHorizontal } from "lucide-react";
 import socketService from "@/lib/services/socket-service";
 import { formatTo12Hour } from "@/lib/utils/commonUtils";
 import { getCollobrationConversation } from "@/lib/web-api/collobration";
-import { ICollaboration, IProduct } from "../viewProduct/viewDetailProduct";
+import { ICollaboration } from "./view";
 import Loading from "@/app/creator/loading";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useVendorStore } from "@/lib/store/vendor";
+import { useParams } from "next/navigation";
 
 export default function ChatComponent({
-  productData,
   collaborationData,
 }: {
-  productData: IProduct;
   collaborationData: ICollaboration;
 }) {
+  const params = useParams();
+  const collaborationId = params?.collaborationId;
   const [message, setMessage] = useState("");
   const { account: user } = useAuthStore();
   const { creator } = useCreatorStore();
@@ -34,7 +35,7 @@ export default function ChatComponent({
       id && socketService.registerUser(String(id));
     }
 
-    socketService.joinCollaboration(collaborationData?._id);
+    collaborationId &&socketService.joinCollaboration(collaborationId);
     socketService.joinedCollaborationRoom((data) => {});
     socketService.joinedCollaborationMessages((data) => {
       setMessages((prev) => [...prev, data.message]);
@@ -43,7 +44,7 @@ export default function ChatComponent({
     return () => {
       // socketService.disconnect();
     };
-  }, [creator.creatorId, vendor.vendorId]);
+  }, [creator.creatorId, vendor.vendorId,collaborationId]);
 
   useEffect(() => {
     (async () => {
@@ -76,7 +77,7 @@ export default function ChatComponent({
     }
   };
   const getUserName = () => {
-    return user?.role === "creator" ? creator.creatorId : vendor.vendorId;
+    return user?.role === "creator" ? collaborationData.creatorId?.user_name : collaborationData.vendorId?.business_name;
   };
 
   return (

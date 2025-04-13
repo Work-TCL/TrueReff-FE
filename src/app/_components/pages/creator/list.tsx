@@ -7,12 +7,12 @@ import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { translate } from "@/lib/utils/translate";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import { useTranslations } from "next-intl";
 export interface ICategory {
   _id: string;
   name: string;
@@ -54,6 +54,7 @@ export interface ICreator {
 
 export default function CreatorList() {
   const axios = useAxiosAuth();
+  const translate = useTranslations();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [creators, setCreators] = useState<ICreator[]>([]);

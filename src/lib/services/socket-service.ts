@@ -37,7 +37,7 @@ class SocketService {
   /**
    * Join a collaboration room
    */
-  joinCollaboration(collaborationId: string): void {
+  joinCollaboration(collaborationId: string|string[]): void {
     if (this.socket) {
       this.socket.emit("joinCollaboration", collaborationId);
       console.log(`Joined collaboration room: ${collaborationId}`);

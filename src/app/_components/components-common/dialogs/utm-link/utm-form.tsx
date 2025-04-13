@@ -1,12 +1,9 @@
 "use client";
 import {
-  ILoginSchema,
   IUTMSchema,
-  loginSchema,
-  utmSchema,
+  utmSchema
 } from "@/lib/utils/validations";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -16,14 +13,14 @@ import Button from "@/app/_components/ui/button";
 import { translate } from "@/lib/utils/translate";
 import { generateUTMLink } from "@/lib/web-api/collobration";
 import { IPostGenerateUTMLinkResponse } from "@/lib/types-api/collobration";
-
-interface IUTMForm {
-  collaborationId: string;
+import { useParams } from "next/navigation";
+interface IUTMFromProps {
+    onClose: () => void;
 }
-
-export default function UTMForm({ collaborationId }: IUTMForm) {
-  const router = useRouter();
+export default function UTMForm({onClose}:IUTMFromProps) {
   const [loading, setLoading] = useState(false);
+  const params = useParams();
+  const collaborationId:any = params?.collaborationId;
   const schema = utmSchema;
   const methods = useForm<IUTMSchema>({
     defaultValues: {
@@ -35,7 +32,6 @@ export default function UTMForm({ collaborationId }: IUTMForm) {
   });
 
   const onSubmit = async (data: IUTMSchema) => {
-    console.log("datat---", data);
 
     setLoading(true);
     try {
@@ -49,6 +45,7 @@ export default function UTMForm({ collaborationId }: IUTMForm) {
       });
       if (res?.status === 200 || res?.status === 201) {
         toast.success(res.message);
+        onClose();
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);

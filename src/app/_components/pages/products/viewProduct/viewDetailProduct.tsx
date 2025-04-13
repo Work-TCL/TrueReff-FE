@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { translate } from "@/lib/utils/translate";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import BargainingView from "../barganing/view";
 import { useCreatorStore } from "@/lib/store/creator";
+import { useAuthStore } from "@/lib/store/auth-user";
 
 interface ICategory {
   _id: string;
@@ -47,7 +47,16 @@ export interface IProduct {
   category?: string;
   vendorId?: string;
 }
-
+export interface IRequest {
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  collaborationStatus: string;
+  requestFrom: string;
+  createdAt: string;
+  updatedAt: string;
+}
 export interface ICollaboration {
   _id: string;
   creatorId: string;
@@ -62,6 +71,7 @@ export interface ICollaboration {
   expiresAt: string;
   createdAt: string;
   updatedAt: string;
+  requestId: IRequest;
 }
 
 const statusText: { [key: string]: string } = {
@@ -84,6 +94,7 @@ const buttonColor: { [key: string]: string } = {
 export default function ViewProductDetail() {
   const pathName = usePathname();
   const axios = useAxiosAuth();
+  const {account} = useAuthStore();
   const { creator } = useCreatorStore();
   const params = useParams();
   const router = useRouter();
@@ -91,8 +102,6 @@ export default function ViewProductDetail() {
   const channelType = params?.channelType;
   const searchParams = useSearchParams();
   const shopifyId = searchParams.get("id");
-  const isChatView = searchParams.get("isChatView") === "true";
-  const brandName = searchParams.get("brandName");
   const creatorId = searchParams.get("creatorId");
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -112,6 +121,16 @@ export default function ViewProductDetail() {
     expiresAt: "",
     createdAt: "",
     updatedAt: "string",
+    requestId: {
+      _id: "",
+      creatorId: "",
+      productId: "",
+      vendorId: "",
+      collaborationStatus: "",
+      requestFrom: "",
+      createdAt: "",
+      updatedAt: "",
+    }
   });
   const [productData, setProductData] = useState<IProduct>({
     productId: "",
@@ -137,13 +156,11 @@ export default function ViewProductDetail() {
       );
 
       const product: any = response?.data?.data;
-
-      const images = product?.featuredMedia?.preview?.image?.url;
-      const imagess = product?.media?.nodes?.map((ele: any) => ele?.image.url);
+      const images = product?.media?.nodes?.map((ele: any) => ele?.image.url);
       // ✅ Update product state
       const updatedProduct = {
         productId: product.id,
-        images: imagess,
+        images: images,
         name: product.title,
         tags: product?.tags || [],
         description: product?.description || "", // Add description if available
@@ -198,15 +215,14 @@ export default function ViewProductDetail() {
     }
   };
 
-  const fetchProductCollaborationStatus = async (creatorID: string) => {
-    if (!creatorID) return;
+  const fetchProductCollaborationStatus = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `/product/collaboration/status/${productId}?creatorId=${creatorID}`
+        `/product/collaboration/status/${productId}${creatorId ? `?creatorId=${creatorId}`: ``}`
       );
       const collaboration: any = response?.data?.data?.collaboration;
-      setCollaborationStatus(collaboration?.collaborationStatus ?? "");
+      setCollaborationStatus(collaboration?getRequestStatus(collaboration):"");
       setCollaborationData(collaboration);
     } catch (error: any) {
       toast.error(error?.message || "Status Fetch Failed.");
@@ -228,35 +244,29 @@ export default function ViewProductDetail() {
     }
   }, [productId]);
   useEffect(() => {
-    const creator_id = creator.creatorId || creatorId;
-    if (creator_id) {
-      fetchProductCollaborationStatus(creator_id);
+    if(creator?.creatorId || creatorId){
+      fetchProductCollaborationStatus();
     }
-  }, [creator.creatorId, creatorId]);
+  }, [creator?.creatorId,]);
   const handleSendRequest = async () => {
     setLoading(true);
     try {
       const response: any = await axios.post(
         `/product/collaboration/creator/request`,
         {
-          productId: productData?.productId,
-          creatorId: creator.creatorId,
-          vendorId: productData?.vendorId,
-          discountType: "PERCENTAGE", //"PERCENTAGE", "FIXED_AMOUNT"
-          discountValue: 10,
-          couponCode: "ABCDEFG",
-          expiresAt: "2025-12-31T23:59:59Z",
-        }
-      );
-      if (response.status === 200) {
-        toast.success(response.data.message);
+          "productIds": [productData?.productId],
+          "creatorId": creator.creatorId,
+          "vendorId": productData?.vendorId
       }
+      );
       if (response.status === 201) {
-        let data = response?.data?.data?.newCollaboration;
-        if (data && data?.collaborationStatus) {
-          setCollaborationStatus(data?.collaborationStatus);
+        let data = response?.data?.data?.results;
+        if (data && data?.length > 0 && data[0]?.data) {
+          fetchProductCollaborationStatus()
         }
-        toast.success(response.data.message);
+        if (data && data?.length > 0 && data[0]?.message) {
+            toast.success(data[0]?.message);
+        }
         setLoading(false);
       } else {
         setLoading(false);
@@ -272,23 +282,20 @@ export default function ViewProductDetail() {
     if (status === "" || status === "REJECTED") {
       handleSendRequest();
     } else if (status === "PENDING") {
-      const params = new URLSearchParams(searchParams.toString());
-
-      params.set("isChatView", "true");
-
-      router.push(`?${params.toString()}`, { scroll: false });
+      router.push(`/${account?.role}/collaboration/${collaborationData?._id}`);
     }
   };
-  const handleProductView = () => {
-    if (isChatView) {
-      const params = new URLSearchParams(searchParams.toString());
 
-      params.delete("isChatView");
-
-      router.push(`?${params.toString()}`, { scroll: false });
-      setIsUTMView(false);
-    }
-  };
+  const getRequestStatus = (collaboration: ICollaboration) => {
+    const { requestId } = collaboration;
+    if (requestId) {
+      if (requestId?.collaborationStatus === "REQUESTED" || requestId?.collaborationStatus === "REJECTED") {
+        return requestId?.collaborationStatus;
+      } else {
+        return collaboration?.collaborationStatus;
+      }
+    } else return "SEND_REQUEST";
+  }
 
   return (
     <div className="flex flex-col w-full p-6 gap-6">
@@ -297,34 +304,18 @@ export default function ViewProductDetail() {
       <div className="flex md:flex-row flex-col items-start justify-between md:items-center gap-2">
         <Breadcrumb>
           <BreadcrumbList
-            className="md:text-sm text-xs
-"
+            className="md:text-sm text-xs"
           >
-            {(channelType || brandName) && (
-              <>
-                <BreadcrumbItem>
-                  <BreadcrumbPage
-                    className="cursor-pointer hover:text-[grey] "
-                    onClick={() => router.push("/creator/brandsList/")}
-                  >
-                    {channelType || brandName}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="md:size-6 size-4" />
-              </>
-            )}
             <BreadcrumbItem>
               <BreadcrumbPage
                 className="cursor-pointer hover:text-[grey]"
                 onClick={() =>
                   router.push(
-                    productId
-                      ? pathName.includes("/creator/collaboration")
-                        ? `/creator/collaboration`
-                        : pathName.includes("/product-management")
-                        ? `/creator/product-management`
-                        : `/creator/brandsList/${params.id}?brandName=${brandName}`
-                      : `/vendor/products/${params?.channelType}`
+                    (creator?.creatorId)
+                      ? pathName.includes("/product-management")
+                          ? `/creator/product-management`
+                          : `/creator/brandsList/${params.id}`
+                      : channelType ? `/vendor/products/${channelType}` : `/vendor/products`
                   )
                 }
               >
@@ -334,65 +325,37 @@ export default function ViewProductDetail() {
             <BreadcrumbSeparator className="md:size-6 size-4" />
             <BreadcrumbItem>
               <BreadcrumbPage
-                className={`cursor-pointer ${
-                  isChatView ? "hover:text-[grey]" : ""
-                }`}
-                onClick={() => handleProductView()}
+                className={`cursor-pointer`}
               >
                 {translate("View_Product")}
               </BreadcrumbPage>
             </BreadcrumbItem>
-            {isChatView ? (
-              <>
-                <BreadcrumbSeparator className="md:size-6 size-4" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{"Bargaining"}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </>
-            ) : (
-              <></>
-            )}
           </BreadcrumbList>
         </Breadcrumb>
-        {(!isChatView ||
-          (collaborationStatus === "PENDING" &&
-            !creator.creatorId &&
-            !isChatView)) && (
-          <Button
-            disabled={
-              collaborationStatus === "REQUESTED" ||
-              collaborationStatus === "REJECTED"
-            }
-            variant="secondary"
-            className={`${buttonColor[collaborationStatus]} text-white`}
-            onClick={() => handleButtonClick(collaborationStatus)}
-          >
-            {statusText[collaborationStatus]}
-          </Button>
-        )}
+        {(creator?.creatorId || creatorId) &&  
+            <Button
+              disabled={
+                collaborationStatus === "REQUESTED" ||
+                collaborationStatus === "REJECTED"
+              }
+              variant="secondary"
+              className={`${buttonColor[collaborationStatus]} text-white`}
+              onClick={() => handleButtonClick(collaborationStatus)}
+            >
+              {statusText[collaborationStatus]}
+            </Button>
+          }
       </div>
 
       {/* Card Section */}
-      {isChatView ? (
-        <BargainingView
-          productData={productData}
-          isVendor={!Boolean(creator.creatorId)}
-          collaborationData={collaborationData}
-          openUtmForm={() => {
-            setIsUTMView(true);
-          }}
-          isOpenUtmForm={Boolean(isUTMView && collaborationData)}
-        />
-      ) : (
-        <Card className="bg-white rounded-lg overflow-auto">
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <ProductImageGallery images={productData?.images} />
-              <ProductInfo productData={productData} />
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <Card className="bg-white rounded-lg overflow-auto">
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ProductImageGallery images={productData?.images} />
+            <ProductInfo productData={productData} />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -20,11 +20,11 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import Loading from "@/app/vendor/loading";
-import Link from "next/link";
 import ChannleToProduct from "@/lib/components/dialogs/channel-to-product";
 import { useTranslations } from "next-intl";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
+import { useRouter } from "next/navigation";
 
 interface IProduct {
   handle: string;
@@ -43,6 +43,7 @@ export default function ChannelProductList({
   channelName = "shopify",
 }: IProps) {
   const axios = useAxiosAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [currentData, setCurrentData] = useState<IProduct | null>(null);
@@ -184,9 +185,7 @@ export default function ChannelProductList({
                                 <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
                   <CustomTableCell>
                     <div className="flex justify-center gap-3">
-                      <Link href={`shopify/view?id=${product.id}`} className="">
-                        <Eye color="#FF4979" className="cursor-pointer" />
-                      </Link>
+                        <Eye color="#FF4979" className="cursor-pointer" onClick={()=> router.push(`shopify/view?id=${product.id}`)}/>
                       <div
                         onClick={() => {
                           setCurrentData(product);

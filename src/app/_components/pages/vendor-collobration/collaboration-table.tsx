@@ -42,7 +42,7 @@ const CollaborationTable = ({
   const initialValue = {show:false,collaborationId:"",status:""};
   const [isOpen, setIsOpen] = useState<IRequestCancel>(initialValue);
   const handleViewCreatorDetails = (id: string) => {
-    router.push(`/creator/collaboration/${id}`);
+    router.push(`/vendor/creators/${id}`);
   };
   const handleStatusChangeRequest = async (
     status: "accepted" | "rejected",
@@ -153,7 +153,7 @@ const CollaborationTable = ({
               <TableRow key={index} className="bg-white">
                 <CustomTableCell>
                   <div
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                     onClick={() =>
                       handleViewCreatorDetails(collaboration._id)
                     }
@@ -207,7 +207,7 @@ const CollaborationTable = ({
                         color="#3b82f680"
                         className="cursor-pointer"
                         onClick={() =>
-                          router.push(`/creator/collaboration/${collaboration?.productId?._id}?isChatView=true`)
+                          router.push(`/vendor/creators/collaboration/${collaboration?._id}`)
                         }
                         size={25}
                       />

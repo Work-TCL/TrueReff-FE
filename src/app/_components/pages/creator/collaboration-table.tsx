@@ -20,14 +20,6 @@ export function capitalizeFirstLetter(word: string = "") {
   return word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase();
 }
 
-export const badgeColor: { [key: string]: string } = {
-  LIVE: "bg-[#098228] text-[#098228]",
-  REQUESTED: "bg-[#FF9500] text-[#FF9500]",
-  EXPIRED: "bg-[#FF3B30] text-[#FF3B30]",
-  REJECTED: "bg-[#FF3B30] text-[#FF3B30]",
-  PENDING: "bg-[#FF9500] text-[#FF9500]",
-};
-
 interface ICreatorTableProps {
   data: ICollaboration[];
   filter: string;
@@ -51,13 +43,6 @@ const CollaborationTable = ({
   const [loading, setLoading] = useState<boolean>(false);
   const initialValue = {show:false,collaborationId:"",status:""};
   const [isOpen, setIsOpen] = useState<IRequestCancel>(initialValue);
-  const badgeColor: { [key: string]: string } = {
-    LIVE: "bg-[#098228] text-[#098228]",
-    REQUESTED: "bg-[#FF9500] text-[#FF9500]",
-    EXPIRED: "bg-[#FF3B30] text-[#FF3B30]",
-    REJECTED: "bg-[#FF3B30] text-[#FF3B30]",
-    PENDING: "bg-[#FF9500] text-[#FF9500]",
-  };
   const handleViewCreatorDetails = (id: string) => {
     router.push(`/vendor/collaboration/${id}`);
   };
@@ -110,12 +95,12 @@ const CollaborationTable = ({
       setIsOpen(initialValue);
     }
   };
-  const handleChatView = (productId: string) => {
-    router.push(`/creator/collaboration/${productId}?isChatView=true`);
+  const handleChatView = (collaborationId: string) => {
+    router.push(`/creator/collaboration/${collaborationId}`);
   };
 
   const handleProductDetail = (productId: string) => {
-    router.push(`/creator/collaboration/${productId}`);
+    router.push(`/creator/product-management/${productId}`);
   };
   const handleConfirm = () => {
       if(isOpen?.status === "cancel"){
@@ -240,7 +225,7 @@ const CollaborationTable = ({
                         color="#3b82f680"
                           className="cursor-pointer"
                           onClick={() =>
-                            handleChatView(collaboration?.productId?._id)
+                            handleChatView(collaboration?._id)
                           }
                           size={25}
                         />
