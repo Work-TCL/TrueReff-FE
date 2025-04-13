@@ -13,7 +13,7 @@ export default function BargainingDetailView({productData}:any) {
     setIsUTMView(prev => !prev);
   }
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 overflow-hidden h-full">
       <div className="flex flex-col gap-5">
         <p className="text-text font-medium text-sm">Product Image</p>
         <div className="flex flex-col gap-3">
@@ -37,7 +37,7 @@ export default function BargainingDetailView({productData}:any) {
           </div>
         </div>
       </div>
-      <div className="flex flex-1 flex-col gap-5">
+      <div className="flex flex-1 flex-col gap-5 overflow-auto pr-3">
         <p className="text-text font-medium text-sm">General Information</p>
         <div className="grid grid-cols-1 gap-4">
           <div className="flex flex-col w-full gap-1">

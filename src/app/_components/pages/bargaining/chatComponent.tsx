@@ -83,7 +83,7 @@ export default function ChatComponent({
   };
 
   return (
-    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden flex flex-col md:h-[100vh] h-[80vh] md:sticky md:top-0">
+    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden flex flex-col md:h-[80vh] h-[80vh] md:sticky md:top-0">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
         <Avatar>
           <AvatarImage

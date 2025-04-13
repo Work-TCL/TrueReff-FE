@@ -3,12 +3,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import BargainingDetailView from "./detail";
 import ChatComponent from "./chatComponent";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { useAuthStore } from "@/lib/store/auth-user";
 import Loader from "@/app/_components/components-common/layout/loader";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { useTranslations } from "use-intl";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 export interface IProduct {
@@ -73,7 +79,7 @@ export default function BargainingView() {
     vendorId: {
       _id: "",
       business_name: "",
-  },
+    },
     collaborationStatus: "",
     utmLink: "",
     discountType: "",
@@ -107,19 +113,21 @@ export default function BargainingView() {
     fetchProductCollaboration();
   }, []);
   return (
-    <div className="flex flex-col w-full p-6 gap-6">
+    <div className="flex flex-col w-full p-6 gap-6 md:h-full">
       {loading && <Loader />}
       {/* Breadcrumb and Button */}
       <div className="flex md:flex-row flex-col items-start justify-between md:items-center gap-2">
         <Breadcrumb>
-          <BreadcrumbList
-            className="md:text-sm text-xs"
-          >
+          <BreadcrumbList className="md:text-sm text-xs">
             <BreadcrumbItem>
               <BreadcrumbPage
                 className="cursor-pointer hover:text-[grey]"
                 onClick={() =>
-                  router.push(account?.role === 'creator' ? `/${account?.role}/collaboration`: `/${account?.role}/creators/collaboration`)
+                  router.push(
+                    account?.role === "creator"
+                      ? `/${account?.role}/collaboration`
+                      : `/${account?.role}/creators/collaboration`
+                  )
                 }
               >
                 {translate("Collaboration")}
@@ -127,26 +135,20 @@ export default function BargainingView() {
             </BreadcrumbItem>
             <BreadcrumbSeparator className="md:size-6 size-4" />
             <BreadcrumbItem>
-              <BreadcrumbPage
-                className={`cursor-pointer`}
-              >
+              <BreadcrumbPage className={`cursor-pointer`}>
                 {translate("Bargaining")}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="flex md:flex-row flex-col-reverse h-full gap-4">
-        <Card className="bg-white rounded-lg overflow-auto md:w-[40%] w-full">
-          <CardContent>
-            <BargainingDetailView
-              collaborationData={collaborationData}
-            />
+      <div className="flex md:flex-row flex-col-reverse h-full gap-4 overflow-hidden">
+        <Card className="bg-white rounded-lg md:w-[40%] w-full overflow-hidden">
+          <CardContent className="overflow-hidden h-full">
+            <BargainingDetailView collaborationData={collaborationData} />
           </CardContent>
         </Card>
-        <ChatComponent
-          collaborationData={collaborationData}
-        />
+        <ChatComponent collaborationData={collaborationData} />
       </div>
     </div>
   );

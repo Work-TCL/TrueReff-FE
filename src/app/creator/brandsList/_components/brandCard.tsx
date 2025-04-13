@@ -45,12 +45,14 @@ export default function BrandCard({
             {/* <p className="text-lg font-medium text-gray-black">{name}</p> */}
             <TruncateWithToolTip
               checkHorizontalOverflow={true}
-              className="line-clamp-none truncate text-lg font-medium text-gray-black"
+              className="line-clamp-none truncate md:text-lg text-sm font-medium text-gray-black"
               text={name}
             />
-            <p className="text-font-grey">{`(${translate("Fashion")})`}</p>
+            <p className="text-font-grey md:text-lg text-sm">{`(${translate(
+              "Fashion"
+            )})`}</p>
           </div>
-          <p className="text-secondary text-base font-normal text-start">
+          <p className="text-secondary md:text-base text-sm font-normal text-start">
             {category}
           </p>
         </div>
@@ -78,10 +80,10 @@ export default function BrandCard({
         </div>
         <div className="flex justify-between w-full text-sm">
           <div className="flex flex-1 flex-col item-center w-full">
-            <p className="text-sm font-normal text-gray-black">
+            <p className="md:text-sm text-xs font-normal text-gray-black">
               {totalProducts}
             </p>
-            <p className="text-gray-color font-normal">
+            <p className="text-gray-color md:text-sm text-xs  font-normal whitespace-nowrap">
               {translate("Total_Products")}
             </p>
           </div>
@@ -89,10 +91,12 @@ export default function BrandCard({
           <div className="flex flex-1 flex-col item-center w-full">
             <div className="flex item-center w-full gap-1 justify-center">
               <Star className="w-4 h-4 fill-current text-dark-orange" />
-              <p className="text-sm font-normal"> {rating} </p>
-              <p>({reviews})</p>
+              <p className="md:text-sm text-xs font-normal"> {rating} </p>
+              <p className="md:text-sm text-xs">({reviews})</p>
             </div>
-            <p className="text-gray-color font-normal">{translate("Rating")}</p>
+            <p className="text-gray-color font-normal md:text-sm text-xs">
+              {translate("Rating")}
+            </p>
           </div>
         </div>
       </CardContent>
