@@ -43,9 +43,7 @@ export default function Channels() {
           )}
         />
       ) : (
-        <div className="flex-1 h-full flex justify-center items-center">
           <StoreConnectsRedirect />
-        </div>
       )}
     </>
   );

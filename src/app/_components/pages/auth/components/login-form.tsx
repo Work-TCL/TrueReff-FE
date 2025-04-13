@@ -58,7 +58,7 @@ export default function LoginForm() {
         });
         if (response?.ok) {
           toast.success("Login Successfully.");
-          setIsAuthStatus("authanticated");
+          setIsAuthStatus("authenticated");
           setToken(res?.data?.token);
           if (
             !res?.data?.detailsFilled &&
@@ -105,7 +105,7 @@ export default function LoginForm() {
                 addresses: res?.data?.vendor?.addresses,
               });
             }
-            setIsAuthStatus("authanticated");
+            setIsAuthStatus("authenticated");
             if (res?.data?.type === USER_TYPE.Vendor) {
               router?.push("/vendor-register");
             } else if (res?.data?.creator?.completed === 50) {
@@ -122,7 +122,7 @@ export default function LoginForm() {
         throw "Internal server error";
       }
     } catch (error) {
-      setIsAuthStatus("unauthanticated");
+      setIsAuthStatus("unauthenticated");
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     } finally {

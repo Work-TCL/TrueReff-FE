@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }: IDashboardLayout) {
   useEffect(() => {
     getUserApi();
   }, []);
-  // if (status === "unauthanticated") {
+  // if (status === "unauthenticated") {
   //   return navigate?.push("/login");
   // }
   if (status === "loading") {

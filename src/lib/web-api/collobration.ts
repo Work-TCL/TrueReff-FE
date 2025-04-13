@@ -5,14 +5,14 @@ import {
 import { getErrorMessage } from "../utils/commonUtils";
 import axiosInstance from "./http-common";
 
-export const getCollobrationConversation = async (collobrationId: string) => {
+export const getCollobrationConversation = async (collobrationId: string,limit:number,page:number) => {
   try {
     const response = await axiosInstance.get(
-      `/message/collaboration/${collobrationId}?limit=20&page=1`
+      `/message/collaboration/${collobrationId}?limit=${limit}&page=${page}`
     );
-    return response?.data?.data || [];
+    return response?.data;
   } catch (error) {
-    return [];
+    return error;
   }
 };
 

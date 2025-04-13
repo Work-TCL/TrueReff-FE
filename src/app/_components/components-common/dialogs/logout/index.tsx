@@ -10,7 +10,6 @@ const LOGOUT = "logout";
 
 export default function Logout() {
   const { status } = useAuthStore();
-  const navigate = useRouter();
   const auth = useSearchParams().get("auth");
   const dialogPath = status === "authenticated" && auth === LOGOUT;
 

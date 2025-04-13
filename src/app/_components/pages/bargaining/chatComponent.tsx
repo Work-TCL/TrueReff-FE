@@ -1,8 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { useEffect, useState } from "react";
-import { SendHorizontal } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { LoaderCircle, SendHorizontal } from "lucide-react";
 import socketService from "@/lib/services/socket-service";
 import { formatTo12Hour } from "@/lib/utils/commonUtils";
 import { getCollobrationConversation } from "@/lib/web-api/collobration";
@@ -19,13 +19,17 @@ export default function ChatComponent({
   collaborationData: ICollaboration;
 }) {
   const params = useParams();
-  const collaborationId = params?.collaborationId;
+  const loadingRef = useRef<HTMLDivElement | null>(null);
+  const collaborationId:any = params?.collaborationId;
   const [message, setMessage] = useState("");
   const { account: user } = useAuthStore();
   const { creator } = useCreatorStore();
   const { vendor } = useVendorStore();
   const [messages, setMessages] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     socketService.connect();
@@ -38,33 +42,41 @@ export default function ChatComponent({
     collaborationId && socketService.joinCollaboration(collaborationId);
     socketService.joinedCollaborationRoom((data) => {});
     socketService.joinedCollaborationMessages((data) => {
-      setMessages((prev) => [...prev, data.message]);
+      setMessages((prev) => [data.message,...prev]);
     });
 
     return () => {
-      // socketService.disconnect();
+      socketService.disconnect();
     };
   }, [creator.creatorId, vendor.vendorId, collaborationId]);
-
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      try {
-        if (!collaborationData?._id) throw "";
-        const conversations: any[] = await getCollobrationConversation(
-          collaborationData?._id
-        );
-        setMessages(Array.isArray(conversations) ? conversations : []);
-      } catch (error) {
-        console.log("while getting conversations");
-      } finally {
+  const fetchCollaborationConversions = async (page:number,isLoadMore: boolean = false) => {
+    if (!hasMore || isLoading) return;
+    isLoadMore ? setLoading(true) : setIsLoading(true);
+  
+    try {
+      const conversations: any = await getCollobrationConversation(
+        collaborationId,
+        20,
+        page
+      );
+  
+      if (conversations?.data?.length > 0) {
+        setMessages((prev) => [...prev, ...conversations.data]);
+        setHasMore((messages.length + conversations.data.length) < conversations.total);
         setIsLoading(false);
+        setLoading(false);
+      } else {
+        setHasMore(false);
+        setIsLoading(false);
+        setLoading(false);
       }
-    })();
-
-    return () => {};
-  }, [collaborationData?._id]);
-
+    } catch (error) {
+      console.error("Failed to fetch messages:", error);
+    } finally {
+      setIsLoading(false);
+      setLoading(false)
+    }
+  };
   const sendMessage = () => {
     if (message.trim()) {
       socketService.sendMessage(
@@ -77,13 +89,39 @@ export default function ChatComponent({
     }
   };
   const getUserName = () => {
-    return user?.role === "creator"
-      ? collaborationData.creatorId?.user_name
-      : collaborationData.vendorId?.business_name;
+    return user?.role === "creator" ? collaborationData.creatorId?.user_name : collaborationData.vendorId?.business_name;
   };
+  useEffect(() => {
+    fetchCollaborationConversions(currentPage,true);
+  },[currentPage])
+
+  useEffect(() => {
+    if (!hasMore) return;
+  
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !isLoading) {
+          setCurrentPage(prev => prev + 1)
+        }
+      },
+      { root: null, rootMargin: '0px', threshold: 1.0 }
+    );
+  
+    const currentRef = loadingRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+  
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [loadingRef, hasMore, isLoading]);
 
   return (
-    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden flex flex-col md:h-[80vh] h-[80vh] md:sticky md:top-0">
+    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden flex flex-col md:h-full h-[80vh] md:sticky md:top-0">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
         <Avatar>
           <AvatarImage
@@ -100,7 +138,7 @@ export default function ChatComponent({
       </div>
       <div className="h-px w-full bg-stroke mx-2"></div>{" "}
       <CardContent className="flex flex-col-reverse overflow-y-auto gap-3 h-full">
-        {isLoading && <Loading />}
+        {/* {isLoading && <Loading />} */}
         {!isLoading && message?.length < 0 && (
           <p className="opacity-50 text-center">Start your chat now.</p>
         )}
@@ -159,6 +197,7 @@ export default function ChatComponent({
               </div>
             );
           })}
+          {hasMore && <div className="flex justify-center py-2 text-gray-400" ref={loadingRef}><LoaderCircle className="animate-spin" color="#ff4979" size={40} /></div>}
       </CardContent>
       <div className="flex gap-2 items-center border-t pt-3">
         <Input

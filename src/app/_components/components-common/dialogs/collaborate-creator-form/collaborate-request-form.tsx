@@ -82,10 +82,7 @@ export default function CollaborateRequestForm({ onClose,creatorId }: ICollabora
   }
   return (
     <>
-      <div className="flex justify-center text-[32px] font-semibold text-gray-darken">
-        {"Send Collaboration Request"}
-      </div>
-      <div className="flex justify-center max-h-80 overflow-scroll">
+      <div className="flex max-h-80 overflow-scroll">
         <div className="flex flex-col gap-2">
           {products?.length > 0 && products?.map((product: any, index: number) => {
             return (

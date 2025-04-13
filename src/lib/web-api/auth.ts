@@ -113,10 +113,10 @@ export const getUserApi = async (): Promise<IGetUserResponse> => {
         addresses: vendor?.addresses,
       });
     }
-    useAuthStore.getState().setIsAuthStatus("authanticated");
+    useAuthStore.getState().setIsAuthStatus("authenticated");
     return response?.data;
   } catch (error) {
-    useAuthStore.getState().setIsAuthStatus("unauthanticated");
+    useAuthStore.getState().setIsAuthStatus("unauthenticated");
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While getting user");
   }

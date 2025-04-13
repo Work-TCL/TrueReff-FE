@@ -55,11 +55,6 @@ export default function UTMForm({onClose}:IUTMFromProps) {
     }
   };
   return (
-    <>
-      <div className="flex justify-center text-[32px] font-semibold text-gray-darken">
-        {translate("Generate_UTM")}
-      </div>
-
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
@@ -115,6 +110,5 @@ export default function UTMForm({onClose}:IUTMFromProps) {
           </Button>
         </form>
       </FormProvider>
-    </>
   );
 }

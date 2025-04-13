@@ -26,7 +26,7 @@ interface IAuthStoreSetterState {
     role: (typeof USER_TYPE)[keyof typeof USER_TYPE];
   }) => void;
   setIsAuthStatus: (
-    status: "unauthanticated" | "loading" | "authanticated"
+    status: "unauthenticated" | "loading" | "authenticated"
   ) => void;
   setToken: (token: string) => void;
 }
@@ -41,10 +41,10 @@ export const useAuthStore = create<IAuthDataState & IAuthStoreSetterState>()(
         role: USER_TYPE.Vendor,
       },
       token: "",
-      status: "unauthanticated",
+      status: "unauthenticated",
       setAccountData: (data) => set({ account: data }),
       setIsAuthStatus: (
-        status: "unauthanticated" | "loading" | "authanticated"
+        status: "unauthenticated" | "loading" | "authenticated"
       ) => set({ status }),
       setToken: (token: string) => set({ token }),
     }),

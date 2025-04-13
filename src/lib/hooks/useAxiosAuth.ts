@@ -7,6 +7,7 @@ import {
 } from "axios";
 import { useEffect } from "react";
 import { useAuthStore } from "../store/auth-user";
+import { signOut } from "next-auth/react";
 
 type AxiosError = { config: { _retry: boolean } } & OriginalAxiosError;
 
@@ -45,6 +46,10 @@ const useAxiosAuth = () => {
             originalConfig._retry = true;
             try {
               // Logic to handle token refresh or redirect to login
+              await signOut({
+                    callbackUrl: "/login",
+                    redirect: false,
+                  });
               // e.g., fetch a new token and retry the request
             } catch (e) {
               return Promise.reject(e);
