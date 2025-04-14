@@ -158,6 +158,7 @@ export default function ProfileSetup({
             />
             <Button
               variant="outline"
+              type="button"
               className="w-full disabled:cursor-not-allowed"
               onClick={() => {
                 document.getElementById("profile-image")?.click();

@@ -27,6 +27,7 @@ export interface IVendor {
   gst_number: string;
   website: string;
   type_of_business: string;
+  profile_image: string;
   contacts: VendorContact[];
   omni_channels: string[];
   brand_documents: any[];
@@ -41,6 +42,7 @@ export interface IVendorUpdate {
   company_phone?: string;
   gst_number?: string;
   website?: string;
+  profile_image?: string;
   type_of_business?: string;
   contacts?: VendorContact[];
   omni_channels?: string[];

@@ -23,6 +23,11 @@ export default function EditVendorForm({
 }) {
   const { setVendorData } = useVendorStore();
   const [loading, setLoading] = useState(false);
+  const [profileFile, setProfileFile] = useState<File | null>(null);
+  const [profilePreview, setProfilePreview] = useState<string>(
+    profile?.profile_image || ""
+  );
+
   const schema = vendorProfileUpdateSchema;
   const methods = useForm<IVendorProfileUpdateSchema>({
     defaultValues: {
@@ -39,10 +44,17 @@ export default function EditVendorForm({
     setLoading(true);
     try {
       ("use server");
-      const payload = data;
+      const payload: any = { ...data };
+      if (profileFile) {
+        payload["profile_image"] = profileFile;
+      }
       //   delete payload.company_email
       //   delete payload.company_phone
-      let response: any = await axios.patch("/auth/vendor", payload);
+      let response: any = await axios.patch("/auth/vendor", payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response?.data) {
         response = response?.data;
       }
@@ -53,6 +65,7 @@ export default function EditVendorForm({
           gst_number: data.gst_number,
           website: data.website,
           business_name: data.business_name,
+          profile_image: response.data?.profile_image,
         });
         toast.success(response?.message);
         methods?.reset();
@@ -67,6 +80,17 @@ export default function EditVendorForm({
       setLoading(false);
     }
   };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const previewURL = URL.createObjectURL(file);
+
+    setProfileFile(file);
+    setProfilePreview(previewURL);
+  };
+
   return (
     <>
       <FormProvider {...methods}>
@@ -106,7 +130,36 @@ export default function EditVendorForm({
             type="text"
             placeholder={translate("Business_Name")}
           />
-          <div className="mt-6 col-span-2 sticky bottom-0 bg-white">
+          <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
+            <div className="text-sm">{translate("Profile_Image")}</div>
+            <div className="flex justify-center items-center border rounded-lg p-5">
+              <div className="flex flex-col w-full gap-4">
+                <div className="flex justify-center">
+                  <img
+                    src={profilePreview || "/assets/product/image-square.svg"}
+                    className="w-[100px] h-[100px] object-cover rounded-full"
+                  />
+                </div>
+                <input
+                  type="file"
+                  id="profile-image"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={(e) => handleImageSelect(e)}
+                />
+                <Button
+                  type="button"
+                  className="w-full disabled:cursor-not-allowed"
+                  onClick={() => {
+                    document.getElementById("profile-image")?.click();
+                  }}
+                >
+                  {translate("Upload_your_photo")}
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className="py-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
               Save
             </Button>

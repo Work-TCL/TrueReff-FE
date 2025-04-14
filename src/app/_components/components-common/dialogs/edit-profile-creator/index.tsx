@@ -12,7 +12,7 @@ export default function EditProfileCreator({ open = false, onClose }: any) {
       title={translate("Edit_Profile")}
       onClose={onClose}
     >
-      <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
+      <div className="p-4 sm:p-10 pb-0 sm:pb-0 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
         <EditCreatorForm onClose={onClose} />
       </div>
     </DialogLayout>

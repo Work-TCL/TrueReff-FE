@@ -56,6 +56,8 @@ export default function PreFormPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { setVendorData } = useVendorStore();
+  const [profileFile, setProfileFile] = useState<File | null>(null);
+  const [profilePreview, setProfilePreview] = useState<string>("");
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
   const methods = useForm<IPreFormSchema>({
     defaultValues: {
@@ -106,6 +108,9 @@ export default function PreFormPage() {
         type_of_business: data.type_of_business,
         website: data.website,
       };
+      if (profileFile) {
+        payload.profile_image = profileFile;
+      }
       const response: IPostVendorRegisterResponse = await venderRegister(
         payload
       );
@@ -175,6 +180,16 @@ export default function PreFormPage() {
     }
   };
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const previewURL = URL.createObjectURL(file);
+
+    setProfileFile(file);
+    setProfilePreview(previewURL);
+  };
+
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
       <HeaderAuth />
@@ -195,7 +210,12 @@ export default function PreFormPage() {
             {TABS_STATUS.CONTACT_INFO === activeTab ? (
               <ContactDetailsForm />
             ) : null}
-            {TABS_STATUS.BASIC_INFO === activeTab ? <BasicInfoForm /> : null}
+            {TABS_STATUS.BASIC_INFO === activeTab ? (
+              <BasicInfoForm
+                handleImageSelect={handleImageSelect}
+                profilePreview={profilePreview}
+              />
+            ) : null}
             <div className="bg-white">
               {TABS_STATUS.OMNI_CHANNEL === activeTab && !loading ? (
                 <Button

@@ -253,7 +253,12 @@ export const venderRegister = async (
   try {
     const response = await axios.post(
       "/auth/vendor/add-vendor-details",
-      params
+      params,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response?.data;
   } catch (error: unknown) {
@@ -266,7 +271,11 @@ export const creatorRegister = async (
   params: IPostCreatorRegisterRequest
 ): Promise<IPostCreatorRegisterResponse> => {
   try {
-    const response = await axios.post("/auth/creator/add", params);
+    const response = await axios.post("/auth/creator/add", params, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);

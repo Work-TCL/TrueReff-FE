@@ -115,7 +115,7 @@ export default function EditAddressVendorForm({
             />
           </div>
 
-          <div className="mt-6 col-span-2 sticky bottom-0 bg-white">
+          <div className="py-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
               {translate("Save")}
             </Button>

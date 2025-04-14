@@ -6,6 +6,7 @@ import AddressesProfile from "./components/addresses";
 import ContactsProfile from "./components/contacts";
 import { getProfileAPI } from "@/lib/web-api/user";
 import Loader from "../../components-common/layout/loader";
+import { useVendorStore } from "@/lib/store/vendor";
 interface IProfile {
   business_name: string;
   company_email: string;
@@ -36,6 +37,7 @@ export default function Profile() {
   });
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const { vendor } = useVendorStore();
 
   const getProfile = async () => {
     setLoading(true);
@@ -82,6 +84,12 @@ export default function Profile() {
           </div>
         </div>
         <div className="flex gap-3 xl:gap-4">
+          <div className="flex justify-center min-w-fit">
+            <img
+              src={vendor.profile_image || "/assets/product/image-square.svg"}
+              className="w-[100px] h-[100px] object-cover rounded-full"
+            />
+          </div>
           <div className="flex flex-col gap-2 text-[14px] xl:text-[16px] text-gray-500">
             <span>{translate("Name")}:</span>
             <span>{translate("Email")}:</span>
@@ -105,7 +113,7 @@ export default function Profile() {
         />
         <EditProfile
           open={isOpen}
-          profile={profile}
+          profile={vendor}
           onClose={() => {
             setIsOpen(false);
             getProfile();

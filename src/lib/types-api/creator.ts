@@ -47,3 +47,13 @@ export interface ICreator {
   short_description: string;
   long_description: string;
 }
+
+export interface ICreatorByIdRequest {
+  id: string;
+}
+
+export interface ICreatorByIdResponse {
+  message: string;
+  status: number;
+  data: ICreator;
+}

@@ -2,6 +2,8 @@ import toast from "react-hot-toast";
 import {
   IConnectYoutubeChannelRequest,
   IConnectYoutubeChannelResponse,
+  ICreatorByIdRequest,
+  ICreatorByIdResponse,
   IGetYTConnectChannelResponse,
 } from "../types-api/creator";
 import { getErrorMessage } from "../utils/commonUtils";
@@ -36,5 +38,17 @@ export const connectYoutubeChannel = async (
       toast.error(errorMessage);
     }
     throw errorMessage || new Error("Error While validating youtube channel");
+  }
+};
+
+export const getCreatorById = async (
+  params: ICreatorByIdRequest
+): Promise<ICreatorByIdResponse> => {
+  try {
+    const response = await axios.get(`/auth/creator/${params.id}`);
+    return response?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While fetching categories.");
   }
 };

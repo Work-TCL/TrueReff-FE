@@ -178,6 +178,7 @@ export interface IPostVendorRegisterRequest {
     email: string;
   }[];
   omni_channels: string[];
+  profile_image?: any;
 }
 // POST Creator Register
 export interface IPostCreatorRegisterRequest {

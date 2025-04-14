@@ -17,7 +17,7 @@ export default function EditAddressProfile({
       title={address ? translate("edit_address") : translate("add_new_address")}
       onClose={onClose}
     >
-      <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
+      <div className="p-4 sm:p-10 pb-0 sm:pb-0 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
         <EditAddressVendorForm profile={address} id={id} onClose={onClose} />
       </div>
     </DialogLayout>

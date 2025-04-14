@@ -1,8 +1,13 @@
 "use client";
+import Button from "@/app/_components/ui/button";
 import Input from "@/app/_components/ui/form/Input";
+import { translate } from "@/lib/utils/translate";
 import React from "react";
 
-export default function BasicInfoForm() {
+export default function BasicInfoForm({
+  handleImageSelect,
+  profilePreview,
+}: any) {
   return (
     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
       <div className="col-span-2">
@@ -62,6 +67,35 @@ export default function BasicInfoForm() {
             },
           ]}
         />
+      </div>
+      <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
+        <div className="text-sm">{translate("Profile_Image")}</div>
+        <div className="flex justify-center items-center border rounded-lg p-5">
+          <div className="flex flex-col w-full gap-4">
+            <div className="flex justify-center">
+              <img
+                src={profilePreview || "/assets/product/image-square.svg"}
+                className="w-[100px] h-[100px] object-cover rounded-full"
+              />
+            </div>
+            <input
+              type="file"
+              id="profile-image"
+              className="hidden"
+              accept="image/*"
+              onChange={(e) => handleImageSelect(e)}
+            />
+            <Button
+              type="button"
+              className="w-full disabled:cursor-not-allowed"
+              onClick={() => {
+                document.getElementById("profile-image")?.click();
+              }}
+            >
+              {translate("Upload_your_photo")}
+            </Button>
+          </div>
+        </div>
       </div>
       {/* <div className="col-span-2">
           <Input

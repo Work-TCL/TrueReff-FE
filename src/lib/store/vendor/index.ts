@@ -28,6 +28,7 @@ export const useVendorStore = create<
         gst_number: "",
         website: "",
         type_of_business: "",
+        profile_image: "",
         contacts: [],
         omni_channels: [],
         brand_documents: [],

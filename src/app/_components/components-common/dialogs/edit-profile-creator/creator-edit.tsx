@@ -346,7 +346,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               </div>
             </div>
           </div>
-          <div className="mt-6 col-span-2 sticky bottom-0 bg-white">
+          <div className="py-6 col-span-2 sticky bottom-0 bg-white bg-white">
             <Button type="submit" loading={loading}>
               Save
             </Button>

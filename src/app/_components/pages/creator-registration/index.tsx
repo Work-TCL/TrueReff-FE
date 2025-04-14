@@ -138,15 +138,13 @@ export default function CreatorRegistrationPage() {
         category: data.category.map((v) => v.value),
         sub_category: data.sub_category.map((v) => v.value),
         tags: data.tags || [],
-        profile_image: profileFile,
-        banner_image: bannerFile,
       };
 
-      if (data.banner_image) {
-        payload.banner_image = data.banner_image;
+      if (bannerFile) {
+        payload.banner_image = bannerFile;
       }
-      if (data.profile_image) {
-        payload.profile_image = data.profile_image;
+      if (profileFile) {
+        payload.profile_image = profileFile;
       }
 
       const response: IPostCreatorRegisterResponse = await creatorRegister(

@@ -264,10 +264,27 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             </div>
           </DrawerContent>
         </Drawer>
-        <div className="w-8 h-8  bg-background rounded-full"></div>
-        <p className="text-gray-black md:text-base text-sm md:block hidden">
-          {creator.full_name || vendor.business_name}
-        </p>
+        <Link
+          href={
+            creator
+              ? `/creator/profile/${creator.creatorId}`
+              : `/vendor/profile/${vendor.vendorId}`
+          }
+          className="flex gap-3 items-center block w-fit"
+        >
+          <div
+            className="w-8 h-8 bg-background rounded-full bg-cover bg-center"
+            style={{
+              backgroundImage:
+                creator.profile_image || vendor.profile_image
+                  ? `url(${creator.profile_image || vendor.profile_image})`
+                  : undefined,
+            }}
+          ></div>
+          <p className="text-gray-black md:text-base text-sm md:block hidden">
+            {creator.full_name || vendor.business_name}
+          </p>
+        </Link>
       </div>
       <Link href="?auth=logout" className="mx-4 block">
         <IoLogOutOutline className="text-2xl text-primary" />
