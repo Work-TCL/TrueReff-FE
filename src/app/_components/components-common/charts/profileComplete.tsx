@@ -1,13 +1,23 @@
+import { cn } from "@sohanemon/utils";
 import { ChevronRight } from "lucide-react";
 import React from "react";
 
 interface IProfileCompletionCard {
   progress?: number;
+  className?: string;
 }
 
-const ProfileCompletionCard = ({ progress = 80 }: IProfileCompletionCard) => {
+const ProfileCompletionCard = ({
+  progress = 80,
+  className,
+}: IProfileCompletionCard) => {
   return (
-    <div className="flex gap-6 justify-between p-6 w-full box-border h-fit rounded-[20px] bg-custom-gradient">
+    <div
+      className={cn(
+        "flex gap-6 justify-between p-6 w-full box-border h-fit rounded-[20px] bg-custom-gradient",
+        className
+      )}
+    >
       <div className="flex md:gap-6 flex-col md:flex-row">
         <div className="relative w-20 md:w-28 md:h-28 h-20">
           <svg

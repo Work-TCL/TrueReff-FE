@@ -8,31 +8,30 @@ import { CustomTableHead } from "../../components-common/tables/CustomTableHead"
 import { CustomTableCell } from "../../components-common/tables/CustomTableCell";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
-// Sample Data
 const activities = [
   {
-    productImage: "",
-    productName: "Canvas Backpack",
-    brandName: "Puma",
-    categories: "Fashion",
-    price: "$500",
+    thumbnail: "",
+    VideoTitle: "Best Grooming Tips for Men",
+    platform: "YouTube",
+    Views: "520K",
+    Likes: "18K",
   },
   {
-    productImage: "",
-    productName: "Canvas Backpack",
-    brandName: "Puma",
-    categories: "Fashion",
-    price: "$500",
+    Thumbnail: "",
+    VideoTitle: "Winter Skincare Hacks",
+    platform: "Instagram",
+    Views: "410K",
+    Likes: "22K",
   },
 ];
 
-export default function MyProducts() {
+export default function VideosTable() {
   return (
     <div className="p-4 bg-white rounded-[20px]">
       <div className="flex justify-between items-center mb-4">
         <h2 className="md:text-xl text-base text-text font-semibold">
           {" "}
-          {translate("My Products")}
+          {translate("Top 10 Videos")}
         </h2>
         <Button variant="link" className="text-primary md:h-10 h-7">
           {" "}
@@ -44,22 +43,19 @@ export default function MyProducts() {
           <TableHeader className="bg-gray-100">
             <TableRow>
               <CustomTableHead className="p-2 text-text text-left text-sm">
-                {translate("Product_Image")}
+                {translate("Thumbnail")}
               </CustomTableHead>
               <CustomTableHead className="p-2 text-text text-left text-sm">
-                {translate("Product_Name")}
+                {translate(" Video Title")}
               </CustomTableHead>
               <CustomTableHead className="p-2 text-text text-left text-sm">
-                {translate("Brand_Name")}
+                {translate("Platform")}
               </CustomTableHead>
               <CustomTableHead className="p-2 text-text text-left text-sm">
-                {translate("Category")}
+                {translate("Views")}
               </CustomTableHead>
               <CustomTableHead className="p-2 text-text text-left text-sm">
-                {translate("Price")}
-              </CustomTableHead>
-              <CustomTableHead className="p-2 text-center font-medium">
-                {translate("Action")}
+                {translate("Likes")}
               </CustomTableHead>
             </TableRow>
           </TableHeader>
@@ -74,26 +70,16 @@ export default function MyProducts() {
                   </div>
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  <span className="text-text "> {activity.productName}</span>
+                  <span className="text-secondary font-medium">{activity.VideoTitle}</span>
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  {activity.brandName}
+                  {activity.platform}
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  {activity.categories}
+                  {activity.Views}
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  {activity.price}
-                </CustomTableCell>
-                <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  <div className="flex items-center gap-2 justify-center">
-                    <div className="flex justify-center items-center box-border border size-9 rounded-[6px] ">
-                      <Heart className="size-4 shrink-0 fill-primary text-primary" />
-                    </div>
-                    <div className="flex justify-center items-center box-border border size-9 rounded-[6px] ">
-                      <Eye className="size-4 shrink-0 text-secondary" />
-                    </div>{" "}
-                  </div>
+                  {activity.Likes}
                 </CustomTableCell>
               </TableRow>
             ))}

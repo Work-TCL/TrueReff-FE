@@ -9,6 +9,7 @@ export const CradComponent = ({
   bgColor,
   icon,
   titleClassName,
+  onClick,
 }: {
   title: string;
   value: number | string;
@@ -16,9 +17,11 @@ export const CradComponent = ({
   bgColor: string;
   icon?: React.ReactNode;
   titleClassName?: string;
+  onClick?: () => void;
 }) => {
   return (
     <Card
+      onClick={onClick}
       className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} rounded-2xl`}
     >
       <CardContent className="p-3 flex flex-col justify -between h-full">
@@ -51,7 +54,9 @@ export const BrandCreatorCard = ({
   isCreator?: boolean;
 }) => {
   return (
-    <Card className={`w-full md:h-[145px] box-border border bg-white rounded-2xl`}>
+    <Card
+      className={`w-full md:h-[145px] box-border border bg-white rounded-2xl`}
+    >
       <CardContent className="p-3 flex flex-col justify -between h-full">
         <div className="flex flex-col justify-between h-full gap-4">
           <div className="flex justify-center items-center">
