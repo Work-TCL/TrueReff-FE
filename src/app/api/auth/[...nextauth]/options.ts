@@ -29,14 +29,21 @@ const authOptions: NextAuthOptions = {
         try {
           if (credentials?.otp) {
             // Handle OTP login
-            const response: IPostVerifyEmailResponse = await verifyEmail({
-              email: credentials?.username,
-              otpCode: credentials?.otp,
-            });
-            if (response?.data) {
+            // const response: IPostVerifyEmailResponse = await verifyEmail({
+            //   email: credentials?.username,
+            //   otpCode: credentials?.otp,
+            // });
+            // if (response?.data) {
+            //   return {
+            //     ...response?.data,
+            //     accessToken: response?.data?.token,
+            //   };
+            // }
+            if (credentials?.otp && credentials?.userData) {
+              const parsedData = JSON.parse(credentials.userData);
               return {
-                ...response?.data,
-                accessToken: response?.data?.token,
+                ...parsedData,
+                accessToken: parsedData?.token,
               };
             }
           } else if (credentials?.password) {

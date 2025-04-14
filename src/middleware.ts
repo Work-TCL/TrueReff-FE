@@ -45,10 +45,12 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     if (!token && !PUBLIC_ROUTES.includes(pathname)) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-
+    // if(token && !user?.type){
+    //   return NextResponse.redirect(new URL(`/dashboard`, request.url));
+    // }
     // Redirect Authenticated Users Away from Auth Pages
-    if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp","/dashboard"], request)) {
-      return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
+    if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request)) {
+      return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard`:`/dashboard`, request.url));
     }
 
     if(token && user?.type === "vendor" && pathname.startsWith("/creator")){

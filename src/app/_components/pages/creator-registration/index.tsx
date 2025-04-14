@@ -71,6 +71,7 @@ const TABS_STATUS = {
 export default function CreatorRegistrationPage() {
   const searchParams = useSearchParams();
   const { account } = useAuthStore();
+  console.log("account",account)
   const { setCreatorData } = useCreatorStore();
   const router = useRouter();
   const email = searchParams.get("email") ?? "";
@@ -89,7 +90,7 @@ export default function CreatorRegistrationPage() {
     defaultValues: {
       full_name: "",
       user_name: "",
-      email: email,
+      email: "",
       phone_number: "",
       profile_title: "",
       short_description: "",
@@ -122,7 +123,11 @@ export default function CreatorRegistrationPage() {
     resolver: yupResolver(creatorSocialConnectSchema),
     mode: "onSubmit",
   });
-
+  useEffect(() => {
+    if(account?.email){
+      methods.setValue("email",account?.email)
+    }
+  },[account?.email])
   const onSubmit = async (data: ICreatorOnBoardingSchema) => {
     setLoading(true);
 
@@ -210,7 +215,7 @@ export default function CreatorRegistrationPage() {
       if (isExist) {
         toast.error("user_name already exists");
       } else if (isValid) {
-        router.push(`?tab=1&email=${email}`); // Move to next tab
+        router.push(`?tab=1`); // Move to next tab
       }
     } else if (TABS_STATUS.PROFILE_SETUP === activeTab) {
       const profileSetUpFields: any = [

@@ -25,7 +25,7 @@ interface IPageName {
   [key: string]: string;
 }
 interface IHeaderProps {
-  handleExpandSidebar: () => void;
+  handleExpandSidebar?: () => void;
 }
 
 interface INotification {
@@ -120,7 +120,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   };
 
   useEffect(() => {
-    fetchNotifications();
+    if(pathName !== "/dashboard"){
+      fetchNotifications();
+    }
   }, []);
 
   useEffect(() => {
@@ -189,7 +191,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       <h2 className="md:text-2xl text-lg font-medium text-gray-black">
         {pageNames[pathName]}
       </h2>
-      <div className="ml-auto flex items-center md:gap-3 gap-2">
+      {pathName !== "/dashboard" && <div className="ml-auto flex items-center md:gap-3 gap-2">
         <Drawer
           //  =====> Add direction
           direction="right"
@@ -270,7 +272,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               ? `/creator/profile/${creator.creatorId}`
               : `/vendor/profile/${vendor.vendorId}`
           }
-          className="flex gap-3 items-center block w-fit"
+          className="flex gap-3 items-center w-fit"
         >
           <div
             className="w-8 h-8 bg-background rounded-full bg-cover bg-center"
@@ -285,10 +287,11 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             {creator.full_name || vendor.business_name}
           </p>
         </Link>
-      </div>
-      <Link href="?auth=logout" className="mx-4 block">
+      </div>}
+      <div className="flex justify-end w-full"><Link href="?auth=logout" className="mx-4 block">
         <IoLogOutOutline className="text-2xl text-primary" />
       </Link>
+      </div>
     </header>
   );
 }

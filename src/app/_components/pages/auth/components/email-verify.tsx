@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
 import { signIn } from "next-auth/react";
 import { translate } from "@/lib/utils/translate";
+import { verifyEmail } from "@/lib/web-api/auth";
 
 export default function EmailVerifyOTPForm() {
   const searchParams = useSearchParams();
@@ -45,25 +46,22 @@ export default function EmailVerifyOTPForm() {
 
     setLoading(true);
     try {
-      const response: any = await signIn("credentials", {
-        username: email,
-        otp: data?.otpCode,
-        redirect: false,
-      });
-
-      if (response?.status === 200 || response?.status === 201) {
+      const response = await verifyEmail({
+                    email: email,
+                    otpCode: data?.otpCode,
+                  });
+                  const userData = response?.data;
+        const result = await signIn("credentials", {
+          redirect: false,
+          username: email,
+          otp:data?.otpCode,
+          // Optional: Pass additional fields to "authorize"
+          userData: JSON.stringify(userData), // send everything you want stored
+        });
+      if (result?.status === 200 || result?.status === 201) {
         toast.success("Email Verified Successfully.");
         methods.reset();
-
-        localStorage.setItem("userType", userType);
-
-        if (userType === "vendor") {
-          router.push("/vendor-register");
-        } else if (userType === "creator") {
-          router.push(`/creator-registration?email=${email}`);
-        } else {
-          router.push("/");
-        }
+        router.push("/dashboard");        
         return;
       }
 

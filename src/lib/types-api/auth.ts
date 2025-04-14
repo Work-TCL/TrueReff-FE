@@ -2,7 +2,6 @@
 export interface IPostSignupRequest {
   email: string;
   password: string;
-  type: string;
 }
 export interface IPostSignupResponse {
   status: number;

@@ -1,8 +1,10 @@
+"use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@sohanemon/utils";
 import { Package } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export const CradComponent = ({
+export const CardComponent = ({
   title,
   value,
   borderColor,
@@ -48,11 +50,14 @@ export const BrandCreatorCard = ({
   question,
   btnText,
   isCreator,
+  redirectUrl = '',
 }: {
   question: string;
   btnText: string;
   isCreator?: boolean;
+  redirectUrl:string;
 }) => {
+  const router = useRouter();
   return (
     <Card
       className={`w-full md:h-[145px] box-border border bg-white rounded-2xl`}
@@ -60,9 +65,9 @@ export const BrandCreatorCard = ({
       <CardContent className="p-3 flex flex-col justify -between h-full">
         <div className="flex flex-col justify-between h-full gap-4">
           <div className="flex justify-center items-center">
-            <p
+            <p onClick={() => router?.push(redirectUrl)}
               className={cn(
-                "text-secondary md:text-[14px] lg:text-base  box-border border border-secondary rounded-[12px] py-[11px] px-[40px]",
+                "text-secondary cursor-pointer md:text-[14px] lg:text-base  box-border border border-secondary rounded-[12px] py-[11px] px-[40px]",
                 isCreator && "bg-secondary text-white"
               )}
             >

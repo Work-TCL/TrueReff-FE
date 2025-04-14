@@ -32,7 +32,7 @@ export default function MyProducts() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="md:text-xl text-base text-text font-semibold">
           {" "}
-          {translate("My Products")}
+          {translate("My_Products")}
         </h2>
         <Button variant="link" className="text-primary md:h-10 h-7">
           {" "}

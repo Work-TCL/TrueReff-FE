@@ -4,7 +4,7 @@ import { translate } from "@/lib/utils/translate";
 import ProfileCompletionCard from "../../components-common/charts/profileComplete";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import MyProducts from "./myPoducts";
-import { BrandCreatorCard, CradComponent } from "./cardComponent";
+import { BrandCreatorCard, CardComponent } from "./cardComponent";
 import { Package, ShoppingBag, Users } from "lucide-react";
 import { ProductDetailUser } from "./productDetail";
 import { ProileDetailUser } from "./userProfile";
@@ -38,8 +38,8 @@ export default function UserOverView() {
         <div className="flex flex-col md:gap-6 gap-4 w-full lg:max-w-[60%]">
           <ProfileCompletionCard progress={80} className="lg:hidden flex" />
           <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4 rounded-[20px] w-full bg-white p-4">
-            <CradComponent
-              title={translate("My Products")}
+            <CardComponent
+              title={translate("My_Products")}
               value={`$${120}`}
               bgColor={
                 selectedCard === "products" ? "bg-[#FFEDF2]" : "bg-white"
@@ -62,7 +62,7 @@ export default function UserOverView() {
               }
               onClick={() => setSelectedCard("products")}
             />
-            <CradComponent
+            <CardComponent
               title={translate("My Creators")}
               borderColor={
                 selectedCard === "creators" ? "border-[#FF4979]" : ""
@@ -86,7 +86,7 @@ export default function UserOverView() {
               }
               onClick={() => setSelectedCard("creators")}
             />
-            <CradComponent
+            <CardComponent
               title={translate("My Purchased")}
               borderColor={
                 selectedCard === "purchased" ? "border-[#FF4979]" : ""
@@ -114,7 +114,7 @@ export default function UserOverView() {
           <MyProducts />
         </div>
         <div className="flex flex-col md:gap-6 gap-4">
-          <div className="flex md:flex-row flex-col gap-4">
+          {/* <div className="flex md:flex-row flex-col gap-4">
             <BrandCreatorCard
               question={translate("Do you have an e-commerce site to sell?")}
               btnText={translate("Become a Brand")}
@@ -124,7 +124,7 @@ export default function UserOverView() {
               btnText={translate("Become a Creator")}
               isCreator={true}
             />
-          </div>
+          </div> */}
           <ProfileCompletionCard progress={80} className="lg:flex hidden" />
           {selectedCard === "products" && (
             <ProductDetailUser

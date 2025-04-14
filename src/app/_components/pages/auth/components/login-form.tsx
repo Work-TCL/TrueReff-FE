@@ -111,10 +111,10 @@ export default function LoginForm() {
             } else if (res?.data?.creator?.completed === 50) {
               router.push("/creator/dashboard");
             } else {
-              router?.push(`/creator-registration?email=${data?.email}`);
+              router?.push(`/creator-registration`);
             }
           } else {
-            router?.push(`/${res?.data?.type}/dashboard`);
+            router?.push(`/dashboard`);
           }
           methods?.reset();
           return true;

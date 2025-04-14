@@ -1,6 +1,5 @@
 import axiosPckg from "axios";
 import { getToken } from "../utils/commonUtils";
-import { signOut } from "next-auth/react";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -30,10 +29,10 @@ axios.interceptors.response.use(
       originalConfig._retry = true;
       try {
         // Optional: refresh token logic here
-        await signOut({
-          callbackUrl: "/login",
-          redirect: false,
-        });
+        // await signOut({
+        //   callbackUrl: "/login",
+        //   redirect: false,
+        // });
       } catch (e) {
         return Promise.reject(e);
       }

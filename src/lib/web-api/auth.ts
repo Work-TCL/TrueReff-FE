@@ -54,6 +54,16 @@ export const loginAPI = async (
 ): Promise<IPostLoginResponse> => {
   try {
     const response = await axios.post("/auth/login", params);
+    console.log("response",response)
+    const user = response?.data;
+    // if(user){
+    //   useAuthStore.getState().setAccountData({
+    //     email: user?.email,
+    //     id: user?._id,
+    //     name: user?.name,
+    //     role: user?.type,
+    //   });
+    // }
     return response?.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -152,6 +162,7 @@ export const verifyEmail = async (
 ): Promise<IPostVerifyEmailResponse> => {
   try {
     const response = await axios.post("/auth/email-verify", params);
+    console.log("response",response?.data)
     // user
     if (response.data?.data) {
       const user = response.data?.data;
@@ -161,6 +172,7 @@ export const verifyEmail = async (
         name: user?.name,
         role: user?.type,
       });
+      useAuthStore.getState().setToken(response.data?.data?.token);
     }
     // creator
     if (response.data?.data?.type === USER_TYPE.Creator) {

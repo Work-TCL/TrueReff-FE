@@ -49,15 +49,14 @@ export default function RegisterForm() {
       ("use server");
       const payload: IPostSignupRequest = {
         email: data?.email,
-        password: data.password,
-        type: userType,
+        password: data.password
       };
       const response: IPostSignupResponse = await signUpAPI(payload);
 
       if (response?.status === 201 || response?.status === 200) {
         if (response?.data?.otpSent) {
           toast.success("Sent Email Successfully.");
-          router?.push(`/email-verify?email=${data?.email}&type=${userType}`);
+          router?.push(`/email-verify?email=${data?.email}`);
           return true;
         }
         toast.success("Registered Successfully.");
@@ -92,16 +91,6 @@ export default function RegisterForm() {
           placeholder={translate("Password")}
           Icon={PiLockKey}
         />
-        <select
-          className="border border-gray-light rounded-xl p-3"
-          name="type"
-          value={userType}
-          onChange={(e) => setUserType(e.target.value)}
-        >
-          <option value="">select</option>
-          <option value="vendor">vendor</option>
-          <option value="creator">creator</option>
-        </select>
 
         <label className="mt-3 text-xs flex align-middle gap-2 text-gray-600">
           <input
@@ -124,7 +113,7 @@ export default function RegisterForm() {
           type="submit"
           className="mt-3"
           loading={loading}
-          disabled={!methods.formState.isValid || !userType || loading}
+          disabled={!methods.formState.isValid || loading}
         >
           {translate("Sign_up")}
         </Button>
