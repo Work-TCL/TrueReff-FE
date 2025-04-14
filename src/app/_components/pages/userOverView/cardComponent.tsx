@@ -51,9 +51,9 @@ export const BrandCreatorCard = ({
   isCreator?: boolean;
 }) => {
   return (
-    <Card className={`w-full h-[145px] box-border border bg-white rounded-2xl`}>
+    <Card className={`w-full md:h-[145px] box-border border bg-white rounded-2xl`}>
       <CardContent className="p-3 flex flex-col justify -between h-full">
-        <div className="flex flex-col justify-between h-full">
+        <div className="flex flex-col justify-between h-full gap-4">
           <div className="flex justify-center items-center">
             <p
               className={cn(

@@ -6,9 +6,17 @@ import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import MyProducts from "./myPoducts";
 import { BrandCreatorCard, CradComponent } from "./cardComponent";
 import { Package, ShoppingBag, Users } from "lucide-react";
+import { ProductDetailUser } from "./productDetail";
 
 export default function UserOverView() {
   const lg = useMediaQuery("(min-width: 1024px)");
+  const productDetail = {
+    productImage: "",
+    productName: "Canvas Backpack",
+    brandName: "Puma",
+    categories: "Fashion",
+    sku: "SPR005",
+  };
 
   return (
     <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
@@ -43,18 +51,24 @@ export default function UserOverView() {
           </div>
           <MyProducts />
         </div>
-        <div className="flex gap-4">
-          <BrandCreatorCard
-            question={translate("Do you have an e-commerce site to sell?")}
-            btnText={translate("Become a Brand")}
-          />
-          <BrandCreatorCard
-            question={translate("Do you have a 2000+ followers?")}
-            btnText={translate("Become a Creator")}
-            isCreator={true}
+        <div className="flex flex-col md:gap-6 gap-4">
+          <div className="flex md:flex-row flex-col gap-4">
+            <BrandCreatorCard
+              question={translate("Do you have an e-commerce site to sell?")}
+              btnText={translate("Become a Brand")}
+            />
+            <BrandCreatorCard
+              question={translate("Do you have a 2000+ followers?")}
+              btnText={translate("Become a Creator")}
+              isCreator={true}
+            />
+          </div>
+          {lg && <ProfileCompletionCard progress={80} />}
+          <ProductDetailUser
+            title={translate("Product Details")}
+            productDetail={productDetail}
           />
         </div>
-        {/* {lg && <ProfileCompletionCard progress={80} />} */}
       </div>
     </div>
   );
