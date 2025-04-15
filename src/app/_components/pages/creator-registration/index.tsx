@@ -34,6 +34,7 @@ import {
 import Loader from "../../components-common/layout/loader";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
+import { fileUploadLimitValidator } from "@/lib/utils/constants";
 
 let allTabs: {
   id: string;
@@ -123,10 +124,10 @@ export default function CreatorRegistrationPage() {
     mode: "onSubmit",
   });
   useEffect(() => {
-    if(account?.email){
-      methods.setValue("email",account?.email)
+    if (account?.email) {
+      methods.setValue("email", account?.email);
     }
-  },[account?.email])
+  }, [account?.email]);
   const onSubmit = async (data: ICreatorOnBoardingSchema) => {
     setLoading(true);
 
@@ -238,6 +239,27 @@ export default function CreatorRegistrationPage() {
     setLoading(false);
   };
 
+  const handleValidTab = async () => {
+    setIsCreatorLoading(true);
+    if (TABS_STATUS.PROFILE_SETUP === activeTab) {
+      const basicInfoField: any = [
+        "full_name",
+        "user_name",
+        "email",
+        "phone_number",
+      ];
+      const isValid = await methods.trigger(basicInfoField);
+      const isExist = await checkCreatorUserNameExist({
+        user_name: methods.watch("user_name"),
+      });
+
+      if (isExist || !isValid) {
+        router.push(`?tab=0`);
+      }
+    }
+    setIsCreatorLoading(false);
+  };
+
   const getCreator = async () => {
     setIsCreatorLoading(true);
     try {
@@ -263,7 +285,6 @@ export default function CreatorRegistrationPage() {
         });
       }
     } catch (e) {
-      
     } finally {
       setIsCreatorLoading(false);
     }
@@ -285,15 +306,19 @@ export default function CreatorRegistrationPage() {
   useEffect(() => {
     (async () => {
       await getCreator();
+      await handleValidTab();
     })();
   }, []);
 
-  const handleImageSelect = (
+  const handleImageSelect = async (
     e: React.ChangeEvent<HTMLInputElement>,
     type: "profile" | "banner"
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const isValid = await fileUploadLimitValidator(file.size);
+    if (!isValid) return;
 
     const previewURL = URL.createObjectURL(file);
 

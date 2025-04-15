@@ -293,6 +293,8 @@
   "reviews": "reviews",
   "Fashion": "Fashion",
   "channels_connected": "Store Channels",
+  "channels_connect": "Channels Connect",
+  "channel_connects": "Channel Connect",
   "Channels": "Channels",
   "Creator_List": "Creator List",
   "Available_Creators": "Available Creators",
@@ -335,5 +337,5 @@
   "Short_Description": "Short Description",
   "Long_Description": "Long Description",
   "View": "View",
-  "My_Products":"My Products"
+  "My_Products": "My Products"
 }

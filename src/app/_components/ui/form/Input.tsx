@@ -240,7 +240,9 @@ export default function Input({
               {...field}
               disabled={props?.disabled}
             >
-              <option value={placeholder || "Select..."}>{placeholder || "Select..."}</option>
+              <option value={placeholder || "Select..."}>
+                {placeholder || "Select..."}
+              </option>
               {options?.map((item) => (
                 <option key={item?.value} value={item?.value}>
                   {item?.label}
@@ -268,7 +270,6 @@ export default function Input({
           {getLabel()}
           <div className="relative">
             <Select
-              defaultValue={field?.value || []}
               isMulti
               options={options}
               className="basic-multi-select focus:outline-none focus:shadow-none"
@@ -296,7 +297,6 @@ export default function Input({
           {getLabel()}
           <div className="relative z-50">
             <Select
-              defaultValue={field?.value || []}
               isMulti
               options={options}
               className="basic-multi-select focus:outline-none focus:shadow-none"

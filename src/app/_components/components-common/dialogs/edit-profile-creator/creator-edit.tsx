@@ -14,6 +14,7 @@ import Button from "@/app/_components/ui/button";
 import { useCreatorStore } from "@/lib/store/creator";
 import { getCategories, updateCreator } from "@/lib/web-api/auth";
 import { ICategoryData, IPutUpdateCreatorRequest } from "@/lib/types-api/auth";
+import { fileUploadLimitValidator } from "@/lib/utils/constants";
 
 export default function EditCreatorForm({ onClose }: { onClose: any }) {
   const { creator, setCreatorData } = useCreatorStore();
@@ -167,12 +168,15 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     }
   };
 
-  const handleImageSelect = (
+  const handleImageSelect = async (
     e: React.ChangeEvent<HTMLInputElement>,
     type: "profile" | "banner"
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const isValid = await fileUploadLimitValidator(file.size);
+    if (!isValid) return;
 
     const previewURL = URL.createObjectURL(file);
 
@@ -184,8 +188,6 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       setBannerPreview(previewURL);
     }
   };
-
-  
 
   return (
     <>

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -163,12 +162,12 @@ export default function ProductTable({
             return (
               <TableRow key={index} className="bg-white">
                 <CustomTableCell>
-                  <div className="flex items-center gap-2">
+                  <span className="flex items-center gap-2">
                     <Avatar className="w-8 h-8">
                       <AvatarImage src={product.media[0]} />
                     </Avatar>
                     {product.title}
-                  </div>
+                  </span>
                 </CustomTableCell>
                 <CustomTableCell>{product?.description}</CustomTableCell>
                 <CustomTableCell>
@@ -192,7 +191,7 @@ export default function ProductTable({
                   />
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
-                  <CustomTableCell className="flex justify-center">
+                  <span className="flex justify-center">
                     {
                       {
                         REQUESTED: {
@@ -226,7 +225,7 @@ export default function ProductTable({
                         // />
                       }[status]
                     }
-                  </CustomTableCell>
+                  </span>
                 </CustomTableCell>
               </TableRow>
             );

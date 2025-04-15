@@ -78,16 +78,16 @@ export const badgeColor: { [key: string]: string } = {
   PENDING: "bg-[#5856D6] text-[#5856D6]",
 };
 export const statusMessage: { [key: string]: string } = {
-  "REQUESTED": "Request Sent",
-  "PENDING": "Collaboration Pending",
-  "REJECTED": "Request Rejected",
-  "LIVE": "Collaboration Live",
-  "EXPIRED": "Collaboration Expired",
-  "REQUESTED_CREATOR_TO_VENDOR": "Creator requested to you",
-  "REQUESTED_VENDOR_TO_CREATOR": "You requested to creator",
-  "REQUESTED_CREATOR_FROM_VENDOR": "You requested to vendor",
-  "REQUESTED_VENDOR_FROM_CREATOR": "Vendor requested to you",
-}
+  REQUESTED: "Request Sent",
+  PENDING: "Collaboration Pending",
+  REJECTED: "Request Rejected",
+  LIVE: "Collaboration Live",
+  EXPIRED: "Collaboration Expired",
+  REQUESTED_CREATOR_TO_VENDOR: "Creator requested to you",
+  REQUESTED_VENDOR_TO_CREATOR: "You requested to creator",
+  REQUESTED_CREATOR_FROM_VENDOR: "You requested to vendor",
+  REQUESTED_VENDOR_FROM_CREATOR: "Vendor requested to you",
+};
 export function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -96,3 +96,12 @@ export function formatNumber(num: number = 0) {
   }
   return num === 0 ? "" : num.toString();
 }
+
+export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
+  const maxSizeInBytes = mb * 1024 * 1024; // 20MB
+  if (size > maxSizeInBytes) {
+    alert("File size should be less than 10MB.");
+    return false;
+  }
+  return true;
+};

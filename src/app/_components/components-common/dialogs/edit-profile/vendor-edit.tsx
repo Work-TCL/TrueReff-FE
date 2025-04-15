@@ -13,6 +13,7 @@ import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
+import { fileUploadLimitValidator } from "@/lib/utils/constants";
 
 export default function EditVendorForm({
   profile,
@@ -80,9 +81,12 @@ export default function EditVendorForm({
     }
   };
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const isValid = await fileUploadLimitValidator(file.size);
+    if (!isValid) return;
 
     const previewURL = URL.createObjectURL(file);
 
