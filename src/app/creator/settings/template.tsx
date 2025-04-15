@@ -5,20 +5,19 @@ interface ILayout {
   children: ReactNode;
 }
 
-
 const settingMenus: {
   label: string;
   path: string;
 }[] = [
-    {
-      label: "Profile",
-      path: "/creator/settings",
-    },
-    {
-      label: "store_connects",
-      path: "/creator/settings/store",
-    }
-  ];
+  {
+    label: "Profile",
+    path: "/creator/settings",
+  },
+  {
+    label: "channel_connects",
+    path: "/creator/settings/store",
+  },
+];
 
 export default function template({ children, ...props }: ILayout) {
   return <SettingsLayout menus={settingMenus}>{children}</SettingsLayout>;

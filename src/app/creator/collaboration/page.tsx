@@ -1,7 +1,11 @@
+import React, { Suspense } from "react";
 import CollaborationList from "@/app/_components/pages/creator/collaboration";
-import React from "react";
+import Loader from "@/app/_components/components-common/layout/loader";
 
-
-export default function CollaborationPage (){
-    return <CollaborationList/>
+export default function CollaborationPage() {
+  return (
+    <Suspense fallback={<Loader />}>
+      <CollaborationList />
+    </Suspense>
+  );
 }

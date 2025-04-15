@@ -1,5 +1,5 @@
+"use client";
 import React from "react";
-import { RiLoader3Fill } from "react-icons/ri";
 
 interface IProps {
   isTransparent?: boolean;

@@ -23,6 +23,7 @@ import {
 } from "@/lib/types-api/auth";
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
+import { fileUploadLimitValidator } from "@/lib/utils/constants";
 
 let allTabs: {
   id: string;
@@ -176,13 +177,18 @@ export default function PreFormPage() {
     } catch (error) {
       toast.error(translate("try_again"));
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
     }
   };
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const isValid = await fileUploadLimitValidator(file.size);
+    if (!isValid) return;
 
     const previewURL = URL.createObjectURL(file);
 
@@ -217,11 +223,11 @@ export default function PreFormPage() {
               />
             ) : null}
             <div className="bg-white">
-              {TABS_STATUS.OMNI_CHANNEL === activeTab && !loading ? (
+              {TABS_STATUS.OMNI_CHANNEL === activeTab ? (
                 <Button
                   type="submit"
                   loading={loading}
-                  disabled={loading}
+                  disabled={loading || TABS_STATUS.OMNI_CHANNEL !== activeTab}
                   className="w-fit font-medium px-8"
                   size="small"
                 >
