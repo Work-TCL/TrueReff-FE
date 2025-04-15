@@ -7,20 +7,21 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import { translate } from "@/lib/utils/translate";
 
 export default function CollabsWithCompanies() {
   return (
     <Card className="rounded-[20px] p-6 bg-white border-0 shadow-none">
       {/* Header Section */}
       <div className="flex justify-between items-center">
-        <h2 className="text-[20px] font-medium text-text">
-          Total collabs with companies
+        <h2 className="sm:text-xl text-base font-medium text-text">
+          {translate("Total_collabs_with_companies")}
         </h2>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="text-font-grey font-semibold px-3 py-1 rounded-lg bg-white"
+              className="text-font-grey font-semibold md:px-3 p-1 md:py-1 rounded-lg bg-white"
             >
               Last 7 Days <ChevronDown className="text-xs w-5" />
             </Button>
@@ -35,7 +36,9 @@ export default function CollabsWithCompanies() {
 
       {/* Total Count */}
       <div className="mt-3 flex items-center gap-2">
-        <span className="text-[40px] font-medium text-text">6,4K</span>
+        <span className="md:text-[40px] text-lg font-medium text-text">
+          6,4K
+        </span>
         <span className="text-xs font-medium text-success bg-success-light px-2 py-1 rounded-md">
           +3.4%
         </span>
@@ -84,12 +87,16 @@ function StatCard({
     <div className="p-4 rounded-lg border bg-white shadow-sm flex flex-col gap-1">
       <div className="flex items-center gap-2">
         <span className={`h-2 w-2 rounded-full bg-${color}`}></span>
-        <span className="text-font-grey font-medium">{name}</span>
+        <span className="text-font-grey font-medium md:text-base text-sm">
+          {name}
+        </span>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-[20px] font-medium text-text">{value}</span>
+        <span className="md:text-[20px] text-sm font-medium text-text">
+          {value}
+        </span>
         <span
-          className={`text-xs font-medium px-2 py-1 rounded-md ${
+          className={`md:text-xs text-[10px] font-medium px-2 py-1 rounded-md ${
             isNegative
               ? "text-red-600 bg-red-100"
               : "text-success bg-success-light"

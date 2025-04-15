@@ -23,7 +23,6 @@ export default function CreatorProfile() {
         const response: any = await getCreatorById({ id: String(id) });
         if (response?.status === 200) setCreatorData(response?.data?.creator);
       } catch (error) {
-       
       } finally {
         setIsLoading(false);
       }
@@ -33,7 +32,7 @@ export default function CreatorProfile() {
   return (
     <div className="flex flex-col p-4 gap-5">
       {isLoading && <Loader isTransparent={false} />}
-      <div className="grid grid-cols-2 gap-5 w-full">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-5 w-full">
         <InfluencerProfile
           banner_image={creatorData.banner_image}
           profile_image={creatorData.profile_image}
@@ -48,7 +47,7 @@ export default function CreatorProfile() {
           <CollabsWithCompanies />
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-5 w-full">
+      <div className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-0 w-full">
         <div className="col-span-2 h-full">
           <TopVideosCraetor />
         </div>

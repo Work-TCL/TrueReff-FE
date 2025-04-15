@@ -1,3 +1,4 @@
+import { translate } from "@/lib/utils/translate";
 import { cn } from "@sohanemon/utils";
 import { ChevronRight } from "lucide-react";
 import React from "react";
@@ -62,11 +63,10 @@ const ProfileCompletionCard = ({
         </div>
         <div className="flex-1">
           <h3 className="md:text-[32px] text-lg font-semibold text-gray-black pb-1">
-            Complete your profile
+            {translate("Complete_your_profile")}{" "}
           </h3>
           <p className="md:text-xl text-sm text-gray-black max-w-[80%]">
-            Complete your profile to unlock earnings, brand deals, and full
-            platform access.
+            {translate("Complete_your_profile_Description")}
           </p>
         </div>
       </div>

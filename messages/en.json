@@ -335,5 +335,16 @@
   "Short_Description": "Short Description",
   "Long_Description": "Long Description",
   "View": "View",
-  "My_Products":"My Products"
+  "My_Products": "My Products",
+  "My_Creators": "My_Creators",
+  "My_Purchased":"My_Purchased",
+  "Do_you_have_an_e_commerce_site_to_sell":"Do you have an e-commerce site to sell?",
+  "Become_a_Brand":"Become a Brand",
+  "Do_you_have_a_2000_followers":"Do you have a 2000+ followers?",
+  "Become_a_Creator":"Become a Creator",
+  "Product_Details":"Product Details",
+"Complete_your_profile":"Complete your profile",
+"Complete_your_profile_Description":" Complete your profile to unlock earnings, brand deals, and full platform access.",
+"Total_collabs_with_companies":"Total collabs with companies"
+
 }

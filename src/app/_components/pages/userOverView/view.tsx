@@ -4,7 +4,7 @@ import { translate } from "@/lib/utils/translate";
 import ProfileCompletionCard from "../../components-common/charts/profileComplete";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import MyProducts from "./myPoducts";
-import { BrandCreatorCard, CardComponent } from "./cardComponent";
+import { CardComponent } from "./cardComponent";
 import { Package, ShoppingBag, Users } from "lucide-react";
 import { ProductDetailUser } from "./productDetail";
 import { ProileDetailUser } from "./userProfile";
@@ -13,7 +13,6 @@ import VideosTable from "./videoTable";
 import { cn } from "@sohanemon/utils";
 
 export default function UserOverView() {
-  const lg = useMediaQuery("(min-width: 1024px)");
   const translate = useTranslations();
   const productDetail = {
     productImage: "",

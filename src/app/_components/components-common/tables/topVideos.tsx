@@ -50,7 +50,7 @@ export default function TopVideosCraetor() {
   return (
     <div className="p-4 bg-white rounded-[20px]">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl text-text font-semibold">
+        <h2 className="sm:text-xl text-base text-text font-semibold">
           {translate("top_10_videos")}
         </h2>
       </div>
