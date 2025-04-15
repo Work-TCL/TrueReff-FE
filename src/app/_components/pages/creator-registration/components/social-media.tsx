@@ -92,7 +92,7 @@ export default function SocialMedia({
         } else setInstagramConnected(false);
       }
     } catch (error) {
-      console.log("while fetching conncted channels");
+      
     } finally {
       setIsPageLoading(false);
     }

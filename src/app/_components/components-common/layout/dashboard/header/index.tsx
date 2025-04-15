@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { translate } from "../../../../../../lib/utils/translate";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
-import { BellRing, Menu, User, X } from "lucide-react";
+import { BellRing, CircleUserRound, Menu, User, X } from "lucide-react";
 import {
   Drawer,
   DrawerClose,
@@ -268,9 +268,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         </Drawer>
         <Link
           href={
-            creator
+            creator.creatorId
               ? `/creator/profile/${creator.creatorId}`
-              : `/vendor/profile/${vendor.vendorId}`
+              : `/vendor/settings`
           }
           className="flex gap-3 items-center w-fit"
         >
@@ -282,13 +282,13 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
                   ? `url(${creator.profile_image || vendor.profile_image})`
                   : undefined,
             }}
-          ></div>
+          >{!(creator.profile_image || vendor.profile_image) && <CircleUserRound className="w-8 h-8" color="#EB815B"/>}</div>
           <p className="text-gray-black md:text-base text-sm md:block hidden">
             {creator.full_name || vendor.business_name}
           </p>
         </Link>
       </div>}
-      <div className="flex justify-end w-full"><Link href="?auth=logout" className="mx-4 block">
+      <div className={pathName === "/dashboard" ? "flex justify-end w-full":""}><Link href="?auth=logout" className="mx-4 block">
         <IoLogOutOutline className="text-2xl text-primary" />
       </Link>
       </div>

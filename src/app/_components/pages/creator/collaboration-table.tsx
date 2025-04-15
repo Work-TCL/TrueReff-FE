@@ -262,7 +262,7 @@ const CollaborationTable = ({
                             color="#3b82f680"
                             className="cursor-pointer"
                             onClick={() =>
-                              handleChatView(collaboration?.productId?._id)
+                              handleChatView(collaboration?._id)
                             }
                             size={25}
                           />

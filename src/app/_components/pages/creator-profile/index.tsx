@@ -23,7 +23,7 @@ export default function CreatorProfile() {
         const response: any = await getCreatorById({ id: String(id) });
         if (response?.status === 200) setCreatorData(response?.data?.creator);
       } catch (error) {
-        console.log("while getting creator data");
+       
       } finally {
         setIsLoading(false);
       }

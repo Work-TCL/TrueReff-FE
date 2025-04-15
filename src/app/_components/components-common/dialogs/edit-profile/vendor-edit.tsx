@@ -69,7 +69,6 @@ export default function EditVendorForm({
         });
         toast.success(response?.message);
         methods?.reset();
-        console.log("response", data);
         onClose && onClose(true);
         return true;
       }

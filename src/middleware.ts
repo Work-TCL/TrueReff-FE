@@ -53,11 +53,11 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
       return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard`:`/dashboard`, request.url));
     }
 
-    if(token && user?.type === "vendor" && pathname.startsWith("/creator")){
+    if(token && user?.type === "vendor" && (pathname.startsWith("/creator") || ['/vendor-register',"/creator-registration"].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
-    if(token && user?.type === "creator" && pathname.startsWith("/vendor")){
+    if(token && user?.type === "creator" && (pathname.startsWith("/vendor") || ['/vendor-register',"/creator-registration"].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 

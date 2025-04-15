@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
+import { Info } from "lucide-react";
+import { useTranslations } from "next-intl";
 interface ICollaborateRequestFormProps {
   onClose: () => void;
   creatorId: string;
@@ -16,6 +18,7 @@ export default function CollaborateRequestForm({
   onClose,
   creatorId,
 }: ICollaborateRequestFormProps) {
+  const translate = useTranslations();
   const [loading, setLoading] = useState(false);
   const { vendor } = useVendorStore();
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
@@ -89,8 +92,8 @@ export default function CollaborateRequestForm({
   return (
     <>
       <div className="flex max-h-80 overflow-scroll">
-        <div className="flex flex-col gap-2">
-          {products?.length > 0 &&
+        <div className={`flex flex-col gap-2 ${products?.length > 0 ? "":"w-full"}`}>
+          {products?.length > 0 ? 
             products?.map((product: any, index: number) => {
               return (
                 <div className="flex items-center gap-4" key={index}>
@@ -112,7 +115,16 @@ export default function CollaborateRequestForm({
                   </div>
                 </div>
               );
-            })}
+            }) : 
+              <div className="flex flex-col justify-center text-center items-center">
+              <Info height={30} width={30} className="mx-auto mb-2 text-gray-400" />
+              <h2 className="text-lg font-semibold">
+                {translate("No_Products_Available_Title")}
+              </h2>
+              <p className="text-sm">
+                {translate("No_Products_Available_Description")}
+              </p>
+            </div>}
         </div>
       </div>
       <Button

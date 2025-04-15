@@ -42,6 +42,7 @@ interface ICreator {
 interface IVendor {
   _id: string;
   business_name: string;
+  profile_image:string;
 }
 
 export interface ICollaboration {
@@ -78,6 +79,7 @@ export default function BargainingView() {
     vendorId: {
       _id: "",
       business_name: "",
+      profile_image:""
     },
     collaborationStatus: "",
     utmLink: "",

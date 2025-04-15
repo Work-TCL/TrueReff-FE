@@ -117,8 +117,6 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     reSetSubCategories();
   }, [methods.watch("category")?.length]);
 
-  console.log("errors", methods.formState.errors, methods.watch());
-
   const onSubmit = async (data: ICreatorProfileUpdateSchema) => {
     setLoading(true);
     try {
@@ -138,7 +136,6 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       };
 
       const response: any = await updateCreator(payload);
-      console.log("response", response);
 
       if (response.status === 200) {
         toast.success(response?.message || "Profile Update Successfully");
@@ -188,7 +185,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     }
   };
 
-  console.log("profile images", bannerFile, profileFile);
+  
 
   return (
     <>
@@ -346,7 +343,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               </div>
             </div>
           </div>
-          <div className="py-6 col-span-2 sticky bottom-0 bg-white bg-white">
+          <div className="py-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
               Save
             </Button>

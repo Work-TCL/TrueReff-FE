@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { LoaderCircle, SendHorizontal } from "lucide-react";
+import { CircleUserRound, LoaderCircle, SendHorizontal } from "lucide-react";
 import socketService from "@/lib/services/socket-service";
 import { formatTo12Hour } from "@/lib/utils/commonUtils";
 import { getCollobrationConversation } from "@/lib/web-api/collobration";
@@ -89,8 +89,11 @@ export default function ChatComponent({
     }
   };
   const getUserName = () => {
-    return user?.role === "creator" ? collaborationData.creatorId?.user_name : collaborationData.vendorId?.business_name;
+    return user?.role !== "creator" ? collaborationData.creatorId?.user_name : collaborationData.vendorId?.business_name;
   };
+  const getProfile = () => {
+    return user?.role !== "creator" ? collaborationData.creatorId?.profile_image : collaborationData.vendorId?.profile_image;
+  }
   useEffect(() => {
     fetchCollaborationConversions(currentPage,true);
   },[currentPage])
@@ -124,10 +127,10 @@ export default function ChatComponent({
     <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden flex flex-col md:h-full h-[80vh] md:sticky md:top-0">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
         <Avatar>
-          <AvatarImage
-            src="/assets/product/diamondRing.webp"
+          {(collaborationData.creatorId?.profile_image || collaborationData.vendorId?.profile_image) ? <AvatarImage
+            src={getProfile()}
             className="rounded-full border border-border"
-          />
+          /> : <CircleUserRound className="w-8 h-8" color="#EB815B"/>}
         </Avatar>
         <div>
           <p className="font-medium text-text md:text-lg text-base">
@@ -162,7 +165,7 @@ export default function ChatComponent({
                   {!owner && (
                     <Avatar>
                       <AvatarImage
-                        src="/assets/product/diamondRing.webp"
+                        src={user?.role === 'creator' ? collaborationData.vendorId?.profile_image : collaborationData.creatorId?.profile_image}
                         className="rounded-full border border-border md:size-8 size-6 "
                       />
                     </Avatar>
@@ -189,7 +192,7 @@ export default function ChatComponent({
                 {owner && (
                   <Avatar>
                     <AvatarImage
-                      src="/assets/product/diamondRing.webp"
+                      src={user?.role === 'creator' ? collaborationData.creatorId?.profile_image : collaborationData.vendorId?.profile_image}
                       className="rounded-full border border-border md:size-8 size-6"
                     />
                   </Avatar>

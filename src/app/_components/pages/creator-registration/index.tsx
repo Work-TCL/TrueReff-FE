@@ -71,7 +71,6 @@ const TABS_STATUS = {
 export default function CreatorRegistrationPage() {
   const searchParams = useSearchParams();
   const { account } = useAuthStore();
-  console.log("account",account)
   const { setCreatorData } = useCreatorStore();
   const router = useRouter();
   const email = searchParams.get("email") ?? "";
@@ -264,7 +263,7 @@ export default function CreatorRegistrationPage() {
         });
       }
     } catch (e) {
-      console.log("error while getting creator");
+      
     } finally {
       setIsCreatorLoading(false);
     }

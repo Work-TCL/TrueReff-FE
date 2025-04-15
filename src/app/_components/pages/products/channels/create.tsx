@@ -209,7 +209,6 @@ export default function CreateProduct({
   const onSubmit = (data: IProductSchema) => {
     setLoading(true);
     try {
-      console.log("data");
     } catch (error) {
       toast.error("product save filed.");
     } finally {

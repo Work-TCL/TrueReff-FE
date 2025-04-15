@@ -114,7 +114,13 @@ export default function LoginForm() {
               router?.push(`/creator-registration`);
             }
           } else {
-            router?.push(`/dashboard`);
+            if (res?.data?.type === USER_TYPE.Vendor) {
+              router?.push("/vendor/dashboard");
+            } else if (res?.data?.type === USER_TYPE.Creator) {
+              router.push("/creator/dashboard");
+            } else {
+              router?.push(`/dashboard`);
+            }
           }
           methods?.reset();
           return true;

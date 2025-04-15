@@ -184,7 +184,7 @@ const MultiSelectPreForm = ({ options = [], ...props }: any) => {
           ? method
               .watch(props.name)
               .map((c:string) => (
-                <div className="bg-gray-small-light py-3 px-4">{c}</div>
+                <div className="bg-gray-small-light py-3 px-4" key={c}>{c}</div>
               ))
           : null}
       </div>

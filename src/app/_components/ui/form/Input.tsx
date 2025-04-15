@@ -240,7 +240,7 @@ export default function Input({
               {...field}
               disabled={props?.disabled}
             >
-              <option selected>{placeholder || "Select..."}</option>
+              <option value={placeholder || "Select..."}>{placeholder || "Select..."}</option>
               {options?.map((item) => (
                 <option key={item?.value} value={item?.value}>
                   {item?.label}

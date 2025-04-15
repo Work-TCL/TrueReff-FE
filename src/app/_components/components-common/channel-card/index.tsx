@@ -44,13 +44,14 @@ export default function ChannelCard({
   return href ? (
     <Link
       href={href}
+      key={channelType}
       className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3 bg-white"
     >
       {headerContent()}
       {bodyContent()}
     </Link>
   ) : (
-    <div className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3 bg-white">
+    <div key={channelType} className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3 bg-white">
       {headerContent()}
       {bodyContent()}
     </div>

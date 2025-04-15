@@ -26,9 +26,9 @@ export default function InstallButton() {
 
     const choiceResult = await prompt.userChoice;
     if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the install prompt');
+     
     } else {
-      console.log('User dismissed the install prompt');
+      
     }
 
     setDeferredPrompt(null);

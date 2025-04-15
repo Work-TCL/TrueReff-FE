@@ -15,11 +15,9 @@ class SocketService {
       });
 
       this.socket.on("connect", () => {
-        console.log("Connected to socket server:", this.socket?.id);
       });
 
       this.socket.on("disconnect", () => {
-        console.log("Disconnected from socket server");
       });
     }
   }
@@ -30,7 +28,6 @@ class SocketService {
   registerUser(userId: string): void {
     if (this.socket) {
       this.socket.emit("register", userId);
-      console.log(`User ${userId} registered`);
     }
   }
 
@@ -40,7 +37,6 @@ class SocketService {
   joinCollaboration(collaborationId: string|string[]): void {
     if (this.socket) {
       this.socket.emit("joinCollaboration", collaborationId);
-      console.log(`Joined collaboration room: ${collaborationId}`);
     }
   }
 
@@ -69,7 +65,6 @@ class SocketService {
   leaveCollaboration(): void {
     if (this.socket) {
       this.socket.emit("leaveCollaboration");
-      console.log("Left collaboration room");
     }
   }
 
