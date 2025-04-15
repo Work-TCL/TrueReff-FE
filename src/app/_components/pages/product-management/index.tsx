@@ -14,6 +14,10 @@ import Loader from "../../components-common/layout/loader";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
+import { debounce } from "lodash";
+import { getCategories } from "@/lib/web-api/auth";
+import Select from "react-select";
+import { Search } from "lucide-react";
 export interface ICategory {
   _id: string;
   name: string;
@@ -74,8 +78,17 @@ export interface IProduct {
   request: IRequest | null;
   collaboration: ICollaboration | null;
   categories?: string;
+  subCategories?:string;
   tag?: string;
 }
+
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+};
 
 export default function ProductList() {
   const translate = useTranslations();
@@ -84,17 +97,22 @@ export default function ProductList() {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [filter, setFilter] = useState<string>("5");
   const [search, setSearch] = useState<string>("");
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
+  const [subCategory, setSubCategory] = useState<ICategory[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 20;
 
   // Get Creator list
   const getProductList = useCallback(
-    async (page: number, isInternalLoader = false) => {
+    async (page: number, isInternalLoader = false, searchValue: string = "", categoryIds: string[] = []) => {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/product/list?page=${page}&limit=${pageSize}`
+          `/product/list?page=${page}&limit=${pageSize}${searchValue ? `&search=${searchValue}` : ""}${categoryIds?.length > 0 ? `&categories=${categoryIds.join(",")}` : ""}`
         );
         if (response.status === 200) {
           const productData = response.data.data;
@@ -107,9 +125,15 @@ export default function ProductList() {
                 ele.tag = ele.tags.join(", ");
                 ele.categories = ele?.category?.length
                   ? ele.category
-                      .filter((ele: ICategory) => ele?.parentId === null)
-                      .map((ele: ICategory) => ele?.name)
-                      .join(", ")
+                    .filter((ele: ICategory) => ele?.parentId === null)
+                    .map((ele: ICategory) => ele?.name)
+                    .join(", ")
+                  : "";
+                  ele.subCategories = ele?.category?.length
+                  ? ele.category
+                    .filter((ele: ICategory) => ele?.parentId !== null)
+                    .map((ele: ICategory) => ele?.name)
+                    .join(", ")
                   : "";
                 return { ...ele };
               });
@@ -141,13 +165,31 @@ export default function ProductList() {
   useEffect(() => {
     getProductList(currentPage);
   }, []);
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories({ page: 0, limit: 0 });
+      const data = response?.data?.data || [];
+      setCategories(data);
+      setParentCategory(data.filter((ele) => ele?.parentId === null));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
+  const debouncedSearch = useCallback(
+    debounce((value: string,categoryIds:string[]) => {
+      getProductList(currentPage, true, value,categoryIds);
+    }, 500),
+    []
+  );
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
+    const value = e.target.value;
     setSearch(value);
-  };
-  const handleFilterValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilter(e.target.value);
+    debouncedSearch(value,[...selectedCategories,...selectedSubCategories]); // call debounce on value
   };
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -156,33 +198,84 @@ export default function ProductList() {
   const handleUpdateProduct = () => {
     getProductList(currentPage, true);
   };
+
+  const handleSelectCategory = (selectedOptions: any) => {
+    const selectedIds = selectedOptions.map((opt: any) => opt.value);
+    setSelectedCategories(selectedIds);
+    
+    const optionsSubCategory = categories.filter((ele) =>
+      selectedIds.includes(ele?.parentId || "")
+    );
+    setSubCategory(optionsSubCategory);
+
+    // Filter selected subcategories to only include available ones
+    const availableSubCategoriesIds = optionsSubCategory.map((v) => v._id);
+    let selectedSubCategory = selectedSubCategories.filter((id) => availableSubCategoriesIds.includes(id))
+    setSelectedSubCategories(selectedSubCategory);
+    getProductList(currentPage, true, search, [...selectedIds, ...selectedSubCategory]);
+  }
+
+  const handleSelectSubCategory = (selectedOptions: any) => {
+    const selectedIds = selectedOptions.map((opt: any) => opt.value);
+    setSelectedSubCategories(selectedIds);
+    getProductList(currentPage, true, search, [...selectedCategories,...selectedIds]);
+  }
+
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
+      <div className="flex justify-between items-center gap-2">
+        <div
+          className={`relative`}
+        >
+          <Input
+            value={search}
+            onChange={handleSearch}
+            placeholder={translate("Search_Product")}
+            className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+          />
+          <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
+        </div>
+        <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
+          <Select
+            styles={customStyles}
+            value={selectedCategories.map((id) => {
+              const match = parentCategory.find((cat) => cat._id === id);
+              return { value: id, label: match?.name || id };
+            })}
+            isMulti
+            onChange={handleSelectCategory}
+            options={parentCategory.map((ele) => ({
+              value: ele._id,
+              label: ele.name,
+            }))}
+            isOptionDisabled={() => selectedCategories.length >= 3}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            placeholder="Parent Categories (max 3)"
+          />
+          <Select
+            styles={customStyles}
+            placeholder="Subcategories (max 3)"
+            value={selectedSubCategories.map((id) => {
+              const match = subCategory.find((cat) => cat._id === id);
+              return { value: id, label: match?.name || id };
+            })}
+            isMulti
+            onChange={handleSelectSubCategory}
+            options={subCategory.map((ele) => ({
+              value: ele._id,
+              label: ele.name,
+            }))}
+            isOptionDisabled={() => selectedSubCategories.length >= 3}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            classNamePrefix="select"
+          />
+        </div>
+      </div>
+      {internalLoader && <Loader />}
       {loading ? (
         <Loading />
       ) : products?.length > 0 ? (
         <>
-          <div className="flex justify-between items-center gap-2">
-            <div className="md:text-[20px] text-base text-500">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={translate("Search_creator")}
-                className="md:h-10 h-8"
-              />
-            </div>
-            <div className="flex items-center gap-[10px]">
-              <PiListChecksLight className="md:size-[30px] size-6" />
-              <IoGridOutline className="md:size-[30px] size-6" />
-              <Button
-                variant="outline"
-                className="text-black w-[100px] rounded-[4px]"
-              >
-                <FaSlidersH /> {translate("Filters")}
-              </Button>
-            </div>
-          </div>
-          {internalLoader && <Loader />}
           <ProductTable
             data={products}
             handleUpdateProduct={handleUpdateProduct}

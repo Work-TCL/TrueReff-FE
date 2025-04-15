@@ -5,13 +5,14 @@ import BrandCard from "./_components/brandCard";
 import { Search } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import Loading from "../loading";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
+import { debounce } from "lodash";
 
 export interface Brand {
   id: number;
@@ -26,6 +27,7 @@ export interface Brand {
 export default function BrandList() {
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>();
   const [brands, setBrands] = useState<Brand[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -36,12 +38,13 @@ export default function BrandList() {
   // Get Brand list
   const getBrandList = async (
     page: number,
-    isInternalLoader: boolean = false
+    isInternalLoader: boolean = false,
+    searchValue: string = ""
   ) => {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response: any = await axios.get(
-        `/product/vendor-product/vendor/list?page=${page}&limit=${itemsPerPage}`
+        `/product/vendor-product/vendor/list?page=${page}&limit=${itemsPerPage}${searchValue ? `&search=${searchValue}` : ""}`
       );
       if (response.status === 200) {
         const brandData = response.data.data;
@@ -86,29 +89,40 @@ export default function BrandList() {
   useEffect(() => {
     getBrandList(currentPage);
   }, []);
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      getBrandList(currentPage, true, value);
+    }, 500),
+    []
+  );
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value);
+    debouncedSearch(value); // call debounce on value
+  };
   return (
     <div
-      className={`flex flex-col md:p-6 p-4 md:gap-6 gap-4 ${
-        Boolean(brands.length === 0) ? "h-full" : ""
-      }`}
+      className={`flex flex-col md:p-6 p-4 md:gap-6 gap-4 ${Boolean(brands.length === 0) ? "h-full" : ""
+        }`}
     >
+      <div
+        className={`relative`}
+      >
+        <Input
+          value={search}
+          onChange={handleSearch}
+          placeholder={translate("Search_Brand")}
+          className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+        />
+        <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
+      </div>
+      {internalLoader && <Loader />}
       {loading ? (
         <Loading />
       ) : brands?.length > 0 ? (
         <>
-          <div
-            className={`relative ${
-              Boolean(brands.length === 0) ? "hidden" : ""
-            } `}
-          >
-            <Input
-              placeholder={translate("Search_Product")}
-              className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
-            />
-            <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-          </div>
-          {internalLoader && <Loader />}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
             {brands.map((brand: any) => (
               <BrandCard key={brand.id} {...brand} />

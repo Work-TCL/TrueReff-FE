@@ -109,28 +109,31 @@ export default function BrandProductTable({
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
           <TableRow>
-            <CustomTableHead className="w-1/8">
+            <CustomTableHead className="w-1/9">
               {translate("Product_Name")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8">
+            <CustomTableHead className="w-1/9">
               {translate("Description")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8">
+            <CustomTableHead className="w-1/9">
               {translate("Brand_Name")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8">
+            <CustomTableHead className="w-1/9">
               {translate("Category")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8">
+            <CustomTableHead className="w-1/9">
+              {translate("Sub_category")}
+            </CustomTableHead>
+            <CustomTableHead className="w-1/9">
               {translate("Tags")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8 text-center">
+            <CustomTableHead className="w-1/9 text-center">
               {"Status"}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8 text-center">
+            <CustomTableHead className="w-1/9 text-center">
               {"View"}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8 text-center">
+            <CustomTableHead className="w-1/9 text-center">
               {translate("Action")}
             </CustomTableHead>
           </TableRow>
@@ -157,6 +160,9 @@ export default function BrandProductTable({
                 </CustomTableCell>
                 <CustomTableCell>
                   {brand.categories?.length ? brand.categories?.join(", ") : ""}
+                </CustomTableCell>
+                <CustomTableCell>
+                  {brand.subCategories?.length ? brand.subCategories?.join(", ") : ""}
                 </CustomTableCell>
                 <CustomTableCell>
                   {brand?.tags?.length ? brand.tags.join(", ") : ""}

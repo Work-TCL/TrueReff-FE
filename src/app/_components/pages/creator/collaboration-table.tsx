@@ -6,7 +6,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { useRouter } from "next/navigation";
-import { CheckCircle, Eye, MessagesSquare, X, XCircle } from "lucide-react";
+import { CheckCircle, Eye, MessagesSquare, XCircle } from "lucide-react";
 import { ICollaboration, IRequest } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -109,13 +109,13 @@ const CollaborationTable = ({
     }
   };
   const getRequestStatus = (collaboration: ICollaboration) => {
-    const { requestId } = collaboration;
-    if (requestId) {
+    const { request } = collaboration;
+    if (request) {
       if (
-        requestId?.collaborationStatus === "REQUESTED" ||
-        requestId?.collaborationStatus === "REJECTED"
+        request?.collaborationStatus === "REQUESTED" ||
+        request?.collaborationStatus === "REJECTED"
       ) {
-        return requestId?.collaborationStatus;
+        return request?.collaborationStatus;
       } else {
         return collaboration?.collaborationStatus;
       }
@@ -135,25 +135,28 @@ const CollaborationTable = ({
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
           <TableRow>
-            <CustomTableHead className="w-1/6">
+            <CustomTableHead className="w-1/7">
               {translate("Product_Name")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/6">
+            <CustomTableHead className="w-1/7">
               {translate("Description")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/6">
+            <CustomTableHead className="w-1/7">
               {translate("Product_Category")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/6">
+            <CustomTableHead className="w-1/7">
+              {translate("Product_Sub_Category")}
+            </CustomTableHead>
+            <CustomTableHead className="w-1/7">
               {translate("Product_Tags")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/6">
+            <CustomTableHead className="w-1/7">
               {translate(`${user}_Name`)}
             </CustomTableHead>
-            <CustomTableHead className="w-1/6 text-center">
+            <CustomTableHead className="w-1/7 text-center">
               {translate("Status")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/6 text-center">
+            <CustomTableHead className="w-1/7 text-center">
               {translate("Action")}
             </CustomTableHead>
           </TableRow>
@@ -169,25 +172,28 @@ const CollaborationTable = ({
                     onClick={() => handleViewCreatorDetails(collaboration._id)}
                   >
                     <Avatar className="w-8 h-8">
-                      <AvatarImage src={collaboration?.productId?.media[0]} />
+                      <AvatarImage src={collaboration?.product?.media[0]} />
                       <AvatarImage
                         src={"/assets/collaboration/collaboration-image.svg"}
                       />
                     </Avatar>
-                    {collaboration?.productId?.title}
+                    {collaboration?.product?.title}
                   </div>
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.productId?.categories}
+                  {collaboration?.product?.description}
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.productId?.description}
+                  {collaboration?.product?.categories}
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.productId?.tag}
+                  {collaboration?.product?.subCategories}
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.vendorId?.business_name}
+                  {collaboration?.product?.tag}
+                </CustomTableCell>
+                <CustomTableCell>
+                  {collaboration?.fromUser?.business_name}
                 </CustomTableCell>
                 {/* <CustomTableCell>{""}</CustomTableCell> */}
                 {/* <CustomTableCell>{""}</CustomTableCell> */}
@@ -197,7 +203,7 @@ const CollaborationTable = ({
                       status={status}
                       messageStatus={getMessages(
                         status,
-                        collaboration?.requestId
+                        collaboration?.request
                       )}
                     />
                   )}
@@ -247,14 +253,14 @@ const CollaborationTable = ({
                             }
                           />
                         ),
-                      }[collaboration?.requestId?.requestFrom ?? ""],
+                      }[collaboration?.request?.requestFrom ?? ""],
                       PENDING: (
                         <div className="flex gap-3">
                           <Eye
                             color="#FF4979"
                             className=" cursor-pointer"
                             onClick={() =>
-                              handleProductDetail(collaboration?.productId?._id)
+                              handleProductDetail(collaboration?.product?._id)
                             }
                             size={25}
                           />
