@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Info } from "lucide-react";
+import { Info, Search } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
@@ -15,6 +15,9 @@ import { useTranslations } from "next-intl";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useAuthStore } from "@/lib/store/auth-user";
 import axios from "@/lib/web-api/axios";
+import { debounce } from "lodash";
+import Loader from "../../components-common/layout/loader";
+import Select from "react-select";
 export interface ICategory {
   _id: string;
   name: string;
@@ -30,15 +33,16 @@ export interface IProduct {
   vendorId: string;
   sku: string;
   description: string;
-  media: string[]; // assuming media is an array of URLs or identifiers
-  channelName: string; // e.g., "shopify"
-  category: ICategory[];
-  categories?: string;
-  tags: string[];
+  media: string[];
+  channelName: string;
+  categories: ICategory[];
+  category?: string;
+  subCategories?: string;
   tag?: string;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export interface ICreator {
   _id: string;
@@ -55,13 +59,16 @@ export interface IRequest {
   createdAt: string;
   updatedAt: string;
 }
-
+export interface IVendor {
+  _id: string;
+  business_name: string;
+}
 export interface ICollaboration {
   _id: string;
-  creatorId: ICreator;
-  productId: IProduct;
+  creatorId: string;
+  productId: string;
   vendorId: string;
-  requestId: IRequest;
+  requestId: string;
   collaborationStatus: string;
   utmLink: string | null;
   discountType: string;
@@ -73,16 +80,47 @@ export interface ICollaboration {
   agreedByVendor: boolean;
   createdAt: string;
   updatedAt: string;
+  product: IProduct;
+  request: IRequest;
+  fromUser: {
+    _id: string;
+    user_name: string;
+    profile_image: string;
+  };
 }
 
+export interface IStatus {
+  value:string;
+  label:string;
+}
+
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+  control:(base:any) => ({
+    ...base,
+    width: '200px'
+  })
+};
 export default function CollaborationList() {
   const t = useTranslations();
   const { account: user } = useAuthStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
-  const [filter, setFilter] = useState<string>("5");
   const [search, setSearch] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const statusOptions:IStatus[] = [
+      {value:"",label:"Select Status"},
+      {value:"REQUESTED",label:"Requested"},
+      {value:"REJECTED",label:"Rejected"},
+      {value:"PENDING",label:"Pending"},
+      {value:"LIVE",label:"Live"},
+      {value:"EXPIRED",label:"Expired"}
+    ];
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 20;
@@ -92,12 +130,12 @@ export default function CollaborationList() {
     return { vendor: "Creator", creator: "Brand" }[user?.role] ?? "";
   };
   // Get Creator list
-  const getCreatorList = useCallback(
-    async (page: number, isInternalLoader?: boolean) => {
+  const fetchCollaboration = useCallback(
+    async (page: number, isInternalLoader?: boolean, searchValue: string = '',status:string="") => {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/product/collaboration/list?page=${page}&limit=${pageSize}`
+          `/product/collaboration/list?page=${page}&limit=${pageSize}${searchValue ? `&search=${searchValue}` : ""}${status ?`&collaborationStatus=${status}`:""}`
         );
         if (response.status === 200) {
           const collaborationData = response.data.data;
@@ -107,12 +145,19 @@ export default function CollaborationList() {
 
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
-                ele.productId.categories = (
-                  ele.productId.category as unknown as { name: string }[]
-                )
-                  ?.map((cat) => String(cat?.name))
-                  .join(", ");
-                ele.productId.tag = ele.productId.tags.join(", ");
+                ele.product.category = ele.product.categories?.length > 0 ? ele.product.categories
+                  .filter((category: ICategory) => category?.parentId === null)
+                  .map((category: ICategory) => {
+                    return category?.name;
+                  })
+                  .join(", ") : "";
+                ele.product.subCategories = ele.product.categories?.length > 0 ? ele.product.categories
+                  .filter((category: ICategory) => category?.parentId !== null)
+                  .map((category: ICategory) => {
+                    return category?.name;
+                  })
+                  .join(", ") : "";
+                ele.product.tag = ele.product.tags.join(", ");
                 return { ...ele };
               });
               setCollaborations([...result]);
@@ -141,41 +186,62 @@ export default function CollaborationList() {
   );
 
   useEffect(() => {
-    getCreatorList(currentPage);
+    fetchCollaboration(currentPage);
   }, []);
   const handlePageChange = (page: number) => {
-    page !== currentPage && getCreatorList(page, true);
+    page !== currentPage && fetchCollaboration(page, true);
     setCurrentPage(page);
   };
+  const debouncedSearch = useCallback(
+    debounce((value: string, status: string) => {
+      fetchCollaboration(currentPage, true, value, status);
+    }, 500),
+    []
+  );
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setSearch(value);
+    debouncedSearch(value, selectedStatus)
   };
+  const handleSelectStatus = (selectedOptions: any) => {
+    setSelectedStatus(selectedOptions?.value);
+    fetchCollaboration(currentPage, true, search, selectedOptions?.value);
+  }
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
+      <div className="flex justify-between items-center gap-2">
+        <div
+          className={`relative`}
+        >
+          <Input
+            value={search}
+            onChange={handleSearch}
+            placeholder={translate("Search_Product")}
+            className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+          />
+          <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
+        </div>
+        <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
+        <Select
+            styles={customStyles}
+            value={[{ value: selectedStatus, label: selectedStatus?statusOptions.find(ele => ele?.value === selectedStatus)?.label:"Select Status" }]}
+            onChange={handleSelectStatus}
+            options={statusOptions}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            placeholder="Select Status"
+          />
+        </div>
+      </div>
+      {internalLoader && <Loader />}
       {loading ? (
         <Loading />
       ) : !loading && collaborations?.length > 0 ? (
         <>
-          <div className="flex justify-between items-center gap-2">
-            <div className="md:text-[20px] text-base text-500">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={t("Search_product")}
-                className="md:h-10 h-8"
-              />
-            </div>
-            <div className="flex items-center gap-[10px]">
-              <PiListChecksLight className="md:size-[30px] size-6" />
-              <IoGridOutline className="md:size-[30px] size-6" />
-            </div>
-          </div>
           <CollaborationTable
             data={collaborations}
-            filter={filter}
             user={getUserType()}
-            refreshCentral={() => getCreatorList(currentPage, true)}
+            refreshCentral={() => fetchCollaboration(currentPage, true)}
             loader={internalLoader}
           />
           <div className="flex justify-end items-center mt-4">

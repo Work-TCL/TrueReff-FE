@@ -1,16 +1,12 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { Input } from "@/components/ui/input";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
-import { FaSlidersH } from "react-icons/fa";
-import { Eye } from "lucide-react";
+
+import { Eye, Search } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -19,11 +15,17 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import Loading from "@/app/vendor/loading";
-import Link from "next/link";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import Loader from "../../components-common/layout/loader";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
+import { getCategories } from "@/lib/web-api/auth";
+import { debounce } from "lodash";
+import { useRouter } from "next/navigation";
+import dynamic from 'next/dynamic';
+import { Input } from "@/components/ui/input";
+const Select = dynamic(() => import('react-select'), { ssr: false });
+
 
 export interface ICategory {
   _id: string;
@@ -51,8 +53,17 @@ export interface IProduct {
   price?: string;
 }
 
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+};
+
 export default function ProductList() {
   const translate = useTranslations();
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
@@ -67,19 +78,27 @@ export default function ProductList() {
     hasNextPage: false,
     hasPreviousPage: false,
   });
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
+  const [subCategory, setSubCategory] = useState<ICategory[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
+  const [search, setSearch] = useState<string>("");
 
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
     ItemPerPage: number,
     cursor: string | null = null,
-    isInternalLoader: boolean = false
+    isInternalLoader: boolean = false,
+    searchValue:string = "",
+    categoryIds: string[] = []
   ) => {
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
         `product/vendor-product/product/list?per_page=${ItemPerPage}${
           cursor ? `&cursor=${cursor}` : ""
-        }`
+        }${searchValue ? `&search=${searchValue}`:""}`
       );
       if (response.data.data?.data) {
         setProductList(
@@ -108,6 +127,20 @@ export default function ProductList() {
   useEffect(() => {
     fetProductsList(20);
   }, []);
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories({ page: 0, limit: 0 });
+      const data = response?.data?.data || [];
+      setCategories(data);
+      setParentCategory(data.filter((ele) => ele?.parentId === null));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
 
   // Update the onClick handlers for pagination buttons
   const handleNextPage = () => {
@@ -121,32 +154,92 @@ export default function ProductList() {
       fetProductsList(20, cursors.previous, true);
     }
   };
+  const debouncedSearch = useCallback(
+        debounce((value: string,categoryIds:string[]) => {
+          fetProductsList(20, cursors.previous, true, value,categoryIds);
+        }, 500),
+        []
+      );
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+      let value = e.target.value;
+      setSearch(value);
+      debouncedSearch(value,[...selectedCategories,...selectedSubCategories]);
+    };
+    const handleSelectCategory = (selectedOptions: any) => {
+      const selectedIds = selectedOptions.map((opt: any) => opt.value);
+      setSelectedCategories(selectedIds);
+      
+      const optionsSubCategory = categories.filter((ele) =>
+        selectedIds.includes(ele?.parentId || "")
+      );
+      setSubCategory(optionsSubCategory);
+  
+      // Filter selected subcategories to only include available ones
+      const availableSubCategoriesIds = optionsSubCategory.map((v) => v._id);
+      let selectedSubCategory = selectedSubCategories.filter((id) => availableSubCategoriesIds.includes(id))
+      setSelectedSubCategories(selectedSubCategory);
+      fetProductsList(20, cursors.previous, true, search,[...selectedIds, ...selectedSubCategory]);
+    }
+    const handleSelectSubCategory = (selectedOptions: any) => {
+      const selectedIds = selectedOptions.map((opt: any) => opt.value);
+      setSelectedSubCategories(selectedIds);
+      fetProductsList(20, cursors.previous, true, search,[...selectedCategories,...selectedIds]);
+    }
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+       <div className="flex justify-between items-center gap-2">
+        <div
+          className={`relative`}
+        >
+          <Input
+            value={search}
+            onChange={handleSearch}
+            placeholder={translate("Search_Product")}
+            className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+          />
+          <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
+        </div>
+        <div className="hidden md:flex-row flex-col gap-2 w-full justify-end">
+          <Select
+            styles={customStyles}
+            value={selectedCategories.map((id) => {
+              const match = parentCategory.find((cat) => cat._id === id);
+              return { value: id, label: match?.name || id };
+            })}
+            isMulti
+            onChange={handleSelectCategory}
+            options={parentCategory.map((ele) => ({
+              value: ele._id,
+              label: ele.name,
+            }))}
+            isOptionDisabled={() => selectedCategories.length >= 3}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            placeholder="Parent Categories (max 3)"
+          />
+          <Select
+            styles={customStyles}
+            placeholder="Subcategories (max 3)"
+            value={selectedSubCategories.map((id) => {
+              const match = subCategory.find((cat) => cat._id === id);
+              return { value: id, label: match?.name || id };
+            })}
+            isMulti
+            onChange={handleSelectSubCategory}
+            options={subCategory.map((ele) => ({
+              value: ele._id,
+              label: ele.name,
+            }))}
+            isOptionDisabled={() => selectedSubCategories.length >= 3}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            classNamePrefix="select"
+          />
+        </div>
+      </div>
+      {internalLoading && <Loader />}
       {loading ? (
         <Loading />
       ) : productList?.length > 0 ? (
-        <>
-          <div className="flex justify-between items-center  gap-2">
-            <div className="md:text-[20px] text-base text-500">
-              {" "}
-              <Input
-                placeholder={translate("Search_product")}
-                className="md:h-10 h-8"
-              />
-            </div>
-            <div className="flex items-center gap-[10px]">
-              <PiListChecksLight className="md:size-[30px] size-6" />
-              <IoGridOutline className="md:size-[30px] size-6" />
-              <Button
-                variant="outline"
-                className="text-black w-[100px] rounded-[4px]"
-              >
-                <FaSlidersH /> {translate("Filters")}
-              </Button>
-            </div>
-          </div>
-          {internalLoading && <Loader />}
+        <>          
           <div className="overflow-auto flex-1">
             <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
               <TableHeader className="bg-stroke">
@@ -169,8 +262,6 @@ export default function ProductList() {
                   <CustomTableHead className="w-1/6">
                     Selling {translate("Price")}
                   </CustomTableHead>
-                  {/*              <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
                   <CustomTableHead className="w-1/6 text-center">
                     {translate("Action")}
                   </CustomTableHead>
@@ -194,15 +285,8 @@ export default function ProductList() {
                     <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
                     <CustomTableCell>{product.sku}</CustomTableCell>
                     <CustomTableCell>{product.price}</CustomTableCell>
-                    {/*                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
                     <CustomTableCell>
-                      <Link
-                        href={`/vendor/products/view/${product._id}`}
-                        className="flex justify-center gap-3"
-                      >
-                        <Eye color="#FF4979" className="cursor-pointer" />
-                      </Link>
+                      <Eye color="#FF4979" className="cursor-pointer" onClick={() => router.push(`/vendor/products/view/${product._id}`)}/>
                     </CustomTableCell>
                   </TableRow>
                 ))}

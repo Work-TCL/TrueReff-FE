@@ -37,8 +37,8 @@ export default function BrandCard({
     >
       <CardContent className="w-full p-0 flex flex-col items-center gap-4">
         <div className="bg-background rounded-lg xl:max-w-[258px] max-w-full min-h-[96px] w-full h-full flex items-center justify-center">
-          {/* <img src={logo} alt={name} className="max-h-12" /> */}
-          <h2 className="text-gray-black">{name}</h2>
+          <img src={logo} alt={name} className="max-h-12" />
+          {/* <h2 className="text-gray-black">{name}</h2> */}
         </div>
         <div className="flex flex-col w-full gap-1">
           <div className="flex flex-1 item-center w-full text-start gap-[6px]">

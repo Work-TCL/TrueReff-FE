@@ -60,7 +60,7 @@ export default function BrandList() {
               totalProducts: brand.productCount,
               rating: 4.5,
               reviews: "0",
-              logo: "/default-logo.png",
+              logo: brand.profile_image              ,
             }));
             setBrands(transformedData);
             setTotalPages(Math.ceil(response.data.count / itemsPerPage));

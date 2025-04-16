@@ -1,3 +1,5 @@
+"use client";
+import React from "react";
 import { TableCell } from "@/components/ui/table";
 import { cn } from "@/lib/utils/commonUtils";
 

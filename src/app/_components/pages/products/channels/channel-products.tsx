@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
-import { CircleFadingPlus, Eye, Info } from "lucide-react";
+import { CircleFadingPlus, Eye, Info, Search } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -25,6 +25,7 @@ import Loader from "@/app/_components/components-common/layout/loader";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import { useRouter } from "next/navigation";
 import axios from "@/lib/web-api/axios";
+import { debounce } from "lodash";
 
 interface IProduct {
   handle: string;
@@ -45,6 +46,7 @@ export default function ChannelProductList({
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
   const [currentData, setCurrentData] = useState<IProduct | null>(null);
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [cursors, setCursors] = useState<{
@@ -65,14 +67,15 @@ export default function ChannelProductList({
   const fetProductsList = async (
     ItemPerPage: number,
     cursor: string | null = null,
-    isInternalLoader = false
+    isInternalLoader = false,
+    searchValue:string = ""
   ) => {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
         `channel/shopify/product/list?per_page=${ItemPerPage}${
           cursor ? `&cursor=${cursor}` : ""
-        }`
+        }${searchValue ? `&search=${searchValue}`:""}`
       );
       if (response.data.data.products) {
         setProductList(response.data.data.products);
@@ -108,31 +111,37 @@ export default function ChannelProductList({
       fetProductsList(20, cursors.previous, true);
     }
   };
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      fetProductsList(20, cursors.previous, true, value);
+    }, 500),
+    []
+  );
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setSearch(value);
+    debouncedSearch(value);
+  };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+      <div className="flex justify-between items-center gap-2">
+        <div
+          className={`relative`}
+        >
+          <Input
+            value={search}
+            onChange={handleSearch}
+            placeholder={translate("Search_Product")}
+            className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+          />
+          <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
+        </div>
+      </div>
+      {internalLoader && <Loader />}
       {loading ? (
         <Loading />
       ) : productList?.length > 0 ? (
         <>
-          <div className="flex justify-between items-center gap-2">
-            <div className="md:text-[20px] text-base text-500">
-              <Input
-                placeholder={translate("Search_product")}
-                className="md:h-10 h-8"
-              />
-            </div>
-            <div className="flex items-center gap-[10px]">
-              <PiListChecksLight className="md:size-[30px] size-6" />
-              <IoGridOutline className="md:size-[30px] size-6" />
-              <Button
-                variant="outline"
-                className="text-black w-[100px] rounded-[4px]"
-              >
-                <FaSlidersH /> {translate("Filters")}
-              </Button>
-            </div>
-          </div>
-          {internalLoader && <Loader />}
           <div className="overflow-auto flex-1">
             <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
               <TableHeader className="bg-stroke">

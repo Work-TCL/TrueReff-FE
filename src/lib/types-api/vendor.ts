@@ -32,6 +32,10 @@ export interface IVendor {
   omni_channels: string[];
   brand_documents: any[];
   addresses: any[];
+  banner_image?:string,
+  user_name?:string;
+  short_description?:string;
+  long_description?:string;
 }
 
 export interface IVendorUpdate {
@@ -48,4 +52,18 @@ export interface IVendorUpdate {
   omni_channels?: string[];
   brand_documents?: any[];
   addresses?: any[];
+  banner_image?:string,
+  user_name?:string;
+  short_description?:string;
+  long_description?:string;
+}
+
+export interface IVendorByIdRequest {
+  id: string;
+}
+
+export interface IVendorByIdResponse {
+  message: string;
+  status: number;
+  data: IVendor;
 }

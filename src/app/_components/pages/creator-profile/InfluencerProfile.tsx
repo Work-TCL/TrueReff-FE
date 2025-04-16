@@ -12,13 +12,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface IProps {
-  banner_image: string;
-  profile_image: string;
-  full_name: string;
-  user_name: string;
-  short_description: string;
-  long_description: string;
-  tags: string[];
+  banner_image?: string;
+  profile_image?: string;
+  full_name?: string;
+  user_name?: string;
+  short_description?: string;
+  long_description?: string;
+  tags?: string[];
 }
 
 export default function InfluencerProfile({
@@ -76,7 +76,7 @@ export default function InfluencerProfile({
           >
             <Image
               src="/assets/creator/profile/fbIcon.svg"
-              alt={full_name}
+              alt={"facebook"}
               width={35}
               height={35}
             />
@@ -88,7 +88,7 @@ export default function InfluencerProfile({
           >
             <Image
               src="/assets/creator/profile/twitterIcon.svg"
-              alt={full_name}
+              alt={"twitterIcon"}
               width={35}
               height={35}
             />
@@ -100,7 +100,7 @@ export default function InfluencerProfile({
           >
             <Image
               src="/assets/creator/profile/instaIcon.svg"
-              alt={full_name}
+              alt={'instaIcon'}
               width={35}
               height={35}
             />
@@ -112,7 +112,7 @@ export default function InfluencerProfile({
           >
             <Image
               src="/assets/creator/profile/ytIcon.svg"
-              alt={full_name}
+              alt={"youtubeIcon"}
               width={35}
               height={35}
             />
@@ -125,7 +125,7 @@ export default function InfluencerProfile({
             {full_name}
           </h2>
           <span className="text-lg md:text-xl font-medium text-gray-black">
-            (@{user_name})
+            {user_name? `(@${user_name})`:""}
           </span>
           <LinkIcon className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
         </div>

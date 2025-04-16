@@ -12,6 +12,8 @@ import Loading from "@/app/vendor/loading";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
+import { debounce } from "lodash";
+import Select from "react-select";
 export interface ICategory {
   _id: string;
   name: string;
@@ -50,6 +52,17 @@ export interface ICreator {
   categories?: string;
   tag?: string;
 }
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+  control:(base:any) => ({
+    ...base,
+    width: '200px'
+  })
+};
 
 export default function CreatorList() {
   const translate = useTranslations();
@@ -61,14 +74,19 @@ export default function CreatorList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(20);
+  const filterOption = [
+    {value:"",label:"Select"},
+    {value:"5",label:"Last 5 Videos"},
+    {value:"30",label:"Last 1 Month"},
+  ]
 
   // Get Creator list
   const getCreatorList = useCallback(
-    async (page: number, isInternalLoader?: boolean) => {
+    async (page: number, isInternalLoader?: boolean,searchValue:string = "") => {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/auth/creator/list?page=${page}&limit=${pageSize}`
+          `/auth/creator/list?page=${page}&limit=${pageSize}${searchValue ? `&search=${searchValue}`:""}`
         );
         if (response.status === 200) {
           const creatorData = response.data.data;
@@ -116,73 +134,47 @@ export default function CreatorList() {
     page !== currentPage && getCreatorList(page, true);
     setCurrentPage(page);
   };
-
+  const debouncedSearch = useCallback(
+      debounce((value: string) => {
+        getCreatorList(currentPage, true, value);
+      }, 500),
+      []
+    );
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
+    debouncedSearch(value);
     setSearch(value);
   };
-  const getFilterData = (data: ICreator[]) => {
-    let result = data;
-    if (search) {
-      result = result.filter((ele: ICreator) => {
-        return (
-          ele?.full_name
-            .toLocaleLowerCase()
-            .includes(search.toLocaleLowerCase()) ||
-          ele?.short_description
-            .toLocaleLowerCase()
-            .includes(search.toLocaleLowerCase()) ||
-          ele?.long_description
-            .toLocaleLowerCase()
-            .includes(search.toLocaleLowerCase()) ||
-          (ele?.tag ?? "")
-            .toLocaleLowerCase()
-            .includes(search.toLocaleLowerCase()) ||
-          (ele?.categories ?? "")
-            .toLocaleLowerCase()
-            .includes(search.toLocaleLowerCase())
-        );
-      });
-    }
-    return result;
-  };
-  const handleFilterValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilter(e.target.value);
+  const handleFilterValue = (value:any) => {
+    setFilter(value?.value);
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
-      {loading ? (
-        <Loading />
-      ) : creators?.length > 0 ? (
-        <>
-          <div className="flex justify-between items-center flex-wrap gap-2">
+      <div className="flex justify-between items-center flex-wrap gap-2">
             <div className="md:text-[20px] text-base text-500">
               <Input
                 value={search}
                 onChange={handleSearch}
                 placeholder={translate("Search_creator")}
                 className="md:h-10 h-8"
-              />{" "}
+              />
             </div>
             <div className="flex items-center gap-[10px]">
-              <PiListChecksLight className="md:size-[30px] size-6" />
-              <IoGridOutline className="md:size-[30px] size-6" />
-              {/* <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
-                        <FaSlidersH /> {translate("Filters")}
-                    </Button> */}
-              <select
-                className="bg-white rounded-sm border border-black h-[30px]"
-                value={filter}
-                onChange={handleFilterValue}
-              >
-                <option value="" disabled>
-                  Filters
-                </option>
-                <option value={5}>Last 5 Videos</option>
-                <option value={1}>Last 1 Month</option>
-              </select>
+            <Select
+            styles={customStyles}
+            value={[{ value: filter, label: filter?filterOption.find(ele => ele?.value === filter)?.label:"Select Status" }]}
+            onChange={handleFilterValue}
+            options={filterOption}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            placeholder="Select Status"
+          />
             </div>
           </div>
+      {loading ? (
+        <Loading />
+      ) : creators?.length > 0 ? (
+        <>
+          
           <CreatorTable
             data={creators}
             filter={filter}

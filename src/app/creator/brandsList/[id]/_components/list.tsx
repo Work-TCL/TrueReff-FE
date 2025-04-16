@@ -283,16 +283,6 @@ export default function CreatorList() {
             classNamePrefix="select"
           />
         </div>
-        {/* <div className="flex items-center gap-[10px]">
-          <PiListChecksLight className="md:size-[30px] size-6" />
-          <IoGridOutline className="md:size-[30px] size-6" />
-          <Button
-            variant="outline"
-            className="text-black w-[100px] rounded-[4px]"
-          >
-            <FaSlidersH /> {translate("Filters")}
-          </Button>
-        </div> */}
       </div>
       {internalLoader && <Loader />}
       {loading ? (

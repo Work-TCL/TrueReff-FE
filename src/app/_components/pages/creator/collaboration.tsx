@@ -32,8 +32,8 @@ export interface IProduct {
   description: string;
   media: string[];
   channelName: string;
-  category: ICategory[];
-  categories?: string;
+  categories: ICategory[];
+  category?: string;
   subCategories?: string;
   tag?: string;
   tags: string[];
@@ -92,6 +92,10 @@ const customStyles = {
     fontSize: "0.875rem ", // Tailwind text-sm
     color: "#a1a1aa", // Tailwind slate-400
   }),
+  control:(base:any) => ({
+    ...base,
+    width: '200px'
+  })
 };
 export interface IStatus {
   value:string;
@@ -105,6 +109,7 @@ export default function CollaborationList() {
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const statusOptions:IStatus[] = [
+    {value:"",label:"Select Status"},
     {value:"REQUESTED",label:"Requested"},
     {value:"REJECTED",label:"Rejected"},
     {value:"PENDING",label:"Pending"},
@@ -137,13 +142,13 @@ export default function CollaborationList() {
 
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
-                let category = ele.product.category?.length > 0 ?ele.product.category
+                let category = ele.product.categories?.length > 0 ?ele.product.categories
                 .filter((category: ICategory) => category?.parentId === null)
                   .map((category: ICategory) => {
                     return category?.name;
                   })
                   .join(", "):"";
-                  let subCategory = ele.product.category?.length > 0 ?ele.product.category
+                  let subCategory = ele.product.categories?.length > 0 ?ele.product.categories
                   .filter((category: ICategory) => category?.parentId !== null)
                   .map((category: ICategory) => {
                     return category?.name;
@@ -152,7 +157,7 @@ export default function CollaborationList() {
                 let tag = ele.product.tags.join(", ");
                 return {
                   ...ele,
-                  product: { ...ele?.product, categories: category,subCategories:subCategory, tag },
+                  product: { ...ele?.product, category: category,subCategories:subCategory, tag },
                 };
               });
               setCollaborations([...result]);
@@ -221,7 +226,7 @@ export default function CollaborationList() {
         <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
         <Select
             styles={customStyles}
-            value={[{ value: selectedStatus, label: selectedStatus }]}
+            value={[{ value: selectedStatus, label: selectedStatus?statusOptions.find(ele => ele?.value === selectedStatus)?.label:"Select Status" }]}
             onChange={handleSelectStatus}
             options={statusOptions}
             className="basic-multi-select focus:outline-none focus:shadow-none"

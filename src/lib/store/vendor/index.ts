@@ -33,6 +33,10 @@ export const useVendorStore = create<
         omni_channels: [],
         brand_documents: [],
         addresses: [],
+        banner_image:"",
+  user_name:"",
+  short_description:"",
+  long_description:"",
       },
       vendors: [],
       setVendorData: (key, value) => {

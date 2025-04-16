@@ -184,7 +184,7 @@ const CollaborationTable = ({
                   {collaboration?.product?.description}
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.product?.categories}
+                  {collaboration?.product?.category}
                 </CustomTableCell>
                 <CustomTableCell>
                   {collaboration?.product?.subCategories}
@@ -193,7 +193,15 @@ const CollaborationTable = ({
                   {collaboration?.product?.tag}
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.fromUser?.business_name}
+                  <div
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => router.push(`/vendor/profile/${collaboration?.fromUser?._id}`)}
+                  >
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={collaboration?.fromUser?.profile_image} />
+                    </Avatar>
+                    {collaboration?.fromUser?.business_name}
+                  </div>
                 </CustomTableCell>
                 {/* <CustomTableCell>{""}</CustomTableCell> */}
                 {/* <CustomTableCell>{""}</CustomTableCell> */}

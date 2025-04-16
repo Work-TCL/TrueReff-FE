@@ -270,7 +270,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
           href={
             creator.creatorId
               ? `/creator/profile/${creator.creatorId}`
-              : `/vendor/settings`
+              : `/vendor/profile/${vendor?.vendorId}`
           }
           className="flex gap-3 items-center w-fit"
         >

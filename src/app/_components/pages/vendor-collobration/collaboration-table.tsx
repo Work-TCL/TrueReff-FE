@@ -19,7 +19,6 @@ import axios from "@/lib/web-api/axios";
 
 interface ICreatorTableProps {
   data: ICollaboration[];
-  filter: string;
   user: string;
   refreshCentral: () => void;
   loader: boolean;
@@ -31,7 +30,6 @@ interface IRequestCancel {
 }
 const CollaborationTable = ({
   data,
-  filter,
   user,
   loader = false,
   refreshCentral = () => {},
@@ -70,13 +68,13 @@ const CollaborationTable = ({
     }
   };
   const getRequestStatus = (collaboration: ICollaboration) => {
-    const { requestId } = collaboration;
-    if (requestId) {
+    const { request } = collaboration;
+    if (request) {
       if (
-        requestId?.collaborationStatus === "REQUESTED" ||
-        requestId?.collaborationStatus === "REJECTED"
+        request?.collaborationStatus === "REQUESTED" ||
+        request?.collaborationStatus === "REJECTED"
       ) {
-        return requestId?.collaborationStatus;
+        return request?.collaborationStatus;
       } else {
         return collaboration?.collaborationStatus;
       }
@@ -127,25 +125,28 @@ const CollaborationTable = ({
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
           <TableRow>
-            <CustomTableHead className="w-1/7">
+            <CustomTableHead className="w-1/8">
               {translate("Product_Name")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7">
+            <CustomTableHead className="w-1/8">
               {translate("Description")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7">
+            <CustomTableHead className="w-1/8">
               {translate("Product_Category")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7">
+            <CustomTableHead className="w-1/8">
+              {translate("Sub_category")}
+            </CustomTableHead>
+            <CustomTableHead className="w-1/8">
               {translate("Product_Tags")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7">
+            <CustomTableHead className="w-1/8">
               {translate(`${user}_Name`)}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7 text-center">
+            <CustomTableHead className="w-1/8 text-center">
               {translate("Status")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7 text-center">
+            <CustomTableHead className="w-1/8 text-center">
               {translate("Action")}
             </CustomTableHead>
           </TableRow>
@@ -158,28 +159,39 @@ const CollaborationTable = ({
                 <CustomTableCell>
                   <div
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => handleViewCreatorDetails(collaboration._id)}
+                    
                   >
                     <Avatar className="w-8 h-8">
-                      <AvatarImage src={collaboration?.productId?.media[0]} />
+                      <AvatarImage src={collaboration?.product?.media[0]} />
                       <AvatarImage
                         src={"/assets/collaboration/collaboration-image.svg"}
                       />
                     </Avatar>
-                    {collaboration?.productId?.title}
+                    {collaboration?.product?.title}
                   </div>
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.productId?.description}
+                  {collaboration?.product?.description}
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.productId?.categories}
+                  {collaboration?.product?.category}
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.productId?.tag}
+                  {collaboration?.product?.subCategories}
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.creatorId?.user_name}
+                  {collaboration?.product?.tag}
+                </CustomTableCell>
+                <CustomTableCell>
+                <div
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => router.push(`/creator/profile/${collaboration?.fromUser?._id}`)}
+                  >
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={collaboration?.fromUser?.profile_image} />
+                    </Avatar>
+                    {collaboration?.fromUser?.user_name}
+                  </div>
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
                   {status ? (
@@ -187,7 +199,7 @@ const CollaborationTable = ({
                       status={status}
                       messageStatus={getMessages(
                         status,
-                        collaboration?.requestId
+                        collaboration?.request
                       )}
                     />
                   ) : null}
@@ -238,7 +250,7 @@ const CollaborationTable = ({
                               }
                             />
                           ),
-                        }[collaboration?.requestId?.requestFrom ?? ""],
+                        }[collaboration?.request?.requestFrom ?? ""],
                         PENDING: (
                           <MessagesSquare
                             color="#3b82f680"
