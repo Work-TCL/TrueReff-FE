@@ -1,4 +1,9 @@
-import { IVendorByIdRequest, IVendorByIdResponse } from "../types-api/vendor";
+import {
+  IGETProductListsRequest,
+  IGETProductListsResponse,
+  IVendorByIdRequest,
+  IVendorByIdResponse,
+} from "../types-api/vendor";
 import { getErrorMessage } from "../utils/commonUtils";
 import axios from "./axios";
 
@@ -20,5 +25,18 @@ export const getVendorById = async (
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While fetching categories.");
+  }
+};
+export const getProductLists = async (
+  params: IGETProductListsRequest
+): Promise<IGETProductListsResponse> => {
+  try {
+    const response = await axios.get(
+      `/product/vendor-product/product/list?page=${params.start}&limit=${params.limit}`
+    );
+    return response?.data?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While fetching products.");
   }
 };

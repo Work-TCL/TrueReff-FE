@@ -155,6 +155,7 @@
   "Omni_Channel": "Omni Channel",
   "Campaign_Details_Form": "Campaign Details Form",
   "Start_Campaign": "Start Campaign",
+  "Edit_Campaign": "Edit Campaign",
   "Campaign_Name": "Campaign Name",
   "Type_campaign_name_here": "Type campaign name here",
   "Type_campaign_description_here": "Type campaign description here",
@@ -323,6 +324,8 @@
   "No_Creators_Available_Title": "No Creators Available",
   "Type_product_name_ here": "Type product name here...",
   "Discount_Percentage_Doller": "Discount Percentage (%)",
+  "Select_Discount_Type": "Select Discount Type",
+  "Product_Media": "Product Media",
   "VAT_Amount_Doller": "VAT Amount (%)",
   "No_Creators_Available_Description": "It seems there are currently no creators to display. Please check back later.",
   "Product_Lists": "Product Lists",
@@ -351,10 +354,8 @@
   "Complete_your_profile_Description": " Complete your profile to unlock earnings, brand deals, and full platform access.",
   "Total_collabs_with_companies": "Total collabs with companies",
   "Top_Views_across_Platforms": "Top Views across Platforms",
-  "Video_Wise_Revenue":"Video-Wise Revenue",
-  "No_discount":" No discount",
-  "Tax_Free":"Tax Free",
-  "Start_your_chat_now":"Start your chat now." 
-  
-   
+  "Video_Wise_Revenue": "Video-Wise Revenue",
+  "No_discount": " No discount",
+  "Tax_Free": "Tax Free",
+  "Start_your_chat_now": "Start your chat now."
 }

@@ -32,12 +32,33 @@ export interface IVendor {
   omni_channels: string[];
   brand_documents: any[];
   addresses: any[];
-  banner_image?:string,
-  user_name?:string;
-  short_description?:string;
-  long_description?:string;
+  banner_image?: string;
+  user_name?: string;
+  short_description?: string;
+  long_description?: string;
+}
+export interface ICategory {
+  _id: string;
+  name: string;
+  parentId: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
+export interface IProduct {
+  _id: string;
+  title: string;
+  channelProductId: string;
+  vendorId: string;
+  sku: string;
+  description: string;
+  media: string[];
+  channelName: string;
+  category: ICategory[];
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
 export interface IVendorUpdate {
   vendorId?: string;
   accountId?: string;
@@ -52,10 +73,10 @@ export interface IVendorUpdate {
   omni_channels?: string[];
   brand_documents?: any[];
   addresses?: any[];
-  banner_image?:string,
-  user_name?:string;
-  short_description?:string;
-  long_description?:string;
+  banner_image?: string;
+  user_name?: string;
+  short_description?: string;
+  long_description?: string;
 }
 
 export interface IVendorByIdRequest {
@@ -66,4 +87,13 @@ export interface IVendorByIdResponse {
   message: string;
   status: number;
   data: IVendor;
+}
+export interface IGETProductListsRequest {
+  start: number;
+  limit: number;
+}
+
+export interface IGETProductListsResponse {
+  count: number;
+  data: IProduct[];
 }

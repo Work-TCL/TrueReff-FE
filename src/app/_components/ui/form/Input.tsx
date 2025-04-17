@@ -336,6 +336,7 @@ export default function Input({
                     className="mr-2"
                     checked={field?.value}
                     {...field}
+                    {...props}
                   />
                   {label}
                 </label>
@@ -363,6 +364,7 @@ export default function Input({
                     className="mr-3 mt-1 w-4 h-4"
                     checked={field?.value}
                     {...field}
+                    {...props}
                   />
                   {label}
                 </label>

@@ -1,313 +1,319 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import React, { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { Button as ButtonOutline } from "@/components/ui/button";
+import React, { useEffect, useState } from "react";
 import { translate } from "../../../../lib/utils/translate";
+import { FormProvider, useForm } from "react-hook-form";
+import Input from "../../ui/form/Input";
+import ProductSelectDropdown from "./_components/selectProduct";
+import {
+  campaignValidationSchema,
+  ICampaignValidationSchema,
+} from "@/lib/utils/validations";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { IProduct } from "@/lib/types-api/vendor";
+import MediaUploader from "./_components/mediaUploader";
+import { useParams, useRouter } from "next/navigation";
+import {
+  createCampaign,
+  getCampaign,
+  updateCampaign,
+} from "@/lib/web-api/campaign";
+import { IPOSTCreateCampaignRequest } from "@/lib/types-api/campaign";
+import Button from "../../ui/button";
+import Loader from "../../components-common/layout/loader";
 
 interface IAddProductDetailProps {
   isDetailView?: boolean;
 }
+
 export default function CreateCampaign(props: IAddProductDetailProps) {
-  let { isDetailView } = props;
-  const [variants, setVariants] = useState([
-    { variationType: "", variation: "" },
-  ]);
-  const handleAddVariant = () => {
-    setVariants([...variants, { variationType: "", variation: "" }]);
+  const params = useParams();
+  const router = useRouter();
+  const campaignId: any = params?.id !== "add" ? params?.id : null;
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [media, setMedia] = useState<{ images: File[]; video: File | null }>({
+    images: [],
+    video: null,
+  });
+  const methods = useForm<ICampaignValidationSchema>({
+    defaultValues: {},
+    resolver: yupResolver(campaignValidationSchema),
+    mode: "onChange",
+  });
+  const onSubmit = async (data: ICampaignValidationSchema) => {
+    if (!selectedProduct) {
+      toast.error("select product required.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const payload: any = {
+        name: data.name,
+        description: data.description,
+        channels: data.channels,
+        discount_type: data.discount_type,
+        discount_value: data.discount_value,
+        endDate: data.endDate,
+        // images: media.images,
+        productId: selectedProduct?._id,
+        startDate: data.startDate,
+        video: media.video,
+      };
+      console.log("payload", payload);
+
+      let response: any;
+      if (campaignId) {
+        response = await updateCampaign(payload, campaignId);
+      } else {
+        response = await createCampaign(payload);
+      }
+      console.log("resposneee", response);
+
+      if (response?.status === 201 || response?.status === 200) {
+        toast.success(response?.message);
+        methods?.reset();
+        router?.push("/vendor/campaign");
+        return true;
+      }
+      throw response;
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
-  const handleDelete = (ind: number) => {
-    setVariants([...variants.filter((ele, index) => index !== ind)]);
+  const handleProductSelect = (product: IProduct) => {
+    console.log("Selected product:", product);
+    setSelectedProduct(product);
+    methods.setValue("productId", String(product._id));
+    methods.setValue("price", 100);
   };
+
+  const handleChannelChange = (channelName = "") => {
+    const channels = Array.isArray(methods.watch("channels"))
+      ? methods.watch("channels")
+      : [];
+    if (Boolean(channels?.includes(channelName))) {
+      methods.setValue(
+        "channels",
+        channels?.filter((v) => v != channelName)
+      );
+    } else {
+      methods.setValue("channels", [...channels, channelName]);
+    }
+    methods.trigger("channels");
+  };
+
+  useEffect(() => {
+    if (campaignId) {
+      (async () => {
+        const response = await getCampaign({ id: campaignId });
+        methods.setValue("name", response.name);
+        methods.setValue("description", response.description);
+        methods.setValue("channels", response.channels);
+        methods.setValue("discount_type", response.discount_type);
+        methods.setValue("discount_value", response.discount_value);
+        // methods.setValue("endDate", response.endDate);
+        // methods.setValue("startDate", response.startDate);
+        methods.setValue("productId", response.productId._id);
+        methods.setValue("price", 200);
+        setSelectedProduct(response.productId);
+        console.log("response---get", response);
+      })();
+    }
+  }, [campaignId]);
+
   return (
-    <div className="flex flex-col gap-5 h-full px-4 py-3">
-      <div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="md:text-[20px] text-base text-500">
-          {translate("Campaign_Details_Form")}
+    <FormProvider {...methods}>
+      <form
+        onSubmit={methods.handleSubmit(onSubmit)}
+        className="flex flex-col gap-5 h-full px-4 py-3"
+      >
+        {loading && <Loader />}
+        <div className="flex justify-between items-center flex-wrap gap-2">
+          <div className="md:text-[20px] text-base text-500">
+            {translate("Campaign_Details_Form")}
+          </div>
+          <div className="flex gap-[10px]">
+            <ButtonOutline
+              type="button"
+              variant="outline"
+              className="rounded-[12px]"
+            >
+              {translate("Cancel")}
+            </ButtonOutline>
+            <Button
+              type="submit"
+              className="text-white rounded-[12px] text-sm py-2"
+            >
+              {!campaignId
+                ? translate("Start_Campaign")
+                : translate("Edit_Campaign")}
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-[10px]">
-          <Button
-            variant="outline"
-            className="md:w-[140px] rounded-[12px] md:h-10 h-8 md:text-[20px] text-xs "
-          >
-            {translate("Cancel")}
-          </Button>
-          <Button
-            variant="secondary"
-            className="text-white md:w-[140px] rounded-[12px] md:h-10 h-8 md:text-[20px] text-xs"
-          >
-            {translate("Start_Campaign")}
-          </Button>
-        </div>
-      </div>
-      <div className="flex flex-col lg:flex-row gap-5 w-full">
-        <div className="flex flex-col lg:w-3/4 gap-5">
-          <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
-            <div className="text-[16px]">
-              {translate("General_Information")}
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[12px] text-[#7E7E80]">
-                {translate("Campaign_Name")}
-              </label>
-              <Input
-                className="placeholder:md:text-sm text-xs"
-                name="campaignName"
-                placeholder={`${translate("Type_campaign_name_here...")}`}
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[12px] text-[#7E7E80]">
-                {translate("Description")}
-              </label>
-              <Textarea
-                className="placeholder:md:text-sm text-xs"
-                placeholder={translate("Type_campaign_description_here...")}
-                rows={5}
-              />
-            </div>
-            <div className="flex flex-col lg:flex-row gap-2">
-              <div className="flex flex-col w-full lg:w-1/2 gap-1">
-                <label className="text-[12px] text-[#7E7E80]">
-                  {translate("Campaign_Start_Date")}
-                </label>
-                <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder={translate("Select_date")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Tags</SelectLabel>
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="blueberry">Blueberry</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+        <div className="flex flex-col lg:flex-row gap-5 w-full">
+          <div className="flex flex-col gap-5 w-full">
+            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
+              <div className="text-[16px]">
+                {translate("General_Information")}
               </div>
-              <div className="flex flex-col w-full lg:w-1/2 gap-1">
-                <label className="text-[12px] text-[#7E7E80]">
-                  {translate("Campaign_End_Date")}
-                </label>
+              <div className="flex flex-col gap-1">
                 <Input
-                  placeholder={translate("Select_date")}
-                  className="placeholder:md:text-sm text-xs"
+                  name="name"
+                  placeholder={`${translate("Type_campaign_name_here")}`}
+                  label={`${translate("Campaign_Name")}`}
                 />
               </div>
+              <div className="flex flex-col gap-1">
+                <Input
+                  type="textarea"
+                  placeholder={translate("Type_campaign_description_here")}
+                  label={translate("Description")}
+                  name="description"
+                  rows={5}
+                />
+              </div>
+              <div className="flex flex-col lg:flex-row gap-2">
+                <div className="flex flex-col w-full lg:w-1/2 gap-1">
+                  <Input
+                    name="startDate"
+                    type="date"
+                    placeholder={translate("Select_date")}
+                    label={translate("Campaign_Start_Date")}
+                  />
+                </div>
+                <div className="flex flex-col w-full lg:w-1/2 gap-1">
+                  <Input
+                    name="endDate"
+                    type="date"
+                    placeholder={translate("Select_date")}
+                    label={translate("Campaign_End_Date")}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
-            <div className="text-[16px]">{translate("Product_Selection")}</div>
-            <div className="flex flex-col lg:flex-row gap-2">
-              <div className="flex flex-col w-full lg:w-1/2 gap-1">
-                <label className="text-[12px] text-[#7E7E80]">
-                  {translate("Product_SKUs_on_Our_Site")}
-                </label>
-                <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue
-                      placeholder={translate("Select_a_product_SKU")}
+            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
+              <div className="text-[16px]">{translate("Product_Media")}</div>
+              <div className="flex flex-col lg:flex-row gap-2">
+                <div className="flex flex-col w-full gap-1">
+                  <MediaUploader onMediaChange={setMedia} />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
+              <div className="text-[16px]">
+                {translate("Product_Selection")}
+              </div>
+              <div className="flex flex-col lg:flex-row gap-2">
+                <div className="flex flex-col w-full gap-1">
+                  <ProductSelectDropdown
+                    onSelect={handleProductSelect}
+                    selectedProduct={selectedProduct}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
+              <div className="text-[16px]">
+                {translate("Campaign_Channels")}{" "}
+              </div>
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="flex gap-1">
+                  <Input
+                    name="channels"
+                    type="checkbox"
+                    placeholder={translate("Add_link")}
+                    label={translate("Instagram")}
+                    checked={Boolean(
+                      methods.watch("channels")?.includes("instagram")
+                    )}
+                    onChange={(v) => {
+                      handleChannelChange("instagram");
+                    }}
+                  />
+                </div>
+                <div className="flex gap-1">
+                  <Input
+                    name="chanls"
+                    type="checkbox"
+                    placeholder={translate("Add_link")}
+                    label={translate("You_tube")}
+                    checked={Boolean(
+                      methods.watch("channels")?.includes("youtube")
+                    )}
+                    onChange={(v) => {
+                      handleChannelChange("youtube");
+                    }}
+                  />
+                </div>
+                <div className="flex gap-1">
+                  <Input
+                    name="cha"
+                    type="checkbox"
+                    placeholder={translate("Add_link")}
+                    label={translate("Facebook")}
+                    checked={Boolean(
+                      methods.watch("channels")?.includes("facebook")
+                    )}
+                    onChange={(v) => {
+                      handleChannelChange("facebook");
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2 mb-4">
+              <div className="text-[16px]">
+                {translate("Discount/Price Range")}
+              </div>
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col md:flex-row gap-2">
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="price"
+                      type="number"
+                      placeholder={"10"}
+                      label={translate("Price")}
                     />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Tags</SelectLabel>
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="blueberry">Blueberry</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col w-full lg:w-1/2 gap-1">
-                <label className="text-[12px] text-[#7E7E80]">
-                  {translate("Product_SKUs_on_ Brand_Website")}
-                </label>
-                <Input
-                  className="placeholder:md:text-sm text-xs"
-                  placeholder={translate("Type_product_SKU_on_brand_website")}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[12px] text-[#7E7E80]">
-                {translate("Product_Links")}
-              </label>
-              <Input
-                className="placeholder:md:text-sm text-xs"
-                placeholder={translate("Add_product_link...")}
-              />
-            </div>
-            <div className="flex">
-              <Button variant="outline" onClick={handleAddVariant}>
-                <FaPlus /> {translate("Add_another_product_link")}
-              </Button>
-            </div>
-          </div>
-          <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
-            <div className="text-[16px]">{translate("Campaign_Channels")} </div>
-            <div className="flex flex-col md:flex-row gap-2">
-              <div className="flex flex-col w-full md:w-1/3 gap-1">
-                <label className="text-[12px] text-[#7E7E80]">
-                  {translate("Instagram")}
-                </label>
-                <Input
-                  placeholder={translate("Add_link...")}
-                  className="placeholder:md:text-sm text-xs"
-                />
-              </div>
-              <div className="flex flex-col w-full md:w-1/3 gap-1">
-                <label className="text-[12px] text-[#7E7E80]">
-                  {translate("You_tube")}
-                </label>
-                <Input
-                  placeholder={translate("Add_link...")}
-                  className="placeholder:md:text-sm text-xs"
-                />
-              </div>
-              <div className="flex flex-col w-full md:w-1/3 gap-1">
-                <label className="text-[12px] text-[#7E7E80]">
-                  {translate("Facebook")}
-                </label>
-                <Input
-                  placeholder={translate("Add_link...")}
-                  className="placeholder:md:text-sm text-xs"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2 mb-4">
-            <div className="text-[16px]">
-              {translate("Discount/Price Range")}
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col md:flex-row gap-2">
-                <div className="flex flex-col w-full md:w-1/2 gap-1">
-                  <label className="text-[12px] text-[#7E7E80]">
-                    {translate("Base_Price")}
-                  </label>
-                  <Input
-                    placeholder={translate("Type_base_price_here...")}
-                    className="placeholder:md:text-sm text-xs"
-                  />
-                </div>
-                <div className="flex flex-col w-full md:w-1/2 gap-1">
-                  <label className="text-[12px] text-[#7E7E80]">
-                    {translate("Discount_Percentage_Doller")}
-                  </label>
-                  <Input
-                    placeholder={translate("Type_discount_percentage...")}
-                    className="placeholder:md:text-sm text-xs"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col md:flex-row gap-2">
-                <div className="flex flex-col w-full md:w-1/2 gap-1">
-                  <label className="text-[12px] text-[#7E7E80]">
-                    {translate("Min._price_range")}
-                  </label>
-                  <Input
-                    placeholder={translate("Type_min_price...")}
-                    className="placeholder:md:text-sm text-xs"
-                  />
-                </div>
-                <div className="flex flex-col w-full md:w-1/2 gap-1">
-                  <label className="text-[12px] text-[#7E7E80]">
-                    {translate("Max._price_range")}
-                  </label>
-                  <Input
-                    placeholder={translate("Type_max_price...")}
-                    className="placeholder:md:text-sm text-xs"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col md:flex-row gap-2">
-                <div className="flex flex-col w-full md:w-1/2 gap-1">
-                  <label className="text-[12px] text-[#7E7E80]">
-                    {translate("Negotiated_Price")}
-                  </label>
-                  <Input
-                    placeholder={translate("Type_negotiated_Price...")}
-                    className="placeholder:md:text-sm text-xs"
-                  />
-                </div>
-                <div className="flex flex-col w-full md:w-1/2 gap-1">
-                  <label className="text-[12px] text-[#7E7E80]">
-                    {translate("Max._price_range")}
-                  </label>
-                  <Input
-                    placeholder={translate("Type_max_price...")}
-                    className="placeholder:md:text-sm text-xs"
-                  />
+                  </div>
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="discount_type"
+                      type="select"
+                      placeholder={translate("Select_Discount_Type")}
+                      label={translate("Discount_Type")}
+                      options={[
+                        {
+                          label: "Amount",
+                          value: "FIXED_AMOUNT",
+                        },
+                        {
+                          label: "Percentage",
+                          value: "PERCENTAGE",
+                        },
+                      ]}
+                    />
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="discount_value"
+                      type="number"
+                      placeholder={"10"}
+                      label={translate("Discount")}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col lg:w-1/4">
-          <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
-            <div className="text-[16px]">{translate("Category")}</div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[12px] text-[#7E7E80]">
-                {translate("Product_Category")}
-              </label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder={translate("Select_a_category")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Categories</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[12px] text-[#7E7E80]">
-                {translate("Product_Tags")}
-              </label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder={translate("Select_tags")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Tags</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      </form>
+    </FormProvider>
   );
 }

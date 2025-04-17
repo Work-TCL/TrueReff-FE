@@ -561,3 +561,65 @@ export const creatorProfileUpdateSchema = Yup.object().shape({
 
 export interface ICreatorProfileUpdateSchema
   extends Yup.Asserts<typeof creatorProfileUpdateSchema> {}
+import * as yup from "yup";
+
+export const campaignValidationSchema = yup.object().shape({
+  name: yup.string().required("Campaign name is required"),
+  description: yup.string().required("Description is required"),
+  startDate: yup
+    .date()
+    .required("Start date is required")
+    .test(
+      "is-future-date",
+      "Start date must be in the future (not today)",
+      (value) => {
+        if (!value) return false;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return value > today;
+      }
+    ),
+
+  endDate: yup
+    .date()
+    .required("End date is required")
+    .when("startDate", ([startDate], schema) => {
+      return schema.test(
+        "is-after-start",
+        "End date must be after start date",
+        (endDate) => {
+          if (!startDate || !endDate) return false;
+          return new Date(endDate) > new Date(startDate);
+        }
+      );
+    }),
+
+  productId: yup.string().required("Product is required"),
+
+  channels: yup
+    .array()
+    .min(1, "At least one channel is required")
+    .required("Channels are required"),
+
+  discount_type: yup
+    .string()
+    .oneOf(
+      ["FIXED_AMOUNT", "PERCENTAGE"],
+      "Discount type must be either FIXED_AMOUNT or PERCENTAGE"
+    )
+    .required("Discount type is required"),
+
+  discount_value: yup
+    .number()
+    .typeError("Discount value is required")
+    .required("Discount value is required")
+    .moreThan(0, "Discount value must be greater than 0"),
+  price: yup
+    .number()
+    .typeError("Discount value is required")
+    .required("Discount value is required")
+    .moreThan(0, "Discount value must be greater than 0"),
+});
+
+export interface ICampaignValidationSchema
+  extends Yup.Asserts<typeof campaignValidationSchema> {}

@@ -3,11 +3,21 @@ import React from "react";
 
 interface IProps {
   isTransparent?: boolean;
+  fixed?: boolean;
+  small?: boolean;
 }
 
-export default function Loader({ isTransparent = false }: IProps) {
+export default function Loader({
+  isTransparent = false,
+  fixed = true,
+  small = false,
+}: IProps) {
   return (
-    <div className="fixed top-0 bottom-0 right-0 left-0 bg-white/50 z-[999] flex justify-center items-center">
+    <div
+      className={`${fixed ? "fixed top-0 bottom-0 right-0 left-0" : ""} ${
+        small ? "scale-75" : ""
+      } bg-white/50 z-[999] flex justify-center items-center`}
+    >
       <div className="w-fit h-fit">
         <svg
           aria-hidden="true"
