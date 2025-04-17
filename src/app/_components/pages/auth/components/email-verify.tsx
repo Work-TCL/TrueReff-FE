@@ -47,21 +47,21 @@ export default function EmailVerifyOTPForm() {
     setLoading(true);
     try {
       const response = await verifyEmail({
-                    email: email,
-                    otpCode: data?.otpCode,
-                  });
-                  const userData = response?.data;
-        const result = await signIn("credentials", {
-          redirect: false,
-          username: email,
-          otp:data?.otpCode,
-          // Optional: Pass additional fields to "authorize"
-          userData: JSON.stringify(userData), // send everything you want stored
-        });
+        email: email,
+        otpCode: data?.otpCode,
+      });
+      const userData = response?.data;
+      const result = await signIn("credentials", {
+        redirect: false,
+        username: email,
+        otp: data?.otpCode,
+        // Optional: Pass additional fields to "authorize"
+        userData: JSON.stringify(userData), // send everything you want stored
+      });
       if (result?.status === 200 || result?.status === 201) {
         toast.success("Email Verified Successfully.");
         methods.reset();
-        router.push("/dashboard");        
+        router.push("/dashboard");
         return;
       }
 

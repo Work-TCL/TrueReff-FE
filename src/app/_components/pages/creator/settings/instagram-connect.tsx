@@ -9,6 +9,7 @@ import {
   IGetYTConnectChannelResponse,
 } from "@/lib/types-api/creator";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
+import { translate } from "@/lib/utils/translate";
 import {
   connectYoutubeChannel,
   getConnectedChannel,
@@ -120,7 +121,7 @@ export default function ChannelsConnect() {
                 width={40}
                 height={40}
               />
-              <div>Instagram</div>
+              <div>{translate("Instagram")}</div>
             </div>
           </div>
           <div className="col-span-2 lg:col-span-1">
@@ -175,7 +176,7 @@ export default function ChannelsConnect() {
                 width={40}
                 height={40}
               />
-              <div>Youtube</div>
+              <div>{translate("You_tube")}</div>
             </div>
           </div>
           <div className="col-span-2 lg:col-span-1">

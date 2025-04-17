@@ -123,7 +123,7 @@ export default function BrandList() {
       ) : brands?.length > 0 ? (
         <>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
+          <div className="grid 1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
             {brands.map((brand: any) => (
               <BrandCard key={brand.id} {...brand} />
             ))}

@@ -1,5 +1,6 @@
 "use client";
 
+import { translate } from "@/lib/utils/translate";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
@@ -14,7 +15,7 @@ const TopViewAcrossPlatforms: React.FC = () => {
   return (
     <div className="w-full p-5 bg-white rounded-xl h-full">
       <h2 className="sm:text-xl text-base font-semibold text-gray-900 whitespace-nowrap">
-        Top Views across Platforms
+        {translate("Top_Views_across_Platforms")}
       </h2>
       <div className="flex sm:flex-row flex-col items-center gap-3 h-full lg:pt-0 pt-2">
         <div className="relative h-[200px] flex justify-center items-center flex-1">

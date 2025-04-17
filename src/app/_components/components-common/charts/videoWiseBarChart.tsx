@@ -58,7 +58,9 @@ const VideoWiseRevenueChart = () => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-md w-full">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-semibold">Video-Wise Revenue</h3>
+        <h3 className="text-lg font-semibold">
+          {translate("Video_Wise_Revenue")}
+        </h3>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="text-gray-700 bg-gray-100 px-3 py-0 text-sm rounded-md md:h-10 h-8">

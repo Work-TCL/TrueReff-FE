@@ -30,7 +30,7 @@ export default function Dashboard() {
     try {
       const creator = await getCreatorProgress();
       setCreatorDetails(creator);
-    } catch (e) {}
+    } catch (e) { }
   };
   useEffect(() => {
     getCreator();

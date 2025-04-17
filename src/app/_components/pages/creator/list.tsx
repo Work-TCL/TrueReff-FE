@@ -58,10 +58,10 @@ const customStyles = {
     fontSize: "0.875rem ", // Tailwind text-sm
     color: "#a1a1aa", // Tailwind slate-400
   }),
-  control:(base:any) => ({
+  control: (base: any) => ({
     ...base,
-    width: '200px'
-  })
+    width: "200px",
+  }),
 };
 
 export default function CreatorList() {
@@ -75,18 +75,24 @@ export default function CreatorList() {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(20);
   const filterOption = [
-    {value:"",label:"Select"},
-    {value:"5",label:"Last 5 Videos"},
-    {value:"30",label:"Last 1 Month"},
-  ]
+    { value: "", label: "Select" },
+    { value: "5", label: "Last 5 Videos" },
+    { value: "30", label: "Last 1 Month" },
+  ];
 
   // Get Creator list
   const getCreatorList = useCallback(
-    async (page: number, isInternalLoader?: boolean,searchValue:string = "") => {
+    async (
+      page: number,
+      isInternalLoader?: boolean,
+      searchValue: string = ""
+    ) => {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/auth/creator/list?page=${page}&limit=${pageSize}${searchValue ? `&search=${searchValue}`:""}`
+          `/auth/creator/list?page=${page}&limit=${pageSize}${
+            searchValue ? `&search=${searchValue}` : ""
+          }`
         );
         if (response.status === 200) {
           const creatorData = response.data.data;
@@ -135,46 +141,52 @@ export default function CreatorList() {
     setCurrentPage(page);
   };
   const debouncedSearch = useCallback(
-      debounce((value: string) => {
-        getCreatorList(currentPage, true, value);
-      }, 500),
-      []
-    );
+    debounce((value: string) => {
+      getCreatorList(currentPage, true, value);
+    }, 500),
+    []
+  );
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     debouncedSearch(value);
     setSearch(value);
   };
-  const handleFilterValue = (value:any) => {
+  const handleFilterValue = (value: any) => {
     setFilter(value?.value);
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
       <div className="flex justify-between items-center flex-wrap gap-2">
-            <div className="md:text-[20px] text-base text-500">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={translate("Search_creator")}
-                className="md:h-10 h-8"
-              />
-            </div>
-            <div className="flex items-center gap-[10px]">
-            <Select
+        <div className="md:text-[20px] text-base text-500">
+          <Input
+            value={search}
+            onChange={handleSearch}
+            placeholder={translate("Search_creator")}
+            className="md:h-10 h-8"
+          />
+        </div>
+        <div className="flex items-center gap-[10px]">
+          <Select
             styles={customStyles}
-            value={[{ value: filter, label: filter?filterOption.find(ele => ele?.value === filter)?.label:"Select Status" }]}
+            value={[
+              {
+                value: filter,
+                label: filter
+                  ? filterOption.find((ele) => ele?.value === filter)?.label
+                  : "Select Status",
+              },
+            ]}
             onChange={handleFilterValue}
             options={filterOption}
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder="Select Status"
           />
-            </div>
-          </div>
+        </div>
+      </div>
       {loading ? (
         <Loading />
       ) : creators?.length > 0 ? (
         <>
-          
           <CreatorTable
             data={creators}
             filter={filter}

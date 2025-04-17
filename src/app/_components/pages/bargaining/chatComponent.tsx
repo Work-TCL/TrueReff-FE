@@ -12,6 +12,7 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useVendorStore } from "@/lib/store/vendor";
 import { useParams } from "next/navigation";
+import { translate } from "@/lib/utils/translate";
 
 export default function ChatComponent({
   collaborationData,
@@ -20,7 +21,7 @@ export default function ChatComponent({
 }) {
   const params = useParams();
   const loadingRef = useRef<HTMLDivElement | null>(null);
-  const collaborationId:any = params?.collaborationId;
+  const collaborationId: any = params?.collaborationId;
   const [message, setMessage] = useState("");
   const { account: user } = useAuthStore();
   const { creator } = useCreatorStore();
@@ -42,27 +43,32 @@ export default function ChatComponent({
     collaborationId && socketService.joinCollaboration(collaborationId);
     socketService.joinedCollaborationRoom((data) => {});
     socketService.joinedCollaborationMessages((data) => {
-      setMessages((prev) => [data.message,...prev]);
+      setMessages((prev) => [data.message, ...prev]);
     });
 
     return () => {
       socketService.disconnect();
     };
   }, [creator.creatorId, vendor.vendorId, collaborationId]);
-  const fetchCollaborationConversions = async (page:number,isLoadMore: boolean = false) => {
+  const fetchCollaborationConversions = async (
+    page: number,
+    isLoadMore: boolean = false
+  ) => {
     if (!hasMore || isLoading) return;
     isLoadMore ? setLoading(true) : setIsLoading(true);
-  
+
     try {
       const conversations: any = await getCollobrationConversation(
         collaborationId,
         20,
         page
       );
-  
+
       if (conversations?.data?.length > 0) {
         setMessages((prev) => [...prev, ...conversations.data]);
-        setHasMore((messages.length + conversations.data.length) < conversations.total);
+        setHasMore(
+          messages.length + conversations.data.length < conversations.total
+        );
         setIsLoading(false);
         setLoading(false);
       } else {
@@ -74,7 +80,7 @@ export default function ChatComponent({
       console.error("Failed to fetch messages:", error);
     } finally {
       setIsLoading(false);
-      setLoading(false)
+      setLoading(false);
     }
   };
   const sendMessage = () => {
@@ -89,33 +95,37 @@ export default function ChatComponent({
     }
   };
   const getUserName = () => {
-    return user?.role !== "creator" ? collaborationData.creatorId?.user_name : collaborationData.vendorId?.business_name;
+    return user?.role !== "creator"
+      ? collaborationData.creatorId?.user_name
+      : collaborationData.vendorId?.business_name;
   };
   const getProfile = () => {
-    return user?.role !== "creator" ? collaborationData.creatorId?.profile_image : collaborationData.vendorId?.profile_image;
-  }
+    return user?.role !== "creator"
+      ? collaborationData.creatorId?.profile_image
+      : collaborationData.vendorId?.profile_image;
+  };
   useEffect(() => {
-    fetchCollaborationConversions(currentPage,true);
-  },[currentPage])
+    fetchCollaborationConversions(currentPage, true);
+  }, [currentPage]);
 
   useEffect(() => {
     if (!hasMore) return;
-  
+
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting && !isLoading) {
-          setCurrentPage(prev => prev + 1)
+          setCurrentPage((prev) => prev + 1);
         }
       },
-      { root: null, rootMargin: '0px', threshold: 1.0 }
+      { root: null, rootMargin: "0px", threshold: 1.0 }
     );
-  
+
     const currentRef = loadingRef.current;
     if (currentRef) {
       observer.observe(currentRef);
     }
-  
+
     return () => {
       if (currentRef) {
         observer.unobserve(currentRef);
@@ -127,10 +137,15 @@ export default function ChatComponent({
     <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden flex flex-col md:h-full h-[80vh] md:sticky md:top-0">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
         <Avatar>
-          {(collaborationData.creatorId?.profile_image || collaborationData.vendorId?.profile_image) ? <AvatarImage
-            src={getProfile()}
-            className="rounded-full border border-border"
-          /> : <CircleUserRound className="w-8 h-8" color="#EB815B"/>}
+          {collaborationData.creatorId?.profile_image ||
+          collaborationData.vendorId?.profile_image ? (
+            <AvatarImage
+              src={getProfile()}
+              className="rounded-full border border-border"
+            />
+          ) : (
+            <CircleUserRound className="w-8 h-8" color="#EB815B" />
+          )}
         </Avatar>
         <div>
           <p className="font-medium text-text md:text-lg text-base">
@@ -143,7 +158,9 @@ export default function ChatComponent({
       <CardContent className="flex flex-col-reverse overflow-y-auto gap-3 h-full">
         {/* {isLoading && <Loading />} */}
         {!isLoading && message?.length < 0 && (
-          <p className="opacity-50 text-center">Start your chat now.</p>
+          <p className="opacity-50 text-center">
+            {translate("Start_your_chat_now")}
+          </p>
         )}
         {!isLoading &&
           messages.map((msg: any, idx) => {
@@ -165,7 +182,11 @@ export default function ChatComponent({
                   {!owner && (
                     <Avatar>
                       <AvatarImage
-                        src={user?.role === 'creator' ? collaborationData.vendorId?.profile_image : collaborationData.creatorId?.profile_image}
+                        src={
+                          user?.role === "creator"
+                            ? collaborationData.vendorId?.profile_image
+                            : collaborationData.creatorId?.profile_image
+                        }
                         className="rounded-full border border-border md:size-8 size-6 "
                       />
                     </Avatar>
@@ -192,7 +213,11 @@ export default function ChatComponent({
                 {owner && (
                   <Avatar>
                     <AvatarImage
-                      src={user?.role === 'creator' ? collaborationData.creatorId?.profile_image : collaborationData.vendorId?.profile_image}
+                      src={
+                        user?.role === "creator"
+                          ? collaborationData.creatorId?.profile_image
+                          : collaborationData.vendorId?.profile_image
+                      }
                       className="rounded-full border border-border md:size-8 size-6"
                     />
                   </Avatar>
@@ -200,7 +225,14 @@ export default function ChatComponent({
               </div>
             );
           })}
-          {hasMore && <div className="flex justify-center py-2 text-gray-400" ref={loadingRef}><LoaderCircle className="animate-spin" color="#ff4979" size={40} /></div>}
+        {hasMore && (
+          <div
+            className="flex justify-center py-2 text-gray-400"
+            ref={loadingRef}
+          >
+            <LoaderCircle className="animate-spin" color="#ff4979" size={40} />
+          </div>
+        )}
       </CardContent>
       <div className="flex gap-2 items-center border-t pt-3">
         <Input

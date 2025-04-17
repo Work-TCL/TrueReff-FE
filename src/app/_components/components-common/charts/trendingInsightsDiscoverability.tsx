@@ -1,5 +1,6 @@
 "use client";
 
+import { translate } from "@/lib/utils/translate";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
@@ -14,8 +15,7 @@ const TrendingInsightsDiscoverability: React.FC = () => {
   return (
     <div className="w-full p-5 bg-white rounded-lg shadow-sm ">
       <h2 className="md:text-xl text-base font-semibold text-gray-900 whitespace-nowrap mb-4">
-        {" "}
-        Trending Insights & Discoverability
+        {translate("Trending_Insights_Discoverability")}
       </h2>
       <div className="flex sm:flex-row flex-col items-center gap-3 h-full">
         <div className="relative h-[160px] flex justify-center items-center flex-1">
