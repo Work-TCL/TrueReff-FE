@@ -1,23 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { translate } from "../../../../../../lib/utils/translate";
-import { IoLogOutOutline } from "react-icons/io5";
-import Link from "next/link";
-import { CircleUserRound, Menu } from "lucide-react";
-import toast from "react-hot-toast";
+
 import socketService from "@/lib/services/socket-service";
-import { useAuthStore } from "@/lib/store/auth-user";
-import { useVendorStore } from "@/lib/store/vendor";
 import { useCreatorStore } from "@/lib/store/creator";
+import { useVendorStore } from "@/lib/store/vendor";
+import { translate } from "@/lib/utils/translate";
 import axios from "@/lib/web-api/axios";
-import NotificationPopover from "./notificationPopover";
-interface IPageName {
-  [key: string]: string;
-}
-interface IHeaderProps {
-  handleExpandSidebar?: () => void;
-}
+import { Info, LoaderCircle } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 interface INotification {
   _id: string;
@@ -27,6 +18,7 @@ interface INotification {
   createdAt: string;
   updatedAt: string;
 }
+
 function formatTimeAgo(date: string) {
   const now: any = new Date();
   const past: any = new Date(date);
@@ -54,9 +46,7 @@ function formatTimeAgo(date: string) {
       .replace(",", ""); // Show full date & time after 2 hours
   }
 }
-export default function Header({ handleExpandSidebar }: IHeaderProps) {
-  const pathName = usePathname();
-  const { account } = useAuthStore();
+export default function Notification() {
   const { vendor } = useVendorStore();
   const { creator } = useCreatorStore();
   const [loading, setLoading] = useState<boolean>(false);
@@ -64,28 +54,39 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const [page, setPage] = useState<number>(1);
   const [unreadNotifications, setUnReadNotifications] = useState<number>(0);
   const [totalNotification, setTotalNotification] = useState<number>(0);
-  const pageLimit: number = 10;
-  const pageNames: IPageName = {
-    "/vendor/dashboard": translate("Overview"),
-    "/vendor/products/add": translate("Add_New_Product"),
-    "/vendor/products": translate("Product_Lists"),
-    "/vendor/products/view": translate("View_Product"),
-    "/vendor/products/channels": translate("Channels"),
-    "/vendor/creator": translate("Creators"),
-    "/vendor/creator/details": translate("Creator_Details"),
-    "/vendor/campaign/add": translate("Add_New_Campaign"),
-    "/vendor/campaign": translate("Campaign_List"),
-    "/vendor/settings": translate("Settings"),
-    "/creator/dashboard": translate("Overview"),
-    "/creator/my-store/store-setup": translate("Store_set_up"),
-    "/creator/my-store": translate("Product_List"),
-    "/creator/product-management": translate("Product_Management"),
-    "/creator/creator_analysis": translate("Creator_Analysis"),
-    "/creator/payment-earnings": translate("Payment_Earnings"),
-    "/creator/brandsList": translate("Brands_List"),
-  };
+  const pageLimit: number = 20;
+  const pathName = usePathname();
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const loadingRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !isLoading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { root: null, rootMargin: "0px", threshold: 1.0 }
+    );
+
+    const currentRef = loadingRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [loadingRef, hasMore, isLoading]);
+
   const fetchNotifications = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `/message/notification/list?limit=${pageLimit}&page=${page}`
@@ -94,7 +95,15 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         const notificationRes: any = response?.data;
         setUnReadNotifications(notificationRes?.unreadCount);
         setTotalNotification(notificationRes?.total);
-        setNotifications([...notificationRes?.data]);
+
+        setNotifications((prev) =>
+          page === 1
+            ? [...notificationRes?.data]
+            : [...prev, ...notificationRes?.data]
+        );
+
+        // Check if there's more to load
+        setHasMore(notificationRes?.data.length === pageLimit);
       } else {
         setUnReadNotifications(0);
         setTotalNotification(0);
@@ -106,16 +115,17 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       setTotalNotification(0);
       setNotifications([]);
     } finally {
+      setIsLoading(false);
       setLoading(false);
     }
   };
 
+  console.log("pathName", pathName);
   useEffect(() => {
     if (pathName !== "/dashboard") {
       fetchNotifications();
     }
   }, []);
-
   useEffect(() => {
     socketService.connect();
     if (creator.creatorId || vendor.vendorId) {
@@ -174,57 +184,57 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   };
 
   return (
-    <header className="bg-white px-3 py-3 flex items-center gap-1">
-      <Menu
-        className="size-5 shrink-0 cursor-pointer lg:hidden"
-        onClick={handleExpandSidebar}
-      />
-      <h2 className="md:text-2xl text-lg font-medium text-gray-black">
-        {pageNames[pathName]}
-      </h2>
-      {pathName !== "/dashboard" && (
-        <div className="ml-auto flex items-center md:gap-3 gap-2">
-          <NotificationPopover
-            notifications={notifications}
-            unreadNotifications={unreadNotifications}
-            fetchNotifications={fetchNotifications}
-            readNotifications={readNotifications}
-            formatTimeAgo={formatTimeAgo}
-          />
-          <Link
-            href={
-              creator.creatorId
-                ? `/creator/profile/${creator.creatorId}`
-                : `/vendor/profile/${vendor?.vendorId}`
-            }
-            className="flex gap-3 items-center w-fit"
-          >
-            <div
-              className="w-8 h-8 bg-background rounded-full bg-cover bg-center"
-              style={{
-                backgroundImage:
-                  creator.profile_image || vendor.profile_image
-                    ? `url(${creator.profile_image || vendor.profile_image})`
-                    : undefined,
-              }}
-            >
-              {!(creator.profile_image || vendor.profile_image) && (
-                <CircleUserRound className="w-8 h-8" color="#EB815B" />
-              )}
-            </div>
-            <p className="text-gray-black md:text-base text-sm md:block hidden">
-              {creator.full_name || vendor.business_name}
-            </p>
-          </Link>
-        </div>
-      )}
-      <div
-        className={pathName === "/dashboard" ? "flex justify-end w-full" : ""}
-      >
-        <Link href="?auth=logout" className="mx-4 block">
-          <IoLogOutOutline className="text-2xl text-primary" />
-        </Link>
+    <div className="flex flex-col md:p-6 p-4 md:gap-6 gap-4 h-full">
+      <div className="p-4 bg-white rounded-[20px] h-full">
+        {!isLoading && notifications.length === 0 ? (
+          <EmptyPlaceHolder />
+        ) : (
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-semibold mb-2">Notifications</h2>
+            {notifications.map((notification) => (
+              <div
+                key={notification._id}
+                className={`p-3 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 transition-all cursor-pointer hover:scale-[1.01] hover:shadow-md ${
+                  !notification.read ? "font-semibold" : "font-normal"
+                }`}
+                onClick={() =>
+                  !notification.read && readNotifications(notification._id)
+                }
+              >
+                <p className="text-sm text-gray-800">{notification.message}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {formatTimeAgo(notification.createdAt)}
+                </p>
+              </div>
+            ))}
+            {hasMore && (
+              <div
+                className="flex justify-center py-2 text-gray-400"
+                ref={loadingRef}
+              >
+                <LoaderCircle
+                  className="animate-spin"
+                  color="#ff4979"
+                  size={40}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </div>
-    </header>
+    </div>
+  );
+}
+export function EmptyPlaceHolder() {
+  return (
+    <div className="flex items-center justify-center flex-col flex-1 col-span-full text-center h-full text-gray-500 p-4 bg-white ">
+      <Info className="mx-auto mb-2 text-gray-400" />
+      <h2 className="text-lg font-semibold">{translate("No Notifications")}</h2>
+      <p className="text-sm">
+        {translate(
+          "  You're all caught up! You’ll see notifications here when there’s something new"
+        )}
+      </p>
+    </div>
   );
 }
