@@ -1,6 +1,7 @@
 "use client";
 import { IChannel } from "@/lib/types-api/vendor";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 interface IChannelCard {
@@ -19,6 +20,7 @@ export default function ChannelCard({
   channelConfig,
   href = "",
 }: IChannelCard) {
+  const router = useRouter();
   const headerContent = () => (
     <div className="flex items-center gap-4">
       <span className="text-sm xl:text-lg font-semibold">{channelType}</span>
@@ -30,28 +32,41 @@ export default function ChannelCard({
 
   const bodyContent = () => (
     <div className="flex flex-col text-[14px] xl:text-[16px] text-gray-500">
-      <Link
-        href={`https://${channelConfig?.domain}`}
-        target="_blank"
-        className="text-sm hover:underline hover:text-blue-600"
+      <div
+        onClick={(e) => {
+          e.stopPropagation(); // 🔥 Prevents parent onClick
+
+          typeof window !== undefined &&
+            window.open(
+              `https://${channelConfig?.domain}`,
+              "_blank",
+              "noopener,noreferrer"
+            );
+        }}
+        className="text-sm hover:underline hover:text-blue-600 cursor-pointer"
       >
         {channelConfig?.domain}
-      </Link>
+      </div>
       <span className="text-base pt-1">{channelConfig?.name}</span>
     </div>
   );
 
   return href ? (
-    <Link
-      href={href}
+    <div
+      onClick={() => {
+        router?.push(href);
+      }}
       key={channelType}
-      className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3 bg-white"
+      className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3 bg-white cursor-pointer"
     >
       {headerContent()}
       {bodyContent()}
-    </Link>
+    </div>
   ) : (
-    <div key={channelType} className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3 bg-white">
+    <div
+      key={channelType}
+      className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3 bg-white"
+    >
       {headerContent()}
       {bodyContent()}
     </div>

@@ -32,7 +32,9 @@ export const getProductLists = async (
 ): Promise<IGETProductListsResponse> => {
   try {
     const response = await axios.get(
-      `/product/vendor-product/product/list?page=${params.start}&limit=${params.limit}`
+      `/product/vendor-product/product/list?page=${params.start}&limit=${
+        params.limit
+      }${params.search ? `&search=${params.search}` : ""}`
     );
     return response?.data?.data;
   } catch (error: unknown) {

@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/app/_components/ui/button";
+import { Button as ButtonOutline } from "@/components/ui/button";
 import Input from "@/app/_components/ui/form/Input";
 import { translate } from "@/lib/utils/translate";
 import React from "react";
@@ -71,7 +71,7 @@ export default function BasicInfoForm({
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
         <div className="text-sm">{translate("Profile_Image")}</div>
         <div className="flex justify-center items-center border rounded-lg p-5">
-          <div className="flex flex-col w-full gap-4">
+          <div className="flex flex-col w-full gap-4 relative">
             <div className="flex justify-center">
               <img
                 src={profilePreview || "/assets/product/image-square.svg"}
@@ -81,11 +81,12 @@ export default function BasicInfoForm({
             <input
               type="file"
               id="profile-image"
-              className="hidden"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               accept="image/*"
-              onChange={(e) => handleImageSelect(e)}
+              onChange={(e) => handleImageSelect(e, "profile")}
             />
-            <Button
+            <ButtonOutline
+              variant="outline"
               type="button"
               className="w-full disabled:cursor-not-allowed"
               onClick={() => {
@@ -93,7 +94,7 @@ export default function BasicInfoForm({
               }}
             >
               {translate("Upload_your_photo")}
-            </Button>
+            </ButtonOutline>
           </div>
         </div>
       </div>

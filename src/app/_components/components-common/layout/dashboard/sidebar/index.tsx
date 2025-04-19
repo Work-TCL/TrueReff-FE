@@ -30,6 +30,7 @@ import {
   ToolTipProvider,
 } from "@/app/_components/ui/tooltip/customTooltip";
 import { useAuthStore } from "@/lib/store/auth-user";
+import { BsChevronDown } from "react-icons/bs";
 
 type MenuItem = {
   label: string;
@@ -64,7 +65,7 @@ const NavLink = ({
       } items-center text-[16px] cursor-pointer px-4 py-3 rounded-md text-nowrap  ${
         isActive
           ? hasSubmenu
-            ? "bg-[#FF49791A] text-black"
+            ? "bg-pink-100 text-black"
             : "bg-primary-color text-white"
           : "text-font-grey hover:bg-pink-100"
       }`;
@@ -79,11 +80,11 @@ const NavLink = ({
           <div>{label}</div>
         </div>
         <div>
-          {expended ? (
-            <ChevronUp className="ml-auto w-4 h-4" />
-          ) : (
-            <ChevronDown className="ml-auto w-4 h-4" />
-          )}
+          <BsChevronDown
+            className={`ml-auto w-5 h-5 transition-transform duration-300 ease-in-out ${
+              expended ? "rotate-180" : ""
+            }`}
+          />
         </div>
       </div>
     );
@@ -249,7 +250,15 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
           <div
             className={`p-4 pb-8 text-primary-color font-bold text-4xl text-center`}
           >
-            {!isSidebarExpanded ? <PackageOpen /> : "truereff"}
+            {!isSidebarExpanded ? (
+              <PackageOpen />
+            ) : (
+              <img
+                src="/assets/TrueReff-logo.svg"
+                alt="Logo Image"
+                className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"
+              />
+            )}
           </div>
         </div>
         <nav className="flex flex-col space-y-2 px-3 overflow-auto flex-1">
@@ -396,7 +405,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       <aside
         id="sidebar-multi-level-sidebar"
         className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-40 transition-transform ${
-          expanded ? "-translate-x-full" : ""
+          expanded ? "-translate-x-full" : "shadow-lg"
         }`}
       >
         <div className="flex justify-end  gap-10">

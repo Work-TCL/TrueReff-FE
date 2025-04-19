@@ -1,12 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 type MediaUploaderProps = {
   onMediaChange: (media: { images: File[]; video: File | null }) => void;
+  setMediaPriview: (media: { images: string[]; video: string | null }) => void;
+  mediaPreview: { images: string[]; video: string | null };
 };
 
-const MediaUploader: React.FC<MediaUploaderProps> = ({ onMediaChange }) => {
+const MediaUploader: React.FC<MediaUploaderProps> = ({
+  onMediaChange,
+  mediaPreview,
+  setMediaPriview,
+}) => {
   const [images, setImages] = useState<File[]>([]);
   const [video, setVideo] = useState<File | null>(null);
 
@@ -25,8 +31,18 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ onMediaChange }) => {
       return true;
     });
 
-    const totalImages = [...images, ...validImages].slice(0, 3);
-    if (totalImages.length > 3) {
+    // how many are already on the server / in the preview
+    const existingCount = mediaPreview.images.length; // e.g. 2
+    const maxTotal = 3;
+
+    // how many more we’re allowed to add
+    const availableSlots = maxTotal - existingCount; // e.g. 1
+
+    // combine your new files (from file input + any validated ones)
+    const pending = [...images, ...validImages]; // e.g. 2 new selects
+
+    const totalImages = pending.slice(0, availableSlots);
+    if (availableSlots < pending.length || pending.length > 3) {
       toast.error("You can only upload up to 3 images");
     }
 
@@ -35,6 +51,11 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ onMediaChange }) => {
   };
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (mediaPreview.video) {
+      toast.error("You can only upload 1 video");
+      return;
+    }
+
     const file = e.target.files?.[0];
 
     if (!file) return;
@@ -54,11 +75,27 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ onMediaChange }) => {
     setImages(updated);
     onMediaChange({ images: updated, video });
   };
+  const removeFromS3 = (index: number) => {
+    const updated = [...mediaPreview.images];
+    updated.splice(index, 1);
+    setMediaPriview({ images: updated, video: mediaPreview.video });
+  };
+  const removeVideoFromS3 = () => {
+    setMediaPriview({ images: mediaPreview.images, video: null });
+  };
 
   const removeVideo = () => {
     setVideo(null);
     onMediaChange({ images, video: null });
   };
+
+  const videoPreviewUrl = useMemo(() => {
+    return video ? URL.createObjectURL(video) : null;
+  }, [video]);
+
+  const imagePreviewUrls = useMemo(() => {
+    return images.map((img) => URL.createObjectURL(img));
+  }, [images]);
 
   return (
     <div className="space-y-4">
@@ -96,13 +133,31 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ onMediaChange }) => {
           </div>
         </div>
         <div className="flex gap-3 mt-2 flex-wrap">
-          {images.map((img, i) => (
+          {mediaPreview.images.map((img, i) => (
             <div
               key={i}
               className="relative w-24 h-24 hover:bg-gray-100 cursor-pointer"
             >
               <img
-                src={URL.createObjectURL(img)}
+                src={img}
+                alt={`preview-${i}`}
+                className="w-full h-full object-cover rounded"
+              />
+              <button
+                onClick={() => removeFromS3(i)}
+                className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          {imagePreviewUrls.map((img, i) => (
+            <div
+              key={i}
+              className="relative w-24 h-24 hover:bg-gray-100 cursor-pointer"
+            >
+              <img
+                src={img}
                 alt={`preview-${i}`}
                 className="w-full h-full object-cover rounded"
               />
@@ -147,10 +202,25 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ onMediaChange }) => {
             <span className="text-xs text-gray-400">(MP4, Max 20MB)</span>
           </div>
         </div>
-        {video && (
+        {mediaPreview.video && (
           <div className="relative mt-2 hover:bg-gray-100 cursor-pointer w-fit">
             <video
-              src={URL.createObjectURL(video)}
+              src={mediaPreview.video}
+              controls
+              className="w-64 max-h-40 rounded"
+            />
+            <button
+              onClick={removeVideoFromS3}
+              className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+            >
+              ×
+            </button>
+          </div>
+        )}
+        {videoPreviewUrl && (
+          <div className="relative mt-2 hover:bg-gray-100 cursor-pointer w-fit">
+            <video
+              src={videoPreviewUrl}
               controls
               className="w-64 max-h-40 rounded"
             />

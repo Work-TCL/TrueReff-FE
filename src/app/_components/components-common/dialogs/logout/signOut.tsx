@@ -1,17 +1,16 @@
 "use client";
 import Button from "@/app/_components/ui/button";
+import { clearLocalStorage } from "@/lib/utils/commonUtils";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function SignOut() {
-  const navigate = useRouter();
   const handleLogout = async () => {
     await signOut({
       callbackUrl: "/login",
-      redirect: false,
+      redirect: true,
     });
-    navigate.push("/login");
+    clearLocalStorage();
   };
   return (
     <Button

@@ -19,6 +19,7 @@ interface IProps {
   short_description?: string;
   long_description?: string;
   tags?: string[];
+  categories?: string[];
 }
 
 export default function InfluencerProfile({
@@ -29,6 +30,7 @@ export default function InfluencerProfile({
   short_description,
   long_description,
   tags = [],
+  categories = [],
 }: IProps) {
   return (
     <Card className="bg-white rounded-[20PX] overflow-hidden border-0 shadow-none">
@@ -59,13 +61,16 @@ export default function InfluencerProfile({
               />
             ) : (
               <AvatarImage
-                src="/assets/creator/profile/profile.png"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8LhuoUUgh-Ji96FR66bY_axXP-aSc7tf_kGiHSLkzpoTCPVSbjg&s=10&ec=72940544"
                 alt={full_name}
-                width={120}
-                height={120}
+                width={140}
+                height={140}
+                className="opacity-50"
               />
             )}
-            w<AvatarFallback>JD</AvatarFallback>
+            {profile_image ? (
+              <AvatarFallback>{full_name}</AvatarFallback>
+            ) : null}
           </Avatar>
         </div>
         <div className="flex gap-2 md:gap-4 text-gray-500 text-lg md:text-2xl">
@@ -100,7 +105,7 @@ export default function InfluencerProfile({
           >
             <Image
               src="/assets/creator/profile/instaIcon.svg"
-              alt={'instaIcon'}
+              alt={"instaIcon"}
               width={35}
               height={35}
             />
@@ -125,7 +130,7 @@ export default function InfluencerProfile({
             {full_name}
           </h2>
           <span className="text-lg md:text-xl font-medium text-gray-black">
-            {user_name? `(@${user_name})`:""}
+            {user_name ? `(@${user_name})` : ""}
           </span>
           <LinkIcon className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
         </div>
@@ -146,18 +151,14 @@ export default function InfluencerProfile({
           {long_description}
         </p>
         <div className="flex gap-2 md:gap-4">
-          <Button
-            size={"lg"}
-            className="bg-primary-color hover:bg-pink-600 text-white px-4 md:px-5 py-1 md:py-3 rounded-md text-xs md:text-sm"
-          >
-            Fashion & Beauty
-          </Button>
-          <Button
-            size={"lg"}
-            className="bg-primary-color hover:bg-pink-600 text-white px-4 md:px-5 py-1 md:py-3 rounded-md text-xs md:text-sm"
-          >
-            Men's Fashion
-          </Button>
+          {categories?.map((v) => (
+            <Button
+              size={"lg"}
+              className="bg-primary-color hover:bg-pink-600 text-white px-4 md:px-5 py-1 md:py-3 rounded-md text-xs md:text-sm"
+            >
+              {v}
+            </Button>
+          ))}
         </div>
       </CardContent>
     </Card>

@@ -6,15 +6,19 @@ import { cn } from "@sohanemon/utils";
 import { GoChevronDown } from "react-icons/go";
 import Select from "react-select";
 import { get } from "lodash";
-
+import { FaRegCalendarAlt } from "react-icons/fa";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 interface IInput
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
   name: string;
   type?: string;
   required?: boolean;
+  hideError?: boolean;
   rows?: number;
   Icon?: any;
+  minDate?: any;
   options?: {
     label: string;
     value: string;
@@ -22,7 +26,7 @@ interface IInput
 }
 
 export const inputStyle =
-  "w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white";
+  "w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white disabled:cursor-not-allowed";
 
 export const labelStyle = "mb-1 text-sm text-gray-darken";
 
@@ -34,6 +38,7 @@ export default function Input({
   placeholder = "",
   options = [],
   Icon,
+  hideError,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -75,7 +80,8 @@ export default function Input({
 
   const getError = () => {
     return (
-      Boolean(get(errors, name)) && (
+      Boolean(get(errors, name)) &&
+      !hideError && (
         <span className="text-red-600 text-sm p-2">
           {getErrorMessage(name)}
         </span>
@@ -107,6 +113,39 @@ export default function Input({
               {...field}
               autoComplete="off"
               {...props}
+            />
+            {Icon ? (
+              <Icon
+                fontSize={25}
+                className="absolute top-[50%] left-4 text-gray-black z-10 translate-y-[-50%]"
+              />
+            ) : null}
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
+  const renderDateInput = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-[1]">
+              <FaRegCalendarAlt />
+            </span>
+            <DatePicker
+              {...field}
+              selected={field.value}
+              className={cn(inputStyle, "!pl-10")}
+              placeholderText={placeholder}
+              dateFormat="dd/MM/yyyy"
+              wrapperClassName="w-full"
+              {...(props?.minDate ? { minDate: props.minDate } : {})}
             />
             {Icon ? (
               <Icon
@@ -328,8 +367,8 @@ export default function Input({
               <div className="flex flex-col">
                 <label
                   className={`flex items-center mb-2 text-black font-medium ${
-                    props?.className ? props?.className : ""
-                  }`}
+                    props?.disabled ? "opacity-50 cursor-not-allowed" : ""
+                  } ${props?.className ? props?.className : ""}`}
                 >
                   <input
                     type="radio"
@@ -356,8 +395,8 @@ export default function Input({
               <div className="flex flex-col">
                 <label
                   className={`flex items-start text-black font-medium sm:text-base text-sm ${
-                    props?.className ? props?.className : ""
-                  }`}
+                    props?.disabled ? "opacity-50 cursor-not-allowed" : ""
+                  } ${props?.className ? props?.className : ""}`}
                 >
                   <input
                     type="checkbox"
@@ -389,6 +428,8 @@ export default function Input({
         return renderTagInput();
       case "productCategories":
         return renderMultiSelectCategories();
+      case "date":
+        return renderDateInput();
       default:
         return renderTextInput();
     }

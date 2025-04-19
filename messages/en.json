@@ -200,7 +200,7 @@
   "Previous": "Previous",
   "Next": "Next",
   "More_pages": "More pages",
-  "Personal_Information": "Brand Information",
+  "Personal_Information": "My Information",
   "edit_profile": "Edit profile",
   "Name": "Name",
   "Mobile": "Mobile",
@@ -337,7 +337,7 @@
   "Coupon_Code": "Coupon Code",
   "expiresAt": "expiresAt",
   "No_Channels_Available_Description": "Please connect to the store to view available channels.",
-  "Creator_Information": "Creator Information",
+  "Creator_Information": "My Information",
   "Short_Description": "Short Description",
   "Long_Description": "Long Description",
   "View": "View",
@@ -357,5 +357,6 @@
   "Video_Wise_Revenue": "Video-Wise Revenue",
   "No_discount": " No discount",
   "Tax_Free": "Tax Free",
-  "Start_your_chat_now": "Start your chat now."
+  "Start_your_chat_now": "Start your chat now.",
+  "View_All_Notifications": "View All Notifications"
 }

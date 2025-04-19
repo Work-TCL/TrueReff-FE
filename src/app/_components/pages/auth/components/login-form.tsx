@@ -1,6 +1,6 @@
 "use client";
 import { ILoginSchema, loginSchema } from "@/lib/utils/validations";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,10 +19,16 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { USER_TYPE } from "@/lib/utils/constants";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useVendorStore } from "@/lib/store/vendor";
+import {
+  clearRememberedUser,
+  getRememberedUser,
+  saveRememberedUser,
+} from "@/lib/utils/rememberUtils";
 
 export default function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isRemember, setIsRemember] = useState(false);
   const schema = loginSchema;
   const { setAccountData, setIsAuthStatus, setToken } = useAuthStore();
   const { setCreatorData } = useCreatorStore();
@@ -60,6 +66,13 @@ export default function LoginForm() {
           toast.success("Login Successfully.");
           setIsAuthStatus("authenticated");
           setToken(res?.data?.token);
+
+          if (isRemember) {
+            saveRememberedUser(data.email, data.password);
+          } else {
+            clearRememberedUser();
+          }
+
           if (
             !res?.data?.detailsFilled &&
             [USER_TYPE.Creator, USER_TYPE.Vendor].includes(res?.data?.type)
@@ -135,6 +148,17 @@ export default function LoginForm() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const remembered = getRememberedUser();
+    if (remembered?.email) {
+      methods.setValue("email", remembered.email);
+      methods.setValue("password", remembered.password);
+      setIsRemember(true);
+      methods.trigger(["email", "password"]);
+    }
+  }, []);
+
   return (
     <FormProvider {...methods}>
       <form
@@ -155,7 +179,14 @@ export default function LoginForm() {
         />
         <div className="mt-3 text-[16px] flex align-middle justify-between  text-gray-600">
           <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" className="w-4 h-4" />
+            <input
+              type="checkbox"
+              checked={isRemember}
+              className="w-4 h-4"
+              onChange={(e) => {
+                setIsRemember(e?.target?.checked);
+              }}
+            />
             <span className="">{translate("Remember_Me")}</span>
           </label>
           <Link href="/forgot-password" className="cursor-pointer text-sm">

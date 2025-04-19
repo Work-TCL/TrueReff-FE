@@ -561,13 +561,11 @@ export const creatorProfileUpdateSchema = Yup.object().shape({
 
 export interface ICreatorProfileUpdateSchema
   extends Yup.Asserts<typeof creatorProfileUpdateSchema> {}
-import * as yup from "yup";
 
-export const campaignValidationSchema = yup.object().shape({
-  name: yup.string().required("Campaign name is required"),
-  description: yup.string().required("Description is required"),
-  startDate: yup
-    .date()
+export const campaignValidationSchema = Yup.object().shape({
+  name: Yup.string().required("Campaign name is required"),
+  description: Yup.string().required("Description is required"),
+  startDate: Yup.date()
     .required("Start date is required")
     .test(
       "is-future-date",
@@ -580,8 +578,7 @@ export const campaignValidationSchema = yup.object().shape({
       }
     ),
 
-  endDate: yup
-    .date()
+  endDate: Yup.date()
     .required("End date is required")
     .when("startDate", ([startDate], schema) => {
       return schema.test(
@@ -593,29 +590,24 @@ export const campaignValidationSchema = yup.object().shape({
         }
       );
     }),
+  productId: Yup.string().required("Product is required"),
 
-  productId: yup.string().required("Product is required"),
-
-  channels: yup
-    .array()
+  channels: Yup.array()
     .min(1, "At least one channel is required")
     .required("Channels are required"),
 
-  discount_type: yup
-    .string()
+  discount_type: Yup.string()
     .oneOf(
       ["FIXED_AMOUNT", "PERCENTAGE"],
       "Discount type must be either FIXED_AMOUNT or PERCENTAGE"
     )
     .required("Discount type is required"),
 
-  discount_value: yup
-    .number()
+  discount_value: Yup.number()
     .typeError("Discount value is required")
     .required("Discount value is required")
     .moreThan(0, "Discount value must be greater than 0"),
-  price: yup
-    .number()
+  price: Yup.number()
     .typeError("Discount value is required")
     .required("Discount value is required")
     .moreThan(0, "Discount value must be greater than 0"),

@@ -102,7 +102,7 @@ export default function ProductList() {
     setFilter(e.target.value);
   };
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4">
+    <div className="p-4 rounded-lg flex flex-col gap-4 h-full overflow-hidden">
       <div className="flex justify-between items-center gap-2">
         <div className="md:text-[20px] text-base text-500">
           <Input
@@ -126,13 +126,15 @@ export default function ProductList() {
       {loading && <Loading />}
       {!loading && <ProductTable data={products} />}
       {/* Pagination */}
-      <div className="flex justify-end items-center mt-4">
-        <TablePagination
-          totalPages={totalPages}
-          activePage={currentPage}
-          onPageChange={setCurrentPage}
-        />
-      </div>
+      {products?.length > 0 && (
+        <div className="flex justify-end items-center mt-4">
+          <TablePagination
+            totalPages={totalPages}
+            activePage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

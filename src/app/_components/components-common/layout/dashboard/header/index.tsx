@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { translate } from "../../../../../../lib/utils/translate";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
-import { CircleUserRound, Menu } from "lucide-react";
+import { CircleUserRound, Menu, User, UserRound } from "lucide-react";
 import toast from "react-hot-toast";
 import socketService from "@/lib/services/socket-service";
 import { useAuthStore } from "@/lib/store/auth-user";
@@ -200,16 +200,19 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             className="flex gap-3 items-center w-fit"
           >
             <div
-              className="w-8 h-8 bg-background rounded-full bg-cover bg-center"
+              className="w-8 h-8 bg-background rounded-full bg-cover bg-center flex items-center justify-center"
               style={{
-                backgroundImage:
-                  creator.profile_image || vendor.profile_image
-                    ? `url(${creator.profile_image || vendor.profile_image})`
-                    : undefined,
+                ...(creator.profile_image || vendor.profile_image
+                  ? {
+                      backgroundImage: `url(${
+                        creator.profile_image || vendor.profile_image
+                      })`,
+                    }
+                  : {}),
               }}
             >
               {!(creator.profile_image || vendor.profile_image) && (
-                <CircleUserRound className="w-8 h-8" color="#EB815B" />
+                <UserRound className="" color="#656466" />
               )}
             </div>
             <p className="text-gray-black md:text-base text-sm md:block hidden">

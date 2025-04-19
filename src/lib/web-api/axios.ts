@@ -1,5 +1,5 @@
 import axiosPckg from "axios";
-import { getToken } from "../utils/commonUtils";
+import { clearLocalStorage, getToken } from "../utils/commonUtils";
 import { signOut } from "next-auth/react";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -32,7 +32,8 @@ axios.interceptors.response.use(
           callbackUrl: "/login",
           redirect: true,
         });
-        if (typeof window !== undefined) window.location.href = "/login";
+        clearLocalStorage();
+        // if (typeof window !== undefined) window.location.href = "/login";
       } catch (e) {
         return Promise.reject(e);
       }

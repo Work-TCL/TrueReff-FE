@@ -81,3 +81,16 @@ export function formatTo12Hour(timeString: string) {
 export const getToken = () => {
   return useAuthStore.getState().token;
 };
+
+export function formatForDateInput(isoString: string): string {
+  const d = new Date(isoString);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function clearLocalStorage() {
+  const removeItems = ["vendor-storage", "user-storage", "creator-storage"];
+  removeItems.forEach((key) => localStorage.removeItem(key));
+}

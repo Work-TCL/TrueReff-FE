@@ -9,6 +9,7 @@ import React, { useEffect, useState, useTransition } from "react";
 
 export default function Channels() {
   const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(true);
   const [channels, setChannels] = useState<any[]>([]);
 
   useEffect(() => {
@@ -17,12 +18,13 @@ export default function Channels() {
       if (Array.isArray(res)) {
         setChannels(res);
       }
+      setIsLoading(false);
     });
   }, []);
 
   return (
     <>
-      {isPending && <LoadingPage />}
+      {(isPending || isLoading) && <LoadingPage />}
       {channels.length > 0 ? (
         <StoreConnects
           channels={channels}
@@ -40,9 +42,9 @@ export default function Channels() {
             />
           )}
         />
-      ) : (
-          <StoreConnectsRedirect />
-      )}
+      ) : !(isPending || isLoading) ? (
+        <StoreConnectsRedirect />
+      ) : null}
     </>
   );
 }

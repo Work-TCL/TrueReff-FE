@@ -91,6 +91,7 @@ export interface IVendorByIdResponse {
 export interface IGETProductListsRequest {
   start: number;
   limit: number;
+  search?: string;
 }
 
 export interface IGETProductListsResponse {

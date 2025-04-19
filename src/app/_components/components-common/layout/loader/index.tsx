@@ -8,7 +8,7 @@ interface IProps {
 }
 
 export default function Loader({
-  isTransparent = false,
+  isTransparent = true,
   fixed = true,
   small = false,
 }: IProps) {
@@ -16,7 +16,9 @@ export default function Loader({
     <div
       className={`${fixed ? "fixed top-0 bottom-0 right-0 left-0" : ""} ${
         small ? "scale-75" : ""
-      } bg-white/50 z-[999] flex justify-center items-center`}
+      } ${
+        isTransparent ? "bg-white/50" : "bg-white"
+      } z-[999] flex justify-center items-center`}
     >
       <div className="w-fit h-fit">
         <svg

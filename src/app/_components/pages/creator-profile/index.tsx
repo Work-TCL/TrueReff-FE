@@ -12,7 +12,7 @@ import Loader from "../../components-common/layout/loader";
 
 export default function CreatorProfile() {
   const { id } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { creator } = useCreatorStore();
   const [creatorData, setCreatorData] = useState(creator);
 
@@ -41,6 +41,7 @@ export default function CreatorProfile() {
           short_description={creatorData.short_description}
           long_description={creatorData.long_description}
           tags={creatorData.tags}
+          categories={[...creatorData.category.map((v: any) => v.name)]}
         />
         <div className="flex flex-col gap-5">
           <ProfileCompletionCard progress={60} />

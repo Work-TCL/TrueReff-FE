@@ -94,6 +94,20 @@ export default function EditVendorForm({
     setProfilePreview(previewURL);
   };
 
+  const handleDropImage = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+
+    const isValid = await fileUploadLimitValidator(file.size);
+    if (!isValid) return;
+
+    const previewURL = URL.createObjectURL(file);
+
+    setProfileFile(file);
+    setProfilePreview(previewURL);
+  };
+
   return (
     <>
       <FormProvider {...methods}>
@@ -135,7 +149,11 @@ export default function EditVendorForm({
           />
           <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
             <div className="text-sm">{translate("Profile_Image")}</div>
-            <div className="flex justify-center items-center border rounded-lg p-5">
+            <div
+              className="flex justify-center items-center border rounded-lg p-5"
+              onDrop={handleDropImage}
+              onDragOver={(e) => e.preventDefault()}
+            >
               <div className="flex flex-col w-full gap-4">
                 <div className="flex justify-center">
                   <img

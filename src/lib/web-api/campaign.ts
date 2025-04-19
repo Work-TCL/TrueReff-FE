@@ -8,7 +8,7 @@ import { getErrorMessage } from "../utils/commonUtils";
 import axios from "./axios";
 
 export const createCampaign = async (
-  params: IPOSTCreateCampaignRequest
+  params: FormData
 ): Promise<IPOSTCreateCampaignResponse> => {
   try {
     const response = await axios.post(`/product/campaign/add`, params, {
@@ -23,7 +23,7 @@ export const createCampaign = async (
   }
 };
 export const updateCampaign = async (
-  params: IPOSTCreateCampaignRequest,
+  params: FormData,
   campaignId: string
 ): Promise<IPOSTCreateCampaignResponse> => {
   try {

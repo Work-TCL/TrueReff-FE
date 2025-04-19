@@ -189,6 +189,28 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     }
   };
 
+  const handleDropImage = async (
+    e: React.DragEvent<HTMLDivElement>,
+    type: "profile" | "banner"
+  ) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+
+    const isValid = await fileUploadLimitValidator(file.size);
+    if (!isValid) return;
+
+    const previewURL = URL.createObjectURL(file);
+
+    if (type === "profile") {
+      setProfileFile(file);
+      setProfilePreview(previewURL);
+    } else {
+      setBannerFile(file);
+      setBannerPreview(previewURL);
+    }
+  };
+
   return (
     <>
       <FormProvider {...methods}>
@@ -280,7 +302,11 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           </div>
           <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
             <div className="text-sm">{translate("Profile_Image")}</div>
-            <div className="flex justify-center items-center border rounded-lg p-5">
+            <div
+              className="flex justify-center items-center border rounded-lg p-5"
+              onDrop={(e) => handleDropImage(e, "profile")}
+              onDragOver={(e) => e.preventDefault()}
+            >
               <div className="flex flex-col w-full gap-4">
                 <div className="flex justify-center">
                   <img
@@ -315,9 +341,9 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
             <div className="flex flex-col gap-1">
               <div
                 className="flex justify-center items-center border border-dashed rounded-lg p-5"
-                onClick={() => {
-                  document.getElementById("banner_image")?.click();
-                }}
+                onClick={() => document.getElementById("banner_image")?.click()}
+                onDrop={(e) => handleDropImage(e, "banner")}
+                onDragOver={(e) => e.preventDefault()}
               >
                 <div className="flex flex-col items-center gap-4">
                   <img

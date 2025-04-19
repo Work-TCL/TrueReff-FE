@@ -109,7 +109,7 @@ export default function NotificationPopover({
               className="text-gray-600 bg-gray-100 px-3 py-1 md:text-sm text-xs rounded-md md:h-10 h-7 w-full"
               onClick={() => router.push("/notification")}
             >
-              {translate("View All Notifications")}
+              {translate("View_All_Notifications")}
             </Button>
           </div>
         )}
