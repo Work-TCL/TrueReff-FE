@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import dynamic from 'next/dynamic';
 import { Input } from "@/components/ui/input";
 import { TablePagination } from "../../components-common/tables/Pagination";
+import ToolTip from "../../components-common/tool-tip";
 const Select = dynamic(() => import('react-select'), { ssr: false });
 
 
@@ -262,7 +263,7 @@ export default function ProductList() {
               </TableHeader>
               <TableBody>
                 {productList.map((product, index) => (
-                  <TableRow key={index} className=" bg-white">
+                  <TableRow key={index} className=" bg-white hover:bg-gray-100">
                     <CustomTableCell>{product.channelName}</CustomTableCell>
                     <CustomTableCell>
                       <div className="flex items-center gap-2">
@@ -280,7 +281,7 @@ export default function ProductList() {
                     <CustomTableCell>{product.sku}</CustomTableCell>
                     <CustomTableCell>{product.price}</CustomTableCell>
                     <CustomTableCell>
-                      <Eye color="#FF4979" className="cursor-pointer" onClick={() => router.push(`/vendor/products/view/${product._id}`)}/>
+                      <ToolTip content="View Product" delayDuration={1000}><Eye strokeWidth={1.5} color="#FF4979" className="cursor-pointer" onClick={() => router.push(`/vendor/products/view/${product._id}`)}/></ToolTip>
                     </CustomTableCell>
                   </TableRow>
                 ))}

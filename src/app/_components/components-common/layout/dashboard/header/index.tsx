@@ -71,7 +71,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor/products": translate("Product_Lists"),
     "/vendor/products/view": translate("View_Product"),
     "/vendor/products/channels": translate("Channels"),
-    "/vendor/creator": translate("Creators"),
+    "/vendor/creators": translate("Creators"),
     "/vendor/creator/details": translate("Creator_Details"),
     "/vendor/campaign/add": translate("Add_New_Campaign"),
     "/vendor/campaign": translate("Campaign_List"),
@@ -83,6 +83,11 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/creator/creator_analysis": translate("Creator_Analysis"),
     "/creator/payment-earnings": translate("Payment_Earnings"),
     "/creator/brandsList": translate("Brands_List"),
+    "/creator/profile" : translate("Creator_Profile"),
+    "/vendor/profile" : translate("Brand_Profile"),
+    "/vendor/creators/collaboration": translate("Collaboration"),
+    "/creator/collaboration": translate("Collaboration"),
+    "/vendor/creators/available-creators": translate("Available_Creators")
   };
   const fetchNotifications = async () => {
     setLoading(true);
@@ -173,6 +178,20 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     }
   };
 
+  const getHeaderName = () => {
+    if(pathName.includes("/vendor/creators/collaboration/")){
+      return translate("Bargaining");
+    } else if(pathName.includes("/creator/profile/")){
+      return translate("Creator_Profile");
+    } else if(pathName.includes("/vendor/products/view/")){
+      return translate("Product_Details");
+    } else if(pathName.includes("/creator/brandsList/")) {
+      return translate("Brand_Products")
+    } else {
+      return pageNames[pathName];
+    }
+  }
+
   return (
     <header className="bg-white px-3 py-3 flex items-center gap-1">
       <Menu
@@ -180,7 +199,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         onClick={handleExpandSidebar}
       />
       <h2 className="md:text-2xl text-lg font-medium text-gray-black">
-        {pageNames[pathName]}
+        {getHeaderName()}
       </h2>
       {pathName !== "/dashboard" && (
         <div className="ml-auto flex items-center md:gap-3 gap-2">

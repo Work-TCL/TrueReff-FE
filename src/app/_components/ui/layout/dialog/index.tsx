@@ -60,9 +60,9 @@ export default function DialogLayout({
               )}
             >
               {title || !skipClose ? (
-                <div className="flex items-center justify-between px-4 sm:px-10 pt-6 sm:pt-6  ">
+                <div className="flex items-center justify-between px-2 sm:px-4 mt-2">
                   {title && (
-                    <h3 className="text-xl text-gray-black font-medium flex-1 truncate">
+                    <h3 className="text-md text-gray-black font-medium flex-1 truncate">
                       {title}
                     </h3>
                   )}

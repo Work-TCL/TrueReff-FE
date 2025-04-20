@@ -129,7 +129,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       label: translate("Product_Catalog"),
       icon: Box,
       children: [
-        { label: translate("Add_New_Product"), link: "/vendor/products/add" },
+        // { label: translate("Add_New_Product"), link: "/vendor/products/add" },
         { label: translate("Product_List"), link: "/vendor/products" },
         { label: translate("Channels"), link: "/vendor/products/channels" },
       ],
@@ -248,7 +248,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       >
         <div className="flex justify-center gap-10  ">
           <div
-            className={`p-4 pb-8 text-primary-color font-bold text-4xl text-center`}
+            className={`p-4 text-primary-color font-bold text-4xl text-center`}
           >
             {!isSidebarExpanded ? (
               <PackageOpen />

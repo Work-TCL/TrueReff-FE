@@ -127,19 +127,19 @@ export default function ChannleToProduct({
   return (
     <DialogLayout
       open={true}
-      size="!max-w-[638px] w-full overflow-auto"
-      title="Product To CRM"
-      onClose={() => onClose()}
+      size="!max-w-[638px] w-full overflow-auto m-2"
+      title="Add Product To CRM"
+      onClose={() => !loading && onClose()}
     >
-      <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto">
+      <div className="p-2 sm:p-4 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto flex flex-col gap-3">
         <div>
           <div
             className={cn(
               inputStyle,
-              "mb-10 flex items-center text-nowrap overflow-hidden truncate justify-center"
+              "flex items-center text-nowrap overflow-hidden truncate justify-center gap-3"
             )}
           >
-            <Avatar className="w-8 h-8 mr-3">
+            <Avatar className="w-8 h-8">
               <AvatarImage src={product.image} />
             </Avatar>
             {product.title}
@@ -147,6 +147,7 @@ export default function ChannleToProduct({
         </div>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2 text-left gap-3">
               <div className="md:col-span-1 col-span-2">
                 <Input
@@ -154,6 +155,7 @@ export default function ChannleToProduct({
                   placeholder={translate("Fashion_Beauty")}
                   name="category"
                   type="productCategories"
+                  disabled={loading}
                   options={parentCategory?.map((ele) => ({
                     value: ele?._id,
                     label: ele?.name,
@@ -166,6 +168,7 @@ export default function ChannleToProduct({
                   placeholder={translate("Men_Fashion")}
                   name="subCategory"
                   type="productCategories"
+                  disabled={loading}
                   options={subCategory.map((ele) => ({
                     value: ele?._id,
                     label: ele?.name,
@@ -173,18 +176,21 @@ export default function ChannleToProduct({
                 />
               </div>
             </div>
-            <div className="mt-6 grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-4 gap-4">
+              <div/><div/>
               <Button
                 variant="outline"
                 type="button"
+                disabled={loading}
                 onClick={() => onClose()}
                 className="w-full h-full border-black bg-transparent text-base"
               >
                 {translate("Cancel")}
               </Button>
-              <ButtonSubmit type="submit" loading={loading}>
+              <ButtonSubmit type="submit" loading={loading} disabled={loading}>
                 {translate("Save")}
               </ButtonSubmit>
+            </div>
             </div>
           </form>
         </FormProvider>

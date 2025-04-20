@@ -26,6 +26,7 @@ import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import { useRouter } from "next/navigation";
 import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
+import ToolTip from "@/app/_components/components-common/tool-tip";
 
 interface IProduct {
   handle: string;
@@ -173,7 +174,7 @@ export default function ChannelProductList({
               </TableHeader>
               <TableBody>
                 {productList.map((product, index) => (
-                  <TableRow key={index} className=" bg-white">
+                  <TableRow key={index} className=" bg-white hover:bg-gray-100">
                     <CustomTableCell>
                       {product.id.split("/").pop()}
                     </CustomTableCell>
@@ -192,24 +193,27 @@ export default function ChannelProductList({
                     {/*                <CustomTableCell>{product.discount}</CustomTableCell>
                                 <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
                     <CustomTableCell>
-                      <div className="flex justify-center gap-3">
-                        <Eye
+                      <div className="flex justify-center items-center gap-3">
+                       <ToolTip content="View Product" delayDuration={1000}>
+                        <Eye strokeWidth={1.5}
                           color="#FF4979"
                           className="cursor-pointer"
                           onClick={() =>
                             router.push(`shopify/view?id=${product.id}`)
                           }
                         />
+                        </ToolTip>
                         <div
                           onClick={() => {
                             setCurrentData(product);
                           }}
                           className=""
                         >
-                          <CircleFadingPlus
+                          <ToolTip content="Add Product to CRM" delayDuration={1000}><CircleFadingPlus strokeWidth={1.5}
                             color="#3b82f680"
                             className="cursor-pointer"
                           />
+                          </ToolTip>
                         </div>
                       </div>
                     </CustomTableCell>

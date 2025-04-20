@@ -8,12 +8,14 @@ import { useRouter } from "next/navigation";
 import { IProduct } from "./";
 import { useTranslations } from "next-intl";
 import StatusBadge from "../../components-common/status-badge";
-import { CircleFadingPlus, Eye, XCircle } from "lucide-react";
+import { Eye, UserPlus, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import CancelRequest from "../../components-common/dialogs/cancel-request";
 import { useCreatorStore } from "@/lib/store/creator";
 import axios from "@/lib/web-api/axios";
+import Loader from "../../components-common/layout/loader";
+import ToolTip from "../../components-common/tool-tip";
 interface IProductTableProps {
   data: IProduct[];
   handleUpdateProduct: () => void;
@@ -127,6 +129,7 @@ export default function ProductTable({
   };
   return (
     <div className="overflow-auto">
+      {loading && <Loader/>}
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
           <TableRow>
@@ -163,7 +166,7 @@ export default function ProductTable({
           {data.map((product: IProduct, index: number) => {
             const status = getRequestStatus(product);
             return (
-              <TableRow key={index} className="bg-white">
+              <TableRow key={index} className="bg-white hover:bg-gray-100">
                 <CustomTableCell>
                   <span className="flex items-center gap-2">
                     <Avatar className="w-8 h-8">
@@ -187,46 +190,41 @@ export default function ProductTable({
                   ) : null}
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
-                  <Eye
+                <ToolTip content="View Product" delayDuration={1000}>
+                    <Eye strokeWidth={1.5} 
                     color="#FF4979"
                     className=" cursor-pointer"
                     onClick={() => handleDetailView(product._id)}
                     size={25}
                   />
+                </ToolTip>
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
                   <span className="flex justify-center">
                     {
                       {
                         REQUESTED: {
-                          CREATOR: (
-                            <XCircle
+                          CREATOR: (<ToolTip content="Cancel Request" delayDuration={1000}>
+                            <XCircle strokeWidth={1.5}
                               className="cursor-pointer"
                               size={25}
                               color="#ef4444"
                               onClick={() => handleAction(status, product)}
                             />
+                        </ToolTip>
                           ),
                           VENDOR: null,
                         }[product?.request?.requestFrom ?? ""],
                         SEND_REQUEST: (
-                          <CircleFadingPlus
+                          <ToolTip content="Send Collaboration Request" delayDuration={1000}>
+                            <UserPlus strokeWidth={1.5}
                             color="#3b82f680"
                             className="cursor-pointer"
                             onClick={() => handleAction(status, product)}
                             size={25}
                           />
+                          </ToolTip>
                         ),
-                        // PENDING: <MessagesSquare
-                        //     color="#3b82f680"
-                        //     className="cursor-pointer"
-                        //     onClick={() =>
-                        //         router.push(
-                        //             `/creator/`
-                        //         )
-                        //     }
-                        //     size={25}
-                        // />
                       }[status]
                     }
                   </span>
@@ -241,6 +239,7 @@ export default function ProductTable({
           onClose={() => setIsOpen("")}
           collaborationId={isOpen}
           handleCancelRequest={handleRejectRequest}
+          loading={loading}
         />
       )}
     </div>

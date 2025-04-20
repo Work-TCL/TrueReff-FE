@@ -14,6 +14,7 @@ import CancelRequest from "../../components-common/dialogs/cancel-request";
 import { useTranslations } from "next-intl";
 import StatusBadge from "../../components-common/status-badge";
 import axios from "@/lib/web-api/axios";
+import ToolTip from "../../components-common/tool-tip";
 
 export function capitalizeFirstLetter(word: string = "") {
   if (!word) return ""; // Handle empty strings
@@ -159,7 +160,7 @@ const CollaborationTable = ({
           {data.map((collaboration: ICollaboration, index: number) => {
             let status = getRequestStatus(collaboration);
             return (
-              <TableRow key={index} className="bg-white">
+              <TableRow key={index} className="bg-white hover:bg-gray-100">
                 <CustomTableCell>
                   <div
                     className="flex items-center gap-2"
@@ -208,7 +209,9 @@ const CollaborationTable = ({
                       REQUESTED: {
                         VENDOR: (
                           <div className="flex justify-between gap-3">
-                            <CheckCircle
+                            
+                            <ToolTip content="Accept Request" delayDuration={1000}>
+                              <CheckCircle strokeWidth={1.5}
                               color="#22c55e"
                               className="cursor-pointer"
                               size={25}
@@ -219,7 +222,9 @@ const CollaborationTable = ({
                                 )
                               }
                             />
-                            <XCircle
+                            </ToolTip>
+                            <ToolTip content="Reject Request" delayDuration={1000}>
+                            <XCircle strokeWidth={1.5}
                               className="cursor-pointer"
                               size={25}
                               color="#ef4444"
@@ -231,10 +236,12 @@ const CollaborationTable = ({
                                 })
                               }
                             />
+                            </ToolTip>
                           </div>
                         ),
                         CREATOR: (
-                          <XCircle
+                          <ToolTip content="Cancel Request" delayDuration={1000}>
+                            <XCircle strokeWidth={1.5}
                             className="cursor-pointer"
                             size={25}
                             color="#ef4444"
@@ -246,11 +253,13 @@ const CollaborationTable = ({
                               })
                             }
                           />
+                          </ToolTip>
                         ),
                       }[collaboration?.request?.requestFrom ?? ""],
                       PENDING: (
                         <div className="flex gap-3">
-                          <Eye
+                          <ToolTip content="View Product" delayDuration={1000}>
+                            <Eye strokeWidth={1.5}
                             color="#FF4979"
                             className=" cursor-pointer"
                             onClick={() =>
@@ -258,7 +267,9 @@ const CollaborationTable = ({
                             }
                             size={25}
                           />
-                          <MessagesSquare
+                          </ToolTip>
+                          <ToolTip content="Start Bargaining" delayDuration={1000}>
+                          <MessagesSquare strokeWidth={1.5}
                             color="#3b82f680"
                             className="cursor-pointer"
                             onClick={() =>
@@ -266,6 +277,7 @@ const CollaborationTable = ({
                             }
                             size={25}
                           />
+                          </ToolTip>
                         </div>
                       ),
                       REJECTED: null,
@@ -282,6 +294,7 @@ const CollaborationTable = ({
           onClose={() => setIsOpen(initialValue)}
           collaborationId={""}
           handleCancelRequest={handleConfirm}
+          loading={loading}
         />
       )}
     </div>

@@ -93,7 +93,7 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
         </TableHeader>
         <TableBody>
           {data.map((creator: any, index: number) => (
-            <TableRow key={index} className="bg-white">
+            <TableRow key={index} className="bg-white hover:bg-gray-100">
               <CustomTableCell>
                 <div
                   className="flex items-center cursor-pointer gap-2"
