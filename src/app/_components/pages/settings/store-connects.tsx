@@ -28,11 +28,9 @@ export default function StoreConnects({
             : translate("store_integration")}
         </h2>
       </div>
-      {Array.isArray(channels) && channels.length > 0
-        ? channels?.map((value, index) => {
+      {channels?.map((value, index) => {
             return ChannelCardComponent && ChannelCardComponent(value);
-          })
-        : StoreConnectsComponent && StoreConnectsComponent()}
+          })}
     </div>
   );
 }

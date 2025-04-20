@@ -312,7 +312,7 @@ export default function ViewProductDetail() {
           <BreadcrumbList className="md:text-sm text-xs">
             <BreadcrumbItem>
               <BreadcrumbPage
-                className="cursor-pointer hover:text-[grey]"
+                className="cursor-pointer hover:text-[grey] hover:underline"
                 onClick={() =>
                   router.push(
                     creator?.creatorId

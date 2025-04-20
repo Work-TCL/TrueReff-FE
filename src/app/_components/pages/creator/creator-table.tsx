@@ -51,7 +51,7 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
       : "-";
   };
   const handleViewCreatorDetails = (id: string) => {
-    router.push(`/vendor/creators/${id}`);
+    router.push(`/creator/profile/${id}`);
   };
   const handleCollaborateNow = (creatorId: string) => {
     setIsOpen({ show: true, creatorId });
@@ -74,6 +74,9 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
             <CustomTableHead className="w-1/6">
               {translate("Categories")}
             </CustomTableHead>
+            <CustomTableHead className="w-1/4">
+              {translate("Tags")}
+            </CustomTableHead>
             <CustomTableHead className="w-1/8">
               {translate("Instagram_View")}
             </CustomTableHead>
@@ -82,9 +85,6 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
             </CustomTableHead>
             <CustomTableHead className="w-1/6">
               {translate("Past_Sales")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/4">
-              {translate("Tags_Collaboration")}
             </CustomTableHead>
             <CustomTableHead className="w-1/6 text-center">
               {translate("Action")}
@@ -96,7 +96,7 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
             <TableRow key={index} className="bg-white">
               <CustomTableCell>
                 <div
-                  className="flex items-center gap-2"
+                  className="flex items-center cursor-pointer gap-2"
                   onClick={() => handleViewCreatorDetails(creator._id)}
                 >
                   <Avatar className="w-8 h-8">
@@ -110,6 +110,7 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
                 {creator.short_description || creator.long_description}
               </CustomTableCell>
               <CustomTableCell>{creator.categories}</CustomTableCell>
+              <CustomTableCell>{creator.tag}</CustomTableCell>
               <CustomTableCell>
                 {getInstagramView(creator.channels)}
               </CustomTableCell>
@@ -117,7 +118,6 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
                 {getYoutubeView(creator.channels)}
               </CustomTableCell>
               <CustomTableCell>{creator.pastSales ?? ""}</CustomTableCell>
-              <CustomTableCell>{creator.tag}</CustomTableCell>
               <CustomTableCell>
                 <Button
                   variant="outline"

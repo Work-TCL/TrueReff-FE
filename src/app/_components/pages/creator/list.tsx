@@ -61,12 +61,13 @@ const customStyles = {
   control: (base: any) => ({
     ...base,
     width: "200px",
+    borderRadius:"8px"
   }),
 };
 
 export default function CreatorList() {
   const translate = useTranslations();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [creators, setCreators] = useState<ICreator[]>([]);
   const [filter, setFilter] = useState<string>("5");
@@ -75,7 +76,6 @@ export default function CreatorList() {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(20);
   const filterOption = [
-    { value: "", label: "Select" },
     { value: "5", label: "Last 5 Videos" },
     { value: "30", label: "Last 1 Month" },
   ];
@@ -137,12 +137,11 @@ export default function CreatorList() {
     getCreatorList(currentPage);
   }, []);
   const handlePageChange = (page: number) => {
-    page !== currentPage && getCreatorList(page, true);
-    setCurrentPage(page);
+    page !== currentPage && getCreatorList(page, true,search);
   };
   const debouncedSearch = useCallback(
     debounce((value: string) => {
-      getCreatorList(currentPage, true, value);
+      getCreatorList(1, true, value);
     }, 500),
     []
   );
@@ -155,8 +154,10 @@ export default function CreatorList() {
     setFilter(value?.value);
   };
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4">
-      <div className="flex justify-between items-center flex-wrap gap-2">
+    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+      {loading ? (
+        <Loading />
+      ) : <><div className="flex justify-between items-center flex-wrap gap-2">
         <div className="md:text-[20px] text-base text-500">
           <Input
             value={search}
@@ -183,9 +184,7 @@ export default function CreatorList() {
           />
         </div>
       </div>
-      {loading ? (
-        <Loading />
-      ) : creators?.length > 0 ? (
+      {creators?.length > 0 ? (
         <>
           <CreatorTable
             data={creators}
@@ -193,20 +192,18 @@ export default function CreatorList() {
             loader={internalLoader}
           />
           {/* Pagination */}
-          <div className="flex justify-end items-center mt-4">
             <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
             />
-          </div>
         </>
       ) : (
         <EmptyPlaceHolder
           title={"No_Creators_Available_Title"}
           description={"No_Creators_Available_Description"}
         />
-      )}
+      )}</>}
     </div>
   );
 }

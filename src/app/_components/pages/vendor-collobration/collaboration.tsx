@@ -102,13 +102,14 @@ const customStyles = {
   }),
   control:(base:any) => ({
     ...base,
-    width: '200px'
+    width: '200px',
+    borderRadius:"8px"
   })
 };
 export default function CollaborationList() {
   const t = useTranslations();
   const { account: user } = useAuthStore();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
   const [search, setSearch] = useState<string>("");
@@ -162,6 +163,7 @@ export default function CollaborationList() {
               });
               setCollaborations([...result]);
               setTotalPages(Math.ceil(collaborationCount / pageSize));
+              setCurrentPage(page);
             } else {
               setCollaborations([]);
               setCurrentPage(1);
@@ -189,8 +191,7 @@ export default function CollaborationList() {
     fetchCollaboration(currentPage);
   }, []);
   const handlePageChange = (page: number) => {
-    page !== currentPage && fetchCollaboration(page, true);
-    setCurrentPage(page);
+    page !== currentPage && fetchCollaboration(page, true,search,selectedStatus);
   };
   const debouncedSearch = useCallback(
     debounce((value: string, status: string) => {
@@ -209,15 +210,17 @@ export default function CollaborationList() {
     fetchCollaboration(currentPage, true, search, selectedOptions?.value);
   }
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4">
-      <div className="flex justify-between items-center gap-2">
+    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+      {loading ? (
+        <Loading />
+      ) : <><div className="flex justify-between items-center gap-2">
         <div
           className={`relative`}
         >
           <Input
             value={search}
             onChange={handleSearch}
-            placeholder={translate("Search_Product")}
+            placeholder={t("Search_Product")}
             className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
           />
           <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
@@ -234,9 +237,7 @@ export default function CollaborationList() {
         </div>
       </div>
       {internalLoader && <Loader />}
-      {loading ? (
-        <Loading />
-      ) : !loading && collaborations?.length > 0 ? (
+      {!loading && collaborations?.length > 0 ? (
         <>
           <CollaborationTable
             data={collaborations}
@@ -244,20 +245,18 @@ export default function CollaborationList() {
             refreshCentral={() => fetchCollaboration(currentPage, true)}
             loader={internalLoader}
           />
-          <div className="flex justify-end items-center mt-4">
             <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
             />
-          </div>
         </>
       ) : (
         <EmptyPlaceHolder
           title={"No_Collaborations_Available_Title"}
           description={"No_Collaborations_Available_Description"}
         />
-      )}
+      )}</>}
     </div>
   );
 }

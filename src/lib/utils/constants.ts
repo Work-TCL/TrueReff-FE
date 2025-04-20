@@ -83,10 +83,10 @@ export const statusMessage: { [key: string]: string } = {
   REJECTED: "Request Rejected",
   LIVE: "Collaboration Live",
   EXPIRED: "Collaboration Expired",
-  REQUESTED_CREATOR_TO_VENDOR: "Creator requested to you",
-  REQUESTED_VENDOR_TO_CREATOR: "You requested to creator",
-  REQUESTED_CREATOR_FROM_VENDOR: "You requested to vendor",
-  REQUESTED_VENDOR_FROM_CREATOR: "Vendor requested to you",
+  REQUESTED_CREATOR_TO_VENDOR: "Creator invited",
+REQUESTED_VENDOR_TO_CREATOR: "Requested creator",
+REQUESTED_CREATOR_FROM_VENDOR: "Requested vendor",
+REQUESTED_VENDOR_FROM_CREATOR: "Vendor invited",
 };
 export function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {

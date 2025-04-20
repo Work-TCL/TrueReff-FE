@@ -131,32 +131,26 @@ const CollaborationTable = ({
       : status;
   };
   return (
-    <div className="">
+    <div className="overflow-auto">
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
           <TableRow>
-            <CustomTableHead className="w-1/7">
+            <CustomTableHead className="w-1/5">
               {translate("Product_Name")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7">
-              {translate("Description")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/7">
+            <CustomTableHead className="w-1/5">
               {translate("Product_Category")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7">
-              {translate("Product_Sub_Category")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/7">
+            <CustomTableHead className="w-1/5">
               {translate("Product_Tags")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7">
-              {translate(`${user}_Name`)}
+            <CustomTableHead className="w-1/5">
+              {translate(`Brand`)}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7 text-center">
+            <CustomTableHead className="w-1/5 text-center">
               {translate("Status")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/7 text-center">
+            <CustomTableHead className="w-1/5 text-center">
               {translate("Action")}
             </CustomTableHead>
           </TableRow>
@@ -172,22 +166,16 @@ const CollaborationTable = ({
                     onClick={() => handleViewCreatorDetails(collaboration._id)}
                   >
                     <Avatar className="w-8 h-8">
-                      <AvatarImage src={collaboration?.product?.media[0]} />
+                      <AvatarImage src={collaboration?.product?.media[0]??"/assets/product/image-square.svg"} />
                       <AvatarImage
-                        src={"/assets/collaboration/collaboration-image.svg"}
+                        src={"/assets/product/image-square.svg"}
                       />
                     </Avatar>
                     {collaboration?.product?.title}
                   </div>
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.product?.description}
-                </CustomTableCell>
-                <CustomTableCell>
                   {collaboration?.product?.category}
-                </CustomTableCell>
-                <CustomTableCell>
-                  {collaboration?.product?.subCategories}
                 </CustomTableCell>
                 <CustomTableCell>
                   {collaboration?.product?.tag}
@@ -203,8 +191,6 @@ const CollaborationTable = ({
                     {collaboration?.fromUser?.business_name}
                   </div>
                 </CustomTableCell>
-                {/* <CustomTableCell>{""}</CustomTableCell> */}
-                {/* <CustomTableCell>{""}</CustomTableCell> */}
                 <CustomTableCell className="flex justify-center">
                   {status && (
                     <StatusBadge

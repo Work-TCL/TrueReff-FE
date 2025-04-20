@@ -7,13 +7,6 @@ import { CustomTableHead } from "@/app/_components/components-common/tables/Cust
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 
 import { Eye, Search } from "lucide-react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import Loading from "@/app/vendor/loading";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import Loader from "../../components-common/layout/loader";
@@ -24,6 +17,7 @@ import { debounce } from "lodash";
 import { useRouter } from "next/navigation";
 import dynamic from 'next/dynamic';
 import { Input } from "@/components/ui/input";
+import { TablePagination } from "../../components-common/tables/Pagination";
 const Select = dynamic(() => import('react-select'), { ssr: false });
 
 
@@ -49,6 +43,7 @@ export interface IProduct {
   createdAt: string; // or Date
   updatedAt: string;
   categories?: string;
+  subCategories?: string;
   tag?: string;
   price?: string;
 }
@@ -59,36 +54,31 @@ const customStyles = {
     fontSize: "0.875rem ", // Tailwind text-sm
     color: "#a1a1aa", // Tailwind slate-400
   }),
+  control:(base:any) => ({
+    ...base,
+    borderRadius:"8px"
+  })
 };
 
 export default function ProductList() {
   const translate = useTranslations();
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
-  const [cursors, setCursors] = useState<{
-    next: string | null;
-    previous: string | null;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  }>({
-    next: null,
-    previous: null,
-    hasNextPage: false,
-    hasPreviousPage: false,
-  });
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
   const [subCategory, setSubCategory] = useState<ICategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
   const [search, setSearch] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const pageLimit = 20;
 
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
-    ItemPerPage: number,
-    cursor: string | null = null,
+    page: number = currentPage,
     isInternalLoader: boolean = false,
     searchValue:string = "",
     categoryIds: string[] = []
@@ -96,9 +86,7 @@ export default function ProductList() {
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `product/vendor-product/product/list?per_page=${ItemPerPage}${
-          cursor ? `&cursor=${cursor}` : ""
-        }${searchValue ? `&search=${searchValue}`:""}`
+        `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${searchValue ? `&search=${searchValue}`:""}${categoryIds?.length > 0 ? `&categories=${categoryIds}`:""}`
       );
       if (response.data.data?.data) {
         setProductList(
@@ -106,26 +94,39 @@ export default function ProductList() {
             let categories =
               product.category?.length > 0
                 ? product.category
+                    .filter((cat:ICategory) => cat.parentId === null)
+                    .map((cat: ICategory) => cat?.name)
+                    ?.join(", ")
+                : "";
+                let subCategories =
+              product.category?.length > 0
+                ? product.category
+                    .filter((cat:ICategory) => cat.parentId !== null)
                     .map((cat: ICategory) => cat?.name)
                     ?.join(", ")
                 : "";
             let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
-            return { ...product, categories, tag };
+            return { ...product, categories, tag, subCategories };
           })
         );
+        setTotalPages(Math.ceil(response.data.data?.count / pageLimit));
+        setCurrentPage(page);
       }
       setLoading(false);
       setInternalLoading(false);
     } catch (error) {
       setLoading(false);
       setProductList([]);
+      setTotalPages(0);
+      setCurrentPage(1);
       setInternalLoading(false);
     }
   };
 
   // Update useEffect to fetch the initial product list
   useEffect(() => {
-    fetProductsList(20);
+    fetProductsList(currentPage);
+    fetchCategory();
   }, []);
   const fetchCategory = async () => {
     try {
@@ -138,25 +139,14 @@ export default function ProductList() {
     }
   };
 
-  useEffect(() => {
-    fetchCategory();
-  }, []);
-
   // Update the onClick handlers for pagination buttons
-  const handleNextPage = () => {
-    if (cursors.next && cursors.hasNextPage) {
-      fetProductsList(20, cursors.next, true);
-    }
+  const handlePageChange = (page:number) => {
+    page !== currentPage && fetProductsList(page, true,search,[...selectedCategories,...selectedSubCategories]);
   };
 
-  const handlePreviousPage = () => {
-    if (cursors.previous && cursors.hasPreviousPage) {
-      fetProductsList(20, cursors.previous, true);
-    }
-  };
   const debouncedSearch = useCallback(
         debounce((value: string,categoryIds:string[]) => {
-          fetProductsList(20, cursors.previous, true, value,categoryIds);
+          fetProductsList(1, true, value,categoryIds);
         }, 500),
         []
       );
@@ -178,16 +168,18 @@ export default function ProductList() {
       const availableSubCategoriesIds = optionsSubCategory.map((v) => v._id);
       let selectedSubCategory = selectedSubCategories.filter((id) => availableSubCategoriesIds.includes(id))
       setSelectedSubCategories(selectedSubCategory);
-      fetProductsList(20, cursors.previous, true, search,[...selectedIds, ...selectedSubCategory]);
+      fetProductsList(1, true, search,[...selectedIds, ...selectedSubCategory]);
     }
     const handleSelectSubCategory = (selectedOptions: any) => {
       const selectedIds = selectedOptions.map((opt: any) => opt.value);
       setSelectedSubCategories(selectedIds);
-      fetProductsList(20, cursors.previous, true, search,[...selectedCategories,...selectedIds]);
+      fetProductsList(1, true, search,[...selectedCategories,...selectedIds]);
     }
   return (
      <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
-       <div className="flex justify-between items-center gap-2">
+       {loading ? (
+        <Loading />
+      ) : <><div className="flex justify-between items-center gap-2">
         <div
           className={`relative`}
         >
@@ -199,7 +191,7 @@ export default function ProductList() {
           />
           <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
         </div>
-        <div className="hidden md:flex-row flex-col gap-2 w-full justify-end">
+        <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
           <Select
             styles={customStyles}
             value={selectedCategories.map((id) => {
@@ -236,22 +228,23 @@ export default function ProductList() {
         </div>
       </div>
       {internalLoading && <Loader />}
-      {loading ? (
-        <Loading />
-      ) : productList?.length > 0 ? (
+      {productList?.length > 0 ? (
         <>          
-          <div className="overflow-auto flex-1">
+          <div className="overflow-auto">
             <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
               <TableHeader className="bg-stroke">
                 <TableRow>
-                  <CustomTableHead className="w-1/6">
+                  <CustomTableHead className="w-1/7">
                     {translate("Channel")}
                   </CustomTableHead>
                   <CustomTableHead className="w-1/4">
                     {translate("Product_Name")}
                   </CustomTableHead>
-                  <CustomTableHead className="w-1/6">
+                  <CustomTableHead className="w-1/7">
                     {translate("Categories")}
+                  </CustomTableHead>
+                  <CustomTableHead className="w-1/7">
+                    {translate("Sub_category")}
                   </CustomTableHead>
                   <CustomTableHead className="w-1/4">
                     {translate("Tags")}
@@ -259,10 +252,10 @@ export default function ProductList() {
                   <CustomTableHead className="w-1/4">
                     {translate("SKU")}
                   </CustomTableHead>
-                  <CustomTableHead className="w-1/6">
+                  <CustomTableHead className="w-1/7">
                     Selling {translate("Price")}
                   </CustomTableHead>
-                  <CustomTableHead className="w-1/6 text-center">
+                  <CustomTableHead className="w-1/7 text-center">
                     {translate("Action")}
                   </CustomTableHead>
                 </TableRow>
@@ -282,6 +275,7 @@ export default function ProductList() {
                       </div>
                     </CustomTableCell>
                     <CustomTableCell>{product.categories}</CustomTableCell>
+                    <CustomTableCell>{product.subCategories}</CustomTableCell>
                     <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
                     <CustomTableCell>{product.sku}</CustomTableCell>
                     <CustomTableCell>{product.price}</CustomTableCell>
@@ -294,44 +288,18 @@ export default function ProductList() {
             </Table>
           </div>
           {/* Pagination */}
-          {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
-            <div className="flex justify-end items-center mt-1">
-              <Pagination className="flex justify-end mt-1">
-                <PaginationContent className="flex items-center gap-2">
-                  <PaginationItem>
-                    <PaginationPrevious
-                      className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                        !cursors.hasPreviousPage
-                          ? "cursor-not-allowed opacity-50"
-                          : ""
-                      }`}
-                      showArrow={false}
-                      onClick={handlePreviousPage}
-                    />
-                  </PaginationItem>
-
-                  <PaginationItem>
-                    <PaginationNext
-                      className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                        !cursors.hasNextPage
-                          ? "cursor-not-allowed opacity-50"
-                          : ""
-                      }`}
-                      showArrow={false}
-                      onClick={handleNextPage}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>{" "}
-            </div>
-          ) : null}
+            <TablePagination
+              totalPages={totalPages}
+              activePage={currentPage}
+              onPageChange={handlePageChange}
+            />
         </>
       ) : (
         <EmptyPlaceHolder
           title={"No_Products_Available_Title"}
           description={"No_Products_Available_Description"}
         />
-      )}
+      )}</>}
     </div>
   );
 }

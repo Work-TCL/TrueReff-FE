@@ -9,7 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface TablePaginationProps {
   totalPages: number;
@@ -24,6 +24,9 @@ export function TablePagination({
 }: TablePaginationProps) {
   const [currentPage, setCurrentPage] = useState(activePage);
 
+  useEffect(()=> {
+    setCurrentPage(activePage);
+  },[activePage])
   // Function to handle page click
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -63,7 +66,7 @@ export function TablePagination({
   };
 
   return (
-    <Pagination className="flex justify-center mt-4">
+    <Pagination className="flex justify-center">
       <PaginationContent className="flex items-center gap-2">
         <PaginationItem>
           <PaginationPrevious

@@ -94,7 +94,8 @@ const customStyles = {
   }),
   control:(base:any) => ({
     ...base,
-    width: '200px'
+    width: '200px',
+    borderRadius:"8px"
   })
 };
 export interface IStatus {
@@ -104,7 +105,7 @@ export interface IStatus {
 export default function CollaborationList() {
   const translate = useTranslations();
   const { account: user } = useAuthStore();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
@@ -162,6 +163,7 @@ export default function CollaborationList() {
               });
               setCollaborations([...result]);
               setTotalPages(Math.ceil(collaborationCount / pageSize));
+              setCurrentPage(page);
             } else {
               setCollaborations([]);
               setCurrentPage(1);
@@ -190,7 +192,7 @@ export default function CollaborationList() {
   }, []);
   const debouncedSearch = useCallback(
     debounce((value: string,status:string) => {
-      fetchCollaboration(currentPage, true, value,status);
+      fetchCollaboration(1, true, value,status);
     }, 500),
     []
   );
@@ -202,16 +204,17 @@ export default function CollaborationList() {
   };
 
   const handlePageChange = (page: number) => {
-    page !== currentPage && fetchCollaboration(page, true);
-    setCurrentPage(page);
+    page !== currentPage && fetchCollaboration(page, true,search,selectedStatus);
   };
   const handleSelectStatus = (selectedOptions: any) => {
     setSelectedStatus(selectedOptions?.value);
-    fetchCollaboration(currentPage, true, search, selectedOptions?.value);
+    fetchCollaboration(1, true, search, selectedOptions?.value);
   }
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4">
-      <div className="flex justify-between items-center gap-2">
+    <div className="p-4 rounded-lg flex flex-col gap-3 h-full">
+      {loading ? (
+        <Loading />
+      ) : <><div className="flex justify-between items-center gap-2">
         <div
           className={`relative`}
         >
@@ -235,9 +238,7 @@ export default function CollaborationList() {
         </div>
       </div>
       {internalLoader && <Loader />}
-      {loading ? (
-        <Loading />
-      ) : collaborations?.length > 0 ? (
+      {collaborations?.length > 0 ? (
         <>
           <CollaborationTable
             data={collaborations}
@@ -246,20 +247,18 @@ export default function CollaborationList() {
             fetchCollaboration={() => fetchCollaboration(currentPage, true)}
           />
           {/* Pagination */}
-          <div className="flex justify-end items-center mt-4">
             <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
             />
-          </div>
         </>
       ) : (
         <EmptyPlaceHolder
           title={"No_Collaborations_Available_Title"}
           description={"No_Collaborations_Available_Description"}
         />
-      )}
+      )}</>}
     </div>
   );
 }

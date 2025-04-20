@@ -120,33 +120,27 @@ const CollaborationTable = ({
       : status;
   };
   return (
-    <div className="">
+    <div className="overflow-auto">
       {(loading || loader) && <Loader />}
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
           <TableRow>
-            <CustomTableHead className="w-1/8">
+            <CustomTableHead className="w-1/5">
               {translate("Product_Name")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8">
-              {translate("Description")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/8">
+            <CustomTableHead className="w-1/5">
               {translate("Product_Category")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8">
-              {translate("Sub_category")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/8">
+            <CustomTableHead className="w-1/5">
               {translate("Product_Tags")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8">
-              {translate(`${user}_Name`)}
+            <CustomTableHead className="w-1/5">
+              {translate("Creator")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8 text-center">
+            <CustomTableHead className="w-1/5 text-center">
               {translate("Status")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/8 text-center">
+            <CustomTableHead className="w-1/5 text-center">
               {translate("Action")}
             </CustomTableHead>
           </TableRow>
@@ -171,13 +165,7 @@ const CollaborationTable = ({
                   </div>
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.product?.description}
-                </CustomTableCell>
-                <CustomTableCell>
                   {collaboration?.product?.category}
-                </CustomTableCell>
-                <CustomTableCell>
-                  {collaboration?.product?.subCategories}
                 </CustomTableCell>
                 <CustomTableCell>
                   {collaboration?.product?.tag}

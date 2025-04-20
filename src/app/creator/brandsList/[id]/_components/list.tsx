@@ -87,12 +87,16 @@ const customStyles = {
     fontSize: "0.875rem ", // Tailwind text-sm
     color: "#a1a1aa", // Tailwind slate-400
   }),
+  control: (base:any) => ({
+    ...base,
+    borderRadius:"8px"
+  })
 };
 export default function CreatorList() {
   const params = useParams();
   const router = useRouter();
   const translate = useTranslations();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [brandProducts, setBrandProducts] = useState<IBrand[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -137,6 +141,7 @@ export default function CreatorList() {
               });
               setBrandProducts([...result]);
               setTotalPages(Math.ceil(brandsCount / pageSize));
+              setCurrentPage(page);
             } else {
               setBrandProducts([]);
               setCurrentPage(1);
@@ -162,6 +167,7 @@ export default function CreatorList() {
 
   useEffect(() => {
     getBrandProductList(currentPage);
+    fetchCategory();
   }, []);
   const fetchCategory = async () => {
       try {
@@ -173,10 +179,6 @@ export default function CreatorList() {
         console.error("Error fetching categories:", error);
       }
     };
-  
-    useEffect(() => {
-      fetchCategory();
-    }, []);
 
   const handleUpdateCollaboration = () => {
     getBrandProductList(currentPage, true);
@@ -193,8 +195,7 @@ export default function CreatorList() {
     debouncedSearch(value,[...selectedCategories,...selectedSubCategories]);
   };
   const handlePageChange = (page: number) => {
-    page !== currentPage && getBrandProductList(page, true);
-    setCurrentPage(page);
+    page !== currentPage && getBrandProductList(page, true,search,[...selectedCategories,...selectedSubCategories]);
   };
   const handleSelectCategory = (selectedOptions: any) => {
     const selectedIds = selectedOptions.map((opt: any) => opt.value);
@@ -217,13 +218,15 @@ export default function CreatorList() {
     getBrandProductList(currentPage, true, search, [...selectedCategories,...selectedIds]);
   }
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4">
-      <div className="text-[20px] text-500">
+    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+      {loading ? (
+        <Loading />
+      ) : <><div className="text-[20px] text-500">
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
                   <BreadcrumbPage
-                    className="cursor-pointer hover:text-[grey]"
+                    className="cursor-pointer hover:text-[grey] hover:underline"
                     onClick={() => router.push(`/creator/brandsList`)}
                   >
                     Brand Lists
@@ -285,9 +288,7 @@ export default function CreatorList() {
         </div>
       </div>
       {internalLoader && <Loader />}
-      {loading ? (
-        <Loading />
-      ) : brandProducts?.length > 0 ? (
+      {brandProducts?.length > 0 ? (
         <>
           
           <BrandProductTable
@@ -295,20 +296,18 @@ export default function CreatorList() {
             handleUpdateCollaboration={handleUpdateCollaboration}
           />
           {/* Pagination */}
-          <div className="flex justify-end items-center mt-4">
             <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
             />
-          </div>
         </>
       ) : (
         <EmptyPlaceHolder
           title={"No_Products_Available_Title"}
           description={"No_Products_Available_Description"}
         />
-      )}
+      )}</>}
     </div>
   );
 }

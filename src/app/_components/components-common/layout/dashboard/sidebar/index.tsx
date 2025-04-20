@@ -261,7 +261,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
             )}
           </div>
         </div>
-        <nav className="flex flex-col space-y-2 px-3 overflow-auto flex-1">
+        <nav className="flex flex-col space-y-2 px-3 overflow-auto overflow-x-hidden flex-1">
           {(menu ?? []).map((item, idx) => (
             <div key={idx} className="group">
               {isSidebarExpanded ? (

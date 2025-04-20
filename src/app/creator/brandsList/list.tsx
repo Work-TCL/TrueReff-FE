@@ -25,7 +25,7 @@ export interface Brand {
   logo: string;
 }
 export default function BrandList() {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [search, setSearch] = useState<string>();
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -106,9 +106,9 @@ export default function BrandList() {
       className={`flex flex-col md:p-6 p-4 md:gap-6 gap-4 ${Boolean(brands.length === 0) ? "h-full" : ""
         }`}
     >
-      <div
-        className={`relative`}
-      >
+      {loading ? (
+        <Loading />
+      ) : <><div className={`relative`}>
         <Input
           value={search}
           onChange={handleSearch}
@@ -118,11 +118,8 @@ export default function BrandList() {
         <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
       </div>
       {internalLoader && <Loader />}
-      {loading ? (
-        <Loading />
-      ) : brands?.length > 0 ? (
+      {brands?.length > 0 ? (
         <>
-
           <div className="grid 1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
             {brands.map((brand: any) => (
               <BrandCard key={brand.id} {...brand} />
@@ -146,7 +143,7 @@ export default function BrandList() {
           title={"No_Brands_Available_Title"}
           description={"No_Brands_Available_Description"}
         />
-      )}
+      )}</>}
     </div>
   );
 }

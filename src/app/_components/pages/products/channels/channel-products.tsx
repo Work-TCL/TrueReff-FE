@@ -44,7 +44,7 @@ export default function ChannelProductList({
   channelName = "shopify",
 }: IProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [currentData, setCurrentData] = useState<IProduct | null>(null);
@@ -124,7 +124,9 @@ export default function ChannelProductList({
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
-      <div className="flex justify-between items-center gap-2">
+      {loading ? (
+        <Loading />
+      ) : <><div className="flex justify-between items-center gap-2">
         <div
           className={`relative`}
         >
@@ -138,9 +140,7 @@ export default function ChannelProductList({
         </div>
       </div>
       {internalLoader && <Loader />}
-      {loading ? (
-        <Loading />
-      ) : productList?.length > 0 ? (
+      {productList?.length > 0 ? (
         <>
           <div className="overflow-auto flex-1">
             <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
@@ -242,8 +242,8 @@ export default function ChannelProductList({
           )}
           {/* Pagination */}
           {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
-            <div className="flex justify-end items-center mt-1">
-              <Pagination className="flex justify-end mt-1">
+            <div className="flex justify-center items-center">
+              <Pagination className="flex justify-center mt-1">
                 <PaginationContent className="flex items-center gap-2">
                   <PaginationItem>
                     <PaginationPrevious
@@ -278,7 +278,7 @@ export default function ChannelProductList({
           title={"No_Products_Available_Title"}
           description={"No_Products_Available_Description"}
         />
-      )}
+      )}</>}
     </div>
   );
 }

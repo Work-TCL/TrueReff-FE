@@ -88,11 +88,15 @@ const customStyles = {
     fontSize: "0.875rem ", // Tailwind text-sm
     color: "#a1a1aa", // Tailwind slate-400
   }),
+  control: (base:any) => ({
+    ...base,
+    borderRadius:"8px"
+  })
 };
 
 export default function ProductList() {
   const translate = useTranslations();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [filter, setFilter] = useState<string>("5");
@@ -139,6 +143,7 @@ export default function ProductList() {
               });
               setProducts([...result]);
               setTotalPages(Math.ceil(productsCount / pageSize));
+              setCurrentPage(page);
             } else {
               setProducts([]);
               setCurrentPage(1);
@@ -192,8 +197,7 @@ export default function ProductList() {
     debouncedSearch(value,[...selectedCategories,...selectedSubCategories]); // call debounce on value
   };
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    page !== currentPage && getProductList(page, true);
+    page !== currentPage && getProductList(page, true,search,[...selectedCategories,...selectedSubCategories]);
   };
   const handleUpdateProduct = () => {
     getProductList(currentPage, true);
@@ -222,8 +226,10 @@ export default function ProductList() {
   }
 
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4">
-      <div className="flex justify-between items-center gap-2">
+    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+      {loading ? (
+        <Loading />
+      ) : <><div className="flex justify-between items-center gap-2">
         <div
           className={`relative`}
         >
@@ -272,29 +278,25 @@ export default function ProductList() {
         </div>
       </div>
       {internalLoader && <Loader />}
-      {loading ? (
-        <Loading />
-      ) : products?.length > 0 ? (
+      {products?.length > 0 ? (
         <>
           <ProductTable
             data={products}
             handleUpdateProduct={handleUpdateProduct}
           />
           {/* Pagination */}
-          <div className="flex justify-end items-center mt-4">
             <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
-            />
-          </div>
+            />  
         </>
       ) : (
         <EmptyPlaceHolder
           title={"No_Products_Available_Title"}
           description={"No_Products_Available_Description"}
         />
-      )}
+      )}</>}
     </div>
   );
 }

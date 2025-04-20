@@ -33,7 +33,7 @@ export default function BrandCard({
 
   return (
     <Card
-      className="xl:w-[280px] sm:w-[240px] w-full h-auto xl:max-h-[372px] border border-stroke rounded-xl shadow-md p-2 flex flex-col items-center text-center gap-3"
+      className="xl:w-[280px] cursor-pointer sm:w-[240px] w-full h-auto xl:max-h-[372px] border border-stroke rounded-xl shadow-md p-2 flex flex-col items-center text-center gap-3"
       onClick={() => handleBrand(id)}
     >
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
