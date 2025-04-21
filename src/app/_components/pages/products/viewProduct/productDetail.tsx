@@ -9,50 +9,45 @@ export function ProductInfo({productData}:IProductInfoProps) {
 
   return (
     <div className="flex flex-1 flex-col gap-5">
-      <p className="text-text font-medium text-xl">Product Image</p>
-        <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
+      <p className="text-text font-medium text-xl">General Information</p>
           <div className="flex flex-col w-full gap-1">
             <label className="text-[16px] text-font-grey">
               {translate("Product_Name")}
             </label>
-            <input
-            name="product_name"
-              className="p-2 border rounded-md w-full"
-              value={productData?.name}
-              disabled
-            />
+            <div
+              className="p-2  bg-[#FAFAFA] rounded-md w-full"
+            >{productData?.name}</div>
           </div>
-          <div className="flex flex-col w-full gap-1">
+        <div className="flex flex-col w-full gap-1">
             <label className="text-[16px] text-font-grey">
               {translate("Product_Category")}
             </label>
-            <input
-              className="p-2 border rounded-md w-full"
-              value={productData?.category}
-              disabled
-            />
+            <div
+              className="p-2  bg-[#FAFAFA] rounded-md w-full"
+            >{productData?.category}</div>
           </div>
-          <div className="flex flex-col w-full gap-1">
+          
+        <div className="flex flex-col w-full gap-1">
             <label className="text-[16px] text-font-grey">
               {translate("Product_Tags")}
             </label>
-            <input
-              className="p-2 border rounded-md w-full"
-              value={productData?.tags?.join(", ")}
-              disabled
-            />
+            <div
+              className="flex flex-wrap w-full gap-3"
+            >
+              {productData?.tags?.map((tag:string,index:number) => {
+                return (
+                  <div key={`${tag}_${index}`} className="py-1 px-2 border rounded-md bg-gray-100 border-gray-10">#{tag}</div>
+                )
+              })}
+            </div>
           </div>
-        </div>
         <div className="flex flex-col w-full gap-1">
           <label className="text-[16px] text-font-grey">
             {translate("Description")}
           </label>
-          <textarea
-            rows={4}
-            className="p-2 border rounded-md w-full"
-            value={productData?.description}
-            disabled
-          />
+          <div
+            className={`p-2 bg-[#FAFAFA] rounded-md w-full ${productData?.description ? "":"h-[100px]"}`}
+          >{productData?.description}</div>
         </div>
 
         <div className="flex h-[45%] md:flex-row flex-col w-full items-start gap-3">

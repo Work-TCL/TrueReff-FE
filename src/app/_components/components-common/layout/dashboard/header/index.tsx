@@ -182,10 +182,12 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       return translate("Bargaining");
     } else if(pathName.includes("/creator/profile/")){
       return translate("Creator_Profile");
-    } else if(pathName.includes("/vendor/products/view/")){
+    } else if(pathName.includes("/vendor/products/view/") || pathName.includes("/vendor/products/")){
       return translate("Product_Details");
     } else if(pathName.includes("/creator/brandsList/")) {
       return translate("Brand_Products")
+    } else if(pathName.includes("/vendor/profile/")){
+      return translate("Brand_Profile")
     } else {
       return pageNames[pathName];
     }

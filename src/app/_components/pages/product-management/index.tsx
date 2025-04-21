@@ -29,6 +29,7 @@ export interface ICategory {
 export interface IVendor {
   _id: string;
   business_name: string;
+  profile_image?: string;
 }
 
 export interface IRequest {
@@ -285,11 +286,11 @@ export default function ProductList() {
             handleUpdateProduct={handleUpdateProduct}
           />
           {/* Pagination */}
-            <TablePagination
+            {totalPages > 1 && <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
-            />  
+            />}  
         </>
       ) : (
         <EmptyPlaceHolder

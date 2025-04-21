@@ -24,6 +24,7 @@ import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
 import axios from "@/lib/web-api/axios";
+import LoadingPage from "@/lib/components/loading-page";
 
 interface ICategory {
   _id: string;
@@ -304,10 +305,10 @@ export default function ViewProductDetail() {
   };
 
   return (
-    <div className="flex flex-col w-full p-6 gap-6">
-      {loading && <Loader />}
+    <div className="flex flex-col w-full p-3 md:p-6 gap-4">
+      {loading ? <LoadingPage /> : <>
       {/* Breadcrumb and Button */}
-      <div className="flex md:flex-row flex-col items-start justify-between md:items-center gap-2">
+      <div className="flex md:flex-row items-center justify-between md:items-center gap-2">
         <Breadcrumb>
           <BreadcrumbList className="md:text-sm text-xs">
             <BreadcrumbItem>
@@ -353,13 +354,13 @@ export default function ViewProductDetail() {
 
       {/* Card Section */}
       <Card className="bg-white rounded-lg overflow-auto">
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CardContent className=" p-3 md:p-6">
+          <div className="flex flex-col md:flex-row gap-4">
             <ProductImageGallery images={productData?.images} />
             <ProductInfo productData={productData} />
           </div>
         </CardContent>
-      </Card>
+      </Card></>}
     </div>
   );
 }

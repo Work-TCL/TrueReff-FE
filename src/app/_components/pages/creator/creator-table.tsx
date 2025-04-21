@@ -101,19 +101,10 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
                   className="flex items-center cursor-pointer gap-2"
                   onClick={() => handleViewCreatorDetails(creator._id)}
                 >
-                  {creator.profile_image ? (
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={creator.profile_image} />
-                      <AvatarImage src={"/assets/creator/creator-image.svg"} />
-                    </Avatar>
-                  ) : (
-                    <ImageOff className="w-6 h-6 text-gray-400" />
-                  )}
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={creator.full_name}
-                  />
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage className={creator.profile_image?"":"opacity-50"} src={creator.profile_image?creator.profile_image:"/assets/profile/profile-image.png"} />
+                  </Avatar>
+                  {creator.full_name}
                 </div>
               </CustomTableCell>
               <CustomTableCell>

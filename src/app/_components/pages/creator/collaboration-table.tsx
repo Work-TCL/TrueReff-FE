@@ -170,8 +170,10 @@ const CollaborationTable = ({
               <TableRow key={index} className="bg-white hover:bg-gray-100">
                 <CustomTableCell>
                   <div
-                    className="flex items-center gap-2"
-                    onClick={() => handleViewCreatorDetails(collaboration._id)}
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() =>
+                      handleProductDetail(collaboration?.product?._id)
+                    }
                   >
                     {collaboration?.product?.media[0] ? (
                       <Avatar className="w-8 h-8">
@@ -216,15 +218,11 @@ const CollaborationTable = ({
                       )
                     }
                   >
-                    {collaboration?.fromUser?.profile_image ? (
                       <Avatar className="w-8 h-8">
                         <AvatarImage
-                          src={collaboration?.fromUser?.profile_image}
+                          className={collaboration?.fromUser?.profile_image?"":"opacity-50"} src={collaboration?.fromUser?.profile_image?collaboration?.fromUser?.profile_image:"/assets/profile/profile-image.png"}
                         />
                       </Avatar>
-                    ) : (
-                      <ImageOff className="w-6 h-6 text-gray-400" />
-                    )}
 
                     <TruncateWithToolTip
                       checkHorizontalOverflow={false}

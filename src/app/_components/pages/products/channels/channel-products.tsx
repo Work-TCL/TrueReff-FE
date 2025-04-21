@@ -183,7 +183,9 @@ export default function ChannelProductList({
                           {product.id.split("/").pop()}
                         </CustomTableCell>
                         <CustomTableCell>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 cursor-pointer" onClick={() =>
+                            router.push(`shopify/view?id=${product.id}`)
+                          }>
                             {product.image ? (
                               <Avatar className="w-8 h-8">
                                 <AvatarImage src={product.image} />

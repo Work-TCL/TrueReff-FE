@@ -245,11 +245,11 @@ export default function CollaborationList() {
             refreshCentral={() => fetchCollaboration(currentPage, true)}
             loader={internalLoader}
           />
-            <TablePagination
+           {totalPages > 1 &&  <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
-            />
+            />}
         </>
       ) : (
         <EmptyPlaceHolder

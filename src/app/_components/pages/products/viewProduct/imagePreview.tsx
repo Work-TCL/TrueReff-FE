@@ -6,9 +6,9 @@ interface ProductImageGalleryProps {
 }
 export function ProductImageGallery({ images }: ProductImageGalleryProps) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 md:w-2/5">
       <p className="text-text font-medium text-xl">Product Image</p>
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-3">
         {images?.length > 0 && (
           <div
             key={images[0]}
@@ -24,7 +24,7 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-3 overflow-auto max-h-[210px] pr-2">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 overflow-auto max-h-[230px]">
           {images?.length > 1 &&
             images.slice(1).map((img, index) => (
               <div key={index} className="border border-border rounded-2xl p-2">

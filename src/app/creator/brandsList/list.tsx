@@ -33,7 +33,7 @@ export default function BrandList() {
   const [totalPages, setTotalPages] = useState(0);
   // const translate = useTranslations();
 
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
 
   // Get Brand list
   const getBrandList = async (
@@ -65,7 +65,7 @@ export default function BrandList() {
               logo: brand.profile_image,
             }));
             setBrands(transformedData);
-            setTotalPages(Math.ceil(response.data.count / itemsPerPage));
+            setTotalPages(Math.ceil(brandData.count / itemsPerPage));
           } else {
             console.error("Expected an array but got:", brandsArray);
             setBrands([]);
@@ -105,9 +105,7 @@ export default function BrandList() {
   };
   return (
     <div
-      className={`flex flex-col md:p-6 p-4 md:gap-6 gap-4 ${
-        Boolean(brands.length === 0) ? "h-full" : ""
-      }`}
+      className={`flex flex-col p-4 gap-4 h-full`}
     >
       {loading ? (
         <Loading />
@@ -125,22 +123,20 @@ export default function BrandList() {
           {internalLoader && <Loader />}
           {brands?.length > 0 ? (
             <>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 p-2 md:p-4 bg-white rounded-[20px] overflow-auto">
                 {brands.map((brand: any) => (
                   <BrandCard key={brand.id} {...brand} />
                 ))}
               </div>
               {totalPages > 1 && (
-                <div className="flex justify-end items-center mt-4">
                   <TablePagination
                     totalPages={totalPages}
                     activePage={currentPage}
                     onPageChange={(page) => {
                       setCurrentPage(page);
-                      page !== currentPage && getBrandList(page, true);
+                      page !== currentPage && getBrandList(page, true,search);
                     }}
                   />
-                </div>
               )}
             </>
           ) : (

@@ -51,6 +51,7 @@ export interface ICollaboration {
 export interface IVendor {
   _id: string;
   business_name: string;
+  profile_image?: string;
 }
 
 export interface IRequest {
@@ -296,11 +297,11 @@ export default function CreatorList() {
             handleUpdateCollaboration={handleUpdateCollaboration}
           />
           {/* Pagination */}
-            <TablePagination
+            {totalPages > 1 && <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
-            />
+            />}
         </>
       ) : (
         <EmptyPlaceHolder

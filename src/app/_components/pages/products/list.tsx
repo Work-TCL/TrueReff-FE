@@ -279,7 +279,7 @@ export default function ProductList() {
                       >
                         <CustomTableCell>{product.channelName}</CustomTableCell>
                         <CustomTableCell>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push(`/vendor/products/view/${product._id}`)}>
                             {product.media?.length > 0 && product.media[0] ? (
                               <Avatar className="w-8 h-8">
                                 <AvatarImage src={product.media[0]} />
@@ -349,11 +349,11 @@ export default function ProductList() {
                 </Table>
               </div>
               {/* Pagination */}
-              <TablePagination
+              {totalPages > 1 &&<TablePagination
                 totalPages={totalPages}
                 activePage={currentPage}
                 onPageChange={handlePageChange}
-              />
+              />}
             </>
           ) : (
             <EmptyPlaceHolder

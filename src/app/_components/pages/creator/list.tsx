@@ -192,11 +192,11 @@ export default function CreatorList() {
             loader={internalLoader}
           />
           {/* Pagination */}
-            <TablePagination
+            {totalPages > 1 && <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
-            />
+            />}
         </>
       ) : (
         <EmptyPlaceHolder

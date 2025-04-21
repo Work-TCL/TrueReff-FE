@@ -191,7 +191,7 @@ export default function CampaignList() {
                         className="even:bg-gray-100 odd:bg-white"
                       >
                         <CustomTableCell>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push(`/vendor/campaign/${campaign?._id}?view=true`)}>
                             {campaign?.imageUrls?.length > 0 &&
                             campaign?.imageUrls[0] ? (
                               <Avatar className="w-8 h-8">
@@ -208,7 +208,7 @@ export default function CampaignList() {
                           </div>
                         </CustomTableCell>
                         <CustomTableCell>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push(`/vendor/products/view/${campaign?.productId?._id}`)}>
                             {campaign?.productId?.media?.length &&
                             campaign?.productId?.media[0] ? (
                               <Avatar className="w-8 h-8">

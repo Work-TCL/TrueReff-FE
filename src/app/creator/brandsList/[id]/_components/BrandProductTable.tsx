@@ -146,12 +146,9 @@ export default function BrandProductTable({
             return (
               <TableRow key={index} className="bg-white hover:bg-gray-100">
                 <CustomTableCell>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleDetailView(brand._id)}>
                     <Avatar className="w-8 h-8">
-                      {brand.media?.length > 0 && (
-                        <AvatarImage src={brand.media[0]} />
-                      )}
-                      <AvatarImage src={"/assets/brand/brand-image.svg"} />
+                        <AvatarImage className={brand.media?.length > 0  ? "":"opacity-50"} src={brand.media?.length > 0 ? brand.media[0]:"/assets/profile/profile-image.png"} />
                     </Avatar>
                     <TruncateWithToolTip
                       checkHorizontalOverflow={false}
@@ -168,11 +165,16 @@ export default function BrandProductTable({
                   />
                 </CustomTableCell>
                 <CustomTableCell>
-                  <TruncateWithToolTip
+                <div className="flex items-center gap-2 cursor-pointer" onClick={()=> router.push(`/vendor/profile/${brand?.vendor?._id}`)}>
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage className={brand?.vendor?.profile_image?"":"opacity-50"} src={brand?.vendor?.profile_image ? brand?.vendor?.profile_image : '/assets/profile/profile-image.png' } />
+                    </Avatar>
+                    <TruncateWithToolTip
                     checkHorizontalOverflow={false}
                     linesToClamp={2}
                     text={brand?.vendor?.business_name}
                   />
+                  </div>
                 </CustomTableCell>
                 <CustomTableCell>
                   <TruncateWithToolTip

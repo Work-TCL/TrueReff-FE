@@ -121,7 +121,7 @@ export default function CollaborationList() {
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [pageSize] = useState(20);
+  const pageSize = 20;
 
   // get user role
   const getUserType = () => {
@@ -247,11 +247,11 @@ export default function CollaborationList() {
             fetchCollaboration={() => fetchCollaboration(currentPage, true)}
           />
           {/* Pagination */}
-            <TablePagination
+            {totalPages > 1 && <TablePagination
               totalPages={totalPages}
               activePage={currentPage}
               onPageChange={handlePageChange}
-            />
+            />}
         </>
       ) : (
         <EmptyPlaceHolder
