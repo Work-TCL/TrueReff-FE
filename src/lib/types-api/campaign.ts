@@ -39,3 +39,45 @@ export interface IPOSTCreateCampaignResponse {
 export interface IGETCampaignRequest {
   id: string;
 }
+
+export interface IGETCampaignListRequest {
+  page: number;
+  limit: number;
+  search?: string;
+  status?: string;
+}
+
+export interface ICampaignProduct {
+  _id: string;
+  title: string;
+  channelProductId: string;
+  vendorId: string;
+  sku: string;
+  description: string;
+  media: string[];
+  channelName: string;
+  category: string[];
+  tags: string[],
+  createdAt: string;
+  updatedAt: string;
+}
+export interface ICampaignData {
+    _id: string;
+    name: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    status: string;
+    productId: ICampaignProduct,
+    channels: string[],
+    discount_type: string;
+    discount_value: string;
+    vendorId: string;
+    imageUrls: string[],
+    createdAt: string;
+    updatedAt: string;
+}
+export interface IGETCampaignListResponse {
+  campaigns: ICampaignData[];
+  count: number;
+}

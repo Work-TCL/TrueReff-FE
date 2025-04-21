@@ -1,5 +1,7 @@
 import {
   ICampaign,
+  IGETCampaignListRequest,
+  IGETCampaignListResponse,
   IGETCampaignRequest,
   IPOSTCreateCampaignRequest,
   IPOSTCreateCampaignResponse,
@@ -48,6 +50,19 @@ export const getCampaign = async (
   try {
     const response = await axios.get(`/product/campaign/${params.id}`);
     return response?.data?.data?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While getCampaign.");
+  }
+};
+
+export const getCampaignList = async (
+  params: IGETCampaignListRequest
+): Promise<IGETCampaignListResponse> => {
+  const {page,limit,search,status} = params;
+  try {
+    const response = await axios.get(`/product/campaign/list?limit=${limit}&page=${page}${search ? `&search=${search}`:''}${status ? `&status=${status}`:""}`);
+    return response?.data?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While getCampaign.");

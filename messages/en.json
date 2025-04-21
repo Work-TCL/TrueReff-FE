@@ -362,5 +362,8 @@
   "Creator":"Creator",
   "Creator_Profile":"Creator_Profile",
   "Brand_Profile": "Brand_Profile",
-  "Brand_Products":"Brand_Products"
+  "Brand_Products":"Brand_Products",
+  "No_Campaigns_Available_Title":"No Campaigns Available",
+  "No_Campaigns_Available_Description":"It seems there are currently no campaigns to display. Please check back later.",
+  "Search_Campaign":"Search Campaign"
 }

@@ -106,7 +106,6 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         setNotifications([]);
       }
     } catch (error: any) {
-      toast.error(error?.message || "Notifications Fetch Failed.");
       setUnReadNotifications(0);
       setTotalNotification(0);
       setNotifications([]);
