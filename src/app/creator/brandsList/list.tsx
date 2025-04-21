@@ -31,7 +31,7 @@ export default function BrandList() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const translate = useTranslations();
+  // const translate = useTranslations();
 
   const itemsPerPage = 20;
 
@@ -112,7 +112,7 @@ export default function BrandList() {
         <Input
           value={search}
           onChange={handleSearch}
-          placeholder={translate("Search_Brand")}
+          placeholder={"Search Brand"}
           className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
         />
         <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
