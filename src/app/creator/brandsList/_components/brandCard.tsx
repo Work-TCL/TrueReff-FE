@@ -33,15 +33,15 @@ export default function BrandCard({
 
   return (
     <Card
-      className="xl:w-[280px] cursor-pointer sm:w-[240px] w-full h-auto xl:max-h-[372px] border border-stroke rounded-xl shadow-md p-2 flex flex-col items-center text-center gap-3"
+      className="cursor-pointer w-full h-auto xl:max-h-[372px] border border-stroke rounded-xl shadow-md p-2 flex flex-col items-center text-center gap-3"
       onClick={() => handleBrand(id)}
     >
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
-        <div className="bg-background rounded-lg xl:max-w-[258px] max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden">
+        <div className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden">
           {logo ? (
             <img src={logo} alt={name} className="object-cover object-center" />
           ) : (
-            <ImageOff className="w-6 h-6 text-gray-400" />
+            <ImageOff className="w-8 h-8 text-gray-400" />
           )}
         </div>
 

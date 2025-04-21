@@ -7,6 +7,7 @@ import { translate } from "@/lib/utils/translate";
 import { CustomTableHead } from "../../components-common/tables/CustomTableHead";
 import { CustomTableCell } from "../../components-common/tables/CustomTableCell";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 // Sample Data
 const activities = [
@@ -74,16 +75,35 @@ export default function MyProducts() {
                   </div>
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  <span className="text-text "> {activity.productName}</span>
+                  <span className="text-text ">
+                    {" "}
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={activity.productName}
+                    />
+                  </span>
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  {activity.brandName}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.brandName}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  {activity.categories}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.categories}
+                  />{" "}
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  {activity.price}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.price}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
                   <div className="flex items-center gap-2 justify-center">

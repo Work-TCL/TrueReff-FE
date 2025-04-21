@@ -6,6 +6,7 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { CustomTableHead } from "./CustomTableHead";
 import { CustomTableCell } from "./CustomTableCell";
 import { translate } from "@/lib/utils/translate";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 // Sample Data
 const videos = [
@@ -92,22 +93,47 @@ export default function TopVideosCraetor() {
                   />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {video.title}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={video.title}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {video.platform}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={video.platform}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {video.views}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={video.views}
+                  />
+                </CustomTableCell>
+
+                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={video.likes}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {video.likes}
-                </CustomTableCell>
-                <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {video.comments}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={video.comments}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm text-center">
-                  {video.watchTime}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={video.watchTime}
+                  />
                 </CustomTableCell>
               </TableRow>
             ))}

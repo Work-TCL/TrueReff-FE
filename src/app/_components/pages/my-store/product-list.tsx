@@ -12,6 +12,7 @@ import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
 import { translate } from "@/lib/utils/translate";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 interface IProducts {
   productImage: string;
@@ -219,13 +220,55 @@ export default function ProductList() {
                                         </Avatar> */}
                   </div>
                 </CustomTableCell>
-                <CustomTableCell>{creator.name}</CustomTableCell>
-                <CustomTableCell>{creator.rating}</CustomTableCell>
-                <CustomTableCell>{creator.price}</CustomTableCell>
-                <CustomTableCell>{creator.discount}</CustomTableCell>
-                <CustomTableCell>{creator.category}</CustomTableCell>
-                <CustomTableCell>{creator.sold}</CustomTableCell>
-                <CustomTableCell>{creator.trendingTag}</CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.name}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.rating}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.price}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.price}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.category}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.sold}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.trendingTag}
+                  />
+                </CustomTableCell>
                 <CustomTableCell>
                   <Switch />
                 </CustomTableCell>

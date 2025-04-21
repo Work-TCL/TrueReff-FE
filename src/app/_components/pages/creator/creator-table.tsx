@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import Loader from "../../components-common/layout/loader";
 import { useTranslations } from "next-intl";
 import CollaborateRequest from "../../components-common/dialogs/collaborate-creator-form";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { ImageOff } from "lucide-react";
 function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -99,18 +101,42 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
                   className="flex items-center cursor-pointer gap-2"
                   onClick={() => handleViewCreatorDetails(creator._id)}
                 >
-                  <Avatar className="w-8 h-8">
-                    <AvatarImage src={creator.profile_image} />
-                    <AvatarImage src={"/assets/creator/creator-image.svg"} />
-                  </Avatar>
-                  {creator.full_name}
+                  {creator.profile_image ? (
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={creator.profile_image} />
+                      <AvatarImage src={"/assets/creator/creator-image.svg"} />
+                    </Avatar>
+                  ) : (
+                    <ImageOff className="w-6 h-6 text-gray-400" />
+                  )}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.full_name}
+                  />
                 </div>
               </CustomTableCell>
               <CustomTableCell>
-                {creator.short_description || creator.long_description}
+                <TruncateWithToolTip
+                  checkHorizontalOverflow={false}
+                  linesToClamp={2}
+                  text={creator.short_description || creator.long_description}
+                />
               </CustomTableCell>
-              <CustomTableCell>{creator.categories}</CustomTableCell>
-              <CustomTableCell>{creator.tag}</CustomTableCell>
+              <CustomTableCell>
+                <TruncateWithToolTip
+                  checkHorizontalOverflow={false}
+                  linesToClamp={2}
+                  text={creator.categories ?? ""}
+                />
+              </CustomTableCell>
+              <CustomTableCell>
+                <TruncateWithToolTip
+                  checkHorizontalOverflow={false}
+                  linesToClamp={2}
+                  text={creator.tag}
+                />
+              </CustomTableCell>
               <CustomTableCell>
                 {getInstagramView(creator.channels)}
               </CustomTableCell>

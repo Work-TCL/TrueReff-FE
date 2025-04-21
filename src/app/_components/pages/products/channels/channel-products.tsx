@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
-import { CircleFadingPlus, Eye, Info, Search } from "lucide-react";
+import { CircleFadingPlus, Eye, ImageOff, Info, Search } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
 import ToolTip from "@/app/_components/components-common/tool-tip";
+import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 
 interface IProduct {
   handle: string;
@@ -69,14 +70,14 @@ export default function ChannelProductList({
     ItemPerPage: number,
     cursor: string | null = null,
     isInternalLoader = false,
-    searchValue:string = ""
+    searchValue: string = ""
   ) => {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
         `channel/shopify/product/list?per_page=${ItemPerPage}${
           cursor ? `&cursor=${cursor}` : ""
-        }${searchValue ? `&search=${searchValue}`:""}`
+        }${searchValue ? `&search=${searchValue}` : ""}`
       );
       if (response.data.data.products) {
         setProductList(response.data.data.products);
@@ -127,162 +128,209 @@ export default function ChannelProductList({
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
         <Loading />
-      ) : <><div className="flex justify-between items-center gap-2">
-        <div
-          className={`relative`}
-        >
-          <Input
-            value={search}
-            onChange={handleSearch}
-            placeholder={translate("Search_Product")}
-            className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
-          />
-          <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
-        </div>
-      </div>
-      {internalLoader && <Loader />}
-      {productList?.length > 0 ? (
+      ) : (
         <>
-          <div className="overflow-auto flex-1">
-            <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-              <TableHeader className="bg-stroke">
-                <TableRow>
-                  <CustomTableHead className="w-1/6">
-                    {translate("Product_ID")}
-                  </CustomTableHead>
-                  <CustomTableHead className="w-1/4">
-                    {translate("Product_Name")}
-                  </CustomTableHead>
-                  <CustomTableHead className="w-1/6">
-                    {translate("Categories")}
-                  </CustomTableHead>
-                  <CustomTableHead className="w-1/4">
-                    {translate("Tags")}
-                  </CustomTableHead>
-                  <CustomTableHead className="w-1/4">
-                    {translate("SKU")}
-                  </CustomTableHead>
-                  <CustomTableHead className="w-1/6">
-                    Selling {translate("Price")}
-                  </CustomTableHead>
-                  {/*              <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
-                  <CustomTableHead className="w-1/6 text-center">
-                    {translate("Action")}
-                  </CustomTableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {productList.map((product, index) => (
-                  <TableRow key={index} className=" bg-white hover:bg-gray-100">
-                    <CustomTableCell>
-                      {product.id.split("/").pop()}
-                    </CustomTableCell>
-                    <CustomTableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="w-8 h-8">
-                          <AvatarImage src={product.image} />
-                        </Avatar>
-                        {product.title}
-                      </div>
-                    </CustomTableCell>
-                    <CustomTableCell>{product.category}</CustomTableCell>
-                    <CustomTableCell>{product.tags.join(", ")}</CustomTableCell>
-                    <CustomTableCell>{product.sku}</CustomTableCell>
-                    <CustomTableCell>{product.price}</CustomTableCell>
-                    {/*                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
-                    <CustomTableCell>
-                      <div className="flex justify-center items-center gap-3">
-                       <ToolTip content="View Product" delayDuration={1000}>
-                        <Eye strokeWidth={1.5}
-                          color="#FF4979"
-                          className="cursor-pointer"
-                          onClick={() =>
-                            router.push(`shopify/view?id=${product.id}`)
-                          }
-                        />
-                        </ToolTip>
-                        <div
-                          onClick={() => {
-                            setCurrentData(product);
-                          }}
-                          className=""
-                        >
-                          <ToolTip content="Add Product to CRM" delayDuration={1000}><CircleFadingPlus strokeWidth={1.5}
-                            color="#3b82f680"
-                            className="cursor-pointer"
-                          />
-                          </ToolTip>
-                        </div>
-                      </div>
-                    </CustomTableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <div className="flex justify-between items-center gap-2">
+            <div className={`relative`}>
+              <Input
+                value={search}
+                onChange={handleSearch}
+                placeholder={translate("Search_Product")}
+                className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+              />
+              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
+            </div>
           </div>
-          {currentData !== null && (
-            <ChannleToProduct
-              product={{
-                productId: currentData.id,
-                channelName: channelName,
-                handle: currentData.handle,
-                id: currentData.id,
-                image: currentData.image,
-                title: currentData.title,
-                category: currentData.category,
-                tags: currentData.tags,
-                sku: currentData.sku,
-                price: currentData.price,
-              }}
-              onClose={(refresh = false) => {
-                setCurrentData(null);
-                if (refresh) {
-                  fetProductsList(20, null, true);
-                }
-              }}
+          {internalLoader && <Loader />}
+          {productList?.length > 0 ? (
+            <>
+              <div className="overflow-auto flex-1">
+                <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
+                  <TableHeader className="bg-stroke">
+                    <TableRow>
+                      <CustomTableHead className="w-1/6">
+                        {translate("Product_ID")}
+                      </CustomTableHead>
+                      <CustomTableHead className="w-1/4">
+                        {translate("Product_Name")}
+                      </CustomTableHead>
+                      <CustomTableHead className="w-1/6">
+                        {translate("Categories")}
+                      </CustomTableHead>
+                      <CustomTableHead className="w-1/4">
+                        {translate("Tags")}
+                      </CustomTableHead>
+                      <CustomTableHead className="w-1/4">
+                        {translate("SKU")}
+                      </CustomTableHead>
+                      <CustomTableHead className="w-1/6">
+                        Selling {translate("Price")}
+                      </CustomTableHead>
+                      {/*              <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
+                            <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
+                      <CustomTableHead className="w-1/6 text-center">
+                        {translate("Action")}
+                      </CustomTableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {productList.map((product, index) => (
+                      <TableRow
+                        key={index}
+                        className=" bg-white hover:bg-gray-100"
+                      >
+                        <CustomTableCell>
+                          {product.id.split("/").pop()}
+                        </CustomTableCell>
+                        <CustomTableCell>
+                          <div className="flex items-center gap-2">
+                            {product.image ? (
+                              <Avatar className="w-8 h-8">
+                                <AvatarImage src={product.image} />
+                              </Avatar>
+                            ) : (
+                              <ImageOff className="w-6 h-6 text-gray-400" />
+                            )}
+
+                            <TruncateWithToolTip
+                              checkHorizontalOverflow={false}
+                              linesToClamp={2}
+                              text={product.title ?? ""}
+                            />
+                          </div>
+                        </CustomTableCell>
+                        <CustomTableCell>
+                          <TruncateWithToolTip
+                            checkHorizontalOverflow={false}
+                            linesToClamp={2}
+                            text={product.category ?? ""}
+                          />
+                        </CustomTableCell>
+                        <CustomTableCell>
+                          <TruncateWithToolTip
+                            checkHorizontalOverflow={false}
+                            linesToClamp={2}
+                            text={product.tags.join(", ") ?? ""}
+                          />
+                        </CustomTableCell>
+                        <CustomTableCell>
+                          <TruncateWithToolTip
+                            checkHorizontalOverflow={false}
+                            linesToClamp={2}
+                            text={product.sku ?? ""}
+                          />
+                        </CustomTableCell>
+                        <CustomTableCell>
+                          <TruncateWithToolTip
+                            checkHorizontalOverflow={false}
+                            linesToClamp={2}
+                            text={product.price ?? ""}
+                          />
+                        </CustomTableCell>
+                        {/*                <CustomTableCell>{product.discount}</CustomTableCell>
+                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
+                        <CustomTableCell>
+                          <div className="flex justify-center items-center gap-3">
+                            <ToolTip
+                              content="View Product"
+                              delayDuration={1000}
+                            >
+                              <Eye
+                                strokeWidth={1.5}
+                                color="#FF4979"
+                                className="cursor-pointer"
+                                onClick={() =>
+                                  router.push(`shopify/view?id=${product.id}`)
+                                }
+                              />
+                            </ToolTip>
+                            <div
+                              onClick={() => {
+                                setCurrentData(product);
+                              }}
+                              className=""
+                            >
+                              <ToolTip
+                                content="Add Product to CRM"
+                                delayDuration={1000}
+                              >
+                                <CircleFadingPlus
+                                  strokeWidth={1.5}
+                                  color="#3b82f680"
+                                  className="cursor-pointer"
+                                />
+                              </ToolTip>
+                            </div>
+                          </div>
+                        </CustomTableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+              {currentData !== null && (
+                <ChannleToProduct
+                  product={{
+                    productId: currentData.id,
+                    channelName: channelName,
+                    handle: currentData.handle,
+                    id: currentData.id,
+                    image: currentData.image,
+                    title: currentData.title,
+                    category: currentData.category,
+                    tags: currentData.tags,
+                    sku: currentData.sku,
+                    price: currentData.price,
+                  }}
+                  onClose={(refresh = false) => {
+                    setCurrentData(null);
+                    if (refresh) {
+                      fetProductsList(20, null, true);
+                    }
+                  }}
+                />
+              )}
+              {/* Pagination */}
+              {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
+                <div className="flex justify-center items-center">
+                  <Pagination className="flex justify-center mt-1">
+                    <PaginationContent className="flex items-center gap-2">
+                      <PaginationItem>
+                        <PaginationPrevious
+                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
+                            !cursors.hasPreviousPage
+                              ? "cursor-not-allowed opacity-50"
+                              : "cursor-pointer"
+                          }`}
+                          showArrow={false}
+                          onClick={handlePreviousPage}
+                        />
+                      </PaginationItem>
+
+                      <PaginationItem>
+                        <PaginationNext
+                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
+                            !cursors.hasNextPage
+                              ? "cursor-not-allowed opacity-50"
+                              : "cursor-pointer"
+                          }`}
+                          showArrow={false}
+                          onClick={handleNextPage}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>{" "}
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <EmptyPlaceHolder
+              title={"No_Products_Available_Title"}
+              description={"No_Products_Available_Description"}
             />
           )}
-          {/* Pagination */}
-          {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
-            <div className="flex justify-center items-center">
-              <Pagination className="flex justify-center mt-1">
-                <PaginationContent className="flex items-center gap-2">
-                  <PaginationItem>
-                    <PaginationPrevious
-                      className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                        !cursors.hasPreviousPage
-                          ? "cursor-not-allowed opacity-50"
-                          : "cursor-pointer"
-                      }`}
-                      showArrow={false}
-                      onClick={handlePreviousPage}
-                    />
-                  </PaginationItem>
-
-                  <PaginationItem>
-                    <PaginationNext
-                      className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                        !cursors.hasNextPage
-                          ? "cursor-not-allowed opacity-50"
-                          : "cursor-pointer"
-                      }`}
-                      showArrow={false}
-                      onClick={handleNextPage}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>{" "}
-            </div>
-          ) : null}
         </>
-      ) : (
-        <EmptyPlaceHolder
-          title={"No_Products_Available_Title"}
-          description={"No_Products_Available_Description"}
-        />
-      )}</>}
+      )}
     </div>
   );
 }

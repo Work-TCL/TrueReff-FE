@@ -44,7 +44,9 @@ export default function BrandList() {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response: any = await axios.get(
-        `/product/vendor-product/vendor/list?page=${page}&limit=${itemsPerPage}${searchValue ? `&search=${searchValue}` : ""}`
+        `/product/vendor-product/vendor/list?page=${page}&limit=${itemsPerPage}${
+          searchValue ? `&search=${searchValue}` : ""
+        }`
       );
       if (response.status === 200) {
         const brandData = response.data.data;
@@ -60,7 +62,7 @@ export default function BrandList() {
               totalProducts: brand.productCount,
               rating: 4.5,
               reviews: "0",
-              logo: brand.profile_image              ,
+              logo: brand.profile_image,
             }));
             setBrands(transformedData);
             setTotalPages(Math.ceil(response.data.count / itemsPerPage));
@@ -103,47 +105,52 @@ export default function BrandList() {
   };
   return (
     <div
-      className={`flex flex-col md:p-6 p-4 md:gap-6 gap-4 ${Boolean(brands.length === 0) ? "h-full" : ""
-        }`}
+      className={`flex flex-col md:p-6 p-4 md:gap-6 gap-4 ${
+        Boolean(brands.length === 0) ? "h-full" : ""
+      }`}
     >
       {loading ? (
         <Loading />
-      ) : <><div className={`relative`}>
-        <Input
-          value={search}
-          onChange={handleSearch}
-          placeholder={"Search Brand"}
-          className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
-        />
-        <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-      </div>
-      {internalLoader && <Loader />}
-      {brands?.length > 0 ? (
+      ) : (
         <>
-          <div className="grid 1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
-            {brands.map((brand: any) => (
-              <BrandCard key={brand.id} {...brand} />
-            ))}
+          <div className={`relative`}>
+            <Input
+              value={search}
+              onChange={handleSearch}
+              placeholder={"Search Brand"}
+              className="p-3 rounded-lg bg-white pl-10 max-w-[350px] w-full gray-color" // Add padding to the left for the icon
+            />
+            <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
           </div>
-          {totalPages > 1 && (
-            <div className="flex justify-end items-center mt-4">
-              <TablePagination
-                totalPages={totalPages}
-                activePage={currentPage}
-                onPageChange={(page) => {
-                  setCurrentPage(page);
-                  page !== currentPage && getBrandList(page, true);
-                }}
-              />
-            </div>
+          {internalLoader && <Loader />}
+          {brands?.length > 0 ? (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white rounded-[20px]">
+                {brands.map((brand: any) => (
+                  <BrandCard key={brand.id} {...brand} />
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <div className="flex justify-end items-center mt-4">
+                  <TablePagination
+                    totalPages={totalPages}
+                    activePage={currentPage}
+                    onPageChange={(page) => {
+                      setCurrentPage(page);
+                      page !== currentPage && getBrandList(page, true);
+                    }}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <EmptyPlaceHolder
+              title={"No_Brands_Available_Title"}
+              description={"No_Brands_Available_Description"}
+            />
           )}
         </>
-      ) : (
-        <EmptyPlaceHolder
-          title={"No_Brands_Available_Title"}
-          description={"No_Brands_Available_Description"}
-        />
-      )}</>}
+      )}
     </div>
   );
 }

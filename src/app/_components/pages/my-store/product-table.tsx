@@ -7,7 +7,7 @@ import { CustomTableHead } from "@/app/_components/components-common/tables/Cust
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
 import { useParams, useRouter } from "next/navigation";
-import { Eye, Info } from "lucide-react";
+import { Eye, ImageOff, Info } from "lucide-react";
 import { IProduct } from "./list";
 import Button from "../../ui/button";
 import { Column, DynamicTable } from "../../components-common/dynamic-table";
@@ -30,11 +30,14 @@ export default function BrandProductTable({ data }: IProductTableProps) {
     {
       key: "image",
       label: "Product_Image",
-      render: (product) => (
-        <Avatar className="w-8 h-8">
-          <AvatarImage src={product.media[0]} />
-        </Avatar>
-      ),
+      render: (product) =>
+        product.media?.[0] ? (
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={product.media[0]} alt={product.title} />
+          </Avatar>
+        ) : (
+          <ImageOff className="w-6 h-6 text-gray-400" />
+        ),
       className: "w-1/6",
     },
     { key: "title", label: "Product_Name", className: "w-1/4" },

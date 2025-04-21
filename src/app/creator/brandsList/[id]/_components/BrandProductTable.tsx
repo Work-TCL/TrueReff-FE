@@ -16,6 +16,7 @@ import StatusBadge from "@/app/_components/components-common/status-badge";
 import { useCreatorStore } from "@/lib/store/creator";
 import axios from "@/lib/web-api/axios";
 import ToolTip from "@/app/_components/components-common/tool-tip";
+import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 
 interface ICreatorTableProps {
   data: IBrand[];
@@ -152,37 +153,72 @@ export default function BrandProductTable({
                       )}
                       <AvatarImage src={"/assets/brand/brand-image.svg"} />
                     </Avatar>
-                    {brand.title}
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={brand.title}
+                    />
                   </div>
                 </CustomTableCell>
-                <CustomTableCell>{brand?.description}</CustomTableCell>
                 <CustomTableCell>
-                  {brand?.vendor?.business_name}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={brand?.description}
+                  />
                 </CustomTableCell>
                 <CustomTableCell>
-                  {brand.categories?.length ? brand.categories?.join(", ") : ""}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={brand?.vendor?.business_name}
+                  />
                 </CustomTableCell>
                 <CustomTableCell>
-                  {brand.subCategories?.length ? brand.subCategories?.join(", ") : ""}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={
+                      brand.categories?.length
+                        ? brand.categories?.join(", ")
+                        : ""
+                    }
+                  />
                 </CustomTableCell>
                 <CustomTableCell>
-                  {brand?.tags?.length ? brand.tags.join(", ") : ""}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={
+                      brand.subCategories?.length
+                        ? brand.subCategories?.join(", ")
+                        : ""
+                    }
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={brand?.tags?.length ? brand.tags.join(", ") : ""}
+                  />
                 </CustomTableCell>
                 {/* <CustomTableCell>{brand.pastSales??''}</CustomTableCell> */}
                 <CustomTableCell className="flex justify-center">
                   {status === "REJECTED" ||
-                  (status === "REQUESTED" &&
-                    brand?.request?.requestFrom === "CREATOR") ? (
+                    (status === "REQUESTED" &&
+                      brand?.request?.requestFrom === "CREATOR") ? (
                     <StatusBadge status={status} />
                   ) : null}
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
-                  <ToolTip content="View Product" delayDuration={1000}><Eye
-                    color="#FF4979"
-                    className=" cursor-pointer"
-                    onClick={() => handleDetailView(brand._id)}
-                    size={25}
-                  />
+                  <ToolTip content="View Product" delayDuration={1000}>
+                    <Eye
+                      color="#FF4979"
+                      className=" cursor-pointer"
+                      onClick={() => handleDetailView(brand._id)}
+                      size={25}
+                    />
                   </ToolTip>
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
@@ -190,24 +226,31 @@ export default function BrandProductTable({
                     {
                       REQUESTED:
                         brand?.request?.requestFrom === "CREATOR" ? (
-                          <ToolTip content="Cancel Request" delayDuration={1000}><XCircle
-                            className="cursor-pointer"
-                            size={25}
-                            color="#ef4444"
-                            onClick={() => handleAction(status, brand)}
-                          />
+                          <ToolTip
+                            content="Cancel Request"
+                            delayDuration={1000}
+                          >
+                            <XCircle
+                              className="cursor-pointer"
+                              size={25}
+                              color="#ef4444"
+                              onClick={() => handleAction(status, brand)}
+                            />
                           </ToolTip>
                         ) : null,
                       SEND_REQUEST: (
-                        <ToolTip content="Send Collaboration Request" delayDuration={1000}>
-                        <UserPlus
-                          color="#3b82f680"
-                          className="cursor-pointer"
-                          onClick={() => handleAction(status, brand)}
-                          size={25}
-                        />
+                        <ToolTip
+                          content="Send Collaboration Request"
+                          delayDuration={1000}
+                        >
+                          <UserPlus
+                            color="#3b82f680"
+                            className="cursor-pointer"
+                            onClick={() => handleAction(status, brand)}
+                            size={25}
+                          />
                         </ToolTip>
-                      )
+                      ),
                     }[status]
                   }
                 </CustomTableCell>

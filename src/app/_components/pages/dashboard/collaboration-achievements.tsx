@@ -6,6 +6,7 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { translate } from "@/lib/utils/translate";
 import { CustomTableHead } from "../../components-common/tables/CustomTableHead";
 import { CustomTableCell } from "../../components-common/tables/CustomTableCell";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 // Sample Data
 const products = [
@@ -55,16 +56,32 @@ export default function CollaborationAchievements() {
             {products.map((activity, index) => (
               <TableRow key={index} className="even:bg-gray-50">
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.product}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.product}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.brand}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.brand}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.bid}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.bid}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.status}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.status}
+                  />
                 </CustomTableCell>
                 <td className="p-3 flex justify-center gap-3">
                   <CheckCircle

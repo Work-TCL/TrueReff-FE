@@ -14,25 +14,34 @@ export default function TruncateWithToolTip({
   className,
   tooltipContentClassName,
   checkHorizontalOverflow = false, // New prop to determine overflow direction
+  linesToClamp = 2, // 👈 New prop to support custom line clamping
 }: {
   text: string;
   className?: string;
   tooltipContentClassName?: string;
   checkHorizontalOverflow?: boolean;
+  linesToClamp?: number;
 }) {
-  const { showTooltip, handleMouseEnterTruncate, handleMouseLeaveTruncate } =
-    useIsTruncate(checkHorizontalOverflow);
+  const {
+    showTooltip,
+    handleMouseEnterTruncate,
+    handleMouseLeaveTruncate,
+    textRef,
+  } = useIsTruncate(checkHorizontalOverflow);
 
   return (
     <TooltipProvider>
       <Tooltip>
         {showTooltip ? ( // Conditionally wrap in TooltipTrigger
           <TooltipTrigger asChild>
-            <p className={cn("line-clamp-1 w-fit", className)}>{text}</p>
+            <p className={cn(`line-clamp-${linesToClamp}`, className)}>
+              {text}
+            </p>
           </TooltipTrigger>
         ) : (
           <p
-            className={cn("line-clamp-1 w-fit", className)}
+            ref={textRef}
+            className={cn(`line-clamp-${linesToClamp}`, className)}
             onMouseEnter={handleMouseEnterTruncate}
             onMouseLeave={handleMouseLeaveTruncate}
           >
@@ -42,7 +51,7 @@ export default function TruncateWithToolTip({
         <TooltipContent
           side="bottom"
           className={cn(
-            "w-auto max-w-[80vw] rounded-md border border-igray-color bg-white text-[14px] md:max-w-[50vw]",
+            "z-[99] w-auto max-w-[80vw] rounded-md border border-igray-color bg-white text-[14px] md:max-w-[300px]",
             tooltipContentClassName
           )}
         >

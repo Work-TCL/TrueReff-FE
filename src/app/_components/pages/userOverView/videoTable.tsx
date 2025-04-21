@@ -7,6 +7,7 @@ import { translate } from "@/lib/utils/translate";
 import { CustomTableHead } from "../../components-common/tables/CustomTableHead";
 import { CustomTableCell } from "../../components-common/tables/CustomTableCell";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 const activities = [
   {
@@ -70,16 +71,34 @@ export default function VideosTable() {
                   </div>
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  <span className="text-secondary font-medium">{activity.VideoTitle}</span>
+                  <span className="text-secondary font-medium">
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={activity.VideoTitle}
+                    />
+                  </span>
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  {activity.platform}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.platform}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  {activity.Views}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.Views}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
-                  {activity.Likes}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.Likes}
+                  />
                 </CustomTableCell>
               </TableRow>
             ))}

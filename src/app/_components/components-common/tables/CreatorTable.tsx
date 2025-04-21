@@ -8,6 +8,8 @@ import { CustomTableCell } from "./CustomTableCell";
 import { CustomTableHead } from "./CustomTableHead";
 import { TablePagination } from "./Pagination";
 import { translate } from "@/lib/utils/translate";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { ImageOff } from "lucide-react";
 
 // Sample Data
 const creators = [
@@ -180,18 +182,67 @@ export default function CreatorTable() {
               <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
                 <CustomTableCell>
                   <div className="flex items-center gap-2">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={creator.avatar} />
-                    </Avatar>
-                    {creator.name}
+                    {creator.avatar ? (
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={creator.avatar} />
+                      </Avatar>
+                    ) : (
+                      <ImageOff className="w-6 h-6 text-gray-400" />
+                    )}
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={creator.name}
+                    />
                   </div>
                 </CustomTableCell>
-                <CustomTableCell>{creator.bio}</CustomTableCell>
-                <CustomTableCell>{creator.category}</CustomTableCell>
-                <CustomTableCell>{creator.instagramView}</CustomTableCell>
-                <CustomTableCell>{creator.youtubeView}</CustomTableCell>
-                <CustomTableCell>{creator.pastSales}</CustomTableCell>
-                <CustomTableCell>{creator.collaboration}</CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.bio}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  {" "}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.category}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  {" "}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.instagramView}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  {" "}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.youtubeView}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  {" "}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.pastSales}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  {" "}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={creator.collaboration}
+                  />
+                </CustomTableCell>
                 <CustomTableCell>
                   <Button
                     variant="outline"

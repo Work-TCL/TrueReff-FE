@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { IProduct } from "./";
 import { useTranslations } from "next-intl";
 import StatusBadge from "../../components-common/status-badge";
-import { Eye, UserPlus, XCircle } from "lucide-react";
+import { Eye, ImageOff, UserPlus, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import CancelRequest from "../../components-common/dialogs/cancel-request";
@@ -16,6 +16,7 @@ import { useCreatorStore } from "@/lib/store/creator";
 import axios from "@/lib/web-api/axios";
 import Loader from "../../components-common/layout/loader";
 import ToolTip from "../../components-common/tool-tip";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 interface IProductTableProps {
   data: IProduct[];
   handleUpdateProduct: () => void;
@@ -129,7 +130,7 @@ export default function ProductTable({
   };
   return (
     <div className="overflow-auto">
-      {loading && <Loader/>}
+      {loading && <Loader />}
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
           <TableRow>
@@ -169,19 +170,58 @@ export default function ProductTable({
               <TableRow key={index} className="bg-white hover:bg-gray-100">
                 <CustomTableCell>
                   <span className="flex items-center gap-2">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={product.media[0]} />
-                    </Avatar>
-                    {product.title}
+                    {product.media?.length > 0 && product.media[0] ? (
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={product.media[0]} />
+                      </Avatar>
+                    ) : (
+                      <ImageOff className="w-6 h-6 text-gray-400" />
+                    )}
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={product.title ?? ""}
+                    />
                   </span>
                 </CustomTableCell>
-                <CustomTableCell>{product?.description}</CustomTableCell>
                 <CustomTableCell>
-                  {product?.vendor?.business_name}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product?.description ?? ""}
+                  />
                 </CustomTableCell>
-                <CustomTableCell>{product?.categories}</CustomTableCell>
-                <CustomTableCell>{product?.subCategories}</CustomTableCell>
-                <CustomTableCell>{product.tag}</CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product?.vendor?.business_name ?? ""}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  {" "}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product?.categories ?? ""}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  {" "}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product?.subCategories ?? ""}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  {" "}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product.tag ?? ""}
+                  />
+                </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
                   {status === "REJECTED" ||
                   (status === "REQUESTED" &&
@@ -190,39 +230,49 @@ export default function ProductTable({
                   ) : null}
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
-                <ToolTip content="View Product" delayDuration={1000}>
-                    <Eye strokeWidth={1.5} 
-                    color="#FF4979"
-                    className=" cursor-pointer"
-                    onClick={() => handleDetailView(product._id)}
-                    size={25}
-                  />
-                </ToolTip>
+                  <ToolTip content="View Product" delayDuration={1000}>
+                    <Eye
+                      strokeWidth={1.5}
+                      color="#FF4979"
+                      className=" cursor-pointer"
+                      onClick={() => handleDetailView(product._id)}
+                      size={25}
+                    />
+                  </ToolTip>
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
                   <span className="flex justify-center">
                     {
                       {
                         REQUESTED: {
-                          CREATOR: (<ToolTip content="Cancel Request" delayDuration={1000}>
-                            <XCircle strokeWidth={1.5}
-                              className="cursor-pointer"
-                              size={25}
-                              color="#ef4444"
-                              onClick={() => handleAction(status, product)}
-                            />
-                        </ToolTip>
+                          CREATOR: (
+                            <ToolTip
+                              content="Cancel Request"
+                              delayDuration={1000}
+                            >
+                              <XCircle
+                                strokeWidth={1.5}
+                                className="cursor-pointer"
+                                size={25}
+                                color="#ef4444"
+                                onClick={() => handleAction(status, product)}
+                              />
+                            </ToolTip>
                           ),
                           VENDOR: null,
                         }[product?.request?.requestFrom ?? ""],
                         SEND_REQUEST: (
-                          <ToolTip content="Send Collaboration Request" delayDuration={1000}>
-                            <UserPlus strokeWidth={1.5}
-                            color="#3b82f680"
-                            className="cursor-pointer"
-                            onClick={() => handleAction(status, product)}
-                            size={25}
-                          />
+                          <ToolTip
+                            content="Send Collaboration Request"
+                            delayDuration={1000}
+                          >
+                            <UserPlus
+                              strokeWidth={1.5}
+                              color="#3b82f680"
+                              className="cursor-pointer"
+                              onClick={() => handleAction(status, product)}
+                              size={25}
+                            />
                           </ToolTip>
                         ),
                       }[status]

@@ -5,6 +5,7 @@ import { CustomTableHead } from "@/app/_components/components-common/tables/Cust
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
 import { EmptyPlaceholder } from "./empty-place-holder";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 export interface Column<T> {
   key: keyof T | string;
@@ -49,7 +50,13 @@ export function DynamicTable<T>({
                 <TableRow key={rowIndex} className="bg-white">
                   {columns.map((col, colIndex) => (
                     <CustomTableCell key={colIndex}>
-                      {col.render ? col.render(row) : (row as any)[col.key]}
+                      <TruncateWithToolTip
+                        checkHorizontalOverflow={false}
+                        linesToClamp={2}
+                        text={
+                          col.render ? col.render(row) : (row as any)[col.key]
+                        }
+                      />
                     </CustomTableCell>
                   ))}
                 </TableRow>

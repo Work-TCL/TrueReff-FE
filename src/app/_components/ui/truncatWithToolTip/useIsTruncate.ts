@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const useIsTruncate = (checkHorizontalOverflow?: boolean) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  
+  const textRef = useRef<HTMLParagraphElement>(null);
 
   const isTextOverflow = (element: HTMLElement) => {
     if (checkHorizontalOverflow) {
@@ -22,7 +24,7 @@ const useIsTruncate = (checkHorizontalOverflow?: boolean) => {
     setShowTooltip(false);
   };
 
-  return { showTooltip, handleMouseEnterTruncate, handleMouseLeaveTruncate };
+  return { showTooltip, handleMouseEnterTruncate, handleMouseLeaveTruncate,textRef };
 };
 
 export default useIsTruncate;

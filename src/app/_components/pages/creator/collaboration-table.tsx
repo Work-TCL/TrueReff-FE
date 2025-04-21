@@ -6,7 +6,13 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { useRouter } from "next/navigation";
-import { CheckCircle, Eye, MessagesSquare, XCircle } from "lucide-react";
+import {
+  CheckCircle,
+  Eye,
+  ImageOff,
+  MessagesSquare,
+  XCircle,
+} from "lucide-react";
 import { ICollaboration, IRequest } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -15,6 +21,7 @@ import { useTranslations } from "next-intl";
 import StatusBadge from "../../components-common/status-badge";
 import axios from "@/lib/web-api/axios";
 import ToolTip from "../../components-common/tool-tip";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 export function capitalizeFirstLetter(word: string = "") {
   if (!word) return ""; // Handle empty strings
@@ -166,30 +173,64 @@ const CollaborationTable = ({
                     className="flex items-center gap-2"
                     onClick={() => handleViewCreatorDetails(collaboration._id)}
                   >
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={collaboration?.product?.media[0]??"/assets/product/image-square.svg"} />
-                      <AvatarImage
-                        src={"/assets/product/image-square.svg"}
-                      />
-                    </Avatar>
-                    {collaboration?.product?.title}
+                    {collaboration?.product?.media[0] ? (
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage
+                          src={
+                            collaboration?.product?.media[0] ??
+                            "/assets/product/image-square.svg"
+                          }
+                        />
+                        <AvatarImage src={"/assets/product/image-square.svg"} />
+                      </Avatar>
+                    ) : (
+                      <ImageOff className="w-6 h-6 text-gray-400" />
+                    )}
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={collaboration?.product?.title}
+                    />
                   </div>
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.product?.category}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={collaboration?.product?.category ?? ""}
+                  />
                 </CustomTableCell>
                 <CustomTableCell>
-                  {collaboration?.product?.tag}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={collaboration?.product?.tag ?? ""}
+                  />
                 </CustomTableCell>
                 <CustomTableCell>
                   <div
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => router.push(`/vendor/profile/${collaboration?.fromUser?._id}`)}
+                    onClick={() =>
+                      router.push(
+                        `/vendor/profile/${collaboration?.fromUser?._id}`
+                      )
+                    }
                   >
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={collaboration?.fromUser?.profile_image} />
-                    </Avatar>
-                    {collaboration?.fromUser?.business_name}
+                    {collaboration?.fromUser?.profile_image ? (
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage
+                          src={collaboration?.fromUser?.profile_image}
+                        />
+                      </Avatar>
+                    ) : (
+                      <ImageOff className="w-6 h-6 text-gray-400" />
+                    )}
+
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={collaboration?.fromUser?.business_name}
+                    />
                   </div>
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">
@@ -209,22 +250,50 @@ const CollaborationTable = ({
                       REQUESTED: {
                         VENDOR: (
                           <div className="flex justify-between gap-3">
-                            
-                            <ToolTip content="Accept Request" delayDuration={1000}>
-                              <CheckCircle strokeWidth={1.5}
-                              color="#22c55e"
-                              className="cursor-pointer"
-                              size={25}
-                              onClick={() =>
-                                handleStatusChangeRequest(
-                                  "accepted",
-                                  collaboration?._id
-                                )
-                              }
-                            />
+                            <ToolTip
+                              content="Accept Request"
+                              delayDuration={1000}
+                            >
+                              <CheckCircle
+                                strokeWidth={1.5}
+                                color="#22c55e"
+                                className="cursor-pointer"
+                                size={25}
+                                onClick={() =>
+                                  handleStatusChangeRequest(
+                                    "accepted",
+                                    collaboration?._id
+                                  )
+                                }
+                              />
                             </ToolTip>
-                            <ToolTip content="Reject Request" delayDuration={1000}>
-                            <XCircle strokeWidth={1.5}
+                            <ToolTip
+                              content="Reject Request"
+                              delayDuration={1000}
+                            >
+                              <XCircle
+                                strokeWidth={1.5}
+                                className="cursor-pointer"
+                                size={25}
+                                color="#ef4444"
+                                onClick={() =>
+                                  setIsOpen({
+                                    show: true,
+                                    collaborationId: collaboration?._id,
+                                    status: "reject",
+                                  })
+                                }
+                              />
+                            </ToolTip>
+                          </div>
+                        ),
+                        CREATOR: (
+                          <ToolTip
+                            content="Cancel Request"
+                            delayDuration={1000}
+                          >
+                            <XCircle
+                              strokeWidth={1.5}
                               className="cursor-pointer"
                               size={25}
                               color="#ef4444"
@@ -232,51 +301,37 @@ const CollaborationTable = ({
                                 setIsOpen({
                                   show: true,
                                   collaborationId: collaboration?._id,
-                                  status: "reject",
+                                  status: "cancel",
                                 })
                               }
                             />
-                            </ToolTip>
-                          </div>
-                        ),
-                        CREATOR: (
-                          <ToolTip content="Cancel Request" delayDuration={1000}>
-                            <XCircle strokeWidth={1.5}
-                            className="cursor-pointer"
-                            size={25}
-                            color="#ef4444"
-                            onClick={() =>
-                              setIsOpen({
-                                show: true,
-                                collaborationId: collaboration?._id,
-                                status: "cancel",
-                              })
-                            }
-                          />
                           </ToolTip>
                         ),
                       }[collaboration?.request?.requestFrom ?? ""],
                       PENDING: (
                         <div className="flex gap-3">
                           <ToolTip content="View Product" delayDuration={1000}>
-                            <Eye strokeWidth={1.5}
-                            color="#FF4979"
-                            className=" cursor-pointer"
-                            onClick={() =>
-                              handleProductDetail(collaboration?.product?._id)
-                            }
-                            size={25}
-                          />
+                            <Eye
+                              strokeWidth={1.5}
+                              color="#FF4979"
+                              className=" cursor-pointer"
+                              onClick={() =>
+                                handleProductDetail(collaboration?.product?._id)
+                              }
+                              size={25}
+                            />
                           </ToolTip>
-                          <ToolTip content="Start Bargaining" delayDuration={1000}>
-                          <MessagesSquare strokeWidth={1.5}
-                            color="#3b82f680"
-                            className="cursor-pointer"
-                            onClick={() =>
-                              handleChatView(collaboration?._id)
-                            }
-                            size={25}
-                          />
+                          <ToolTip
+                            content="Start Bargaining"
+                            delayDuration={1000}
+                          >
+                            <MessagesSquare
+                              strokeWidth={1.5}
+                              color="#3b82f680"
+                              className="cursor-pointer"
+                              onClick={() => handleChatView(collaboration?._id)}
+                              size={25}
+                            />
                           </ToolTip>
                         </div>
                       ),

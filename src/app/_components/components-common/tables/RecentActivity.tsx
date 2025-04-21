@@ -6,6 +6,7 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { CustomTableHead } from "./CustomTableHead";
 import { CustomTableCell } from "./CustomTableCell";
 import { translate } from "@/lib/utils/translate";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 // Sample Data
 const activities = [
@@ -73,13 +74,25 @@ export default function RecentActivities() {
             {activities.map((activity, index) => (
               <TableRow key={index} className="even:bg-gray-50">
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.name}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.name}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
-                  {activity.product}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.product}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-13 text-font-grey text-sm">
-                  {activity.categories}
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={activity.categories}
+                  />
                 </CustomTableCell>
                 <CustomTableCell parentClassName="p-3 text-font-grey text-sm">
                   {activity.bid}

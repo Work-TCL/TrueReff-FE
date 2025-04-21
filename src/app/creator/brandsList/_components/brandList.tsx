@@ -6,13 +6,13 @@ import { CustomTableCell } from "@/app/_components/components-common/tables/Cust
 import { translate } from "@/lib/utils/translate";
 import { Brand } from "../list";
 import { Star } from "lucide-react";
+import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 
 interface BrandListProps {
   brand: Brand[];
 }
 export default function BrandListView({ brand }: BrandListProps) {
   return (
-    
     <div className="overflow-auto">
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
@@ -78,19 +78,39 @@ export default function BrandListView({ brand }: BrandListProps) {
                 </div>
               </CustomTableCell>
               <CustomTableCell className="font-normal text-gray-black whitespace-nowrap">
-                {creator.name}
+                <TruncateWithToolTip
+                  checkHorizontalOverflow={false}
+                  linesToClamp={2}
+                  text={creator.name}
+                />
               </CustomTableCell>
               <CustomTableCell className="text-font-grey whitespace-nowrap">
-                {creator.name}
+                <TruncateWithToolTip
+                  checkHorizontalOverflow={false}
+                  linesToClamp={2}
+                  text={creator.name}
+                />
               </CustomTableCell>
               <CustomTableCell className="text-font-grey whitespace-nowrap">
-                {creator.category}
+                <TruncateWithToolTip
+                  checkHorizontalOverflow={false}
+                  linesToClamp={2}
+                  text={creator.category}
+                />
               </CustomTableCell>
               <CustomTableCell className="text-font-grey whitespace-nowrap">
-                {creator.category}
+                <TruncateWithToolTip
+                  checkHorizontalOverflow={false}
+                  linesToClamp={2}
+                  text={creator.category}
+                />
               </CustomTableCell>
               <CustomTableCell className="text-font-grey whitespace-nowrap">
-                {"15,000 items available"}
+                <TruncateWithToolTip
+                  checkHorizontalOverflow={false}
+                  linesToClamp={2}
+                  text={"15,000 items available"}
+                />
               </CustomTableCell>
               <CustomTableCell className="flex items-center text-font-grey whitespace-nowrap gap-1">
                 <Star className="w-4 h-4 fill-current text-dark-orange" />
