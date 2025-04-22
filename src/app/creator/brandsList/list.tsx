@@ -33,7 +33,7 @@ export default function BrandList() {
   const [totalPages, setTotalPages] = useState(0);
   // const translate = useTranslations();
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 20;
 
   // Get Brand list
   const getBrandList = async (
