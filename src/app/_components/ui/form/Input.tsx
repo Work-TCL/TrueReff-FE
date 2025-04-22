@@ -28,7 +28,7 @@ interface IInput
 export const inputStyle =
   "w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white disabled:cursor-not-allowed";
 
-export const labelStyle = "mb-1 text-sm text-gray-darken";
+export const labelStyle = "mb-1 text-sm text-gray-500";
 
 export default function Input({
   label = "",

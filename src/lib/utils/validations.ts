@@ -22,7 +22,7 @@ export const loginSchema = Yup.object().shape({
     ),
 });
 
-export interface ILoginSchema extends Yup.Asserts<typeof loginSchema> {}
+export interface ILoginSchema extends Yup.Asserts<typeof loginSchema> { }
 
 export const loginWithOtpSchema = Yup.object().shape({
   email: Yup.string()
@@ -32,7 +32,7 @@ export const loginWithOtpSchema = Yup.object().shape({
 });
 
 export interface ILoginWithOtpSchema
-  extends Yup.Asserts<typeof loginWithOtpSchema> {}
+  extends Yup.Asserts<typeof loginWithOtpSchema> { }
 
 export const forgotSchema = Yup.object().shape({
   email: Yup.string()
@@ -40,7 +40,7 @@ export const forgotSchema = Yup.object().shape({
     .required("Email is required"),
 });
 
-export interface IForgotSchema extends Yup.Asserts<typeof forgotSchema> {}
+export interface IForgotSchema extends Yup.Asserts<typeof forgotSchema> { }
 
 export const otpSchema = Yup.object().shape({
   otpCode: Yup.string()
@@ -49,7 +49,7 @@ export const otpSchema = Yup.object().shape({
     .required("OTP is required"),
 });
 
-export interface IOtpSchema extends Yup.Asserts<typeof otpSchema> {}
+export interface IOtpSchema extends Yup.Asserts<typeof otpSchema> { }
 
 export const resetPasswordSchema = Yup.object().shape({
   password: Yup.string()
@@ -73,7 +73,7 @@ export const resetPasswordSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Passwords must match"),
 });
 
-export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> {}
+export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> { }
 
 export const registerSchema = Yup.object().shape({
   email: Yup.string()
@@ -99,7 +99,7 @@ export const registerSchema = Yup.object().shape({
   // type: Yup.string().required("Type is required")
 });
 
-export interface IRegisterSchema extends Yup.Asserts<typeof registerSchema> {}
+export interface IRegisterSchema extends Yup.Asserts<typeof registerSchema> { }
 
 export const _validatePhone = (number: string, format: string) => {
   if (
@@ -151,7 +151,7 @@ export const changePasswordSchema = Yup.object().shape({
 });
 
 export interface IChangePasswordSchema
-  extends Yup.Asserts<typeof changePasswordSchema> {}
+  extends Yup.Asserts<typeof changePasswordSchema> { }
 
 // Add to wishlist
 export const preFormSchema = Yup.object().shape({
@@ -236,7 +236,7 @@ export const preFormSchema = Yup.object().shape({
     .min(1, "At least one channel is required"),
 });
 
-export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
+export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> { }
 
 export const creatorFormSchema = Yup.object().shape({
   full_name: Yup.string()
@@ -268,7 +268,7 @@ export const creatorFormSchema = Yup.object().shape({
 });
 
 export interface ICreatorFormSchema
-  extends Yup.Asserts<typeof creatorFormSchema> {}
+  extends Yup.Asserts<typeof creatorFormSchema> { }
 
 export const contactSchema = Yup.object().shape({
   firstName: Yup.string().required("First Name is required"),
@@ -279,7 +279,7 @@ export const contactSchema = Yup.object().shape({
   message: Yup.string().required("Message is required"),
 });
 
-export interface IContactSchema extends Yup.Asserts<typeof contactSchema> {}
+export interface IContactSchema extends Yup.Asserts<typeof contactSchema> { }
 
 export const profileUpdateSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -292,7 +292,7 @@ export const profileUpdateSchema = Yup.object().shape({
 });
 
 export interface IProfileUpdateSchema
-  extends Yup.Asserts<typeof profileUpdateSchema> {}
+  extends Yup.Asserts<typeof profileUpdateSchema> { }
 
 export const vendorProfileUpdateSchema = Yup.object().shape({
   company_email: Yup.string()
@@ -326,7 +326,7 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
 });
 
 export interface IVendorProfileUpdateSchema
-  extends Yup.Asserts<typeof vendorProfileUpdateSchema> {}
+  extends Yup.Asserts<typeof vendorProfileUpdateSchema> { }
 
 export const addAddressVendorSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -344,7 +344,7 @@ export const addAddressVendorSchema = Yup.object().shape({
 });
 
 export interface IAddAddressVendorSchema
-  extends Yup.Asserts<typeof addAddressVendorSchema> {}
+  extends Yup.Asserts<typeof addAddressVendorSchema> { }
 
 export const addContactVendorSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -358,7 +358,7 @@ export const addContactVendorSchema = Yup.object().shape({
 });
 
 export interface IAddContactVendorSchema
-  extends Yup.Asserts<typeof addContactVendorSchema> {}
+  extends Yup.Asserts<typeof addContactVendorSchema> { }
 
 // Add to wishlist
 export const creatorOnBoardingSchema = Yup.object().shape({
@@ -402,13 +402,13 @@ export const creatorOnBoardingSchema = Yup.object().shape({
 });
 
 export interface ICreatorOnBoardingSchema
-  extends Yup.Asserts<typeof creatorOnBoardingSchema> {}
+  extends Yup.Asserts<typeof creatorOnBoardingSchema> { }
 
 export const shopifyConnectSchema = Yup.object().shape({
   id_string: Yup.string().required("Shopify ID is required"),
 });
 export interface IShopifyConnectSchema
-  extends Yup.Asserts<typeof shopifyConnectSchema> {}
+  extends Yup.Asserts<typeof shopifyConnectSchema> { }
 
 export const creatorSocialConnectSchema = Yup.object().shape({
   channels: Yup.array(),
@@ -436,7 +436,7 @@ export const creatorSocialConnectSchema = Yup.object().shape({
 });
 
 export interface ICreatorSocialConnectSchema
-  extends Yup.Asserts<typeof creatorSocialConnectSchema> {}
+  extends Yup.Asserts<typeof creatorSocialConnectSchema> { }
 
 // Add to wishlist
 export const productSchema = Yup.object().shape({
@@ -471,7 +471,7 @@ export const productSchema = Yup.object().shape({
   tags: Yup.array().of(Yup.string()).required("At least one tag is required"),
 });
 
-export interface IProductSchema extends Yup.Asserts<typeof productSchema> {}
+export interface IProductSchema extends Yup.Asserts<typeof productSchema> { }
 
 export const channlesToProduct = Yup.object().shape({
   category: Yup.array()
@@ -495,7 +495,7 @@ export const channlesToProduct = Yup.object().shape({
 });
 
 export interface IChannelsToProduct
-  extends Yup.Asserts<typeof channlesToProduct> {}
+  extends Yup.Asserts<typeof channlesToProduct> { }
 
 export const utmSchema = Yup.object().shape({
   discountType: Yup.string()
@@ -520,7 +520,7 @@ export const utmSchema = Yup.object().shape({
   expiresAt: Yup.string().required("Expiration date is required"),
 });
 
-export interface IUTMSchema extends Yup.Asserts<typeof utmSchema> {}
+export interface IUTMSchema extends Yup.Asserts<typeof utmSchema> { }
 
 export const creatorProfileUpdateSchema = Yup.object().shape({
   full_name: Yup.string().required("Full name is required"),
@@ -560,7 +560,7 @@ export const creatorProfileUpdateSchema = Yup.object().shape({
 });
 
 export interface ICreatorProfileUpdateSchema
-  extends Yup.Asserts<typeof creatorProfileUpdateSchema> {}
+  extends Yup.Asserts<typeof creatorProfileUpdateSchema> { }
 
 export const campaignValidationSchema = Yup.object().shape({
   name: Yup.string().required("Campaign name is required"),
@@ -614,4 +614,37 @@ export const campaignValidationSchema = Yup.object().shape({
 });
 
 export interface ICampaignValidationSchema
-  extends Yup.Asserts<typeof campaignValidationSchema> {}
+  extends Yup.Asserts<typeof campaignValidationSchema> { }
+
+export const createStoreSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required."),
+  description: Yup.string().required("Description is required"),
+  link: Yup.string().url().required("Store Link is required."),
+  tags: Yup.array()
+    .of(Yup.string().required("Each tag must be a string"))
+    .min(1, "At least one tag is required")
+    .required("Tags are required"),
+  category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().required("Label is required"),
+        value: Yup.string().required("Value is required"),
+      })
+    )
+    .min(1, "Category is required")
+    .required("Category is required"), // Ensure at least one category is selected
+  // sub_category: Yup.array()
+  //   .of(
+  //     Yup.object().shape({
+  //       label: Yup.string().required("Label is required"),
+  //       value: Yup.string().required("Value is required"),
+  //     })
+  //   )
+  //   .min(1, "Sub-category is required")
+  //   .required("Sub-Category is required"), // Ensure at least one sub-category is selected
+  profile_image: Yup.string().nullable(),
+  banner_image: Yup.string().nullable(),
+});
+
+export interface ICreateStoreSchema
+  extends Yup.Asserts<typeof createStoreSchema> { }
