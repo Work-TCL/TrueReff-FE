@@ -102,15 +102,15 @@ const CreatorTable = ({ data, filter }: ICreatorTableProps) => {
                     {creator.short_description || creator.long_description}
                   </CustomTableCell>
                   <CustomTableCell>{creator.categories}</CustomTableCell>
-                  <CustomTableCell>
+                  <CustomTableCell className="text-center">
                     {getInstagramView(creator.channels)}
                   </CustomTableCell>
-                  <CustomTableCell>
+                  <CustomTableCell className="text-center">
                     {getYoutubeView(creator.channels)}
                   </CustomTableCell>
                   <CustomTableCell>{creator.pastSales ?? ""}</CustomTableCell>
                   <CustomTableCell>{creator.tag}</CustomTableCell>
-                  <CustomTableCell>
+                  <CustomTableCell className="text-center">
                     <Button
                       variant="outline"
                       className="whitespace-nowrap  bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm"

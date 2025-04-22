@@ -46,7 +46,7 @@ export default function BrandProductTable({ data }: IProductTableProps) {
     {
       key: "action",
       label: "Action",
-      className: "w-1/6",
+      className: "w-1/6 text-center",
       render: (product) => (
         <Button
           className="whitespace-nowrap w-[150px] bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm"

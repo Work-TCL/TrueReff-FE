@@ -98,7 +98,10 @@ export default function MyProducts() {
                     text={activity.categories}
                   />{" "}
                 </CustomTableCell>
-                <CustomTableCell parentClassName="p-2 text-font-grey text-sm">
+                <CustomTableCell
+                  className="text-center"
+                  parentClassName="p-2 text-font-grey text-sm"
+                >
                   <TruncateWithToolTip
                     checkHorizontalOverflow={false}
                     linesToClamp={2}

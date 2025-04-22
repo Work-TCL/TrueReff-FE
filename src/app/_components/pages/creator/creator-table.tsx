@@ -98,11 +98,18 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
             <TableRow key={index} className="bg-white hover:bg-gray-100">
               <CustomTableCell>
                 <div
-                  className="flex items-center cursor-pointer gap-2"
+                  className="flex items-center justify-start cursor-pointer gap-2"
                   onClick={() => handleViewCreatorDetails(creator._id)}
                 >
                   <Avatar className="w-8 h-8">
-                    <AvatarImage className={creator.profile_image?"":"opacity-50"} src={creator.profile_image?creator.profile_image:"/assets/profile/profile-image.png"} />
+                    <AvatarImage
+                      className={creator.profile_image ? "" : "opacity-50"}
+                      src={
+                        creator.profile_image
+                          ? creator.profile_image
+                          : "/assets/profile/profile-image.png"
+                      }
+                    />
                   </Avatar>
                   {creator.full_name}
                 </div>
@@ -128,14 +135,14 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
                   text={creator.tag}
                 />
               </CustomTableCell>
-              <CustomTableCell>
+              <CustomTableCell className="text-center">
                 {getInstagramView(creator.channels)}
               </CustomTableCell>
-              <CustomTableCell>
+              <CustomTableCell className="text-center">
                 {getYoutubeView(creator.channels)}
               </CustomTableCell>
               <CustomTableCell>{creator.pastSales ?? ""}</CustomTableCell>
-              <CustomTableCell>
+              <CustomTableCell className="text-center">
                 <Button
                   variant="outline"
                   className="whitespace-nowrap  border border-[#FFEDF2] bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all py-3 px-[10px] text-sm"

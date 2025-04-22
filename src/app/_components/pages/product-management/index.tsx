@@ -79,7 +79,7 @@ export interface IProduct {
   request: IRequest | null;
   collaboration: ICollaboration | null;
   categories?: string;
-  subCategories?:string;
+  subCategories?: string;
   tag?: string;
 }
 
@@ -89,10 +89,10 @@ const customStyles = {
     fontSize: "0.875rem ", // Tailwind text-sm
     color: "#a1a1aa", // Tailwind slate-400
   }),
-  control: (base:any) => ({
+  control: (base: any) => ({
     ...base,
-    borderRadius:"8px"
-  })
+    borderRadius: "8px",
+  }),
 };
 
 export default function ProductList() {
@@ -106,18 +106,31 @@ export default function ProductList() {
   const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
   const [subCategory, setSubCategory] = useState<ICategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
+  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>(
+    []
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 20;
 
   // Get Creator list
   const getProductList = useCallback(
-    async (page: number, isInternalLoader = false, searchValue: string = "", categoryIds: string[] = []) => {
+    async (
+      page: number,
+      isInternalLoader = false,
+      searchValue: string = "",
+      categoryIds: string[] = []
+    ) => {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/product/list?page=${page}&limit=${pageSize}${searchValue ? `&search=${searchValue}` : ""}${categoryIds?.length > 0 ? `&categories=${categoryIds.join(",")}` : ""}`
+          `/product/list?page=${page}&limit=${pageSize}${
+            searchValue ? `&search=${searchValue}` : ""
+          }${
+            categoryIds?.length > 0
+              ? `&categories=${categoryIds.join(",")}`
+              : ""
+          }`
         );
         if (response.status === 200) {
           const productData = response.data.data;
@@ -130,15 +143,15 @@ export default function ProductList() {
                 ele.tag = ele.tags.join(", ");
                 ele.categories = ele?.category?.length
                   ? ele.category
-                    .filter((ele: ICategory) => ele?.parentId === null)
-                    .map((ele: ICategory) => ele?.name)
-                    .join(", ")
+                      .filter((ele: ICategory) => ele?.parentId === null)
+                      .map((ele: ICategory) => ele?.name)
+                      .join(", ")
                   : "";
-                  ele.subCategories = ele?.category?.length
+                ele.subCategories = ele?.category?.length
                   ? ele.category
-                    .filter((ele: ICategory) => ele?.parentId !== null)
-                    .map((ele: ICategory) => ele?.name)
-                    .join(", ")
+                      .filter((ele: ICategory) => ele?.parentId !== null)
+                      .map((ele: ICategory) => ele?.name)
+                      .join(", ")
                   : "";
                 return { ...ele };
               });
@@ -186,8 +199,8 @@ export default function ProductList() {
     fetchCategory();
   }, []);
   const debouncedSearch = useCallback(
-    debounce((value: string,categoryIds:string[]) => {
-      getProductList(currentPage, true, value,categoryIds);
+    debounce((value: string, categoryIds: string[]) => {
+      getProductList(currentPage, true, value, categoryIds);
     }, 500),
     []
   );
@@ -195,10 +208,14 @@ export default function ProductList() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
-    debouncedSearch(value,[...selectedCategories,...selectedSubCategories]); // call debounce on value
+    debouncedSearch(value, [...selectedCategories, ...selectedSubCategories]); // call debounce on value
   };
   const handlePageChange = (page: number) => {
-    page !== currentPage && getProductList(page, true,search,[...selectedCategories,...selectedSubCategories]);
+    page !== currentPage &&
+      getProductList(page, true, search, [
+        ...selectedCategories,
+        ...selectedSubCategories,
+      ]);
   };
   const handleUpdateProduct = () => {
     getProductList(currentPage, true);
@@ -207,7 +224,7 @@ export default function ProductList() {
   const handleSelectCategory = (selectedOptions: any) => {
     const selectedIds = selectedOptions.map((opt: any) => opt.value);
     setSelectedCategories(selectedIds);
-    
+
     const optionsSubCategory = categories.filter((ele) =>
       selectedIds.includes(ele?.parentId || "")
     );
@@ -215,89 +232,101 @@ export default function ProductList() {
 
     // Filter selected subcategories to only include available ones
     const availableSubCategoriesIds = optionsSubCategory.map((v) => v._id);
-    let selectedSubCategory = selectedSubCategories.filter((id) => availableSubCategoriesIds.includes(id))
+    let selectedSubCategory = selectedSubCategories.filter((id) =>
+      availableSubCategoriesIds.includes(id)
+    );
     setSelectedSubCategories(selectedSubCategory);
-    getProductList(currentPage, true, search, [...selectedIds, ...selectedSubCategory]);
-  }
+    getProductList(currentPage, true, search, [
+      ...selectedIds,
+      ...selectedSubCategory,
+    ]);
+  };
 
   const handleSelectSubCategory = (selectedOptions: any) => {
     const selectedIds = selectedOptions.map((opt: any) => opt.value);
     setSelectedSubCategories(selectedIds);
-    getProductList(currentPage, true, search, [...selectedCategories,...selectedIds]);
-  }
+    getProductList(currentPage, true, search, [
+      ...selectedCategories,
+      ...selectedIds,
+    ]);
+  };
 
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
         <Loading />
-      ) : <><div className="flex justify-between items-center gap-2">
-        <div
-          className={`relative`}
-        >
-          <Input
-            value={search}
-            onChange={handleSearch}
-            placeholder={translate("Search_Product")}
-            className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
-          />
-          <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-        </div>
-        <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
-          <Select
-            styles={customStyles}
-            value={selectedCategories.map((id) => {
-              const match = parentCategory.find((cat) => cat._id === id);
-              return { value: id, label: match?.name || id };
-            })}
-            isMulti
-            onChange={handleSelectCategory}
-            options={parentCategory.map((ele) => ({
-              value: ele._id,
-              label: ele.name,
-            }))}
-            isOptionDisabled={() => selectedCategories.length >= 3}
-            className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder="Parent Categories (max 3)"
-          />
-          <Select
-            styles={customStyles}
-            placeholder="Subcategories (max 3)"
-            value={selectedSubCategories.map((id) => {
-              const match = subCategory.find((cat) => cat._id === id);
-              return { value: id, label: match?.name || id };
-            })}
-            isMulti
-            onChange={handleSelectSubCategory}
-            options={subCategory.map((ele) => ({
-              value: ele._id,
-              label: ele.name,
-            }))}
-            isOptionDisabled={() => selectedSubCategories.length >= 3}
-            className="basic-multi-select focus:outline-none focus:shadow-none"
-            classNamePrefix="select"
-          />
-        </div>
-      </div>
-      {internalLoader && <Loader />}
-      {products?.length > 0 ? (
-        <>
-          <ProductTable
-            data={products}
-            handleUpdateProduct={handleUpdateProduct}
-          />
-          {/* Pagination */}
-            {totalPages > 1 && <TablePagination
-              totalPages={totalPages}
-              activePage={currentPage}
-              onPageChange={handlePageChange}
-            />}  
-        </>
       ) : (
-        <EmptyPlaceHolder
-          title={"No_Products_Available_Title"}
-          description={"No_Products_Available_Description"}
-        />
-      )}</>}
+        <>
+          <div className="flex justify-between items-center gap-2">
+            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
+              <Input
+                value={search}
+                onChange={handleSearch}
+                placeholder={translate("Search_Product")}
+                className="p-3 rounded-lg bg-white pl-10 w-full gray-color" // Add padding to the left for the icon
+              />
+              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
+            </div>
+            <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
+              <Select
+                styles={customStyles}
+                value={selectedCategories.map((id) => {
+                  const match = parentCategory.find((cat) => cat._id === id);
+                  return { value: id, label: match?.name || id };
+                })}
+                isMulti
+                onChange={handleSelectCategory}
+                options={parentCategory.map((ele) => ({
+                  value: ele._id,
+                  label: ele.name,
+                }))}
+                isOptionDisabled={() => selectedCategories.length >= 3}
+                className="basic-multi-select focus:outline-none focus:shadow-none"
+                placeholder="Parent Categories (max 3)"
+              />
+              <Select
+                styles={customStyles}
+                placeholder="Subcategories (max 3)"
+                value={selectedSubCategories.map((id) => {
+                  const match = subCategory.find((cat) => cat._id === id);
+                  return { value: id, label: match?.name || id };
+                })}
+                isMulti
+                onChange={handleSelectSubCategory}
+                options={subCategory.map((ele) => ({
+                  value: ele._id,
+                  label: ele.name,
+                }))}
+                isOptionDisabled={() => selectedSubCategories.length >= 3}
+                className="basic-multi-select focus:outline-none focus:shadow-none"
+                classNamePrefix="select"
+              />
+            </div>
+          </div>
+          {internalLoader && <Loader />}
+          {products?.length > 0 ? (
+            <>
+              <ProductTable
+                data={products}
+                handleUpdateProduct={handleUpdateProduct}
+              />
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <TablePagination
+                  totalPages={totalPages}
+                  activePage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </>
+          ) : (
+            <EmptyPlaceHolder
+              title={"No_Products_Available_Title"}
+              description={"No_Products_Available_Description"}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

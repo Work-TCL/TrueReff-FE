@@ -104,19 +104,17 @@ export default function BrandList() {
     debouncedSearch(value); // call debounce on value
   };
   return (
-    <div
-      className={`flex flex-col p-4 gap-4 h-full`}
-    >
+    <div className={`flex flex-col p-4 gap-4 h-full`}>
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className={`relative`}>
+          <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
             <Input
               value={search}
               onChange={handleSearch}
               placeholder={"Search Brand"}
-              className="p-3 rounded-lg bg-white pl-10 max-w-[350px] w-full gray-color" // Add padding to the left for the icon
+              className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
             />
             <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
           </div>
@@ -129,14 +127,14 @@ export default function BrandList() {
                 ))}
               </div>
               {totalPages > 1 && (
-                  <TablePagination
-                    totalPages={totalPages}
-                    activePage={currentPage}
-                    onPageChange={(page) => {
-                      setCurrentPage(page);
-                      page !== currentPage && getBrandList(page, true,search);
-                    }}
-                  />
+                <TablePagination
+                  totalPages={totalPages}
+                  activePage={currentPage}
+                  onPageChange={(page) => {
+                    setCurrentPage(page);
+                    page !== currentPage && getBrandList(page, true, search);
+                  }}
+                />
               )}
             </>
           ) : (

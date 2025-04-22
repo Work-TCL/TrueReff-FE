@@ -193,12 +193,12 @@ export default function ProductList() {
       ) : (
         <>
           <div className="flex justify-between items-center gap-2">
-            <div className={`relative`}>
+            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
               <Input
                 value={search}
                 onChange={handleSearch}
                 placeholder={translate("Search_Product")}
-                className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+                className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
               />
               <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
             </div>
@@ -279,7 +279,14 @@ export default function ProductList() {
                       >
                         <CustomTableCell>{product.channelName}</CustomTableCell>
                         <CustomTableCell>
-                          <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push(`/vendor/products/view/${product._id}`)}>
+                          <div
+                            className="flex items-center gap-2 cursor-pointer"
+                            onClick={() =>
+                              router.push(
+                                `/vendor/products/view/${product._id}`
+                              )
+                            }
+                          >
                             {product.media?.length > 0 && product.media[0] ? (
                               <Avatar className="w-8 h-8">
                                 <AvatarImage src={product.media[0]} />
@@ -322,7 +329,7 @@ export default function ProductList() {
                             text={product.sku ?? ""}
                           />
                         </CustomTableCell>
-                        <CustomTableCell>
+                        <CustomTableCell className="text-center">
                           <TruncateWithToolTip
                             checkHorizontalOverflow={false}
                             linesToClamp={2}
@@ -349,11 +356,13 @@ export default function ProductList() {
                 </Table>
               </div>
               {/* Pagination */}
-              {totalPages > 1 &&<TablePagination
-                totalPages={totalPages}
-                activePage={currentPage}
-                onPageChange={handlePageChange}
-              />}
+              {totalPages > 1 && (
+                <TablePagination
+                  totalPages={totalPages}
+                  activePage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              )}
             </>
           ) : (
             <EmptyPlaceHolder

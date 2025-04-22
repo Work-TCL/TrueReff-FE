@@ -61,7 +61,7 @@ const customStyles = {
   control: (base: any) => ({
     ...base,
     width: "200px",
-    borderRadius:"8px"
+    borderRadius: "8px",
   }),
 };
 
@@ -137,7 +137,7 @@ export default function CreatorList() {
     getCreatorList(currentPage);
   }, []);
   const handlePageChange = (page: number) => {
-    page !== currentPage && getCreatorList(page, true,search);
+    page !== currentPage && getCreatorList(page, true, search);
   };
   const debouncedSearch = useCallback(
     debounce((value: string) => {
@@ -157,53 +157,59 @@ export default function CreatorList() {
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
         <Loading />
-      ) : <><div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="md:text-[20px] text-base text-500">
-          <Input
-            value={search}
-            onChange={handleSearch}
-            placeholder={translate("Search_creator")}
-            className="md:h-10 h-8"
-          />
-        </div>
-        <div className="flex items-center gap-[10px]">
-          <Select
-            styles={customStyles}
-            value={[
-              {
-                value: filter,
-                label: filter
-                  ? filterOption.find((ele) => ele?.value === filter)?.label
-                  : "Select Status",
-              },
-            ]}
-            onChange={handleFilterValue}
-            options={filterOption}
-            className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder="Select Status"
-          />
-        </div>
-      </div>
-      {creators?.length > 0 ? (
-        <>
-          <CreatorTable
-            data={creators}
-            filter={filter}
-            loader={internalLoader}
-          />
-          {/* Pagination */}
-            {totalPages > 1 && <TablePagination
-              totalPages={totalPages}
-              activePage={currentPage}
-              onPageChange={handlePageChange}
-            />}
-        </>
       ) : (
-        <EmptyPlaceHolder
-          title={"No_Creators_Available_Title"}
-          description={"No_Creators_Available_Description"}
-        />
-      )}</>}
+        <>
+          <div className="flex justify-between items-center flex-wrap gap-2">
+            <div className="md:text-[20px] text-base text-500 max-w-[350px] w-full ">
+              <Input
+                value={search}
+                onChange={handleSearch}
+                placeholder={translate("Search_creator")}
+                className="md:h-10 h-8 w-full"
+              />
+            </div>
+            <div className="flex items-center gap-[10px]">
+              <Select
+                styles={customStyles}
+                value={[
+                  {
+                    value: filter,
+                    label: filter
+                      ? filterOption.find((ele) => ele?.value === filter)?.label
+                      : "Select Status",
+                  },
+                ]}
+                onChange={handleFilterValue}
+                options={filterOption}
+                className="basic-multi-select focus:outline-none focus:shadow-none"
+                placeholder="Select Status"
+              />
+            </div>
+          </div>
+          {creators?.length > 0 ? (
+            <>
+              <CreatorTable
+                data={creators}
+                filter={filter}
+                loader={internalLoader}
+              />
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <TablePagination
+                  totalPages={totalPages}
+                  activePage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </>
+          ) : (
+            <EmptyPlaceHolder
+              title={"No_Creators_Available_Title"}
+              description={"No_Creators_Available_Description"}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

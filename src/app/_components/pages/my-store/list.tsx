@@ -104,12 +104,12 @@ export default function ProductList() {
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full overflow-hidden">
       <div className="flex justify-between items-center gap-2">
-        <div className="md:text-[20px] text-base text-500">
+        <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
           <Input
             value={search}
             onChange={handleSearch}
             placeholder={translate("Search_creator")}
-            className="md:h-10 h-8"
+            className="md:h-10 h-8 w-full"
           />
         </div>
         <div className="flex items-center gap-[10px]">

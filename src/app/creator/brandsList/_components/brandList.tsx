@@ -112,7 +112,7 @@ export default function BrandListView({ brand }: BrandListProps) {
                   text={"15,000 items available"}
                 />
               </CustomTableCell>
-              <CustomTableCell className="flex items-center text-font-grey whitespace-nowrap gap-1">
+              <CustomTableCell className="flex items-center text-font-grey whitespace-nowrap gap-1 text-center">
                 <Star className="w-4 h-4 fill-current text-dark-orange" />
                 <span>{creator.rating}</span>
                 <span>

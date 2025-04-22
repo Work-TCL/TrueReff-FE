@@ -140,11 +140,12 @@ export default function CreatorList() {
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
       <div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="text-[20px] text-500">
+        <div className="md:text-[20px] text-base text-500 max-w-[350px] w-full ">
           <Input
             value={search}
             onChange={handleSearch}
             placeholder={translate("Search_creator")}
+            className="md:h-10 h-8 w-full"
           />
         </div>
         <div className="flex items-center gap-[10px]">

@@ -131,12 +131,12 @@ export default function ChannelProductList({
       ) : (
         <>
           <div className="flex justify-between items-center gap-2">
-            <div className={`relative`}>
+            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
               <Input
                 value={search}
                 onChange={handleSearch}
                 placeholder={translate("Search_Product")}
-                className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+                className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
               />
               <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
             </div>
@@ -183,9 +183,12 @@ export default function ChannelProductList({
                           {product.id.split("/").pop()}
                         </CustomTableCell>
                         <CustomTableCell>
-                          <div className="flex items-center gap-2 cursor-pointer" onClick={() =>
-                            router.push(`shopify/view?id=${product.id}`)
-                          }>
+                          <div
+                            className="flex items-center gap-2 cursor-pointer"
+                            onClick={() =>
+                              router.push(`shopify/view?id=${product.id}`)
+                            }
+                          >
                             {product.image ? (
                               <Avatar className="w-8 h-8">
                                 <AvatarImage src={product.image} />
@@ -222,7 +225,7 @@ export default function ChannelProductList({
                             text={product.sku ?? ""}
                           />
                         </CustomTableCell>
-                        <CustomTableCell>
+                        <CustomTableCell className="text-center">
                           <TruncateWithToolTip
                             checkHorizontalOverflow={false}
                             linesToClamp={2}

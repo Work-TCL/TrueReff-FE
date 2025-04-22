@@ -214,14 +214,12 @@ export default function CollaborationList() {
       {loading ? (
         <Loading />
       ) : <><div className="flex justify-between items-center gap-2">
-        <div
-          className={`relative`}
-        >
+         <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
           <Input
             value={search}
             onChange={handleSearch}
             placeholder={t("Search_Product")}
-            className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+            className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
           />
           <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
         </div>

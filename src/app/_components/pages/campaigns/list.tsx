@@ -123,12 +123,12 @@ export default function CampaignList() {
       ) : (
         <>
           <div className="flex md:flex-row flex-col justify-between items-center gap-2">
-            <div className={`relative`}>
+            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
               <Input
                 value={search}
                 onChange={handleSearch}
                 placeholder={translate("Search_Campaign")}
-                className="p-3 rounded-lg bg-white pl-10 max-w-[320px] w-full gray-color" // Add padding to the left for the icon
+                className="p-3 rounded-lg bg-white pl-10   w-full gray-color" // Add padding to the left for the icon
               />
               <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
             </div>
@@ -191,7 +191,14 @@ export default function CampaignList() {
                         className="even:bg-gray-100 odd:bg-white"
                       >
                         <CustomTableCell>
-                          <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push(`/vendor/campaign/${campaign?._id}?view=true`)}>
+                          <div
+                            className="flex items-center justify-start gap-2 cursor-pointer"
+                            onClick={() =>
+                              router.push(
+                                `/vendor/campaign/${campaign?._id}?view=true`
+                              )
+                            }
+                          >
                             {campaign?.imageUrls?.length > 0 &&
                             campaign?.imageUrls[0] ? (
                               <Avatar className="w-8 h-8">
@@ -208,7 +215,14 @@ export default function CampaignList() {
                           </div>
                         </CustomTableCell>
                         <CustomTableCell>
-                          <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push(`/vendor/products/view/${campaign?.productId?._id}`)}>
+                          <div
+                            className="flex items-center justify-start gap-2 cursor-pointer"
+                            onClick={() =>
+                              router.push(
+                                `/vendor/products/view/${campaign?.productId?._id}`
+                              )
+                            }
+                          >
                             {campaign?.productId?.media?.length &&
                             campaign?.productId?.media[0] ? (
                               <Avatar className="w-8 h-8">
