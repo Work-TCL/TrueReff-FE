@@ -49,15 +49,14 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     //   return NextResponse.redirect(new URL(`/dashboard`, request.url));
     // }
     // Redirect Authenticated Users Away from Auth Pages
-    if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request)) {
+    if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp","/dashboard"], request)) {
       return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard`:`/dashboard`, request.url));
     }
-
-    if(token && user?.type === "vendor" && ((!pathname.startsWith("/creator/profile")) && pathname.startsWith("/creator") || ['/vendor-register',"/creator-registration"].includes(pathname))){
+    if(token && user?.type === "vendor" && ((!pathname.startsWith("/creator/profile") && !pathname.includes("/store/")) && pathname.startsWith("/creator") || ['/vendor-register',"/creator-registration","/dashboard"].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
-    if(token && user?.type === "creator" && ((!pathname.startsWith("/vendor/profile")) && pathname.startsWith("/vendor") || ['/vendor-register',"/creator-registration"].includes(pathname))){
+    if(token && user?.type === "creator" && ((!pathname.startsWith("/vendor/profile")) && pathname.startsWith("/vendor") || ['/vendor-register',"/creator-registration",'/dashboard'].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 

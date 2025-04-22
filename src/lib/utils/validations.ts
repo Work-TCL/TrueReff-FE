@@ -619,19 +619,19 @@ export interface ICampaignValidationSchema
 export const createStoreSchema = Yup.object().shape({
   name: Yup.string().required("Name is required."),
   description: Yup.string().required("Description is required"),
-  link: Yup.string().url().required("Store Link is required."),
+  // link: Yup.string().url().required("Store Link is required."),
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
     .required("Tags are required"),
-  category: Yup.array()
+    category: Yup.array()
     .of(
       Yup.object().shape({
         label: Yup.string().required("Label is required"),
         value: Yup.string().required("Value is required"),
       })
     )
-    .min(1, "Category is required")
+    .min(1, "At least one category is required")
     .required("Category is required"), // Ensure at least one category is selected
   // sub_category: Yup.array()
   //   .of(
@@ -642,8 +642,8 @@ export const createStoreSchema = Yup.object().shape({
   //   )
   //   .min(1, "Sub-category is required")
   //   .required("Sub-Category is required"), // Ensure at least one sub-category is selected
-  profile_image: Yup.string().nullable(),
-  banner_image: Yup.string().nullable(),
+  profile_image: Yup.string().required("Profile Image is required."),
+  banner_image: Yup.string().required("Banner Image is required."),
 });
 
 export interface ICreateStoreSchema

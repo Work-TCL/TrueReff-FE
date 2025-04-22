@@ -7,7 +7,7 @@ export const createStore = async (
   params: FormData
 ): Promise<ICreateStoreRequest> => {
   try {
-    const response = await axios.post(`/product/campaign/add`, params, {
+    const response = await axios.post(`/auth/creator-store/add`, params, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -18,37 +18,36 @@ export const createStore = async (
     throw errorMessage || new Error("Error While create campaign.");
   }
 };
-// export const updateCampaign = async (
-//   params: FormData,
-//   campaignId: string
-// ): Promise<IPOSTCreateCampaignResponse> => {
-//   try {
-//     const response = await axios.put(
-//       `/product/campaign/update/${campaignId}`,
-//       params,
-//       {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       }
-//     );
-//     return response?.data;
-//   } catch (error: unknown) {
-//     const errorMessage = getErrorMessage(error);
-//     throw errorMessage || new Error("Error While update campaign.");
-//   }
-// };
-// export const getCampaign = async (
-//   params: IGETCampaignRequest
-// ): Promise<ICampaign> => {
-//   try {
-//     const response = await axios.get(`/product/campaign/${params.id}`);
-//     return response?.data?.data?.data;
-//   } catch (error: unknown) {
-//     const errorMessage = getErrorMessage(error);
-//     throw errorMessage || new Error("Error While getCampaign.");
-//   }
-// };
+export const updateCreatorStore = async (
+  params: FormData
+): Promise<any> => {
+  try {
+    const response = await axios.put(
+      `/auth/creator-store/update`,
+      params,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While update campaign.");
+  }
+};
+export const getCreatorStore = async (
+  params: {storeName?:string}
+): Promise<any> => {
+  try {
+    const response = await axios.get(`/auth/creator-store${params?.storeName ? `?name=${params.storeName}`:""}`);
+    return response?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While getCampaign.");
+  }
+};
 
 // export const getCampaignList = async (
 //   params: IGETCampaignListRequest
