@@ -146,6 +146,7 @@ export default function Input({
               dateFormat="dd/MM/yyyy"
               wrapperClassName="w-full"
               {...(props?.minDate ? { minDate: props.minDate } : {})}
+              {...(props?.disabled ? { disabled: true } : {})}
             />
             {Icon ? (
               <Icon

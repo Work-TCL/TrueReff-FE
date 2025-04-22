@@ -8,6 +8,7 @@ import { debounce } from "lodash";
 type ProductSelectDropdownProps = {
   onSelect?: (product: IProduct) => void;
   selectedProduct: IProduct | null;
+  disabled: boolean;
 };
 
 const LIMIT: number = 20;
@@ -15,6 +16,7 @@ const LIMIT: number = 20;
 const ProductSelectDropdown: React.FC<ProductSelectDropdownProps> = ({
   onSelect,
   selectedProduct,
+  disabled,
 }) => {
   const [isLoading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +27,10 @@ const ProductSelectDropdown: React.FC<ProductSelectDropdownProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
+  const toggleDropdown = () => {
+    if (disabled) return;
+    setIsOpen((prev) => !prev);
+  };
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(e.target.value);
 

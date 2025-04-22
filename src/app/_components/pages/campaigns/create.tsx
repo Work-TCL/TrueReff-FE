@@ -35,6 +35,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
   const params = useParams();
   const router = useRouter();
   const campaignId: any = params?.id !== "add" ? params?.id : null;
+  const isDisabled: any = props?.isDetailView;
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   const [campaignData, setCampaignData] = useState<ICampaign | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -197,23 +198,25 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
           <div className="md:text-[20px] text-base text-500">
             {translate("Campaign_Details_Form")}
           </div>
-          <div className="flex gap-[10px]">
-            <ButtonOutline
-              type="button"
-              variant="outline"
-              className="rounded-[12px]"
-            >
-              {translate("Cancel")}
-            </ButtonOutline>
-            <Button
-              type="submit"
-              className="text-white rounded-[12px] text-sm py-2"
-            >
-              {!campaignId
-                ? translate("Start_Campaign")
-                : translate("Edit_Campaign")}
-            </Button>
-          </div>
+          {!isDisabled ? (
+            <div className="flex gap-[10px]">
+              <ButtonOutline
+                type="button"
+                variant="outline"
+                className="rounded-[12px]"
+              >
+                {translate("Cancel")}
+              </ButtonOutline>
+              <Button
+                type="submit"
+                className="text-white rounded-[12px] text-sm py-2"
+              >
+                {!campaignId
+                  ? translate("Start_Campaign")
+                  : translate("Edit_Campaign")}
+              </Button>
+            </div>
+          ) : null}
         </div>
         <div className="flex flex-col lg:flex-row gap-5 w-full">
           <div className="flex flex-col gap-5 w-full">
@@ -226,6 +229,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                   name="name"
                   placeholder={`${translate("Type_campaign_name_here")}`}
                   label={`${translate("Campaign_Name")}`}
+                  disabled={isDisabled}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -235,6 +239,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                   label={translate("Description")}
                   name="description"
                   rows={5}
+                  disabled={isDisabled}
                 />
               </div>
               <div className="flex flex-col lg:flex-row gap-2">
@@ -247,6 +252,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                     minDate={
                       new Date(new Date().setDate(new Date().getDate() + 1))
                     }
+                    disabled={isDisabled}
                   />
                 </div>
                 <div className="flex flex-col w-full lg:w-1/2 gap-1">
@@ -264,6 +270,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                           )
                         : new Date(new Date().setDate(new Date().getDate() + 2))
                     }
+                    disabled={isDisabled}
                   />
                 </div>
               </div>
@@ -276,6 +283,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                     onMediaChange={setMedia}
                     mediaPreview={mediaPreview}
                     setMediaPriview={setMediaPriview}
+                    disabled={isDisabled}
                   />
                 </div>
               </div>
@@ -289,6 +297,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                   <ProductSelectDropdown
                     onSelect={handleProductSelect}
                     selectedProduct={selectedProduct}
+                    disabled={isDisabled}
                   />
                   {Boolean(get(methods.formState.errors, "productId")) && (
                     <span className="text-red-600 text-sm p-2 block">
@@ -317,6 +326,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                         handleChannelChange("instagram");
                       }}
                       hideError={true}
+                      disabled={isDisabled}
                     />
                   </div>
                   <div className="flex gap-1">
@@ -331,6 +341,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                       onChange={(v) => {
                         handleChannelChange("youtube");
                       }}
+                      disabled={isDisabled}
                     />
                   </div>
                   <div className="flex gap-1">
@@ -387,6 +398,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                           value: "PERCENTAGE",
                         },
                       ]}
+                      disabled={isDisabled}
                     />
                   </div>
 
@@ -396,6 +408,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                       type="number"
                       placeholder={"10"}
                       label={translate("Discount")}
+                      disabled={isDisabled}
                     />
                   </div>
                 </div>

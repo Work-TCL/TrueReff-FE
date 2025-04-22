@@ -6,12 +6,14 @@ type MediaUploaderProps = {
   onMediaChange: (media: { images: File[]; video: File | null }) => void;
   setMediaPriview: (media: { images: string[]; video: string | null }) => void;
   mediaPreview: { images: string[]; video: string | null };
+  disabled: boolean;
 };
 
 const MediaUploader: React.FC<MediaUploaderProps> = ({
   onMediaChange,
   mediaPreview,
   setMediaPriview,
+  disabled = false,
 }) => {
   const [images, setImages] = useState<File[]>([]);
   const [video, setVideo] = useState<File | null>(null);
@@ -103,35 +105,38 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
         <label className="block font-semibold mb-2">
           Upload Images (Max 3)
         </label>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer relative">
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          />
-          <div className="flex flex-col items-center justify-center space-y-2 text-gray-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 16.5V7.5A1.5 1.5 0 014.5 6h15a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 16.5zM21 12l-4.5-3.5L12 15l-4.5-6L3 12"
-              />
-            </svg>
-            <p className="text-sm">Click or drag image files to upload</p>
-            <span className="text-xs text-gray-400">
-              (JPG, PNG, Max 5MB each)
-            </span>
+        {!disabled && (
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer relative">
+            <input
+              key={images.length}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageUpload}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div className="flex flex-col items-center justify-center space-y-2 text-gray-600">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5V7.5A1.5 1.5 0 014.5 6h15a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 16.5zM21 12l-4.5-3.5L12 15l-4.5-6L3 12"
+                />
+              </svg>
+              <p className="text-sm">Click or drag image files to upload</p>
+              <span className="text-xs text-gray-400">
+                (JPG, PNG, Max 5MB each)
+              </span>
+            </div>
           </div>
-        </div>
+        )}
         <div className="flex gap-3 mt-2 flex-wrap">
           {mediaPreview.images.map((img, i) => (
             <div
@@ -144,6 +149,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
                 className="w-full h-full object-cover rounded"
               />
               <button
+                type="button"
                 onClick={() => removeFromS3(i)}
                 className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
               >
@@ -162,6 +168,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
                 className="w-full h-full object-cover rounded"
               />
               <button
+                type="button"
                 onClick={() => removeImage(i)}
                 className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
               >
@@ -176,32 +183,34 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
         <label className="block font-semibold mb-2">
           Upload Video (Max 20MB)
         </label>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer relative">
-          <input
-            type="file"
-            accept="video/*"
-            onChange={handleVideoUpload}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          />
-          <div className="flex flex-col items-center justify-center space-y-2 text-gray-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 10.5V6a2.25 2.25 0 00-2.25-2.25h-3A2.25 2.25 0 008.25 6v4.5M4.5 10.5h15M6.75 10.5v6.75A2.25 2.25 0 009 19.5h6a2.25 2.25 0 002.25-2.25V10.5"
-              />
-            </svg>
-            <p className="text-sm">Click or drag a video file to upload</p>
-            <span className="text-xs text-gray-400">(MP4, Max 20MB)</span>
+        {!disabled && (
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer relative">
+            <input
+              type="file"
+              accept="video/*"
+              onChange={handleVideoUpload}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div className="flex flex-col items-center justify-center space-y-2 text-gray-600">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 10.5V6a2.25 2.25 0 00-2.25-2.25h-3A2.25 2.25 0 008.25 6v4.5M4.5 10.5h15M6.75 10.5v6.75A2.25 2.25 0 009 19.5h6a2.25 2.25 0 002.25-2.25V10.5"
+                />
+              </svg>
+              <p className="text-sm">Click or drag a video file to upload</p>
+              <span className="text-xs text-gray-400">(MP4, Max 20MB)</span>
+            </div>
           </div>
-        </div>
+        )}
         {mediaPreview.video && (
           <div className="relative mt-2 hover:bg-gray-100 cursor-pointer w-fit">
             <video
@@ -210,6 +219,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               className="w-64 max-h-40 rounded"
             />
             <button
+              type="button"
               onClick={removeVideoFromS3}
               className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
             >
@@ -225,6 +235,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               className="w-64 max-h-40 rounded"
             />
             <button
+              type="button"
               onClick={removeVideo}
               className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
             >
