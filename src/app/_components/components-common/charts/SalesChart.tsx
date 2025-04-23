@@ -59,12 +59,12 @@ export default function SalesChart() {
               {translate("Revenue")}
             </span>
           </div>
-          <div className="flex items-center space-x-1">
+          {/* <div className="flex items-center space-x-1">
             <span className="w-3 h-3 bg-primary rounded-full"></span>
             <span className="text-font-grey text-sm font-medium">
               {translate("Profit")}
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex gap-4 items-center">

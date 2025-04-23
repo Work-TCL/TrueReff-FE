@@ -1,8 +1,10 @@
 "use client";
-import { IChannel } from "@/lib/types-api/vendor";
-import Link from "next/link";
+
+import React, { useState } from "react";
+import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { Button } from "@/components/ui/button";
+import Confirmation from "../dialogs/confirmation-dialog";
 
 interface IChannelCard {
   href?: string;
@@ -21,6 +23,10 @@ export default function ChannelCard({
   href = "",
 }: IChannelCard) {
   const router = useRouter();
+  const [confirm,setConfirm] = useState<boolean>(false)
+  const handleConfirm = () => {
+    setConfirm(false);
+  }
   const headerContent = () => (
     <div className="flex items-center gap-4">
       <span className="text-sm xl:text-lg font-semibold">{channelType}</span>
@@ -51,14 +57,22 @@ export default function ChannelCard({
     </div>
   );
 
-  return href ? (
+  return <>{href ? (
     <div
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         router?.push(href);
       }}
       key={channelType}
-      className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3 bg-white cursor-pointer"
+      className="relative group flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3 bg-white cursor-pointer"
     >
+      <div className="absolute top-2 right-2 hidden group-hover:flex items-center justify-center p-1 bg-gray-100 rounded-full hover:bg-gray-200" onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        router.push("/vendor/settings/store")
+      }}>
+        <Pencil className="w-4 h-4 text-gray-600" />
+      </div>
       {headerContent()}
       {bodyContent()}
     </div>
@@ -69,6 +83,11 @@ export default function ChannelCard({
     >
       {headerContent()}
       {bodyContent()}
+      <div>
+        <Button className="text-white" variant="secondary" onClick={()=> setConfirm(true)}>Deactivate</Button>
+      </div>
     </div>
-  );
+  )} 
+  {confirm && <Confirmation loading={false} title="Are you sure you want to deactivate this store?" handleConfirm={handleConfirm} onClose={()=> setConfirm(false)}/>}
+  </>
 }

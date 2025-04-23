@@ -20,7 +20,7 @@ const MostSellingBrands = () => {
   return (
     <div className="w-full p-4 bg-white rounded-2xl">
       <h3 className="md:text-xl text-base text-text font-medium mb-3">
-        {translate("Most_Selling_Brands")}
+        {translate("Top_Creators")}
       </h3>
       <ul className="space-y-4">
         {data.map((item, index) => (

@@ -14,7 +14,7 @@ const DonutChart: React.FC = () => {
   return (
     <div className="w-full p-4 rounded-20 bg-white ">
       <h2 className=" text-text text-xl font-medium ">{translate("Product_Updates")}</h2>
-      <div className=' relative h-[240px]'>
+      <div className=' relative h-[280px]'>
 
       <ResponsiveContainer width="100%" height={'100%'}>
         <PieChart>
@@ -43,7 +43,7 @@ const DonutChart: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 mt-4 text-sm">
+      {/* <div className="flex flex-col gap-3 mt-4 text-sm">
         {data.map((item, index) => (
           <div key={index} className="flex items-center space-x-2">
             <div
@@ -55,7 +55,7 @@ const DonutChart: React.FC = () => {
             </span>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

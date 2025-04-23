@@ -44,7 +44,7 @@ export default function CreatorProfile() {
           categories={[...creatorData.category.map((v: any) => v.name)]}
         />
         <div className="flex flex-col gap-5">
-          <ProfileCompletionCard progress={60} />
+          {creator?.creatorId === creatorData?.creatorId && <ProfileCompletionCard progress={60} />}
           <CollabsWithCompanies />
         </div>
       </div>

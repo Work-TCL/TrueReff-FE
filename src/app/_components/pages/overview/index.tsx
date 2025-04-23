@@ -1,22 +1,89 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SalesChart from "../../components-common/charts/SalesChart";
 import DonutChart from "../../components-common/charts/DonutChat";
 import MostSellingBrands from "../../components-common/charts/MostSellingBrands";
 import RecentActivities from "../../components-common/tables/RecentActivity";
 import VendorActivity from "../../components-common/charts/VendorActivityChart";
-import StatesCards from "../../components-common/states/StatesCard";
-import ProfileCompletionCard from "../../components-common/charts/profileComplete";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
-import PerformanceSummaryChart from "../../components-common/charts/PerformanceChart";
-import PerformanceSummaryChartDashBoard from "../../components-common/charts/performanceSummary";
+import { StatsCard } from "../../components-common/states/StatesCard";
+import { translate } from "@/lib/utils/translate";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { toastMessage } from "@/lib/utils/toast-message";
+import { getStatesInfo } from "@/lib/web-api/vendor-dashboard";
+import Loading from "@/app/vendor/loading";
+import { IStateInfo } from "@/lib/types-api/vendor-dashboard";
 
 export default function Overview() {
+  const initialStateInfo = {
+    activeCollaborations: 0,
+    pendingCollaborations: 0,
+    activeCampaigns: 0,
+    last7DaysCreator: 0
+};
+  const [statesInfo,setStatesInfo] = useState<IStateInfo>(initialStateInfo);
+  const [mainLoading,setMailLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetchStatesInfo();
+  },[])
+  const fetchStatesInfo = async () => {
+    setMailLoading(true);
+    try{
+      const response = await getStatesInfo();
+      if(response){
+        setStatesInfo(response);
+      } else {
+        setStatesInfo(initialStateInfo)
+      }
+    } catch(error){
+      let errorMessage = await getErrorMessage(error);
+      toastMessage.error(errorMessage);
+      setStatesInfo(initialStateInfo)
+    } finally{
+      setMailLoading(false);
+    }
+  }
   return (
     <div className="flex flex-col gap-4 md:p-6 p-4  w-full">
-      {" "}
-      <StatesCards />
+      {mainLoading && <Loading/>}
+      <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 gap-4 rounded-[20px] w-full">
+            <StatsCard
+              title={translate("Active_Collaborations")}
+              value={statesInfo?.activeCollaborations}
+              growth={5}
+              bgColor="bg-white bg-[#f2f1fd]"
+              borderColor={"border-[#7877EE]"}
+            />
+            <StatsCard
+              title={translate("Products_Sales")}
+              value={200}
+              growth={5}
+              borderColor="border-[#EB815B]"
+              bgColor="bg-[#fdf2ef]"
+            />
+            <StatsCard
+              title={translate("Active_Campaigns")}
+              value={statesInfo?.activeCampaigns}
+              growth={5}
+              borderColor="border-[#77EE8D]"
+              bgColor="bg-[#f1fdf4]"
+            />
+            <StatsCard
+              title={translate("Pending_Collaboration")}
+              value={statesInfo?.pendingCollaborations}
+              growth={5}
+              borderColor="border-[#9773C8]"
+              bgColor="bg-[#f5f1fa]"
+            />
+            <StatsCard
+              title={translate("New_Creators")}
+              value={statesInfo?.last7DaysCreator}
+              growth={5}
+              borderColor="border-[#C861A0]"
+              bgColor="bg-[#faeff6]"
+            />
+          </div>
       <div className="flex flex-col xl:flex-row gap-5 w-full">
         <div className="flex flex-col xl:w-3/4 gap-5">
           <div className="flex flex-col md:flex-row gap-4">
