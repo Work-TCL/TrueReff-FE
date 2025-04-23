@@ -222,9 +222,6 @@ export default function ProductList() {
               <CustomTableHead className="w-1/7">
                 Selling {translate("Price")}
               </CustomTableHead>
-              <CustomTableHead className="w-1/7 text-center">
-                {translate("Action")}
-              </CustomTableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -286,18 +283,6 @@ export default function ProductList() {
                     linesToClamp={2}
                     text={product.price ?? ""}
                   />
-                </CustomTableCell>
-                <CustomTableCell>
-                  <ToolTip content="View Product" delayDuration={1000}>
-                    <Eye
-                      strokeWidth={1.5}
-                      color="#FF4979"
-                      className="cursor-pointer"
-                      onClick={() =>
-                        router.push(`/vendor/products/view/${product._id}`)
-                      }
-                    />
-                  </ToolTip>
                 </CustomTableCell>
               </TableRow>
             ))}
@@ -374,7 +359,6 @@ export default function ProductList() {
           {internalLoading && <Loader />}
           {productList?.length > 0 ? (
             <>
-<<<<<<< HEAD
               {viewMode === "table" && tableContent()}
               {viewMode === "card" && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
@@ -385,127 +369,6 @@ export default function ProductList() {
                   ))}
                 </div>
               )}
-=======
-              <div className="overflow-auto">
-                <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-                  <TableHeader className="bg-stroke">
-                    <TableRow>
-                      <CustomTableHead className="w-1/7">
-                        {translate("Channel")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/4">
-                        {translate("Product_Name")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/7">
-                        {translate("Categories")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/7">
-                        {translate("Sub_category")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/4">
-                        {translate("Tags")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/4">
-                        {translate("SKU")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/7">
-                        Selling {translate("Price")}
-                      </CustomTableHead>
-                        {/* <CustomTableHead className="w-1/7 text-center">
-                          {translate("Action")}
-                        </CustomTableHead> */}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {productList.map((product, index) => (
-                      <TableRow
-                        key={index}
-                        className=" bg-white hover:bg-gray-100"
-                      >
-                        <CustomTableCell>{product.channelName}</CustomTableCell>
-                        <CustomTableCell>
-                          <div
-                            className="flex items-center gap-2 cursor-pointer"
-                            onClick={() =>
-                              router.push(
-                                `/vendor/products/view/${product._id}`
-                              )
-                            }
-                          >
-                            {product.media?.length > 0 && product.media[0] ? (
-                              <Avatar className="w-8 h-8">
-                                <AvatarImage src={product.media[0]} />
-                              </Avatar>
-                            ) : (
-                              <ImageOff className="w-6 h-6 text-gray-400" />
-                            )}
-                            <TruncateWithToolTip
-                              checkHorizontalOverflow={false}
-                              linesToClamp={2}
-                              text={product.title ?? ""}
-                            />
-                          </div>
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={product?.categories ?? ""}
-                          />
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={product.subCategories ?? ""}
-                          />
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={product.tags.join(", ") ?? ""}
-                          />
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={product.sku ?? ""}
-                          />
-                        </CustomTableCell>
-                        <CustomTableCell className="text-center">
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={product.price ?? ""}
-                          />
-                        </CustomTableCell>
-                      
-                          {/* <CustomTableCell>
-                            <ToolTip
-                              content="View Product"
-                              delayDuration={1000}
-                            >
-                              <Eye
-                                strokeWidth={1.5}
-                                color="#FF4979"
-                                className="cursor-pointer"
-                                onClick={() =>
-                                  router.push(
-                                    `/vendor/products/view/${product._id}`
-                                  )
-                                }
-                              />
-                            </ToolTip>
-                          </CustomTableCell> */}
-                      
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
->>>>>>> 8869236d7712f788b67cf62b671fdcf370ef143d
               {/* Pagination */}
               {totalPages > 1 && (
                 <TablePagination
