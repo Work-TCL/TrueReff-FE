@@ -266,9 +266,9 @@ export default function ProductList() {
                       <CustomTableHead className="w-1/7">
                         Selling {translate("Price")}
                       </CustomTableHead>
-                      <CustomTableHead className="w-1/7 text-center">
-                        {translate("Action")}
-                      </CustomTableHead>
+                        {/* <CustomTableHead className="w-1/7 text-center">
+                          {translate("Action")}
+                        </CustomTableHead> */}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -336,20 +336,25 @@ export default function ProductList() {
                             text={product.price ?? ""}
                           />
                         </CustomTableCell>
-                        <CustomTableCell>
-                          <ToolTip content="View Product" delayDuration={1000}>
-                            <Eye
-                              strokeWidth={1.5}
-                              color="#FF4979"
-                              className="cursor-pointer"
-                              onClick={() =>
-                                router.push(
-                                  `/vendor/products/view/${product._id}`
-                                )
-                              }
-                            />
-                          </ToolTip>
-                        </CustomTableCell>
+                      
+                          {/* <CustomTableCell>
+                            <ToolTip
+                              content="View Product"
+                              delayDuration={1000}
+                            >
+                              <Eye
+                                strokeWidth={1.5}
+                                color="#FF4979"
+                                className="cursor-pointer"
+                                onClick={() =>
+                                  router.push(
+                                    `/vendor/products/view/${product._id}`
+                                  )
+                                }
+                              />
+                            </ToolTip>
+                          </CustomTableCell> */}
+                      
                       </TableRow>
                     ))}
                   </TableBody>

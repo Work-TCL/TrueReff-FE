@@ -1,91 +1,96 @@
-"use client";
+import React from "react";
 import { translate } from "@/lib/utils/translate";
 import { IProduct } from "./viewDetailProduct";
 
 interface IProductInfoProps {
-  productData: IProduct
+  productData: IProduct;
 }
-export function ProductInfo({productData}:IProductInfoProps) {
 
+export function ProductInfo({ productData }: IProductInfoProps) {
   return (
-    <div className="flex flex-1 flex-col gap-5">
-      <p className="text-text font-medium text-xl">General Information</p>
-          <div className="flex flex-col w-full gap-1">
-            <label className="text-[16px] text-font-grey">
-              {translate("Product_Name")}
-            </label>
-            <div
-              className="p-2  bg-[#FAFAFA] rounded-md w-full"
-            >{productData?.name}</div>
+    <div className="flex flex-1 flex-col gap-6 p-6 bg-white rounded-2xl shadow-md ">
+      <h1 className="sm:text-3xl text-xl font-bold text-gray-800">
+        {productData.name}
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-200 pt-6">
+        <div>
+          <p className="sm:text-sm text-xs text-gray-500 mb-1">
+            {translate("Category")}
+          </p>
+          <p className="sm:text-base text-sm  font-medium text-gray-700">
+            {productData.category}
+          </p>
+        </div>
+        <div>
+          <p className="sm:text-sm text-xs text-gray-500 mb-1">Price</p>
+          <p className="sm:text-xl text-sm font-semibold text-green-600">
+            ${productData.price}
+          </p>
+        </div>
+      </div>
+      {productData.tags?.length > 0 && (
+        <div className="border-t border-gray-200 pt-6">
+          <p className="text-sm text-gray-500 mb-2">{translate("Tags")}</p>
+          <div className="flex flex-wrap gap-2">
+            {productData.tags.map((tag, idx) => (
+              <span
+                key={idx}
+                className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full"
+              >
+                #{tag}
+              </span>
+            ))}
           </div>
-        <div className="flex flex-col w-full gap-1">
-            <label className="text-[16px] text-font-grey">
-              {translate("Product_Category")}
-            </label>
-            <div
-              className="p-2  bg-[#FAFAFA] rounded-md w-full"
-            >{productData?.category}</div>
-          </div>
-          
-        <div className="flex flex-col w-full gap-1">
-            <label className="text-[16px] text-font-grey">
-              {translate("Product_Tags")}
-            </label>
-            <div
-              className="flex flex-wrap w-full gap-3"
-            >
-              {productData?.tags?.map((tag:string,index:number) => {
-                return (
-                  <div key={`${tag}_${index}`} className="py-1 px-2 border rounded-md bg-gray-100 border-gray-10">#{tag}</div>
-                )
-              })}
-            </div>
-          </div>
-        <div className="flex flex-col w-full gap-1">
-          <label className="text-[16px] text-font-grey">
+        </div>
+      )}
+      {productData.description && (
+        <div className="border-t border-gray-200 pt-6">
+          <p className="sm:text-sm text-xs text-gray-500 mb-1">
             {translate("Description")}
-          </label>
-          <div
-            className={`p-2 bg-[#FAFAFA] rounded-md w-full ${productData?.description ? "":"h-[100px]"}`}
-          >{productData?.description}</div>
+          </p>
+          <p className="sm:text-base text-sm  text-gray-800 leading-relaxed">
+            {productData.description}
+          </p>
         </div>
-
-        <div className="flex h-[45%] md:flex-row flex-col w-full items-start gap-3">
-          <div className="flex w-full flex-1 flex-col gap-3">
-            <p className="flex text-font-grey text-base">
-              <span className="w-[53%]">Base Price:</span>{" "}
-              <span className="text-lg font-normal text-text">${productData?.price}</span>
-            </p>
-
-            <p className="flex text-font-grey text-base">
-              <span className="w-[53%]"> Discount Type: </span>{" "}
-              <span className="text-lg font-normal text-text">No discount</span>
-            </p>
-            <p className="flex text-font-grey text-base">
-              <span className="w-[53%]"> Discount Type: </span>{" "}
-              <span className="text-lg font-normal text-text">0</span>
-            </p>
-            <p className="flex text-font-grey text-base">
-              <span className="w-[53%]"> Tax Class: </span>{" "}
-              <span className="text-lg font-normal text-text">Tax Free</span>
-            </p>
-            <p className="flex text-font-grey text-base">
-              <span className="w-[53%]"> VAT Amount: </span>{" "}
-              <span className="text-lg font-normal text-text">12%</span>
-            </p>
+      )}
+      <div className="border-t border-gray-200 pt-6">
+        <h3 className="sm:text-lg text-base font-semibold text-gray-800 mb-3">
+          Pricing & Tax
+        </h3>
+        <div className="space-y-2 sm:text-sm text-xs text-gray-700">
+          <div className="flex justify-between">
+            <span>Base Price</span>
+            <span>${productData.price}</span>
           </div>
-          <div className="h-[100%] w-px bg-stroke mx-2 md:block hidden"></div>{" "}
-          <div className="flex w-full flex-1 flex-col gap-3">
-            <p className="flex text-font-grey text-base">
-              <span className="w-[53%]"> Variation: </span>{" "}
-              <span className="text-lg font-normal text-text">Rose Gold</span>
-            </p>
-            <p className="flex text-font-grey text-base">
-              <span className="w-[53%]"> Variation Type: </span>{" "}
-              <span className="text-lg font-normal text-text">Color</span>
-            </p>
+          <div className="flex justify-between">
+            <span>Discount</span>
+            <span className="text-gray-500">None</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Tax Class</span>
+            <span className="text-gray-500">Tax Free</span>
+          </div>
+          <div className="flex justify-between">
+            <span>VAT Amount</span>
+            <span className="text-gray-500">12%</span>
           </div>
         </div>
+      </div>
+      <div className="border-t border-gray-200 pt-6">
+        <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">
+          Variations
+        </h3>
+        <div className="space-y-2 sm:text-sm text-xs text-gray-700">
+          <div className="flex justify-between">
+            <span>Variation</span>
+            <span>Rose Gold</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Type</span>
+            <span>Color</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

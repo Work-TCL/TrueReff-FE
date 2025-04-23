@@ -6,8 +6,8 @@ interface ProductImageGalleryProps {
 }
 export function ProductImageGallery({ images }: ProductImageGalleryProps) {
   return (
-    <div className="flex flex-col gap-5 md:w-2/5">
-      <p className="text-text font-medium text-xl">Product Image</p>
+    <div className="flex flex-col gap-6 p-6 bg-white rounded-2xl shadow-md md:w-2/5">
+      <p className="text-text font-medium text-xl">Image</p>
       <div className="grid grid-cols-1 gap-3">
         {images?.length > 0 && (
           <div

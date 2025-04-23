@@ -155,9 +155,9 @@ export default function ProductTable({
             <CustomTableHead className="w-1/9 text-center">
               {translate("Status")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/9 text-center">
+            {/* <CustomTableHead className="w-1/9 text-center">
               {translate("View")}
-            </CustomTableHead>
+            </CustomTableHead> */}
             <CustomTableHead className="w-1/9 text-center">
               {translate("Action")}
             </CustomTableHead>
@@ -169,7 +169,10 @@ export default function ProductTable({
             return (
               <TableRow key={index} className="bg-white hover:bg-gray-100">
                 <CustomTableCell>
-                  <span className="flex items-center gap-2 cursor-pointer" onClick={() => handleDetailView(product._id)}>
+                  <span
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => handleDetailView(product._id)}
+                  >
                     {product.media?.length > 0 && product.media[0] ? (
                       <Avatar className="w-8 h-8">
                         <AvatarImage src={product.media[0]} />
@@ -192,18 +195,29 @@ export default function ProductTable({
                   />
                 </CustomTableCell>
                 <CustomTableCell>
-                <div
+                  <div
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => router.push(`/vendor/profile/${product?.vendor?._id}`)}
+                    onClick={() =>
+                      router.push(`/vendor/profile/${product?.vendor?._id}`)
+                    }
                   >
                     <Avatar className="w-8 h-8">
-                      <AvatarImage className={product?.vendor?.profile_image ? "" : "opacity-50"} src={product?.vendor?.profile_image ? product?.vendor?.profile_image : "/assets/profile/profile-image.png"} />
+                      <AvatarImage
+                        className={
+                          product?.vendor?.profile_image ? "" : "opacity-50"
+                        }
+                        src={
+                          product?.vendor?.profile_image
+                            ? product?.vendor?.profile_image
+                            : "/assets/profile/profile-image.png"
+                        }
+                      />
                     </Avatar>
                     <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={product?.vendor?.business_name ?? ""}
-                  />
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={product?.vendor?.business_name ?? ""}
+                    />
                   </div>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -236,7 +250,7 @@ export default function ProductTable({
                     <StatusBadge status={status} />
                   ) : null}
                 </CustomTableCell>
-                <CustomTableCell className="flex justify-center">
+                {/* <CustomTableCell className="flex justify-center">
                   <ToolTip content="View Product" delayDuration={1000}>
                     <Eye
                       strokeWidth={1.5}
@@ -246,7 +260,7 @@ export default function ProductTable({
                       size={25}
                     />
                   </ToolTip>
-                </CustomTableCell>
+                </CustomTableCell> */}
                 <CustomTableCell className="flex justify-center">
                   <span className="flex justify-center">
                     {

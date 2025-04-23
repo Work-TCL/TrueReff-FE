@@ -132,9 +132,9 @@ export default function BrandProductTable({
             <CustomTableHead className="w-1/9 text-center">
               {"Status"}
             </CustomTableHead>
-            <CustomTableHead className="w-1/9 text-center">
+            {/* <CustomTableHead className="w-1/9 text-center">
               {"View"}
-            </CustomTableHead>
+            </CustomTableHead> */}
             <CustomTableHead className="w-1/9 text-center">
               {translate("Action")}
             </CustomTableHead>
@@ -237,7 +237,7 @@ export default function BrandProductTable({
                     <StatusBadge status={status} />
                   ) : null}
                 </CustomTableCell>
-                <CustomTableCell className="flex justify-center">
+                {/* <CustomTableCell className="flex justify-center">
                   <ToolTip content="View Product" delayDuration={1000}>
                     <Eye
                       color="#FF4979"
@@ -246,7 +246,7 @@ export default function BrandProductTable({
                       size={25}
                     />
                   </ToolTip>
-                </CustomTableCell>
+                </CustomTableCell> */}
                 <CustomTableCell className="flex justify-center">
                   {
                     {

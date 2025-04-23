@@ -236,7 +236,7 @@ export default function ChannelProductList({
                                 <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
                         <CustomTableCell>
                           <div className="flex justify-center items-center gap-3">
-                            <ToolTip
+                            {/* <ToolTip
                               content="View Product"
                               delayDuration={1000}
                             >
@@ -248,7 +248,7 @@ export default function ChannelProductList({
                                   router.push(`shopify/view?id=${product.id}`)
                                 }
                               />
-                            </ToolTip>
+                            </ToolTip> */}
                             <div
                               onClick={() => {
                                 setCurrentData(product);
