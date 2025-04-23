@@ -1,5 +1,4 @@
 "use client";
-
 import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
@@ -14,6 +13,9 @@ import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
 import Select from "react-select";
+import CreatorCard from "./creator-card";
+import { formatNumber } from "@/lib/utils/constants";
+import CollaborateRequest from "../../components-common/dialogs/collaborate-creator-form";
 export interface ICategory {
   _id: string;
   name: string;
@@ -51,6 +53,9 @@ export interface ICreator {
   channels: IChannel[];
   categories?: string;
   tag?: string;
+  instagramViews?: string;
+  youtubeViews?: string;
+  pastSales?: string;
 }
 const customStyles = {
   placeholder: (base: any) => ({
@@ -74,12 +79,36 @@ export default function CreatorList() {
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
+
+  const initialValue = { show: false, creatorId: "" };
+  const [isOpen, setIsOpen] = useState(initialValue);
   const [pageSize] = useState(20);
   const filterOption = [
     { value: "5", label: "Last 5 Videos" },
     { value: "30", label: "Last 1 Month" },
   ];
 
+  const getInstagramView: (channels: IChannel[]) => string = (
+    channels: IChannel[]
+  ) => {
+    let instagram = channels.find(
+      (ele: { channelType: string }) => ele.channelType === "instagram"
+    );
+    return "";
+  };
+  const getYoutubeView: (channels: IChannel[]) => string = (
+    channels: IChannel[]
+  ) => {
+    let youtube = channels.find(
+      (ele: { channelType: string }) => ele.channelType === "youtube"
+    );
+    return youtube
+      ? formatNumber(
+          filter === "5" ? youtube?.lastFiveVideoViews : youtube?.lastMonthViews
+        )
+      : "-";
+  };
   // Get Creator list
   const getCreatorList = useCallback(
     async (
@@ -106,6 +135,10 @@ export default function CreatorList() {
                   ?.map((ele: { name: string }) => ele?.name)
                   .join(",");
                 ele.tag = ele.tags?.join(",");
+                ele.instagramViews = getInstagramView(ele.channels);
+                ele.youtubeViews = getYoutubeView(ele.channels);
+                //@ts-ignore
+                ele.pastSales = ele?.pastSales || "";
                 return { ...ele };
               });
               setCreators([...result]);
@@ -169,6 +202,18 @@ export default function CreatorList() {
               />
             </div>
             <div className="flex items-center gap-[10px]">
+              <PiListChecksLight
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("table")}
+              />
+              <IoGridOutline
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("card")}
+              />
               <Select
                 styles={customStyles}
                 value={[
@@ -188,11 +233,30 @@ export default function CreatorList() {
           </div>
           {creators?.length > 0 ? (
             <>
-              <CreatorTable
-                data={creators}
-                filter={filter}
-                loader={internalLoader}
-              />
+              {viewMode === "table" && (
+                <CreatorTable
+                  data={creators}
+                  filter={filter}
+                  loader={internalLoader}
+                  handleCollaborateNow={(creatorId: string) => {
+                    setIsOpen({ show: true, creatorId });
+                  }}
+                />
+              )}
+              {viewMode === "card" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
+                  {creators.map((item: any, i) => (
+                    <div key={i} className="flex h-full w-full">
+                      <CreatorCard
+                        item={item}
+                        handleCollaborateNow={(creatorId: string) => {
+                          setIsOpen({ show: true, creatorId });
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
               {/* Pagination */}
               {totalPages > 1 && (
                 <TablePagination
@@ -209,6 +273,15 @@ export default function CreatorList() {
             />
           )}
         </>
+      )}
+      {isOpen?.show && (
+        <CollaborateRequest
+          open={isOpen?.show}
+          onClose={() => {
+            setIsOpen(initialValue);
+          }}
+          creatorId={isOpen?.creatorId}
+        />
       )}
     </div>
   );

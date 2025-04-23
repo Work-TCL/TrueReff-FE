@@ -20,6 +20,9 @@ import { Input } from "@/components/ui/input";
 import { TablePagination } from "../../components-common/tables/Pagination";
 import ToolTip from "../../components-common/tool-tip";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { IoGridOutline } from "react-icons/io5";
+import { PiListChecksLight } from "react-icons/pi";
+import ProductCard from "./product-card";
 const Select = dynamic(() => import("react-select"), { ssr: false });
 
 export interface ICategory {
@@ -31,6 +34,9 @@ export interface ICategory {
 }
 
 export interface IProduct {
+  vendor: any;
+  collaboration: any;
+  request: any;
   _id: string;
   title: string;
   channelProductId: string;
@@ -74,6 +80,8 @@ export default function ProductList() {
   const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>(
     []
   );
+
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -186,6 +194,119 @@ export default function ProductList() {
     setSelectedSubCategories(selectedIds);
     fetProductsList(1, true, search, [...selectedCategories, ...selectedIds]);
   };
+
+  const tableContent = () => {
+    return (
+      <div className="overflow-auto">
+        <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
+          <TableHeader className="bg-stroke">
+            <TableRow>
+              <CustomTableHead className="w-1/7">
+                {translate("Channel")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/4">
+                {translate("Product_Name")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7">
+                {translate("Categories")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7">
+                {translate("Sub_category")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/4">
+                {translate("Tags")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/4">
+                {translate("SKU")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7">
+                Selling {translate("Price")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7 text-center">
+                {translate("Action")}
+              </CustomTableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {productList.map((product, index) => (
+              <TableRow key={index} className=" bg-white hover:bg-gray-100">
+                <CustomTableCell>{product.channelName}</CustomTableCell>
+                <CustomTableCell>
+                  <div
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() =>
+                      router.push(`/vendor/products/view/${product._id}`)
+                    }
+                  >
+                    {product.media?.length > 0 && product.media[0] ? (
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={product.media[0]} />
+                      </Avatar>
+                    ) : (
+                      <ImageOff className="w-6 h-6 text-gray-400" />
+                    )}
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={product.title ?? ""}
+                    />
+                  </div>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product?.categories ?? ""}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product.subCategories ?? ""}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product.tags.join(", ") ?? ""}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product.sku ?? ""}
+                  />
+                </CustomTableCell>
+                <CustomTableCell className="text-center">
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={product.price ?? ""}
+                  />
+                </CustomTableCell>
+                <CustomTableCell>
+                  <ToolTip content="View Product" delayDuration={1000}>
+                    <Eye
+                      strokeWidth={1.5}
+                      color="#FF4979"
+                      className="cursor-pointer"
+                      onClick={() =>
+                        router.push(`/vendor/products/view/${product._id}`)
+                      }
+                    />
+                  </ToolTip>
+                </CustomTableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
+
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
@@ -202,7 +323,19 @@ export default function ProductList() {
               />
               <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
             </div>
-            <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
+            <div className="flex md:flex-row flex-col gap-2 w-full justify-end items-center">
+              <PiListChecksLight
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("table")}
+              />
+              <IoGridOutline
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("card")}
+              />
               <Select
                 styles={customStyles}
                 value={selectedCategories.map((id) => {
@@ -241,6 +374,18 @@ export default function ProductList() {
           {internalLoading && <Loader />}
           {productList?.length > 0 ? (
             <>
+<<<<<<< HEAD
+              {viewMode === "table" && tableContent()}
+              {viewMode === "card" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
+                  {productList.map((item: any, i) => (
+                    <div key={i} className="flex h-full w-full">
+                      <ProductCard item={item} />
+                    </div>
+                  ))}
+                </div>
+              )}
+=======
               <div className="overflow-auto">
                 <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
                   <TableHeader className="bg-stroke">
@@ -360,6 +505,7 @@ export default function ProductList() {
                   </TableBody>
                 </Table>
               </div>
+>>>>>>> 8869236d7712f788b67cf62b671fdcf370ef143d
               {/* Pagination */}
               {totalPages > 1 && (
                 <TablePagination

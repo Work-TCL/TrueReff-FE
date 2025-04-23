@@ -5,7 +5,7 @@ import { CustomTableHead } from "@/app/_components/components-common/tables/Cust
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
 import { Brand } from "../list";
-import { Star } from "lucide-react";
+import { ImageOff, Star } from "lucide-react";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 
 interface BrandListProps {
@@ -45,36 +45,15 @@ export default function BrandListView({ brand }: BrandListProps) {
             <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
               <CustomTableCell>
                 <div className="flex items-center justify-center ">
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      width="32"
-                      height="32"
-                      rx="4"
-                      fill={index % 2 === 0 ? "#F2F4F5" : "#FFFFFF"}
+                  {creator?.logo ? (
+                    <img
+                      src={creator?.logo}
+                      alt={creator?.logo}
+                      className="w-8 h-8 object-cover object-center rounded-full overflow-hidden"
                     />
-                    <defs>
-                      <pattern
-                        id="pattern0_1206_3031"
-                        patternContentUnits="objectBoundingBox"
-                        width="1"
-                        height="1"
-                      >
-                        <use transform="scale(0.000520833)" />
-                      </pattern>
-                      <image
-                        id="image0_1206_3031"
-                        width="1920"
-                        height="1920"
-                        preserveAspectRatio="none"
-                      />
-                    </defs>
-                  </svg>
+                  ) : (
+                    <ImageOff className="w-8 h-8 text-gray-400" />
+                  )}
                 </div>
               </CustomTableCell>
               <CustomTableCell className="font-normal text-gray-black whitespace-nowrap">

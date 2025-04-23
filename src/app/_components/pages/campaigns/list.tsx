@@ -21,8 +21,11 @@ import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import Loading from "@/app/vendor/loading";
 import { debounce } from "lodash";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { PiListChecksLight } from "react-icons/pi";
+import { IoGridOutline } from "react-icons/io5";
+import CampaignCard from "./_components/campaign-card";
 
-const campaignStatus: { [key: string]: string } = {
+export const campaignStatus: { [key: string]: string } = {
   ACTIVE: "Running",
   PENDING: "Hold",
   EXPIRED: "Completed",
@@ -37,6 +40,8 @@ export default function CampaignList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [campaigns, setCampaigns] = useState<ICampaignData[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const pageSize = 20;
   const [totalPages, setTotalPages] = useState<number>(0);
   const fetchCampaignList = async (
@@ -115,6 +120,140 @@ export default function CampaignList() {
     fetchCampaignList(1, true, search, selectedOption?.value);
   };
 
+  const tableContent = () => {
+    return (
+      <div className="overflow-auto">
+        <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
+          <TableHeader className="bg-stroke">
+            <TableRow>
+              <CustomTableHead className="w-1/7">
+                {translate("Campaign_Name")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7">
+                {translate("Product_Name")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7">
+                {translate("Total_Sales")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7">
+                {translate("Total_Views")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7">
+                {translate("Omni_Channel")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7 text-center">
+                {translate("Status")}
+              </CustomTableHead>
+              <CustomTableHead className="w-1/7 text-center">
+                {translate("Action")}
+              </CustomTableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {campaigns.map((campaign, index) => (
+              <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
+                <CustomTableCell>
+                  <div
+                    className="flex items-center justify-start gap-2 cursor-pointer"
+                    onClick={() =>
+                      router.push(`/vendor/campaign/${campaign?._id}?view=true`)
+                    }
+                  >
+                    {campaign?.imageUrls?.length > 0 &&
+                    campaign?.imageUrls[0] ? (
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={campaign?.imageUrls[0]} />
+                      </Avatar>
+                    ) : (
+                      <ImageOff className="w-6 h-6 text-gray-400" />
+                    )}
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={campaign.name}
+                    />
+                  </div>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <div
+                    className="flex items-center justify-start gap-2 cursor-pointer"
+                    onClick={() =>
+                      router.push(
+                        `/vendor/products/view/${campaign?.productId?._id}`
+                      )
+                    }
+                  >
+                    {campaign?.productId?.media?.length &&
+                    campaign?.productId?.media[0] ? (
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={campaign?.productId?.media[0]} />
+                      </Avatar>
+                    ) : (
+                      <ImageOff className="w-6 h-6 text-gray-400" />
+                    )}
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={campaign.productId?.title}
+                    />
+                  </div>
+                </CustomTableCell>
+                <CustomTableCell>{"-"}</CustomTableCell>
+                <CustomTableCell>{"-"}</CustomTableCell>
+                <CustomTableCell>
+                  <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={campaign.channels?.join(", ")}
+                  />
+                </CustomTableCell>
+                <CustomTableCell className="flex justify-center">
+                  <div
+                    className={`w-1/2 ${
+                      campaign.status === "ACTIVE"
+                        ? "bg-[#5856D61A] text[#5856D6]"
+                        : campaign.status === "EXPIRED"
+                        ? "bg-[#0982281A] text-[#098228]"
+                        : "bg-[#FF95001A] text-[#FF9500]"
+                    } p-2 rounded-md text-center`}
+                  >
+                    {campaignStatus[campaign.status]}
+                  </div>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <div className="flex justify-center gap-3">
+                    <Eye
+                      strokeWidth={1.5}
+                      color="#FF4979"
+                      className="cursor-pointer"
+                      onClick={() =>
+                        router.push(
+                          `/vendor/campaign/${campaign?._id}?view=true`
+                        )
+                      }
+                    />
+                    <PencilLine
+                      strokeWidth={1.5}
+                      className="cursor-pointer"
+                      onClick={() =>
+                        router.push(`/vendor/campaign/${campaign?._id}`)
+                      }
+                    />
+                    <Trash2
+                      strokeWidth={1.5}
+                      color="#FF3B30"
+                      className="cursor-pointer"
+                    />
+                  </div>
+                </CustomTableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
+
   return (
     <div className="p-4 rounded-lg flex flex-col gap-3 h-full">
       {internalLoading && <Loader />}
@@ -132,7 +271,19 @@ export default function CampaignList() {
               />
               <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
             </div>
-            <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
+            <div className="flex md:flex-row flex-col gap-2 w-full justify-end items-center">
+              <PiListChecksLight
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("table")}
+              />
+              <IoGridOutline
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("card")}
+              />
               <Select
                 styles={customStyles}
                 value={[
@@ -157,142 +308,17 @@ export default function CampaignList() {
           </div>
           {campaigns?.length > 0 ? (
             <>
-              <div className="overflow-auto">
-                <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-                  <TableHeader className="bg-stroke">
-                    <TableRow>
-                      <CustomTableHead className="w-1/7">
-                        {translate("Campaign_Name")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/7">
-                        {translate("Product_Name")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/7">
-                        {translate("Total_Sales")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/7">
-                        {translate("Total_Views")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/7">
-                        {translate("Omni_Channel")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/7 text-center">
-                        {translate("Status")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/7 text-center">
-                        {translate("Action")}
-                      </CustomTableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {campaigns.map((campaign, index) => (
-                      <TableRow
-                        key={index}
-                        className="even:bg-gray-100 odd:bg-white"
-                      >
-                        <CustomTableCell>
-                          <div
-                            className="flex items-center justify-start gap-2 cursor-pointer"
-                            onClick={() =>
-                              router.push(
-                                `/vendor/campaign/${campaign?._id}?view=true`
-                              )
-                            }
-                          >
-                            {campaign?.imageUrls?.length > 0 &&
-                            campaign?.imageUrls[0] ? (
-                              <Avatar className="w-8 h-8">
-                                <AvatarImage src={campaign?.imageUrls[0]} />
-                              </Avatar>
-                            ) : (
-                              <ImageOff className="w-6 h-6 text-gray-400" />
-                            )}
-                            <TruncateWithToolTip
-                              checkHorizontalOverflow={false}
-                              linesToClamp={2}
-                              text={campaign.name}
-                            />
-                          </div>
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <div
-                            className="flex items-center justify-start gap-2 cursor-pointer"
-                            onClick={() =>
-                              router.push(
-                                `/vendor/products/view/${campaign?.productId?._id}`
-                              )
-                            }
-                          >
-                            {campaign?.productId?.media?.length &&
-                            campaign?.productId?.media[0] ? (
-                              <Avatar className="w-8 h-8">
-                                <AvatarImage
-                                  src={campaign?.productId?.media[0]}
-                                />
-                              </Avatar>
-                            ) : (
-                              <ImageOff className="w-6 h-6 text-gray-400" />
-                            )}
-                            <TruncateWithToolTip
-                              checkHorizontalOverflow={false}
-                              linesToClamp={2}
-                              text={campaign.productId?.title}
-                            />
-                          </div>
-                        </CustomTableCell>
-                        <CustomTableCell>{"-"}</CustomTableCell>
-                        <CustomTableCell>{"-"}</CustomTableCell>
-                        <CustomTableCell>
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={campaign.channels?.join(", ")}
-                          />
-                        </CustomTableCell>
-                        <CustomTableCell className="flex justify-center">
-                          <div
-                            className={`w-1/2 ${
-                              campaign.status === "ACTIVE"
-                                ? "bg-[#5856D61A] text[#5856D6]"
-                                : campaign.status === "EXPIRED"
-                                ? "bg-[#0982281A] text-[#098228]"
-                                : "bg-[#FF95001A] text-[#FF9500]"
-                            } p-2 rounded-md text-center`}
-                          >
-                            {campaignStatus[campaign.status]}
-                          </div>
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <div className="flex justify-center gap-3">
-                            <Eye
-                              strokeWidth={1.5}
-                              color="#FF4979"
-                              className="cursor-pointer"
-                              onClick={() =>
-                                router.push(
-                                  `/vendor/campaign/${campaign?._id}?view=true`
-                                )
-                              }
-                            />
-                            <PencilLine
-                              strokeWidth={1.5}
-                              className="cursor-pointer"
-                              onClick={() =>
-                                router.push(`/vendor/campaign/${campaign?._id}`)
-                              }
-                            />
-                            <Trash2
-                              strokeWidth={1.5}
-                              color="#FF3B30"
-                              className="cursor-pointer"
-                            />
-                          </div>
-                        </CustomTableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+              {" "}
+              {viewMode === "table" && tableContent()}
+              {viewMode === "card" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
+                  {campaigns.map((item: any, i) => (
+                    <div key={i} className="flex h-full w-full">
+                      <CampaignCard item={item} />
+                    </div>
+                  ))}
+                </div>
+              )}
               {/* Pagination */}
               {totalPages > 1 && (
                 <TablePagination
