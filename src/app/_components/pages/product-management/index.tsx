@@ -18,6 +18,7 @@ import { debounce } from "lodash";
 import { getCategories } from "@/lib/web-api/auth";
 import Select from "react-select";
 import { Search } from "lucide-react";
+import ProductCard from "./product-card";
 export interface ICategory {
   _id: string;
   name: string;
@@ -106,6 +107,7 @@ export default function ProductList() {
   const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
   const [subCategory, setSubCategory] = useState<ICategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>(
     []
   );
@@ -268,6 +270,18 @@ export default function ProductList() {
               <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
             </div>
             <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
+              <PiListChecksLight
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("table")}
+              />
+              <IoGridOutline
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("card")}
+              />
               <Select
                 styles={customStyles}
                 value={selectedCategories.map((id) => {
@@ -306,10 +320,26 @@ export default function ProductList() {
           {internalLoader && <Loader />}
           {products?.length > 0 ? (
             <>
-              <ProductTable
-                data={products}
-                handleUpdateProduct={handleUpdateProduct}
-              />
+              {viewMode === "table" && (
+                <ProductTable
+                  data={products}
+                  handleUpdateProduct={handleUpdateProduct}
+                />
+              )}
+              {viewMode === "card" && (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 p-2 md:p-4 bg-white rounded-[20px] overflow-auto">
+                  {products.map((product: any, i) => (
+                    <div key={i} className="flex w-full h-full">
+                      <ProductCard
+                        key={i}
+                        item={product}
+                        handleUpdateProduct={handleUpdateProduct}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {/* Pagination */}
               {totalPages > 1 && (
                 <TablePagination

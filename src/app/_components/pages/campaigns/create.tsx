@@ -6,6 +6,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import ProductSelectDropdown from "./_components/selectProduct";
 import {
   campaignValidationSchema,
+  campaignValidationUpdateSchema,
   ICampaignValidationSchema,
 } from "@/lib/utils/validations";
 import toast from "react-hot-toast";
@@ -52,7 +53,9 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
   });
   const methods = useForm<ICampaignValidationSchema>({
     defaultValues: {},
-    resolver: yupResolver(campaignValidationSchema),
+    resolver: campaignId
+      ? yupResolver(campaignValidationUpdateSchema)
+      : yupResolver(campaignValidationSchema),
     mode: "onChange",
   });
   const onSubmit = async (data: ICampaignValidationSchema) => {
@@ -152,26 +155,33 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
   useEffect(() => {
     if (campaignId) {
       (async () => {
-        const response = await getCampaign({ id: campaignId });
-        methods.setValue("name", response.name);
-        methods.setValue("description", response.description);
-        methods.setValue("channels", response.channels);
-        methods.setValue("discount_type", response.discount_type);
-        methods.setValue("discount_value", response.discount_value);
-        //@ts-ignore
-        methods.setValue("endDate", formatForDateInput(response.endDate));
-        //@ts-ignore
-        methods.setValue("startDate", formatForDateInput(response.startDate));
-        methods.setValue("productId", response.productId._id);
-        methods.setValue("price", 200);
-        setMediaPriview((prev: any) => {
-          prev.images = response.imageUrls;
-          prev.video = response?.videoUrl;
-          return prev;
-        });
+        setLoading(true);
+        try {
+          const response = await getCampaign({ id: campaignId });
+          methods.setValue("name", response.name);
+          methods.setValue("description", response.description);
+          methods.setValue("channels", response.channels);
+          methods.setValue("discount_type", response.discount_type);
+          methods.setValue("discount_value", response.discount_value);
+          //@ts-ignore
+          methods.setValue("endDate", formatForDateInput(response.endDate));
+          //@ts-ignore
+          methods.setValue("startDate", formatForDateInput(response.startDate));
+          methods.setValue("productId", response.productId._id);
+          methods.setValue("price", 200);
+          setMediaPriview((prev: any) => {
+            prev.images = response.imageUrls;
+            prev.video = response?.videoUrl;
+            return prev;
+          });
 
-        setSelectedProduct(response.productId);
-        setCampaignData(response);
+          setSelectedProduct(response.productId);
+          setCampaignData(response);
+        } catch (e) {
+          console.log("while fetch campaign");
+        } finally {
+          setLoading(false);
+        }
       })();
     }
   }, [campaignId]);

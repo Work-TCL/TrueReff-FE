@@ -13,6 +13,9 @@ import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
+import { IoGridOutline } from "react-icons/io5";
+import { PiListChecksLight } from "react-icons/pi";
+import BrandListView from "./_components/brandList";
 
 export interface Brand {
   id: number;
@@ -32,6 +35,7 @@ export default function BrandList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   // const translate = useTranslations();
+  const [viewMode, setViewMode] = useState<"table" | "card">("card");
 
   const itemsPerPage = 20;
 
@@ -109,23 +113,42 @@ export default function BrandList() {
         <Loading />
       ) : (
         <>
-          <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-            <Input
-              value={search}
-              onChange={handleSearch}
-              placeholder={"Search Brand"}
-              className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
-            />
-            <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
+          <div className="flex justify-between items-center flex-wrap gap-2">
+            <div className="relative md:text-[20px] text-base text-500 max-w-[350px]">
+              <Input
+                value={search}
+                onChange={handleSearch}
+                placeholder={"Search Brand"}
+                className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
+              />
+              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
+            </div>
+            <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
+              <PiListChecksLight
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("table")}
+              />
+              <IoGridOutline
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("card")}
+              />
+            </div>
           </div>
           {internalLoader && <Loader />}
           {brands?.length > 0 ? (
             <>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 p-2 md:p-4 bg-white rounded-[20px] overflow-auto">
-                {brands.map((brand: any) => (
-                  <BrandCard key={brand.id} {...brand} />
-                ))}
-              </div>
+              {viewMode === "table" && <BrandListView brand={brands} />}
+              {viewMode === "card" && (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 p-2 md:p-4 bg-white rounded-[20px] overflow-auto">
+                  {brands.map((brand: any) => (
+                    <BrandCard key={brand.id} {...brand} />
+                  ))}
+                </div>
+              )}
               {totalPages > 1 && (
                 <TablePagination
                   totalPages={totalPages}

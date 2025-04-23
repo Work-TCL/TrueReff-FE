@@ -26,12 +26,16 @@ interface ICreatorTableProps {
   data: ICreator[];
   filter: string;
   loader: boolean;
+  handleCollaborateNow: (creatorId: string) => void;
 }
-const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
+const CreatorTable = ({
+  data,
+  filter,
+  loader,
+  handleCollaborateNow,
+}: ICreatorTableProps) => {
   const translate = useTranslations();
   const router = useRouter();
-  const initialValue = { show: false, creatorId: "" };
-  const [isOpen, setIsOpen] = useState(initialValue);
   const getInstagramView: (channels: IChannel[]) => string = (
     channels: IChannel[]
   ) => {
@@ -54,12 +58,6 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
   };
   const handleViewCreatorDetails = (id: string) => {
     router.push(`/creator/profile/${id}`);
-  };
-  const handleCollaborateNow = (creatorId: string) => {
-    setIsOpen({ show: true, creatorId });
-  };
-  const handleOnClose = () => {
-    setIsOpen(initialValue);
   };
   return (
     <div className="overflow-auto">
@@ -155,13 +153,6 @@ const CreatorTable = ({ data, filter, loader }: ICreatorTableProps) => {
           ))}
         </TableBody>
       </Table>
-      {isOpen?.show && (
-        <CollaborateRequest
-          open={isOpen?.show}
-          onClose={handleOnClose}
-          creatorId={isOpen?.creatorId}
-        />
-      )}
     </div>
   );
 };
