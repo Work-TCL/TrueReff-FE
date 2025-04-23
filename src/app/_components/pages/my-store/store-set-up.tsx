@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import Input from "@/app/_components/ui/form/Input";
 import Select from 'react-select';
-import { Textarea } from "@/components/ui/textarea";
 import React, { useEffect, useState } from "react";
 import { translate } from "../../../../lib/utils/translate";
 import { ICategory } from "@/lib/types-api/category";
@@ -17,7 +16,8 @@ import { createStore, getCreatorStore, updateCreatorStore } from "@/lib/web-api/
 import { fileUploadLimitValidator } from "@/lib/utils/constants";
 import StoreDetailView from "./store-detail-view";
 import Loader from "../../components-common/layout/loader";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import PhotoUpload from "../../components-common/PhotoUpload";
 
 const customStyles = {
   placeholder: (base: any) => ({
@@ -36,6 +36,7 @@ export default function StoreSetUp(props: any) {
   const [loading, setLoading] = useState<boolean>(true);
   const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [dragActive,setDragActive] = useState<boolean>(false);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [profileFile, setProfileFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string>("");
@@ -204,7 +205,7 @@ export default function StoreSetUp(props: any) {
     }
   }
   const handleImageSelect = async (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement>|any,
     type: "profile" | "banner"
   ) => {
     const file = e.target.files?.[0];
@@ -233,6 +234,18 @@ export default function StoreSetUp(props: any) {
       })
     }
   };
+  const handleOnDrop = (e: any, type: "profile" | "banner") => {
+    e.preventDefault();
+    if (e.dataTransfer.files?.length > 1) {
+      toastMessage.info("Upload only one photo.")
+    } else {
+      const file = e.dataTransfer.files?.[0];
+      if (file && file.type.startsWith("image/")) {
+        handleImageSelect({ target: { files: [file] } }, type);
+      }
+    }
+    setDragActive(false)
+  }
   const handleOnEdit = () => {
     setProfilePreview(store?.profile_image);
     setBannerPreview(store?.banner_image);
@@ -263,9 +276,9 @@ export default function StoreSetUp(props: any) {
               {translate("Add_Details_For_Store_Set_Up")}
             </div>
             <div className="flex gap-[10px]">
-              <Button type="button" variant="outline" className="w-[140px] rounded-[12px]" onClick={()=> {setIsDetailView(true);setIsEdit(false);}}>
+              {store?.name && <Button type="button" variant="outline" className="w-[140px] rounded-[12px]" onClick={()=> {setIsDetailView(true);setIsEdit(false);}}>
                 {translate("Cancel")}
-              </Button>
+              </Button>}
               <Button
                 type='submit'
                 variant="secondary"
@@ -281,27 +294,7 @@ export default function StoreSetUp(props: any) {
               <div className="text-sm text-gray-500">
                 {translate("Store_Banner_Image")}<span className="text-[red]">*</span>
               </div>
-              <div className="flex justify-center items-center border border-dashed rounded-lg p-5">
-                <div className="flex flex-col items-center gap-4">
-                  <img
-                    src={bannerPreview || "/assets/product/image-square.svg"}
-                    className={`w-full max-h-[200px] object-cover rounded-lg ${bannerPreview ? "":"opacity-50"}`}
-                  />
-                  <div className="text-gray-500">
-                    {translate("Drag_and_drop_image_here,_or_click_Add_Image")}
-                  </div>
-                  <input
-                  name="banner_image"
-                    type="file"
-                    id="banner-image"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={(e) => handleImageSelect(e, "banner")} />
-                  <Button type="button" variant="outline" onClick={() => {
-                    document.getElementById("banner-image")?.click();
-                  }}>{translate("Add_Image")}</Button>
-                </div>
-              </div>
+              <PhotoUpload name="banner" previewUrl={bannerPreview} handleImageSelect={handleImageSelect} />
               {methods?.formState?.errors?.banner_image?.message && <span className="text-red-600 text-sm">{methods?.formState?.errors?.banner_image?.message}</span>}
             </div>
             <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2 lg:w-1/2  p-4">
@@ -309,28 +302,7 @@ export default function StoreSetUp(props: any) {
               <div className="text-sm text-gray-500">
                 {translate("Store_Profile_Image")}<span className="text-[red]">*</span>
               </div>
-              <div className="flex justify-center items-center border rounded-lg p-5">
-                <div className="flex flex-col items-center gap-4">
-                  <img
-                    src={profilePreview || "/assets/product/image-square.svg"}
-                    className={`w-full max-h-[200px] object-cover rounded-lg ${profilePreview ? "":"opacity-50"}`}
-                  />
-                  <div className="text-gray-500">
-                    {translate("Drag_and_drop_image_here,_or_click_Add_Image")}
-                  </div>
-                  <input
-                    type="file"
-                    name="profile_image"
-                    id="profile-image"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={(e) => handleImageSelect(e, "profile")}
-                  />
-                  <Button type="button" variant="outline" onClick={() => {
-                    document.getElementById("profile-image")?.click();
-                  }}>{translate("Add_Image")}</Button>
-                </div>
-              </div>
+              <PhotoUpload name="profile" previewUrl={profilePreview} handleImageSelect={handleImageSelect} showType="circle" />
               {methods?.formState?.errors?.profile_image?.message && <span className="text-red-600 text-sm">{methods?.formState?.errors?.profile_image?.message}</span>}
             </div>
           </div>

@@ -35,10 +35,10 @@ export default function StoreDetailView({ store,handleOnEdit }: any) {
           <div className="text-sm text-gray-500">
             {translate("Store_Banner_Image")}
           </div>
-          <div className="flex justify-center items-center border border-dashed rounded-lg p-5">
+          <div className="flex justify-center items-center border rounded-lg p-5">
             <img
               src={store?.banner_image || "/assets/product/image-square.svg"}
-              className="w-full max-h-[200px] object-contain"
+              className="w-full max-h-[200px] object-contain rounded-lg"
             />
           </div>
         </div>
