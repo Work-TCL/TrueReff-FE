@@ -1,27 +1,52 @@
 import { translate } from "@/lib/utils/translate";
 import { cn } from "@sohanemon/utils";
 import { ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 interface IProfileCompletionCard {
   progress?: number;
   className?: string;
+  gradientId?: string
 }
 
 const ProfileCompletionCard = ({
-  progress = 80,
+  progress = 0,
   className,
+  gradientId = "gradient"
 }: IProfileCompletionCard) => {
+  const router = useRouter()
+  const getCompleteProfileMessage = () => {
+    if (progress < 25) return translate("Complete_your_profile");
+    else if (progress >= 25 && progress < 55)
+      return translate("Complete_your_Social_Media_Connects");
+    else return translate("Complete_your_Payment_Integration");
+  };
+
+  const getCompleteProfileDescription = () => {
+    if (progress < 25)
+      return translate("Complete_your_profile_Description");
+    else if (progress >= 25 && progress < 55)
+      return translate("Connect_your_Youtube_Channel_or_Instagram_account");
+    else return translate("Complete_your_Subscription_plan");
+  };
+  
+  const handleCompleteProfile = () => {
+    router.push('/creator/settings')
+  }
   return (
     <div
       className={cn(
-        "flex gap-6 justify-between p-6 w-full box-border h-fit rounded-[20px] bg-custom-gradient",
+        "flex flex-col relative md:flex-row items-center justify-between text-left md:text-left p-5 md:p-6 rounded-2xl w-full bg-custom-gradient gap-4",
         className
       )}
     >
-      <div className="flex md:gap-6 flex-col md:flex-row">
-        <div className="relative w-20 md:w-28 md:h-28 h-20">
-          <svg
+      <div className="absolute top-4 right-4 md:hidden cursor-pointer" onClick={handleCompleteProfile}>
+        <ChevronRight className="w-5 h-5 text-gray-800" />
+      </div>
+      {/* Progress circle */}
+      <div className="relative w-20 h-20 md:w-24 md:h-24 shrink-0 mx-auto md:mx-0">
+      <svg
             className="absolute top-0 left-0 w-full h-full"
             viewBox="0 0 100 100"
           >
@@ -45,34 +70,33 @@ const ProfileCompletionCard = ({
               strokeLinecap="round"
               transform="rotate(-90 50 50)"
             />
-            <defs>
-              <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#9B5FE9" />
-                <stop offset="50%" stopColor="#6684F0" />
-                <stop offset="75%" stopColor="#DE598E" />
-                <stop offset="100%" stopColor="#FBB11E" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <span
-            className="absolute inset-0 flex items-center justify-center font-bold md:text-2xl text-lg
- text-gray-900"
-          >
-            {progress}%
-          </span>
-        </div>
-        <div className="flex-1">
-          <h3 className="md:text-[32px] text-lg font-semibold text-gray-black pb-1">
-            {translate("Complete_your_profile")}{" "}
-          </h3>
-          <p className="md:text-xl text-sm text-gray-black max-w-[80%]">
-            {translate("Complete_your_profile_Description")}
-          </p>
-        </div>
+          <defs>
+            <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#9B5FE9" />
+              <stop offset="50%" stopColor="#6684F0" />
+              <stop offset="75%" stopColor="#DE598E" />
+              <stop offset="100%" stopColor="#FBB11E" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span className="absolute inset-0 flex items-center justify-center font-bold text-sm md:text-xl text-gray-900">
+          {progress}%
+        </span>
       </div>
 
-      <div className="size-16">
-        <ChevronRight className="size-full shrink-0 text-3xl" />
+      {/* Text Section */}
+      <div className="flex-1 flex flex-col gap-1">
+        <span className="font-semibold text-base md:text-lg text-gray-black">
+          {getCompleteProfileMessage()}
+        </span>
+        <p className="text-sm md:text-base text-gray-black">
+          {getCompleteProfileDescription()}
+        </p>
+      </div>
+
+      {/* Chevron Icon on desktop only */}
+      <div className="hidden md:flex items-center justify-center w-10 h-10 cursor-pointer"  onClick={handleCompleteProfile}>
+        <ChevronRight className="w-6 h-6 text-gray-800" />
       </div>
     </div>
   );

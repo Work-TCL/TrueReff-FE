@@ -1,28 +1,24 @@
 "use client";
 
+import Loading from "@/app/creator/loading";
+import { ITopBrands } from "@/lib/types-api/creator-dashboard";
 import { translate } from "@/lib/utils/translate";
 import React from "react";
-
-const data = [
-  { name: "Zara", percentage: 70, price: "$12000" },
-  { name: "H & M", percentage: 35, price: "$1200" },
-  { name: "Puma", percentage: 60, price: "$850" },
-  { name: "Nike", percentage: 80, price: "$500" },
-  { name: "Adidas", percentage: 50, price: "$6000" },
-  { name: "Campus", percentage: 45, price: "$780" },
-  { name: "Michel Kaur", percentage: 90, price: "$120" },
-];
-
-const ProductInsights = () => {
+import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+interface ITopBrandsProps {
+  data: ITopBrands[];
+  loading: boolean
+}
+const TopBrands = ({data,loading}:ITopBrandsProps) => {
   return (
-    <div className="w-full  p-4 bg-white rounded-2xl">
+    <div className="flex flex-col flex-1 w-full p-4 bg-white rounded-2xl">
       <div className="flex justify-between items-center mb-3">
         <div>
           <h3 className="text-xl text-text font-medium">
-            {translate("Product_Insights")}
+            {translate("Top_Brands")}
           </h3>
         </div>
-        <div className="flex gap-3">
+        <div className="hidden gap-3">
           <div className="flex items-center space-x-1">
             <span className="w-3 h-3 bg-primary rounded-full"></span>
             <span className="text-font-grey text-sm font-medium">
@@ -37,14 +33,13 @@ const ProductInsights = () => {
           </div>
         </div>
       </div>
-      <ul className="space-y-4">
-        {data.map((item, index) => (
+      {loading ? <Loading height="fit"/> : data?.length > 0 ? <ul className="space-y-4">
+        {data.map((item:ITopBrands, index:any) => (
           <li key={index} className="flex flex-col">
             <div className="flex justify-between items-center gap-2">
-              <span className="text-font-grey">{item.name}</span>
+              <span className="text-font-grey">{item.business_name}<span className="text-secondary">({item.activeCollaborationCount})</span></span>
               <div className="flex gap-3">
                 <span className="text-primary">{item.percentage}%</span>
-                <span className="text-secondary">{item.price}</span>
               </div>
             </div>
             {/* Progress Bar */}
@@ -56,9 +51,16 @@ const ProductInsights = () => {
             </div>
           </li>
         ))}
-      </ul>
+      </ul>:<div className="space-y-4 flex justify-center items-center h-full">
+                <EmptyPlaceHolder
+                  title={"No_Top_Brands_Yet"}
+                  description={
+                    "Top_brands_will_be_displayed_here_once_activity_data_is_available._Encourage_users_to_participate_to_see_leaderboard_ranking."
+                  }
+                />
+              </div>}
     </div>
   );
 };
 
-export default ProductInsights;
+export default TopBrands;

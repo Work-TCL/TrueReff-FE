@@ -373,9 +373,17 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                       className="bg-white rounded-r-md px-2 py-[9px] text-gray-500 hover:text-gray-700"
                       side="right"
                     >
-                      <p className={`${"text-gray-500 hover:text-gray-700"}`}>
-                        {item.label}
-                      </p>
+                      <div className="flex flex-col gap-1 pl-4 ">
+                            <Link
+                              key={item.link}
+                              href={item.link??""}
+                              className={cn(
+                                "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ","text-gray-500 hover:text-gray-700 hover:bg-pink-100"
+                              )}
+                            >
+                              {item.label}
+                            </Link>
+                        </div>
                     </Tooltip.Content>
                   </Tooltip>
                 </ToolTipProvider>

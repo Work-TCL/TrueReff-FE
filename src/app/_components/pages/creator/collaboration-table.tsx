@@ -30,8 +30,9 @@ export function capitalizeFirstLetter(word: string = "") {
 
 interface ICreatorTableProps {
   data: ICollaboration[];
-  filter: string;
-  user: string;
+  filter?: string;
+  user?: string;
+  isDashboard?: boolean;
   fetchCollaboration: () => void;
 }
 interface IRequestCancel {
@@ -44,6 +45,7 @@ const CollaborationTable = ({
   filter,
   user,
   fetchCollaboration,
+  isDashboard = false
 }: ICreatorTableProps) => {
   const router = useRouter();
   const translate = useTranslations();
@@ -140,18 +142,19 @@ const CollaborationTable = ({
   };
   return (
     <div className="overflow-auto">
-      <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
+      <div className="min-w-full border-2 border-gray-200 overflow-hidden rounded-2xl">
+      <Table className="w-full">
         <TableHeader className="bg-stroke">
           <TableRow>
             <CustomTableHead className="w-1/5">
               {translate("Product_Name")}
             </CustomTableHead>
-            <CustomTableHead className="w-1/5">
+            {!isDashboard && <CustomTableHead className="w-1/5">
               {translate("Product_Category")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/5">
+            </CustomTableHead>}
+            {!isDashboard && <CustomTableHead className="w-1/5">
               {translate("Product_Tags")}
-            </CustomTableHead>
+            </CustomTableHead>}
             <CustomTableHead className="w-1/5">
               {translate(`Brand`)}
             </CustomTableHead>
@@ -195,20 +198,20 @@ const CollaborationTable = ({
                     />
                   </div>
                 </CustomTableCell>
-                <CustomTableCell>
+                {!isDashboard && <CustomTableCell>
                   <TruncateWithToolTip
                     checkHorizontalOverflow={false}
                     linesToClamp={2}
                     text={collaboration?.product?.category ?? ""}
                   />
-                </CustomTableCell>
-                <CustomTableCell>
+                </CustomTableCell>}
+                {!isDashboard && <CustomTableCell>
                   <TruncateWithToolTip
                     checkHorizontalOverflow={false}
                     linesToClamp={2}
                     text={collaboration?.product?.tag ?? ""}
                   />
-                </CustomTableCell>
+                </CustomTableCell>}
                 <CustomTableCell>
                   <div
                     className="flex items-center gap-2 cursor-pointer"
@@ -342,6 +345,7 @@ const CollaborationTable = ({
           })}
         </TableBody>
       </Table>
+      </div>
       {isOpen?.show && (
         <CancelRequest
           onClose={() => setIsOpen(initialValue)}

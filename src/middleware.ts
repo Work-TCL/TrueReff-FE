@@ -23,6 +23,7 @@ const match = (matcher: string[], request: NextRequest) =>
 
 // Define public (non-authenticated) routes
 const PUBLIC_ROUTES = ["/aboutus", "/contact", "/help","/login","/register","/email-verify","/reset-password","/forgot-password","/send-otp"];
+const USER_PUBLIC_ROUTES = ["/store",'/product-detail'];
 
 const withAuthMiddleware: MiddlewareFactory = (next) => {
   return async (request: NextRequest) => {
@@ -35,8 +36,8 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     if (
       pathname.startsWith("/_next") || // Next.js internals
       pathname.startsWith("/api") || // API routes
-      pathname.startsWith("/public")  // Public assets
-    //   match(PUBLIC_ROUTES, request) // Allow public routes
+      pathname.startsWith("/public") || // Public assets
+      match(USER_PUBLIC_ROUTES, request) // Allow public routes
     ) {
       return next(request);
     }
@@ -45,8 +46,8 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     if (!token && !PUBLIC_ROUTES.includes(pathname)) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-    // if(token && !user?.type){
-    //   return NextResponse.redirect(new URL(`/dashboard`, request.url));
+    // if(USER_PUBLIC_ROUTES.includes(pathname)){
+    //   return NextResponse.redirect(new URL(pathname, request.url));
     // }
     // Redirect Authenticated Users Away from Auth Pages
     if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request)) {

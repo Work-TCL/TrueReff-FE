@@ -13,7 +13,7 @@ const TrendingInsightsDiscoverability: React.FC = () => {
   ];
 
   return (
-    <div className="w-full p-5 bg-white rounded-lg shadow-sm ">
+    <div className="w-full h-full p-5 bg-white rounded-lg shadow-sm ">
       <h2 className="md:text-xl text-base font-semibold text-gray-900 whitespace-nowrap mb-4">
         {translate("Trending_Insights_Discoverability")}
       </h2>
