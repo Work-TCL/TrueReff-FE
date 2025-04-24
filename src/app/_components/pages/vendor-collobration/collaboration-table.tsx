@@ -122,7 +122,7 @@ const CollaborationTable = ({
       : status;
   };
   return (
-    <div className="overflow-auto">
+    <div className="overflow-auto rounded-2xl bg-stroke">
       {(loading || loader) && <Loader />}
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
         <TableHeader className="bg-stroke">
@@ -153,8 +153,14 @@ const CollaborationTable = ({
             return (
               <TableRow key={index} className="bg-white hover:bg-gray-100">
                 <CustomTableCell>
-                  <div className="flex items-center gap-2 cursor-pointer"  onClick={() => router.push(`/vendor/products/view/${collaboration?.product?._id}`)}>
-                   
+                  <div
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() =>
+                      router.push(
+                        `/vendor/products/view/${collaboration?.product?._id}`
+                      )
+                    }
+                  >
                     {collaboration?.product?.media[0] ? (
                       <Avatar className="w-8 h-8">
                         <AvatarImage src={collaboration?.product?.media[0]} />
@@ -195,16 +201,25 @@ const CollaborationTable = ({
                       )
                     }
                   >
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage
-                          className={collaboration?.fromUser?.profile_image?"":"opacity-50"} src={collaboration?.fromUser?.profile_image?collaboration?.fromUser?.profile_image:"/assets/profile/profile-image.png"}
-                        />
-                      </Avatar>
-                      <TruncateWithToolTip
-                        checkHorizontalOverflow={false}
-                        linesToClamp={2}
-                        text={collaboration?.fromUser?.user_name}
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage
+                        className={
+                          collaboration?.fromUser?.profile_image
+                            ? ""
+                            : "opacity-50"
+                        }
+                        src={
+                          collaboration?.fromUser?.profile_image
+                            ? collaboration?.fromUser?.profile_image
+                            : "/assets/profile/profile-image.png"
+                        }
                       />
+                    </Avatar>
+                    <TruncateWithToolTip
+                      checkHorizontalOverflow={false}
+                      linesToClamp={2}
+                      text={collaboration?.fromUser?.user_name}
+                    />
                   </div>
                 </CustomTableCell>
                 <CustomTableCell className="flex justify-center">

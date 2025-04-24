@@ -1,9 +1,18 @@
 "use client";
 import React from "react";
 
-export default function Loading() {
+interface IProps {
+  height?: "full" | "fit";
+}
+
+export default function Loading({ height = "full" }: IProps) {
   return (
-    <div role="status" className="h-screen flex justify-center items-center">
+    <div
+      role="status"
+      className={`${
+        height === "full" ? "h-screen" : "h-full"
+      } flex justify-center items-center`}
+    >
       <div className="w-fit h-fit">
         <svg
           aria-hidden="true"

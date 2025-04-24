@@ -12,6 +12,7 @@ import { useCreatorStore } from "@/lib/store/creator";
 import axios from "@/lib/web-api/axios";
 import Loader from "../../components-common/layout/loader";
 import ToolTip from "../../components-common/tool-tip";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 const ProductCard = ({
   item: product,
@@ -96,7 +97,7 @@ const ProductCard = ({
   };
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke relative">
+    <div className="relative bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke relative hover:shadow-lg">
       {loading && <Loader />}
       {/* Image */}
       <div
@@ -115,24 +116,48 @@ const ProductCard = ({
       </div>
 
       {/* Info */}
-      <div className="text-center mb-3">
+      <div className="mb-3 px-2 text-center">
         <div className="text-lg font-semibold">
-          {product.title}{" "}
-          <span className="text-gray-500 text-sm">
-            ({product.categories || "Uncategorized"})
-          </span>
+          {" "}
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            linesToClamp={2}
+            text={product.title}
+          />
         </div>
         <div className="text-gray-700 text-sm mt-1 line-clamp-2">
-          {product.description}
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            linesToClamp={2}
+            text={product.description}
+          />
         </div>
-        <div className="text-gray-500 text-sm mt-1">{product.tag}</div>
         <div className="text-gray-500 text-sm mt-1">
           {translate("SKU")} : {product.sku}
         </div>
+        <div className="text-gray-500 text-sm mt-1">
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            linesToClamp={1}
+            text={`${translate("Categories")} : ${
+              product.categories || "Uncategorized"
+            }`}
+          />
+        </div>
+        {product.tags?.length > 0 && (
+          <div className="text-gray-500 text-sm mt-1">
+            {" "}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={true}
+              linesToClamp={1}
+              text={`${translate("Tags")} : ${product.tags?.join(", ") || ""}`}
+            />
+          </div>
+        )}
       </div>
 
       {/* Stats */}
-      <div className="flex justify-around text-center w-full border-t pt-3 text-sm mb-3">
+      <div className="flex justify-around text-center w-full pt-3 text-sm mb-3">
         <div>
           <div className="font-semibold">{product?.channelName || "-"}</div>
           <div className="text-gray-500">{translate("Channel")}</div>
@@ -144,7 +169,7 @@ const ProductCard = ({
       </div>
 
       {/* Status */}
-      <div className="flex justify-center mb-3 text-sm">
+      <div className="flex justify-center mb-3 !text-sm absolute top-0 left-0 m-3 bg-white rounded">
         {(status === "REJECTED" ||
           (status === "REQUESTED" &&
             product?.request?.requestFrom === "CREATOR")) && (
@@ -153,8 +178,11 @@ const ProductCard = ({
       </div>
 
       {/* Actions */}
-      <div className="flex justify-around text-center w-full border-t pt-3 text-sm mb-3">
-        <div
+      {((status === "REQUESTED" &&
+        product?.request?.requestFrom === "CREATOR") ||
+        status === "SEND_REQUEST") && (
+        <div className="flex justify-around items-center text-center w-full border-t pt-3 text-sm mb-3">
+          {/* <div
           onClick={() => handleDetailView(product._id)}
           className="flex items-center gap-2 cursor-pointer"
         >
@@ -162,43 +190,47 @@ const ProductCard = ({
             <Eye className="text-pink-500 cursor-pointer" size={24} />
           </ToolTip>
           {translate("View")}
+        </div> */}
+          {(() => {
+            if (
+              status === "REQUESTED" &&
+              product?.request?.requestFrom === "CREATOR"
+            ) {
+              return (
+                <div
+                  onClick={() => handleAction()}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <ToolTip content="Cancel Request">
+                    <XCircle
+                      className="text-red-500 cursor-pointer"
+                      size={24}
+                    />
+                  </ToolTip>
+                  {translate("Cancel")}
+                </div>
+              );
+            }
+            if (status === "SEND_REQUEST") {
+              return (
+                <div
+                  onClick={() => handleAction()}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <ToolTip content="Send Collaboration Request">
+                    <UserPlus
+                      className="text-blue-500 cursor-pointer"
+                      size={24}
+                    />
+                  </ToolTip>
+                  {translate("Collobrate")}
+                </div>
+              );
+            }
+            return null;
+          })()}
         </div>
-        {(() => {
-          if (
-            status === "REQUESTED" &&
-            product?.request?.requestFrom === "CREATOR"
-          ) {
-            return (
-              <div
-                onClick={() => handleAction()}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <ToolTip content="Cancel Request">
-                  <XCircle className="text-red-500 cursor-pointer" size={24} />
-                </ToolTip>
-                {translate("Decline")}
-              </div>
-            );
-          }
-          if (status === "SEND_REQUEST") {
-            return (
-              <div
-                onClick={() => handleAction()}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <ToolTip content="Send Collaboration Request">
-                  <UserPlus
-                    className="text-blue-500 cursor-pointer"
-                    size={24}
-                  />
-                </ToolTip>
-                {translate("Collobrate")}
-              </div>
-            );
-          }
-          return null;
-        })()}
-      </div>
+      )}
 
       {isOpen && (
         <CancelRequest

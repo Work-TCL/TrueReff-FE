@@ -10,8 +10,8 @@ const CampaignCard = ({ item: campaign }: { item: ICampaignData }) => {
   const router = useRouter();
   return (
     <div
-      //   onClick={() => router?.push(`/vendor/products/view/${campaign?._id}`)}
-      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke"
+      onClick={() => router.push(`/vendor/campaign/${campaign?._id}?view=true`)}
+      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke cursor-pointer hover:shadow-lg"
     >
       {/* Image */}
       <div className="w-full aspect-[3/2] rounded-lg overflow-hidden mb-3 flex justify-center items-center bg-background">
@@ -56,7 +56,7 @@ const CampaignCard = ({ item: campaign }: { item: ICampaignData }) => {
 
       {/* Stats */}
       <div className="flex justify-around text-center w-full border-t pt-3 text-sm mb-3">
-        <div
+        {/* <div
           onClick={() =>
             router.push(`/vendor/campaign/${campaign?._id}?view=true`)
           }
@@ -70,7 +70,7 @@ const CampaignCard = ({ item: campaign }: { item: ICampaignData }) => {
             />{" "}
           </div>
           <div className="text-gray-500 flex items-center gap-2">View</div>
-        </div>
+        </div> */}
         <div
           onClick={() => router.push(`/vendor/campaign/${campaign?._id}`)}
           className="flex items-center gap-3 cursor-pointer"

@@ -1,39 +1,28 @@
 "use client";
-
-import React, { useState } from "react";
+import React from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
 import { IBrand } from "./list";
-import { useParams, useRouter } from "next/navigation";
-import { Eye, UserPlus, XCircle } from "lucide-react";
-import toast from "react-hot-toast";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
-import CancelRequest from "@/app/_components/components-common/dialogs/cancel-request";
+import { useRouter } from "next/navigation";
+import { UserPlus, XCircle } from "lucide-react";
 import StatusBadge from "@/app/_components/components-common/status-badge";
-import { useCreatorStore } from "@/lib/store/creator";
-import axios from "@/lib/web-api/axios";
 import ToolTip from "@/app/_components/components-common/tool-tip";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 
 interface ICreatorTableProps {
   data: IBrand[];
-  handleUpdateCollaboration: () => void;
+  onView: (id: string) => void;
+  onAction: (status: string, brand: IBrand) => void;
 }
 export default function BrandProductTable({
   data,
-  handleUpdateCollaboration,
+  onView,
+  onAction,
 }: ICreatorTableProps) {
   const router = useRouter();
-  const params = useParams();
-  const { creator } = useCreatorStore();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<string>("");
-  const handleDetailView = (id: string) => {
-    router.push(`/creator/brandsList/${params.id}/${id}`);
-  };
 
   const getRequestStatus = (brand: IBrand) => {
     const { collaboration, request } = brand;
@@ -48,64 +37,7 @@ export default function BrandProductTable({
       }
     } else return "SEND_REQUEST";
   };
-  const handleSendRequest = async (brand: IBrand) => {
-    setLoading(true);
-    try {
-      const response: any = await axios.post(
-        `/product/collaboration/creator/request`,
-        {
-          productIds: [brand?._id],
-          creatorId: creator?.creatorId,
-          vendorId: brand?.vendor?._id,
-        }
-      );
-      if (response.status === 201) {
-        let data = response?.data?.data?.results;
-        if (data && data?.length > 0 && data[0]?.data) {
-          handleUpdateCollaboration();
-        }
-        if (data && data?.length > 0 && data[0]?.message) {
-          toast.success(data[0]?.message);
-        }
-        setLoading(false);
-      } else {
-        setLoading(false);
-      }
-    } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
-      setLoading(false);
-    }
-  };
-  const handleRejectRequest = async (collaborationId: string) => {
-    setLoading(true);
-    try {
-      const response: any = await axios.delete(
-        `/product/collaboration/request/cancel/${collaborationId}`
-      );
-      if (response.status === 200) {
-        toast.success(response.data.message);
-        handleUpdateCollaboration();
-        setLoading(false);
-        setIsOpen("");
-      } else {
-        setLoading(false);
-        setIsOpen("");
-      }
-    } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
-      setLoading(false);
-      setIsOpen("");
-    }
-  };
-  const handleAction = (status: string | null, brand: IBrand) => {
-    if (status === "REQUESTED" && brand?.collaboration?._id) {
-      setIsOpen(brand?.collaboration?._id);
-    } else {
-      handleSendRequest(brand);
-    }
-  };
+
   return (
     <div className="overflow-auto">
       <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
@@ -148,7 +80,7 @@ export default function BrandProductTable({
                 <CustomTableCell>
                   <div
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => handleDetailView(brand._id)}
+                    onClick={() => onView(brand._id)}
                   >
                     <Avatar className="w-8 h-8">
                       <AvatarImage
@@ -260,7 +192,7 @@ export default function BrandProductTable({
                               className="cursor-pointer"
                               size={25}
                               color="#ef4444"
-                              onClick={() => handleAction(status, brand)}
+                              onClick={() => onAction(status, brand)}
                             />
                           </ToolTip>
                         ) : null,
@@ -272,7 +204,7 @@ export default function BrandProductTable({
                           <UserPlus
                             color="#3b82f680"
                             className="cursor-pointer"
-                            onClick={() => handleAction(status, brand)}
+                            onClick={() => onAction(status, brand)}
                             size={25}
                           />
                         </ToolTip>
@@ -285,14 +217,6 @@ export default function BrandProductTable({
           })}
         </TableBody>
       </Table>
-      {isOpen && (
-        <CancelRequest
-          onClose={() => setIsOpen("")}
-          collaborationId={isOpen}
-          handleCancelRequest={handleRejectRequest}
-          loading={loading}
-        />
-      )}
     </div>
   );
 }

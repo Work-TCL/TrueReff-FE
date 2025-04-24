@@ -3,13 +3,14 @@ import { ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { IProduct } from "./list";
 import { translate } from "@/lib/utils/translate";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 const ProductCard = ({ item: product }: { item: IProduct }) => {
   const router = useRouter();
   return (
     <div
       onClick={() => router?.push(`/vendor/products/view/${product?._id}`)}
-      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke"
+      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg"
     >
       {/* Image */}
       <div className="w-full aspect-[3/2] rounded-lg overflow-hidden mb-3 flex justify-center items-center bg-background">
@@ -27,18 +28,41 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
       {/* Title + Category */}
       <div className="text-center mb-3">
         <div className="text-lg font-semibold">
-          {product.title}{" "}
-          <span className="text-gray-500 text-sm">
-            ({product.categories || "Uncategorized"})
-          </span>
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            linesToClamp={2}
+            text={product.title}
+          />
         </div>
         <div className="text-gray-700 text-sm mt-1 line-clamp-2 overflow-hidden text-ellipsis">
-          {product.description}
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            linesToClamp={2}
+            text={product.description}
+          />
         </div>
-        <div className="text-gray-500 text-sm mt-1">{product.tag}</div>
         <div className="text-gray-500 text-sm mt-1">
           {translate("SKU")} : {product.sku}
         </div>
+        <div className="text-gray-500 text-sm mt-1">
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            linesToClamp={1}
+            text={`${translate("Categories")} : ${
+              product.categories || "Uncategorized"
+            }`}
+          />
+        </div>
+        {product.tags?.length > 0 && (
+          <div className="text-gray-500 text-sm mt-1">
+            {" "}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={true}
+              linesToClamp={1}
+              text={`${translate("Tags")} : ${product.tags?.join(", ") || ""}`}
+            />
+          </div>
+        )}
       </div>
 
       {/* Stats */}

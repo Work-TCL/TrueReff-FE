@@ -148,13 +148,15 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
                 alt={`preview-${i}`}
                 className="w-full h-full object-cover rounded"
               />
-              <button
-                type="button"
-                onClick={() => removeFromS3(i)}
-                className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-              >
-                ×
-              </button>
+              {!disabled && (
+                <button
+                  type="button"
+                  onClick={() => removeFromS3(i)}
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                >
+                  ×
+                </button>
+              )}
             </div>
           ))}
           {imagePreviewUrls.map((img, i) => (
@@ -167,13 +169,15 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
                 alt={`preview-${i}`}
                 className="w-full h-full object-cover rounded"
               />
-              <button
-                type="button"
-                onClick={() => removeImage(i)}
-                className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-              >
-                ×
-              </button>
+              {!disabled && (
+                <button
+                  type="button"
+                  onClick={() => removeImage(i)}
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                >
+                  ×
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -218,13 +222,15 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               controls
               className="w-64 max-h-40 rounded"
             />
-            <button
-              type="button"
-              onClick={removeVideoFromS3}
-              className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-            >
-              ×
-            </button>
+            {!disabled && (
+              <button
+                type="button"
+                onClick={removeVideoFromS3}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+              >
+                ×
+              </button>
+            )}
           </div>
         )}
         {videoPreviewUrl && (
@@ -234,13 +240,15 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               controls
               className="w-64 max-h-40 rounded"
             />
-            <button
-              type="button"
-              onClick={removeVideo}
-              className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-            >
-              ×
-            </button>
+            {!disabled && (
+              <button
+                type="button"
+                onClick={removeVideo}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+              >
+                ×
+              </button>
+            )}
           </div>
         )}
       </div>

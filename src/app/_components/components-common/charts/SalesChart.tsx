@@ -47,7 +47,7 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
 
 export default function SalesChart() {
   return (
-    <div className="w-full h-[410px] bg-white p-5 rounded-20">
+    <div className="w-full h-[410px] bg-white p-5 rounded-20 h-full flex-1">
       <div className="flex md:flex-row flex-col justify-between md:items-center items-start mb-3">
         <h3 className="md:text-xl text-base font-semibold whitespace-nowrap text-text">
           {translate("Sales_Performance")}

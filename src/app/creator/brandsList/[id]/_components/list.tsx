@@ -22,6 +22,11 @@ import { Search } from "lucide-react";
 import { debounce } from "lodash";
 import { getCategories } from "@/lib/web-api/auth";
 import Select from "react-select";
+import { PiListChecksLight } from "react-icons/pi";
+import { IoGridOutline } from "react-icons/io5";
+import BrandProductCard from "./brandProductCard";
+import { useCreatorStore } from "@/lib/store/creator";
+import CancelRequest from "@/app/_components/components-common/dialogs/cancel-request";
 export interface ICategory {
   _id: string;
   name: string;
@@ -81,6 +86,7 @@ export interface IBrand {
   subCategories?: string[];
   vendor: IVendor;
   request: IRequest | null;
+  status: string;
 }
 const customStyles = {
   placeholder: (base: any) => ({
@@ -108,9 +114,26 @@ export default function CreatorList() {
     []
   );
   const [search, setSearch] = useState<string>("");
+  const [viewMode, setViewMode] = useState<"table" | "card">("card");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const { creator } = useCreatorStore();
+  const [isOpen, setIsOpen] = useState<string>("");
   const pageSize = 20;
+
+  const getRequestStatus = (brand: IBrand) => {
+    const { collaboration, request } = brand;
+    if (collaboration && request) {
+      if (
+        request?.collaborationStatus === "REQUESTED" ||
+        request?.collaborationStatus === "REJECTED"
+      ) {
+        return request?.collaborationStatus;
+      } else {
+        return collaboration?.collaborationStatus;
+      }
+    } else return "SEND_REQUEST";
+  };
 
   // Get Creator list
   const getBrandProductList = useCallback(
@@ -153,10 +176,12 @@ export default function CreatorList() {
                         .filter((cat: ICategory) => cat.parentId !== null)
                         .map((cat: ICategory) => cat?.name)
                     : [];
+                const status = getRequestStatus(brand);
                 return {
                   ...brand,
                   categories: category,
                   subCategories: subCategory,
+                  status: status,
                 };
               });
               setBrandProducts([...result]);
@@ -249,6 +274,68 @@ export default function CreatorList() {
       ...selectedIds,
     ]);
   };
+
+  const handleSendRequest = async (brand: IBrand) => {
+    setLoading(true);
+    try {
+      const response: any = await axios.post(
+        `/product/collaboration/creator/request`,
+        {
+          productIds: [brand?._id],
+          creatorId: creator?.creatorId,
+          vendorId: brand?.vendor?._id,
+        }
+      );
+      if (response.status === 201) {
+        let data = response?.data?.data?.results;
+        if (data && data?.length > 0 && data[0]?.data) {
+          handleUpdateCollaboration();
+        }
+        if (data && data?.length > 0 && data[0]?.message) {
+          toast.success(data[0]?.message);
+        }
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+      setLoading(false);
+    }
+  };
+  const handleRejectRequest = async (collaborationId: string) => {
+    setLoading(true);
+    try {
+      const response: any = await axios.delete(
+        `/product/collaboration/request/cancel/${collaborationId}`
+      );
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        handleUpdateCollaboration();
+        setLoading(false);
+        setIsOpen("");
+      } else {
+        setLoading(false);
+        setIsOpen("");
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+      setLoading(false);
+      setIsOpen("");
+    }
+  };
+  const handleAction = (status: string | null, brand: IBrand) => {
+    if (status === "REQUESTED" && brand?.collaboration?._id) {
+      setIsOpen(brand?.collaboration?._id);
+    } else {
+      handleSendRequest(brand);
+    }
+  };
+  const handleDetailView = (id: string) => {
+    router.push(`/creator/brandsList/${params.id}/${id}`);
+  };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
@@ -284,6 +371,18 @@ export default function CreatorList() {
               <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
             </div>
             <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
+              <PiListChecksLight
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("table")}
+              />
+              <IoGridOutline
+                className={`cursor-pointer md:size-[30px] size-6 ${
+                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
+                }`}
+                onClick={() => setViewMode("card")}
+              />
               <Select
                 styles={customStyles}
                 value={selectedCategories.map((id) => {
@@ -322,10 +421,25 @@ export default function CreatorList() {
           {internalLoader && <Loader />}
           {brandProducts?.length > 0 ? (
             <>
-              <BrandProductTable
-                data={brandProducts}
-                handleUpdateCollaboration={handleUpdateCollaboration}
-              />
+              {viewMode === "table" && (
+                <BrandProductTable
+                  data={brandProducts}
+                  onAction={handleAction}
+                  onView={handleDetailView}
+                />
+              )}
+              {viewMode === "card" && (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 p-2 md:p-4 bg-white rounded-[20px] overflow-auto">
+                  {brandProducts.map((brand: any) => (
+                    <BrandProductCard
+                      key={brand.id}
+                      brand={brand}
+                      onAction={handleAction}
+                      onView={handleDetailView}
+                    />
+                  ))}
+                </div>
+              )}
               {/* Pagination */}
               {totalPages > 1 && (
                 <TablePagination
@@ -342,6 +456,14 @@ export default function CreatorList() {
             />
           )}
         </>
+      )}
+      {isOpen && (
+        <CancelRequest
+          onClose={() => setIsOpen("")}
+          collaborationId={isOpen}
+          handleCancelRequest={handleRejectRequest}
+          loading={loading}
+        />
       )}
     </div>
   );

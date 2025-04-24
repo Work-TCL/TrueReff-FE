@@ -4,6 +4,7 @@ import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { translate } from "@/lib/utils/translate";
 import { ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 const CreatorCard = ({
   item: creator,
@@ -16,7 +17,7 @@ const CreatorCard = ({
   return (
     <div
       onClick={() => router?.push(`/creator/profile/${creator?._id}`)}
-      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke"
+      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg"
     >
       {/* Image */}
       <div className="w-full aspect-[3/2] rounded-lg overflow-hidden mb-3 flex justify-center items-center bg-background">
@@ -34,15 +35,38 @@ const CreatorCard = ({
       {/* Title + Category */}
       <div className="text-center mb-3">
         <div className="text-lg font-semibold">
-          {creator.title}{" "}
-          <span className="text-gray-500 text-sm">
-            ({creator.categories || "Uncategorized"})
-          </span>
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            linesToClamp={2}
+            text={creator.title}
+          />
         </div>
         <div className="text-gray-700 text-sm mt-1 line-clamp-2 overflow-hidden text-ellipsis">
-          {creator.short_description}
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            linesToClamp={2}
+            text={creator.short_description}
+          />
         </div>
-        <div className="text-gray-500 text-sm mt-1">{creator.tag}</div>
+        <div className="text-gray-500 text-sm mt-1">
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            linesToClamp={1}
+            text={`${translate("Categories")} : ${
+              creator.categories || "Uncategorized"
+            }`}
+          />
+        </div>
+        {creator.tags?.length > 0 && (
+          <div className="text-gray-500 text-sm mt-1">
+            {" "}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={true}
+              linesToClamp={1}
+              text={`${translate("Tags")} : ${creator.tags?.join(", ") || ""}`}
+            />
+          </div>
+        )}
       </div>
 
       {/* Stats */}
@@ -68,7 +92,7 @@ const CreatorCard = ({
       {/* Button */}
       <button
         onClick={() => handleCollaborateNow(creator._id)}
-        className="w-full py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-all"
+        className="whitespace-nowrap  border border-[#FFEDF2] bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all py-3 px-[10px] text-sm w-full"
       >
         {translate("Collaborate_Now")}
       </button>

@@ -88,7 +88,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 
 const VendorActivity: React.FC = () => {
   return (
-    <Card className="p-5 w-full bg-white rounded-xl">
+    <Card className="p-5 w-full bg-white rounded-xl h-full flex-1">
       <div className="flex justify-between items-center mb-4">
         <h2 className="md:text-xl text-base text-text  font-semibold">
           {translate("Vendor_Activity")}
