@@ -49,6 +49,7 @@ const NavLink = ({
   expended = false,
   isChild = false,
   childIndex,
+  childClassName,
 }: any) => {
   const childLinkClasses = `relative block px-4 py-2 rounded-md ${
     isActive
@@ -56,7 +57,7 @@ const NavLink = ({
       : "text-gray-500 hover:text-gray-700"
   } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${
     childIndex === 0 ? "before:h-7" : "before:h-16"
-  } text-nowrap text-[14px]`;
+  } text-nowrap text-[14px] ${childClassName}`;
 
   const classNames = isChild
     ? childLinkClasses
@@ -68,7 +69,7 @@ const NavLink = ({
             ? "bg-pink-100 text-black"
             : "bg-primary-color text-white"
           : "text-font-grey hover:bg-pink-100"
-      }`;
+      } `;
   const iconClassNames = `w-5 h-5 shrink-0 ${
     isActive ? (hasSubmenu ? "text-black" : "text-white") : "text-font-grey"
   }`;
@@ -97,6 +98,7 @@ const NavLink = ({
     </Link>
   );
 };
+
 interface ISidebarProps {
   handleExpandSidebar: () => void;
   expanded: boolean;
@@ -206,11 +208,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       icon: Store,
       link: "/creator/brandsList",
     },
-    {
-      label: translate("Creator_Analysis"),
-      icon: BarChart,
-      link: "/creator/creator_analysis",
-    },
+    // {
+    //   label: translate("Creator_Analysis"),
+    //   icon: BarChart,
+    //   link: "/creator/creator_analysis",
+    // },
     {
       label: translate("Collaboration"),
       icon: UserRound,
@@ -287,6 +289,13 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                               link={child.link}
                               handleToggle={() => toggleMenu(item.label, true)}
                               isActive={pathname === child.link}
+                              childClassName={cn(
+                                "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ",
+                                pathname === child.link
+                                  ? "bg-primary-color text-white"
+                                  : "text-gray-500 hover:text-gray-700",
+                                pathname !== child.link && "hover:bg-pink-100"
+                              )}
                               label={
                                 !lg
                                   ? child.label
@@ -374,16 +383,17 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                       side="right"
                     >
                       <div className="flex flex-col gap-1 pl-4 ">
-                            <Link
-                              key={item.link}
-                              href={item.link??""}
-                              className={cn(
-                                "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ","text-gray-500 hover:text-gray-700 hover:bg-pink-100"
-                              )}
-                            >
-                              {item.label}
-                            </Link>
-                        </div>
+                        <Link
+                          key={item.link}
+                          href={item.link ?? ""}
+                          className={cn(
+                            "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ",
+                            "text-gray-500 hover:text-gray-700 hover:bg-pink-100"
+                          )}
+                        >
+                          {item.label}
+                        </Link>
+                      </div>
                     </Tooltip.Content>
                   </Tooltip>
                 </ToolTipProvider>
@@ -461,7 +471,6 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                 </div>
               ) : (
                 <NavLink
-                  key={idx}
                   handleToggle={() => {
                     handleToggleMenu();
                   }}

@@ -15,19 +15,19 @@ const settingMenus: {
       path: "/vendor/settings",
     },
     {
-      label: "package_details",
+      label: "Package_details",
       path: "/vendor/settings/package",
     },
     {
-      label: "store_connects",
+      label: "Store_connects",
       path: "/vendor/settings/store",
     },
     {
-      label: "payment_options",
+      label: "Payment_options",
       path: "/vendor/settings/payment",
     },
     {
-      label: "billing_details",
+      label: "Blling_details",
       path: "/vendor/settings/billing",
     },
   ];

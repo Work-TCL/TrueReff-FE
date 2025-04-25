@@ -145,7 +145,9 @@ export default function ChannelsConnect() {
                 />
               </div>
               <div
-                className={`flex mt-5 ${instagramConnected ? "hidden" : ""}`}
+                className={`lg:flex hidden mt-5 ${
+                  instagramConnected ? "hidden" : ""
+                }`}
               >
                 {/* main button */}
                 <Button
@@ -168,6 +170,21 @@ export default function ChannelsConnect() {
               placeholder="https://instagram.com/JohnDoe_Style"
               disabled
             />
+          </div>
+          <div
+            className={`col-span-2 lg:hidden mt-5 w-full ${
+              instagramConnected ? "hidden" : ""
+            }`}
+          >
+            <Button
+              loading={isLoading}
+              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
+              size="small"
+              onClick={handleInstaLogin}
+              disabled={isLoading}
+            >
+              {"Connect"}
+            </Button>
           </div>
           <div className="col-span-2">
             <div className="flex gap-4 items-center">
@@ -199,7 +216,11 @@ export default function ChannelsConnect() {
                   placeholder="@JohnDoeFashion"
                 />
               </div>
-              <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
+              <div
+                className={`lg:flex hidden mt-5 ${
+                  youtubeConnected ? "hidden" : ""
+                }`}
+              >
                 <Button
                   className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
                   size="small"
@@ -220,6 +241,21 @@ export default function ChannelsConnect() {
               disabled
               placeholder="https://youtube.com/@JohnDoeFashion"
             />
+          </div>
+          <div
+            className={`col-span-2 lg:hidden w-full mt-5 ${
+              youtubeConnected ? "hidden" : ""
+            }`}
+          >
+            <Button
+              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
+              size="small"
+              onClick={handleGoogleLogin}
+              loading={isLoading}
+              disabled={isLoading}
+            >
+              {"Connect"}
+            </Button>
           </div>
         </div>
       </form>

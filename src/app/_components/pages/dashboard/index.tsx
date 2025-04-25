@@ -126,10 +126,10 @@ export default function Dashboard() {
         <div className=" bg-white rounded-lg shadow w-full">
           <RecentCollaborations />
         </div>
-        <div className="flex gap-4 sm:flex-row flex-col w-full">
-          <div className="w-1/2"><VendorActivity /></div>
+        <div className="flex gap-2 sm:flex-row flex-col w-full">
+          <div className="lg:w-[46%]"><VendorActivity /></div>
           {/* <DonutChart /> */}
-          <div className="w-1/2 flex-1"><TrendingInsightsDiscoverability /></div>
+          <div className="lg:w-1/2 flex-1"><TrendingInsightsDiscoverability /></div>
         </div>
       </div>
     </div>

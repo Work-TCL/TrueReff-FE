@@ -46,8 +46,8 @@ export default function ProfileCreator() {
               className="w-[100px] h-[100px] object-cover rounded-full"
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col md:flex-row gap-2 ">
+          {/* <div className="flex flex-col gap-2">
+            <div className="flex flex-row gap-2 ">
               <div className="min-w-1/6 text-[14px] xl:text-[16px] text-gray-500 text-nowrap">
                 {translate("User_Name")}:
               </div>
@@ -55,7 +55,7 @@ export default function ProfileCreator() {
                 {creator.user_name || "-"}
               </div>
             </div>
-            <div className="flex flex-col md:flex-row gap-2 ">
+            <div className="flex flex-row gap-2 ">
               <div className="min-w-1/6 text-[14px] xl:text-[16px] text-gray-500 text-nowrap">
                 {translate("Name")}:
               </div>
@@ -63,13 +63,13 @@ export default function ProfileCreator() {
                 {creator.full_name || "-"}
               </div>
             </div>
-            <div className="flex flex-col md:flex-row gap-2 ">
+            <div className="flex flex-row gap-2 ">
               <div className="min-w-1/6 text-[14px] xl:text-[16px] text-gray-500 text-nowrap">
                 {translate("Mobile")}:
               </div>
               <div className="font-medium w-5/6">{creator.phone || "-"}</div>
             </div>
-            <div className="flex flex-col md:flex-row gap-2 ">
+            <div className="flex flex-row gap-2 ">
               <div className="min-w-1/6 text-[14px] xl:text-[16px] text-gray-500 text-nowrap">
                 {translate("Short_Description")}:
               </div>
@@ -77,7 +77,7 @@ export default function ProfileCreator() {
                 {creator.short_description || "-"}
               </div>
             </div>
-            <div className="flex flex-col md:flex-row gap-2 ">
+            <div className="flex flex-row gap-2 ">
               <div className="min-w-1/6 text-[14px] xl:text-[16px] text-gray-500 text-nowrap">
                 {translate("Long_Description")}:
               </div>
@@ -85,6 +85,24 @@ export default function ProfileCreator() {
                 {creator.long_description || "-"}
               </div>
             </div>
+          </div> */}
+          <div className="flex flex-col gap-3">
+            {[
+              ["User_Name", creator.user_name],
+              ["Name", creator.full_name],
+              ["Mobile", creator.phone],
+              ["Short_Description", creator.short_description],
+              ["Long_Description", creator.long_description],
+            ].map(([label, value], idx) => (
+              <div key={idx} className="flex items-start gap-2">
+                <div className="w-[120px] text-sm text-gray-500 text-nowrap">
+                  {translate(label as string)}:
+                </div>
+                <div className="font-medium text-sm break-words">
+                  {value || "-"}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         <EditProfileCreator

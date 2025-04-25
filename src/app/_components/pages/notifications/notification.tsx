@@ -110,7 +110,7 @@ export default function Notification() {
         setNotifications([]);
       }
     } catch (error: any) {
-      toast.error(error?.message || "Notifications Fetch Failed.");
+      // toast.error(error?.message || "Notifications Fetch Failed.");
       setUnReadNotifications(0);
       setTotalNotification(0);
       setNotifications([]);
@@ -120,12 +120,12 @@ export default function Notification() {
     }
   };
 
-  console.log("pathName", pathName);
   useEffect(() => {
     if (pathName !== "/dashboard") {
       fetchNotifications();
     }
   }, []);
+  
   useEffect(() => {
     socketService.connect();
     if (creator.creatorId || vendor.vendorId) {

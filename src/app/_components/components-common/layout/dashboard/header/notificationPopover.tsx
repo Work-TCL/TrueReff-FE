@@ -39,11 +39,11 @@ export default function NotificationPopover({
   const translate = useTranslations();
   const router = useRouter();
 
-  useEffect(() => {
-    if (open) {
-      fetchNotifications();
-    }
-  }, [open]);
+  // useEffect(() => {
+  //   if (open) {
+  //     fetchNotifications();
+  //   }
+  // }, [open]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

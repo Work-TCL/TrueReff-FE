@@ -83,11 +83,11 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/creator/creator_analysis": translate("Creator_Analysis"),
     "/creator/payment-earnings": translate("Payment_Earnings"),
     "/creator/brandsList": translate("Brands_List"),
-    "/creator/profile" : translate("Creator_Profile"),
-    "/vendor/profile" : translate("Brand_Profile"),
+    "/creator/profile": translate("Creator_Profile"),
+    "/vendor/profile": translate("Brand_Profile"),
     "/vendor/creators/collaboration": translate("Collaboration"),
     "/creator/collaboration": translate("Collaboration"),
-    "/vendor/creators/available-creators": translate("Available_Creators")
+    "/vendor/creators/available-creators": translate("Available_Creators"),
   };
   const fetchNotifications = async () => {
     setLoading(true);
@@ -113,7 +113,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       setLoading(false);
     }
   };
-
+  console.log("objectobject", pathName);
   useEffect(() => {
     if (pathName !== "/dashboard") {
       fetchNotifications();
@@ -178,20 +178,23 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   };
 
   const getHeaderName = () => {
-    if(pathName.includes("/vendor/creators/collaboration/")){
+    if (pathName.includes("/vendor/creators/collaboration/")) {
       return translate("Bargaining");
-    } else if(pathName.includes("/creator/profile/")){
+    } else if (pathName.includes("/creator/profile/")) {
       return translate("Creator_Profile");
-    } else if(pathName.includes("/vendor/products/view/") || pathName.includes("/vendor/products/")){
+    } else if (
+      pathName.includes("/vendor/products/view/") ||
+      pathName.includes("/vendor/products/")
+    ) {
       return translate("Product_Details");
-    } else if(pathName.includes("/creator/brandsList/")) {
-      return translate("Brand_Products")
-    } else if(pathName.includes("/vendor/profile/")){
-      return translate("Brand_Profile")
+    } else if (pathName.includes("/creator/brandsList/")) {
+      return translate("Brand_Products");
+    } else if (pathName.includes("/vendor/profile/")) {
+      return translate("Brand_Profile");
     } else {
       return pageNames[pathName];
     }
-  }
+  };
 
   return (
     <header className="bg-white px-3 py-3 flex items-center gap-1">

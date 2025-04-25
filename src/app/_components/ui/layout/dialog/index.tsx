@@ -12,6 +12,7 @@ interface IDialogLayout {
   onClose?: () => void;
   isCustomDesign?: boolean;
   title?: string;
+  titleClassName?: string;
 }
 
 export default function DialogLayout({
@@ -21,6 +22,7 @@ export default function DialogLayout({
   skipClose,
   onClose = undefined,
   title = "",
+  titleClassName,
   ...props
 }: IDialogLayout) {
   useEffect(() => {
@@ -60,7 +62,12 @@ export default function DialogLayout({
               )}
             >
               {title || !skipClose ? (
-                <div className="flex items-center justify-between px-2 sm:px-4 mt-2">
+                <div
+                  className={cn(
+                    "flex items-center justify-between px-2 sm:px-4 mt-2",
+                    titleClassName
+                  )}
+                >
                   {title && (
                     <h3 className="text-md text-gray-black font-medium flex-1 truncate">
                       {title}

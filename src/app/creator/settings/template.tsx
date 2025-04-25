@@ -14,7 +14,7 @@ const settingMenus: {
     path: "/creator/settings",
   },
   {
-    label: "channel_connects",
+    label: "Channel_connects",
     path: "/creator/settings/store",
   },
 ];
