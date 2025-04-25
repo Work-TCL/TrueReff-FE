@@ -10,21 +10,23 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ICreatorStore } from "@/lib/types-api/my-store";
+import { ICreateStoreRequest } from "@/lib/types-api/my-store";
 
 interface IProps {
-    store: ICreatorStore
+  store: ICreateStoreRequest;
 }
 
 export default function StoreDetailCard({
-  store:{creatorId,
+  store: {
+    creatorId,
     name,
     description,
     tags,
     category,
     link,
     profile_image,
-    banner_image},
+    banner_image,
+  },
 }: IProps) {
   return (
     <Card className="bg-white rounded-[20PX] overflow-hidden border-0 shadow-none">
@@ -62,9 +64,7 @@ export default function StoreDetailCard({
                 className="opacity-50"
               />
             )}
-            {profile_image ? (
-              <AvatarFallback>{name}</AvatarFallback>
-            ) : null}
+            {profile_image ? <AvatarFallback>{name}</AvatarFallback> : null}
           </Avatar>
         </div>
         <div className="flex gap-2 md:gap-4 text-gray-500 text-lg md:text-2xl">
@@ -125,9 +125,7 @@ export default function StoreDetailCard({
           </h2>
           <LinkIcon className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
         </div>
-        <p className="text-sm md:text-base text-font-grey">
-          {description}
-        </p>
+        <p className="text-sm md:text-base text-font-grey">{description}</p>
         <div className="flex gap-2 md:gap-4 flex-wrap">
           {tags.map((tag) => (
             <span
@@ -141,6 +139,7 @@ export default function StoreDetailCard({
         <div className="flex gap-2 md:gap-4">
           {category?.map((v) => (
             <Button
+              key={v}
               size={"lg"}
               className="bg-primary-color hover:bg-pink-600 text-white px-4 md:px-5 py-1 md:py-3 rounded-md text-xs md:text-sm"
             >

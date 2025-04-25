@@ -93,326 +93,302 @@ export default function ProductList() {
   ) => {
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
-    //   const response = await axios.get(
-    //     `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${
-    //       searchValue ? `&search=${searchValue}` : ""
-    //     }${categoryIds?.length > 0 ? `&categories=${categoryIds}` : ""}`
-    //   );
-    let response = {data:{data:{
-        "data": [
-            {
-                "_id": "67fdea4336446d624d836320",
-                "title": "The Archived Snowboard",
-                "channelProductId": "gid://shopify/Product/7856547102777",
-                "vendorId": "67fddfb2b8f800fa8b7221d0",
-                "sku": "the-archived-snowboard",
-                "description": "",
-                "media": [
-                    "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_52f8e304-92d9-4a36-82af-50df8fe31c69.jpg?v=1740639562"
+      //   const response = await axios.get(
+      //     `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${
+      //       searchValue ? `&search=${searchValue}` : ""
+      //     }${categoryIds?.length > 0 ? `&categories=${categoryIds}` : ""}`
+      //   );
+      let response = {
+        data: {
+          data: {
+            data: [
+              {
+                _id: "67fdea4336446d624d836320",
+                title: "The Archived Snowboard",
+                channelProductId: "gid://shopify/Product/7856547102777",
+                vendorId: "67fddfb2b8f800fa8b7221d0",
+                sku: "the-archived-snowboard",
+                description: "",
+                media: [
+                  "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_52f8e304-92d9-4a36-82af-50df8fe31c69.jpg?v=1740639562",
                 ],
-                "channelName": "shopify",
-                "category": [
-                    {
-                        "_id": "67db0a252d3f810c5588189a",
-                        "name": "category 1",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:09.650Z",
-                        "updatedAt": "2025-03-19T18:17:09.650Z"
-                    },
-                    {
-                        "_id": "67db0a522d3f810c558818ab",
-                        "name": "category 1 sub(1)",
-                        "parentId": "67db0a252d3f810c5588189a",
-                        "createdAt": "2025-03-19T18:17:54.142Z",
-                        "updatedAt": "2025-03-19T18:17:54.142Z"
-                    }
+                channelName: "shopify",
+                category: [
+                  {
+                    _id: "67db0a252d3f810c5588189a",
+                    name: "category 1",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:09.650Z",
+                    updatedAt: "2025-03-19T18:17:09.650Z",
+                  },
+                  {
+                    _id: "67db0a522d3f810c558818ab",
+                    name: "category 1 sub(1)",
+                    parentId: "67db0a252d3f810c5588189a",
+                    createdAt: "2025-03-19T18:17:54.142Z",
+                    updatedAt: "2025-03-19T18:17:54.142Z",
+                  },
                 ],
-                "tags": [
-                    "Archived",
-                    "Premium",
-                    "Snow",
-                    "Snowboard",
-                    "Sport",
-                    "Winter"
+                tags: [
+                  "Archived",
+                  "Premium",
+                  "Snow",
+                  "Snowboard",
+                  "Sport",
+                  "Winter",
                 ],
-                "createdAt": "2025-04-15T05:10:27.771Z",
-                "updatedAt": "2025-04-15T05:10:27.771Z"
-            },
-            {
-                "_id": "67fdea5136446d624d83632a",
-                "title": "Selling Plans Ski Wax",
-                "channelProductId": "gid://shopify/Product/7856547266617",
-                "vendorId": "67fddfb2b8f800fa8b7221d0",
-                "sku": "selling-plans-ski-wax",
-                "description": "",
-                "media": [
-                    "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/snowboard_wax.png?v=1740639562",
-                    "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/wax-special.png?v=1740639562",
-                    "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/sample-normal-wax.png?v=1740639562"
+                createdAt: "2025-04-15T05:10:27.771Z",
+                updatedAt: "2025-04-15T05:10:27.771Z",
+              },
+              {
+                _id: "67fdea5136446d624d83632a",
+                title: "Selling Plans Ski Wax",
+                channelProductId: "gid://shopify/Product/7856547266617",
+                vendorId: "67fddfb2b8f800fa8b7221d0",
+                sku: "selling-plans-ski-wax",
+                description: "",
+                media: [
+                  "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/snowboard_wax.png?v=1740639562",
+                  "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/wax-special.png?v=1740639562",
+                  "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/sample-normal-wax.png?v=1740639562",
                 ],
-                "channelName": "shopify",
-                "category": [
-                    {
-                        "_id": "67db0a252d3f810c5588189a",
-                        "name": "category 1",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:09.650Z",
-                        "updatedAt": "2025-03-19T18:17:09.650Z"
-                    },
-                    {
-                        "_id": "67db0a2f2d3f810c558818a0",
-                        "name": "category 3",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:19.011Z",
-                        "updatedAt": "2025-03-19T18:17:19.011Z"
-                    },
-                    {
-                        "_id": "67db0a522d3f810c558818ab",
-                        "name": "category 1 sub(1)",
-                        "parentId": "67db0a252d3f810c5588189a",
-                        "createdAt": "2025-03-19T18:17:54.142Z",
-                        "updatedAt": "2025-03-19T18:17:54.142Z"
-                    },
-                    {
-                        "_id": "67db0a722d3f810c558818b4",
-                        "name": "category 3 sub(1)",
-                        "parentId": "67db0a2f2d3f810c558818a0",
-                        "createdAt": "2025-03-19T18:18:26.223Z",
-                        "updatedAt": "2025-03-19T18:18:26.223Z"
-                    }
+                channelName: "shopify",
+                category: [
+                  {
+                    _id: "67db0a252d3f810c5588189a",
+                    name: "category 1",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:09.650Z",
+                    updatedAt: "2025-03-19T18:17:09.650Z",
+                  },
+                  {
+                    _id: "67db0a2f2d3f810c558818a0",
+                    name: "category 3",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:19.011Z",
+                    updatedAt: "2025-03-19T18:17:19.011Z",
+                  },
+                  {
+                    _id: "67db0a522d3f810c558818ab",
+                    name: "category 1 sub(1)",
+                    parentId: "67db0a252d3f810c5588189a",
+                    createdAt: "2025-03-19T18:17:54.142Z",
+                    updatedAt: "2025-03-19T18:17:54.142Z",
+                  },
+                  {
+                    _id: "67db0a722d3f810c558818b4",
+                    name: "category 3 sub(1)",
+                    parentId: "67db0a2f2d3f810c558818a0",
+                    createdAt: "2025-03-19T18:18:26.223Z",
+                    updatedAt: "2025-03-19T18:18:26.223Z",
+                  },
                 ],
-                "tags": [
-                    "Accessory",
-                    "Sport",
-                    "Winter"
+                tags: ["Accessory", "Sport", "Winter"],
+                createdAt: "2025-04-15T05:10:41.436Z",
+                updatedAt: "2025-04-15T05:10:41.436Z",
+              },
+              {
+                _id: "67fdea6136446d624d836334",
+                title: "The Out of Stock Snowboard",
+                channelProductId: "gid://shopify/Product/7856547299385",
+                vendorId: "67fddfb2b8f800fa8b7221d0",
+                sku: "the-out-of-stock-snowboard",
+                description: "",
+                media: [
+                  "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_f44a9605-cd62-464d-b095-d45cdaa0d0d7.jpg?v=1740639562",
                 ],
-                "createdAt": "2025-04-15T05:10:41.436Z",
-                "updatedAt": "2025-04-15T05:10:41.436Z"
-            },
-            {
-                "_id": "67fdea6136446d624d836334",
-                "title": "The Out of Stock Snowboard",
-                "channelProductId": "gid://shopify/Product/7856547299385",
-                "vendorId": "67fddfb2b8f800fa8b7221d0",
-                "sku": "the-out-of-stock-snowboard",
-                "description": "",
-                "media": [
-                    "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_f44a9605-cd62-464d-b095-d45cdaa0d0d7.jpg?v=1740639562"
+                channelName: "shopify",
+                category: [
+                  {
+                    _id: "67db0a322d3f810c558818a3",
+                    name: "category 4",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:22.403Z",
+                    updatedAt: "2025-03-19T18:17:22.403Z",
+                  },
+                  {
+                    _id: "67db0a412d3f810c558818a6",
+                    name: "category 4 sub(1)",
+                    parentId: "67db0a322d3f810c558818a3",
+                    createdAt: "2025-03-19T18:17:37.581Z",
+                    updatedAt: "2025-03-19T18:17:37.581Z",
+                  },
                 ],
-                "channelName": "shopify",
-                "category": [
-                    {
-                        "_id": "67db0a322d3f810c558818a3",
-                        "name": "category 4",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:22.403Z",
-                        "updatedAt": "2025-03-19T18:17:22.403Z"
-                    },
-                    {
-                        "_id": "67db0a412d3f810c558818a6",
-                        "name": "category 4 sub(1)",
-                        "parentId": "67db0a322d3f810c558818a3",
-                        "createdAt": "2025-03-19T18:17:37.581Z",
-                        "updatedAt": "2025-03-19T18:17:37.581Z"
-                    }
+                tags: ["Accessory", "Sport", "Winter"],
+                createdAt: "2025-04-15T05:10:57.452Z",
+                updatedAt: "2025-04-15T05:10:57.452Z",
+              },
+              {
+                _id: "67fdf9c136446d624d836542",
+                title: "The Hidden Snowboard",
+                channelProductId: "gid://shopify/Product/7856547332153",
+                vendorId: "67fddfb2b8f800fa8b7221d0",
+                sku: "the-hidden-snowboard",
+                description: "",
+                media: [
+                  "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_c8ff0b5d-c712-429a-be00-b29bd55cbc9d.jpg?v=1740639562",
                 ],
-                "tags": [
-                    "Accessory",
-                    "Sport",
-                    "Winter"
+                channelName: "shopify",
+                category: [
+                  {
+                    _id: "67db0a252d3f810c5588189a",
+                    name: "category 1",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:09.650Z",
+                    updatedAt: "2025-03-19T18:17:09.650Z",
+                  },
+                  {
+                    _id: "67db0a522d3f810c558818ab",
+                    name: "category 1 sub(1)",
+                    parentId: "67db0a252d3f810c5588189a",
+                    createdAt: "2025-03-19T18:17:54.142Z",
+                    updatedAt: "2025-03-19T18:17:54.142Z",
+                  },
                 ],
-                "createdAt": "2025-04-15T05:10:57.452Z",
-                "updatedAt": "2025-04-15T05:10:57.452Z"
-            },
-            {
-                "_id": "67fdf9c136446d624d836542",
-                "title": "The Hidden Snowboard",
-                "channelProductId": "gid://shopify/Product/7856547332153",
-                "vendorId": "67fddfb2b8f800fa8b7221d0",
-                "sku": "the-hidden-snowboard",
-                "description": "",
-                "media": [
-                    "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_c8ff0b5d-c712-429a-be00-b29bd55cbc9d.jpg?v=1740639562"
+                tags: ["Premium", "Snow", "Snowboard", "Sport", "Winter"],
+                createdAt: "2025-04-15T06:16:33.352Z",
+                updatedAt: "2025-04-15T06:16:33.352Z",
+              },
+              {
+                _id: "6802843bc3b3ac185de07a0a",
+                title: "The Collection Snowboard: Hydrogen",
+                channelProductId: "gid://shopify/Product/7856547233849",
+                vendorId: "67fddfb2b8f800fa8b7221d0",
+                sku: "the-collection-snowboard-hydrogen",
+                description: "",
+                media: [
+                  "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_0a40b01b-5021-48c1-80d1-aa8ab4876d3d.jpg?v=1740639562",
                 ],
-                "channelName": "shopify",
-                "category": [
-                    {
-                        "_id": "67db0a252d3f810c5588189a",
-                        "name": "category 1",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:09.650Z",
-                        "updatedAt": "2025-03-19T18:17:09.650Z"
-                    },
-                    {
-                        "_id": "67db0a522d3f810c558818ab",
-                        "name": "category 1 sub(1)",
-                        "parentId": "67db0a252d3f810c5588189a",
-                        "createdAt": "2025-03-19T18:17:54.142Z",
-                        "updatedAt": "2025-03-19T18:17:54.142Z"
-                    }
+                channelName: "shopify",
+                category: [
+                  {
+                    _id: "67db0a252d3f810c5588189a",
+                    name: "category 1",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:09.650Z",
+                    updatedAt: "2025-03-19T18:17:09.650Z",
+                  },
+                  {
+                    _id: "67db0a2f2d3f810c558818a0",
+                    name: "category 3",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:19.011Z",
+                    updatedAt: "2025-03-19T18:17:19.011Z",
+                  },
+                  {
+                    _id: "67db0a522d3f810c558818ab",
+                    name: "category 1 sub(1)",
+                    parentId: "67db0a252d3f810c5588189a",
+                    createdAt: "2025-03-19T18:17:54.142Z",
+                    updatedAt: "2025-03-19T18:17:54.142Z",
+                  },
+                  {
+                    _id: "67db0a752d3f810c558818b7",
+                    name: "category 3 sub(2)",
+                    parentId: "67db0a2f2d3f810c558818a0",
+                    createdAt: "2025-03-19T18:18:29.015Z",
+                    updatedAt: "2025-03-19T18:18:29.015Z",
+                  },
                 ],
-                "tags": [
-                    "Premium",
-                    "Snow",
-                    "Snowboard",
-                    "Sport",
-                    "Winter"
+                tags: ["Accessory", "Sport", "Winter"],
+                createdAt: "2025-04-18T16:56:27.720Z",
+                updatedAt: "2025-04-18T16:56:27.720Z",
+              },
+              {
+                _id: "6805cd7cb0021a73fc9224fd",
+                title: "The 3p Fulfilled Snowboard",
+                channelProductId: "gid://shopify/Product/7856547397689",
+                vendorId: "67fddfb2b8f800fa8b7221d0",
+                sku: "the-3p-fulfilled-snowboard",
+                description: "",
+                media: [
+                  "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_b9e0da7f-db89-4d41-83f0-7f417b02831d.jpg?v=1740639562",
                 ],
-                "createdAt": "2025-04-15T06:16:33.352Z",
-                "updatedAt": "2025-04-15T06:16:33.352Z"
-            },
-            {
-                "_id": "6802843bc3b3ac185de07a0a",
-                "title": "The Collection Snowboard: Hydrogen",
-                "channelProductId": "gid://shopify/Product/7856547233849",
-                "vendorId": "67fddfb2b8f800fa8b7221d0",
-                "sku": "the-collection-snowboard-hydrogen",
-                "description": "",
-                "media": [
-                    "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_0a40b01b-5021-48c1-80d1-aa8ab4876d3d.jpg?v=1740639562"
+                channelName: "shopify",
+                category: [
+                  {
+                    _id: "67db0a252d3f810c5588189a",
+                    name: "category 1",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:09.650Z",
+                    updatedAt: "2025-03-19T18:17:09.650Z",
+                  },
+                  {
+                    _id: "67db0a2c2d3f810c5588189d",
+                    name: "category 2",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:16.624Z",
+                    updatedAt: "2025-03-19T18:17:16.624Z",
+                  },
+                  {
+                    _id: "67db0a5c2d3f810c558818ae",
+                    name: "category 2 sub(1)",
+                    parentId: "67db0a2c2d3f810c5588189d",
+                    createdAt: "2025-03-19T18:18:04.818Z",
+                    updatedAt: "2025-03-19T18:18:04.818Z",
+                  },
+                  {
+                    _id: "67db0a612d3f810c558818b1",
+                    name: "category 2 sub(2)",
+                    parentId: "67db0a2c2d3f810c5588189d",
+                    createdAt: "2025-03-19T18:18:09.657Z",
+                    updatedAt: "2025-03-19T18:18:09.657Z",
+                  },
                 ],
-                "channelName": "shopify",
-                "category": [
-                    {
-                        "_id": "67db0a252d3f810c5588189a",
-                        "name": "category 1",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:09.650Z",
-                        "updatedAt": "2025-03-19T18:17:09.650Z"
-                    },
-                    {
-                        "_id": "67db0a2f2d3f810c558818a0",
-                        "name": "category 3",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:19.011Z",
-                        "updatedAt": "2025-03-19T18:17:19.011Z"
-                    },
-                    {
-                        "_id": "67db0a522d3f810c558818ab",
-                        "name": "category 1 sub(1)",
-                        "parentId": "67db0a252d3f810c5588189a",
-                        "createdAt": "2025-03-19T18:17:54.142Z",
-                        "updatedAt": "2025-03-19T18:17:54.142Z"
-                    },
-                    {
-                        "_id": "67db0a752d3f810c558818b7",
-                        "name": "category 3 sub(2)",
-                        "parentId": "67db0a2f2d3f810c558818a0",
-                        "createdAt": "2025-03-19T18:18:29.015Z",
-                        "updatedAt": "2025-03-19T18:18:29.015Z"
-                    }
+                tags: ["Accessory", "Sport", "Winter"],
+                createdAt: "2025-04-21T04:45:48.503Z",
+                updatedAt: "2025-04-21T04:45:48.503Z",
+              },
+              {
+                _id: "6805e524b0021a73fc9226d4",
+                title: "The Multi-managed Snowboard",
+                channelProductId: "gid://shopify/Product/7856547430457",
+                vendorId: "67fddfb2b8f800fa8b7221d0",
+                sku: "the-multi-managed-snowboard",
+                description: "",
+                media: [
+                  "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_9129b69a-0c7b-4f66-b6cf-c4222f18028a.jpg?v=1740639562",
                 ],
-                "tags": [
-                    "Accessory",
-                    "Sport",
-                    "Winter"
+                channelName: "shopify",
+                category: [
+                  {
+                    _id: "67db0a252d3f810c5588189a",
+                    name: "category 1",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:09.650Z",
+                    updatedAt: "2025-03-19T18:17:09.650Z",
+                  },
+                  {
+                    _id: "67db0a2f2d3f810c558818a0",
+                    name: "category 3",
+                    parentId: null,
+                    createdAt: "2025-03-19T18:17:19.011Z",
+                    updatedAt: "2025-03-19T18:17:19.011Z",
+                  },
+                  {
+                    _id: "67db0a722d3f810c558818b4",
+                    name: "category 3 sub(1)",
+                    parentId: "67db0a2f2d3f810c558818a0",
+                    createdAt: "2025-03-19T18:18:26.223Z",
+                    updatedAt: "2025-03-19T18:18:26.223Z",
+                  },
+                  {
+                    _id: "67db0a752d3f810c558818b7",
+                    name: "category 3 sub(2)",
+                    parentId: "67db0a2f2d3f810c558818a0",
+                    createdAt: "2025-03-19T18:18:29.015Z",
+                    updatedAt: "2025-03-19T18:18:29.015Z",
+                  },
                 ],
-                "createdAt": "2025-04-18T16:56:27.720Z",
-                "updatedAt": "2025-04-18T16:56:27.720Z"
-            },
-            {
-                "_id": "6805cd7cb0021a73fc9224fd",
-                "title": "The 3p Fulfilled Snowboard",
-                "channelProductId": "gid://shopify/Product/7856547397689",
-                "vendorId": "67fddfb2b8f800fa8b7221d0",
-                "sku": "the-3p-fulfilled-snowboard",
-                "description": "",
-                "media": [
-                    "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_b9e0da7f-db89-4d41-83f0-7f417b02831d.jpg?v=1740639562"
-                ],
-                "channelName": "shopify",
-                "category": [
-                    {
-                        "_id": "67db0a252d3f810c5588189a",
-                        "name": "category 1",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:09.650Z",
-                        "updatedAt": "2025-03-19T18:17:09.650Z"
-                    },
-                    {
-                        "_id": "67db0a2c2d3f810c5588189d",
-                        "name": "category 2",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:16.624Z",
-                        "updatedAt": "2025-03-19T18:17:16.624Z"
-                    },
-                    {
-                        "_id": "67db0a5c2d3f810c558818ae",
-                        "name": "category 2 sub(1)",
-                        "parentId": "67db0a2c2d3f810c5588189d",
-                        "createdAt": "2025-03-19T18:18:04.818Z",
-                        "updatedAt": "2025-03-19T18:18:04.818Z"
-                    },
-                    {
-                        "_id": "67db0a612d3f810c558818b1",
-                        "name": "category 2 sub(2)",
-                        "parentId": "67db0a2c2d3f810c5588189d",
-                        "createdAt": "2025-03-19T18:18:09.657Z",
-                        "updatedAt": "2025-03-19T18:18:09.657Z"
-                    }
-                ],
-                "tags": [
-                    "Accessory",
-                    "Sport",
-                    "Winter"
-                ],
-                "createdAt": "2025-04-21T04:45:48.503Z",
-                "updatedAt": "2025-04-21T04:45:48.503Z"
-            },
-            {
-                "_id": "6805e524b0021a73fc9226d4",
-                "title": "The Multi-managed Snowboard",
-                "channelProductId": "gid://shopify/Product/7856547430457",
-                "vendorId": "67fddfb2b8f800fa8b7221d0",
-                "sku": "the-multi-managed-snowboard",
-                "description": "",
-                "media": [
-                    "https://cdn.shopify.com/s/files/1/0712/7996/8313/files/Main_9129b69a-0c7b-4f66-b6cf-c4222f18028a.jpg?v=1740639562"
-                ],
-                "channelName": "shopify",
-                "category": [
-                    {
-                        "_id": "67db0a252d3f810c5588189a",
-                        "name": "category 1",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:09.650Z",
-                        "updatedAt": "2025-03-19T18:17:09.650Z"
-                    },
-                    {
-                        "_id": "67db0a2f2d3f810c558818a0",
-                        "name": "category 3",
-                        "parentId": null,
-                        "createdAt": "2025-03-19T18:17:19.011Z",
-                        "updatedAt": "2025-03-19T18:17:19.011Z"
-                    },
-                    {
-                        "_id": "67db0a722d3f810c558818b4",
-                        "name": "category 3 sub(1)",
-                        "parentId": "67db0a2f2d3f810c558818a0",
-                        "createdAt": "2025-03-19T18:18:26.223Z",
-                        "updatedAt": "2025-03-19T18:18:26.223Z"
-                    },
-                    {
-                        "_id": "67db0a752d3f810c558818b7",
-                        "name": "category 3 sub(2)",
-                        "parentId": "67db0a2f2d3f810c558818a0",
-                        "createdAt": "2025-03-19T18:18:29.015Z",
-                        "updatedAt": "2025-03-19T18:18:29.015Z"
-                    }
-                ],
-                "tags": [
-                    "Premium",
-                    "Snow",
-                    "Snowboard",
-                    "Sport",
-                    "Winter"
-                ],
-                "createdAt": "2025-04-21T06:26:44.519Z",
-                "updatedAt": "2025-04-21T06:26:44.519Z"
-            }
-        ],
-        "count": 7
-    }}}
+                tags: ["Premium", "Snow", "Snowboard", "Sport", "Winter"],
+                createdAt: "2025-04-21T06:26:44.519Z",
+                updatedAt: "2025-04-21T06:26:44.519Z",
+              },
+            ],
+            count: 7,
+          },
+        },
+      };
       if (response.data.data?.data) {
         setProductList(
           response.data.data?.data.map((product: any) => {
@@ -605,7 +581,7 @@ export default function ProductList() {
   };
 
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+    <div className="p-4 rounded-lg flex flex-col gap-4 h-full w-full">
       {loading ? (
         <Loading />
       ) : (
@@ -659,13 +635,16 @@ export default function ProductList() {
           {internalLoading && <Loader />}
           {productList?.length > 0 ? (
             <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white p-4 rounded-[20px] max-h-screen overflow-auto">
-                  {productList.map((item: any, i) => (
-                    <div key={i} className="flex h-full w-full">
-                      <ProductCard item={item} productDetailLink="/product-detail"/>
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white p-4 rounded-[20px] max-h-screen overflow-auto">
+                {productList.map((item: any, i) => (
+                  <div key={i} className="flex h-full w-full">
+                    <ProductCard
+                      item={item}
+                      productDetailLink="/product-detail"
+                    />
+                  </div>
+                ))}
+              </div>
               {/* Pagination */}
               {totalPages > 1 && (
                 <TablePagination

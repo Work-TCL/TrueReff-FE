@@ -21,7 +21,7 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
       </div>
 
       {/* Title + Category */}
-      <div className="text-center mb-3">
+      <div className="text-left mb-3">
         <div className="text-lg font-semibold">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
@@ -39,13 +39,10 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
           />
         </div>
         {product.tags?.length > 0 && (
-          <div className="text-gray-500 text-sm mt-1">
-            {" "}
-            <TruncateWithToolTip
-              checkHorizontalOverflow={true}
-              linesToClamp={1}
-              text={`${translate("Tags")} : ${product.tags?.join(", ") || ""}`}
-            />
+          <div className="text-gray-500 text-sm mt-1 flex flex-wrap gap-2 mt-2">
+            {product.tags?.slice(0, 4).map((v) => (
+              <span className="bg-background py-1 px-2 rounded">#{v}</span>
+            ))}
           </div>
         )}
       </div>

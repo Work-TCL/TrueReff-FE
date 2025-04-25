@@ -116,7 +116,7 @@ const ProductCard = ({
       </div>
 
       {/* Info */}
-      <div className="mb-3 px-2 text-center">
+      <div className="mb-3 px-2 text-left">
         <div className="text-lg font-semibold">
           {" "}
           <TruncateWithToolTip
@@ -133,9 +133,6 @@ const ProductCard = ({
           />
         </div>
         <div className="text-gray-500 text-sm mt-1">
-          {translate("SKU")} : {product.sku}
-        </div>
-        <div className="text-gray-500 text-sm mt-1">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
             linesToClamp={1}
@@ -145,23 +142,21 @@ const ProductCard = ({
           />
         </div>
         {product.tags?.length > 0 && (
-          <div className="text-gray-500 text-sm mt-1">
-            {" "}
-            <TruncateWithToolTip
-              checkHorizontalOverflow={true}
-              linesToClamp={1}
-              text={`${translate("Tags")} : ${product.tags?.join(", ") || ""}`}
-            />
+          <div className="text-gray-500 text-sm mt-1 flex flex-wrap gap-2 mt-2">
+            {product.tags?.slice(0, 4).map((v) => (
+              <span className="bg-background py-1 px-2 rounded">#{v}</span>
+            ))}
           </div>
         )}
       </div>
 
       {/* Stats */}
-      <div className="flex justify-around text-center w-full pt-3 text-sm mb-3">
-        <div>
+      <div className="flex justify-around text-center w-full pt-3 text-sm mb-3 border-t">
+        <div className="">
           <div className="font-semibold">{product?.channelName || "-"}</div>
           <div className="text-gray-500">{translate("Channel")}</div>
         </div>
+        <div className="border-r" />
         <div>
           <div className="font-semibold">{product?.price || "-"}</div>
           <div className="text-gray-500">{translate("Price")}</div>
@@ -181,7 +176,7 @@ const ProductCard = ({
       {((status === "REQUESTED" &&
         product?.request?.requestFrom === "CREATOR") ||
         status === "SEND_REQUEST") && (
-        <div className="flex justify-around items-center text-center w-full border-t pt-3 text-sm mb-3">
+        <div className="flex justify-around items-center text-center w-full pt-3 text-sm border-t">
           {/* <div
           onClick={() => handleDetailView(product._id)}
           className="flex items-center gap-2 cursor-pointer"
@@ -199,7 +194,7 @@ const ProductCard = ({
               return (
                 <div
                   onClick={() => handleAction()}
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-2 cursor-pointer w-full border p-2 rounded-xl flex justify-center bg-background"
                 >
                   <ToolTip content="Cancel Request">
                     <XCircle
@@ -215,7 +210,7 @@ const ProductCard = ({
               return (
                 <div
                   onClick={() => handleAction()}
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-2 cursor-pointer w-full border p-2 rounded-xl flex justify-center bg-background"
                 >
                   <ToolTip content="Send Collaboration Request">
                     <UserPlus

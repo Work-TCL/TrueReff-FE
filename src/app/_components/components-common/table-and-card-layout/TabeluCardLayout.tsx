@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
-import { useCallback, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
@@ -21,7 +21,11 @@ interface ProductLayoutProps<T = ICommonItem> {
     pageSize: number
   ) => Promise<{ data: T[]; total: number }>;
   CardComponent: React.ComponentType<{ item: T }>;
-  TableComponent: React.ComponentType<{ data: T[] }>;
+  TableComponent: React.ComponentType<{
+    data: T[];
+    type?: "table" | "card";
+    CardComponent?: (item: any) => ReactElement;
+  }>;
   pageSize?: number;
   initialViewMode?: "table" | "card";
 }
@@ -58,7 +62,7 @@ export default function ProductLayout<T>({
   }, [currentPage]);
 
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full overflow-hidden">
+    <div className="p-4 rounded-lg flex flex-col gap-4 h-full ">
       <div className="flex justify-between items-center gap-2">
         <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full">
           <Input
@@ -92,15 +96,16 @@ export default function ProductLayout<T>({
 
       {loading && <Loading />}
 
-      {!loading && viewMode === "table" && <TableComponent data={items} />}
-      {!loading && viewMode === "card" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
-          {items.map((item: any, i) => (
-            <div key={i} className="flex h-full">
+      {!loading && (
+        <TableComponent
+          data={items}
+          type={viewMode}
+          CardComponent={(item) => (
+            <div key={item?._id} className="flex h-full">
               <CardComponent item={item} />
             </div>
-          ))}
-        </div>
+          )}
+        />
       )}
 
       {items?.length > 0 && (

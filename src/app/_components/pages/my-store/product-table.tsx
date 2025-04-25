@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
@@ -10,6 +10,8 @@ import { Eye, ImageOff, Info } from "lucide-react";
 import { IProduct } from "./list";
 import Button from "../../ui/button";
 import { Column, DynamicTable } from "../../components-common/dynamic-table";
+import DataTable from "../../components-common/data-table";
+import { ColumnDef } from "@tanstack/react-table";
 function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -21,49 +23,65 @@ function formatNumber(num: number = 0) {
 
 interface IProductTableProps {
   data: IProduct[];
+  type?: "table" | "card";
+  CardComponent?: (item: any) => ReactElement;
 }
 
-export default function BrandProductTable({ data }: IProductTableProps) {
+export default function BrandProductTable({
+  data,
+  type = "table",
+  CardComponent,
+}: IProductTableProps) {
   const router = useRouter();
-  const columns: Column<IProduct>[] = [
+  const columns: ColumnDef<IProduct>[] = [
     {
-      key: "image",
-      label: "Product_Image",
-      render: (product) =>
-        product.media?.[0] ? (
+      accessorKey: "media",
+      header: "Product_Image",
+      cell: ({ row }) => {
+        const product = row.original;
+        return product.media?.[0] ? (
           <Avatar className="w-8 h-8">
             <AvatarImage src={product.media[0]} alt={product.title} />
           </Avatar>
         ) : (
           <ImageOff className="w-6 h-6 text-gray-400" />
-        ),
-      className: "w-1/6",
+        );
+      },
     },
-    { key: "title", label: "Product_Name", className: "w-1/4" },
-    { key: "categories", label: "Category", className: "w-1/4" },
-    { key: "tag", label: "Tags", className: "w-1/8" },
     {
-      key: "action",
-      label: "Action",
-      className: "w-1/6 text-center",
-      render: (product) => (
-        <Button
-          className="whitespace-nowrap w-[150px] bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm"
-          onClick={() => router.push(`/creator/my-store/${product._id}`)}
-        >
-          {translate("Collaborate_Now")}
-        </Button>
-      ),
+      accessorKey: "title",
+      header: "Product_Name",
+    },
+    {
+      accessorKey: "categories",
+      header: "Category",
+    },
+    {
+      accessorKey: "tag",
+      header: "Tags",
+    },
+    {
+      id: "action", // Use `id` for non-accessor columns
+      header: "Action",
+      cell: ({ row }) => {
+        const product = row.original;
+        return (
+          <Button
+            className="whitespace-nowrap w-[150px] bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm"
+            onClick={() => router.push(`/creator/my-store/${product._id}`)}
+          >
+            {translate("Collaborate_Now")}
+          </Button>
+        );
+      },
     },
   ];
   return (
-    <DynamicTable
+    <DataTable
       columns={columns}
-      data={[...data, ...data]}
-      emptyText={{
-        title: translate("No_Products_Available_Title"),
-        description: translate("No_Products_Available_Description"),
-      }}
+      data={data}
+      type={type}
+      CardComponent={(item) => (CardComponent ? CardComponent(item) : <></>)}
     />
   );
 }

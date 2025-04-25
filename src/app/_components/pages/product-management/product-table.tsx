@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
@@ -17,12 +17,18 @@ import axios from "@/lib/web-api/axios";
 import Loader from "../../components-common/layout/loader";
 import ToolTip from "../../components-common/tool-tip";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { ColumnDef } from "@tanstack/react-table";
+import DataTable from "../../components-common/data-table";
 interface IProductTableProps {
   data: IProduct[];
+  type?: "table" | "card";
+  CardComponent?: (item: any) => ReactElement;
   handleUpdateProduct: () => void;
 }
 export default function ProductTable({
   data,
+  type = "table",
+  CardComponent,
   handleUpdateProduct,
 }: IProductTableProps) {
   const router = useRouter();
@@ -128,183 +134,190 @@ export default function ProductTable({
       handleSendRequest(product);
     }
   };
-  return (
-    <div className="overflow-auto">
-      {loading && <Loader />}
-      <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-        <TableHeader className="bg-stroke">
-          <TableRow>
-            <CustomTableHead className="w-1/9">
-              {translate("Product_Name")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Description")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Brand_Name")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Category")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Sub_category")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Tags")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9 text-center">
-              {translate("Status")}
-            </CustomTableHead>
-            {/* <CustomTableHead className="w-1/9 text-center">
-              {translate("View")}
-            </CustomTableHead> */}
-            <CustomTableHead className="w-1/9 text-center">
-              {translate("Action")}
-            </CustomTableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((product: IProduct, index: number) => {
-            const status = getRequestStatus(product);
-            return (
-              <TableRow key={index} className="bg-white hover:bg-gray-100">
-                <CustomTableCell>
-                  <span
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => handleDetailView(product._id)}
-                  >
-                    {product.media?.length > 0 && product.media[0] ? (
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage src={product.media[0]} />
-                      </Avatar>
-                    ) : (
-                      <ImageOff className="w-6 h-6 text-gray-400" />
-                    )}
-                    <TruncateWithToolTip
-                      checkHorizontalOverflow={false}
-                      linesToClamp={2}
-                      text={product.title ?? ""}
-                    />
-                  </span>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={product?.description ?? ""}
-                  />
-                </CustomTableCell>
-                <CustomTableCell>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() =>
-                      router.push(`/vendor/profile/${product?.vendor?._id}`)
-                    }
-                  >
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage
-                        className={
-                          product?.vendor?.profile_image ? "" : "opacity-50"
-                        }
-                        src={
-                          product?.vendor?.profile_image
-                            ? product?.vendor?.profile_image
-                            : "/assets/profile/profile-image.png"
-                        }
+
+  const productColumns: ColumnDef<IProduct>[] = [
+    {
+      accessorKey: "title",
+      header: () => translate("Product_Name"),
+      cell: ({ row }) => {
+        const product = row.original;
+        return (
+          <span
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => handleDetailView(product._id)}
+          >
+            {product.media?.length > 0 && product.media[0] ? (
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={product.media[0]} />
+              </Avatar>
+            ) : (
+              <ImageOff className="w-6 h-6 text-gray-400" />
+            )}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={product.title ?? ""}
+            />
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "description",
+      header: () => translate("Description"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.description ?? ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "vendor.business_name",
+      header: () => translate("Brand_Name"),
+      cell: ({ row }) => {
+        const vendor = row.original.vendor;
+        return (
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push(`/vendor/profile/${vendor?._id}`)}
+          >
+            <Avatar className="w-8 h-8">
+              <AvatarImage
+                className={vendor?.profile_image ? "" : "opacity-50"}
+                src={
+                  vendor?.profile_image
+                    ? vendor.profile_image
+                    : "/assets/profile/profile-image.png"
+                }
+              />
+            </Avatar>
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={vendor?.business_name ?? ""}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "categories",
+      header: () => translate("Category"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.categories ?? ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "subCategories",
+      header: () => translate("Sub_category"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.subCategories ?? ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "tag",
+      header: () => translate("Tags"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.tag ?? ""}
+        />
+      ),
+    },
+    {
+      id: "status",
+      header: () => (
+        <div className="flex justify-center mx-auto">{translate("Status")}</div>
+      ),
+      cell: ({ row }) => {
+        const product = row.original;
+        const status = getRequestStatus(product);
+        if (
+          status === "REJECTED" ||
+          (status === "REQUESTED" &&
+            product?.request?.requestFrom === "CREATOR")
+        ) {
+          return (
+            <div className="flex justify-center text-nowrap">
+              <StatusBadge status={status} />
+            </div>
+          );
+        }
+        return null;
+      },
+    },
+    {
+      id: "action",
+      header: () => (
+        <div className="flex justify-center mx-auto">{translate("Action")}</div>
+      ),
+      cell: ({ row }) => {
+        const product = row.original;
+        const status = getRequestStatus(product);
+        return (
+          <div className="flex justify-center mx-auto">
+            {
+              {
+                REQUESTED: {
+                  CREATOR: (
+                    <ToolTip content="Cancel Request" delayDuration={1000}>
+                      <XCircle
+                        strokeWidth={1.5}
+                        className="cursor-pointer"
+                        size={25}
+                        color="#ef4444"
+                        onClick={() => handleAction(status, product)}
                       />
-                    </Avatar>
-                    <TruncateWithToolTip
-                      checkHorizontalOverflow={false}
-                      linesToClamp={2}
-                      text={product?.vendor?.business_name ?? ""}
-                    />
-                  </div>
-                </CustomTableCell>
-                <CustomTableCell>
-                  {" "}
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={product?.categories ?? ""}
-                  />
-                </CustomTableCell>
-                <CustomTableCell>
-                  {" "}
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={product?.subCategories ?? ""}
-                  />
-                </CustomTableCell>
-                <CustomTableCell>
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={product.tag ?? ""}
-                  />
-                </CustomTableCell>
-                <CustomTableCell className="flex justify-center">
-                  {status === "REJECTED" ||
-                  (status === "REQUESTED" &&
-                    product?.request?.requestFrom === "CREATOR") ? (
-                    <StatusBadge status={status} />
-                  ) : null}
-                </CustomTableCell>
-                {/* <CustomTableCell className="flex justify-center">
-                  <ToolTip content="View Product" delayDuration={1000}>
-                    <Eye
+                    </ToolTip>
+                  ),
+                  VENDOR: null,
+                }[product?.request?.requestFrom ?? ""],
+                SEND_REQUEST: (
+                  <ToolTip
+                    content="Send Collaboration Request"
+                    delayDuration={1000}
+                  >
+                    <UserPlus
                       strokeWidth={1.5}
-                      color="#FF4979"
-                      className=" cursor-pointer"
-                      onClick={() => handleDetailView(product._id)}
+                      color="#3b82f680"
+                      className="cursor-pointer"
+                      onClick={() => handleAction(status, product)}
                       size={25}
                     />
                   </ToolTip>
-                </CustomTableCell> */}
-                <CustomTableCell className="flex justify-center">
-                  <span className="flex justify-center">
-                    {
-                      {
-                        REQUESTED: {
-                          CREATOR: (
-                            <ToolTip
-                              content="Cancel Request"
-                              delayDuration={1000}
-                            >
-                              <XCircle
-                                strokeWidth={1.5}
-                                className="cursor-pointer"
-                                size={25}
-                                color="#ef4444"
-                                onClick={() => handleAction(status, product)}
-                              />
-                            </ToolTip>
-                          ),
-                          VENDOR: null,
-                        }[product?.request?.requestFrom ?? ""],
-                        SEND_REQUEST: (
-                          <ToolTip
-                            content="Send Collaboration Request"
-                            delayDuration={1000}
-                          >
-                            <UserPlus
-                              strokeWidth={1.5}
-                              color="#3b82f680"
-                              className="cursor-pointer"
-                              onClick={() => handleAction(status, product)}
-                              size={25}
-                            />
-                          </ToolTip>
-                        ),
-                      }[status]
-                    }
-                  </span>
-                </CustomTableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                ),
+              }[status]
+            }
+          </div>
+        );
+      },
+    },
+  ];
+
+  return (
+    <div className="overflow-auto">
+      {loading && <Loader />}
+      {!loading && (
+        <DataTable
+          columns={productColumns}
+          data={data}
+          type={type}
+          CardComponent={(item) =>
+            CardComponent ? CardComponent(item) : <></>
+          }
+        />
+      )}
       {isOpen && (
         <CancelRequest
           onClose={() => setIsOpen("")}

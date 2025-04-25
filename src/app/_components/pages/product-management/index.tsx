@@ -320,25 +320,20 @@ export default function ProductList() {
           {internalLoader && <Loader />}
           {products?.length > 0 ? (
             <>
-              {viewMode === "table" && (
-                <ProductTable
-                  data={products}
-                  handleUpdateProduct={handleUpdateProduct}
-                />
-              )}
-              {viewMode === "card" && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 p-2 md:p-4 bg-white rounded-[20px] overflow-auto">
-                  {products.map((product: any, i) => (
-                    <div key={i} className="flex w-full h-full">
-                      <ProductCard
-                        key={i}
-                        item={product}
-                        handleUpdateProduct={handleUpdateProduct}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+              <ProductTable
+                data={products}
+                handleUpdateProduct={handleUpdateProduct}
+                type={viewMode}
+                CardComponent={(item) => (
+                  <div key={item} className="flex w-full h-full">
+                    <ProductCard
+                      key={item?.id}
+                      item={item}
+                      handleUpdateProduct={handleUpdateProduct}
+                    />
+                  </div>
+                )}
+              />
 
               {/* Pagination */}
               {totalPages > 1 && (

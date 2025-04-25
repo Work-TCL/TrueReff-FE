@@ -25,6 +25,7 @@ import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
 import axios from "@/lib/web-api/axios";
 import LoadingPage from "@/lib/components/loading-page";
+import Loading from "@/app/vendor/loading";
 
 interface ICategory {
   _id: string;
@@ -305,62 +306,69 @@ export default function ViewProductDetail() {
   };
 
   return (
-    <div className="flex flex-col w-full p-3 md:p-6 gap-4">
-      {loading ? <LoadingPage /> : <>
-      {/* Breadcrumb and Button */}
-      <div className="flex md:flex-row items-center justify-between md:items-center gap-2">
-        <Breadcrumb>
-          <BreadcrumbList className="md:text-sm text-xs">
-            <BreadcrumbItem>
-              <BreadcrumbPage
-                className="cursor-pointer hover:text-[grey] hover:underline"
-                onClick={() =>
-                  router.push(
-                    creator?.creatorId
-                      ? pathName.includes("/product-management")
-                        ? `/creator/product-management`
-                        : `/creator/brandsList/${params.id}`
-                      : channelType
-                      ? `/vendor/products/${channelType}`
-                      : `/vendor/products`
-                  )
+    <div className="flex flex-col w-full p-3 md:p-6 gap-4 h-full">
+      {loading ? (
+        <Loading height="fit" />
+      ) : (
+        <>
+          {/* Breadcrumb and Button */}
+          <div className="flex md:flex-row items-center justify-between md:items-center gap-2">
+            <Breadcrumb>
+              <BreadcrumbList className="md:text-sm text-xs">
+                <BreadcrumbItem>
+                  <BreadcrumbPage
+                    className="cursor-pointer hover:text-[grey] hover:underline"
+                    onClick={() =>
+                      router.push(
+                        creator?.creatorId
+                          ? pathName.includes("/product-management")
+                            ? `/creator/product-management`
+                            : `/creator/brandsList/${params.id}`
+                          : channelType
+                          ? `/vendor/products/${channelType}`
+                          : `/vendor/products`
+                      )
+                    }
+                  >
+                    {translate("Product_List")}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="md:size-6 size-4" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className={`cursor-pointer`}>
+                    {translate("View_Product")}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            {(creator?.creatorId || creatorId) && (
+              <Button
+                disabled={
+                  collaborationStatus === "REQUESTED" ||
+                  collaborationStatus === "REJECTED"
                 }
+                variant="secondary"
+                className={`${buttonColor[collaborationStatus]} text-white`}
+                onClick={() => handleButtonClick(collaborationStatus)}
               >
-                {translate("Product_List")}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="md:size-6 size-4" />
-            <BreadcrumbItem>
-              <BreadcrumbPage className={`cursor-pointer`}>
-                {translate("View_Product")}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        {(creator?.creatorId || creatorId) && (
-          <Button
-            disabled={
-              collaborationStatus === "REQUESTED" ||
-              collaborationStatus === "REJECTED"
-            }
-            variant="secondary"
-            className={`${buttonColor[collaborationStatus]} text-white`}
-            onClick={() => handleButtonClick(collaborationStatus)}
-          >
-            {statusText[collaborationStatus]}
-          </Button>
-        )}
-      </div>
-
-      {/* Card Section */}
-      <Card className="bg-white rounded-lg overflow-auto">
-        <CardContent className=" p-3 md:p-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <ProductImageGallery images={productData?.images} />
-            <ProductInfo productData={productData} />
+                {statusText[collaborationStatus]}
+              </Button>
+            )}
           </div>
-        </CardContent>
-      </Card></>}
+
+          {/* Card Section */}
+          <Card className="bg-white rounded-lg overflow-auto">
+            <CardContent className=" p-3 md:p-6">
+              <div className="grid grid-cols-3 gap-4">
+                <ProductImageGallery images={productData?.images} />
+                <div className="col-span-2">
+                  <ProductInfo productData={productData} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      )}
     </div>
   );
 }
