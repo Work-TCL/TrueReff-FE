@@ -37,7 +37,9 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
       pathname.startsWith("/_next") || // Next.js internals
       pathname.startsWith("/api") || // API routes
       pathname.startsWith("/public") || // Public assets
-      match(USER_PUBLIC_ROUTES, request) // Allow public routes
+      pathname.startsWith("/store") ||  // Allow store
+      pathname.startsWith("/product-detail") ||   // Allow product detail
+      pathname.startsWith("/creators")   // Allow creators
     ) {
       return next(request);
     }

@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
-import CreatorStore from "../main";
 import Loader from "@/app/_components/components-common/layout/loader";
+import PublicCreatorStore from "./main";
 
 export  default function CreatorStorePage(){
-    return <Suspense fallback={<Loader/>}><CreatorStore/></Suspense>
+    return <Suspense fallback={<Loader/>}><PublicCreatorStore/></Suspense>
 }
