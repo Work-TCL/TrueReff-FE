@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import InfluencerProfile from "./InfluencerProfile";
 import CollabsWithCompanies from "./CollabsWithCompanies";
-import ProfileCompletionCard from "../../components-common/charts/profileComplete";
 import TopVideosCraetor from "../../components-common/tables/topVideos";
 import TopViewAcrossPlatforms from "../../components-common/charts/topViewAcrossPlatforms";
 import { useParams } from "next/navigation";
@@ -44,7 +43,7 @@ export default function CreatorProfile() {
           categories={[...creatorData.category.map((v: any) => v.name)]}
         />
         <div className="flex flex-col gap-5">
-          {creator?.creatorId === creatorData?.creatorId && <ProfileCompletionCard progress={60} />}
+          {/* {creator?.creatorId === creatorData?.creatorId <ProfileCompletionCard progress={60} />} */}
           <CollabsWithCompanies />
         </div>
       </div>

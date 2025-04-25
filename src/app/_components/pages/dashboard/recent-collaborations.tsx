@@ -69,7 +69,7 @@ export default function RecentCollaborations() {
                                 },
                             };
                         });
-                        // setCollaborations([...result]);
+                        setCollaborations([...result]);
                     } else {
                         setCollaborations([]);
                     }

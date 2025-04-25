@@ -11,7 +11,7 @@ import { translate } from "@/lib/utils/translate";
 
 export default function CollabsWithCompanies() {
   return (
-    <Card className="rounded-[20px] p-6 bg-white border-0 shadow-none">
+    <Card className="rounded-[20px] p-6 bg-white border-0 shadow-none flex-1">
       {/* Header Section */}
       <div className="flex justify-between items-center">
         <h2 className="sm:text-xl text-base font-medium text-text">
@@ -57,6 +57,20 @@ export default function CollabsWithCompanies() {
         <StatCard name="Nike" value="1,1K" growth="+3.4%" color="purple" />
         <StatCard name="Puma" value="2,3K" growth="+11.4%" color="light-blue" />
         <StatCard name="Adidas" value="1,6K" growth="+7.0%" color="orange" />
+        <StatCard
+          name="Jockey"
+          value="1,5K"
+          growth="-1.4%"
+          color="blue"
+          isNegative
+        />
+        <StatCard
+          name="Zudio"
+          value="1,5K"
+          growth="-1.4%"
+          color="blue"
+          isNegative
+        />
         <StatCard
           name="Others"
           value="1,5K"

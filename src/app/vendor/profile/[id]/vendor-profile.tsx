@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { useCreatorStore } from "@/lib/store/creator";
 import Loader from "@/app/_components/components-common/layout/loader";
 import InfluencerProfile from "@/app/_components/pages/creator-profile/InfluencerProfile";
-import ProfileCompletionCard from "@/app/_components/components-common/charts/profileComplete";
 import CollabsWithCompanies from "@/app/_components/pages/creator-profile/CollabsWithCompanies";
 import TopVideosCraetor from "@/app/_components/components-common/tables/topVideos";
 import TopViewAcrossPlatforms from "@/app/_components/components-common/charts/topViewAcrossPlatforms";
@@ -45,7 +43,7 @@ export default function VendorProfile() {
           tags={vendorData.omni_channels}
         />
         <div className="flex flex-col gap-5">
-          <ProfileCompletionCard progress={60} />
+          {/* <ProfileCompletionCard progress={60} /> */}
           <CollabsWithCompanies />
         </div>
       </div>
