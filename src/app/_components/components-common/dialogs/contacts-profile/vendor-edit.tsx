@@ -94,11 +94,11 @@ export default function EditContactVendorForm({
               label={translate("Set_as_default_address")}
               name="isDefault"
               type="checkbox"
-              className=""
+              className="items-center gap-2"
             />
           </div>
 
-          <div className="py-6 col-span-2 sticky bottom-0 bg-white">
+          <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
               {translate("Save")}
             </Button>

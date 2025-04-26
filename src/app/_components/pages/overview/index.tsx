@@ -47,7 +47,7 @@ export default function Overview() {
   return (
     <div className="flex flex-col gap-4 md:p-6 p-4  w-full">
       {mainLoading && <Loading />}
-      <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 gap-4 rounded-[20px] w-full">
+      <div className="grid grid-cols-1 2xl:grid-cols-5 md:grid-cols-3 gap-4 rounded-[20px] w-full">
         <StatsCard
           title={translate("Active_Collaborations")}
           value={statesInfo?.activeCollaborations}
@@ -88,19 +88,19 @@ export default function Overview() {
         {/* Row 1: SalesChart + DonutChart and MostSellingBrands */}
         <div className="flex flex-col xl:flex-row gap-4 items-stretch w-full">
           {/* Left block: SalesChart + DonutChart (in column) */}
-          <div className="flex flex-col gap-4 xl:w-3/4 w-full h-full">
+          <div className="flex flex-col gap-4 xl:w-[60%] w-full h-full">
             <div className="flex flex-col md:flex-row gap-4 h-full items-stretch">
-              <div className="flex-1 flex">
+              <div className="flex xl:w-[65%] w-full">
                 <SalesChart />
               </div>
-              <div className="flex-1 flex">
+              <div className="flex xl:w-[35%] w-full">
                 <DonutChart />
               </div>
             </div>
           </div>
 
           {/* Right block: MostSellingBrands */}
-          <div className="xl:w-1/4 w-full flex">
+          <div className="flex-1 w-full flex">
             <MostSellingBrands />
           </div>
         </div>

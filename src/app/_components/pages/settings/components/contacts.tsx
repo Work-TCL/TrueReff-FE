@@ -9,16 +9,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import ConfirmDialog from "./confirmDialog";
 
 export default function ContactsProfile(props: any) {
   const [isOpen, setIsOpen] = useState<any>(false);
   const [contacts, setContacts] = useState<any[]>([...(props?.contacts || [])]);
   const [currentContact, setCurrentContact] = useState<any>(null);
+  const [showConfirm, setShowConfirm] = useState(false); // <-- new
+  const [selectedDeleteIndex, setSelectedDeleteIndex] = useState<number | null>(
+    null
+  );
 
   const handleRemoveContact = async (index: number) => {
     try {
       let response: any = await axios.delete(`/auth/vendor/contact/${index}`);
-
       if (response?.status === 200) {
         toast.success(response?.data?.message);
         props.refreshCentral && props.refreshCentral();
@@ -28,12 +32,24 @@ export default function ContactsProfile(props: any) {
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
-    } finally {
     }
   };
 
   const handleEditContact = async (index: number) => {
     setCurrentContact(index);
+  };
+
+  const confirmRemove = (index: number) => {
+    setSelectedDeleteIndex(index);
+    setShowConfirm(true);
+  };
+
+  const handleConfirmRemove = async () => {
+    if (selectedDeleteIndex !== null) {
+      await handleRemoveContact(selectedDeleteIndex);
+      setSelectedDeleteIndex(null);
+      setShowConfirm(false);
+    }
   };
 
   useEffect(() => {
@@ -83,7 +99,7 @@ export default function ContactsProfile(props: any) {
               </div>
               <div className="flex gap-4 mt-2 xl:mt-2">
                 <Button
-                  onClick={() => handleRemoveContact(index)}
+                  onClick={() => confirmRemove(index)}
                   className="w-24 h-10 rounded-xl border border-gray-300 bg-white text-black"
                 >
                   {removeText}
@@ -102,6 +118,18 @@ export default function ContactsProfile(props: any) {
           );
         })}
       </div>
+      {showConfirm && (
+        <ConfirmDialog
+          open={showConfirm}
+          description="Are you sure you want to remove this contact?"
+          warning="Note: This action cannot be undone."
+          onClose={() => {
+            setShowConfirm(false);
+            setSelectedDeleteIndex(null);
+          }}
+          onConfirm={handleConfirmRemove}
+        />
+      )}
       <EditContactProfile
         open={isOpen}
         contact={currentContact !== null && contacts[currentContact]}

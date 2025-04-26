@@ -144,7 +144,7 @@ export default function BargainingView() {
         </Breadcrumb>
       </div>
       <div className="flex md:flex-row flex-col-reverse h-full gap-4 overflow-hidden">
-        <Card className="bg-white rounded-lg md:w-[40%] w-full overflow-hidden">
+        <Card className="bg-white rounded-lg md:w-[50%] w-full overflow-hidden">
           <CardContent className="overflow-hidden h-full">
             <BargainingDetailView />
             {/* <BargainingDetailView collaborationData={collaborationData} /> */}

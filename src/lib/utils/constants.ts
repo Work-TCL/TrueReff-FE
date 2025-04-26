@@ -83,7 +83,7 @@ export const statusMessage: { [key: string]: string } = {
   REJECTED: "Request Rejected",
   LIVE: "Collaboration Live",
   EXPIRED: "Collaboration Expired",
-  REQUESTED_CREATOR_TO_VENDOR: "Creator invited",
+  REQUESTED_CREATOR_TO_VENDOR: "Creator Requested",
 REQUESTED_VENDOR_TO_CREATOR: "Requested creator",
 REQUESTED_CREATOR_FROM_VENDOR: "Requested vendor",
 REQUESTED_VENDOR_FROM_CREATOR: "Vendor invited",

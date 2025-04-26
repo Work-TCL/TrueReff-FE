@@ -153,6 +153,9 @@ export default function EditVendorForm({
               className="flex justify-center items-center border rounded-lg p-5"
               onDrop={handleDropImage}
               onDragOver={(e) => e.preventDefault()}
+              onClick={() => {
+                document.getElementById("profile-image")?.click();
+              }}
             >
               <div className="flex flex-col w-full gap-4">
                 <div className="flex justify-center">
@@ -168,7 +171,7 @@ export default function EditVendorForm({
                   accept="image/*"
                   onChange={(e) => handleImageSelect(e)}
                 />
-                <Button
+                {/* <Button
                   type="button"
                   className="w-full disabled:cursor-not-allowed"
                   onClick={() => {
@@ -176,11 +179,11 @@ export default function EditVendorForm({
                   }}
                 >
                   {translate("Upload_your_photo")}
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
-          <div className="py-6 col-span-2 sticky bottom-0 bg-white">
+          <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
               Save
             </Button>
