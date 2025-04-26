@@ -1,151 +1,151 @@
 "use client";
-import React, { useState } from "react";
-import { translate } from "@/lib/utils/translate";
-import { useVendorStore } from "@/lib/store/vendor";
+import React, { useState, useEffect } from "react";
 import Button from "@/app/_components/ui/button";
-import UtmLinkForm from "../../components-common/dialogs/utm-link";
 
-export default function BargainingDetailView({ productData }: any) {
-  const { vendor } = useVendorStore();
-  const [isUTMView, setIsUTMView] = useState<boolean>(false);
+export default function BargainingDetailView() {
+  // Bargaining state
+  const [vendorProposal, setVendorProposal] = useState<number | "">("");
+  const [creatorProposal, setCreatorProposal] = useState<number | "">("");
+  const [finalAgreedAmount, setFinalAgreedAmount] = useState<number | "">("");
 
-  const openUtmForm = () => {
-    setIsUTMView((prev) => !prev);
+  // Discount section state
+  const [discountType, setDiscountType] = useState<string>("PERCENTAGE");
+  const [discountValue, setDiscountValue] = useState<number | "">("");
+  const [couponCode, setCouponCode] = useState<string>("");
+  const [startAt, setStartAt] = useState<string>("");
+  const [expiresAt, setExpiresAt] = useState<string>("");
+
+  // Update finalAgreedAmount automatically on latest vendor or creator input
+  useEffect(() => {
+    if (vendorProposal !== "") {
+      setFinalAgreedAmount(vendorProposal);
+    } else if (creatorProposal !== "") {
+      setFinalAgreedAmount(creatorProposal);
+    }
+  }, [vendorProposal, creatorProposal]);
+
+  // Lock Proposal button click
+  const handleLockProposal = () => {
+    // Here you can trigger API call to save the proposal
+    console.log({
+      vendorProposal,
+      creatorProposal,
+      finalAgreedAmount,
+      discountType,
+      discountValue,
+      couponCode,
+      startAt,
+      expiresAt,
+    });
+    alert("Proposal Locked Successfully!");
   };
-  return (
-    <div className="flex flex-col gap-5 overflow-hidden h-full">
-      <div className="flex flex-col gap-5">
-        <p className="text-text font-medium text-sm">
-          {translate("Product_Image")}
-        </p>
-        <div className="flex flex-col gap-3">
-          <div className="grid grid-cols-3 gap-3 overflow-auto max-h-[210px] pr-2">
-            {productData?.images?.length > 0 &&
-              productData?.images.map((img: string, index: number) => (
-                <div
-                  key={index}
-                  className="border border-border rounded-2xl p-2"
-                >
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`Thumbnail ${index}`}
-                    width={200}
-                    height={185}
-                    className="rounded-md object-contain w-full h-full"
-                  />
-                </div>
-              ))}
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-1 flex-col gap-5 overflow-auto pr-3">
-        <p className="text-text font-medium text-sm">
-          {translate("General_Information")}
-        </p>
-        <div className="grid grid-cols-1 gap-4">
-          <div className="flex flex-col w-full gap-1">
-            <label className="text-sm text-font-grey">
-              {translate("Product_Name")}
-            </label>
-            <input
-              name="product_name"
-              className="p-2 border text-sm rounded-md w-full"
-              value={productData?.name}
-              disabled
-            />
-          </div>
-          <div className="flex flex-col w-full gap-1">
-            <label className="text-sm text-font-grey">
-              {translate("Product_Category")}
-            </label>
-            <input
-              className="p-2 text-sm border rounded-md w-full"
-              value={productData?.category}
-              disabled
-            />
-          </div>
-          <div className="flex flex-col w-full gap-1">
-            <label className="text-sm text-font-grey">
-              {translate("Product_Tags")}
-            </label>
-            <input
-              className="p-2 text-sm border rounded-md w-full"
-              value={productData?.tags?.join(", ")}
-              disabled
-            />
-          </div>
-        </div>
-        <div className="flex flex-col w-full gap-1">
-          <label className="text-sm text-font-grey">
-            {translate("Description")}
-          </label>
-          <textarea
-            rows={4}
-            className="p-2 text-sm border rounded-md w-full"
-            value={productData?.description}
-            disabled
-          />
-        </div>
-        <div className="flex h-[45%] flex-col w-full items-start gap-3">
-          <div className="flex w-full flex-1 flex-col gap-3">
-            <p className="flex text-font-grey md:text-base text-sm">
-              <span className="w-[53%]">Base Price:</span>{" "}
-              <span className="md:text-lg text-base font-normal text-text">
-                ${productData?.price}
-              </span>
-            </p>
 
-            <p className="flex text-font-grey md:text-base text-sm">
-              <span className="w-[53%]">{translate("Discount_Type")}: </span>{" "}
-              <span className="md:text-lg text-base font-normal text-text">
-                {translate("No_discount")}{" "}
-              </span>
-            </p>
-            <p className="flex text-font-grey md:text-base text-sm">
-              <span className="w-[53%]">{translate("Discount_Type")}: </span>{" "}
-              <span className="md:text-lg text-base font-normal text-text">
-                0
-              </span>
-            </p>
-            <p className="flex text-font-grey md:text-base text-sm">
-              <span className="w-[53%]"> {translate("Tax_Class")}: </span>{" "}
-              <span className="md:text-lg text-base font-normal text-text">
-                {translate("Tax_Free")}
-              </span>
-            </p>
-            <p className="flex text-font-grey md:text-base text-sm">
-              <span className="w-[53%]">{translate("VAT_Amount")}:</span>{" "}
-              <span className="md:text-lg text-base font-normal text-text">
-                12%
-              </span>
-            </p>
+  return (
+    <div className="flex flex-col gap-8 p-4 overflow-auto h-full">
+      {/* Bargaining Section */}
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-semibold">Bargaining Section</h2>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-font-grey">Your Suggestion (Vendor Proposal)</label>
+            <input
+              type="number"
+              className="p-2 border text-sm rounded-md w-full"
+              value={vendorProposal}
+              onChange={(e) => setVendorProposal(Number(e.target.value))}
+              placeholder="Enter Vendor Proposal"
+            />
           </div>
-          <div className="flex w-full flex-1 flex-col gap-3">
-            <p className="flex text-font-grey md:text-base text-sm">
-              <span className="w-[53%]">{translate("Variation")}: </span>{" "}
-              <span className="md:text-lg text-base font-normal text-text">
-                Rose Gold
-              </span>
-            </p>
-            <p className="flex text-font-grey md:text-base text-sm">
-              <span className="w-[53%]">{translate("Variation_Type")}: </span>{" "}
-              <span className="md:text-lg text-base font-normal text-text">
-                Color
-              </span>
-            </p>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-font-grey">Creator Suggestion</label>
+            <input
+              type="number"
+              className="p-2 border text-sm rounded-md w-full"
+              value={creatorProposal}
+              onChange={(e) => setCreatorProposal(Number(e.target.value))}
+              placeholder="Enter Creator Proposal"
+            />
           </div>
-          {vendor && vendor?.vendorId && (
-            <Button
-              className="mt-3 w-fit bg-black text-white"
-              onClick={openUtmForm}
-            >
-              {translate("Generate_UTM")}
-            </Button>
-          )}
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-font-grey">Final Agreed Amount</label>
+            <input
+              type="number"
+              className="p-2 border text-sm rounded-md w-full bg-gray-100"
+              value={finalAgreedAmount}
+              disabled
+            />
+          </div>
         </div>
       </div>
-      {isUTMView && <UtmLinkForm open={isUTMView} onClose={openUtmForm} />}
+
+      {/* Discount & Offer Section */}
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-semibold">Discount & Offer Details</h2>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-font-grey">Discount Type</label>
+            <select
+              className="p-2 border text-sm rounded-md w-full"
+              value={discountType}
+              onChange={(e) => setDiscountType(e.target.value)}
+            >
+              <option value="PERCENTAGE">Percentage</option>
+              <option value="FIXED_AMOUNT">Fixed Amount</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-font-grey">Discount Value</label>
+            <input
+              type="number"
+              className="p-2 border text-sm rounded-md w-full"
+              value={discountValue}
+              onChange={(e) => setDiscountValue(Number(e.target.value))}
+              placeholder="Enter Discount Value"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-font-grey">Coupon Code</label>
+            <input
+              type="text"
+              className="p-2 border text-sm rounded-md w-full"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value)}
+              placeholder="Enter Coupon Code"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-font-grey">Start At</label>
+            <input
+              type="datetime-local"
+              className="p-2 border text-sm rounded-md w-full"
+              value={startAt}
+              onChange={(e) => setStartAt(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-font-grey">Expires At</label>
+            <input
+              type="datetime-local"
+              className="p-2 border text-sm rounded-md w-full"
+              value={expiresAt}
+              onChange={(e) => setExpiresAt(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Lock Proposal Button */}
+      <div className="flex justify-center mt-6">
+        <Button className="bg-black text-white px-6 py-2 rounded-md" onClick={handleLockProposal}>
+          Lock Proposal
+        </Button>
+      </div>
     </div>
   );
 }
