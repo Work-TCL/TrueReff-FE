@@ -14,6 +14,8 @@ import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
 import { Search } from "lucide-react";
 import Select from "react-select";
+import SingleSelect from "../../components-common/single-select";
+import { SearchInput } from "../../components-common/search-field";
 
 export interface ICategory {
   _id: string;
@@ -229,9 +231,9 @@ export default function CollaborationList() {
     page !== currentPage &&
       fetchCollaboration(page, true, search, selectedStatus);
   };
-  const handleSelectStatus = (selectedOptions: any) => {
-    setSelectedStatus(selectedOptions?.value);
-    fetchCollaboration(1, true, search, selectedOptions?.value);
+  const handleSelectStatus = (selectedOption: string) => {
+    setSelectedStatus(selectedOption);
+    fetchCollaboration(1, true, search, selectedOption);
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-3 h-full">
@@ -239,32 +241,17 @@ export default function CollaborationList() {
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center gap-2">
-            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={translate("Search_Product")}
-                className="p-3 rounded-lg bg-white pl-10 w-full gray-color" // Add padding to the left for the icon
-              />
-              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-            </div>
-            <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
-              <Select
-                styles={customStyles}
-                value={[
-                  {
-                    value: selectedStatus,
-                    label: selectedStatus
-                      ? statusOptions.find(
-                          (ele) => ele?.value === selectedStatus
-                        )?.label
-                      : "Select Status",
-                  },
-                ]}
+          <div className="flex justify-between items-center gap-2 flex-wrap">
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_Product")}
+            />
+            <div className="flex md:flex-row flex-col gap-2 justify-end relative z-[999] md:w-fit w-full">
+              <SingleSelect
+                value={selectedStatus}
                 onChange={handleSelectStatus}
                 options={statusOptions}
-                className="basic-multi-select focus:outline-none focus:shadow-none"
                 placeholder="Select Status"
               />
             </div>
@@ -279,13 +266,11 @@ export default function CollaborationList() {
                 fetchCollaboration={() => fetchCollaboration(currentPage, true)}
               />
               {/* Pagination */}
-              {totalPages > 1 && (
-                <TablePagination
-                  totalPages={totalPages}
-                  activePage={currentPage}
-                  onPageChange={handlePageChange}
-                />
-              )}
+              <TablePagination
+                totalPages={totalPages}
+                activePage={currentPage}
+                onPageChange={handlePageChange}
+              />
             </>
           ) : (
             <EmptyPlaceHolder

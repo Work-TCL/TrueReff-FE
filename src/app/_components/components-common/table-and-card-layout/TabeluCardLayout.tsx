@@ -9,6 +9,8 @@ import { translate } from "@/lib/utils/translate";
 import Loading from "@/app/vendor/loading";
 import { Button } from "@/components/ui/button";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
+import { ViewToggle } from "../view-toggle";
+import { SearchInput } from "../search-field";
 
 export interface ICommonItem {
   _id: string;
@@ -64,33 +66,13 @@ export default function ProductLayout<T>({
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full ">
       <div className="flex justify-between items-center gap-2">
-        <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full">
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={translate("Search_creator")}
-            className="md:h-10 h-8 w-full"
-          />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={translate("Search_creator")}
+        />
         <div className="flex items-center gap-[10px]">
-          <PiListChecksLight
-            className={`cursor-pointer md:size-[30px] size-6 ${
-              viewMode === "table" ? "text-blue-600" : "text-gray-400"
-            }`}
-            onClick={() => setViewMode("table")}
-          />
-          <IoGridOutline
-            className={`cursor-pointer md:size-[30px] size-6 ${
-              viewMode === "card" ? "text-blue-600" : "text-gray-400"
-            }`}
-            onClick={() => setViewMode("card")}
-          />
-          <Button
-            variant="outline"
-            className="text-black w-[100px] rounded-[4px] md:h-10 h-8"
-          >
-            <FaSlidersH /> {translate("Filters")}
-          </Button>
+          <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
         </div>
       </div>
 

@@ -27,82 +27,52 @@ const CampaignCard = ({ item: campaign }: { item: ICampaignData }) => {
       </div>
 
       {/* Title + Category */}
-      <div className="text-center mb-3">
-        <div className="text-lg font-semibold">
+      <div className="text-left mb-3 relative flex-1">
+        <div className="text-lg font-semibold flex flex-wrap items-center md:w-[65%] w-[62%] truncate text-wrap">
           {campaign.name}{" "}
-          <span
-            className={`text-sm ml-1 ${
-              campaign.status === "ACTIVE"
-                ? "bg-[#5856D61A] text[#5856D6]"
-                : campaign.status === "EXPIRED"
-                ? "bg-[#0982281A] text-[#098228]"
-                : "bg-[#FF95001A] text-[#FF9500]"
-            } px-2 py-1 rounded-md text-center`}
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/vendor/campaign/${campaign?._id}`);
+            }}
+            className="flex items-center gap-1 cursor-pointer text-base scale-75"
           >
-            {campaignStatus[campaign.status] || "Uncategorized"}
-          </span>
+            <div className="font-semibold">
+              <PencilLine
+                strokeWidth={1}
+                className="cursor-pointer mx-auto text-sm"
+              />
+            </div>
+            <div className="text-gray-500 flex items-center text-lg">
+              {translate("Edit")}
+            </div>
+          </div>
+        </div>
+        <div className="text-gray-500 text-sm my-2 flex gap-2 items-center flex-wrap">
+          {campaign.channels?.map((v) => (
+            <span className="bg-background py-1 px-2 rounded">{v}</span>
+          ))}
         </div>
         <div className="text-gray-500 text-sm mt-1">
           {formatForDateInput(campaign.startDate)} to{" "}
           {formatForDateInput(campaign.endDate)}
         </div>
-        <div className="text-gray-500 text-sm mt-1">
-          {campaign.channels?.join(", ")}
-        </div>
         <div className="text-gray-700 text-sm mt-1 line-clamp-2 overflow-hidden text-ellipsis">
           {campaign.description}
         </div>
-      </div>
 
-      {/* Stats */}
-      <div className="flex justify-around text-center w-full border-t pt-3 text-sm mb-3">
-        {/* <div
-          onClick={() =>
-            router.push(`/vendor/campaign/${campaign?._id}?view=true`)
-          }
-          className="flex items-center gap-3 cursor-pointer"
+        <span
+          className={`text-sm ${
+            campaign.status === "ACTIVE"
+              ? "bg-[#5856D61A] text[#5856D6]"
+              : campaign.status === "EXPIRED"
+              ? "bg-[#0982281A] text-[#098228]"
+              : "bg-[#FF95001A] text-[#FF9500]"
+          } px-2 py-1 rounded-md text-center absolute top-0 right-0`}
         >
-          <div className="font-semibold">
-            <Eye
-              strokeWidth={1.5}
-              color="#FF4979"
-              className="cursor-pointer mx-auto"
-            />{" "}
-          </div>
-          <div className="text-gray-500 flex items-center gap-2">View</div>
-        </div> */}
-        <div
-          onClick={() => router.push(`/vendor/campaign/${campaign?._id}`)}
-          className="flex items-center gap-3 cursor-pointer"
-        >
-          <div className="font-semibold">
-            <PencilLine strokeWidth={1.5} className="cursor-pointer mx-auto" />
-          </div>
-          <div className="text-gray-500 flex items-center">
-            {translate("Edit")}
-          </div>
-        </div>
-        <div className="flex items-center gap-3 cursor-pointer">
-          <div className="font-semibold">
-            <Trash2
-              strokeWidth={1.5}
-              color="#FF3B30"
-              className="cursor-pointer mx-auto"
-            />
-          </div>
-          <div className="text-gray-500 flex items-center">
-            {translate("Delete")}
-          </div>
-        </div>
+          {campaignStatus[campaign.status] || "Uncategorized"}
+        </span>
       </div>
-
-      {/* Button */}
-      {/* <button
-        onClick={() => handleCollaborateNow(product._id)}
-        className="w-full py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-all"
-      >
-        {translate("Collaborate_Now")}
-      </button> */}
     </div>
   );
 };

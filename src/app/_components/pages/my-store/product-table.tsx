@@ -1,17 +1,14 @@
 "use client";
-import React, { ReactElement, useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
+import React, { ReactElement } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { translate } from "@/lib/utils/translate";
-import { useParams, useRouter } from "next/navigation";
-import { Eye, ImageOff, Info } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ImageOff } from "lucide-react";
 import { IProduct } from "./list";
 import Button from "../../ui/button";
-import { Column, DynamicTable } from "../../components-common/dynamic-table";
 import DataTable from "../../components-common/data-table";
 import { ColumnDef } from "@tanstack/react-table";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -36,21 +33,26 @@ export default function BrandProductTable({
   const columns: ColumnDef<IProduct>[] = [
     {
       accessorKey: "media",
-      header: "Product_Image",
+      header: () => translate("Product_Name"),
       cell: ({ row }) => {
         const product = row.original;
-        return product.media?.[0] ? (
-          <Avatar className="w-8 h-8">
-            <AvatarImage src={product.media[0]} alt={product.title} />
-          </Avatar>
-        ) : (
-          <ImageOff className="w-6 h-6 text-gray-400" />
+        return (
+          <div className="flex items-center gap-2 cursor-pointer">
+            {product.media?.[0] ? (
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={product.media[0]} alt={product.title} />
+              </Avatar>
+            ) : (
+              <ImageOff className="w-6 h-6 text-gray-400" />
+            )}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={product?.title}
+            />
+          </div>
         );
       },
-    },
-    {
-      accessorKey: "title",
-      header: "Product_Name",
     },
     {
       accessorKey: "categories",
@@ -82,6 +84,7 @@ export default function BrandProductTable({
       data={data}
       type={type}
       CardComponent={(item) => (CardComponent ? CardComponent(item) : <></>)}
+      gridClasses="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"
     />
   );
 }

@@ -214,6 +214,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
                 type="button"
                 variant="outline"
                 className="rounded-[12px]"
+                onClick={() => router?.push("/vendor/campaign")}
               >
                 {translate("Cancel")}
               </ButtonOutline>
@@ -231,7 +232,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
         <div className="flex flex-col lg:flex-row gap-5 w-full">
           <div className="flex flex-col gap-5 w-full">
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
-              <div className="text-[16px]">
+              <div className="text-lg font-medium text-gray-500">
                 {translate("General_Information")}
               </div>
               <div className="flex flex-col gap-1">
@@ -286,7 +287,9 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
               </div>
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
-              <div className="text-[16px]">{translate("Product_Media")}</div>
+              <div className="text-lg font-medium text-gray-500">
+                {translate("Product_Media")}
+              </div>
               <div className="flex flex-col lg:flex-row gap-2">
                 <div className="flex flex-col w-full gap-1">
                   <MediaUploader
@@ -299,7 +302,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
               </div>
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
-              <div className="text-[16px]">
+              <div className="text-lg font-medium text-gray-500">
                 {translate("Product_Selection")}
               </div>
               <div className="flex flex-col lg:flex-row gap-2">
@@ -318,57 +321,73 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
               </div>
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2">
-              <div className="text-[16px]">
+              <div className="text-lg font-medium text-gray-500">
                 {translate("Campaign_Channels")}{" "}
               </div>
               <div className="pt-2">
                 <div className="flex flex-col md:flex-row gap-6">
-                  <div className="flex gap-1">
-                    <Input
-                      name="channels"
-                      type="checkbox"
-                      placeholder={translate("Add_link")}
-                      label={translate("Instagram")}
-                      checked={Boolean(
-                        methods.watch("channels")?.includes("instagram")
-                      )}
-                      onChange={(v) => {
-                        handleChannelChange("instagram");
-                      }}
-                      hideError={true}
-                      disabled={isDisabled}
-                    />
-                  </div>
-                  <div className="flex gap-1">
-                    <Input
-                      name="chanls"
-                      type="checkbox"
-                      placeholder={translate("Add_link")}
-                      label={translate("You_tube")}
-                      checked={Boolean(
-                        methods.watch("channels")?.includes("youtube")
-                      )}
-                      onChange={(v) => {
-                        handleChannelChange("youtube");
-                      }}
-                      disabled={isDisabled}
-                    />
-                  </div>
-                  <div className="flex gap-1">
-                    <Input
-                      name="cha"
-                      type="checkbox"
-                      placeholder={translate("Add_link")}
-                      label={translate("Facebook")}
-                      checked={Boolean(
-                        methods.watch("channels")?.includes("facebook")
-                      )}
-                      onChange={(v) => {
-                        handleChannelChange("facebook");
-                      }}
-                      disabled
-                    />
-                  </div>
+                  {!isDisabled ? (
+                    <div className="flex gap-1 cursor-pointer">
+                      <Input
+                        name="channels"
+                        type="checkbox"
+                        placeholder={translate("Add_link")}
+                        label={translate("Instagram")}
+                        checked={Boolean(
+                          methods.watch("channels")?.includes("instagram")
+                        )}
+                        onChange={(v) => {
+                          handleChannelChange("instagram");
+                        }}
+                        hideError={true}
+                        disabled={isDisabled}
+                      />
+                    </div>
+                  ) : null}
+
+                  {!isDisabled ? (
+                    <div className="flex gap-1 cursor-pointer">
+                      <Input
+                        name="chanls"
+                        type="checkbox"
+                        placeholder={translate("Add_link")}
+                        label={translate("You_tube")}
+                        checked={Boolean(
+                          methods.watch("channels")?.includes("youtube")
+                        )}
+                        onChange={(v) => {
+                          handleChannelChange("youtube");
+                        }}
+                        disabled={isDisabled}
+                      />
+                    </div>
+                  ) : null}
+                  {!isDisabled ? (
+                    <div className="flex gap-1 cursor-pointer">
+                      <Input
+                        name="cha"
+                        type="checkbox"
+                        placeholder={translate("Add_link")}
+                        label={translate("Facebook")}
+                        checked={Boolean(
+                          methods.watch("channels")?.includes("facebook")
+                        )}
+                        onChange={(v) => {
+                          handleChannelChange("facebook");
+                        }}
+                        disabled
+                      />
+                    </div>
+                  ) : null}
+                  {isDisabled
+                    ? methods
+                        .watch("channels")
+                        ?.map((v) => (
+                          <div className="flex gap-1 bg-background p-2 rounded-md">
+                            {v}
+                          </div>
+                        ))
+                    : null}
                 </div>
                 {Boolean(get(methods.formState.errors, "channels")) && (
                   <span className="text-red-600 text-sm p-2 block">
@@ -378,7 +397,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
               </div>
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-2 mb-4">
-              <div className="text-[16px]">
+              <div className="text-lg font-medium text-gray-500">
                 {translate("Discount/Price Range")}
               </div>
               <div className="flex flex-col gap-2">

@@ -10,7 +10,7 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
   return (
     <div className="bg-white rounded-2xl overflow-hidden flex flex-col justify-between h-full p-4 border border-stroke hover:shadow-lg">
       {/* Image */}
-      <div className="w-full aspect-[3/1] rounded-lg overflow-hidden mb-3">
+      <div className="w-full aspect-[1/1] rounded-lg overflow-hidden mb-3">
         {product.media?.length > 0 && (
           <img
             src={product.media?.[0] || "/placeholder.png"}
@@ -21,7 +21,7 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
       </div>
 
       {/* Title + Category */}
-      <div className="text-left mb-3">
+      <div className="text-left mb-3 mb-auto">
         <div className="text-lg font-semibold">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
@@ -39,7 +39,7 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
           />
         </div>
         {product.tags?.length > 0 && (
-          <div className="text-gray-500 text-sm mt-1 flex flex-wrap gap-2 mt-2">
+          <div className="text-gray-500 text-sm flex flex-wrap gap-2 mt-2">
             {product.tags?.slice(0, 4).map((v) => (
               <span className="bg-background py-1 px-2 rounded">#{v}</span>
             ))}
@@ -68,7 +68,7 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
       {/* Button */}
       <button
         onClick={() => router.push(`/creator/my-store/${product._id}`)}
-        className="w-full py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-all"
+        className="w-full py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-all mt-3"
       >
         {translate("Collaborate_Now")}
       </button>

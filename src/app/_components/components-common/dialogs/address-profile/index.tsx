@@ -13,11 +13,11 @@ export default function EditAddressProfile({
   return (
     <DialogLayout
       open={Boolean(open)}
-      size="!max-w-[600px] w-full overflow-auto"
+      size="!max-w-[600px] w-full overflow-auto p-4"
       title={address ? translate("edit_address") : translate("add_new_address")}
       onClose={onClose}
     >
-      <div className="p-4 sm:p-10 pb-0 sm:pb-0 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
+      <div className="px-4 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
         <EditAddressVendorForm profile={address} id={id} onClose={onClose} />
       </div>
     </DialogLayout>

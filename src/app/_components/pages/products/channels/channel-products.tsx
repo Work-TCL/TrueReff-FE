@@ -28,6 +28,9 @@ import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
 import ToolTip from "@/app/_components/components-common/tool-tip";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
+import { ColumnDef } from "@tanstack/react-table";
+import DataTable from "@/app/_components/components-common/data-table";
+import { SearchInput } from "@/app/_components/components-common/search-field";
 
 interface IProduct {
   handle: string;
@@ -124,6 +127,120 @@ export default function ChannelProductList({
     setSearch(value);
     debouncedSearch(value);
   };
+
+  const columns: ColumnDef<IProduct>[] = [
+    {
+      accessorKey: "id",
+      header: () => translate("Product_ID"),
+      cell: ({ row }) => {
+        const product = row.original;
+        return product.id.split("/").pop();
+      },
+    },
+    {
+      accessorKey: "title",
+      header: () => translate("Product_Name"),
+      cell: ({ row }) => {
+        const product = row.original;
+        return (
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push(`shopify/view?id=${product.id}`)}
+          >
+            {product.image ? (
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={product.image} />
+              </Avatar>
+            ) : (
+              <ImageOff className="w-6 h-6 text-gray-400" />
+            )}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={product.title ?? ""}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "category",
+      header: () => translate("Categories"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.category ?? ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "tags",
+      header: () => translate("Tags"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.tags?.join(", ") ?? ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "sku",
+      header: () => translate("SKU"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.sku ?? ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "price",
+      header: () => <>Selling {translate("Price")}</>,
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.price ?? ""}
+        />
+      ),
+    },
+    {
+      id: "actions",
+      header: () => <div className="text-center">{translate("Action")}</div>,
+      cell: ({ row }) => {
+        const product = row.original;
+        return (
+          <div className="flex justify-center items-center gap-3">
+            {/* View button (currently commented) */}
+            {/* <ToolTip content="View Product" delayDuration={1000}>
+            <Eye
+              strokeWidth={1.5}
+              color="#FF4979"
+              className="cursor-pointer"
+              onClick={() => router.push(`shopify/view?id=${product.id}`)}
+            />
+          </ToolTip> */}
+
+            <div
+              onClick={() => setCurrentData(product)}
+              className="cursor-pointer"
+            >
+              <ToolTip content="Add Product to CRM" delayDuration={1000}>
+                <CircleFadingPlus
+                  strokeWidth={1.5}
+                  color="#3b82f680"
+                  className="cursor-pointer"
+                />
+              </ToolTip>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
@@ -131,148 +248,17 @@ export default function ChannelProductList({
       ) : (
         <>
           <div className="flex justify-between items-center gap-2">
-            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={translate("Search_Product")}
-                className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
-              />
-              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
-            </div>
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_Product")}
+              className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
+            />
           </div>
           {internalLoader && <Loader />}
           {productList?.length > 0 ? (
             <>
-              <div className="overflow-auto flex-1">
-                <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-                  <TableHeader className="bg-stroke">
-                    <TableRow>
-                      <CustomTableHead className="w-1/6">
-                        {translate("Product_ID")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/4">
-                        {translate("Product_Name")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/6">
-                        {translate("Categories")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/4">
-                        {translate("Tags")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/4">
-                        {translate("SKU")}
-                      </CustomTableHead>
-                      <CustomTableHead className="w-1/6">
-                        Selling {translate("Price")}
-                      </CustomTableHead>
-                      {/*              <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
-                      <CustomTableHead className="w-1/6 text-center">
-                        {translate("Action")}
-                      </CustomTableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {productList.map((product, index) => (
-                      <TableRow
-                        key={index}
-                        className=" bg-white hover:bg-gray-100"
-                      >
-                        <CustomTableCell>
-                          {product.id.split("/").pop()}
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <div
-                            className="flex items-center gap-2 cursor-pointer"
-                            onClick={() =>
-                              router.push(`shopify/view?id=${product.id}`)
-                            }
-                          >
-                            {product.image ? (
-                              <Avatar className="w-8 h-8">
-                                <AvatarImage src={product.image} />
-                              </Avatar>
-                            ) : (
-                              <ImageOff className="w-6 h-6 text-gray-400" />
-                            )}
-
-                            <TruncateWithToolTip
-                              checkHorizontalOverflow={false}
-                              linesToClamp={2}
-                              text={product.title ?? ""}
-                            />
-                          </div>
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={product.category ?? ""}
-                          />
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={product.tags.join(", ") ?? ""}
-                          />
-                        </CustomTableCell>
-                        <CustomTableCell>
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={product.sku ?? ""}
-                          />
-                        </CustomTableCell>
-                        <CustomTableCell className="text-center">
-                          <TruncateWithToolTip
-                            checkHorizontalOverflow={false}
-                            linesToClamp={2}
-                            text={product.price ?? ""}
-                          />
-                        </CustomTableCell>
-                        {/*                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
-                        <CustomTableCell>
-                          <div className="flex justify-center items-center gap-3">
-                            {/* <ToolTip
-                              content="View Product"
-                              delayDuration={1000}
-                            >
-                              <Eye
-                                strokeWidth={1.5}
-                                color="#FF4979"
-                                className="cursor-pointer"
-                                onClick={() =>
-                                  router.push(`shopify/view?id=${product.id}`)
-                                }
-                              />
-                            </ToolTip> */}
-                            <div
-                              onClick={() => {
-                                setCurrentData(product);
-                              }}
-                              className=""
-                            >
-                              <ToolTip
-                                content="Add Product to CRM"
-                                delayDuration={1000}
-                              >
-                                <CircleFadingPlus
-                                  strokeWidth={1.5}
-                                  color="#3b82f680"
-                                  className="cursor-pointer"
-                                />
-                              </ToolTip>
-                            </div>
-                          </div>
-                        </CustomTableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+              <DataTable columns={columns} data={productList} />
               {currentData !== null && (
                 <ChannleToProduct
                   product={{

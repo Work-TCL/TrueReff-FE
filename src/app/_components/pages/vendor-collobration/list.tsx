@@ -12,6 +12,8 @@ import { IoGridOutline } from "react-icons/io5";
 import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import axios from "@/lib/web-api/axios";
+import { SearchInput } from "../../components-common/search-field";
+import SingleSelect from "../../components-common/single-select";
 export interface ICategory {
   _id: string;
   name: string;
@@ -51,6 +53,10 @@ export interface ICreator {
   tag?: string;
 }
 
+const filterOption = [
+  { value: "5", label: "Last 5 Videos" },
+  { value: "30", label: "Last 1 Month" },
+];
 export default function CreatorList() {
   const [loading, setLoading] = useState<boolean>(false);
   const [creators, setCreators] = useState<ICreator[]>([]);
@@ -134,37 +140,29 @@ export default function CreatorList() {
     }
     return result;
   };
-  const handleFilterValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilter(e.target.value);
+  const handleFilterValue = (value: string) => {
+    setFilter(value);
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4">
       <div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-          <Input
-            value={search}
-            onChange={handleSearch}
-            placeholder={translate("Search_creator")}
-            className="md:h-10 h-8 w-full"
-          />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={handleSearch}
+          placeholder={translate("Search_creator")}
+        />
         <div className="flex items-center gap-[10px]">
-          <PiListChecksLight size={35} />
-          <IoGridOutline size={30} />
+          {/* <PiListChecksLight size={35} />
+          <IoGridOutline size={30} /> */}
           {/* <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
                         <FaSlidersH /> {translate("Filters")}
                     </Button> */}
-          <select
-            className="bg-white rounded-sm border border-black h-[30px]"
+          <SingleSelect
+            placeholder="Select Status"
+            options={filterOption}
             value={filter}
             onChange={handleFilterValue}
-          >
-            <option value="" disabled>
-              Filters
-            </option>
-            <option value={5}>Last 5 Videos</option>
-            <option value={1}>Last 1 Month</option>
-          </select>
+          />
         </div>
       </div>
       {loading && <Loading />}

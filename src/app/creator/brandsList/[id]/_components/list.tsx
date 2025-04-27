@@ -27,6 +27,9 @@ import { IoGridOutline } from "react-icons/io5";
 import BrandProductCard from "./brandProductCard";
 import { useCreatorStore } from "@/lib/store/creator";
 import CancelRequest from "@/app/_components/components-common/dialogs/cancel-request";
+import CategorySubCategorySelect from "@/app/_components/components-common/category-dropdowns";
+import { ViewToggle } from "@/app/_components/components-common/view-toggle";
+import { SearchInput } from "@/app/_components/components-common/search-field";
 export interface ICategory {
   _id: string;
   name: string;
@@ -106,13 +109,7 @@ export default function CreatorList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [brandProducts, setBrandProducts] = useState<IBrand[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
-  const [subCategory, setSubCategory] = useState<ICategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>(
-    []
-  );
   const [search, setSearch] = useState<string>("");
   const [viewMode, setViewMode] = useState<"table" | "card">("card");
   const [currentPage, setCurrentPage] = useState(1);
@@ -212,18 +209,7 @@ export default function CreatorList() {
 
   useEffect(() => {
     getBrandProductList(currentPage);
-    fetchCategory();
   }, []);
-  const fetchCategory = async () => {
-    try {
-      const response = await getCategories({ page: 0, limit: 0 });
-      const data = response?.data?.data || [];
-      setCategories(data);
-      setParentCategory(data.filter((ele) => ele?.parentId === null));
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
 
   const handleUpdateCollaboration = () => {
     getBrandProductList(currentPage, true);
@@ -237,42 +223,15 @@ export default function CreatorList() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setSearch(value);
-    debouncedSearch(value, [...selectedCategories, ...selectedSubCategories]);
+    debouncedSearch(value, [...selectedCategories]);
   };
   const handlePageChange = (page: number) => {
     page !== currentPage &&
-      getBrandProductList(page, true, search, [
-        ...selectedCategories,
-        ...selectedSubCategories,
-      ]);
+      getBrandProductList(page, true, search, [...selectedCategories]);
   };
-  const handleSelectCategory = (selectedOptions: any) => {
-    const selectedIds = selectedOptions.map((opt: any) => opt.value);
-    setSelectedCategories(selectedIds);
-
-    const optionsSubCategory = categories.filter((ele) =>
-      selectedIds.includes(ele?.parentId || "")
-    );
-    setSubCategory(optionsSubCategory);
-
-    // Filter selected subcategories to only include available ones
-    const availableSubCategoriesIds = optionsSubCategory.map((v) => v._id);
-    let selectedSubCategory = selectedSubCategories.filter((id) =>
-      availableSubCategoriesIds.includes(id)
-    );
-    setSelectedSubCategories(selectedSubCategory);
-    getBrandProductList(currentPage, true, search, [
-      ...selectedIds,
-      ...selectedSubCategory,
-    ]);
-  };
-  const handleSelectSubCategory = (selectedOptions: any) => {
-    const selectedIds = selectedOptions.map((opt: any) => opt.value);
-    setSelectedSubCategories(selectedIds);
-    getBrandProductList(currentPage, true, search, [
-      ...selectedCategories,
-      ...selectedIds,
-    ]);
+  const handleCategories = (selectedOptions: any) => {
+    setSelectedCategories(selectedOptions);
+    getBrandProductList(currentPage, true, search, [...selectedOptions]);
   };
 
   const handleSendRequest = async (brand: IBrand) => {
@@ -360,62 +319,15 @@ export default function CreatorList() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <div className="flex justify-between items-center gap-2">
-            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={translate("Search_Product")}
-                className="p-3 rounded-lg bg-white pl-10 w-full gray-color" // Add padding to the left for the icon
-              />
-              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-            </div>
-            <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
-              <PiListChecksLight
-                className={`cursor-pointer md:size-[30px] size-6 ${
-                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
-                }`}
-                onClick={() => setViewMode("table")}
-              />
-              <IoGridOutline
-                className={`cursor-pointer md:size-[30px] size-6 ${
-                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
-                }`}
-                onClick={() => setViewMode("card")}
-              />
-              <Select
-                styles={customStyles}
-                value={selectedCategories.map((id) => {
-                  const match = parentCategory.find((cat) => cat._id === id);
-                  return { value: id, label: match?.name || id };
-                })}
-                isMulti
-                onChange={handleSelectCategory}
-                options={parentCategory.map((ele) => ({
-                  value: ele._id,
-                  label: ele.name,
-                }))}
-                isOptionDisabled={() => selectedCategories.length >= 3}
-                className="basic-multi-select focus:outline-none focus:shadow-none"
-                placeholder="Parent Categories (max 3)"
-              />
-              <Select
-                styles={customStyles}
-                placeholder="Subcategories (max 3)"
-                value={selectedSubCategories.map((id) => {
-                  const match = subCategory.find((cat) => cat._id === id);
-                  return { value: id, label: match?.name || id };
-                })}
-                isMulti
-                onChange={handleSelectSubCategory}
-                options={subCategory.map((ele) => ({
-                  value: ele._id,
-                  label: ele.name,
-                }))}
-                isOptionDisabled={() => selectedSubCategories.length >= 3}
-                className="basic-multi-select focus:outline-none focus:shadow-none"
-                classNamePrefix="select"
-              />
+          <div className="flex justify-between items-center gap-2 flex-wrap">
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_Product")}
+            />
+            <div className="flex md:flex-row flex-col gap-2 justify-end ml-auto">
+              <CategorySubCategorySelect onChange={handleCategories} />
+              <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>
           {internalLoader && <Loader />}
@@ -429,15 +341,23 @@ export default function CreatorList() {
                 />
               )}
               {viewMode === "card" && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 p-2 md:p-4 bg-white rounded-[20px] overflow-auto">
-                  {brandProducts.map((brand: any) => (
-                    <BrandProductCard
-                      key={brand.id}
-                      brand={brand}
-                      onAction={handleAction}
-                      onView={handleDetailView}
-                    />
-                  ))}
+                <div className="bg-white overflow-hidden flex flex-col rounded-[20px] h-full ">
+                  <div className="flex-1 overflow-auto p-2 md:p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 md:gap-4">
+                      {[
+                        ...brandProducts,
+                        ...brandProducts,
+                        ...brandProducts,
+                      ].map((brand: any, i: number) => (
+                        <BrandProductCard
+                          key={i}
+                          brand={brand}
+                          onAction={handleAction}
+                          onView={handleDetailView}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
               {/* Pagination */}

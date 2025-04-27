@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { UserPlus, XCircle, Eye, ImageOff } from "lucide-react";
@@ -6,6 +7,7 @@ import StatusBadge from "@/app/_components/components-common/status-badge";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import { IBrand } from "./list";
 import { translate } from "@/lib/utils/translate";
+import { useRouter } from "next/navigation";
 
 interface IProductCardProps {
   brand: IBrand;
@@ -14,28 +16,31 @@ interface IProductCardProps {
 }
 
 const ProductCard = ({ brand, onView, onAction }: IProductCardProps) => {
+  const router = useRouter();
   return (
-    <div className="relative bg-white border border-gray-200 rounded-2xl overflow-hidden flex flex-col h-full transition hover:shadow-lg">
+    <div
+      onClick={() => onView(brand._id)}
+      className="relative bg-white border border-gray-200 rounded-2xl overflow-hidden flex flex-col h-full transition hover:shadow-lg cursor-pointer"
+    >
       {/* Image */}
-      <div
-        className="w-full aspect-[3/2] rounded-lg overflow-hidden mb-3 flex justify-center items-center bg-background cursor-pointer"
-        onClick={() => onView(brand._id)}
-      >
-        {brand.media?.length > 0 ? (
-          <img
-            src={brand.media[0]}
-            alt={brand.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <ImageOff className="w-8 h-8 text-gray-400" />
-        )}
+      <div className="p-3">
+        <div className="w-full aspect-[3/2] rounded-lg overflow-hidden mb-3 flex justify-center items-center bg-background cursor-pointer">
+          {brand.media?.length > 0 ? (
+            <img
+              src={brand.media[0]}
+              alt={brand.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <ImageOff className="w-8 h-8 text-gray-400" />
+          )}
+        </div>
       </div>
 
       {/* Content */}
-      <div className="flex flex-col p-4 gap-2 flex-1 justify-between text-center">
+      <div className="flex flex-col p-4 gap-2 flex-1 justify-between text-left">
         {/* Info */}
-        <div className="mb-3 px-2 text-center">
+        <div className="mb-3 px-2 text-left">
           <div className="text-lg font-semibold">
             {" "}
             <TruncateWithToolTip
@@ -64,13 +69,10 @@ const ProductCard = ({ brand, onView, onAction }: IProductCardProps) => {
             />
           </div>
           {brand.tags?.length > 0 && (
-            <div className="text-gray-500 text-sm mt-1">
-              {" "}
-              <TruncateWithToolTip
-                checkHorizontalOverflow={true}
-                linesToClamp={1}
-                text={`${translate("Tags")} : ${brand.tags?.join(", ") || ""}`}
-              />
+            <div className="text-gray-500 text-sm flex flex-wrap gap-2 mt-2">
+              {brand.tags?.slice(0, 4).map((v) => (
+                <span className="bg-background py-1 px-2 rounded">#{v}</span>
+              ))}
             </div>
           )}
         </div>
@@ -84,11 +86,14 @@ const ProductCard = ({ brand, onView, onAction }: IProductCardProps) => {
           )}
         </div>
         {/*  Actions */}
-        <div className="flex items-center justify-around items-center gap-3 mt-2 pt-3 border-t text-sm text-gray-600">
+        <div className="flex justify-around items-center gap-3 mt-2 pt-3 border-t text-sm text-gray-600">
           {/* Brand Info */}
           <div
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() => onView(`/vendor/profile/${brand?.vendor?._id}`)}
+            onClick={(e) => {
+              e.stopPropagation();
+              router?.push(`/vendor/profile/${brand?.vendor?._id}`);
+            }}
           >
             <Avatar className="w-8 h-8">
               <AvatarImage

@@ -106,13 +106,11 @@ export default function EditAddressVendorForm({
               placeholder={translate("Road_Name_Area_Name_Colony")}
             />
           </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("Set_as_default_address")}
-              name="isDefault"
-              type="checkbox"
-              className=""
-            />
+          <div className="col-span-2 flex gap-1 cursor-pointer">
+            <label className="flex items-center gap-2 pl-2">
+              <Input name="isDefault" type="checkbox" className="" />
+              <span className="">{translate("Set_as_default_address")}</span>
+            </label>
           </div>
 
           <div className="py-6 col-span-2 sticky bottom-0 bg-white">

@@ -2,6 +2,7 @@ import * as Yup from "yup";
 
 export const loginSchema = Yup.object().shape({
   email: Yup.string()
+    .lowercase()
     .email("Email must be a valid email address")
     .required("Email is required"),
   password: Yup.string()
@@ -27,6 +28,7 @@ export interface ILoginSchema extends Yup.Asserts<typeof loginSchema> {}
 export const loginWithOtpSchema = Yup.object().shape({
   email: Yup.string()
     .email("Email must be a valid email address")
+    .lowercase()
     .required("Email is required"),
   password: Yup.string().optional(),
 });
@@ -37,6 +39,7 @@ export interface ILoginWithOtpSchema
 export const forgotSchema = Yup.object().shape({
   email: Yup.string()
     .email("Email must be a valid email address")
+    .lowercase()
     .required("Email is required"),
 });
 
@@ -78,6 +81,7 @@ export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> {}
 export const registerSchema = Yup.object().shape({
   email: Yup.string()
     .email("Email must be a valid email address")
+    .lowercase()
     .required("Email is required"),
   password: Yup.string()
     .required("Password is required")
@@ -219,6 +223,7 @@ export const preFormSchema = Yup.object().shape({
         ),
         email: Yup.string()
           .email("Invalid email format")
+          .lowercase()
           .test("test-email", "Email is required", function (value) {
             const { path, createError } = this;
             // Check if this is the first contact
@@ -274,6 +279,7 @@ export const contactSchema = Yup.object().shape({
   firstName: Yup.string().required("First Name is required"),
   email: Yup.string()
     .email("Email must be a valid email address")
+    .lowercase()
     .required("Email is required"),
   type: Yup.string().required("Type is required"),
   message: Yup.string().required("Message is required"),
@@ -285,6 +291,7 @@ export const profileUpdateSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   email: Yup.string()
     .email("Email must be a valid email address")
+    .lowercase()
     .required("Email is required"),
   phone: Yup.string()
     .required("Phone is required")
@@ -297,6 +304,7 @@ export interface IProfileUpdateSchema
 export const vendorProfileUpdateSchema = Yup.object().shape({
   company_email: Yup.string()
     .email("Company Email must be a valid email address")
+    .lowercase()
     .required("Company Email is required"),
   company_phone: Yup.string()
     .matches(/^[0-9]{10}$/, "Company Phone must be a valid 10-digit number")
@@ -353,6 +361,7 @@ export const addContactVendorSchema = Yup.object().shape({
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
   email: Yup.string()
     .email("Email must be a valid email address")
+    .lowercase()
     .required("Email is required"),
   isDefault: Yup.boolean().optional().default(false),
 });
@@ -366,6 +375,7 @@ export const creatorOnBoardingSchema = Yup.object().shape({
   user_name: Yup.string().required("User name is required"),
   email: Yup.string()
     .email("Invalid email format")
+    .lowercase()
     .required("Email is required"),
   phone_number: Yup.string()
     .required("Phone is required")
@@ -663,7 +673,7 @@ export const createStoreSchema = Yup.object().shape({
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
     .required("Tags are required"),
-    category: Yup.array()
+  category: Yup.array()
     .of(
       Yup.object().shape({
         label: Yup.string().required("Label is required"),

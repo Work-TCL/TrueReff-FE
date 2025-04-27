@@ -1,4 +1,7 @@
 "use client";
+import { labelStyle } from "@/app/_components/ui/form/Input";
+import { cn } from "@sohanemon/utils";
+import { Video } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -102,9 +105,11 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
   return (
     <div className="space-y-4">
       <div>
-        <label className="block font-semibold mb-2">
-          Upload Images (Max 3)
-        </label>
+        {!disabled && (
+          <label className={cn(labelStyle, "mb-1")}>
+            Upload Images (Max 3)
+          </label>
+        )}
         {!disabled && (
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer relative">
             <input
@@ -184,9 +189,11 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
       </div>
 
       <div>
-        <label className="block font-semibold mb-2">
-          Upload Video (Max 20MB)
-        </label>
+        {!disabled && (
+          <label className={cn(labelStyle, "mb-1")}>
+            Upload Video (Max 20MB)
+          </label>
+        )}
         {!disabled && (
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer relative">
             <input
@@ -196,20 +203,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
             <div className="flex flex-col items-center justify-center space-y-2 text-gray-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 10.5V6a2.25 2.25 0 00-2.25-2.25h-3A2.25 2.25 0 008.25 6v4.5M4.5 10.5h15M6.75 10.5v6.75A2.25 2.25 0 009 19.5h6a2.25 2.25 0 002.25-2.25V10.5"
-                />
-              </svg>
+              <Video />
               <p className="text-sm">Click or drag a video file to upload</p>
               <span className="text-xs text-gray-400">(MP4, Max 20MB)</span>
             </div>

@@ -24,6 +24,11 @@ import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import CampaignCard from "./_components/campaign-card";
+import { SearchInput } from "../../components-common/search-field";
+import { ViewToggle } from "../../components-common/view-toggle";
+import DataTable from "../../components-common/data-table";
+import { ColumnDef } from "@tanstack/react-table";
+import SingleSelect from "../../components-common/single-select";
 
 export const campaignStatus: { [key: string]: string } = {
   ACTIVE: "Running",
@@ -120,138 +125,131 @@ export default function CampaignList() {
     fetchCampaignList(1, true, search, selectedOption?.value);
   };
 
+  const campaignColumns: ColumnDef<ICampaignData>[] = [
+    {
+      id: "campaign_name",
+      header: () => translate("Campaign_Name"),
+      cell: ({ row }) => {
+        const campaign = row.original;
+        const router = useRouter();
+        return (
+          <div
+            className="flex items-center justify-start gap-2 cursor-pointer"
+            onClick={() =>
+              router.push(`/vendor/campaign/${campaign?._id}?view=true`)
+            }
+          >
+            {campaign?.imageUrls?.length > 0 && campaign.imageUrls[0] ? (
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={campaign.imageUrls[0]} />
+              </Avatar>
+            ) : (
+              <ImageOff className="w-6 h-6 text-gray-400" />
+            )}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={campaign.name}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      id: "product_name",
+      header: () => translate("Product_Name"),
+      cell: ({ row }) => {
+        const campaign = row.original;
+        const router = useRouter();
+        return (
+          <div
+            className="flex items-center justify-start gap-2 cursor-pointer"
+            onClick={() =>
+              router.push(`/vendor/products/view/${campaign?.productId?._id}`)
+            }
+          >
+            {campaign?.productId?.media?.length > 0 &&
+            campaign.productId.media[0] ? (
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={campaign.productId.media[0]} />
+              </Avatar>
+            ) : (
+              <ImageOff className="w-6 h-6 text-gray-400" />
+            )}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={campaign.productId?.title}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      id: "total_sales",
+      header: () => translate("Total_Sales"),
+      cell: () => "-",
+    },
+    {
+      id: "total_views",
+      header: () => translate("Total_Views"),
+      cell: () => "-",
+    },
+    {
+      id: "omni_channel",
+      header: () => translate("Omni_Channel"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.channels?.join(", ") ?? ""}
+        />
+      ),
+    },
+    {
+      id: "status",
+      header: () => <div className="text-center">{translate("Status")}</div>,
+      cell: ({ row }) => {
+        const campaign = row.original;
+        const statusColorClass =
+          {
+            ACTIVE: "bg-[#5856D61A] text-[#5856D6]",
+            EXPIRED: "bg-[#0982281A] text-[#098228]",
+            UPCOMING: "bg-[#FF95001A] text-[#FF9500]",
+          }[campaign.status] || "bg-gray-100 text-gray-500";
+
+        return (
+          <div className="flex justify-center">
+            <div
+              className={`w-1/2 p-2 rounded-md text-center ${statusColorClass}`}
+            >
+              {campaignStatus[campaign.status]}
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: "action",
+      header: () => <div className="text-center">{translate("Action")}</div>,
+      cell: ({ row }) => {
+        const campaign = row.original;
+        const router = useRouter();
+        return (
+          <div className="flex justify-center gap-3">
+            <PencilLine
+              strokeWidth={1.5}
+              className="cursor-pointer"
+              onClick={() => router.push(`/vendor/campaign/${campaign?._id}`)}
+            />
+          </div>
+        );
+      },
+    },
+  ];
+
   const tableContent = () => {
-    return (
-      <div className="overflow-auto">
-        <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-          <TableHeader className="bg-stroke">
-            <TableRow>
-              <CustomTableHead className="w-1/7">
-                {translate("Campaign_Name")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/7">
-                {translate("Product_Name")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/7">
-                {translate("Total_Sales")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/7">
-                {translate("Total_Views")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/7">
-                {translate("Omni_Channel")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/7 text-center">
-                {translate("Status")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/7 text-center">
-                {translate("Action")}
-              </CustomTableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {campaigns.map((campaign, index) => (
-              <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-                <CustomTableCell>
-                  <div
-                    className="flex items-center justify-start gap-2 cursor-pointer"
-                    onClick={() =>
-                      router.push(`/vendor/campaign/${campaign?._id}?view=true`)
-                    }
-                  >
-                    {campaign?.imageUrls?.length > 0 &&
-                    campaign?.imageUrls[0] ? (
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage src={campaign?.imageUrls[0]} />
-                      </Avatar>
-                    ) : (
-                      <ImageOff className="w-6 h-6 text-gray-400" />
-                    )}
-                    <TruncateWithToolTip
-                      checkHorizontalOverflow={false}
-                      linesToClamp={2}
-                      text={campaign.name}
-                    />
-                  </div>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <div
-                    className="flex items-center justify-start gap-2 cursor-pointer"
-                    onClick={() =>
-                      router.push(
-                        `/vendor/products/view/${campaign?.productId?._id}`
-                      )
-                    }
-                  >
-                    {campaign?.productId?.media?.length &&
-                    campaign?.productId?.media[0] ? (
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage src={campaign?.productId?.media[0]} />
-                      </Avatar>
-                    ) : (
-                      <ImageOff className="w-6 h-6 text-gray-400" />
-                    )}
-                    <TruncateWithToolTip
-                      checkHorizontalOverflow={false}
-                      linesToClamp={2}
-                      text={campaign.productId?.title}
-                    />
-                  </div>
-                </CustomTableCell>
-                <CustomTableCell>{"-"}</CustomTableCell>
-                <CustomTableCell>{"-"}</CustomTableCell>
-                <CustomTableCell>
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={campaign.channels?.join(", ")}
-                  />
-                </CustomTableCell>
-                <CustomTableCell className="flex justify-center">
-                  <div
-                    className={`w-1/2 ${
-                      campaign.status === "ACTIVE"
-                        ? "bg-[#5856D61A] text[#5856D6]"
-                        : campaign.status === "EXPIRED"
-                        ? "bg-[#0982281A] text-[#098228]"
-                        : "bg-[#FF95001A] text-[#FF9500]"
-                    } p-2 rounded-md text-center`}
-                  >
-                    {campaignStatus[campaign.status]}
-                  </div>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <div className="flex justify-center gap-3">
-                    <Eye
-                      strokeWidth={1.5}
-                      color="#FF4979"
-                      className="cursor-pointer"
-                      onClick={() =>
-                        router.push(
-                          `/vendor/campaign/${campaign?._id}?view=true`
-                        )
-                      }
-                    />
-                    <PencilLine
-                      strokeWidth={1.5}
-                      className="cursor-pointer"
-                      onClick={() =>
-                        router.push(`/vendor/campaign/${campaign?._id}`)
-                      }
-                    />
-                    <Trash2
-                      strokeWidth={1.5}
-                      color="#FF3B30"
-                      className="cursor-pointer"
-                    />
-                  </div>
-                </CustomTableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
+    return <DataTable columns={campaignColumns} data={campaigns} />;
   };
 
   return (
@@ -261,39 +259,15 @@ export default function CampaignList() {
         <Loading />
       ) : (
         <>
-          <div className="flex md:flex-row flex-col justify-between items-center gap-2">
-            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={translate("Search_Campaign")}
-                className="p-3 rounded-lg bg-white pl-10   w-full gray-color" // Add padding to the left for the icon
-              />
-              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-            </div>
-            <div className="flex md:flex-row flex-col gap-2 w-full justify-end items-center">
-              <PiListChecksLight
-                className={`cursor-pointer md:size-[30px] size-6 ${
-                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
-                }`}
-                onClick={() => setViewMode("table")}
-              />
-              <IoGridOutline
-                className={`cursor-pointer md:size-[30px] size-6 ${
-                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
-                }`}
-                onClick={() => setViewMode("card")}
-              />
-              <Select
-                styles={customStyles}
-                value={[
-                  {
-                    value: selectedStatus,
-                    label: selectedStatus
-                      ? campaignStatus[selectedStatus]
-                      : "Select Status",
-                  },
-                ]}
+          <div className="flex md:flex-row flex-col justify-between items-center gap-2 flex-wrap">
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_Campaign")}
+            />
+            <div className="flex flex-row gap-2 justify-end items-center md:w-fit w-full">
+              <SingleSelect
+                value={selectedStatus}
                 onChange={handleOnSelectStatus}
                 options={[
                   { value: "", label: "Select Status" },
@@ -301,9 +275,9 @@ export default function CampaignList() {
                   { value: "PENDING", label: "Hold" },
                   { value: "EXPIRED", label: "Completed" },
                 ]}
-                className="basic-multi-select focus:outline-none focus:shadow-none"
                 placeholder="Select Status"
               />
+              <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>
           {campaigns?.length > 0 ? (
@@ -311,7 +285,7 @@ export default function CampaignList() {
               {" "}
               {viewMode === "table" && tableContent()}
               {viewMode === "card" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
                   {campaigns.map((item: any, i) => (
                     <div key={i} className="flex h-full w-full">
                       <CampaignCard item={item} />

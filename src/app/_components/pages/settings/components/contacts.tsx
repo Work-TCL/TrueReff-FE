@@ -62,7 +62,7 @@ export default function ContactsProfile(props: any) {
   return (
     <div>
       <div className="flex justify-between items-center border-b border-gray-300 pb-4 mt-6 mb-4">
-        <h2 className="text-sm xl:text-xl font-medium">
+        <h2 className="text-sm xl:text-xl font-medium capitalize">
           {translate("saved_contacts")}
         </h2>
         <div
@@ -70,7 +70,7 @@ export default function ContactsProfile(props: any) {
             setIsOpen(true);
             setCurrentContact(null);
           }}
-          className="text-sm text-primary cursor-pointer"
+          className="text-sm text-primary cursor-pointer capitalize"
         >
           {translate("add_new_contact")}
         </div>

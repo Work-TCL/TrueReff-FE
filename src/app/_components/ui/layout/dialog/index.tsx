@@ -64,7 +64,7 @@ export default function DialogLayout({
               {title || !skipClose ? (
                 <div
                   className={cn(
-                    "flex items-center justify-between px-2 sm:px-4 mt-2",
+                    "flex items-center justify-between px-4 pb-3 pt-2 mt-2 m-0 mb-1",
                     titleClassName
                   )}
                 >

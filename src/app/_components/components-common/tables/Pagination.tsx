@@ -24,9 +24,9 @@ export function TablePagination({
 }: TablePaginationProps) {
   const [currentPage, setCurrentPage] = useState(activePage);
 
-  useEffect(()=> {
+  useEffect(() => {
     setCurrentPage(activePage);
-  },[activePage])
+  }, [activePage]);
   // Function to handle page click
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -65,6 +65,9 @@ export function TablePagination({
     return pages;
   };
 
+  if (!Boolean(totalPages > 1)) {
+    return null;
+  }
   return (
     <Pagination className="flex justify-center">
       <PaginationContent className="flex items-center gap-2">

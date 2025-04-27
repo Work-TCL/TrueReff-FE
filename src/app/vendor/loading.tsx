@@ -10,7 +10,7 @@ export default function Loading({ height = "full" }: IProps) {
     <div
       role="status"
       className={`${
-        height === "full" ? "h-screen" : "h-full"
+        height === "full" ? "max-h-screen h-full" : "h-full"
       } flex justify-center items-center`}
     >
       <div className="w-fit h-fit">

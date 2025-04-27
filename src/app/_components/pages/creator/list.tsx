@@ -16,6 +16,9 @@ import Select from "react-select";
 import CreatorCard from "./creator-card";
 import { formatNumber } from "@/lib/utils/constants";
 import CollaborateRequest from "../../components-common/dialogs/collaborate-creator-form";
+import SingleSelect from "../../components-common/single-select";
+import { ViewToggle } from "../../components-common/view-toggle";
+import { SearchInput } from "../../components-common/search-field";
 export interface ICategory {
   _id: string;
   name: string;
@@ -184,7 +187,7 @@ export default function CreatorList() {
     setSearch(value);
   };
   const handleFilterValue = (value: any) => {
-    setFilter(value?.value);
+    setFilter(value);
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
@@ -193,42 +196,19 @@ export default function CreatorList() {
       ) : (
         <>
           <div className="flex justify-between items-center flex-wrap gap-2">
-            <div className="md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={translate("Search_creator")}
-                className="md:h-10 h-8 w-full"
-              />
-            </div>
-            <div className="flex items-center gap-[10px]">
-              <PiListChecksLight
-                className={`cursor-pointer md:size-[30px] size-6 ${
-                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
-                }`}
-                onClick={() => setViewMode("table")}
-              />
-              <IoGridOutline
-                className={`cursor-pointer md:size-[30px] size-6 ${
-                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
-                }`}
-                onClick={() => setViewMode("card")}
-              />
-              <Select
-                styles={customStyles}
-                value={[
-                  {
-                    value: filter,
-                    label: filter
-                      ? filterOption.find((ele) => ele?.value === filter)?.label
-                      : "Select Status",
-                  },
-                ]}
-                onChange={handleFilterValue}
-                options={filterOption}
-                className="basic-multi-select focus:outline-none focus:shadow-none"
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_creator")}
+            />
+            <div className="flex items-center gap-[10px] md:w-fit w-full">
+              <SingleSelect
                 placeholder="Select Status"
+                options={filterOption}
+                value={filter}
+                onChange={handleFilterValue}
               />
+              <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>
           {creators?.length > 0 ? (

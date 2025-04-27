@@ -5,46 +5,46 @@ import { ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 export interface ICategory {
-    _id: string;
-    name: string;
-  }
-  
-  export interface IChannel {
-    _id: string;
-    creatorId: string;
-    channelId: string;
-    channelName: string;
-    handleName: string;
-    token: string;
-    channelType: string;
-    createdAt: string;
-    updatedAt: string;
-    lastFiveVideoViews: number;
-    lastMonthViews: number;
-  }
-  export interface ICreator {
-    _id: string;
-    accountId: string;
-    full_name: string;
-    user_name: string;
-    phone: string;
-    title: string;
-    long_description: string;
-    short_description: string;
-    profile_image: string;
-    banner_image: string;
-    createdAt: string;
-    updatedAt: string;
-    tags: string[];
-    sub_category: string[];
-    category: ICategory[];
-    channels: IChannel[];
-    categories?: string;
-    tag?: string;
-    instagramViews?: string;
-    youtubeViews?: string;
-    pastSales?: string;
-  }
+  _id: string;
+  name: string;
+}
+
+export interface IChannel {
+  _id: string;
+  creatorId: string;
+  channelId: string;
+  channelName: string;
+  handleName: string;
+  token: string;
+  channelType: string;
+  createdAt: string;
+  updatedAt: string;
+  lastFiveVideoViews: number;
+  lastMonthViews: number;
+}
+export interface ICreator {
+  _id: string;
+  accountId: string;
+  full_name: string;
+  user_name: string;
+  phone: string;
+  title: string;
+  long_description: string;
+  short_description: string;
+  profile_image: string;
+  banner_image: string;
+  createdAt: string;
+  updatedAt: string;
+  tags: string[];
+  sub_category: string[];
+  category: ICategory[];
+  channels: IChannel[];
+  categories?: string;
+  tag?: string;
+  instagramViews?: string;
+  youtubeViews?: string;
+  pastSales?: string;
+}
 const CreatorCard = ({
   item: creator,
   handleCollaborateNow,
@@ -96,14 +96,12 @@ const CreatorCard = ({
             }`}
           />
         </div>
+        -
         {creator.tags?.length > 0 && (
-          <div className="text-gray-500 text-sm mt-1">
-            {" "}
-            <TruncateWithToolTip
-              checkHorizontalOverflow={true}
-              linesToClamp={1}
-              text={`${translate("Tags")} : ${creator.tags?.join(", ") || ""}`}
-            />
+          <div className="text-gray-500 text-sm flex flex-wrap gap-2 mt-2">
+            {creator.tags?.slice(0, 4).map((v) => (
+              <span className="bg-background py-1 px-2 rounded">#{v}</span>
+            ))}
           </div>
         )}
       </div>

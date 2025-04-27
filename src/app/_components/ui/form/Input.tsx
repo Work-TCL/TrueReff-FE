@@ -111,6 +111,14 @@ export default function Input({
               className={cn(inputStyle, Icon ? "!pl-12" : "")}
               placeholder={placeholder}
               {...field}
+              onChange={(e) => {
+                if (type === "email") {
+                  e.target.value = e?.target?.value?.toLowerCase();
+                  field.onChange(e);
+                } else {
+                  field?.onChange(e);
+                }
+              }}
               autoComplete="off"
               {...props}
             />

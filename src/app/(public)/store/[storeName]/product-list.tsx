@@ -20,6 +20,7 @@ import Loader from "@/app/_components/components-common/layout/loader";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import ProductCard from "@/app/_components/components-common/product/product-card";
+import { SearchInput } from "@/app/_components/components-common/search-field";
 const Select = dynamic(() => import("react-select"), { ssr: false });
 
 export interface ICategory {
@@ -587,15 +588,11 @@ export default function ProductList() {
       ) : (
         <>
           <div className="flex justify-between items-center gap-2">
-            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={translate("Search_Product")}
-                className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
-              />
-              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
-            </div>
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_Product")}
+            />
             <div className="flex md:flex-row flex-col gap-2 w-full justify-end items-center">
               <Select
                 styles={customStyles}

@@ -7,92 +7,92 @@ import { Brand } from "../list";
 import { ImageOff, Star } from "lucide-react";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import { useRouter } from "next/navigation";
+import { ColumnDef } from "@tanstack/react-table";
+import DataTable from "@/app/_components/components-common/data-table";
 
 interface BrandListProps {
   brand: Brand[];
 }
 export default function BrandListView({ brand }: BrandListProps) {
   const router = useRouter();
-  return (
-    <div className="overflow-auto">
-      <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-        <TableHeader className="bg-stroke">
-          <TableRow>
-            <CustomTableHead className="w-[20%]">
-              {translate("Brand_Name")}
-            </CustomTableHead>
-            <CustomTableHead className="w-[15%]">
-              {translate("Category")}
-            </CustomTableHead>
-            <CustomTableHead className="w-[15%]">
-              {translate("Total_Product")}
-            </CustomTableHead>
-            <CustomTableHead className="w-[15%]">
-              {translate("Total_Sale")}
-            </CustomTableHead>
-            <CustomTableHead className="w-[10%]">
-              {translate("Brand_Rating")}
-            </CustomTableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {brand.map((creator, index) => (
-            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-              <CustomTableCell>
-                <div
-                  className="flex items-center gap-3 cursor-pointer"
-                  onClick={() =>
-                    router?.push(`/creator/brandsList/${creator.id}`)
-                  }
-                >
-                  {creator?.logo ? (
-                    <img
-                      src={creator?.logo}
-                      alt={creator?.logo}
-                      className="w-8 h-8 object-cover object-center rounded-full overflow-hidden"
-                    />
-                  ) : (
-                    <ImageOff className="w-8 h-8 text-gray-400" />
-                  )}
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={creator.name}
-                  />
-                </div>
-              </CustomTableCell>
-              <CustomTableCell className="text-font-grey whitespace-nowrap">
-                <TruncateWithToolTip
-                  checkHorizontalOverflow={false}
-                  linesToClamp={2}
-                  text={creator.category}
-                />
-              </CustomTableCell>
-              <CustomTableCell className="text-font-grey whitespace-nowrap">
-                <TruncateWithToolTip
-                  checkHorizontalOverflow={false}
-                  linesToClamp={2}
-                  text={`${creator.totalProducts}`}
-                />
-              </CustomTableCell>
-              <CustomTableCell className="text-font-grey whitespace-nowrap">
-                <TruncateWithToolTip
-                  checkHorizontalOverflow={false}
-                  linesToClamp={2}
-                  text={creator.totalSale}
-                />
-              </CustomTableCell>
-              <CustomTableCell className="flex items-center text-font-grey whitespace-nowrap gap-1 text-center">
-                <Star className="w-4 h-4 fill-current text-dark-orange" />
-                <span>{creator.rating}</span>
-                <span>
-                  ({creator.reviews} {translate("reviews")})
-                </span>
-              </CustomTableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
+  const brandColumns: ColumnDef<Brand>[] = [
+    {
+      accessorKey: "name",
+      header: () => translate("Brand_Name"),
+      cell: ({ row }) => {
+        const creator = row.original;
+        return (
+          <div
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={() => router.push(`/creator/brandsList/${creator.id}`)}
+          >
+            {creator?.logo ? (
+              <img
+                src={creator.logo}
+                alt={creator.name}
+                className="w-8 h-8 object-cover object-center rounded-full overflow-hidden"
+              />
+            ) : (
+              <ImageOff className="w-8 h-8 text-gray-400" />
+            )}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={creator.name}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "category",
+      header: () => translate("Category"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.category}
+        />
+      ),
+    },
+    {
+      accessorKey: "totalProducts",
+      header: () => translate("Total_Product"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={`${row.original.totalProducts}`}
+        />
+      ),
+    },
+    {
+      accessorKey: "totalSale",
+      header: () => translate("Total_Sale"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={`${row.original.totalSale}`}
+        />
+      ),
+    },
+    {
+      id: "brandRating",
+      header: () => translate("Brand_Rating"),
+      cell: ({ row }) => {
+        const creator = row.original;
+        return (
+          <div className="flex items-center gap-1 text-font-grey whitespace-nowrap">
+            <Star className="w-4 h-4 fill-current text-dark-orange" />
+            <span>{creator.rating}</span>
+            <span>
+              ({creator.reviews} {translate("reviews")})
+            </span>
+          </div>
+        );
+      },
+    },
+  ];
+  return <DataTable columns={brandColumns} data={brand} />;
 }

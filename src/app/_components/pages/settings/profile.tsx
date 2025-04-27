@@ -78,7 +78,7 @@ export default function Profile() {
           </h2>
           <div
             onClick={() => setIsOpen(true)}
-            className="text-sm text-primary cursor-pointer"
+            className="text-sm text-primary cursor-pointer capitalize"
           >
             {translate("edit_profile")}
           </div>

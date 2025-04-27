@@ -11,6 +11,8 @@ import { UserPlus, XCircle } from "lucide-react";
 import StatusBadge from "@/app/_components/components-common/status-badge";
 import ToolTip from "@/app/_components/components-common/tool-tip";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
+import { ColumnDef } from "@tanstack/react-table";
+import DataTable from "@/app/_components/components-common/data-table";
 
 interface ICreatorTableProps {
   data: IBrand[];
@@ -38,185 +40,169 @@ export default function BrandProductTable({
     } else return "SEND_REQUEST";
   };
 
-  return (
-    <div className="overflow-auto">
-      <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-        <TableHeader className="bg-stroke">
-          <TableRow>
-            <CustomTableHead className="w-1/9">
-              {translate("Product_Name")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Description")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Brand_Name")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Category")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Sub_category")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9">
-              {translate("Tags")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/9 text-center">
-              {"Status"}
-            </CustomTableHead>
-            {/* <CustomTableHead className="w-1/9 text-center">
-              {"View"}
-            </CustomTableHead> */}
-            <CustomTableHead className="w-1/9 text-center">
-              {translate("Action")}
-            </CustomTableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((brand: IBrand, index: number) => {
-            let status = getRequestStatus(brand);
-            return (
-              <TableRow key={index} className="bg-white hover:bg-gray-100">
-                <CustomTableCell>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => onView(brand._id)}
-                  >
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage
-                        className={brand.media?.length > 0 ? "" : "opacity-50"}
-                        src={
-                          brand.media?.length > 0
-                            ? brand.media[0]
-                            : "/assets/profile/profile-image.png"
-                        }
-                      />
-                    </Avatar>
-                    <TruncateWithToolTip
-                      checkHorizontalOverflow={false}
-                      linesToClamp={2}
-                      text={brand.title}
-                    />
-                  </div>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={brand?.description}
-                  />
-                </CustomTableCell>
-                <CustomTableCell>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() =>
-                      router.push(`/vendor/profile/${brand?.vendor?._id}`)
-                    }
-                  >
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage
-                        className={
-                          brand?.vendor?.profile_image ? "" : "opacity-50"
-                        }
-                        src={
-                          brand?.vendor?.profile_image
-                            ? brand?.vendor?.profile_image
-                            : "/assets/profile/profile-image.png"
-                        }
-                      />
-                    </Avatar>
-                    <TruncateWithToolTip
-                      checkHorizontalOverflow={false}
-                      linesToClamp={2}
-                      text={brand?.vendor?.business_name}
-                    />
-                  </div>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={
-                      brand.categories?.length
-                        ? brand.categories?.join(", ")
-                        : ""
-                    }
-                  />
-                </CustomTableCell>
-                <CustomTableCell>
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={
-                      brand.subCategories?.length
-                        ? brand.subCategories?.join(", ")
-                        : ""
-                    }
-                  />
-                </CustomTableCell>
-                <CustomTableCell>
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={brand?.tags?.length ? brand.tags.join(", ") : ""}
-                  />
-                </CustomTableCell>
-                {/* <CustomTableCell>{brand.pastSales??''}</CustomTableCell> */}
-                <CustomTableCell className="flex justify-center">
-                  {status === "REJECTED" ||
-                  (status === "REQUESTED" &&
-                    brand?.request?.requestFrom === "CREATOR") ? (
-                    <StatusBadge status={status} />
-                  ) : null}
-                </CustomTableCell>
-                {/* <CustomTableCell className="flex justify-center">
-                  <ToolTip content="View Product" delayDuration={1000}>
-                    <Eye
-                      color="#FF4979"
-                      className=" cursor-pointer"
-                      onClick={() => handleDetailView(brand._id)}
-                      size={25}
-                    />
-                  </ToolTip>
-                </CustomTableCell> */}
-                <CustomTableCell className="flex justify-center">
-                  {
-                    {
-                      REQUESTED:
-                        brand?.request?.requestFrom === "CREATOR" ? (
-                          <ToolTip
-                            content="Cancel Request"
-                            delayDuration={1000}
-                          >
-                            <XCircle
-                              className="cursor-pointer"
-                              size={25}
-                              color="#ef4444"
-                              onClick={() => onAction(status, brand)}
-                            />
-                          </ToolTip>
-                        ) : null,
-                      SEND_REQUEST: (
-                        <ToolTip
-                          content="Send Collaboration Request"
-                          delayDuration={1000}
-                        >
-                          <UserPlus
-                            color="#3b82f680"
-                            className="cursor-pointer"
-                            onClick={() => onAction(status, brand)}
-                            size={25}
-                          />
-                        </ToolTip>
-                      ),
-                    }[status]
-                  }
-                </CustomTableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
-  );
+  const columns: ColumnDef<IBrand>[] = [
+    {
+      accessorKey: "title",
+      header: () => translate("Product_Name"),
+      cell: ({ row }) => {
+        const brand = row.original;
+        return (
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => onView(brand._id)}
+          >
+            <Avatar className="w-8 h-8">
+              <AvatarImage
+                className={brand.media?.length > 0 ? "" : "opacity-50"}
+                src={
+                  brand.media?.length > 0
+                    ? brand.media[0]
+                    : "/assets/profile/profile-image.png"
+                }
+              />
+            </Avatar>
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={brand.title}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "description",
+      header: () => translate("Description"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.description}
+        />
+      ),
+    },
+    {
+      accessorKey: "vendor.business_name",
+      header: () => translate("Brand_Name"),
+      cell: ({ row }) => {
+        const brand = row.original;
+        return (
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push(`/vendor/profile/${brand?.vendor?._id}`)}
+          >
+            <Avatar className="w-8 h-8">
+              <AvatarImage
+                className={brand?.vendor?.profile_image ? "" : "opacity-50"}
+                src={
+                  brand?.vendor?.profile_image
+                    ? brand?.vendor?.profile_image
+                    : "/assets/profile/profile-image.png"
+                }
+              />
+            </Avatar>
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={brand?.vendor?.business_name}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "categories",
+      header: () => translate("Category"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.categories?.join(", ") || ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "subCategories",
+      header: () => translate("Sub_category"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.subCategories?.join(", ") || ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "tags",
+      header: () => translate("Tags"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.tags?.join(", ") || ""}
+        />
+      ),
+    },
+    {
+      id: "status",
+      header: () => <div className="text-center">{translate("Status")}</div>,
+      cell: ({ row }) => {
+        const brand = row.original;
+        const status = getRequestStatus(brand);
+        return status === "REJECTED" ||
+          (status === "REQUESTED" &&
+            brand?.request?.requestFrom === "CREATOR") ? (
+          <StatusBadge status={status} />
+        ) : null;
+      },
+    },
+    {
+      id: "actions",
+      header: () => <div className="text-center">{translate("Action")}</div>,
+      cell: ({ row }) => {
+        const brand = row.original;
+        const status = getRequestStatus(brand);
+
+        if (
+          status === "REQUESTED" &&
+          brand?.request?.requestFrom === "CREATOR"
+        ) {
+          return (
+            <div className="mx-auto w-fit">
+              <ToolTip content="Cancel Request" delayDuration={1000}>
+                <XCircle
+                  className="cursor-pointer"
+                  size={25}
+                  color="#ef4444"
+                  onClick={() => onAction(status, brand)}
+                />
+              </ToolTip>
+            </div>
+          );
+        }
+
+        if (status === "SEND_REQUEST") {
+          return (
+            <div className="mx-auto w-fit">
+              <ToolTip
+                content="Send Collaboration Request"
+                delayDuration={1000}
+              >
+                <UserPlus
+                  className="cursor-pointer"
+                  size={25}
+                  color="#3b82f680"
+                  onClick={() => onAction(status, brand)}
+                />
+              </ToolTip>
+            </div>
+          );
+        }
+
+        return null; // important to avoid undefined crash
+      },
+    },
+  ];
+
+  return <DataTable columns={columns} data={data} />;
 }

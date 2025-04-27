@@ -18,6 +18,8 @@ import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
 import Loader from "../../components-common/layout/loader";
 import Select from "react-select";
+import { SearchInput } from "../../components-common/search-field";
+import SingleSelect from "../../components-common/single-select";
 export interface ICategory {
   _id: string;
   name: string;
@@ -42,7 +44,7 @@ export interface IProduct {
   tags: string[];
   createdAt: string;
   updatedAt: string;
-};
+}
 
 export interface ICreator {
   _id: string;
@@ -90,8 +92,8 @@ export interface ICollaboration {
 }
 
 export interface IStatus {
-  value:string;
-  label:string;
+  value: string;
+  label: string;
 }
 
 const customStyles = {
@@ -100,11 +102,11 @@ const customStyles = {
     fontSize: "0.875rem ", // Tailwind text-sm
     color: "#a1a1aa", // Tailwind slate-400
   }),
-  control:(base:any) => ({
+  control: (base: any) => ({
     ...base,
-    width: '200px',
-    borderRadius:"8px"
-  })
+    width: "200px",
+    borderRadius: "8px",
+  }),
 };
 export default function CollaborationList() {
   const t = useTranslations();
@@ -114,14 +116,14 @@ export default function CollaborationList() {
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
   const [search, setSearch] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
-  const statusOptions:IStatus[] = [
-      {value:"",label:"Select Status"},
-      {value:"REQUESTED",label:"Requested"},
-      {value:"REJECTED",label:"Rejected"},
-      {value:"PENDING",label:"Pending"},
-      {value:"LIVE",label:"Live"},
-      {value:"EXPIRED",label:"Expired"}
-    ];
+  const statusOptions: IStatus[] = [
+    { value: "", label: "Select Status" },
+    { value: "REQUESTED", label: "Requested" },
+    { value: "REJECTED", label: "Rejected" },
+    { value: "PENDING", label: "Pending" },
+    { value: "LIVE", label: "Live" },
+    { value: "EXPIRED", label: "Expired" },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 20;
@@ -132,11 +134,18 @@ export default function CollaborationList() {
   };
   // Get Creator list
   const fetchCollaboration = useCallback(
-    async (page: number, isInternalLoader?: boolean, searchValue: string = '',status:string="") => {
+    async (
+      page: number,
+      isInternalLoader?: boolean,
+      searchValue: string = "",
+      status: string = ""
+    ) => {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/product/collaboration/list?page=${page}&limit=${pageSize}${searchValue ? `&search=${searchValue}` : ""}${status ?`&collaborationStatus=${status}`:""}`
+          `/product/collaboration/list?page=${page}&limit=${pageSize}${
+            searchValue ? `&search=${searchValue}` : ""
+          }${status ? `&collaborationStatus=${status}` : ""}`
         );
         if (response.status === 200) {
           const collaborationData = response.data.data;
@@ -146,18 +155,28 @@ export default function CollaborationList() {
 
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
-                ele.product.category = ele.product.categories?.length > 0 ? ele.product.categories
-                  .filter((category: ICategory) => category?.parentId === null)
-                  .map((category: ICategory) => {
-                    return category?.name;
-                  })
-                  .join(", ") : "";
-                ele.product.subCategories = ele.product.categories?.length > 0 ? ele.product.categories
-                  .filter((category: ICategory) => category?.parentId !== null)
-                  .map((category: ICategory) => {
-                    return category?.name;
-                  })
-                  .join(", ") : "";
+                ele.product.category =
+                  ele.product.categories?.length > 0
+                    ? ele.product.categories
+                        .filter(
+                          (category: ICategory) => category?.parentId === null
+                        )
+                        .map((category: ICategory) => {
+                          return category?.name;
+                        })
+                        .join(", ")
+                    : "";
+                ele.product.subCategories =
+                  ele.product.categories?.length > 0
+                    ? ele.product.categories
+                        .filter(
+                          (category: ICategory) => category?.parentId !== null
+                        )
+                        .map((category: ICategory) => {
+                          return category?.name;
+                        })
+                        .join(", ")
+                    : "";
                 ele.product.tag = ele.product.tags.join(", ");
                 return { ...ele };
               });
@@ -191,7 +210,8 @@ export default function CollaborationList() {
     fetchCollaboration(currentPage);
   }, []);
   const handlePageChange = (page: number) => {
-    page !== currentPage && fetchCollaboration(page, true,search,selectedStatus);
+    page !== currentPage &&
+      fetchCollaboration(page, true, search, selectedStatus);
   };
   const debouncedSearch = useCallback(
     debounce((value: string, status: string) => {
@@ -203,58 +223,58 @@ export default function CollaborationList() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setSearch(value);
-    debouncedSearch(value, selectedStatus)
+    debouncedSearch(value, selectedStatus);
   };
   const handleSelectStatus = (selectedOptions: any) => {
-    setSelectedStatus(selectedOptions?.value);
-    fetchCollaboration(currentPage, true, search, selectedOptions?.value);
-  }
+    setSelectedStatus(selectedOptions);
+    fetchCollaboration(currentPage, true, search, selectedOptions);
+  };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
         <Loading />
-      ) : <><div className="flex justify-between items-center gap-2">
-         <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-          <Input
-            value={search}
-            onChange={handleSearch}
-            placeholder={t("Search_Product")}
-            className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
-          />
-          <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-        </div>
-        <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
-        <Select
-            styles={customStyles}
-            value={[{ value: selectedStatus, label: selectedStatus?statusOptions.find(ele => ele?.value === selectedStatus)?.label:"Select Status" }]}
-            onChange={handleSelectStatus}
-            options={statusOptions}
-            className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder="Select Status"
-          />
-        </div>
-      </div>
-      {internalLoader && <Loader />}
-      {!loading && collaborations?.length > 0 ? (
-        <>
-          <CollaborationTable
-            data={collaborations}
-            user={getUserType()}
-            refreshCentral={() => fetchCollaboration(currentPage, true)}
-            loader={internalLoader}
-          />
-           {totalPages > 1 &&  <TablePagination
-              totalPages={totalPages}
-              activePage={currentPage}
-              onPageChange={handlePageChange}
-            />}
-        </>
       ) : (
-        <EmptyPlaceHolder
-          title={"No_Collaborations_Available_Title"}
-          description={"No_Collaborations_Available_Description"}
-        />
-      )}</>}
+        <>
+          <div className="flex justify-between items-center gap-2">
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={t("Search_Product")}
+            />
+            <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
+              <SingleSelect
+                value={selectedStatus}
+                onChange={handleSelectStatus}
+                options={statusOptions}
+                placeholder="Select Status"
+              />
+            </div>
+          </div>
+          {internalLoader && <Loader />}
+          {!loading && collaborations?.length > 0 ? (
+            <>
+              <CollaborationTable
+                data={collaborations}
+                user={getUserType()}
+                refreshCentral={() => fetchCollaboration(currentPage, true)}
+                loader={internalLoader}
+              />
+              {totalPages > 1 && (
+                <TablePagination
+                  totalPages={totalPages}
+                  activePage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </>
+          ) : (
+            <EmptyPlaceHolder
+              title={"No_Collaborations_Available_Title"}
+              description={"No_Collaborations_Available_Description"}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

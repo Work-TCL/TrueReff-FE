@@ -19,6 +19,9 @@ import { getCategories } from "@/lib/web-api/auth";
 import Select from "react-select";
 import { Search } from "lucide-react";
 import ProductCard from "./product-card";
+import { ViewToggle } from "../../components-common/view-toggle";
+import CategorySubCategorySelect from "../../components-common/category-dropdowns";
+import { SearchInput } from "../../components-common/search-field";
 export interface ICategory {
   _id: string;
   name: string;
@@ -101,16 +104,9 @@ export default function ProductList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [filter, setFilter] = useState<string>("5");
   const [search, setSearch] = useState<string>("");
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
-  const [subCategory, setSubCategory] = useState<ICategory[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // parent and sub both categories
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
-  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>(
-    []
-  );
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 20;
@@ -186,20 +182,7 @@ export default function ProductList() {
   useEffect(() => {
     getProductList(currentPage);
   }, []);
-  const fetchCategory = async () => {
-    try {
-      const response = await getCategories({ page: 0, limit: 0 });
-      const data = response?.data?.data || [];
-      setCategories(data);
-      setParentCategory(data.filter((ele) => ele?.parentId === null));
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
 
-  useEffect(() => {
-    fetchCategory();
-  }, []);
   const debouncedSearch = useCallback(
     debounce((value: string, categoryIds: string[]) => {
       getProductList(currentPage, true, value, categoryIds);
@@ -210,47 +193,19 @@ export default function ProductList() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
-    debouncedSearch(value, [...selectedCategories, ...selectedSubCategories]); // call debounce on value
+    debouncedSearch(value, [...selectedCategories]); // call debounce on value
   };
   const handlePageChange = (page: number) => {
     page !== currentPage &&
-      getProductList(page, true, search, [
-        ...selectedCategories,
-        ...selectedSubCategories,
-      ]);
+      getProductList(page, true, search, [...selectedCategories]);
   };
   const handleUpdateProduct = () => {
     getProductList(currentPage, true);
   };
 
   const handleSelectCategory = (selectedOptions: any) => {
-    const selectedIds = selectedOptions.map((opt: any) => opt.value);
-    setSelectedCategories(selectedIds);
-
-    const optionsSubCategory = categories.filter((ele) =>
-      selectedIds.includes(ele?.parentId || "")
-    );
-    setSubCategory(optionsSubCategory);
-
-    // Filter selected subcategories to only include available ones
-    const availableSubCategoriesIds = optionsSubCategory.map((v) => v._id);
-    let selectedSubCategory = selectedSubCategories.filter((id) =>
-      availableSubCategoriesIds.includes(id)
-    );
-    setSelectedSubCategories(selectedSubCategory);
-    getProductList(currentPage, true, search, [
-      ...selectedIds,
-      ...selectedSubCategory,
-    ]);
-  };
-
-  const handleSelectSubCategory = (selectedOptions: any) => {
-    const selectedIds = selectedOptions.map((opt: any) => opt.value);
-    setSelectedSubCategories(selectedIds);
-    getProductList(currentPage, true, search, [
-      ...selectedCategories,
-      ...selectedIds,
-    ]);
+    setSelectedCategories(selectedOptions);
+    getProductList(currentPage, true, search, [...selectedOptions]);
   };
 
   return (
@@ -259,62 +214,16 @@ export default function ProductList() {
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center gap-2">
-            <div className="relative md:text-[20px] text-base text-500 max-w-[350px] w-full ">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={translate("Search_Product")}
-                className="p-3 rounded-lg bg-white pl-10 w-full gray-color" // Add padding to the left for the icon
-              />
-              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-            </div>
-            <div className="flex md:flex-row flex-col gap-2 w-full justify-end">
-              <PiListChecksLight
-                className={`cursor-pointer md:size-[30px] size-6 ${
-                  viewMode === "table" ? "text-blue-600" : "text-gray-400"
-                }`}
-                onClick={() => setViewMode("table")}
-              />
-              <IoGridOutline
-                className={`cursor-pointer md:size-[30px] size-6 ${
-                  viewMode === "card" ? "text-blue-600" : "text-gray-400"
-                }`}
-                onClick={() => setViewMode("card")}
-              />
-              <Select
-                styles={customStyles}
-                value={selectedCategories.map((id) => {
-                  const match = parentCategory.find((cat) => cat._id === id);
-                  return { value: id, label: match?.name || id };
-                })}
-                isMulti
-                onChange={handleSelectCategory}
-                options={parentCategory.map((ele) => ({
-                  value: ele._id,
-                  label: ele.name,
-                }))}
-                isOptionDisabled={() => selectedCategories.length >= 3}
-                className="basic-multi-select focus:outline-none focus:shadow-none"
-                placeholder="Parent Categories (max 3)"
-              />
-              <Select
-                styles={customStyles}
-                placeholder="Subcategories (max 3)"
-                value={selectedSubCategories.map((id) => {
-                  const match = subCategory.find((cat) => cat._id === id);
-                  return { value: id, label: match?.name || id };
-                })}
-                isMulti
-                onChange={handleSelectSubCategory}
-                options={subCategory.map((ele) => ({
-                  value: ele._id,
-                  label: ele.name,
-                }))}
-                isOptionDisabled={() => selectedSubCategories.length >= 3}
-                className="basic-multi-select focus:outline-none focus:shadow-none"
-                classNamePrefix="select"
-              />
+          <div className="flex justify-between items-center gap-2 flex-wrap">
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_Product")}
+              className="p-3 rounded-lg bg-white pl-10 w-full gray-color" // Add padding to the left for the icon
+            />
+            <div className="flex flex-row gap-2 justify-end relative z-[99] flex-wrap ml-auto">
+              <CategorySubCategorySelect onChange={handleSelectCategory} />
+              <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>
           {internalLoader && <Loader />}
@@ -336,13 +245,13 @@ export default function ProductList() {
               />
 
               {/* Pagination */}
-              {totalPages > 1 && (
-                <TablePagination
-                  totalPages={totalPages}
-                  activePage={currentPage}
-                  onPageChange={handlePageChange}
-                />
-              )}
+              {/* {totalPages > 1 && ( */}
+              <TablePagination
+                totalPages={totalPages}
+                activePage={currentPage}
+                onPageChange={handlePageChange}
+              />
+              {/* )} */}
             </>
           ) : (
             <EmptyPlaceHolder

@@ -17,23 +17,25 @@ const CreatorCard = ({
   return (
     <div
       onClick={() => router?.push(`/creator/profile/${creator?._id}`)}
-      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg"
+      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg cursor-pointer"
     >
       {/* Image */}
-      <div className="w-full aspect-[3/2] rounded-lg overflow-hidden mb-3 flex justify-center items-center bg-background">
-        {creator.profile_image ? (
-          <img
-            src={creator.profile_image}
-            alt={creator.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <ImageOff className="w-8 h-8 text-gray-400" />
-        )}
+      <div className="">
+        <div className="w-full aspect-[3/2] rounded-lg overflow-hidden mb-3 flex justify-center items-center bg-background">
+          {creator.profile_image ? (
+            <img
+              src={creator.profile_image}
+              alt={creator.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <ImageOff className="w-8 h-8 text-gray-400" />
+          )}
+        </div>
       </div>
 
       {/* Title + Category */}
-      <div className="text-center mb-3">
+      <div className="text-left mb-3">
         <div className="text-lg font-semibold">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
@@ -58,13 +60,10 @@ const CreatorCard = ({
           />
         </div>
         {creator.tags?.length > 0 && (
-          <div className="text-gray-500 text-sm mt-1">
-            {" "}
-            <TruncateWithToolTip
-              checkHorizontalOverflow={true}
-              linesToClamp={1}
-              text={`${translate("Tags")} : ${creator.tags?.join(", ") || ""}`}
-            />
+          <div className="text-gray-500 text-sm flex flex-wrap gap-2 mt-2">
+            {creator.tags?.slice(0, 4).map((v) => (
+              <span className="bg-background py-1 px-2 rounded">#{v}</span>
+            ))}
           </div>
         )}
       </div>

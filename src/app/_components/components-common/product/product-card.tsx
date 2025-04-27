@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { translate } from "@/lib/utils/translate";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 export interface ICategory {
-    _id: string;
-    name: string;
-    parentId: string | null;
-    createdAt: string; // or Date if parsed
-    updatedAt: string; // or Date
-  }
+  _id: string;
+  name: string;
+  parentId: string | null;
+  createdAt: string; // or Date if parsed
+  updatedAt: string; // or Date
+}
 export interface IProduct {
   vendor: any;
   collaboration: any;
@@ -31,7 +31,13 @@ export interface IProduct {
   tag?: string;
   price?: string;
 }
-const ProductCard = ({ item: product,productDetailLink }: { item: IProduct,productDetailLink: string }) => {
+const ProductCard = ({
+  item: product,
+  productDetailLink,
+}: {
+  item: IProduct;
+  productDetailLink: string;
+}) => {
   const router = useRouter();
   return (
     <div
@@ -80,13 +86,10 @@ const ProductCard = ({ item: product,productDetailLink }: { item: IProduct,produ
           />
         </div>
         {product.tags?.length > 0 && (
-          <div className="text-gray-500 text-sm mt-1">
-            {" "}
-            <TruncateWithToolTip
-              checkHorizontalOverflow={true}
-              linesToClamp={1}
-              text={`${translate("Tags")} : ${product.tags?.join(", ") || ""}`}
-            />
+          <div className="text-gray-500 text-sm flex flex-wrap gap-2 mt-2">
+            {product.tags?.slice(0, 4).map((v) => (
+              <span className="bg-background py-1 px-2 rounded">#{v}</span>
+            ))}
           </div>
         )}
       </div>

@@ -148,49 +148,54 @@ export default function ChannleToProduct({
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-2 text-left gap-3">
-              <div className="md:col-span-1 col-span-2">
-                <Input
-                  label={translate("Category")}
-                  placeholder={translate("Fashion_Beauty")}
-                  name="category"
-                  type="productCategories"
-                  disabled={loading}
-                  options={parentCategory?.map((ele) => ({
-                    value: ele?._id,
-                    label: ele?.name,
-                  }))}
-                />
+              <div className="grid grid-cols-2 text-left gap-3">
+                <div className="md:col-span-1 col-span-2">
+                  <Input
+                    label={translate("Category")}
+                    placeholder={translate("Fashion_Beauty")}
+                    name="category"
+                    type="productCategories"
+                    disabled={loading}
+                    options={parentCategory?.map((ele) => ({
+                      value: ele?._id,
+                      label: ele?.name,
+                    }))}
+                  />
+                </div>
+                <div className="md:col-span-1 col-span-2">
+                  <Input
+                    label={translate("Sub_category")}
+                    placeholder={translate("Men_Fashion")}
+                    name="subCategory"
+                    type="productCategories"
+                    disabled={loading}
+                    options={subCategory.map((ele) => ({
+                      value: ele?._id,
+                      label: ele?.name,
+                    }))}
+                  />
+                </div>
               </div>
-              <div className="md:col-span-1 col-span-2">
-                <Input
-                  label={translate("Sub_category")}
-                  placeholder={translate("Men_Fashion")}
-                  name="subCategory"
-                  type="productCategories"
+              <div className="grid grid-cols-4 gap-4">
+                <div />
+                <div />
+                <Button
+                  variant="outline"
+                  type="button"
                   disabled={loading}
-                  options={subCategory.map((ele) => ({
-                    value: ele?._id,
-                    label: ele?.name,
-                  }))}
-                />
+                  onClick={() => onClose()}
+                  className="w-full h-full border-black bg-transparent text-base"
+                >
+                  {translate("Cancel")}
+                </Button>
+                <ButtonSubmit
+                  type="submit"
+                  loading={loading}
+                  disabled={loading}
+                >
+                  {translate("Save")}
+                </ButtonSubmit>
               </div>
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              <div/><div/>
-              <Button
-                variant="outline"
-                type="button"
-                disabled={loading}
-                onClick={() => onClose()}
-                className="w-full h-full border-black bg-transparent text-base"
-              >
-                {translate("Cancel")}
-              </Button>
-              <ButtonSubmit type="submit" loading={loading} disabled={loading}>
-                {translate("Save")}
-              </ButtonSubmit>
-            </div>
             </div>
           </form>
         </FormProvider>

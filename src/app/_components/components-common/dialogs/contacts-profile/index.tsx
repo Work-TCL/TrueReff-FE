@@ -16,10 +16,8 @@ export default function EditContactProfile({
       size="!max-w-[600px] w-full overflow-auto p-4"
       title={contact ? translate("edit_contact") : translate("add_new_contact")}
       onClose={onClose}
-      titleClassName='m-0 !p-0 mb-3'
-
     >
-      <div className="p-4 sm:p-10 pb-0 sm:pb-0 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
+      <div className="px-4 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
         <EditContactVendorForm profile={contact} id={id} onClose={onClose} />
       </div>
     </DialogLayout>

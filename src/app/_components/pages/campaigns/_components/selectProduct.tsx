@@ -4,6 +4,7 @@ import Loader from "@/app/_components/components-common/layout/loader";
 import { IProduct } from "@/lib/types-api/vendor";
 import { getProductLists } from "@/lib/web-api/vendor";
 import { debounce } from "lodash";
+import { SearchInput } from "@/app/_components/components-common/search-field";
 
 type ProductSelectDropdownProps = {
   onSelect?: (product: IProduct) => void;
@@ -143,12 +144,11 @@ const ProductSelectDropdown: React.FC<ProductSelectDropdownProps> = ({
       {isOpen && (
         <div className="absolute z-10 mt-2 w-full bg-white border rounded-lg shadow-lg">
           <div className="p-2">
-            <input
-              type="text"
+            <SearchInput
               placeholder="Search product..."
               value={search}
               onChange={handleSearch}
-              className="w-full p-3 pl-5 border rounded-full outline-none"
+              className="md:!max-w-full"
             />
           </div>
           <div

@@ -22,6 +22,8 @@ import StatusBadge from "../../components-common/status-badge";
 import axios from "@/lib/web-api/axios";
 import ToolTip from "../../components-common/tool-tip";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { ColumnDef } from "@tanstack/react-table";
+import DataTable from "../../components-common/data-table";
 
 export function capitalizeFirstLetter(word: string = "") {
   if (!word) return ""; // Handle empty strings
@@ -45,7 +47,7 @@ const CollaborationTable = ({
   filter,
   user,
   fetchCollaboration,
-  isDashboard = false
+  isDashboard = false,
 }: ICreatorTableProps) => {
   const router = useRouter();
   const translate = useTranslations();
@@ -140,212 +142,190 @@ const CollaborationTable = ({
       ? userStatus[request?.requestFrom]
       : status;
   };
-  return (
-    <div className="overflow-auto">
-      <div className="min-w-full border-2 border-gray-200 overflow-hidden rounded-2xl">
-      <Table className="w-full">
-        <TableHeader className="bg-stroke">
-          <TableRow>
-            <CustomTableHead className="w-1/5">
-              {translate("Product_Name")}
-            </CustomTableHead>
-            {!isDashboard && <CustomTableHead className="w-1/5">
-              {translate("Product_Category")}
-            </CustomTableHead>}
-            {!isDashboard && <CustomTableHead className="w-1/5">
-              {translate("Product_Tags")}
-            </CustomTableHead>}
-            <CustomTableHead className="w-1/5">
-              {translate(`Brand`)}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/5 text-center">
-              {translate("Status")}
-            </CustomTableHead>
-            <CustomTableHead className="w-1/5 text-center">
-              {translate("Action")}
-            </CustomTableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((collaboration: ICollaboration, index: number) => {
-            let status = getRequestStatus(collaboration);
-            return (
-              <TableRow key={index} className="bg-white hover:bg-gray-100">
-                <CustomTableCell>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() =>
-                      handleProductDetail(collaboration?.product?._id)
-                    }
-                  >
-                    {collaboration?.product?.media[0] ? (
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage
-                          src={
-                            collaboration?.product?.media[0] ??
-                            "/assets/product/image-square.svg"
-                          }
-                        />
-                        <AvatarImage src={"/assets/product/image-square.svg"} />
-                      </Avatar>
-                    ) : (
-                      <ImageOff className="w-6 h-6 text-gray-400" />
-                    )}
-                    <TruncateWithToolTip
-                      checkHorizontalOverflow={false}
-                      linesToClamp={2}
-                      text={collaboration?.product?.title}
-                    />
-                  </div>
-                </CustomTableCell>
-                {!isDashboard && <CustomTableCell>
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={collaboration?.product?.category ?? ""}
-                  />
-                </CustomTableCell>}
-                {!isDashboard && <CustomTableCell>
-                  <TruncateWithToolTip
-                    checkHorizontalOverflow={false}
-                    linesToClamp={2}
-                    text={collaboration?.product?.tag ?? ""}
-                  />
-                </CustomTableCell>}
-                <CustomTableCell>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() =>
-                      router.push(
-                        `/vendor/profile/${collaboration?.fromUser?._id}`
-                      )
-                    }
-                  >
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage
-                          className={collaboration?.fromUser?.profile_image?"":"opacity-50"} src={collaboration?.fromUser?.profile_image?collaboration?.fromUser?.profile_image:"/assets/profile/profile-image.png"}
-                        />
-                      </Avatar>
 
-                    <TruncateWithToolTip
-                      checkHorizontalOverflow={false}
-                      linesToClamp={2}
-                      text={collaboration?.fromUser?.business_name}
-                    />
-                  </div>
-                </CustomTableCell>
-                <CustomTableCell className="flex justify-center">
-                  {status && (
-                    <StatusBadge
-                      status={status}
-                      messageStatus={getMessages(
-                        status,
-                        collaboration?.request
-                      )}
-                    />
-                  )}
-                </CustomTableCell>
-                <CustomTableCell className="flex justify-center">
-                  {
-                    {
-                      REQUESTED: {
-                        VENDOR: (
-                          <div className="flex justify-between gap-3">
-                            <ToolTip
-                              content="Accept Request"
-                              delayDuration={1000}
-                            >
-                              <CheckCircle
-                                strokeWidth={1.5}
-                                color="#22c55e"
-                                className="cursor-pointer"
-                                size={25}
-                                onClick={() =>
-                                  handleStatusChangeRequest(
-                                    "accepted",
-                                    collaboration?._id
-                                  )
-                                }
-                              />
-                            </ToolTip>
-                            <ToolTip
-                              content="Reject Request"
-                              delayDuration={1000}
-                            >
-                              <XCircle
-                                strokeWidth={1.5}
-                                className="cursor-pointer"
-                                size={25}
-                                color="#ef4444"
-                                onClick={() =>
-                                  setIsOpen({
-                                    show: true,
-                                    collaborationId: collaboration?._id,
-                                    status: "reject",
-                                  })
-                                }
-                              />
-                            </ToolTip>
-                          </div>
-                        ),
-                        CREATOR: (
-                          <ToolTip
-                            content="Cancel Request"
-                            delayDuration={1000}
-                          >
-                            <XCircle
-                              strokeWidth={1.5}
-                              className="cursor-pointer"
-                              size={25}
-                              color="#ef4444"
-                              onClick={() =>
-                                setIsOpen({
-                                  show: true,
-                                  collaborationId: collaboration?._id,
-                                  status: "cancel",
-                                })
-                              }
-                            />
-                          </ToolTip>
-                        ),
-                      }[collaboration?.request?.requestFrom ?? ""],
-                      PENDING: (
-                        <div className="flex gap-3">
-                          <ToolTip content="View Product" delayDuration={1000}>
-                            <Eye
-                              strokeWidth={1.5}
-                              color="#FF4979"
-                              className=" cursor-pointer"
-                              onClick={() =>
-                                handleProductDetail(collaboration?.product?._id)
-                              }
-                              size={25}
-                            />
-                          </ToolTip>
-                          <ToolTip
-                            content="Start Bargaining"
-                            delayDuration={1000}
-                          >
-                            <MessagesSquare
-                              strokeWidth={1.5}
-                              color="#3b82f680"
-                              className="cursor-pointer"
-                              onClick={() => handleChatView(collaboration?._id)}
-                              size={25}
-                            />
-                          </ToolTip>
-                        </div>
-                      ),
-                      REJECTED: null,
-                    }[status]
-                  }
-                </CustomTableCell>
-              </TableRow>
+  const columns: ColumnDef<ICollaboration>[] = [
+    {
+      accessorKey: "product.title",
+      header: () => translate("Product_Name"),
+      cell: ({ row }) => {
+        const product = row.original.product;
+        return (
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => handleProductDetail(product?._id)}
+          >
+            {product?.media?.[0] ? (
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={product.media[0]} />
+                <AvatarImage src={"/assets/product/image-square.svg"} />
+              </Avatar>
+            ) : (
+              <ImageOff className="w-6 h-6 text-gray-400" />
+            )}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={product?.title}
+            />
+          </div>
+        );
+      },
+    },
+    ...(!isDashboard
+      ? ([
+          {
+            accessorKey: "product.category",
+            header: () => translate("Product_Category"),
+            cell: ({ row }) => (
+              <TruncateWithToolTip
+                checkHorizontalOverflow={false}
+                linesToClamp={2}
+                text={row.original.product?.category ?? ""}
+              />
+            ),
+          },
+          {
+            accessorKey: "product.tag",
+            header: () => translate("Product_Tags"),
+            cell: ({ row }) => (
+              <TruncateWithToolTip
+                checkHorizontalOverflow={false}
+                linesToClamp={2}
+                text={row.original.product?.tag ?? ""}
+              />
+            ),
+          },
+        ] as ColumnDef<ICollaboration>[])
+      : []),
+    {
+      accessorKey: "fromUser.business_name",
+      header: () => translate("Brand"),
+      cell: ({ row }) => {
+        const fromUser = row.original.fromUser;
+        return (
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push(`/vendor/profile/${fromUser?._id}`)}
+          >
+            <Avatar className="w-8 h-8">
+              <AvatarImage
+                className={fromUser?.profile_image ? "" : "opacity-50"}
+                src={
+                  fromUser?.profile_image
+                    ? fromUser.profile_image
+                    : "/assets/profile/profile-image.png"
+                }
+              />
+            </Avatar>
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={fromUser?.business_name}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      id: "status",
+      header: () => <div className="text-center">{translate("Status")}</div>,
+      cell: ({ row }) => {
+        const collaboration = row.original;
+        const status = getRequestStatus(collaboration);
+        return status ? (
+          <div className="flex justify-center">
+            <StatusBadge
+              status={status}
+              messageStatus={getMessages(status, collaboration?.request)}
+            />
+          </div>
+        ) : null;
+      },
+    },
+    {
+      id: "action",
+      header: () => <div className="text-center">{translate("Action")}</div>,
+      cell: ({ row }) => {
+        const collaboration = row.original;
+        const status = getRequestStatus(collaboration);
+
+        if (status === "REQUESTED") {
+          if (collaboration?.request?.requestFrom === "VENDOR") {
+            return (
+              <div className="flex justify-between w-fit gap-3 mx-auto">
+                <ToolTip content="Accept Request" delayDuration={1000}>
+                  <CheckCircle
+                    strokeWidth={1.5}
+                    color="#22c55e"
+                    className="cursor-pointer"
+                    size={25}
+                    onClick={() =>
+                      handleStatusChangeRequest("accepted", collaboration._id)
+                    }
+                  />
+                </ToolTip>
+                <ToolTip content="Reject Request" delayDuration={1000}>
+                  <XCircle
+                    strokeWidth={1.5}
+                    className="cursor-pointer"
+                    size={25}
+                    color="#ef4444"
+                    onClick={() =>
+                      setIsOpen({
+                        show: true,
+                        collaborationId: collaboration._id,
+                        status: "reject",
+                      })
+                    }
+                  />
+                </ToolTip>
+              </div>
             );
-          })}
-        </TableBody>
-      </Table>
-      </div>
+          } else if (collaboration?.request?.requestFrom === "CREATOR") {
+            return (
+              <div className="flex gap-3 mx-auto w-fit">
+                <ToolTip content="Cancel Request" delayDuration={1000}>
+                  <XCircle
+                    strokeWidth={1.5}
+                    className="cursor-pointer"
+                    size={25}
+                    color="#ef4444"
+                    onClick={() =>
+                      setIsOpen({
+                        show: true,
+                        collaborationId: collaboration._id,
+                        status: "cancel",
+                      })
+                    }
+                  />
+                </ToolTip>
+              </div>
+            );
+          }
+        } else if (status === "PENDING") {
+          return (
+            <div className="flex gap-3 mx-auto w-fit">
+              <ToolTip content="Start Bargaining" delayDuration={1000}>
+                <MessagesSquare
+                  strokeWidth={1.5}
+                  color="#3b82f680"
+                  className="cursor-pointer"
+                  size={25}
+                  onClick={() => handleChatView(collaboration._id)}
+                />
+              </ToolTip>
+            </div>
+          );
+        }
+        return null;
+      },
+    },
+  ];
+  return (
+    <>
+      {/* <div className="min-w-full border-2 border-gray-200 overflow-hidden rounded-2xl"> */}
+      <DataTable columns={columns} data={[...data]} type={"table"} />
+      {/* </div> */}
       {isOpen?.show && (
         <CancelRequest
           onClose={() => setIsOpen(initialValue)}
@@ -354,7 +334,7 @@ const CollaborationTable = ({
           loading={loading}
         />
       )}
-    </div>
+    </>
   );
 };
 

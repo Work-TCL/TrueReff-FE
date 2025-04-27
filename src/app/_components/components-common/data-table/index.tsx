@@ -50,7 +50,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 key={header.id}
                 colSpan={header.colSpan}
                 onClick={header.column.getToggleSortingHandler()}
-                className="sticky top-0 bg-stroke z-[9] min-w-[150px] py-3.5 px-2 font-medium text-black dark:text-white xl:pl-4 cursor-pointer select-none"
+                className="sticky top-0 bg-stroke min-w-[150px] text-sm text-gray-600 whitespace-nowrap p-4 text-left z-10 dark:text-white xl:pl-4 cursor-pointer select-none font-medium"
               >
                 {flexRender(
                   header.column.columnDef.header,
@@ -78,7 +78,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="border-b border-[#eee] py-3 px-2 dark:border-strokedark xl:pl-4"
+                    className="border-b border-[#eee] py-3 px-2 dark:border-strokedark xl:pl-4 text-sm text-gray-600"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

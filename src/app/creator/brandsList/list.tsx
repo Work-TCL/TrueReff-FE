@@ -16,6 +16,7 @@ import { debounce } from "lodash";
 import { IoGridOutline } from "react-icons/io5";
 import { PiListChecksLight } from "react-icons/pi";
 import BrandListView from "./_components/brandList";
+import { SearchInput } from "@/app/_components/components-common/search-field";
 
 export interface Brand {
   id: number;
@@ -30,7 +31,7 @@ export interface Brand {
 export default function BrandList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>();
+  const [search, setSearch] = useState<string>("");
   const [brands, setBrands] = useState<Brand[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -114,15 +115,11 @@ export default function BrandList() {
       ) : (
         <>
           <div className="flex justify-between items-center flex-wrap gap-2">
-            <div className="relative md:text-[20px] text-base text-500 max-w-[350px]">
-              <Input
-                value={search}
-                onChange={handleSearch}
-                placeholder={"Search Brand"}
-                className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
-              />
-              <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />{" "}
-            </div>
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={"Search Brand"}
+            />
             <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
               <PiListChecksLight
                 className={`cursor-pointer md:size-[30px] size-6 ${
@@ -141,7 +138,7 @@ export default function BrandList() {
           {internalLoader && <Loader />}
           {brands?.length > 0 ? (
             <>
-              {viewMode === "table" && <BrandListView brand={brands} />}
+              {viewMode === "table" && <BrandListView brand={[...brands]} />}
               {viewMode === "card" && (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 p-2 md:p-4 bg-white rounded-[20px] overflow-auto">
                   {brands.map((brand: any) => (
