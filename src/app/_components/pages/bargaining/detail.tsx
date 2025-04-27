@@ -22,7 +22,7 @@ export default function BargainingDetailView() {
 
   const [vendorProposal, setVendorProposal] = useState<number | "">("");
   const [creatorProposal, setCreatorProposal] = useState<number | "">("");
-  const [finalAgreedAmount, setFinalAgreedAmount] = useState<number | "">("");
+  const [commissionValue, setCommissionValue] = useState<number | "">("");
   // Discount section state
   const [discountType, setDiscountType] = useState<string>("PERCENTAGE");
   const [commissionType, setCommissionType] = useState<string>("PERCENTAGE");
@@ -43,13 +43,13 @@ export default function BargainingDetailView() {
   });
   const [isEditMode, setIsEditMode] = useState(false);
 
-  useEffect(() => {
-    if (vendorProposal !== "") {
-      setFinalAgreedAmount(vendorProposal);
-    } else if (creatorProposal !== "") {
-      setFinalAgreedAmount(creatorProposal);
-    }
-  }, [vendorProposal, creatorProposal]);
+  // useEffect(() => {
+  //   if (vendorProposal !== "") {
+  //     setFinalAgreedAmount(vendorProposal);
+  //   } else if (creatorProposal !== "") {
+  //     setFinalAgreedAmount(creatorProposal);
+  //   }
+  // }, [vendorProposal, creatorProposal]);
 
   const handleLockProposal = async () => {
     setIsProposalLoader(true);
@@ -61,7 +61,7 @@ export default function BargainingDetailView() {
         commissionType: commissionType,
         discountType: discountType,
         couponCode: couponCode,
-        commissionValue: finalAgreedAmount,
+        commissionValue: commissionValue,
         discountValue: discountValue,
         startAt: startAt,
         expiresAt: expiresAt,
@@ -97,7 +97,7 @@ export default function BargainingDetailView() {
       const collaboration: any = response?.data?.data?.collaboration;
       setVendorProposal(collaboration?.negotiation?.vendorProposal ?? 0);
       setCreatorProposal(collaboration?.negotiation?.creatorProposal ?? 0);
-      setFinalAgreedAmount(collaboration?.commissionValue ?? 0);
+      setCommissionValue(collaboration?.commissionValue ?? 0);
       setDiscountType(collaboration?.discountType ?? 0);
       setCommissionType(collaboration?.commissionType ?? 0);
       setDiscountValue(collaboration?.commissionValue ?? 0);
@@ -164,7 +164,7 @@ export default function BargainingDetailView() {
               <input
                 type="number"
                 className="p-2 border text-sm rounded-md w-full bg-gray-100"
-                value={finalAgreedAmount}
+                value={commissionValue}
                 disabled
               />
             </div>
@@ -189,9 +189,16 @@ export default function BargainingDetailView() {
               <input
                 type="number"
                 className="p-2 border text-sm rounded-md w-full"
-                value={vendorProposal}
+                value={
+                  user.role === "vendor" ? vendorProposal : creatorProposal
+                }
                 disabled={!isEditMode}
-                onChange={(e) => setVendorProposal(Number(e.target.value))}
+                onChange={(e) => {
+                  user.role === "vendor"
+                    ? setVendorProposal(Number(e.target.value))
+                    : setCreatorProposal(Number(e.target.value));
+                  setCommissionValue(Number(e.target.value));
+                }}
                 placeholder="Enter Proposal Amount"
               />
             </div>
@@ -206,8 +213,14 @@ export default function BargainingDetailView() {
                 disabled={true}
                 type="number"
                 className="p-2 border text-sm rounded-md w-full"
-                value={creatorProposal}
-                onChange={(e) => setCreatorProposal(Number(e.target.value))}
+                value={
+                  user.role === "vendor" ? creatorProposal : vendorProposal
+                }
+                // onChange={(e) => {
+                //   user.role === "vendor"
+                //     ? setCreatorProposal(Number(e.target.value))
+                //     : setVendorProposal(Number(e.target.value));
+                // }}
                 placeholder="0"
               />
             </div>
