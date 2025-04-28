@@ -3,5 +3,5 @@ import React from "react";
 
 
 export default function ProductDetailPage(){
-    return <ViewProductDetail/>
+    return <ViewProductDetail isFromPublic ={true} />
 }

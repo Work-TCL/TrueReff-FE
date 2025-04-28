@@ -94,7 +94,12 @@ const buttonColor: { [key: string]: string } = {
   PENDING: "bg-[#000] text-[#FFF]",
   "": "bg-[#000] text-[#FFF]",
 };
-export default function ViewProductDetail() {
+type ViewProductDetailProps = {
+  isFromPublic?: boolean;
+};
+export default function ViewProductDetail({
+  isFromPublic,
+}: ViewProductDetailProps) {
   const pathName = usePathname();
   const { account } = useAuthStore();
   const { creator } = useCreatorStore();
@@ -307,7 +312,7 @@ export default function ViewProductDetail() {
   };
 
   return (
-    <div className="flex flex-col w-full p-3 md:p-6 gap-4 h-full">
+    <div className="flex flex-col w-full p-3 md:p-6 gap-4 h-[100vh]">
       {loading ? (
         <Loading height="fit" />
       ) : (
@@ -318,7 +323,9 @@ export default function ViewProductDetail() {
               items={[
                 {
                   label: translate("Product_List"),
-                  href: creator?.creatorId
+                  href: isFromPublic
+                    ? "/store/creatorstore"
+                    : creator?.creatorId
                     ? pathName.includes("/product-management")
                       ? `/creator/product-management`
                       : `/creator/brandsList/${params.id}`
@@ -331,6 +338,7 @@ export default function ViewProductDetail() {
                 },
               ]}
             />
+
             {(creator?.creatorId || creatorId) && (
               <Button
                 disabled={
@@ -347,9 +355,9 @@ export default function ViewProductDetail() {
           </div>
 
           {/* Card Section */}
-          <Card className="bg-white rounded-lg overflow-auto">
+          <Card className="bg-white rounded-lg overflow-auto mr-2">
             <CardContent className=" p-3 md:p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex flex-col md:grid grid-cols-1 md:grid-cols-3 gap-4">
                 <ProductImageGallery images={productData?.images} />
                 <div className="col-span-2">
                   <ProductInfo productData={productData} />

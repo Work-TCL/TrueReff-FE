@@ -8,7 +8,7 @@ interface IProductInfoProps {
 
 export function ProductInfo({ productData }: IProductInfoProps) {
   return (
-    <div className="flex flex-1 flex-col gap-6 p-6">
+    <div className="flex flex-1 flex-col gap-6 p-6 overflow-auto pr-2">
       <h1 className="sm:text-3xl text-xl font-bold text-gray-800">
         {productData.name}
       </h1>
@@ -31,7 +31,7 @@ export function ProductInfo({ productData }: IProductInfoProps) {
       {productData.tags?.length > 0 && (
         <div className="border-t border-gray-200 pt-6">
           <p className="text-sm text-gray-500 mb-2">{translate("Tags")}</p>
-          <div className="text-gray-500 text-sm mt-1 flex flex-wrap gap-2 mt-2">
+          <div className="text-gray-500 text-sm flex flex-wrap gap-2 mt-2">
             {productData.tags.map((tag, idx) => (
               <span key={idx} className="bg-background py-1 px-2 rounded">
                 #{tag}

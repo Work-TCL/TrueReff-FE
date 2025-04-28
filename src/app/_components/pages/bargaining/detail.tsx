@@ -42,14 +42,8 @@ export default function BargainingDetailView() {
     creator: false,
   });
   const [isEditMode, setIsEditMode] = useState(false);
-
-  // useEffect(() => {
-  //   if (vendorProposal !== "") {
-  //     setFinalAgreedAmount(vendorProposal);
-  //   } else if (creatorProposal !== "") {
-  //     setFinalAgreedAmount(creatorProposal);
-  //   }
-  // }, [vendorProposal, creatorProposal]);
+  const [utmGenerated, setUtmgGenerated] = useState(false);
+  const [isUtmGenereated, setIsUtmGenerated] = useState(false);
 
   const handleLockProposal = async () => {
     setIsProposalLoader(true);
@@ -94,26 +88,47 @@ export default function BargainingDetailView() {
       const response = await axios.get(
         `/product/collaboration/${collaborationId}`
       );
-      const collaboration: any = response?.data?.data?.collaboration;
-      setVendorProposal(collaboration?.negotiation?.vendorProposal ?? 0);
-      setCreatorProposal(collaboration?.negotiation?.creatorProposal ?? 0);
-      setCommissionValue(collaboration?.commissionValue ?? 0);
-      setDiscountType(collaboration?.discountType ?? 0);
-      setCommissionType(collaboration?.commissionType ?? 0);
-      setDiscountValue(collaboration?.commissionValue ?? 0);
-      setCouponCode(collaboration?.couponCode ?? 0);
-      setStartAt(collaboration?.startAt ?? 0);
-      setExpiresAt(collaboration?.expiresAt ?? 0);
-      setProposalAgreedBy({
-        vendor: collaboration?.negotiation?.agreedByVendor,
-        creator: collaboration?.negotiation?.agreedByCreator,
-      });
+      if (response?.status === 200) {
+        const collaboration: any = response?.data?.data?.collaboration;
+        setVendorProposal(collaboration?.negotiation?.vendorProposal ?? 0);
+        setCreatorProposal(collaboration?.negotiation?.creatorProposal ?? 0);
+        setCommissionValue(collaboration?.commissionValue ?? 0);
+        setDiscountType(collaboration?.discountType ?? 0);
+        setCommissionType(collaboration?.commissionType ?? 0);
+        setDiscountValue(collaboration?.commissionValue ?? 0);
+        setCouponCode(collaboration?.couponCode ?? 0);
+        setStartAt(collaboration?.startAt ?? 0);
+        setExpiresAt(collaboration?.expiresAt ?? 0);
+        setProposalAgreedBy({
+          vendor: collaboration?.negotiation?.agreedByVendor,
+          creator: collaboration?.negotiation?.agreedByCreator,
+        });
+      }
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
       toastMessage.error(errorMessage);
     }
   };
-
+  const generateUTM = async () => {
+    setIsUtmGenerated(true);
+    try {
+      const response = await axios.put(
+        `product/generate-crm/${collaborationId}`
+      );
+      if (response?.status === 200) {
+        setUtmgGenerated(true);
+        setIsUtmGenerated(false);
+      } else {
+        setUtmgGenerated(false);
+        setIsUtmGenerated(false);
+      }
+    } catch (error: any) {
+      const errorMessage = getErrorMessage(error);
+      toastMessage.error(errorMessage);
+      setIsUtmGenerated(false);
+      setUtmgGenerated(false);
+    }
+  };
   useEffect(() => {
     fetchProductCollaboration();
   }, []);
@@ -126,16 +141,17 @@ export default function BargainingDetailView() {
       proposalAgreedBy.creator === true &&
       proposalAgreedBy.vendor === false);
 
-  console.log(shoNote); // This will return true or false depending on the conditions
-
   const handleEditClick = () => {
     setIsEditMode(true); // Enable edit mode when pencil icon is clicked
   };
 
+  const ProposalAggreeed =
+    proposalAgreedBy.creator === true && proposalAgreedBy.vendor === true;
+
   return (
     <>
       <div className="flex flex-col gap-8 overflow-auto h-full pr-3">
-        {shoNote && (
+        {!ProposalAggreeed && shoNote && (
           <div className="flex items-center gap-x-3 rounded-lg bg-[#F9F8F8] p-2 text-[12px] font-normal text-[#6C7880]">
             <Info className="size-5 shrink-0 text-[#6C7880]" />
             <p>
@@ -149,11 +165,30 @@ export default function BargainingDetailView() {
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between w-full">
             <h2 className="text-lg font-semibold">Bargaining Section</h2>
-            {!isEditMode && (
+            {!ProposalAggreeed && !isEditMode && (
               <FaEdit
-                className="size-5 shrink-0 text-primary"
+                className="size-5 shrink-0 text-primary cursor-pointer"
                 onClick={handleEditClick}
               />
+            )}
+            {ProposalAggreeed && utmGenerated ? (
+              <Button
+                loading={isUtmGenereated}
+                disabled={utmGenerated || isUtmGenereated}
+                className="bg-black text-white px-6 py-2 rounded-md w-[40%] text-sm"
+                onClick={() => {
+                  generateUTM();
+                }}
+              >
+                {utmGenerated ? "UTM Generated " : "Generate UTM"}
+              </Button>
+            ) : (
+              <div
+                className={`bg-[#098228] text-[#098228] text-sm bg-opacity-10 font-medium me-2 px-2.5 py-2 rounded-sm text-center cursor-not-allowed
+              `}
+              >
+                UTM Generated
+              </div>
             )}
           </div>
           <div className="flex sm:flex-row flex-col w-full items-center gap-2">
@@ -216,11 +251,6 @@ export default function BargainingDetailView() {
                 value={
                   user.role === "vendor" ? creatorProposal : vendorProposal
                 }
-                // onChange={(e) => {
-                //   user.role === "vendor"
-                //     ? setCreatorProposal(Number(e.target.value))
-                //     : setVendorProposal(Number(e.target.value));
-                // }}
                 placeholder="0"
               />
             </div>

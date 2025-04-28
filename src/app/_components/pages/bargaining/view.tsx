@@ -42,7 +42,7 @@ interface ICreator {
 interface IVendor {
   _id: string;
   business_name: string;
-  profile_image:string;
+  profile_image: string;
 }
 
 export interface ICollaboration {
@@ -79,7 +79,7 @@ export default function BargainingView() {
     vendorId: {
       _id: "",
       business_name: "",
-      profile_image:""
+      profile_image: "",
     },
     collaborationStatus: "",
     utmLink: "",
@@ -145,7 +145,7 @@ export default function BargainingView() {
       </div>
       <div className="flex md:flex-row flex-col-reverse h-full gap-4 overflow-hidden">
         <Card className="bg-white rounded-lg md:w-[50%] w-full overflow-hidden">
-          <CardContent className="overflow-hidden h-full">
+          <CardContent className="overflow-hidden h-full p-6">
             <BargainingDetailView />
             {/* <BargainingDetailView collaborationData={collaborationData} /> */}
           </CardContent>

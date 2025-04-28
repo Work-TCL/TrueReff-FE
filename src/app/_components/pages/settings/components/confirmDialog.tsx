@@ -1,7 +1,8 @@
-    "use client";
+"use client";
 import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
-import { Button } from "@/components/ui/button";
+import { Button as CButton } from "@/components/ui/button";
+import Button from "@/app/_components/ui/button";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -36,7 +37,7 @@ export default function ConfirmDialog({
         )}
 
         <div className="grid grid-cols-2 gap-x-4 mt-4">
-          <Button
+          <CButton
             variant="outline"
             type="button"
             disabled={loading}
@@ -44,10 +45,10 @@ export default function ConfirmDialog({
             className="w-full h-full border-black bg-transparent text-base"
           >
             Cancel
-          </Button>
+          </CButton>
           <Button
+            loading={loading}
             disabled={loading}
-            variant="secondary"
             className="w-full h-full border-black text-white"
             onClick={onConfirm}
           >
