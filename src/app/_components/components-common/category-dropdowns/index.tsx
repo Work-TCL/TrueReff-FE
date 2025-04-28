@@ -25,10 +25,44 @@ const customStyles = {
     fontSize: "0.875rem", // Tailwind text-sm
     color: "#a1a1aa", // Tailwind slate-400
   }),
-  control: (base: any) => ({
+  control: (base: any, state: any) => ({
     ...base,
     borderRadius: "8px",
+    borderColor: state.isFocused ? "#FF4979" : base.borderColor,
+    boxShadow: "none",
+    "&:hover": {
+      borderColor: "#FF4979",
+    },
+    transition: "all 0.2s ease",
   }),
+  option: (base: any, state: any) => ({
+    ...base,
+    backgroundColor: state.isFocused ? "rgba(255, 73, 121, 0.1)" : "white",
+    color: "black",
+    "&:active": {
+      backgroundColor: "rgba(255, 73, 121, 0.2)",
+    },
+  }),
+  // multiValue: (base: any) => ({
+  //   ...base,
+  //   backgroundColor: "rgba(255, 73, 121, 0.15)",
+  //   color: "#FF4979",
+  //   borderRadius: "4px",
+  //   padding: "2px 4px",
+  // }),
+  // multiValueLabel: (base: any) => ({
+  //   ...base,
+  //   color: "#FF4979",
+  //   fontWeight: 500,
+  // }),
+  // multiValueRemove: (base: any) => ({
+  //   ...base,
+  //   color: "#FF4979",
+  //   ":hover": {
+  //     backgroundColor: "rgba(255, 73, 121, 0.3)",
+  //     color: "white",
+  //   },
+  // }),
 };
 
 const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({

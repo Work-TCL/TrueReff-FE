@@ -30,6 +30,7 @@ export interface IProduct {
   subCategories?: string;
   tag?: string;
   price?: string;
+  crmLink?: string;
 }
 const ProductCard = ({
   item: product,
@@ -41,7 +42,7 @@ const ProductCard = ({
   const router = useRouter();
   return (
     <div
-      onClick={() => router?.push(`${productDetailLink}/${product?._id}`)}
+      onClick={() => router?.push(`${product?.crmLink}`)}
       className="bg-white rounded-xl cursor-pointer overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg"
     >
       {/* Image */}
@@ -58,7 +59,7 @@ const ProductCard = ({
       </div>
 
       {/* Title + Category */}
-      <div className="text-center mb-3">
+      <div className="text-left mb-3">
         <div className="text-lg font-semibold">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
@@ -72,9 +73,6 @@ const ProductCard = ({
             linesToClamp={2}
             text={product.description}
           />
-        </div>
-        <div className="text-gray-500 text-sm mt-1">
-          {translate("SKU")} : {product.sku}
         </div>
         <div className="text-gray-500 text-sm mt-1">
           <TruncateWithToolTip
@@ -95,18 +93,15 @@ const ProductCard = ({
       </div>
 
       {/* Stats */}
-      <div className="flex justify-around text-center w-full border-t pt-3 text-sm mb-3">
+      <div className="flex justify-around text-center w-full border-t pt-5 p-3 text-sm items-center">
         <div>
           <div className="font-semibold">{product?.channelName || "-"}</div>
-          <div className="text-gray-500 flex items-center gap-2">
-            {translate("Channel")}
-          </div>
         </div>
-        <div>
-          <div className="font-semibold">{product?.price || "-"}</div>
+        <div className="flex items-center gap-2">
           <div className="text-gray-500 flex items-center">
             {translate("Price")}
           </div>
+          <div className="font-semibold">{product?.price || "-"}</div>
         </div>
       </div>
     </div>

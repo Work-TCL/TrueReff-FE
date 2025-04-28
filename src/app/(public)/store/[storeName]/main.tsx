@@ -8,10 +8,12 @@ import { toastMessage } from "@/lib/utils/toast-message";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductList from "./product-list";
 import Loading from "@/app/vendor/loading";
+import NotFound from "@/app/_components/components-common/404";
 
 export default function PublicCreatorStore() {
   const params = useParams();
   let storeName: any = params?.storeName;
+  const [notFounded, setNotFounded] = useState(false);
   const [store, setStore] = useState({
     creatorId: "",
     name: "",
@@ -45,25 +47,32 @@ export default function PublicCreatorStore() {
           creatorId: storeData?.creatorId?._id,
         };
         setStore({ ...data });
+      } else {
+        throw "This Store is not Exist";
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toastMessage.error(errorMessage);
+      setNotFounded(true);
     } finally {
       setLoading(false);
     }
   }
+
+  if (notFounded || !storeName) {
+    return <NotFound />;
+  }
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading className="h-screen" />
       ) : (
-        <div className="grid grid-cols-3 gap-4 h-screen overflow-hidden p-4">
+        <div className="grid md:grid-cols-3 gap-4 h-screen md:overflow-hidden p-4">
           <div className="col-span-1">
             <StoreDetailCard store={store} />
           </div>
-          <div className="col-span-2 bg-white rounded-lg p-4 overflow-hidden flex">
-            <ProductList />
+          <div className="col-span-2 md:overflow-hidden flex">
+            <ProductList storeName={storeName ?? ""} />
           </div>
         </div>
       )}

@@ -234,7 +234,7 @@ export default function ProductList() {
                 handleUpdateProduct={handleUpdateProduct}
                 type={viewMode}
                 CardComponent={(item) => (
-                  <div key={item} className="flex w-full h-full">
+                  <div key={item?._id} className="flex w-full h-full">
                     <ProductCard
                       key={item?.id}
                       item={item}

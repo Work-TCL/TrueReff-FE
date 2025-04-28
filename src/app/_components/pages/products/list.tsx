@@ -277,7 +277,7 @@ export default function ProductList() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
                   {productList.map((item: any, i) => (
                     <div key={i} className="flex h-full w-full">
-                      <ProductCard item={item} />
+                      <ProductCard key={i + "666"} item={item} />
                     </div>
                   ))}
                 </div>

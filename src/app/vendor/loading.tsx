@@ -3,15 +3,16 @@ import React from "react";
 
 interface IProps {
   height?: "full" | "fit";
+  className?: string;
 }
 
-export default function Loading({ height = "full" }: IProps) {
+export default function Loading({ height = "full", className = "" }: IProps) {
   return (
     <div
       role="status"
       className={`${
         height === "full" ? "max-h-screen h-full" : "h-full"
-      } flex justify-center items-center`}
+      } flex justify-center items-center ${className}`}
     >
       <div className="w-fit h-fit">
         <svg

@@ -11,22 +11,14 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import Loader from "@/app/_components/components-common/layout/loader";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { translate } from "@/lib/utils/translate";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
 import axios from "@/lib/web-api/axios";
-import LoadingPage from "@/lib/components/loading-page";
 import Loading from "@/app/vendor/loading";
 import CommonBreadcrumb from "@/app/_components/components-common/breadcrumb-links";
+import NotFound from "@/app/_components/components-common/404";
 
 interface ICategory {
   _id: string;
@@ -110,9 +102,8 @@ export default function ViewProductDetail({
   const searchParams = useSearchParams();
   const shopifyId = searchParams.get("id");
   const creatorId = searchParams.get("creatorId");
-
+  const [notFounded, setNotFounded] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isUTMView, setIsUTMView] = useState<boolean>(false);
   const [collaborationStatus, setCollaborationStatus] = useState<string>("");
   const [collaborationData, setCollaborationData] = useState<ICollaboration>({
     _id: "",
@@ -190,33 +181,41 @@ export default function ViewProductDetail({
   const fetchProductById = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/product/${productId}`);
+      const response = await axios.get(
+        `/auth/creator-store/product/${productId}`
+      );
+      console.log("response response response response response", response);
 
-      const product: any = response?.data?.data?.data;
-      const images = product.media;
-      // ✅ Update product state
-      const updatedProduct = {
-        productId: product._id,
-        images: images,
-        name: product.title,
-        tags: product?.tags || [],
-        description: product?.description || "", // Add description if available
-        price: product?.price || 0,
-        sku: product?.sku || "",
-        barcode: product?.variants?.nodes[0]?.barcode || "",
-        quantity: product?.quantity || 0,
-        totalInventory: product?.totalInventory || 0,
-        variants: product?.variants?.nodes || [],
-        category: product?.category
-          ?.filter((ele: ICategory) => ele?.parentId === null)
-          ?.map((ele: ICategory) => ele?.name)
-          ?.join(", "),
-        vendorId: product?.vendorId,
-      };
+      const product: any = response?.data?.data;
+      if (product) {
+        const images = product.media;
+        // ✅ Update product state
+        const updatedProduct = {
+          productId: product._id,
+          images: images,
+          name: product.title,
+          tags: product?.tags || [],
+          description: product?.description || "", // Add description if available
+          price: product?.price || 0,
+          sku: product?.sku || "",
+          barcode: product?.variants?.nodes[0]?.barcode || "",
+          quantity: product?.quantity || 0,
+          totalInventory: product?.totalInventory || 0,
+          variants: product?.variants?.nodes || [],
+          category: product?.category
+            ?.filter((ele: ICategory) => ele?.parentId === null)
+            ?.map((ele: ICategory) => ele?.name)
+            ?.join(", "),
+          vendorId: product?.vendorId,
+        };
 
-      setProductData(updatedProduct);
+        setProductData(updatedProduct);
+      } else {
+        throw "Data not found";
+      }
     } catch (error: any) {
       toast.error(error?.message || "Product Fetch Failed.");
+      setNotFounded(true);
     } finally {
       setLoading(false);
     }
@@ -311,12 +310,16 @@ export default function ViewProductDetail({
     } else return "SEND_REQUEST";
   };
 
+  if (notFounded || !productId) {
+    return <NotFound />;
+  }
+
   return (
-    <div className="flex flex-col w-full p-3 md:p-6 gap-4 h-[100vh]">
+    <>
       {loading ? (
-        <Loading height="fit" />
+        <Loading className="h-screen" />
       ) : (
-        <>
+        <div className="flex flex-col w-full p-3 md:p-6 gap-4 h-[100vh]">
           {/* Breadcrumb and Button */}
           <div className="flex md:flex-row items-center justify-between md:items-center gap-2">
             <CommonBreadcrumb
@@ -365,8 +368,8 @@ export default function ViewProductDetail({
               </div>
             </CardContent>
           </Card>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 }
