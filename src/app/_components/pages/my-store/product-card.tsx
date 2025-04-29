@@ -21,7 +21,7 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
       </div>
 
       {/* Title + Category */}
-      <div className="text-left mb-3 mb-auto">
+      <div className="text-left mb-auto">
         <div className="text-lg font-semibold">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
@@ -45,8 +45,12 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
             ))}
           </div>
         )}
+        <TruncateWithToolTip
+          className="line-clamp-none truncate text-xs sm:text-sm font-medium text-[#0000EE] hover:underline cursor-pointer pt-3"
+          checkHorizontalOverflow={true}
+          text={`${product?.crmLink}`}
+        />
       </div>
-
       {/* Stats */}
       {/* <div className="flex justify-around text-center w-full border-t pt-3 text-sm mb-3">
         <div>

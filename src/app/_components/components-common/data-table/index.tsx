@@ -7,6 +7,9 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { Navigation } from "lucide-react";
+import { useAuthStore } from "@/lib/store/auth-user";
 
 interface DataTableProps {
   gridClasses?: string;
@@ -24,6 +27,11 @@ const DataTable: React.FC<DataTableProps> = ({
   CardComponent,
 }) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const router = useRouter();
+  const { account: user } = useAuthStore();
+  const handleNavigate = () => {
+    router.push("/creator/my-store/store-setup"); // adjust this to your desired route
+  };
 
   const table = useReactTable({
     data,
@@ -71,27 +79,27 @@ const DataTable: React.FC<DataTableProps> = ({
       <tbody className="min-h-96">
         {table.getRowModel().rows.length > 0
           ? table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                className="hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="border-b border-[#eee] py-3 px-2 dark:border-strokedark xl:pl-4 text-sm text-gray-600"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))
+            <tr
+              key={row.id}
+              className="hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            >
+              {row.getVisibleCells().map((cell) => (
+                <td
+                  key={cell.id}
+                  className="border-b border-[#eee] py-3 px-2 dark:border-strokedark xl:pl-4 text-sm text-gray-600"
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))
           : null}
       </tbody>
     </table>
   );
 
   return (
-    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
+    <div className=" border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
       <div className="max-w-full h-full overflow-auto ">
         {data.length > 0 && type === "table" ? (
           tableContent()
@@ -101,7 +109,7 @@ const DataTable: React.FC<DataTableProps> = ({
           >
             {data.map((item) => CardComponent(item))}
           </div>
-        ) : (
+        ) : user?.role === "vendor" ? (
           <div className="flex flex-col items-center justify-center text-center rounded-lg w-full h-full border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
             <div className="flex flex-col items-center">
               <div className="p-4 mx-auto text-blue-500 bg-blue-100 rounded-full dark:bg-gray-700">
@@ -126,6 +134,32 @@ const DataTable: React.FC<DataTableProps> = ({
               <p className="mt-2 text-gray-600 dark:text-gray-400">
                 It seems we couldn't find any data matching your criteria.
               </p>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center text-center rounded-lg w-full h-full border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6">
+            <div className="flex flex-col items-center">
+              <div className="p-4 mx-auto text-blue-500 bg-blue-100 rounded-full dark:bg-gray-700">
+                <Navigation
+                  className="w-8 h-8 cursor-pointer"
+                  onClick={handleNavigate}
+                />
+              </div>
+              <h1 className="mt-4 text-2xl font-semibold text-gray-800 dark:text-white">
+                Creator Store Not Found
+              </h1>
+              <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-md">
+                We couldn’t locate any creator store data at the moment. This
+                might be because you haven’t added any products yet or the store
+                is not linked properly. Please check your creator setup or add
+                new products to get started.
+              </p>
+              <button
+                onClick={handleNavigate}
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+              >
+                Go to Creator Store
+              </button>
             </div>
           </div>
         )}

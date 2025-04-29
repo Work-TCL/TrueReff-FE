@@ -53,7 +53,8 @@ export default function ProductLayout<T>({
       setItems(res.data);
       setTotalPages(Math.ceil(res.total / pageSize));
     } catch (error: any) {
-      toast.error(error?.message || "Something went wrong");
+      console.log(error?.message || "Something went wrong");
+      // toast.error(error?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
