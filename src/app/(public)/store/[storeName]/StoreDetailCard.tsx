@@ -30,7 +30,7 @@ export default function StoreDetailCard({
 }: IProps) {
   return (
     <Card className="bg-white rounded-[20PX] overflow-hidden border-0 shadow-none">
-      <div className="relative h-40 md:h-48 w-full bg-blue-100 rounded-b-[20px]">
+      <div className="relative h-28 md:h-48 w-full bg-blue-100 rounded-b-[20px]">
         {banner_image ? (
           <img
             src={banner_image}
@@ -46,8 +46,8 @@ export default function StoreDetailCard({
         )}
       </div>
       <div className="flex items-end px-6 -mt-14 w-full justify-between">
-        <div className="w-[120px] h-[120px] md:w-[120px] md:h-[120px]">
-          <Avatar className="w-[120px] h-[120px] md:w-[120px] md:h-[120px] border-1 border-white bg-white">
+        <div className="w-24 h-24 md:w-[120px] md:h-[120px]">
+          <Avatar className="w-24 h-24 md:w-[120px] md:h-[120px] border-1 border-white bg-white">
             {profile_image ? (
               <AvatarImage
                 src={profile_image}
@@ -71,7 +71,7 @@ export default function StoreDetailCard({
           <Link
             href="#"
             target="_blank"
-            className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
+            className="w-8 h-8 md:w-[35px] md:h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
           >
             <Image
               src="/assets/creator/profile/fbIcon.svg"
@@ -83,7 +83,7 @@ export default function StoreDetailCard({
           <Link
             href="#"
             target="_blank"
-            className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
+            className="w-8 h-8 md:w-[35px] md:h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
           >
             <Image
               src="/assets/creator/profile/twitterIcon.svg"
@@ -95,7 +95,7 @@ export default function StoreDetailCard({
           <Link
             href="#"
             target="_blank"
-            className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
+            className="w-8 h-8 md:w-[35px] md:h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
           >
             <Image
               src="/assets/creator/profile/instaIcon.svg"
@@ -107,7 +107,7 @@ export default function StoreDetailCard({
           <Link
             href="#"
             target="_blank"
-            className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
+            className="w-8 h-8 md:w-[35px] md:h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
           >
             <Image
               src="/assets/creator/profile/ytIcon.svg"
@@ -120,17 +120,17 @@ export default function StoreDetailCard({
       </div>
       <CardContent className="pt-2 md:pt-2 pb-4 md:pb-6 px-4 md:px-6 flex flex-col gap-3 md:gap-4">
         <div className="flex flex-wrap items-center gap-1 md:gap-2">
-          <h2 className="text-lg md:text-xl font-medium text-gray-black">
+          <h2 className="text-base md:text-xl font-medium text-gray-black">
             {name}
           </h2>
           <LinkIcon className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
         </div>
-        <p className="text-sm md:text-base text-font-grey">{description}</p>
+        <p className="text-xs md:text-base text-font-grey">{description}</p>
         <div className="flex gap-2 md:gap-4 flex-wrap">
           {tags.map((tag) => (
             <span
               key={tag}
-              className="bg-gray-small-light text-sm md:text-sm px-3 py-3 text-gray-black rounded-md"
+              className="bg-gray-small-light text-xs md:text-sm px-3 md:py-3 py-1 text-gray-black rounded-md"
             >
               #{tag}
             </span>

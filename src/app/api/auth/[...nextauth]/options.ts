@@ -1,8 +1,6 @@
 import { NextAuthOptions, User as NextAuthUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {
-  IPostLoginResponse,
-} from "@/lib/types-api/auth";
+import { IPostLoginResponse } from "@/lib/types-api/auth";
 import { getUserApi, loginAPI, SocialLoginAPI } from "@/lib/web-api/auth";
 
 interface AuthorizeCredentials {
@@ -23,6 +21,7 @@ const authOptions: NextAuthOptions = {
       credentials: {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password", optional: true },
+        token: { label: "token", type: "text", optional: true },
         otp: { label: "OTP", type: "text", optional: true }, // Add OTP field
       },
       async authorize(credentials: AuthorizeCredentials | any) {
@@ -58,6 +57,17 @@ const authOptions: NextAuthOptions = {
                 accessToken: response?.data?.token,
               };
             }
+          } else if (credentials?.token) {
+            // Handle password login
+            const response: IPostLoginResponse = await SocialLoginAPI({
+              accessToken: credentials.token,
+            });
+            if (response?.data) {
+              return {
+                ...response?.data,
+                accessToken: response?.data?.token,
+              };
+            }
           }
 
           return null;
@@ -66,30 +76,6 @@ const authOptions: NextAuthOptions = {
         }
       },
     }),
-    CredentialsProvider({
-      name: "google",
-      credentials: {
-        token: { label: "token", type: "text" }
-      },
-      async authorize(credentials: AuthorizeCredentials | any) {
-        try {
-          // Handle password login
-          const response: IPostLoginResponse = await SocialLoginAPI({
-            accessToken: credentials.token,
-          });
-          if (response?.data) {
-            return {
-              ...response?.data,
-              accessToken: response?.data?.token,
-            };
-          }
-
-          return null;
-        } catch (error) {
-          throw error || new Error("Invalid credentials");
-        }
-      },
-    })
   ],
   callbacks: {
     async jwt({ token, user, account, trigger }) {
@@ -119,19 +105,18 @@ const authOptions: NextAuthOptions = {
         }
       }
       if (account && user) {
-          token._id = user?._id;
-          token.name = user?.name;
-          token.email = user?.email;
-          token.type = user?.type;
-          token.isActive = user?.isActive;
-          token.isEmailVerified = user?.isEmailVerified;
-          token.createdAt = user?.createdAt;
-          token.updatedAt = user?.updatedAt;
-          token.token = user?.token;
-          token.creator = user?.creator;
-          (token.vendor = user?.vendor),
-            (token.accessToken = user?.token || null); // ✅ Ensure accessToken is set
-
+        token._id = user?._id;
+        token.name = user?.name;
+        token.email = user?.email;
+        token.type = user?.type;
+        token.isActive = user?.isActive;
+        token.isEmailVerified = user?.isEmailVerified;
+        token.createdAt = user?.createdAt;
+        token.updatedAt = user?.updatedAt;
+        token.token = user?.token;
+        token.creator = user?.creator;
+        (token.vendor = user?.vendor),
+          (token.accessToken = user?.token || null); // ✅ Ensure accessToken is set
       }
 
       return token;

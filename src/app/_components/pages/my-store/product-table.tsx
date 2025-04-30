@@ -68,11 +68,13 @@ export default function BrandProductTable({
       cell: ({ row }) => {
         const product = row.original;
         return (
-          <TruncateWithToolTip
-            className="text-xs sm:text-sm font-medium text-[#0000EE] hover:underline w-full max-w-[350px] line-clamp-none truncate"
-            checkHorizontalOverflow={true}
-            text={product?.crmLink}
-          />
+          <div onClick={() => router?.push(product?.crmLink)}>
+            <TruncateWithToolTip
+              className="text-xs sm:text-sm font-medium text-[#0000EE] hover:underline w-full max-w-[350px] line-clamp-none truncate"
+              checkHorizontalOverflow={true}
+              text={product?.crmLink}
+            />
+          </div>
         );
       },
     },
@@ -81,14 +83,7 @@ export default function BrandProductTable({
       header: "Action",
       cell: ({ row }) => {
         const product = row.original;
-        return (
-          <Button
-            className="whitespace-nowrap w-[150px] bg-red-500 text-white rounded-md transition-all hover:bg-red-200 py-3 px-[10px] text-sm"
-            onClick={() => router.push(`/creator/my-store/${product._id}`)}
-          >
-            {translate("Collaborate_Now")}
-          </Button>
-        );
+        return <div className="w-4 h-4 mx-auto rounded-full bg-green-600" />;
       },
     },
   ];
