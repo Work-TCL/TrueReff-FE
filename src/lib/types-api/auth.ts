@@ -13,6 +13,9 @@ export interface IPostSignupResponse {
 }
 
 // POST Login
+export interface IPostSocialLoginRequest {
+  accessToken: string;
+}
 export interface IPostLoginRequest {
   email: string;
   password?: string;

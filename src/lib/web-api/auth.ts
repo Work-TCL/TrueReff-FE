@@ -24,6 +24,7 @@ import {
   IPostResetPasswordResponse,
   IPostSignupRequest,
   IPostSignupResponse,
+  IPostSocialLoginRequest,
   IPostVendorRegisterRequest,
   IPostVendorRegisterResponse,
   IPostVerifyEmailRequest,
@@ -62,6 +63,30 @@ export const loginAPI = async (
         name: user?.name,
         role: user?.type,
       });
+    }
+    return response?.data;
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While Login");
+  }
+};
+export const SocialLoginAPI = async (
+  params: IPostSocialLoginRequest
+): Promise<IPostLoginResponse> => {
+  try {
+    const response = await axios.post("/auth/social-login", params);
+    const user = response?.data;
+    if (user) {
+      useAuthStore.getState().setAccountData({
+        email: user?.email,
+        id: user?._id,
+        name: user?.name,
+        role: user?.type,
+      });
+      if (user?.token) {
+        useAuthStore.getState().setIsAuthStatus("authenticated");
+        useAuthStore.getState().setToken(user?.token);
+    }
     }
     return response?.data;
   } catch (error) {

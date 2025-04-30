@@ -1,18 +1,18 @@
 import { NextAuthOptions, User as NextAuthUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 import {
   IPostLoginResponse,
-  IPostVerifyEmailResponse,
 } from "@/lib/types-api/auth";
-import { getUserApi, loginAPI, verifyEmail } from "@/lib/web-api/auth";
-import axios from "@/lib/web-api/axios";
+import { getUserApi, loginAPI, SocialLoginAPI } from "@/lib/web-api/auth";
 
 interface AuthorizeCredentials {
   username: string;
   otp?: string;
   password?: string;
   redirect?: boolean;
+}
+interface AuthorizeGoogleCredentials {
+  token: string;
 }
 
 const authOptions: NextAuthOptions = {
@@ -66,10 +66,30 @@ const authOptions: NextAuthOptions = {
         }
       },
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+    CredentialsProvider({
+      name: "google",
+      credentials: {
+        token: { label: "token", type: "text" }
+      },
+      async authorize(credentials: AuthorizeCredentials | any) {
+        try {
+          // Handle password login
+          const response: IPostLoginResponse = await SocialLoginAPI({
+            accessToken: credentials.token,
+          });
+          if (response?.data) {
+            return {
+              ...response?.data,
+              accessToken: response?.data?.token,
+            };
+          }
+
+          return null;
+        } catch (error) {
+          throw error || new Error("Invalid credentials");
+        }
+      },
+    })
   ],
   callbacks: {
     async jwt({ token, user, account, trigger }) {
@@ -99,13 +119,6 @@ const authOptions: NextAuthOptions = {
         }
       }
       if (account && user) {
-        if (account.provider === "google") {
-          const res = await axios.post("/user/auth/social-login", {
-            accessToken: account?.access_token,
-          });
-          token.accessToken = res?.data?.data?.token ?? null; // Ensure token is not undefined
-          token.user = res?.data?.data ?? {};
-        } else {
           token._id = user?._id;
           token.name = user?.name;
           token.email = user?.email;
@@ -118,7 +131,7 @@ const authOptions: NextAuthOptions = {
           token.creator = user?.creator;
           (token.vendor = user?.vendor),
             (token.accessToken = user?.token || null); // ✅ Ensure accessToken is set
-        }
+
       }
 
       return token;
