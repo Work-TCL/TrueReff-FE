@@ -83,6 +83,7 @@ export default function BargainingDetailView() {
       setIsEditMode(false);
     }
   };
+
   const fetchProductCollaboration = async () => {
     try {
       const response = await axios.get(
@@ -93,12 +94,12 @@ export default function BargainingDetailView() {
         setVendorProposal(collaboration?.negotiation?.vendorProposal ?? 0);
         setCreatorProposal(collaboration?.negotiation?.creatorProposal ?? 0);
         setCommissionValue(collaboration?.commissionValue ?? 0);
-        setDiscountType(collaboration?.discountType ?? 0);
-        setCommissionType(collaboration?.commissionType ?? 0);
+        setDiscountType(collaboration?.discountType ?? "PERCENTAGE");
+        setCommissionType(collaboration?.commissionType ?? "PERCENTAGE");
         setDiscountValue(collaboration?.commissionValue ?? 0);
         setCouponCode(collaboration?.couponCode ?? 0);
-        setStartAt(collaboration?.startAt ?? 0);
-        setExpiresAt(collaboration?.expiresAt ?? 0);
+        setStartAt(collaboration?.startAt);
+        setExpiresAt(collaboration?.expiresAt);
         setProposalAgreedBy({
           vendor: collaboration?.negotiation?.agreedByVendor,
           creator: collaboration?.negotiation?.agreedByCreator,
@@ -109,6 +110,7 @@ export default function BargainingDetailView() {
       toastMessage.error(errorMessage);
     }
   };
+
   const generateUTM = async () => {
     setIsUtmGenerated(true);
     try {
@@ -129,6 +131,7 @@ export default function BargainingDetailView() {
       setUtmgGenerated(false);
     }
   };
+
   useEffect(() => {
     fetchProductCollaboration();
   }, []);
@@ -165,30 +168,39 @@ export default function BargainingDetailView() {
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between w-full">
             <h2 className="text-lg font-semibold">Bargaining Section</h2>
-            {!ProposalAggreeed && !isEditMode && (
+            {/* {!isEditMode && (
               <FaEdit
                 className="size-5 shrink-0 text-primary cursor-pointer"
                 onClick={handleEditClick}
               />
-            )}
-            {ProposalAggreeed && utmGenerated ? (
-              <Button
-                loading={isUtmGenereated}
-                disabled={utmGenerated || isUtmGenereated}
-                className="bg-black text-white px-6 py-2 rounded-md w-[40%] text-sm"
-                onClick={() => {
-                  generateUTM();
-                }}
-              >
-                {utmGenerated ? "UTM Generated " : "Generate UTM"}
-              </Button>
+            )} */}
+            {false ? (
+              utmGenerated ? (
+                <div
+                  className={`bg-[#098228] text-[#098228] text-sm bg-opacity-10 font-medium me-2 px-2.5 py-2 rounded-sm text-center cursor-not-allowed
+            `}
+                >
+                  UTM Generated
+                </div>
+              ) : (
+                <Button
+                  loading={isUtmGenereated}
+                  disabled={utmGenerated || isUtmGenereated}
+                  className="bg-black text-white px-6 py-2 rounded-md w-[30%] text-sm"
+                  onClick={() => {
+                    generateUTM();
+                  }}
+                >
+                  {"Generate UTM"}
+                </Button>
+              )
+            ) : !isEditMode ? (
+              <FaEdit
+                className="size-5 shrink-0 text-primary cursor-pointer"
+                onClick={handleEditClick}
+              />
             ) : (
-              <div
-                className={`bg-[#098228] text-[#098228] text-sm bg-opacity-10 font-medium me-2 px-2.5 py-2 rounded-sm text-center cursor-not-allowed
-              `}
-              >
-                UTM Generated
-              </div>
+              <></>
             )}
           </div>
           <div className="flex sm:flex-row flex-col w-full items-center gap-2">
@@ -308,79 +320,94 @@ export default function BargainingDetailView() {
           <div className="flex sm:flex-row flex-col w-full items-center gap-4">
             {/* Start Date */}
             <div className="flex flex-col w-full">
-              <label className="text-sm text-font-grey mb-1">Start Date</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-[1]">
-                  <FaRegCalendarAlt />
-                </span>
-                <DatePicker
-                  name="startDate"
-                  key={startAt}
-                  disabled={!isEditMode}
-                  selected={startAt ? new Date(startAt) : null}
-                  onChange={(date) => {
-                    if (!date) {
-                      setStartAt("");
-                      setStartAtError("Start date is required");
-                      return;
-                    }
-                    setStartAt(date.toISOString());
-                    setStartAtError(null);
+              <div className="flex flex-col w-full">
+                <label className="text-sm text-font-grey mb-1">
+                  Start Date
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-[1]">
+                    <FaRegCalendarAlt />
+                  </span>
+                  <DatePicker
+                    name="startDate"
+                    key={startAt}
+                    disabled={!isEditMode}
+                    selected={startAt ? new Date(startAt) : null}
+                    onChange={(date) => {
+                      if (!date) {
+                        setStartAt("");
+                        setStartAtError("Start date is required");
+                        return;
+                      }
+                      setStartAt(date.toISOString());
+                      setStartAtError(null);
 
-                    // Also revalidate expiresAt
-                    if (expiresAt && new Date(expiresAt) <= date) {
-                      setExpiresAtError("Expiry must be after start date");
-                    } else {
-                      setExpiresAtError(null);
-                    }
-                  }}
-                  wrapperClassName="w-full"
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText="Select start date"
-                  className="w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white disabled:cursor-not-allowed !pl-10"
-                  minDate={new Date()}
-                />
+                      // Also revalidate expiresAt
+                      if (expiresAt && new Date(expiresAt) <= date) {
+                        setExpiresAtError("Expiry must be after start date");
+                      } else {
+                        setExpiresAtError(null);
+                      }
+                    }}
+                    wrapperClassName="w-full"
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="Select start date"
+                    className="w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white disabled:cursor-not-allowed !pl-10"
+                    minDate={new Date()}
+                  />
+                </div>
               </div>
-              {startAtError && (
-                <p className="text-red-500 text-xs mt-1">{startAtError}</p>
+              {startAtError ? (
+                <p className="text-red-500 text-xs mt-1">
+                  {startAtError}
+                </p>
+              ) : (
+                <div className="h-5"></div>
               )}
             </div>
-
             {/* Expires At */}
             <div className="flex flex-col w-full">
-              <label className="text-sm text-font-grey mb-1">Expires At</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-[1]">
-                  <FaRegCalendarAlt />
-                </span>
-                <DatePicker
-                  name="endDate"
-                  disabled={!isEditMode}
-                  selected={expiresAt ? new Date(expiresAt) : null}
-                  onChange={(date) => {
-                    if (!date) {
-                      setExpiresAt("");
-                      setExpiresAtError("Expiry date is required");
-                      return;
-                    }
+              <div className="flex flex-col w-full">
+                <label className="text-sm text-font-grey mb-1">
+                  Expires At
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-[1]">
+                    <FaRegCalendarAlt />
+                  </span>
+                  <DatePicker
+                    name="endDate"
+                    disabled={!isEditMode}
+                    selected={expiresAt ? new Date(expiresAt) : null}
+                    onChange={(date) => {
+                      if (!date) {
+                        setExpiresAt("");
+                        setExpiresAtError("Expiry date is required");
+                        return;
+                      }
 
-                    if (startAt && new Date(date) <= new Date(startAt)) {
-                      setExpiresAtError("Expiry must be after start date");
-                    } else {
-                      setExpiresAtError(null);
-                    }
+                      if (startAt && new Date(date) <= new Date(startAt)) {
+                        setExpiresAtError("Expiry must be after start date");
+                      } else {
+                        setExpiresAtError(null);
+                      }
 
-                    setExpiresAt(date.toISOString());
-                  }}
-                  wrapperClassName="w-full"
-                  dateFormat="dd/MM/yyyy"
-                  className="w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white disabled:cursor-not-allowed !pl-10"
-                  placeholderText="Select expiry date"
-                  minDate={startAt ? new Date(startAt) : new Date()}
-                />
+                      setExpiresAt(date.toISOString());
+                    }}
+                    wrapperClassName="w-full"
+                    dateFormat="dd/MM/yyyy"
+                    className="w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white disabled:cursor-not-allowed !pl-10"
+                    placeholderText="Select expiry date"
+                    minDate={startAt ? new Date(startAt) : new Date()}
+                  />
+                </div>
               </div>
-              {expiresAtError && (
-                <p className="text-red-500 text-xs mt-1">{expiresAtError}</p>
+              {expiresAtError ? (
+                <p className="text-red-500 text-xs mt-1">
+                  {expiresAtError}
+                </p>
+              ) : (
+                <div className="h-5"></div>
               )}
             </div>
           </div>

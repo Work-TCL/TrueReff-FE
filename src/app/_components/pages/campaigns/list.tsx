@@ -221,7 +221,7 @@ export default function CampaignList() {
         return (
           <div className="flex justify-center">
             <div
-              className={`w-1/2 p-2 rounded-md text-center ${statusColorClass}`}
+              className={`w-full p-2 rounded-md text-center ${statusColorClass}`}
             >
               {campaignStatus[campaign.status]}
             </div>

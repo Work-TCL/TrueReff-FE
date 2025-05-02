@@ -548,7 +548,7 @@ export default function CreatorList() {
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center flex-wrap gap-2">
+          <div className="flex justify-between items-center  gap-2">
             <SearchInput
               value={search}
               onChange={handleSearch}
@@ -574,7 +574,7 @@ export default function CreatorList() {
           </div>
           {creators?.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 p-2 md:p-4 bg-white rounded-[20px]  overflow-auto">
                 {creators.map((item: any, i) => (
                   <div key={i} className="flex h-full w-full">
                     <CreatorCard

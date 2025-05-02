@@ -72,25 +72,25 @@ const CreatorCard = ({
       </div>
 
       {/* Title + Category */}
-      <div className="text-center mb-3">
+      <div className="text-center sm:mb-3 mb-2">
         <div className="text-lg font-semibold">
           <TruncateWithToolTip
+            className="line-clamp-none truncate text-xs sm:text-lg"
             checkHorizontalOverflow={true}
-            linesToClamp={2}
             text={creator.title}
           />
         </div>
         <div className="text-gray-700 text-sm mt-1 line-clamp-2 overflow-hidden text-ellipsis">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
-            linesToClamp={2}
+            className="line-clamp-none truncate text-xs sm:text-sm"
             text={creator.short_description}
           />
         </div>
         <div className="text-gray-500 text-sm mt-1">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
-            linesToClamp={1}
+            className="line-clamp-none truncate text-xs sm:text-sm"
             text={`${translate("Categories")} : ${
               creator.categories || "Uncategorized"
             }`}
@@ -100,28 +100,47 @@ const CreatorCard = ({
         {creator.tags?.length > 0 && (
           <div className="text-gray-500 text-sm flex flex-wrap gap-2 mt-2">
             {creator.tags?.slice(0, 4).map((v) => (
-              <span className="bg-background py-1 px-2 rounded">#{v}</span>
+              <TruncateWithToolTip
+                checkHorizontalOverflow={true}
+                className="line-clamp-none truncate bg-background py-1 px-2 rounded text-xs sm:text-sm"
+                text={`#${v}`}
+              />
             ))}
           </div>
         )}
       </div>
 
       {/* Stats */}
-      <div className="flex justify-around text-center w-full border-t pt-3 text-sm mb-3">
-        <div>
-          <div className="font-semibold">{creator?.pastSales || "-"}</div>
+      <div className="flex sm:flex-row flex-col justify-around text-center w-full border-t sm:pt-3 pt-2 text-xs sm:text-sm mb-3 gap-1">
+        <div className="sm:block flex gap-2 items-center">
+          <div className="font-semibold sm:block hidden">
+            {creator?.pastSales || "-"}
+          </div>
           <div className="text-gray-500 flex items-center">Total Sale</div>
+          <div className="font-semibold sm:hidden block ">
+            {creator?.pastSales || "-"}
+          </div>
         </div>
-        <div>
-          <div className="font-semibold">{creator?.instagramViews || "-"}</div>
+        <div className="sm:block flex gap-2 items-center">
+          <div className="font-semibold sm:block hidden">
+            {creator?.instagramViews || "-"}
+          </div>
           <div className="text-gray-500 flex items-center gap-2">
             <FaInstagram size={20} /> Views
           </div>
+          <div className="font-semibold sm:hidden block">
+            {creator?.instagramViews || "-"}
+          </div>
         </div>
-        <div>
-          <div className="font-semibold">{creator?.youtubeViews || "-"}</div>
+        <div className="sm:block flex gap-2 items-center">
+          <div className="font-semibold sm:block hidden">
+            {creator?.youtubeViews || "-"}
+          </div>
           <div className="text-gray-500 flex items-center gap-2">
             <FaYoutube size={20} /> Views
+            <div className="font-semibold sm:hidden block">
+              {creator?.youtubeViews || "-"}
+            </div>
           </div>
         </div>
       </div>
@@ -129,7 +148,7 @@ const CreatorCard = ({
       {/* Button */}
       <button
         onClick={() => handleCollaborateNow(creator._id)}
-        className="whitespace-nowrap  border border-[#FFEDF2] bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all py-3 px-[10px] text-sm w-full"
+        className="whitespace-nowrap  border border-[#FFEDF2] bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all sm:py-3 py-2 sm:px-[10px] px-1 text-xs sm:text-sm w-full"
       >
         {translate("Collaborate_Now")}
       </button>
