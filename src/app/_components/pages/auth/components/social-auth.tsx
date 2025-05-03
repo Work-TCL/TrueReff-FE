@@ -8,7 +8,7 @@ export default function SocialAuth() {
   const handleGoogleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-    const redirectUri = `${BACKEND_URL}/api/auth/callback/google`;
+    const redirectUri = `${BACKEND_URL}/auth/callback/google`;
     const scope = encodeURIComponent("openid email profile");
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
 
