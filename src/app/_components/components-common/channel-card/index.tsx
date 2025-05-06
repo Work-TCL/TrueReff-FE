@@ -5,6 +5,7 @@ import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Confirmation from "../dialogs/confirmation-dialog";
+import toast from "react-hot-toast";
 
 interface IChannelCard {
   href?: string;
@@ -23,7 +24,7 @@ export default function ChannelCard({
   href = "",
 }: IChannelCard) {
   const router = useRouter();
-  const [confirm,setConfirm] = useState<boolean>(false)
+  const [confirm, setConfirm] = useState<boolean>(false)
   const handleConfirm = () => {
     setConfirm(false);
   }
@@ -84,10 +85,10 @@ export default function ChannelCard({
       {headerContent()}
       {bodyContent()}
       <div>
-        <Button className="text-white" variant="secondary" onClick={()=> setConfirm(true)}>Deactivate</Button>
+        <Button className="text-white" variant="secondary" onClick={() => toast.success("Coming soon!")}>Deactivate</Button>
       </div>
     </div>
-  )} 
-  {confirm && <Confirmation loading={false} title="Are you sure you want to deactivate this store?" handleConfirm={handleConfirm} onClose={()=> setConfirm(false)}/>}
+  )}
+    {confirm && <Confirmation loading={false} title="Are you sure you want to deactivate this store?" handleConfirm={handleConfirm} onClose={() => setConfirm(false)} />}
   </>
 }

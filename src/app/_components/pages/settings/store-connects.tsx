@@ -28,9 +28,9 @@ export default function StoreConnects({
             : translate("store_integration")}
         </h2>
       </div>
-      {channels?.map((value, index) => {
+      { channels.length > 0 ? channels?.map((value, index) => {
             return ChannelCardComponent && ChannelCardComponent(value);
-          })}
+          }) : <StoreConnectsComponent />}
     </div>
   );
 }
