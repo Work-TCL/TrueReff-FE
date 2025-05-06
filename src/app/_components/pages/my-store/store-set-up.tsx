@@ -408,7 +408,7 @@ export default function StoreSetUp(props: any) {
                       disabled
                       value={`${
                         process.env.NEXT_PUBLIC_FRONTEND_URL
-                      }/creator/store/${methods.watch("name")}`}
+                      }/store/${methods.watch("name")}`}
                       placeholder="https://my-store.com"
                     />
                   </div>
