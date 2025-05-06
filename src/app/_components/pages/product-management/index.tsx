@@ -219,7 +219,7 @@ export default function ProductList() {
               value={search}
               onChange={handleSearch}
               placeholder={translate("Search_Product")}
-              className="p-3 rounded-lg bg-white pl-10 w-full gray-color" // Add padding to the left for the icon
+              // className="p-3 rounded-lg bg-white pl-10 w-full gray-color" // Add padding to the left for the icon
             />
             <div className="flex flex-row gap-2 justify-end relative z-[99] flex-wrap ml-auto">
               <CategorySubCategorySelect onChange={handleSelectCategory} />

@@ -11,6 +11,7 @@ export default function BasicInfoForm() {
           name="full_name"
           type="text"
           placeholder="John Doe"
+          autoFocus
         />
       </div>
       <div className="col-span-1">

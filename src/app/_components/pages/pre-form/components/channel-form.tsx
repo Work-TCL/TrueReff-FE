@@ -24,6 +24,15 @@ export default function ChannelForm() {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="col-span-2">
+        <Input
+          label={translate("choose_your_selling_platforms")}
+          placeholder="Select"
+          name={`omni_channels`}
+          type="select-multiple"
+          options={Options}
+          autoFocus={false}
+        />
+
         <MultiSelectPreForm
           options={Options}
           label={translate("choose_your_selling_platforms")}

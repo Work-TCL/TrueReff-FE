@@ -11,6 +11,7 @@ export default function ContactDetailsForm() {
           name={`contacts[0].name`}
           type="text"
           placeholder="John doe"
+          autoFocus
         />
       </div>
       <div className="md:col-span-1 col-span-2">

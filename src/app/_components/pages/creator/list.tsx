@@ -202,12 +202,12 @@ export default function CreatorList() {
               placeholder={translate("Search_creator")}
             />
             <div className="flex items-center gap-[10px] md:w-fit w-full">
-              <SingleSelect
+              {/* <SingleSelect
                 placeholder="Select Status"
                 options={filterOption}
                 value={filter}
                 onChange={handleFilterValue}
-              />
+              /> */}
               <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>

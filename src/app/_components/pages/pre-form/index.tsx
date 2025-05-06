@@ -53,7 +53,7 @@ const TABS_STATUS = {
   OMNI_CHANNEL: 2,
 };
 
-export default function PreFormPage() {
+export default function   PreFormPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { setVendorData } = useVendorStore();
@@ -154,6 +154,7 @@ export default function PreFormPage() {
           "website",
           "type_of_business",
         ];
+        
 
         const isValid = await methods.trigger(basicInfoField);
         const response: any = await axios.get(

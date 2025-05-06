@@ -3,11 +3,33 @@ import { Button as ButtonOutline } from "@/components/ui/button";
 import Input from "@/app/_components/ui/form/Input";
 import { translate } from "@/lib/utils/translate";
 import React from "react";
+import { get } from "lodash";
+import { useFormContext } from "react-hook-form";
 
 export default function BasicInfoForm({
   handleImageSelect,
   profilePreview,
 }: any) {
+  const {
+    formState: { errors, touchedFields, submitCount },
+  } = useFormContext();
+
+  const getErrorMessage = (name: string) => {
+    const error = get(errors, name);
+    if (error && error.message) {
+      return error.message as string;
+    }
+    return null;
+  };
+  const getError = () => {
+    return (
+      Boolean(get(errors, "type_of_business")) && (
+        <span className="text-red-600 text-sm p-2">
+          {getErrorMessage("type_of_business")}
+        </span>
+      )
+    );
+  };
   return (
     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
       <div className="col-span-2">
@@ -16,6 +38,7 @@ export default function BasicInfoForm({
           name="business_name"
           type="text"
           placeholder="business"
+          autoFocus
         />
       </div>
       <div className="col-span-2">
@@ -67,9 +90,32 @@ export default function BasicInfoForm({
             },
           ]}
         />
+        {/* <label
+          htmlFor="type_of_business"
+          className="block mb-1 text-sm text-gray-500 font-semibold"
+        >
+          Type of business
+        </label>
+        <select
+          id="type_of_business"
+          name="type_of_business"
+          defaultValue=""
+          className="w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white disabled:cursor-not-allowed"
+          onChange={(e) => setCommissionType(e.target.value)}
+
+        >
+          <option value="" disabled hidden>
+            Select business type
+          </option>
+          <option value="business type 1">business type 1</option>
+          <option value="business type 2">business type 2</option>
+        </select>
+        {getError()} */}
       </div>
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
-        <div className="text-sm">{translate("Profile_Image")}</div>
+        <div className="text-sm font-medium text-gray-500">
+          {translate("Profile_Image")}
+        </div>
         <div className="flex justify-center items-center border rounded-lg p-5">
           <div className="flex flex-col w-full gap-4 relative">
             <div className="flex justify-center">

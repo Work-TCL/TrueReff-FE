@@ -23,12 +23,13 @@ interface IInput
     label: string;
     value: string;
   }[];
+  lableClassName?: string;
 }
 
 export const inputStyle =
   "w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white disabled:cursor-not-allowed";
 
-export const labelStyle = "mb-1 text-sm text-gray-500";
+export const labelStyle = "mb-1 text-sm text-gray-500 font-semibold";
 
 export default function Input({
   label = "",
@@ -39,6 +40,7 @@ export default function Input({
   options = [],
   Icon,
   hideError,
+  lableClassName,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -91,7 +93,7 @@ export default function Input({
 
   const getLabel = () =>
     label && (
-      <label className={cn(labelStyle)}>
+      <label className={cn(labelStyle, lableClassName)}>
         {label}
         {required && <span className="text-red-500">*</span>}
       </label>

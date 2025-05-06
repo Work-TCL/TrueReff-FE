@@ -139,6 +139,7 @@ export default function SocialMedia({
             type="text"
             placeholder="JohnDoe_Style"
             disabled
+            autoFocus
           />
         </div>
         <div className="col-span-2 lg:col-span-1">
@@ -152,7 +153,11 @@ export default function SocialMedia({
                 disabled
               />
             </div>
-            <div className={`flex mt-5 ${instagramConnected ? "hidden" : ""}`}>
+            <div
+              className={`mt-5 lg:flex hidden ${
+                instagramConnected ? "hidden" : ""
+              }`}
+            >
               {/* main button */}
               <Button
                 loading={isLoading}
@@ -174,6 +179,22 @@ export default function SocialMedia({
             placeholder="https://instagram.com/JohnDoe_Style"
             disabled
           />
+        </div>
+        <div
+          className={`lg:hidden flex mt-5 col-span-2 ${
+            instagramConnected ? "hidden" : ""
+          }`}
+        >
+          {/* main button */}
+          <Button
+            loading={isLoading}
+            className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
+            size="small"
+            onClick={handleInstaLogin}
+            disabled={isLoading}
+          >
+            {"Connect"}
+          </Button>
         </div>
         <div className="col-span-2">
           <div className="flex gap-4 items-center">
@@ -205,7 +226,11 @@ export default function SocialMedia({
                 placeholder="@JohnDoeFashion"
               />
             </div>
-            <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
+            <div
+              className={`mt-5 lg:flex hidden ${
+                youtubeConnected ? "hidden" : ""
+              }`}
+            >
               <Button
                 className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
                 size="small"
@@ -226,6 +251,21 @@ export default function SocialMedia({
             disabled
             placeholder="https://youtube.com/@JohnDoeFashion"
           />
+        </div>
+        <div
+          className={`lg:hidden flex mt-5 col-span-2 ${
+            youtubeConnected ? "hidden" : ""
+          }`}
+        >
+          <Button
+            className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
+            size="small"
+            onClick={handleGoogleLogin}
+            loading={isLoading}
+            disabled={isLoading}
+          >
+            {"Connect"}
+          </Button>
         </div>
       </div>
     </>

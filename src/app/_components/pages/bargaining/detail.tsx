@@ -104,6 +104,7 @@ export default function BargainingDetailView() {
           vendor: collaboration?.negotiation?.agreedByVendor,
           creator: collaboration?.negotiation?.agreedByCreator,
         });
+        collaboration.crmLink && setUtmgGenerated(true);
       }
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);
@@ -144,6 +145,8 @@ export default function BargainingDetailView() {
       proposalAgreedBy.creator === true &&
       proposalAgreedBy.vendor === false);
 
+  console.log("proposalAgreedBy.vendor", proposalAgreedBy, shoNote);
+
   const handleEditClick = () => {
     setIsEditMode(true); // Enable edit mode when pencil icon is clicked
   };
@@ -154,7 +157,7 @@ export default function BargainingDetailView() {
   return (
     <>
       <div className="flex flex-col gap-8 overflow-auto h-full pr-3">
-        {!ProposalAggreeed && shoNote && (
+        {shoNote && (
           <div className="flex items-center gap-x-3 rounded-lg bg-[#F9F8F8] p-2 text-[12px] font-normal text-[#6C7880]">
             <Info className="size-5 shrink-0 text-[#6C7880]" />
             <p>
@@ -174,7 +177,7 @@ export default function BargainingDetailView() {
                 onClick={handleEditClick}
               />
             )} */}
-            {false ? (
+            {ProposalAggreeed ? (
               utmGenerated ? (
                 <div
                   className={`bg-[#098228] text-[#098228] text-sm bg-opacity-10 font-medium me-2 px-2.5 py-2 rounded-sm text-center cursor-not-allowed
@@ -186,7 +189,7 @@ export default function BargainingDetailView() {
                 <Button
                   loading={isUtmGenereated}
                   disabled={utmGenerated || isUtmGenereated}
-                  className="bg-black text-white px-6 py-2 rounded-md w-[30%] text-sm"
+                  className="bg-black text-white lg:px-6 px-2 py-2 rounded-md w-[40%] lg:text-sm text-xs"
                   onClick={() => {
                     generateUTM();
                   }}
@@ -358,9 +361,7 @@ export default function BargainingDetailView() {
                 </div>
               </div>
               {startAtError ? (
-                <p className="text-red-500 text-xs mt-1">
-                  {startAtError}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{startAtError}</p>
               ) : (
                 <div className="h-5"></div>
               )}
@@ -403,9 +404,7 @@ export default function BargainingDetailView() {
                 </div>
               </div>
               {expiresAtError ? (
-                <p className="text-red-500 text-xs mt-1">
-                  {expiresAtError}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{expiresAtError}</p>
               ) : (
                 <div className="h-5"></div>
               )}

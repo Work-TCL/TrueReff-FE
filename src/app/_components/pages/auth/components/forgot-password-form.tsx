@@ -56,6 +56,7 @@ export default function ForgotPasswordForm() {
           type="email"
           placeholder={translate("Email")}
           Icon={MdOutlineEmail}
+          autoFocus
         />
         <Button
           type="submit"

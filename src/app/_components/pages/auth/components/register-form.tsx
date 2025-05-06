@@ -84,6 +84,7 @@ export default function RegisterForm() {
           type="email"
           placeholder={translate("Email")}
           Icon={MdOutlineEmail}
+          autoFocus
         />
         <Input
           name="password"
