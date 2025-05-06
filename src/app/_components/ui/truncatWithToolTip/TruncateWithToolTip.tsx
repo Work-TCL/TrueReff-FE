@@ -16,7 +16,7 @@ export default function TruncateWithToolTip({
   checkHorizontalOverflow = false, // New prop to determine overflow direction
   linesToClamp = 2, // 👈 New prop to support custom line clamping
 }: {
-  text: string;
+  text?: string;
   className?: string;
   tooltipContentClassName?: string;
   checkHorizontalOverflow?: boolean;

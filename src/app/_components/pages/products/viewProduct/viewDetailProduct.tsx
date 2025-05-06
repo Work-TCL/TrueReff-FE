@@ -182,11 +182,10 @@ export default function ViewProductDetail({
     setLoading(true);
     try {
       const response = await axios.get(
-        `/auth/creator-store/product/${productId}`
+        pathName.includes("/creators/") ? `/auth/creator-store/product/${productId}`:`/product/${productId}`
       );
-      console.log("response response response response response", response);
 
-      const product: any = response?.data?.data;
+      const product: any = pathName.includes("/creators/") ? response?.data?.data : response?.data?.data?.data;
       if (product) {
         const images = product.media;
         // ✅ Update product state
@@ -254,7 +253,7 @@ export default function ViewProductDetail({
     }
   }, [productId]);
   useEffect(() => {
-    if (creator?.creatorId || creatorId) {
+    if (!pathName.includes("/creators/") && creator?.creatorId || creatorId) {
       fetchProductCollaborationStatus();
     }
   }, [creator?.creatorId]);
@@ -342,7 +341,7 @@ export default function ViewProductDetail({
               ]}
             />
 
-            {(creator?.creatorId || creatorId) && (
+            {(!pathName.includes("/creators/") && creator?.creatorId || creatorId) && (
               <Button
                 disabled={
                   collaborationStatus === "REQUESTED" ||
@@ -355,6 +354,19 @@ export default function ViewProductDetail({
                 {statusText[collaborationStatus]}
               </Button>
             )}
+            {/* {(pathName.includes("/creators/")) && (
+              <Button
+                disabled={
+                  collaborationStatus === "REQUESTED" ||
+                  collaborationStatus === "REJECTED"
+                }
+                variant="secondary"
+                className={`${buttonColor[collaborationStatus]} text-white ml-auto`}
+                onClick={() => handleButtonClick(collaborationStatus)}
+              >
+                {statusText[collaborationStatus]}
+              </Button>
+            )} */}
           </div>
 
           {/* Card Section */}

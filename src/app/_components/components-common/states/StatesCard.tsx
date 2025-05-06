@@ -20,12 +20,12 @@ export const StatsCard = ({
     <Card
       className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} rounded-2xl`}
     >
-      <CardContent className="p-5 flex flex-col justify-between h-full">
+      <CardContent className="p-5 gap-2 flex flex-col justify-between h-full">
         <div className="flex justify-between items-start">
           <h3 className=" text-secondary  md:text-[14px] lg:text-[14px]">
             {title}
           </h3>
-          <div className="text-success bg-success-light md:text-sm text-xs px-2 py-1 rounded-sm">
+          <div className="text-success hidden bg-success-light md:text-sm text-xs px-2 py-1 rounded-sm">
             +{growth}%
           </div>
         </div>
@@ -35,7 +35,7 @@ export const StatsCard = ({
           >
             {value}
           </span>
-          <div className="w-20 h-8">
+          <div className="w-20 hidden h-8">
             <StatesCardGraph />
           </div>
         </div>

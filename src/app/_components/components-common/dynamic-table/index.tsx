@@ -67,11 +67,11 @@ export function DynamicTable<T>({
                   <EmptyPlaceholder
                     title={
                       emptyText?.title ??
-                      translate("No_Products_Available_Title")
+                      translate("No_Products_Available")
                     }
                     description={
                       emptyText?.description ??
-                      translate("No_Products_Available_Description")
+                      translate("It seems there are currently no products to display. Please check back later.")
                     }
                   />
                 </td>
@@ -82,10 +82,10 @@ export function DynamicTable<T>({
       )}
       {data.length === 0 || !data ? (
         <EmptyPlaceholder
-          title={emptyText?.title ?? translate("No_Products_Available_Title")}
+          title={emptyText?.title ?? translate("No_Products_Available")}
           description={
             emptyText?.description ??
-            translate("No_Products_Available_Description")
+            translate("It seems there are currently no products to display. Please check back later.")
           }
         />
       ) : null}

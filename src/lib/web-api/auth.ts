@@ -381,3 +381,36 @@ export const checkCreatorUserNameExist = async (
     return null;
   }
 };
+
+export const getCreatorList =
+  async (page:number,limit:number): Promise<any> => {
+    try {
+      const response = await axios.get(`/auth/creator/list?page=${page}&limit=${limit}`);
+      return response?.data?.data;
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error);
+      throw errorMessage || new Error("Error While fetching creator list.");
+    }
+  };
+
+  export const getVendorList =
+  async (page:number,limit:number): Promise<any> => {
+    try {
+      const response = await axios.get(`/auth/vendor/list?page=${page}&limit=${limit}`);
+      return response?.data?.data;
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error);
+      throw errorMessage || new Error("Error While fetching creator list.");
+    }
+  };
+
+  export const getVendorCreatorCount =
+  async (): Promise<any> => {
+    try {
+      const response = await axios.get(`/auth/creator/creator-vendor-count`);
+      return response?.data?.data;
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error);
+      throw errorMessage || new Error("Error While fetching creator list.");
+    }
+  };

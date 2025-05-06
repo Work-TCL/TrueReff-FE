@@ -197,8 +197,8 @@ export default function ProductList({ storeName }: { storeName: string }) {
             </>
           ) : (
             <EmptyPlaceHolder
-              title={"No_Products_Available_Title"}
-              description={"No_Products_Available_Description"}
+              title={"No_Products_Available"}
+              description={"It seems there are currently no products to display. Please check back later."}
             />
           )}
         </>

@@ -161,10 +161,10 @@ export default function CollaborateRequestForm({
             <div className="flex flex-col justify-center text-center items-center h-full">
               <Info height={30} width={30} className="mx-auto mb-2 text-gray-400" />
               <h2 className="text-lg font-semibold">
-                {translate("No_Products_Available_Title")}
+                {translate("No_Products_Available")}
               </h2>
               <p className="text-sm">
-                {translate("No_Products_Available_Description")}
+                {translate("It seems there are currently no products to display. Please check back later.")}
               </p>
             </div>}
         </div>

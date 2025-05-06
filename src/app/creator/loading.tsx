@@ -3,13 +3,14 @@ import React from "react";
 
 interface IProps {
   height?: "full" | "fit";
+  isTransparent?: boolean;
 }
 
-export default function Loading({ height = "full" }: IProps) {
+export default function Loading({ height = "full",isTransparent = false }: IProps) {
   return (
     <div
       role="status"
-      className={`${
+      className={`${isTransparent ? "absolute w-full z-[999] bg-white/50" : "bg-white"} ${
         height === "full" ? "h-screen" : "h-full"
       } flex justify-center items-center`}
     >

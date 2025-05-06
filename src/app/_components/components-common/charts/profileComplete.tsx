@@ -64,14 +64,14 @@ const ProfileCompletionCard = ({
               r="40"
               strokeWidth="10"
               fill="transparent"
-              stroke="url(#gradient)"
+              stroke={`url(#${gradientId})`}
               strokeDasharray={251}
               strokeDashoffset={251 - (progress / 100) * 251}
               strokeLinecap="round"
               transform="rotate(-90 50 50)"
             />
           <defs>
-            <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#9B5FE9" />
               <stop offset="50%" stopColor="#6684F0" />
               <stop offset="75%" stopColor="#DE598E" />

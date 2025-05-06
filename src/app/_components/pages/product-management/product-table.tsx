@@ -141,6 +141,7 @@ export default function ProductTable({
       header: () => translate("Product_Name"),
       cell: ({ row }) => {
         const product = row.original;
+        console.log("product",product)
         return (
           <span
             className="flex items-center gap-2 cursor-pointer"

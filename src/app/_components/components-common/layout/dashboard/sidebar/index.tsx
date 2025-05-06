@@ -141,10 +141,10 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       icon: UsersRound,
       children: [
         { label: translate("Creator_List"), link: "/vendor/creators" },
-        {
-          label: translate("Available_Creators"),
-          link: "/vendor/creators/available-creators",
-        },
+        // {
+        //   label: translate("Available_Creators"),
+        //   link: "/vendor/creators/available-creators",
+        // },
       ],
     },
     {

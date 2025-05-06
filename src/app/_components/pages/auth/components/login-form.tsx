@@ -213,6 +213,7 @@ export default function LoginForm() {
           type="email"
           placeholder={translate("Email")}
           Icon={MdOutlineEmail}
+          autoFocus
         />
         <Input
           name="password"

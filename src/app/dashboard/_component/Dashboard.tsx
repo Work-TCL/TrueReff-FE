@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import { Package, ShoppingBag, Users } from "lucide-react";
 import ProfileCompletionCard from "@/app/_components/components-common/charts/profileComplete";
@@ -7,13 +7,17 @@ import {
   BrandCreatorCard,
   CardComponent,
 } from "@/app/_components/pages/userOverView/cardComponent";
-import MyProducts from "@/app/_components/pages/userOverView/myPoducts";
+import Creators from "@/app/_components/pages/userOverView/creators";
 import { useAuthStore } from "@/lib/store/auth-user";
-import { cn } from "@/lib/utils/commonUtils";
+import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { ProductDetailUser } from "@/app/_components/pages/userOverView/productDetail";
 import { ProileDetailUser } from "@/app/_components/pages/userOverView/userProfile";
 import VideosTable from "@/app/_components/pages/userOverView/videoTable";
 import { translate } from "@/lib/utils/translate";
+import Brands from "@/app/_components/pages/userOverView/brands";
+import { toastMessage } from "@/lib/utils/toast-message";
+import { getVendorCreatorCount } from "@/lib/web-api/auth";
+import Loader from "@/app/_components/components-common/layout/loader";
 
 export default function UserOverView() {
   const { account } = useAuthStore();
@@ -31,64 +35,90 @@ export default function UserOverView() {
     handle: "john_doe_90",
   };
 
-  type CardOption = "products" | "creators" | "purchased";
+  type CardOption = "Brands" | "Creators";
 
-  const [selectedCard, setSelectedCard] = useState<CardOption>("products");
+  const [selectedCard, setSelectedCard] = useState<CardOption>("Brands");
+  const initialData = {
+    creatorCount:  0,
+    vendorCount: 0,
+  };
+  const [count,setCountData] = useState(initialData);
+  const [loading,setLoading] = useState(true);
+  useEffect(() => {
+    fetchCreatorVendorCount()
+  },[])
+  const fetchCreatorVendorCount = async () => {
+    setLoading(true);
+    try {
+      const response = await getVendorCreatorCount();
+      if(response){
+        setCountData(response);
+      } else {
+        setCountData(initialData)
+      }
+    } catch (error) {
+      let errorMessage = await getErrorMessage(error);
+      toastMessage.error(errorMessage);
+    } finally{
+      setLoading(false)
+    }
+  }
   return (
     <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
+      {loading && <Loader/>}
       <div className="flex flex-col lg:flex-row w-full md:gap-6 gap-4">
         <div className="flex flex-col md:gap-6 gap-4 w-full lg:max-w-[60%]">
-          <ProfileCompletionCard progress={80} className="lg:hidden flex" />
+          <ProfileCompletionCard progress={10} className="lg:hidden flex" />
           <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4 rounded-[20px] w-full bg-white p-4">
             <CardComponent
-              title={translate("My_Products")}
-              value={`$${120}`}
+              title={translate("Brands")}
+              value={count?.vendorCount}
               bgColor={
-                selectedCard === "products" ? "bg-[#FFEDF2]" : "bg-white"
+                selectedCard === "Brands" ? "bg-[#FFEDF2]" : "bg-white"
               }
               titleClassName={
-                selectedCard === "products" ? "text-secondary" : ""
+                selectedCard === "Brands" ? "text-secondary" : ""
               }
               borderColor={
-                selectedCard === "products" ? "border-[#FF4979]" : ""
+                selectedCard === "Brands" ? "border-[#FF4979]" : ""
               }
               icon={
                 <Package
                   className={cn(
                     "font-normal size-5",
-                    selectedCard === "products"
+                    selectedCard === "Brands"
                       ? "text-Secondary"
                       : "text-primary"
                   )}
                 />
               }
-              onClick={() => setSelectedCard("products")}
+              onClick={() => setSelectedCard("Brands")}
             />
             <CardComponent
-              title={translate("My_Creators")}
+              title={translate("Creators")}
               borderColor={
-                selectedCard === "creators" ? "border-[#FF4979]" : ""
+                selectedCard === "Creators" ? "border-[#FF4979]" : ""
               }
               titleClassName={
-                selectedCard === "creators" ? "text-secondary" : ""
+                selectedCard === "Creators" ? "text-secondary" : ""
               }
-              value={200}
+              value={count?.creatorCount}
               bgColor={
-                selectedCard === "creators" ? "bg-[#FFEDF2]" : "bg-white"
+                selectedCard === "Creators" ? "bg-[#FFEDF2]" : "bg-white"
               }
               icon={
                 <Users
                   className={cn(
                     "font-normal size-5",
-                    selectedCard === "creators"
+                    selectedCard === "Creators"
                       ? "text-Secondary"
                       : "text-primary"
                   )}
                 />
               }
-              onClick={() => setSelectedCard("creators")}
+              onClick={() => setSelectedCard("Creators")}
             />
-            <CardComponent
+            {/* <CardComponent
               title={translate("My_Purchased")}
               borderColor={
                 selectedCard === "purchased" ? "border-[#FF4979]" : ""
@@ -111,11 +141,16 @@ export default function UserOverView() {
                 />
               }
               onClick={() => setSelectedCard("purchased")}
-            />
+            /> */}
           </div>
-          <MyProducts />
+          {
+            {
+              "Creators":<Creators title={selectedCard} />,
+              "Brands":<Brands title={selectedCard} />
+            }[selectedCard]
+          }
         </div>
-        <div className="flex flex-col md:gap-6 gap-4">
+        <div className="flex flex-col md:gap-6 gap-4 w-full lg:max-w-[40%]">
           <div className="flex md:flex-row flex-col gap-4">
             <BrandCreatorCard
               question={translate("Do_you_have_an_e_commerce_site_to_sell")}
@@ -129,8 +164,8 @@ export default function UserOverView() {
               redirectUrl="/creator-registration"
             />
           </div>
-          <ProfileCompletionCard progress={80} className="lg:flex hidden" />
-          {selectedCard === "products" && (
+          <ProfileCompletionCard progress={10} gradientId={"gradient_lg"} className="lg:flex hidden" />
+          {/* {selectedCard === "products" && (
             <ProductDetailUser
               title={translate("Product_Details")}
               productDetail={productDetail}
@@ -150,7 +185,7 @@ export default function UserOverView() {
                 {translate("Purchase Details Coming Soon!")}
               </p>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

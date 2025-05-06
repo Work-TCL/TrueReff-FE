@@ -3,7 +3,7 @@ import React, { useState, useTransition } from "react";
 import { translate } from "@/lib/utils/translate";
 import ProfileCompletionCard from "../../components-common/charts/profileComplete";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
-import MyProducts from "./myPoducts";
+import MyProducts from "./creators";
 import { CardComponent } from "./cardComponent";
 import { Package, ShoppingBag, Users } from "lucide-react";
 import { ProductDetailUser } from "./productDetail";
@@ -110,7 +110,7 @@ export default function UserOverView() {
               onClick={() => setSelectedCard("purchased")}
             />
           </div>
-          <MyProducts />
+          <MyProducts title="products"/>
         </div>
         <div className="flex flex-col md:gap-6 gap-4">
           {/* <div className="flex md:flex-row flex-col gap-4">
