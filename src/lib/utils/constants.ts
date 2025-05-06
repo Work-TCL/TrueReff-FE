@@ -76,6 +76,7 @@ export const badgeColor: { [key: string]: string } = {
   EXPIRED: "bg-[#FF3B30] text-[#FF3B30]",
   REJECTED: "bg-[#FF3B30] text-[#FF3B30]",
   PENDING: "bg-[#5856D6] text-[#5856D6]",
+  ACTIVE: "bg-[#098228] text-[#098228]",
 };
 export const statusMessage: { [key: string]: string } = {
   REQUESTED: "Request Sent",
@@ -83,10 +84,11 @@ export const statusMessage: { [key: string]: string } = {
   REJECTED: "Request Rejected",
   LIVE: "Collaboration Live",
   EXPIRED: "Collaboration Expired",
+  ACTIVE: "Collaboration Active",
   REQUESTED_CREATOR_TO_VENDOR: "Creator Requested",
-REQUESTED_VENDOR_TO_CREATOR: "Requested creator",
-REQUESTED_CREATOR_FROM_VENDOR: "Requested vendor",
-REQUESTED_VENDOR_FROM_CREATOR: "Vendor invited",
+  REQUESTED_VENDOR_TO_CREATOR: "Requested creator",
+  REQUESTED_CREATOR_FROM_VENDOR: "Requested vendor",
+  REQUESTED_VENDOR_FROM_CREATOR: "Vendor invited",
 };
 export function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {

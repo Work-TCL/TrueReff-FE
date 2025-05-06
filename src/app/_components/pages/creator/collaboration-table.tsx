@@ -57,6 +57,7 @@ const CollaborationTable = ({
   const handleViewCreatorDetails = (id: string) => {
     router.push(`/vendor/collaboration/${id}`);
   };
+
   const handleStatusChangeRequest = async (
     status: "accepted" | "rejected",
     collaborationId: string
@@ -84,6 +85,7 @@ const CollaborationTable = ({
       setIsOpen(initialValue);
     }
   };
+
   const handleCancelRequest = async () => {
     setLoading(true);
     try {
@@ -106,6 +108,7 @@ const CollaborationTable = ({
       setIsOpen(initialValue);
     }
   };
+
   const handleChatView = (collaborationId: string) => {
     router.push(`/creator/collaboration/${collaborationId}`);
   };
@@ -113,6 +116,7 @@ const CollaborationTable = ({
   const handleProductDetail = (productId: string) => {
     router.push(`/creator/product-management/${productId}`);
   };
+
   const handleConfirm = () => {
     if (isOpen?.status === "cancel") {
       handleCancelRequest();
@@ -120,6 +124,7 @@ const CollaborationTable = ({
       handleStatusChangeRequest("rejected", isOpen?.collaborationId);
     }
   };
+  
   const getRequestStatus = (collaboration: ICollaboration) => {
     const { request } = collaboration;
     if (request) {
@@ -133,6 +138,7 @@ const CollaborationTable = ({
       }
     } else return "SEND_REQUEST";
   };
+  
   const getMessages = (status: string, request: IRequest) => {
     let userStatus: { [key: string]: string } = {
       CREATOR: "REQUESTED_CREATOR_FROM_VENDOR",

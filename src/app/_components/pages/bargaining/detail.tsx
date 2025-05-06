@@ -118,7 +118,7 @@ export default function BargainingDetailView() {
       const response = await axios.put(
         `product/generate-crm/${collaborationId}`
       );
-      if (response?.status === 200) {
+      if (response?.data) {
         setUtmgGenerated(true);
         setIsUtmGenerated(false);
       } else {
