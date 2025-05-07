@@ -83,6 +83,8 @@ export default function LoginForm() {
           completed: res?.data?.creator?.completed,
           short_description: res?.data?.creator?.short_description,
           long_description: res?.data?.creator?.long_description,
+          state: res?.data?.creator?.state,
+          city: res?.data?.creator?.city,
         });
       }
       if (res?.data?.type === USER_TYPE.Vendor) {
@@ -99,6 +101,8 @@ export default function LoginForm() {
           omni_channels: res?.data?.vendor?.omni_channels,
           brand_documents: res?.data?.vendor?.brand_documents,
           addresses: res?.data?.vendor?.addresses,
+          state: res?.data?.vendor?.state,
+          city: res?.data?.vendor?.city,
         });
       }
       setIsAuthStatus("authenticated");

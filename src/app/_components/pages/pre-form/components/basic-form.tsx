@@ -5,9 +5,29 @@ import { translate } from "@/lib/utils/translate";
 import React from "react";
 import { get } from "lodash";
 import { useFormContext } from "react-hook-form";
-
+import Select from "react-select";
+import { cities, indianStates } from "@/lib/utils/constants";
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+  control: (base: any) => ({
+    ...base,
+    height: "54px",
+    borderRadius: "8px",
+  }),
+  options: (base: any) => ({
+    ...base,
+    zIndex: 999
+  })
+};
 export default function BasicInfoForm({
   handleImageSelect,
+  handleOnSelect = () => { },
+  methods,
+  formState,
   profilePreview,
 }: any) {
   const {
@@ -64,6 +84,56 @@ export default function BasicInfoForm({
           name="gst_number"
           type="phone"
         />
+      </div>
+      <div className="col-span-1">
+        <div className="flex flex-col">
+          <span className="mb-1 text-sm text-gray-500 font-semibold">{"State"}<span className="text-red-500">*</span></span>
+          <Select
+            styles={customStyles}
+            value={[
+              {
+                value: formState.state,
+                label: formState.state
+                  ? formState.state
+                  : "Select State",
+              },
+            ]}
+            onChange={(value) => handleOnSelect(value?.value,"state")}
+            options={indianStates?.map(ele => ({ value: ele, label: ele }))}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            placeholder="Select State"
+          />
+          {Boolean(get(methods.formState.errors, "state")) && (
+            <span className="text-red-600 text-sm p-2 block">
+              {methods.formState.errors["state"]?.message}
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="col-span-1">
+        <div className="flex flex-col">
+          <span className="mb-1 text-sm text-gray-500 font-semibold">{"City"}<span className="text-red-500">*</span></span>
+          <Select
+            styles={customStyles}
+            value={[
+              {
+                value: formState.city,
+                label: formState.city
+                  ? formState.city
+                  : "Select City",
+              },
+            ]}
+            onChange={(value) => handleOnSelect(value?.value, "city")}
+            options={formState.state ? cities[formState?.state]?.map((ele: string) => ({ value: ele, label: ele })) : []}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            placeholder="Select State"
+          />
+          {Boolean(get(methods.formState.errors, "city")) && (
+            <span className="text-red-600 text-sm p-2 block">
+              {methods.formState.errors["city"]?.message}
+            </span>
+          )}
+        </div>
       </div>
       <div className="md:col-span-1 col-span-2">
         <Input

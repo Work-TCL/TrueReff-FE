@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -13,8 +13,25 @@ import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
-import { fileUploadLimitValidator } from "@/lib/utils/constants";
-
+import { cities, fileUploadLimitValidator, indianStates } from "@/lib/utils/constants";
+import Select from "react-select";
+import { get } from "lodash";
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+  control: (base: any) => ({
+    ...base,
+    height: "54px",
+    borderRadius: "8px",
+  }),
+  options: (base: any) => ({
+    ...base,
+    zIndex: 999
+  })
+};
 export default function EditVendorForm({
   profile,
   onClose,
@@ -28,7 +45,16 @@ export default function EditVendorForm({
   const [profilePreview, setProfilePreview] = useState<string>(
     profile?.profile_image || ""
   );
-
+  const initialState = {
+    state: profile?.state ?? "",
+    city: profile?.city ?? ""
+  }
+  const [formState, setFormState] = useState(initialState);
+  useEffect(() => {
+    if (profile) {
+      setFormState({ state: profile?.state, city: profile?.city })
+    }
+  }, [profile])
   const schema = vendorProfileUpdateSchema;
   const methods = useForm<IVendorProfileUpdateSchema>({
     defaultValues: {
@@ -37,6 +63,8 @@ export default function EditVendorForm({
       gst_number: profile?.gst_number || "",
       website: profile?.website || "",
       business_name: profile?.business_name || "",
+      state: profile?.state,
+      city: profile?.city
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -67,6 +95,8 @@ export default function EditVendorForm({
           website: data.website,
           business_name: data.business_name,
           profile_image: response.data?.profile_image,
+          state: response.data?.state,
+          city: response.data?.city,
         });
         toast.success(response?.message);
         methods?.reset();
@@ -107,6 +137,20 @@ export default function EditVendorForm({
     setProfileFile(file);
     setProfilePreview(previewURL);
   };
+  const handleOnSelect = (value: any, name: any) => {
+    setFormState({ ...formState, [name]: value })
+    methods.setValue(name, value);
+    if (name === 'state') {
+      setFormState({ ...formState, [name]: value, city: "" })
+      methods.setValue("city", "");
+    }
+    if (value) {
+      methods.setError(name, {
+        type: "manual",
+        message: "",
+      })
+    }
+  }
 
   return (
     <>
@@ -135,6 +179,56 @@ export default function EditVendorForm({
             type="text"
             placeholder={translate("GST_Number")}
           />
+          <div className="col-span-1">
+            <div className="flex flex-col">
+              <span className="mb-1 text-sm text-gray-500 font-semibold">{"State"}<span className="text-red-500">*</span></span>
+              <Select
+                styles={customStyles}
+                value={[
+                  {
+                    value: formState.state,
+                    label: formState.state
+                      ? formState.state
+                      : "Select State",
+                  },
+                ]}
+                onChange={(value) => handleOnSelect(value?.value, "state")}
+                options={indianStates?.map(ele => ({ value: ele, label: ele }))}
+                className="basic-multi-select focus:outline-none focus:shadow-none"
+                placeholder="Select State"
+              />
+              {Boolean(get(methods.formState.errors, "state")) && (
+                <span className="text-red-600 text-sm p-2 block">
+                  {methods.formState.errors["state"]?.message}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="col-span-1">
+            <div className="flex flex-col">
+              <span className="mb-1 text-sm text-gray-500 font-semibold">{"City"}<span className="text-red-500">*</span></span>
+              <Select
+                styles={customStyles}
+                value={[
+                  {
+                    value: formState.city,
+                    label: formState.city
+                      ? formState.city
+                      : "Select City",
+                  },
+                ]}
+                onChange={(value) => handleOnSelect(value?.value, "city")}
+                options={formState.state ? cities[formState?.state]?.map((ele: string) => ({ value: ele, label: ele })) : []}
+                className="basic-multi-select focus:outline-none focus:shadow-none"
+                placeholder="Select City"
+              />
+              {Boolean(get(methods.formState.errors, "city")) && (
+                <span className="text-red-600 text-sm p-2 block">
+                  {methods.formState.errors["city"]?.message}
+                </span>
+              )}
+            </div>
+          </div>
           <Input
             name="website"
             label={translate("Website")}

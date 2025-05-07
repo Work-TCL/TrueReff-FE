@@ -14,7 +14,25 @@ import Button from "@/app/_components/ui/button";
 import { useCreatorStore } from "@/lib/store/creator";
 import { getCategories, updateCreator } from "@/lib/web-api/auth";
 import { ICategoryData, IPutUpdateCreatorRequest } from "@/lib/types-api/auth";
-import { fileUploadLimitValidator } from "@/lib/utils/constants";
+import { cities, fileUploadLimitValidator, indianStates } from "@/lib/utils/constants";
+import Select from "react-select";
+import { get } from "lodash";
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+  control: (base: any) => ({
+    ...base,
+    height: "54px",
+    borderRadius: "8px",
+  }),
+  options: (base: any) => ({
+    ...base,
+    zIndex: 999
+  })
+};
 
 export default function EditCreatorForm({ onClose }: { onClose: any }) {
   const { creator, setCreatorData } = useCreatorStore();
@@ -30,7 +48,16 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
   const [bannerPreview, setBannerPreview] = useState<string>(
     creator?.banner_image || ""
   );
-
+  const initialState = {
+    state: creator?.state ?? "",
+    city: creator?.city ?? ""
+  }
+  const [formState, setFormState] = useState(initialState);
+  useEffect(() => {
+    if (creator) {
+      setFormState({ state: creator?.state, city: creator?.city })
+    }
+  }, [creator])
   const schema = creatorProfileUpdateSchema;
   const methods = useForm<ICreatorProfileUpdateSchema>({
     defaultValues: {
@@ -45,6 +72,8 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       banner_image: creator?.banner_image || "",
       profile_image: creator?.profile_image || "",
       tags: creator?.tags || [],
+      state: creator?.state ||"",
+      city: creator?.city || "",
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -72,7 +101,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         selectedCategories?.map((v: any) => v.value),
         creator.sub_category || []
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -134,6 +163,8 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         tags: data.tags || [],
         profile_image: profileFile,
         banner_image: bannerFile,
+        state: data?.state,
+        city: data?.city,
       };
 
       const response: any = await updateCreator(payload);
@@ -157,6 +188,8 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           completed: res?.completed,
           short_description: res?.short_description,
           long_description: res?.long_description,
+          state: res?.state,
+          city: res?.city,
         });
         onClose && onClose(true);
       }
@@ -210,6 +243,20 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       setBannerPreview(previewURL);
     }
   };
+  const handleOnSelect = (value: any, name: any) => {
+    setFormState({ ...formState, [name]: value })
+    methods.setValue(name, value);
+    if (name === 'state') {
+      setFormState({ ...formState, [name]: value, city: "" })
+      methods.setValue("city", "");
+    }
+    if (value) {
+      methods.setError(name, {
+        type: "manual",
+        message: "",
+      })
+    }
+  }
 
   return (
     <>
@@ -266,6 +313,56 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               type="text"
               placeholder="Helping men stay stylish with the latest fashion trends."
             />
+          </div>
+          <div className="col-span-1">
+            <div className="flex flex-col">
+              <span className="mb-1 text-sm text-gray-500 font-semibold">{"State"}<span className="text-red-500">*</span></span>
+              <Select
+                styles={customStyles}
+                value={[
+                  {
+                    value: formState.state,
+                    label: formState.state
+                      ? formState.state
+                      : "Select State",
+                  },
+                ]}
+                onChange={(value) => handleOnSelect(value?.value, "state")}
+                options={indianStates?.map(ele => ({ value: ele, label: ele }))}
+                className="basic-multi-select focus:outline-none focus:shadow-none"
+                placeholder="Select State"
+              />
+              {Boolean(get(methods.formState.errors, "state")) && (
+                <span className="text-red-600 text-sm p-2 block">
+                  {methods.formState.errors["state"]?.message}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="col-span-1">
+            <div className="flex flex-col">
+              <span className="mb-1 text-sm text-gray-500 font-semibold">{"City"}<span className="text-red-500">*</span></span>
+              <Select
+                styles={customStyles}
+                value={[
+                  {
+                    value: formState.city,
+                    label: formState.city
+                      ? formState.city
+                      : "Select City",
+                  },
+                ]}
+                onChange={(value) => handleOnSelect(value?.value, "city")}
+                options={formState.state ? cities[formState?.state]?.map((ele: string) => ({ value: ele, label: ele })) : []}
+                className="basic-multi-select focus:outline-none focus:shadow-none"
+                placeholder="Select City"
+              />
+              {Boolean(get(methods.formState.errors, "city")) && (
+                <span className="text-red-600 text-sm p-2 block">
+                  {methods.formState.errors["city"]?.message}
+                </span>
+              )}
+            </div>
           </div>
           <div className="col-span-2">
             <Input

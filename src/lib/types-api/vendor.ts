@@ -36,6 +36,8 @@ export interface IVendor {
   user_name?: string;
   short_description?: string;
   long_description?: string;
+  state: string;
+  city: string;
 }
 export interface ICategory {
   _id: string;

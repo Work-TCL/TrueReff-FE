@@ -32,13 +32,6 @@ export default function ChannelForm() {
           options={Options}
           autoFocus={false}
         />
-
-        <MultiSelectPreForm
-          options={Options}
-          label={translate("choose_your_selling_platforms")}
-          name={`omni_channels`}
-          placeholder="Select"
-        />
       </div>
     </div>
   );

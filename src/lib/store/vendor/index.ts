@@ -34,6 +34,7 @@ export const useVendorStore = create<
         brand_documents: [],
         addresses: [],
         banner_image:"",
+        state:"",city:"",
   user_name:"",
   short_description:"",
   long_description:"",

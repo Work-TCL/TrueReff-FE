@@ -74,7 +74,6 @@ export default function CreatorRegistrationPage() {
   const { account } = useAuthStore();
   const { setCreatorData } = useCreatorStore();
   const router = useRouter();
-  const email = searchParams.get("email") ?? "";
   const tab = searchParams.get("tab") ?? "0";
   const activeTab = parseInt(tab);
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
@@ -86,6 +85,11 @@ export default function CreatorRegistrationPage() {
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string>("");
   const [bannerPreview, setBannerPreview] = useState<string>("");
+  const initialState = {
+    state:"",
+    city:""
+  }
+  const [formState,setFormState] = useState(initialState);
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -143,6 +147,8 @@ export default function CreatorRegistrationPage() {
         category: data.category.map((v) => v.value),
         sub_category: data.sub_category.map((v) => v.value),
         tags: data.tags || [],
+        state: data?.state,
+        city: data?.city
       };
 
       if (bannerFile) {
@@ -172,6 +178,8 @@ export default function CreatorRegistrationPage() {
           completed: response?.data?.completed,
           short_description: response?.data?.short_description,
           long_description: response?.data?.long_description,
+          state: response?.data?.state,
+          city: response?.data?.city,
         });
         router.push(`?tab=2&creatorId=${response?.data?._id}`);
       }
@@ -206,6 +214,8 @@ export default function CreatorRegistrationPage() {
         "user_name",
         "email",
         "phone_number",
+        "state",
+        "city"
       ];
       const isValid = await methods.trigger(basicInfoField);
       const isExist = await checkCreatorUserNameExist({
@@ -282,6 +292,8 @@ export default function CreatorRegistrationPage() {
           completed: creator?.completed,
           short_description: creator?.short_description,
           long_description: creator?.long_description,
+          state: creator?.state,
+          city: creator?.city,
         });
       }
     } catch (e) {
@@ -330,6 +342,21 @@ export default function CreatorRegistrationPage() {
       setBannerPreview(previewURL);
     }
   };
+
+  const handleOnSelect = (value:any,name: any) => {
+    setFormState({...formState,[name]:value})
+    methods.setValue(name, value);
+    if(name === 'state'){
+      setFormState({...formState,[name]:value,city:""})
+      methods.setValue("city", "");
+    }
+    if(value){
+      methods.setError(name,{
+        type: "manual",
+        message: "",
+      })
+    }
+  }
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
@@ -384,7 +411,7 @@ export default function CreatorRegistrationPage() {
                 >
                   {
                     {
-                      [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm />,
+                      [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm handleOnSelect={handleOnSelect} methods={methods} formState={formState}/>,
                       [TABS_STATUS.PROFILE_SETUP]: (
                         <ProfileSetup
                           handleImageSelect={handleImageSelect}

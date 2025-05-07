@@ -17,6 +17,7 @@ import { IoGridOutline } from "react-icons/io5";
 import { PiListChecksLight } from "react-icons/pi";
 import BrandListView from "./_components/brandList";
 import { SearchInput } from "@/app/_components/components-common/search-field";
+import BrandFilter from "./_components/filter";
 
 export interface Brand {
   id: number;
@@ -44,14 +45,15 @@ export default function BrandList() {
   const getBrandList = async (
     page: number,
     isInternalLoader: boolean = false,
-    searchValue: string = ""
+    searchValue: string = "",
+    filterState?:any
   ) => {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response: any = await axios.get(
         `/product/vendor-product/vendor/list?page=${page}&limit=${itemsPerPage}${
           searchValue ? `&search=${searchValue}` : ""
-        }`
+        }${filterState?.state ? `&state=${filterState?.state}`:""}${filterState?.city ? `&city=${filterState?.city}`:""}`
       );
       if (response.status === 200) {
         const brandData = response.data.data;
@@ -108,6 +110,9 @@ export default function BrandList() {
     setSearch(value);
     debouncedSearch(value); // call debounce on value
   };
+  const handleOnFilter = (filterState:any) => {
+    getBrandList(1,true,search,filterState)
+  }
   return (
     <div className={`flex flex-col p-4 gap-4 h-full`}>
       {loading ? (
@@ -121,6 +126,7 @@ export default function BrandList() {
               placeholder={"Search Brand"}
             />
             <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
+              <BrandFilter onChange={handleOnFilter}/>
               <PiListChecksLight
                 className={`cursor-pointer md:size-[30px] size-6 ${
                   viewMode === "table" ? "text-blue-600" : "text-gray-400"

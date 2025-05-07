@@ -19,6 +19,7 @@ import CollaborateRequest from "../../components-common/dialogs/collaborate-crea
 import SingleSelect from "../../components-common/single-select";
 import { ViewToggle } from "../../components-common/view-toggle";
 import { SearchInput } from "../../components-common/search-field";
+import CreatorFilter from "./creator-filter";
 export interface ICategory {
   _id: string;
   name: string;
@@ -117,14 +118,15 @@ export default function CreatorList() {
     async (
       page: number,
       isInternalLoader?: boolean,
-      searchValue: string = ""
+      searchValue: string = "",
+      filterState?:any
     ) => {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
           `/auth/creator/list?page=${page}&limit=${pageSize}${
             searchValue ? `&search=${searchValue}` : ""
-          }`
+          }${filterState?.state ? `&state=${filterState?.state}`:""}${filterState?.city ? `&city=${filterState?.city}`:""}`
         );
         if (response.status === 200) {
           const creatorData = response.data.data;
@@ -186,9 +188,9 @@ export default function CreatorList() {
     debouncedSearch(value);
     setSearch(value);
   };
-  const handleFilterValue = (value: any) => {
-    setFilter(value);
-  };
+  const handleOnFilter = (filterState:any) => {
+    getCreatorList(1,true,search,filterState)
+  }
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
@@ -202,12 +204,7 @@ export default function CreatorList() {
               placeholder={translate("Search_creator")}
             />
             <div className="flex items-center gap-[10px] md:w-fit w-full">
-              {/* <SingleSelect
-                placeholder="Select Status"
-                options={filterOption}
-                value={filter}
-                onChange={handleFilterValue}
-              /> */}
+              <CreatorFilter onChange={handleOnFilter}/>
               <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>

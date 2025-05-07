@@ -46,6 +46,8 @@ export interface ICreator {
   completed: number;
   short_description: string;
   long_description: string;
+  state: string;
+  city: string;
 }
 
 export interface ICreatorByIdRequest {

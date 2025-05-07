@@ -169,6 +169,8 @@ export const preFormSchema = Yup.object().shape({
   company_phone: Yup.string()
     .required("Company Phone is required")
     .matches(/^[0-9]{10}$/, "Company Phone must be a valid 10-digit number"),
+  state: Yup.string().required("State is required"),
+  city: Yup.string().required("City is required"),
   gst_number: Yup.string()
     .required("GST Number is required")
     .min(15, "GST Number should be exactly 15 characters")
@@ -237,7 +239,12 @@ export const preFormSchema = Yup.object().shape({
     .required("At least one contact is required") // Ensure at least one contact
     .min(1, "At least one contact is required"), // Ensure at least one contact
   omni_channels: Yup.array()
-    .of(Yup.string().required("Channel is required"))
+    .of(
+      Yup.object().shape({
+        value: Yup.string().required("Channel value is required"),
+        label: Yup.string().required("Channel label is required"),
+      })
+    )
     .min(1, "At least one channel is required"),
 });
 
@@ -251,6 +258,8 @@ export const creatorFormSchema = Yup.object().shape({
     .required("User Name is required")
     .min(2, "User Name must be at least 2 characters"),
   email: Yup.string().email().lowercase().required("Email is required"),
+  state: Yup.string().required("State is required"),
+  city: Yup.string().required("City is required"),
   phone_number: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
@@ -331,6 +340,8 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
     .url("Website must be a valid URL")
     .required("Website is required"),
   business_name: Yup.string().required("Business Name is required"),
+  state: Yup.string().required("State is required"),
+  city: Yup.string().required("City is required"),
 });
 
 export interface IVendorProfileUpdateSchema
@@ -385,6 +396,8 @@ export const creatorOnBoardingSchema = Yup.object().shape({
   profile_title: Yup.string().required("Title is required"),
   short_description: Yup.string().required("Short description is required"),
   long_description: Yup.string().required("Long description is required"),
+  state: Yup.string().required("State is required"),
+  city: Yup.string().required("City is required"),
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
@@ -543,6 +556,8 @@ export const creatorProfileUpdateSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   short_description: Yup.string().required("Short description is required"),
   long_description: Yup.string().required("Long description is required"),
+  state: Yup.string().required("State is required"),
+  city: Yup.string().required("City is required"),
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")

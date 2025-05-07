@@ -73,6 +73,8 @@ interface ICreator {
   completed: number;
   createdAt: string;
   updatedAt: string;
+  state: string;
+  city: string;
 }
 export interface IGetUserResponse {
   status: number;
@@ -181,12 +183,16 @@ export interface IPostVendorRegisterRequest {
   }[];
   omni_channels: string[];
   profile_image?: any;
+  state: string;
+  city: string;
 }
 // POST Creator Register
 export interface IPostCreatorRegisterRequest {
   full_name: string;
   user_name: string;
   // email: string;
+  state: string;
+  city: string;
   phone: string;
   title: string;
   long_description: string;
@@ -212,6 +218,8 @@ export interface IPutUpdateCreatorRequest {
   user_name: string;
   // email: string;
   phone: string;
+  state: string;
+  city: string;
   title: string;
   long_description: string;
   short_description: string;

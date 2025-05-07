@@ -60,6 +60,10 @@ export default function   PreFormPage() {
   const [profileFile, setProfileFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string>("");
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
+  const initialState = {
+    state:"",city:"",channels:[]
+  }
+  const [formState,setFormState] = useState(initialState);
   const methods = useForm<IPreFormSchema>({
     defaultValues: {
       business_name: "",
@@ -80,12 +84,13 @@ export default function   PreFormPage() {
       gst_number: "",
       type_of_business: "",
       website: "",
+      state:"",
+      city:"",
       omni_channels: [],
     },
     resolver: yupResolver(preFormSchema),
     mode: "onChange",
   });
-
   const onSubmit = async (data: IPreFormSchema) => {
     setLoading(true);
     try {
@@ -104,10 +109,12 @@ export default function   PreFormPage() {
           : [],
         gst_number: data.gst_number,
         omni_channels: Array.isArray(data.omni_channels)
-          ? data.omni_channels
+          ? data.omni_channels.map(ele => ele?.value)
           : [],
         type_of_business: data.type_of_business,
         website: data.website,
+        state: data.state,
+        city: data.city,
       };
       if (profileFile) {
         payload.profile_image = profileFile;
@@ -152,6 +159,8 @@ export default function   PreFormPage() {
           "company_phone",
           "gst_number",
           "website",
+          "state",
+          "city",
           "type_of_business",
         ];
         
@@ -197,6 +206,21 @@ export default function   PreFormPage() {
     setProfilePreview(previewURL);
   };
 
+  const handleOnSelect = (value:any,name: any) => {
+    setFormState({...formState,[name]:value})
+    if(name === 'state'){
+      setFormState({...formState,[name]:value,city:""})
+      methods.setValue("city", "");
+    }
+    methods.setValue(name, value);
+    if(value){
+      methods.setError(name,{
+        type: "manual",
+        message: "",
+      })
+    }
+  }
+
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
       <HeaderAuth />
@@ -221,6 +245,9 @@ export default function   PreFormPage() {
               <BasicInfoForm
                 handleImageSelect={handleImageSelect}
                 profilePreview={profilePreview}
+                handleOnSelect={handleOnSelect}
+                formState={formState}
+                methods={methods}
               />
             ) : null}
             <div className="bg-white">

@@ -36,6 +36,8 @@ export const getProfileAPI = async () => {
         completed: creator?.completed,
         short_description: creator?.short_description,
         long_description: creator?.long_description,
+        state: creator?.state,
+        city: creator?.city,
       });
     }
     // vendor
@@ -54,6 +56,8 @@ export const getProfileAPI = async () => {
         omni_channels: vendor?.omni_channels,
         brand_documents: vendor?.brand_documents,
         addresses: vendor?.addresses,
+        state: vendor?.state,
+        city: vendor?.city,
       });
     }
     return response?.data?.data;
