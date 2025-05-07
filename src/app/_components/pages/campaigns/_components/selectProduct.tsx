@@ -76,10 +76,6 @@ const ProductSelectDropdown: React.FC<ProductSelectDropdownProps> = ({
   }, [search]);
 
   useEffect(() => {
-    handleLoadProducts();
-  }, []);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         wrapperRef.current &&

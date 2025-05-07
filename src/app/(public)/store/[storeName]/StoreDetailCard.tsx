@@ -125,7 +125,12 @@ export default function StoreDetailCard({
           </h2>
           <LinkIcon className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
         </div>
-        <p className="text-xs md:text-base text-font-grey">{description}</p>
+        <div
+          className="text-xs md:text-base text-font-grey"
+          dangerouslySetInnerHTML={{
+            __html: description,
+          }}
+        />
         <div className="flex gap-2 md:gap-4 flex-wrap">
           {tags.map((tag) => (
             <span

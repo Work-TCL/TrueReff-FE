@@ -41,7 +41,7 @@ export default function PublicCreatorStore() {
           description: storeData?.storeDescription,
           tags: storeData?.tags,
           category: storeData?.category?.map((ele: any) => ele?.name),
-          link: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/creator/store/${storeData?.storeName}`,
+          link: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${storeData?.storeName}`,
           profile_image: storeData?.profile_image,
           banner_image: storeData?.banner_image,
           creatorId: storeData?.creatorId?._id,
@@ -68,7 +68,7 @@ export default function PublicCreatorStore() {
         <Loading className="h-screen" />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-4 gap-y-4 md:h-screen overflow-auto md:overflow-hidden p-4">
-          <div className="col-span-1">
+          <div className="col-span-1 overflow-auto">
             <StoreDetailCard store={store} />
           </div>
           <div className="col-span-2 md:overflow-hidden flex lg:min-h-full min-h-96">

@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import Input from "@/app/_components/ui/form/Input";
+import Input, { inputStyle, labelStyle } from "@/app/_components/ui/form/Input";
 import Select from "react-select";
 import React, { useEffect, useState } from "react";
 import { translate } from "../../../../lib/utils/translate";
@@ -21,6 +21,8 @@ import StoreDetailView from "./store-detail-view";
 import Loader from "../../components-common/layout/loader";
 import { useRouter } from "next/navigation";
 import PhotoUpload from "../../components-common/PhotoUpload";
+import { cn } from "@sohanemon/utils";
+import toast from "react-hot-toast";
 
 const customStyles = {
   placeholder: (base: any) => ({
@@ -91,7 +93,7 @@ export default function StoreSetUp(props: any) {
           description: storeData?.storeDescription,
           tags: storeData?.tags,
           category: storeData?.category?.map((ele: any) => ele?.name),
-          link: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/creator/store/${storeData?.storeName}`,
+          link: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${storeData?.storeName}`,
           profile_image: storeData?.profile_image,
           banner_image: storeData?.banner_image,
           creatorId: storeData?.creatorId?._id,
@@ -172,13 +174,11 @@ export default function StoreSetUp(props: any) {
       if (!isEdit) {
         const response: any = await createStore(formData);
         if (response?.status === 200) {
-          router.push("/creator/store");
           toastMessage.success(response?.message);
         }
       } else {
         const response: any = await updateCreatorStore(formData);
         if (response?.status === 200) {
-          router.push("/creator/store");
           toastMessage.success(response?.message);
         }
       }
@@ -187,6 +187,8 @@ export default function StoreSetUp(props: any) {
       toastMessage.error(errorMessage);
     } finally {
       setLoading(false);
+      setIsEdit(false);
+      setIsDetailView(true);
     }
   };
   const handleSelectCategory = (selectedOptions: any) => {
@@ -248,6 +250,8 @@ export default function StoreSetUp(props: any) {
     setDragActive(false);
   };
   const handleOnEdit = () => {
+    setIsDetailView(false);
+    setIsEdit(true);
     setProfilePreview(store?.profile_image);
     setBannerPreview(store?.banner_image);
     setSelectedCategories(
@@ -261,9 +265,23 @@ export default function StoreSetUp(props: any) {
     methods.setValue("banner_image", store?.banner_image);
     methods.setValue("profile_image", store?.profile_image);
     methods.setValue("category", store?.categories);
-    setIsDetailView(false);
-    setIsEdit(true);
   };
+
+  const handleStoreLinkCopy = async () => {
+    const link = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${methods.watch(
+      "name"
+    )}`;
+
+    try {
+      await navigator?.clipboard.writeText(link);
+      console.log("Link copied to clipboard:", link);
+      toast.success("Link copied to clipboard");
+    } catch (err) {
+      console.error("Failed to copy link: ", err);
+      toast.error("Failed to copy link");
+    }
+  };
+
   return (
     <>
       {loading && <Loader />}
@@ -394,29 +412,41 @@ export default function StoreSetUp(props: any) {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="col-span-1">
                     <Input
-                      label="Store Name"
+                      label={translate("Store_Name")}
                       name="name"
                       type="text"
                       placeholder="Men’s Style Guide & Trends"
                     />
                   </div>
                   <div className="col-span-1">
-                    <Input
-                      label="Store Link"
-                      name="link"
-                      type="text"
-                      disabled
-                      value={`${
-                        process.env.NEXT_PUBLIC_FRONTEND_URL
-                      }/store/${methods.watch("name")}`}
-                      placeholder="https://my-store.com"
-                    />
+                    <label className={cn(labelStyle)}>
+                      {translate("Store_Link")}
+                    </label>
+                    <div
+                      className={cn(
+                        inputStyle,
+                        "py-1.5 flex justify-between items-center"
+                      )}
+                    >
+                      <span className="flex-1">
+                        {`${
+                          process.env.NEXT_PUBLIC_FRONTEND_URL
+                        }/store/${methods.watch("name")}`}
+                      </span>
+                      <Button
+                        onClick={handleStoreLinkCopy}
+                        type="button"
+                        className="text-white ml-auto cursor-pointer"
+                      >
+                        {translate("Copy")}
+                      </Button>
+                    </div>
                   </div>
                   <div className="col-span-1 lg:col-span-2">
                     <Input
                       label="Store Description"
                       name="description"
-                      type="textarea"
+                      type="editor"
                       rows={4}
                       placeholder="I'm John, a fashion influencer sharing style tips, outfit inspiration, and grooming advice for men. Follow me for daily fashion insights!"
                     />

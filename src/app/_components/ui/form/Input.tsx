@@ -9,6 +9,7 @@ import { get } from "lodash";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Editor from "./editor";
 interface IInput
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
@@ -123,6 +124,31 @@ export default function Input({
               }}
               autoComplete="off"
               {...props}
+            />
+            {Icon ? (
+              <Icon
+                fontSize={25}
+                className="absolute top-[50%] left-4 text-gray-black z-10 translate-y-[-50%]"
+              />
+            ) : null}
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
+  const renderEditorInput = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative">
+            <Editor
+              onChange={(val: any) => field?.onChange(val)}
+              value={field?.value}
             />
             {Icon ? (
               <Icon
@@ -434,6 +460,8 @@ export default function Input({
 
       case "password":
         return renderPasswordInput();
+      case "editor":
+        return renderEditorInput();
 
       case "tag":
         return renderTagInput();

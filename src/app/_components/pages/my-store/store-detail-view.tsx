@@ -5,28 +5,29 @@ import { Button } from "@/components/ui/button";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useRouter } from "next/navigation";
 
-export default function StoreDetailView({ store,handleOnEdit }: any) {
+export default function StoreDetailView({ store, handleOnEdit }: any) {
   const router = useRouter();
-  const {creator} = useCreatorStore();
+  const { creator } = useCreatorStore();
   return (
     <div className="flex flex-col gap-2 lg:gap-5 h-full p-2 lg:p-4">
       <div className="flex justify-between items-center flex-wrap gap-2">
         <div className="md:text-xl text-base text-500">
           {translate("Store_Overview")}
         </div>
-        {creator?.creatorId === store?.creatorId && <div className="flex gap-[10px]">
-          <Button
-            type='button'
-            variant="secondary"
-            className="text-white w-[140px] rounded-[12px]"
-            onClick={() => {
-              router.push("/creator/my-store/store-setup")
-              handleOnEdit && handleOnEdit();
-            }}
-          >
-            {translate("Edit")}
-          </Button>
-        </div>}
+        {creator?.creatorId === store?.creatorId && (
+          <div className="flex gap-[10px]">
+            <Button
+              type="button"
+              variant="secondary"
+              className="text-white w-[140px] rounded-[12px]"
+              onClick={() => {
+                handleOnEdit && handleOnEdit();
+              }}
+            >
+              {translate("Edit")}
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col lg:flex-row gap-5 w-full">
@@ -102,9 +103,12 @@ export default function StoreDetailView({ store,handleOnEdit }: any) {
             <label className="text-sm text-[#7E7E80]">
               {translate("Store_Description")}
             </label>
-            <p className="text-base font-medium mt-1">
-              {store?.description || "-"}
-            </p>
+            <div
+              className="text-base font-medium mt-1"
+              dangerouslySetInnerHTML={{
+                __html: store?.description,
+              }}
+            ></div>
           </div>
         </div>
       </div>

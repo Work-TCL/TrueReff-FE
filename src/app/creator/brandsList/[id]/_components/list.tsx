@@ -344,11 +344,7 @@ export default function CreatorList() {
                 <div className="bg-white overflow-hidden flex flex-col rounded-[20px] h-full ">
                   <div className="flex-1 overflow-auto p-2 md:p-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 md:gap-4">
-                      {[
-                        ...brandProducts,
-                        ...brandProducts,
-                        ...brandProducts,
-                      ].map((brand: any, i: number) => (
+                      {[...brandProducts].map((brand: any, i: number) => (
                         <BrandProductCard
                           key={i}
                           brand={brand}
@@ -372,7 +368,9 @@ export default function CreatorList() {
           ) : (
             <EmptyPlaceHolder
               title={"No_Products_Available"}
-              description={"It seems there are currently no products to display. Please check back later."}
+              description={
+                "It seems there are currently no products to display. Please check back later."
+              }
             />
           )}
         </>
