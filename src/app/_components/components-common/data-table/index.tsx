@@ -20,7 +20,7 @@ interface DataTableProps {
 }
 
 const DataTable: React.FC<DataTableProps> = ({
-  gridClasses = "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ",
+  gridClasses = "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 h-full",
   data,
   columns,
   type = "table",
@@ -79,20 +79,20 @@ const DataTable: React.FC<DataTableProps> = ({
       <tbody className="min-h-96">
         {table.getRowModel().rows.length > 0
           ? table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              className="hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className="border-b border-[#eee] py-3 px-2 dark:border-strokedark xl:pl-4 text-sm text-gray-600"
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))
+              <tr
+                key={row.id}
+                className="hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="border-b border-[#eee] py-3 px-2 dark:border-strokedark xl:pl-4 text-sm text-gray-600"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))
           : null}
       </tbody>
     </table>
@@ -100,7 +100,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <div className=" border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
-      <div className="max-w-full h-full overflow-auto ">
+      <div className="max-w-full h-full overflow-auto pr-2 ">
         {data.length > 0 && type === "table" ? (
           tableContent()
         ) : data.length > 0 && type === "card" && CardComponent ? (

@@ -1,21 +1,12 @@
 "use client";
 import React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-
-import { ImageOff, Search } from "lucide-react";
 import Loading from "@/app/vendor/loading";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
-import { getCategories } from "@/lib/web-api/auth";
 import { debounce } from "lodash";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { Input } from "@/components/ui/input";
-import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
@@ -91,7 +82,6 @@ export default function ProductList({ storeName }: { storeName: string }) {
         `/auth/creator-store/product-list?limit=${pageLimit}&page=${page}&name=${storeName}`
       );
 
-      console.log("----------------------", response);
       if (response.data.data?.products) {
         setProductList(
           response.data.data?.products.map((product: any) => {
@@ -162,21 +152,25 @@ export default function ProductList({ storeName }: { storeName: string }) {
       ) : (
         <>
           {productList?.length > 0 && (
-            <div className="flex justify-between items-center gap-2 flex-wrap">
+            <div className="flex justify-between items-center gap-2 flex-nowrap">
               <SearchInput
                 value={search}
                 onChange={handleSearch}
                 placeholder={translate("Search_Product")}
+                className="w-full"
               />
               <div className="flex md:flex-row flex-col gap-2 ml-auto justify-end items-center">
-                <CategorySubCategorySelect onChange={handleSelectCategory} />
+                <CategorySubCategorySelect
+                  onChange={handleSelectCategory}
+                  xlBreakPoint={true}
+                />
               </div>
             </div>
           )}
           {internalLoading && <Loader />}
           {productList?.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white md:p-4 rounded-[20px] md:max-h-screen overflow-auto md:pt-4 pt-2 md:pb-4 pb-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-4 bg-white md:p-4 rounded-[20px] md:max-h-screen overflow-auto md:pt-4 pt-2 md:pb-4 pb-2 pr-2">
                 {productList.map((item: IProduct) => (
                   <div key={item?._id} className="flex h-full w-full">
                     <ProductCard
@@ -198,7 +192,9 @@ export default function ProductList({ storeName }: { storeName: string }) {
           ) : (
             <EmptyPlaceHolder
               title={"No_Products_Available"}
-              description={"It seems there are currently no products to display. Please check back later."}
+              description={
+                "It seems there are currently no products to display. Please check back later."
+              }
             />
           )}
         </>

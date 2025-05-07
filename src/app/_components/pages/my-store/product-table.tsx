@@ -93,7 +93,7 @@ export default function BrandProductTable({
       data={data}
       type={type}
       CardComponent={(item) => (CardComponent ? CardComponent(item) : <></>)}
-      gridClasses="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"
+      gridClasses="grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"
     />
   );
 }

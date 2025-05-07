@@ -67,7 +67,7 @@ export default function PublicCreatorStore() {
       {loading ? (
         <Loading className="h-screen" />
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-4 gap-y-4 md:h-screen overflow-auto md:overflow-hidden p-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-4 gap-y-4 h-screen overflow-auto p-4">
           <div className="col-span-1 overflow-auto">
             <StoreDetailCard store={store} />
           </div>

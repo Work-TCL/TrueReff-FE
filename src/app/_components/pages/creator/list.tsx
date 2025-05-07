@@ -221,9 +221,9 @@ export default function CreatorList() {
                 />
               )}
               {viewMode === "card" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white p-4 rounded-[20px] overflow-auto">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 h-full bg-white p-4 rounded-[20px] overflow-auto">
                   {creators.map((item: any, i) => (
-                    <div key={i} className="flex h-full w-full">
+                    <div key={i} className="flex h-fit w-full">
                       <CreatorCard
                         item={item}
                         handleCollaborateNow={(creatorId: string) => {

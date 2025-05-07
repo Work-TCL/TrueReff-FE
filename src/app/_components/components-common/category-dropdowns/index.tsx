@@ -9,6 +9,7 @@ import { labelStyle } from "../../ui/form/Input";
 import { translate } from "@/lib/utils/translate";
 import { getCategories } from "@/lib/web-api/auth";
 import { ICategory } from "../../pages/product-management";
+import { boolean } from "yup";
 
 type Option = {
   value: string;
@@ -17,6 +18,7 @@ type Option = {
 
 interface CategorySubCategorySelectProps {
   onChange: (values: string[]) => void;
+  xlBreakPoint?: boolean;
 }
 
 const customStyles = {
@@ -67,6 +69,7 @@ const customStyles = {
 
 const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
   onChange,
+  xlBreakPoint,
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -142,7 +145,6 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
     const optionsSubCategory = categories.filter((ele) =>
       selectedIds.includes(ele?.parentId || "")
     );
-    console.log("optionsSubCategory", optionsSubCategory);
 
     setSubCategory(optionsSubCategory);
 
@@ -183,7 +185,10 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
       {/* Mobile Button */}
       <Button
         variant="outline"
-        className="text-black w-[100px] rounded-[4px] md:h-10 h-8 lg:hidden"
+        className={cn(
+          "text-black w-[100px] rounded-[4px] md:h-10 h-8",
+          xlBreakPoint ? " 2xl:hidden" : " lg:hidden"
+        )}
         onClick={() => setOpenDialog(true)}
       >
         <FaSlidersH className="mr-1" /> {translate("Filters")}
@@ -251,7 +256,12 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
       </DialogLayout>
 
       {/* Desktop view */}
-      <div className="hidden lg:grid grid-cols-2 gap-4 relative z-[999]">
+      <div
+        className={cn(
+          "hidden grid-cols-2 gap-4 relative z-[999]",
+          xlBreakPoint ? " 2xl:grid " : " lg:grid "
+        )}
+      >
         <Select
           styles={customStyles}
           value={selectedParentOptions}
