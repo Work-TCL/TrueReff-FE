@@ -16,6 +16,7 @@ import { Search } from "lucide-react";
 import Select from "react-select";
 import SingleSelect from "../../components-common/single-select";
 import { SearchInput } from "../../components-common/search-field";
+import { useSearchParams } from "next/navigation";
 
 export interface ICategory {
   _id: string;
@@ -86,6 +87,7 @@ export interface ICollaboration {
     business_name: string;
     profile_image: string;
   };
+  crmLink: string|null;
 }
 
 const customStyles = {
@@ -106,6 +108,8 @@ export interface IStatus {
 }
 export default function CollaborationList() {
   const translate = useTranslations();
+  const searchParams = useSearchParams();
+  const dashboardStatus = searchParams.get("status");
   const { account: user } = useAuthStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
@@ -116,7 +120,7 @@ export default function CollaborationList() {
     { value: "REQUESTED", label: "Requested" },
     { value: "REJECTED", label: "Rejected" },
     { value: "PENDING", label: "Pending" },
-    { value: "LIVE", label: "Live" },
+    { value: "ACTIVE", label: "Active" },
     { value: "EXPIRED", label: "Expired" },
   ];
   const [filter, setFilter] = useState<string>("5");
@@ -124,7 +128,6 @@ export default function CollaborationList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 20;
-
   // get user role
   const getUserType = () => {
     return { vendor: "Creator", creator: "Brand" }[user?.role] ?? "";
@@ -212,8 +215,11 @@ export default function CollaborationList() {
   );
 
   useEffect(() => {
-    fetchCollaboration(currentPage);
-  }, []);
+    if(dashboardStatus){
+      handleSelectStatus(dashboardStatus)
+    }
+    else fetchCollaboration(currentPage);
+  }, [dashboardStatus]);
   const debouncedSearch = useCallback(
     debounce((value: string, status: string) => {
       fetchCollaboration(1, true, value, status);
@@ -235,6 +241,7 @@ export default function CollaborationList() {
     setSelectedStatus(selectedOption);
     fetchCollaboration(1, true, search, selectedOption);
   };
+  console.log("selectedStatus",selectedStatus)
   return (
     <div className="p-4 rounded-lg flex flex-col gap-3 h-full">
       {loading ? (

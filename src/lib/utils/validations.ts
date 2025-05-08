@@ -398,6 +398,8 @@ export const creatorOnBoardingSchema = Yup.object().shape({
   long_description: Yup.string().required("Long description is required"),
   state: Yup.string().required("State is required"),
   city: Yup.string().required("City is required"),
+  gender: Yup.string().required("Gender is required"),
+  dob: Yup.string().required("Date of Birth is required"),
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
@@ -558,6 +560,8 @@ export const creatorProfileUpdateSchema = Yup.object().shape({
   long_description: Yup.string().required("Long description is required"),
   state: Yup.string().required("State is required"),
   city: Yup.string().required("City is required"),
+  gender: Yup.string().required("Gender is required"),
+  dob: Yup.string().required("Date of Birth is required"),
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")

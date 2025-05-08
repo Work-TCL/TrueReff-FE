@@ -75,6 +75,8 @@ interface ICreator {
   updatedAt: string;
   state: string;
   city: string;
+  gender: string;
+  dob: string;
 }
 export interface IGetUserResponse {
   status: number;
@@ -193,6 +195,8 @@ export interface IPostCreatorRegisterRequest {
   // email: string;
   state: string;
   city: string;
+  gender: string;
+  dob: string;
   phone: string;
   title: string;
   long_description: string;
@@ -220,6 +224,8 @@ export interface IPutUpdateCreatorRequest {
   phone: string;
   state: string;
   city: string;
+  gender: string;
+  dob: string;
   title: string;
   long_description: string;
   short_description: string;

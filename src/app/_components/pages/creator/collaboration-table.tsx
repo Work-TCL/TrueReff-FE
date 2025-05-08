@@ -8,6 +8,7 @@ import { CustomTableCell } from "@/app/_components/components-common/tables/Cust
 import { useRouter } from "next/navigation";
 import {
   CheckCircle,
+  Copy,
   Eye,
   ImageOff,
   MessagesSquare,
@@ -24,6 +25,7 @@ import ToolTip from "../../components-common/tool-tip";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
+import { toastMessage } from "@/lib/utils/toast-message";
 
 export function capitalizeFirstLetter(word: string = "") {
   if (!word) return ""; // Handle empty strings
@@ -138,7 +140,14 @@ const CollaborationTable = ({
       }
     } else return "SEND_REQUEST";
   };
-  
+  const handleCopyLink = async (textToCopy:string|null) => {
+    try {
+      await navigator.clipboard.writeText(textToCopy??"");
+      toastMessage.success("Text copied to clipboard!");
+    } catch (err) {
+      toastMessage.error("Failed to copy!");
+    }
+  };
   const getMessages = (status: string, request: IRequest) => {
     let userStatus: { [key: string]: string } = {
       CREATOR: "REQUESTED_CREATOR_FROM_VENDOR",
@@ -253,75 +262,102 @@ const CollaborationTable = ({
       header: () => <div className="text-center">{translate("Action")}</div>,
       cell: ({ row }) => {
         const collaboration = row.original;
+        const product = row.original.product;
         const status = getRequestStatus(collaboration);
 
-        if (status === "REQUESTED") {
-          if (collaboration?.request?.requestFrom === "VENDOR") {
-            return (
-              <div className="flex justify-between w-fit gap-3 mx-auto">
-                <ToolTip content="Accept Request" delayDuration={1000}>
-                  <CheckCircle
-                    strokeWidth={1.5}
-                    color="#22c55e"
-                    className="cursor-pointer"
-                    size={25}
-                    onClick={() =>
-                      handleStatusChangeRequest("accepted", collaboration._id)
-                    }
-                  />
-                </ToolTip>
-                <ToolTip content="Reject Request" delayDuration={1000}>
-                  <XCircle
-                    strokeWidth={1.5}
-                    className="cursor-pointer"
-                    size={25}
-                    color="#ef4444"
-                    onClick={() =>
-                      setIsOpen({
-                        show: true,
-                        collaborationId: collaboration._id,
-                        status: "reject",
-                      })
-                    }
-                  />
-                </ToolTip>
-              </div>
-            );
-          } else if (collaboration?.request?.requestFrom === "CREATOR") {
+        if (isDashboard) {
+          return (<div className="flex justify-between w-fit gap-3 mx-auto">
+            {collaboration?.crmLink && 
+              <ToolTip content="Copy Link" delayDuration={1000}>
+              <Copy
+                strokeWidth={1.5}
+                color="#22c55e"
+                className="cursor-pointer"
+                size={25}
+                onClick={() =>
+                  handleCopyLink(collaboration?.crmLink)
+                }
+              />
+            </ToolTip>}
+            <ToolTip content="View Detail" delayDuration={1000}>
+              <Eye
+                strokeWidth={1.5}
+                className="cursor-pointer"
+                size={25}
+                color="#ef4444"
+                onClick={() => handleProductDetail(product?._id)}
+              />
+            </ToolTip>
+          </div>)
+         } else {
+          if (status === "REQUESTED") {
+            if (collaboration?.request?.requestFrom === "VENDOR") {
+              return (
+                <div className="flex justify-between w-fit gap-3 mx-auto">
+                  <ToolTip content="Accept Request" delayDuration={1000}>
+                    <CheckCircle
+                      strokeWidth={1.5}
+                      color="#22c55e"
+                      className="cursor-pointer"
+                      size={25}
+                      onClick={() =>
+                        handleStatusChangeRequest("accepted", collaboration._id)
+                      }
+                    />
+                  </ToolTip>
+                  <ToolTip content="Reject Request" delayDuration={1000}>
+                    <XCircle
+                      strokeWidth={1.5}
+                      className="cursor-pointer"
+                      size={25}
+                      color="#ef4444"
+                      onClick={() =>
+                        setIsOpen({
+                          show: true,
+                          collaborationId: collaboration._id,
+                          status: "reject",
+                        })
+                      }
+                    />
+                  </ToolTip>
+                </div>
+              );
+            } else if (collaboration?.request?.requestFrom === "CREATOR") {
+              return (
+                <div className="flex gap-3 mx-auto w-fit">
+                  <ToolTip content="Cancel Request" delayDuration={1000}>
+                    <XCircle
+                      strokeWidth={1.5}
+                      className="cursor-pointer"
+                      size={25}
+                      color="#ef4444"
+                      onClick={() =>
+                        setIsOpen({
+                          show: true,
+                          collaborationId: collaboration._id,
+                          status: "cancel",
+                        })
+                      }
+                    />
+                  </ToolTip>
+                </div>
+              );
+            }
+          } else if (status === "PENDING") {
             return (
               <div className="flex gap-3 mx-auto w-fit">
-                <ToolTip content="Cancel Request" delayDuration={1000}>
-                  <XCircle
+                <ToolTip content="Start Bargaining" delayDuration={1000}>
+                  <MessagesSquare
                     strokeWidth={1.5}
+                    color="#3b82f680"
                     className="cursor-pointer"
                     size={25}
-                    color="#ef4444"
-                    onClick={() =>
-                      setIsOpen({
-                        show: true,
-                        collaborationId: collaboration._id,
-                        status: "cancel",
-                      })
-                    }
+                    onClick={() => handleChatView(collaboration._id)}
                   />
                 </ToolTip>
               </div>
             );
           }
-        } else if (status === "PENDING") {
-          return (
-            <div className="flex gap-3 mx-auto w-fit">
-              <ToolTip content="Start Bargaining" delayDuration={1000}>
-                <MessagesSquare
-                  strokeWidth={1.5}
-                  color="#3b82f680"
-                  className="cursor-pointer"
-                  size={25}
-                  onClick={() => handleChatView(collaboration._id)}
-                />
-              </ToolTip>
-            </div>
-          );
         }
         return null;
       },

@@ -1427,3 +1427,7 @@ export const cities:any = {
     "Adra"
   ]
 }
+
+export const gender:string[] = [
+  "Male","Female"
+]

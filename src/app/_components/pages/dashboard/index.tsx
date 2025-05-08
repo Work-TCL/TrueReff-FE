@@ -14,7 +14,6 @@ import { toastMessage } from "@/lib/utils/toast-message";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { ICreatorStateInfo, ITopBrands } from "@/lib/types-api/creator-dashboard";
 import { getCreatorStatesInfo, getTopPerformingBrand } from "@/lib/web-api/creator-dashboard";
-import Loading from "@/app/vendor/loading";
 import TopBrands from "./top-brands";
 import RecentCollaborations from "./recent-collaborations";
 import Loader from "../../components-common/layout/loader";
@@ -26,7 +25,9 @@ export default function Dashboard() {
     activeCollaborations: 0,
     pendingCollaborations: 0,
     activeCampaigns: 0,
-    last7DaysVendors: 0
+    last7DaysVendors: 0,
+    revenue: 0,
+    commission:0
   };
   const [statesInfo, setStatesInfo] = useState<ICreatorStateInfo>(initialStateInfo);
   const [brands, setBrans] = useState<ITopBrands[]>([]);
@@ -81,8 +82,8 @@ export default function Dashboard() {
     <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
       {mainLoading && <Loader/>}
       <div className="flex flex-col lg:flex-row w-full md:gap-6 gap-4">
-        <div className="flex flex-col md:gap-6 gap-4 w-full">
-        {!lg && (
+        <div className="flex flex-col md:gap-6 gap-4 w-full lg:w-[60%]">
+          {!lg && (
             <ProfileCompletionCard progress={creatorDetails?.completed} />
           )}
           <div className="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-3 gap-4 rounded-[20px] w-full bg-white p-4">
@@ -92,6 +93,7 @@ export default function Dashboard() {
               growth={5}
               bgColor="bg-white bg-[#f2f1fd]"
               borderColor={"border-[#7877EE]"}
+              link="/creator/collaboration?status=ACTIVE"
             />
             <StatsCard
               title={translate("Pending Collaborations")}
@@ -99,17 +101,18 @@ export default function Dashboard() {
               growth={5}
               borderColor="border-[#EB815B]"
               bgColor="bg-[#fdf2ef]"
+              link="/creator/collaboration?status=PENDING"
             />
             <StatsCard
-              title={translate("Active_Campaigns")}
-              value={statesInfo.activeCampaigns}
+              title={translate("Revenue")}
+              value={statesInfo.revenue}
               growth={5}
               borderColor="border-[#77EE8D]"
               bgColor="bg-[#f1fdf4]"
             />
             <StatsCard
-              title={translate("New Brands")}
-              value={statesInfo.last7DaysVendors}
+              title={translate("Commission")}
+              value={statesInfo.commission}
               growth={5}
               borderColor="border-[#9773C8]"
               bgColor="bg-[#f5f1fa]"
@@ -117,19 +120,17 @@ export default function Dashboard() {
           </div>
           <PerformanceSummaryChartDashBoard />
         </div>
-        <div className="flex flex-col gap-6 w-full">
+        <div className="flex flex-col gap-6 w-full lg:w-[40%]">
         {lg && <ProfileCompletionCard progress={creatorDetails?.completed} />}
           <TopBrands data={brands} loading={brandLoading} />
         </div>
       </div>
       <div className="flex xl:flex-row flex-col gap-4 w-full">
-        <div className=" bg-white rounded-lg shadow w-full">
+        <div className=" bg-white rounded-lg shadow w-full xl:w-[70%] flex-1">
           <RecentCollaborations />
         </div>
-        <div className="flex gap-2 sm:flex-row flex-col w-full">
-          <div className="lg:w-[46%]"><VendorActivity /></div>
-          {/* <DonutChart /> */}
-          <div className="lg:w-1/2 flex-1"><TrendingInsightsDiscoverability /></div>
+        <div className="w-full xl:w-[30%]">
+          <TrendingInsightsDiscoverability />
         </div>
       </div>
     </div>

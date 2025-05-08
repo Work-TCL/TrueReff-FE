@@ -14,7 +14,7 @@ import Button from "@/app/_components/ui/button";
 import { useCreatorStore } from "@/lib/store/creator";
 import { getCategories, updateCreator } from "@/lib/web-api/auth";
 import { ICategoryData, IPutUpdateCreatorRequest } from "@/lib/types-api/auth";
-import { cities, fileUploadLimitValidator, indianStates } from "@/lib/utils/constants";
+import { cities, fileUploadLimitValidator, gender, indianStates } from "@/lib/utils/constants";
 import Select from "react-select";
 import { get } from "lodash";
 const customStyles = {
@@ -50,12 +50,13 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
   );
   const initialState = {
     state: creator?.state ?? "",
-    city: creator?.city ?? ""
+    city: creator?.city ?? "",
+    gender: creator?.gender ?? "",
   }
   const [formState, setFormState] = useState(initialState);
   useEffect(() => {
     if (creator) {
-      setFormState({ state: creator?.state, city: creator?.city })
+      setFormState({ state: creator?.state, city: creator?.city,gender: creator?.gender })
     }
   }, [creator])
   const schema = creatorProfileUpdateSchema;
@@ -74,6 +75,8 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       tags: creator?.tags || [],
       state: creator?.state ||"",
       city: creator?.city || "",
+      gender: creator?.gender || "",
+      dob: new Date(creator?.dob).toLocaleDateString() || "",
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -165,6 +168,8 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         banner_image: bannerFile,
         state: data?.state,
         city: data?.city,
+        gender: data?.gender,
+        dob: data?.dob,
       };
 
       const response: any = await updateCreator(payload);
@@ -190,6 +195,8 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           long_description: res?.long_description,
           state: res?.state,
           city: res?.city,
+          gender: res?.gender,
+          dob: res?.dob,
         });
         onClose && onClose(true);
       }
@@ -364,6 +371,43 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               )}
             </div>
           </div>
+          <div className="col-span-1">
+        <div className="flex flex-col">
+          <span className="mb-1 text-sm text-gray-500 font-semibold">{"Gender"}<span className="text-red-500">*</span></span>
+          <Select
+            styles={customStyles}
+            value={[
+              {
+                value: formState.gender,
+                label: formState.gender
+                  ? formState.gender
+                  : "Select Gender",
+              },
+            ]}
+            onChange={(value) => handleOnSelect(value?.value, "gender")}
+            options={gender?.map(ele => ({ value: ele, label: ele }))}
+            className="basic-multi-select focus:outline-none focus:shadow-none"
+            placeholder="Select State"
+          />
+          {Boolean(get(methods.formState.errors, "gender")) && (
+            <span className="text-red-600 text-sm p-2 block">
+              {methods.formState.errors["gender"]?.message}
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="col-span-1">
+        <div className="flex flex-col">
+          <Input
+            name="dob"
+            type="date"
+            placeholder={translate("Select_date_of_birth")}
+            label={translate("Date of Birth")}
+            maxDate={new Date(new Date().setDate(new Date().getDate()))
+            }
+          />
+        </div>
+      </div>
           <div className="col-span-2">
             <Input
               label="Tags"

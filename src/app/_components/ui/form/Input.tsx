@@ -20,6 +20,7 @@ interface IInput
   rows?: number;
   Icon?: any;
   minDate?: any;
+  maxDate?: any;
   options?: {
     label: string;
     value: string;
@@ -179,9 +180,10 @@ export default function Input({
               selected={field.value}
               className={cn(inputStyle, "!pl-10")}
               placeholderText={placeholder}
-              dateFormat="dd/MM/yyyy"
+              dateFormat="MM/dd/yyyy"
               wrapperClassName="w-full"
               {...(props?.minDate ? { minDate: props.minDate } : {})}
+              {...(props?.maxDate ? { maxDate: props.maxDate } : {})}
               {...(props?.disabled ? { disabled: true } : {})}
             />
             {Icon ? (

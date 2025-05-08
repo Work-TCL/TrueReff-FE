@@ -130,6 +130,8 @@ export const getUserApi = async (): Promise<IGetUserResponse> => {
         long_description: creator?.long_description,
         state: creator?.state,
         city: creator?.city,
+        gender: creator?.gender,
+        dob: creator?.dob,
       });
     }
     // vendor
@@ -222,6 +224,8 @@ export const verifyEmail = async (
         long_description: creator?.long_description,
         state: creator?.state,
         city: creator?.city,
+        gender: creator?.gender,
+        dob: creator?.dob,
       });
     }
     // vendor

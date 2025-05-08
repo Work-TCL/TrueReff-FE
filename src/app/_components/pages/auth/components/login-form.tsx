@@ -85,6 +85,8 @@ export default function LoginForm() {
           long_description: res?.data?.creator?.long_description,
           state: res?.data?.creator?.state,
           city: res?.data?.creator?.city,
+          gender: res?.data?.creator?.gender,
+          dob: res?.data?.creator?.dob,
         });
       }
       if (res?.data?.type === USER_TYPE.Vendor) {

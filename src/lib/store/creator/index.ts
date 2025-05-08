@@ -36,7 +36,9 @@ export const useCreatorStore = create<
         short_description: "",
         long_description: "",
         state:"",
-        city:""
+        city:"",
+        gender: "",
+        dob:""
       },
       creators: [],
       setCreatorData: (key, value) =>

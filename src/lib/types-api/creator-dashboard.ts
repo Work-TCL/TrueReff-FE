@@ -9,6 +9,8 @@ export interface ICreatorStateInfo {
     pendingCollaborations: number;
     activeCampaigns: number;
     last7DaysVendors: number;
+    revenue: number;
+    commission: number;
 }
 
 export interface ITopBrands {

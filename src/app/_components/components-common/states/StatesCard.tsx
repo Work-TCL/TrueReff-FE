@@ -2,6 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import StatesCardGraph from "./StatesCardGraph";
 import { translate } from "@/lib/utils/translate";
+import { useRouter } from "next/navigation";
 
 export const StatsCard = ({
   title,
@@ -9,16 +10,20 @@ export const StatsCard = ({
   growth,
   borderColor,
   bgColor,
+  link
 }: {
   title: string;
   value: number | string;
   growth: number;
   borderColor: string;
   bgColor: string;
+  link?: string;
 }) => {
+  const router = useRouter();
   return (
     <Card
-      className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} rounded-2xl`}
+      className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} ${link ? "cursor-pointer":""} rounded-2xl`}
+      onClick={() => link && router.push(link)}
     >
       <CardContent className="p-5 gap-2 flex flex-col justify-between h-full">
         <div className="flex justify-between items-start">

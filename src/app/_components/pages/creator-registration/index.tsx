@@ -87,7 +87,9 @@ export default function CreatorRegistrationPage() {
   const [bannerPreview, setBannerPreview] = useState<string>("");
   const initialState = {
     state:"",
-    city:""
+    city:"",
+    gender:"",
+    dob:""
   }
   const [formState,setFormState] = useState(initialState);
   const methods = useForm<ICreatorOnBoardingSchema>({
@@ -148,8 +150,11 @@ export default function CreatorRegistrationPage() {
         sub_category: data.sub_category.map((v) => v.value),
         tags: data.tags || [],
         state: data?.state,
-        city: data?.city
+        city: data?.city,
+        gender: data?.gender,
+        dob: data?.dob
       };
+      console.log("payload",payload)
 
       if (bannerFile) {
         payload.banner_image = bannerFile;
@@ -180,6 +185,8 @@ export default function CreatorRegistrationPage() {
           long_description: response?.data?.long_description,
           state: response?.data?.state,
           city: response?.data?.city,
+          gender: response?.data?.gender,
+          dob: response?.data?.dob,
         });
         router.push(`?tab=2&creatorId=${response?.data?._id}`);
       }
@@ -215,7 +222,9 @@ export default function CreatorRegistrationPage() {
         "email",
         "phone_number",
         "state",
-        "city"
+        "city",
+        "gender",
+        "dob"
       ];
       const isValid = await methods.trigger(basicInfoField);
       const isExist = await checkCreatorUserNameExist({
@@ -294,6 +303,8 @@ export default function CreatorRegistrationPage() {
           long_description: creator?.long_description,
           state: creator?.state,
           city: creator?.city,
+          gender: creator?.gender,
+          dob: creator?.dob
         });
       }
     } catch (e) {

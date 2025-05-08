@@ -48,6 +48,8 @@ export interface ICreator {
   long_description: string;
   state: string;
   city: string;
+  gender: string;
+  dob: string;
 }
 
 export interface ICreatorByIdRequest {
