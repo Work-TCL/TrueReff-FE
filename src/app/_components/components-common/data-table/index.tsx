@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Navigation } from "lucide-react";
 import { useAuthStore } from "@/lib/store/auth-user";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps {
   gridClasses?: string;
@@ -26,6 +27,7 @@ const DataTable: React.FC<DataTableProps> = ({
   type = "table",
   CardComponent,
 }) => {
+  const t = useTranslations();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const router = useRouter();
   const { account: user } = useAuthStore();
@@ -129,10 +131,10 @@ const DataTable: React.FC<DataTableProps> = ({
                 </svg>
               </div>
               <h1 className="mt-4 text-2xl font-semibold text-gray-800 dark:text-white">
-                No Records Found
+                {t("No_RECORDS")}
               </h1>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
-                It seems we couldn't find any data matching your criteria.
+                {t("No_RECORDS_DESC")}
               </p>
             </div>
           </div>
@@ -146,19 +148,16 @@ const DataTable: React.FC<DataTableProps> = ({
                 />
               </div>
               <h1 className="mt-4 text-2xl font-semibold text-gray-800 dark:text-white">
-                Creator Store Not Found
+                {t("Store_Not_Found")}
               </h1>
               <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-md">
-                We couldn’t locate any creator store data at the moment. This
-                might be because you haven’t added any products yet or the store
-                is not linked properly. Please check your creator setup or add
-                new products to get started.
+                {t("Store_Not_Found_DESC")}
               </p>
               <button
                 onClick={handleNavigate}
                 className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
               >
-                Go to Creator Store
+                {t("Store_Not_Found_BTN")}
               </button>
             </div>
           </div>

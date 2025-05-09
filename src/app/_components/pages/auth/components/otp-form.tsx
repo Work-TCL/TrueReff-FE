@@ -10,13 +10,14 @@ import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
 import { verifyOtp } from "@/lib/web-api/auth";
 import { useSearchParams } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
 import {
   IPostVerifyOTPRequest,
   IPostVerifyOTPResponse,
 } from "@/lib/types-api/auth";
+import { useTranslations } from "next-intl";
 
 export default function VerifyOTPForm() {
+  const translate = useTranslations();
   const searchParams = useSearchParams();
   const email: string = searchParams.get("email") || "";
   const [otp, setOtp] = useState("");
@@ -31,7 +32,7 @@ export default function VerifyOTPForm() {
   useEffect(() => {
     methods.setValue("otpCode", otp);
   }, [otp, methods]);
-  
+
   const onSubmit = async (data: IOtpSchema) => {
     setLoading(true);
     try {

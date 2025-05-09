@@ -1,11 +1,11 @@
 "use client";
 import Loading from "@/app/vendor/loading";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { translate } from "@/lib/utils/translate";
 import axios from "@/lib/web-api/axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import { useTranslations } from "next-intl";
 
 interface ITopCreator {
   activeCollaborationCount: number;
@@ -15,6 +15,7 @@ interface ITopCreator {
 }
 
 const MostSellingBrands = () => {
+  const translate = useTranslations();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ITopCreator[]>([]);
   // Get Creator list
@@ -74,10 +75,8 @@ const MostSellingBrands = () => {
       ) : (
         <div className="space-y-4 flex justify-center items-center h-full">
           <EmptyPlaceHolder
-            title={"No_Top_Creators_Yet"}
-            description={
-              "Top_creators_will_be_displayed_here_once_activity_data_is_available._Encourage_users_to_participate_to_see_leaderboard_ranking."
-            }
+            title={translate("No_Top_Creators_Yet")}
+            description={translate("No_Top_Creators_Yet_DESC")}
           />
         </div>
       )}

@@ -1,10 +1,10 @@
 "use client";
-
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const TopViewAcrossPlatforms: React.FC = () => {
+  const translate = useTranslations();
   const data = [
     { name: "YouTube", value: 45, color: "#FF8E80" },
     { name: "Instagram", value: 45, color: "#808EFF" },

@@ -1,12 +1,11 @@
 "use client";
 import React from "react";
-import { translate } from "../../../../lib/utils/translate";
 import { Button } from "@/components/ui/button";
 import { useCreatorStore } from "@/lib/store/creator";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function StoreDetailView({ store, handleOnEdit }: any) {
-  const router = useRouter();
+  const translate = useTranslations();
   const { creator } = useCreatorStore();
   return (
     <div className="flex flex-col gap-2 lg:gap-5 h-full p-2 lg:p-4">

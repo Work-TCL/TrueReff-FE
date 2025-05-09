@@ -7,9 +7,10 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 export default function CollabsWithCompanies() {
+  const translate = useTranslations();
   return (
     <Card className="rounded-[20px] p-6 bg-white border-0 shadow-none flex-1">
       {/* Header Section */}

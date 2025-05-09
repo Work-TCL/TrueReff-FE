@@ -8,15 +8,20 @@ import {
   ICreatorProfileUpdateSchema,
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { translate } from "@/lib/utils/translate";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 import { useCreatorStore } from "@/lib/store/creator";
 import { getCategories, updateCreator } from "@/lib/web-api/auth";
 import { ICategoryData, IPutUpdateCreatorRequest } from "@/lib/types-api/auth";
-import { cities, fileUploadLimitValidator, gender, indianStates } from "@/lib/utils/constants";
+import {
+  cities,
+  fileUploadLimitValidator,
+  gender,
+  indianStates,
+} from "@/lib/utils/constants";
 import Select from "react-select";
 import { get } from "lodash";
+import { useTranslations } from "next-intl";
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,
@@ -30,11 +35,12 @@ const customStyles = {
   }),
   options: (base: any) => ({
     ...base,
-    zIndex: 999
-  })
+    zIndex: 999,
+  }),
 };
 
 export default function EditCreatorForm({ onClose }: { onClose: any }) {
+  const translate = useTranslations();
   const { creator, setCreatorData } = useCreatorStore();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<ICategoryData[]>([]);
@@ -52,13 +58,17 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     state: creator?.state ?? "",
     city: creator?.city ?? "",
     gender: creator?.gender ?? "",
-  }
+  };
   const [formState, setFormState] = useState(initialState);
   useEffect(() => {
     if (creator) {
-      setFormState({ state: creator?.state, city: creator?.city,gender: creator?.gender })
+      setFormState({
+        state: creator?.state,
+        city: creator?.city,
+        gender: creator?.gender,
+      });
     }
-  }, [creator])
+  }, [creator]);
   const schema = creatorProfileUpdateSchema;
   const methods = useForm<ICreatorProfileUpdateSchema>({
     defaultValues: {
@@ -73,7 +83,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       banner_image: creator?.banner_image || "",
       profile_image: creator?.profile_image || "",
       tags: creator?.tags || [],
-      state: creator?.state ||"",
+      state: creator?.state || "",
       city: creator?.city || "",
       gender: creator?.gender || "",
       dob: new Date(creator?.dob).toLocaleDateString() || "",
@@ -104,7 +114,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         selectedCategories?.map((v: any) => v.value),
         creator.sub_category || []
       );
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -251,19 +261,19 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     }
   };
   const handleOnSelect = (value: any, name: any) => {
-    setFormState({ ...formState, [name]: value })
+    setFormState({ ...formState, [name]: value });
     methods.setValue(name, value);
-    if (name === 'state') {
-      setFormState({ ...formState, [name]: value, city: "" })
+    if (name === "state") {
+      setFormState({ ...formState, [name]: value, city: "" });
       methods.setValue("city", "");
     }
     if (value) {
       methods.setError(name, {
         type: "manual",
         message: "",
-      })
+      });
     }
-  }
+  };
 
   return (
     <>
@@ -274,7 +284,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         >
           <div className="col-span-1">
             <Input
-              label="Full Name"
+              label={translate("FullName")}
               name="full_name"
               type="text"
               placeholder="John Doe"
@@ -282,7 +292,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           </div>
           <div className="col-span-1">
             <Input
-              label="Username"
+              label={translate("Username")}
               name="user_name"
               type="text"
               placeholder="john_doe_90"
@@ -290,7 +300,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           </div>
           <div className="col-span-2">
             <Input
-              label="Phone Number"
+              label={translate("PhoneNumber")}
               name="phone"
               type="phone"
               placeholder="+91 864 542 2548 "
@@ -298,32 +308,35 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           </div>
           <div className="col-span-2">
             <Input
-              label="Profile Title"
+              label={translate("ProfileTitle")}
               name="title"
               type="text"
-              placeholder="Men’s Style Guide & Trends"
+              placeholder={translate("MenTrends")}
             />
           </div>
           <div className="col-span-2">
             <Input
-              label="Long Description"
+              label={translate("Long_Description")}
               name="long_description"
               type="textarea"
               rows={2}
-              placeholder="I'm John, a fashion influencer sharing style tips, outfit inspiration, and grooming advice for men. Follow me for daily fashion insights!"
+              placeholder={translate("Long_Description_placeholder")}
             />
           </div>
           <div className="col-span-2">
             <Input
-              label="Short Description"
+              label={translate("Short_Description")}
               name="short_description"
               type="text"
-              placeholder="Helping men stay stylish with the latest fashion trends."
+              placeholder={translate("Short_Description_placeholder")}
             />
           </div>
           <div className="col-span-1">
             <div className="flex flex-col">
-              <span className="mb-1 text-sm text-gray-500 font-semibold">{"State"}<span className="text-red-500">*</span></span>
+              <span className="mb-1 text-sm text-gray-500 font-semibold">
+                {translate("State")}
+                <span className="text-red-500">*</span>
+              </span>
               <Select
                 styles={customStyles}
                 value={[
@@ -331,13 +344,16 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
                     value: formState.state,
                     label: formState.state
                       ? formState.state
-                      : "Select State",
+                      : translate("Select_State"),
                   },
                 ]}
                 onChange={(value) => handleOnSelect(value?.value, "state")}
-                options={indianStates?.map(ele => ({ value: ele, label: ele }))}
+                options={indianStates?.map((ele) => ({
+                  value: ele,
+                  label: ele,
+                }))}
                 className="basic-multi-select focus:outline-none focus:shadow-none"
-                placeholder="Select State"
+                placeholder={translate("Select_State")}
               />
               {Boolean(get(methods.formState.errors, "state")) && (
                 <span className="text-red-600 text-sm p-2 block">
@@ -348,7 +364,10 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           </div>
           <div className="col-span-1">
             <div className="flex flex-col">
-              <span className="mb-1 text-sm text-gray-500 font-semibold">{"City"}<span className="text-red-500">*</span></span>
+              <span className="mb-1 text-sm text-gray-500 font-semibold">
+                {translate("City")}
+                <span className="text-red-500">*</span>
+              </span>
               <Select
                 styles={customStyles}
                 value={[
@@ -356,13 +375,20 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
                     value: formState.city,
                     label: formState.city
                       ? formState.city
-                      : "Select City",
+                      : translate("selectCity"),
                   },
                 ]}
                 onChange={(value) => handleOnSelect(value?.value, "city")}
-                options={formState.state ? cities[formState?.state]?.map((ele: string) => ({ value: ele, label: ele })) : []}
+                options={
+                  formState.state
+                    ? cities[formState?.state]?.map((ele: string) => ({
+                        value: ele,
+                        label: ele,
+                      }))
+                    : []
+                }
                 className="basic-multi-select focus:outline-none focus:shadow-none"
-                placeholder="Select City"
+                placeholder={translate("selectCity")}
               />
               {Boolean(get(methods.formState.errors, "city")) && (
                 <span className="text-red-600 text-sm p-2 block">
@@ -372,48 +398,50 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
             </div>
           </div>
           <div className="col-span-1">
-        <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">{"Gender"}<span className="text-red-500">*</span></span>
-          <Select
-            styles={customStyles}
-            value={[
-              {
-                value: formState.gender,
-                label: formState.gender
-                  ? formState.gender
-                  : "Select Gender",
-              },
-            ]}
-            onChange={(value) => handleOnSelect(value?.value, "gender")}
-            options={gender?.map(ele => ({ value: ele, label: ele }))}
-            className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder="Select State"
-          />
-          {Boolean(get(methods.formState.errors, "gender")) && (
-            <span className="text-red-600 text-sm p-2 block">
-              {methods.formState.errors["gender"]?.message}
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="col-span-1">
-        <div className="flex flex-col">
-          <Input
-            name="dob"
-            type="date"
-            placeholder={translate("Select_date_of_birth")}
-            label={translate("Date of Birth")}
-            maxDate={new Date(new Date().setDate(new Date().getDate()))
-            }
-          />
-        </div>
-      </div>
+            <div className="flex flex-col">
+              <span className="mb-1 text-sm text-gray-500 font-semibold">
+                {translate("Gender")}
+                <span className="text-red-500">*</span>
+              </span>
+              <Select
+                styles={customStyles}
+                value={[
+                  {
+                    value: formState.gender,
+                    label: formState.gender
+                      ? formState.gender
+                      : translate("SelectGender"),
+                  },
+                ]}
+                onChange={(value) => handleOnSelect(value?.value, "gender")}
+                options={gender?.map((ele) => ({ value: ele, label: ele }))}
+                className="basic-multi-select focus:outline-none focus:shadow-none"
+                placeholder={translate("SelectGender")}
+              />
+              {Boolean(get(methods.formState.errors, "gender")) && (
+                <span className="text-red-600 text-sm p-2 block">
+                  {methods.formState.errors["gender"]?.message}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="col-span-1">
+            <div className="flex flex-col">
+              <Input
+                name="dob"
+                type="date"
+                placeholder={translate("Select_date_of_birth")}
+                label={translate("DateofBirth")}
+                maxDate={new Date(new Date().setDate(new Date().getDate()))}
+              />
+            </div>
+          </div>
           <div className="col-span-2">
             <Input
-              label="Tags"
+              label={translate("Tags")}
               name="tags"
               type="tag"
-              placeholder="Enter your tags"
+              placeholder={translate("Enteryourtags")}
             />
             {/* <Input label="Tags" name="tags" type="text" placeholder="#ABC" /> */}
           </div>
@@ -517,7 +545,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           </div>
           <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
-              Save
+              {translate("Save")}
             </Button>
           </div>
         </form>

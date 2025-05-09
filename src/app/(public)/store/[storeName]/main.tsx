@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { getCreatorStore } from "@/lib/web-api/my-store";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { toastMessage } from "@/lib/utils/toast-message";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductList from "./product-list";
 import Loading from "@/app/vendor/loading";
 import NotFound from "@/app/_components/components-common/404";

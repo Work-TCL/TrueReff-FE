@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { translate } from "@/lib/utils/translate";
 import { useRouter } from "next/navigation";
 import { CheckCircle, ImageOff, MessagesSquare, XCircle } from "lucide-react";
 import { ICollaboration, IRequest } from "./collaboration";
@@ -20,6 +15,7 @@ import ToolTip from "../../components-common/tool-tip";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
+import { useTranslations } from "next-intl";
 
 interface ICreatorTableProps {
   data: ICollaboration[];
@@ -38,6 +34,7 @@ const CollaborationTable = ({
   loader = false,
   refreshCentral = () => {},
 }: ICreatorTableProps) => {
+  const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const initialValue = { show: false, collaborationId: "", status: "" };

@@ -2,9 +2,11 @@
 import Button from "@/app/_components/ui/button";
 import { clearLocalStorage } from "@/lib/utils/commonUtils";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import React from "react";
 
 export default function SignOut() {
+  const t = useTranslations();
   const handleLogout = async () => {
     await signOut({
       callbackUrl: "/login",
@@ -19,7 +21,7 @@ export default function SignOut() {
       className="px-6 text-sm"
       type="submit"
     >
-      Submit
+      {t("Submit")}
     </Button>
   );
 }

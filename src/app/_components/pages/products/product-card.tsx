@@ -2,11 +2,12 @@
 import { ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { IProduct } from "./list";
-import { translate } from "@/lib/utils/translate";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 const ProductCard = ({ item: product }: { item: IProduct }) => {
+  const translate = useTranslations();
   const router = useRouter();
   return (
     <Card

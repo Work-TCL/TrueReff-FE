@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
 import EditVendorForm from "./vendor-edit";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 export default function EditProfile({ profile, open = false, onClose }: any) {
+  const translate = useTranslations();
   return (
     <DialogLayout
       open={Boolean(open)}

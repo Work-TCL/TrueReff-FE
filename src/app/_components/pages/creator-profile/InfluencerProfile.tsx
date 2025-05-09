@@ -1,13 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Facebook,
-  Instagram,
-  Youtube,
-  Link as LinkIcon,
-  X,
-} from "lucide-react";
+import { Link as LinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 

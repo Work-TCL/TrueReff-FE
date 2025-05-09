@@ -1,12 +1,10 @@
 "use client";
 
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle } from "lucide-react";
 import { CustomTableHead } from "./CustomTableHead";
 import { CustomTableCell } from "./CustomTableCell";
-import { translate } from "@/lib/utils/translate";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { useTranslations } from "next-intl";
 
 // Sample Data
 const videos = [
@@ -48,6 +46,7 @@ const videos = [
   },
 ];
 export default function TopVideosCraetor() {
+  const translate = useTranslations();
   return (
     <div className="p-4 bg-white rounded-[20px]">
       <div className="flex justify-between items-center mb-4">

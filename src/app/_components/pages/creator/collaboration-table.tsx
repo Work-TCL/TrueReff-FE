@@ -1,10 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { useRouter } from "next/navigation";
 import {
   CheckCircle,
@@ -126,7 +123,7 @@ const CollaborationTable = ({
       handleStatusChangeRequest("rejected", isOpen?.collaborationId);
     }
   };
-  
+
   const getRequestStatus = (collaboration: ICollaboration) => {
     const { request } = collaboration;
     if (request) {
@@ -140,9 +137,9 @@ const CollaborationTable = ({
       }
     } else return "SEND_REQUEST";
   };
-  const handleCopyLink = async (textToCopy:string|null) => {
+  const handleCopyLink = async (textToCopy: string | null) => {
     try {
-      await navigator.clipboard.writeText(textToCopy??"");
+      await navigator.clipboard.writeText(textToCopy ?? "");
       toastMessage.success("Text copied to clipboard!");
     } catch (err) {
       toastMessage.error("Failed to copy!");
@@ -266,30 +263,31 @@ const CollaborationTable = ({
         const status = getRequestStatus(collaboration);
 
         if (isDashboard) {
-          return (<div className="flex justify-between w-fit gap-3 mx-auto">
-            {collaboration?.crmLink && 
-              <ToolTip content="Copy Link" delayDuration={1000}>
-              <Copy
-                strokeWidth={1.5}
-                color="#22c55e"
-                className="cursor-pointer"
-                size={25}
-                onClick={() =>
-                  handleCopyLink(collaboration?.crmLink)
-                }
-              />
-            </ToolTip>}
-            <ToolTip content="View Detail" delayDuration={1000}>
-              <Eye
-                strokeWidth={1.5}
-                className="cursor-pointer"
-                size={25}
-                color="#ef4444"
-                onClick={() => handleProductDetail(product?._id)}
-              />
-            </ToolTip>
-          </div>)
-         } else {
+          return (
+            <div className="flex justify-between w-fit gap-3 mx-auto">
+              {collaboration?.crmLink && (
+                <ToolTip content="Copy Link" delayDuration={1000}>
+                  <Copy
+                    strokeWidth={1.5}
+                    color="#22c55e"
+                    className="cursor-pointer"
+                    size={25}
+                    onClick={() => handleCopyLink(collaboration?.crmLink)}
+                  />
+                </ToolTip>
+              )}
+              <ToolTip content="View Detail" delayDuration={1000}>
+                <Eye
+                  strokeWidth={1.5}
+                  className="cursor-pointer"
+                  size={25}
+                  color="#ef4444"
+                  onClick={() => handleProductDetail(product?._id)}
+                />
+              </ToolTip>
+            </div>
+          );
+        } else {
           if (status === "REQUESTED") {
             if (collaboration?.request?.requestFrom === "VENDOR") {
               return (

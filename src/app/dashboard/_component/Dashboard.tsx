@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
-import { Package, ShoppingBag, Users } from "lucide-react";
+import { Package, Users } from "lucide-react";
 import ProfileCompletionCard from "@/app/_components/components-common/charts/profileComplete";
 import {
   BrandCreatorCard,
@@ -10,17 +9,15 @@ import {
 import Creators from "@/app/_components/pages/userOverView/creators";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
-import { ProductDetailUser } from "@/app/_components/pages/userOverView/productDetail";
-import { ProileDetailUser } from "@/app/_components/pages/userOverView/userProfile";
-import VideosTable from "@/app/_components/pages/userOverView/videoTable";
-import { translate } from "@/lib/utils/translate";
 import Brands from "@/app/_components/pages/userOverView/brands";
 import { toastMessage } from "@/lib/utils/toast-message";
 import { getVendorCreatorCount } from "@/lib/web-api/auth";
 import Loader from "@/app/_components/components-common/layout/loader";
+import { useTranslations } from "next-intl";
 
 export default function UserOverView() {
   const { account } = useAuthStore();
+  const translate = useTranslations();
   // const translate = (word: string) => word;
   const productDetail = {
     productImage: "",

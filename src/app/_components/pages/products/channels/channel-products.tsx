@@ -1,16 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { Input } from "@/components/ui/input";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
-import { FaSlidersH } from "react-icons/fa";
-import { CircleFadingPlus, Eye, ImageOff, Info, Search } from "lucide-react";
+import { CircleFadingPlus, ImageOff } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -317,7 +309,9 @@ export default function ChannelProductList({
           ) : (
             <EmptyPlaceHolder
               title={"No_Products_Available"}
-              description={"It seems there are currently no products to display. Please check back later."}
+              description={
+                "It seems there are currently no products to display. Please check back later."
+              }
             />
           )}
         </>

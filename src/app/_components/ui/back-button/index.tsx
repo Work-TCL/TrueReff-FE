@@ -3,13 +3,14 @@ import { cn } from "@sohanemon/utils";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { GoChevronLeft } from "react-icons/go";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 interface IBackButton {
   className?: string;
 }
 
 export default function BackButton({ className = "" }: IBackButton) {
+  const translate = useTranslations();
   const router = useRouter();
   const handleGoBack = () => {
     router.back();

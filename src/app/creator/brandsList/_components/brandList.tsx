@@ -1,19 +1,17 @@
 "use client";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { translate } from "@/lib/utils/translate";
 import { Brand } from "../list";
 import { ImageOff, Star } from "lucide-react";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import { useRouter } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/app/_components/components-common/data-table";
+import { useTranslations } from "next-intl";
 
 interface BrandListProps {
   brand: Brand[];
 }
 export default function BrandListView({ brand }: BrandListProps) {
+  const translate = useTranslations();
   const router = useRouter();
   const brandColumns: ColumnDef<Brand>[] = [
     {

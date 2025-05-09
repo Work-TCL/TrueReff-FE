@@ -12,13 +12,14 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useVendorStore } from "@/lib/store/vendor";
 import { useParams } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 export default function ChatComponent({
   collaborationData,
 }: {
   collaborationData: ICollaboration;
 }) {
+  const translate = useTranslations();
   const params = useParams();
   const loadingRef = useRef<HTMLDivElement | null>(null);
   const collaborationId: any = params?.collaborationId;

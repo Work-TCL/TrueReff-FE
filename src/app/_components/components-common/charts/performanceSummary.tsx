@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 import React from "react";
 import {
   LineChart,
@@ -47,6 +47,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function PerformanceSummaryChartDashBoard() {
+  const translate = useTranslations();
   return (
     <div className="w-full h-full bg-white p-6 rounded-2xl shadow-md">
       {/* Header Section */}
@@ -96,7 +97,7 @@ export default function PerformanceSummaryChartDashBoard() {
 
           <XAxis
             dataKey="month"
-            tick={{ fill: "#6B7280", fontSize: 12  }}
+            tick={{ fill: "#6B7280", fontSize: 12 }}
             stroke="#E5E7EB"
           />
           <YAxis tick={{ fill: "#6B7280", fontSize: 12 }} stroke="#E5E7EB" />

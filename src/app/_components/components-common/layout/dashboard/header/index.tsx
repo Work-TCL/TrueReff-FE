@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { translate } from "../../../../../../lib/utils/translate";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
 import { CircleUserRound, Menu, User, UserRound } from "lucide-react";
@@ -12,6 +11,7 @@ import { useVendorStore } from "@/lib/store/vendor";
 import { useCreatorStore } from "@/lib/store/creator";
 import axios from "@/lib/web-api/axios";
 import NotificationPopover from "./notificationPopover";
+import { useTranslations } from "next-intl";
 interface IPageName {
   [key: string]: string;
 }
@@ -55,6 +55,7 @@ function formatTimeAgo(date: string) {
   }
 }
 export default function Header({ handleExpandSidebar }: IHeaderProps) {
+  const translate = useTranslations();
   const pathName = usePathname();
   const { account } = useAuthStore();
   const { vendor } = useVendorStore();

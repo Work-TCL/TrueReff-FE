@@ -1,16 +1,10 @@
 "use client";
-import { Input } from "@/components/ui/input";
-import toast from "react-hot-toast";
 import { ReactElement, useCallback, useEffect, useState } from "react";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
-import { FaSlidersH } from "react-icons/fa";
-import { translate } from "@/lib/utils/translate";
 import Loading from "@/app/vendor/loading";
-import { Button } from "@/components/ui/button";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { ViewToggle } from "../view-toggle";
 import { SearchInput } from "../search-field";
+import { useTranslations } from "next-intl";
 
 export interface ICommonItem {
   _id: string;
@@ -39,6 +33,7 @@ export default function ProductLayout<T>({
   pageSize = 20,
   initialViewMode = "table",
 }: ProductLayoutProps<T>) {
+  const translate = useTranslations();
   const [loading, setLoading] = useState<boolean>(false);
   const [items, setItems] = useState<T[]>([]);
   const [search, setSearch] = useState<string>("");

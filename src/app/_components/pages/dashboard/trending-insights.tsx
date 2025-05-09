@@ -1,7 +1,6 @@
 "use client";
-
-import { translate } from "@/lib/utils/translate";
 import { cn } from "@sohanemon/utils";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 interface DataItem {
@@ -20,6 +19,7 @@ const TrendingInsights = ({
   data,
   legendClassName,
 }: TrendingInsightsProps) => {
+  const translate = useTranslations();
   return (
     <div className="w-full p-4 rounded-20 bg-white ">
       <h2 className=" text-text font-semibold ">

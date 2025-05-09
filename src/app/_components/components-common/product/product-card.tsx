@@ -1,9 +1,9 @@
 "use client";
 import { ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 export interface ICategory {
   _id: string;
@@ -41,6 +41,7 @@ const ProductCard = ({
   item: IProduct;
   productDetailLink: string;
 }) => {
+  const translate = useTranslations();
   const router = useRouter();
   return (
     <Card
@@ -77,7 +78,7 @@ const ProductCard = ({
               product.categories || "Uncategorized"
             }`}
           />
-         {product.tags?.length > 0 ? (
+          {product.tags?.length > 0 ? (
             <div className="flex gap-2 mt-1">
               {product.tags.slice(0, 2).map((tag, index) => (
                 <TruncateWithToolTip

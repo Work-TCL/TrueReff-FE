@@ -6,9 +6,10 @@ import AuthTitle from "./components/auth-title";
 import AuthDescription from "./components/auth-desc";
 import VerifyOTPForm from "./components/otp-form";
 import { useSearchParams } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 export default function SendOtpPage() {
+  const translate = useTranslations();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   return (

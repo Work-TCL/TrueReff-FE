@@ -1,12 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Profile from "./profile";
-import PackageDetails from "./package-details";
-import PaymentOptions from "./payment-options";
-import BillingDetails from "./billing-details";
-import StoreConnects from "./store-connects";
-import { translate } from "../../../../lib/utils/translate";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const settingMenus: string[] = [
   "Profile",
@@ -17,6 +12,7 @@ const settingMenus: string[] = [
 ];
 
 export default function Settings() {
+  const translate = useTranslations();
   const [active, setActive] = useState("Profile");
 
   const handleActiveMenu = (value: string) => {
@@ -29,13 +25,13 @@ export default function Settings() {
         {
           Profile: (
             <Profile
-              // profile={{
-              //   business_name: "",
-              //   company_email: "",
-              //   company_phone: "",
-              //   addresses: [],
-              //   contacts: [],
-              // }}
+            // profile={{
+            //   business_name: "",
+            //   company_email: "",
+            //   company_phone: "",
+            //   addresses: [],
+            //   contacts: [],
+            // }}
             />
           ),
           // "package_details": <PackageDetails />,

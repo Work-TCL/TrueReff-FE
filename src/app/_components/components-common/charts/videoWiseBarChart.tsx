@@ -15,8 +15,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { translate } from "@/lib/utils/translate";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 const data = [
   { day: "Mon", views: 50, revenue: 90, conversions: 30 },
@@ -55,6 +55,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 };
 
 const VideoWiseRevenueChart = () => {
+  const translate = useTranslations();
   return (
     <div className="bg-white p-4 rounded-lg shadow-md w-full">
       <div className="flex justify-between items-center mb-2">

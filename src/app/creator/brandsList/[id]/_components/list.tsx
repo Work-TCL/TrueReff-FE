@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
@@ -18,12 +17,7 @@ import Loader from "@/app/_components/components-common/layout/loader";
 import { useTranslations } from "next-intl";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import axios from "@/lib/web-api/axios";
-import { Search } from "lucide-react";
 import { debounce } from "lodash";
-import { getCategories } from "@/lib/web-api/auth";
-import Select from "react-select";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
 import BrandProductCard from "./brandProductCard";
 import { useCreatorStore } from "@/lib/store/creator";
 import CancelRequest from "@/app/_components/components-common/dialogs/cancel-request";
@@ -309,7 +303,7 @@ export default function CreatorList() {
                     className="cursor-pointer hover:text-[grey] hover:underline"
                     onClick={() => router.push(`/creator/brandsList`)}
                   >
-                    Brand Lists
+                    {translate("Brand_Lists")}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />

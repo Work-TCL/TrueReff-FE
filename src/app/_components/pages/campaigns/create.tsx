@@ -1,7 +1,6 @@
 "use client";
 import { Button as ButtonOutline } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
-import { translate } from "../../../../lib/utils/translate";
 import { FormProvider, useForm } from "react-hook-form";
 import ProductSelectDropdown from "./_components/selectProduct";
 import {
@@ -25,6 +24,7 @@ import Loader from "../../components-common/layout/loader";
 import { get } from "lodash";
 import dynamic from "next/dynamic";
 import { ICampaign } from "@/lib/types-api/campaign";
+import { useTranslations } from "next-intl";
 
 const Input = dynamic(() => import("../../ui/form/Input"), { ssr: false });
 
@@ -33,6 +33,7 @@ interface IAddProductDetailProps {
 }
 
 export default function CreateCampaign(props: IAddProductDetailProps) {
+  const translate = useTranslations();
   const params = useParams();
   const router = useRouter();
   const campaignId: any = params?.id !== "add" ? params?.id : null;

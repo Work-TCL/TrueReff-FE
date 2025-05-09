@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { translate } from "@/lib/utils/translate";
 import { IChannel, ICreator } from "./list";
 import { useRouter } from "next/navigation";
 import { Info } from "lucide-react";
+import { useTranslations } from "next-intl";
 function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -24,6 +24,7 @@ interface ICreatorTableProps {
   filter: string;
 }
 const CreatorTable = ({ data, filter }: ICreatorTableProps) => {
+  const translate = useTranslations();
   const router = useRouter();
   const getInstagramView: (channels: IChannel[]) => string = (
     channels: IChannel[]
@@ -136,6 +137,7 @@ const CreatorTable = ({ data, filter }: ICreatorTableProps) => {
 
 export default CreatorTable;
 export function EmptyPlaceHolder() {
+  const translate = useTranslations();
   return (
     <div className=" flex items-center justify-center flex-col flex-1 col-span-full text-center h-[200px] text-gray-500 p-4 bg-white ">
       <Info className="mx-auto mb-2 text-gray-400" />

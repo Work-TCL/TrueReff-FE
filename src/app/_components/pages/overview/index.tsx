@@ -7,14 +7,15 @@ import MostSellingBrands from "../../components-common/charts/MostSellingBrands"
 import RecentActivities from "../../components-common/tables/RecentActivity";
 import VendorActivity from "../../components-common/charts/VendorActivityChart";
 import { StatsCard } from "../../components-common/states/StatesCard";
-import { translate } from "@/lib/utils/translate";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { toastMessage } from "@/lib/utils/toast-message";
 import { getStatesInfo } from "@/lib/web-api/vendor-dashboard";
 import Loading from "@/app/vendor/loading";
 import { IStateInfo } from "@/lib/types-api/vendor-dashboard";
+import { useTranslations } from "next-intl";
 
 export default function Overview() {
+  const translate = useTranslations();
   const initialStateInfo = {
     activeCollaborations: 0,
     pendingCollaborations: 0,

@@ -1,6 +1,5 @@
 "use client";
-
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 import React from "react";
 import {
   LineChart,
@@ -46,6 +45,7 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
 };
 
 export default function SalesChart() {
+  const translate = useTranslations();
   return (
     <div className="w-full h-[410px] bg-white p-5 rounded-20 h-full flex-1">
       <div className="flex md:flex-row flex-col justify-between md:items-center items-start mb-3">
@@ -69,7 +69,7 @@ export default function SalesChart() {
       </div>
       <div className="flex gap-4 items-center">
         <p className="text-2xl text-text ">$50.4K</p>
-        <p className="text-sm text-success ">↑ 5% than last month</p>
+        <p className="text-sm text-success ">↑ 5% {translate('thenLastMonth')}</p>
       </div>
 
       <ResponsiveContainer width="100%" height={300}>

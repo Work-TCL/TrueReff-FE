@@ -8,14 +8,18 @@ import {
   vendorProfileUpdateSchema,
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { translate } from "@/lib/utils/translate";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
-import { cities, fileUploadLimitValidator, indianStates } from "@/lib/utils/constants";
+import {
+  cities,
+  fileUploadLimitValidator,
+  indianStates,
+} from "@/lib/utils/constants";
 import Select from "react-select";
 import { get } from "lodash";
+import { useTranslations } from "next-intl";
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,
@@ -29,8 +33,8 @@ const customStyles = {
   }),
   options: (base: any) => ({
     ...base,
-    zIndex: 999
-  })
+    zIndex: 999,
+  }),
 };
 export default function EditVendorForm({
   profile,
@@ -39,6 +43,7 @@ export default function EditVendorForm({
   profile: any;
   onClose: any;
 }) {
+  const translate = useTranslations();
   const { setVendorData } = useVendorStore();
   const [loading, setLoading] = useState(false);
   const [profileFile, setProfileFile] = useState<File | null>(null);
@@ -47,14 +52,14 @@ export default function EditVendorForm({
   );
   const initialState = {
     state: profile?.state ?? "",
-    city: profile?.city ?? ""
-  }
+    city: profile?.city ?? "",
+  };
   const [formState, setFormState] = useState(initialState);
   useEffect(() => {
     if (profile) {
-      setFormState({ state: profile?.state, city: profile?.city })
+      setFormState({ state: profile?.state, city: profile?.city });
     }
-  }, [profile])
+  }, [profile]);
   const schema = vendorProfileUpdateSchema;
   const methods = useForm<IVendorProfileUpdateSchema>({
     defaultValues: {
@@ -64,7 +69,7 @@ export default function EditVendorForm({
       website: profile?.website || "",
       business_name: profile?.business_name || "",
       state: profile?.state,
-      city: profile?.city
+      city: profile?.city,
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -138,19 +143,19 @@ export default function EditVendorForm({
     setProfilePreview(previewURL);
   };
   const handleOnSelect = (value: any, name: any) => {
-    setFormState({ ...formState, [name]: value })
+    setFormState({ ...formState, [name]: value });
     methods.setValue(name, value);
-    if (name === 'state') {
-      setFormState({ ...formState, [name]: value, city: "" })
+    if (name === "state") {
+      setFormState({ ...formState, [name]: value, city: "" });
       methods.setValue("city", "");
     }
     if (value) {
       methods.setError(name, {
         type: "manual",
         message: "",
-      })
+      });
     }
-  }
+  };
 
   return (
     <>
@@ -181,19 +186,23 @@ export default function EditVendorForm({
           />
           <div className="col-span-1">
             <div className="flex flex-col">
-              <span className="mb-1 text-sm text-gray-500 font-semibold">{"State"}<span className="text-red-500">*</span></span>
+              <span className="mb-1 text-sm text-gray-500 font-semibold">
+                {"State"}
+                <span className="text-red-500">*</span>
+              </span>
               <Select
                 styles={customStyles}
                 value={[
                   {
                     value: formState.state,
-                    label: formState.state
-                      ? formState.state
-                      : "Select State",
+                    label: formState.state ? formState.state : "Select State",
                   },
                 ]}
                 onChange={(value) => handleOnSelect(value?.value, "state")}
-                options={indianStates?.map(ele => ({ value: ele, label: ele }))}
+                options={indianStates?.map((ele) => ({
+                  value: ele,
+                  label: ele,
+                }))}
                 className="basic-multi-select focus:outline-none focus:shadow-none"
                 placeholder="Select State"
               />
@@ -206,21 +215,29 @@ export default function EditVendorForm({
           </div>
           <div className="col-span-1">
             <div className="flex flex-col">
-              <span className="mb-1 text-sm text-gray-500 font-semibold">{"City"}<span className="text-red-500">*</span></span>
+              <span className="mb-1 text-sm text-gray-500 font-semibold">
+                {translate("City")}
+                <span className="text-red-500">*</span>
+              </span>
               <Select
                 styles={customStyles}
                 value={[
                   {
                     value: formState.city,
-                    label: formState.city
-                      ? formState.city
-                      : "Select City",
+                    label: formState.city ? formState.city : "Select City",
                   },
                 ]}
                 onChange={(value) => handleOnSelect(value?.value, "city")}
-                options={formState.state ? cities[formState?.state]?.map((ele: string) => ({ value: ele, label: ele })) : []}
+                options={
+                  formState.state
+                    ? cities[formState?.state]?.map((ele: string) => ({
+                        value: ele,
+                        label: ele,
+                      }))
+                    : []
+                }
                 className="basic-multi-select focus:outline-none focus:shadow-none"
-                placeholder="Select City"
+                placeholder={translate("selectCity")}
               />
               {Boolean(get(methods.formState.errors, "city")) && (
                 <span className="text-red-600 text-sm p-2 block">
@@ -279,7 +296,7 @@ export default function EditVendorForm({
           </div>
           <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
-              Save
+              {translate("Save")}
             </Button>
           </div>
         </form>

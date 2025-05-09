@@ -14,13 +14,14 @@ import Loading from "@/app/creator/loading";
 interface ICollaborateRequestFormProps {
   onClose: () => void;
   creatorId: string;
-  submitting:boolean; 
-  setSubmitting: (value: boolean) => void
+  submitting: boolean;
+  setSubmitting: (value: boolean) => void;
 }
 export default function CollaborateRequestForm({
   onClose,
   creatorId,
-  submitting, setSubmitting
+  submitting,
+  setSubmitting,
 }: ICollaborateRequestFormProps) {
   const loadingRef = useRef<HTMLDivElement | null>(null);
   const translate = useTranslations();
@@ -74,9 +75,7 @@ export default function CollaborateRequestForm({
           const count = response?.data?.data?.count;
           setProductCount(count);
           setProducts([...products, ...productsArray]);
-          setHasMore(
-            (products.length + productsArray.length) < count
-          );
+          setHasMore(products.length + productsArray.length < count);
           setLoading(false);
           setIsLoading(false);
         } else {
@@ -90,7 +89,7 @@ export default function CollaborateRequestForm({
       toast.error(errorMessage);
       setLoading(false);
       setIsLoading(false);
-      setHasMore(false)
+      setHasMore(false);
     }
   };
   const handleSendRequest = async () => {
@@ -131,9 +130,19 @@ export default function CollaborateRequestForm({
   };
   return (
     <div className="flex flex-col gap-3">
-      <div className={`flex ${loading ? '' : 'flex-col'} max-h-80 h-80 overflow-scroll`}>
-        <div className={`flex flex-col gap-2 ${products?.length > 0 ? "" : "w-full"}`}>
-          {loading ? <Loading /> : products?.length > 0 ?
+      <div
+        className={`flex ${
+          loading ? "" : "flex-col"
+        } max-h-80 h-80 overflow-scroll`}
+      >
+        <div
+          className={`flex flex-col gap-2 ${
+            products?.length > 0 ? "" : "w-full"
+          }`}
+        >
+          {loading ? (
+            <Loading />
+          ) : products?.length > 0 ? (
             products?.map((product: any, index: number) => {
               return (
                 <div className="flex items-center gap-4" key={index}>
@@ -145,7 +154,11 @@ export default function CollaborateRequestForm({
                     disabled={submitting}
                     onChange={() => handleOnSelectProduct(product?._id)}
                   />
-                  <div onClick={() => !submitting && handleOnSelectProduct(product?._id)}>
+                  <div
+                    onClick={() =>
+                      !submitting && handleOnSelectProduct(product?._id)
+                    }
+                  >
                     <div className="flex items-center gap-2">
                       {product?.media?.length > 0 && (
                         <Avatar className="w-8 h-8">
@@ -157,16 +170,22 @@ export default function CollaborateRequestForm({
                   </div>
                 </div>
               );
-            }) :
+            })
+          ) : (
             <div className="flex flex-col justify-center text-center items-center h-full">
-              <Info height={30} width={30} className="mx-auto mb-2 text-gray-400" />
+              <Info
+                height={30}
+                width={30}
+                className="mx-auto mb-2 text-gray-400"
+              />
               <h2 className="text-lg font-semibold">
                 {translate("No_Products_Available")}
               </h2>
               <p className="text-sm">
-                {translate("It seems there are currently no products to display. Please check back later.")}
+                {translate("No_Products_Available_Description")}
               </p>
-            </div>}
+            </div>
+          )}
         </div>
         {hasMore && (
           <div
@@ -185,7 +204,7 @@ export default function CollaborateRequestForm({
           disabled={submitting || selectedProducts?.length === 0}
           onClick={handleSendRequest}
         >
-          {"Collaborate Now"}
+          {translate("Collaborate_Now")}
         </Button>
       </div>
     </div>

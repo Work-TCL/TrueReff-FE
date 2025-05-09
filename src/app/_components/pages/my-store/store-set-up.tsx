@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import Input, { inputStyle, labelStyle } from "@/app/_components/ui/form/Input";
 import Select from "react-select";
 import React, { useEffect, useState } from "react";
-import { translate } from "../../../../lib/utils/translate";
 import { ICategory } from "@/lib/types-api/category";
 import { getCategories } from "@/lib/web-api/auth";
 import { FormProvider, useForm } from "react-hook-form";
@@ -23,6 +22,7 @@ import { useRouter } from "next/navigation";
 import PhotoUpload from "../../components-common/PhotoUpload";
 import { cn } from "@sohanemon/utils";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 const customStyles = {
   placeholder: (base: any) => ({
@@ -37,6 +37,7 @@ const customStyles = {
   }),
 };
 export default function StoreSetUp(props: any) {
+  const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [parentCategory, setParentCategory] = useState<ICategory[]>([]);

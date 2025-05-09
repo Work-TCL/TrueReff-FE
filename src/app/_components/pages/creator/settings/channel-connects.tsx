@@ -1,13 +1,14 @@
 "use client";
 import React from "react";
-import { translate } from "@/lib/utils/translate";
 import ChannelsConnectSocial from "./instagram-connect";
+import { useTranslations } from "next-intl";
 
 interface IStoreConnects {
   className?: string;
 }
 
 export default function ChannelConnects({ className = "" }: IStoreConnects) {
+  const translate = useTranslations();
   return (
     <div
       className={`flex flex-col w-full h-full rounded-xl p-4 gap-2 ${className}`}

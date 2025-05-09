@@ -1,14 +1,15 @@
 "use client";
 import { Eye, ImageOff, PencilLine, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
 import { ICampaignData } from "@/lib/types-api/campaign";
 import { formatForDateInput } from "@/lib/utils/commonUtils";
 import { campaignStatus } from "../list";
 import { Card, CardContent } from "@/components/ui/card";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
+import { useTranslations } from "next-intl";
 
 const CampaignCard = ({ item: campaign }: { item: ICampaignData }) => {
+  const translate = useTranslations();
   const router = useRouter();
   return (
     <Card

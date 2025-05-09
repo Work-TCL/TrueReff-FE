@@ -10,8 +10,6 @@ import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-import { Input } from "@/components/ui/input";
 import { TablePagination } from "../../components-common/tables/Pagination";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import ProductCard from "./product-card";

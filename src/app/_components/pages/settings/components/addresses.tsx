@@ -2,12 +2,13 @@
 import EditAddressProfile from "@/app/_components/components-common/dialogs/address-profile";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { translate } from "@/lib/utils/translate";
 import axios from "@/lib/web-api/axios";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function AddressesProfile(props: any) {
+  const translate = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const [addresses, setAddresses] = useState<any>([
     ...(props?.addresses || []),

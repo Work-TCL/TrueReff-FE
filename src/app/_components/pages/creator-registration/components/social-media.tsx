@@ -1,13 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
-import { useRouter, useSearchParams } from "next/navigation";
-import toast from "react-hot-toast";
 import Loader from "@/app/_components/components-common/layout/loader";
 import Button from "@/app/_components/ui/button";
 import { getConnectedChannel } from "@/lib/web-api/creator";
-import { translate } from "@/lib/utils/translate";
-
+import { useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import toast from "react-hot-toast";
 interface IProps {
   setYoutubeConnected: (value: boolean) => void;
   youtubeConnected: boolean;
@@ -21,6 +20,7 @@ export default function SocialMedia({
   instagramConnected,
   setInstagramConnected,
 }: IProps) {
+  const translate = useTranslations();
   const methods = useFormContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);

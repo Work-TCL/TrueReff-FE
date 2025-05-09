@@ -1,10 +1,11 @@
 "use client";
 import LightButton from "@/app/_components/ui/button/variant/light-button";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { FaApple } from "react-icons/fa";
 
 export default function SocialAuth() {
+  const translate = useTranslations();
   const handleGoogleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;

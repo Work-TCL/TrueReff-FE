@@ -9,10 +9,11 @@ import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
 import { signIn } from "next-auth/react";
-import { translate } from "@/lib/utils/translate";
 import { verifyEmail } from "@/lib/web-api/auth";
+import { useTranslations } from "next-intl";
 
 export default function EmailVerifyOTPForm() {
+  const translate = useTranslations();
   const searchParams = useSearchParams();
   const router = useRouter();
 

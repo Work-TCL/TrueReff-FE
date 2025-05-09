@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { ImageOff, Eye, XCircle, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
 import { IProduct } from "../products/list";
 import StatusBadge from "../../components-common/status-badge";
 import toast from "react-hot-toast";
@@ -14,6 +13,7 @@ import Loader from "../../components-common/layout/loader";
 import ToolTip from "../../components-common/tool-tip";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 const ProductCard = ({
   item: product,
@@ -22,6 +22,7 @@ const ProductCard = ({
   item: IProduct;
   handleUpdateProduct: () => void;
 }) => {
+  const translate = useTranslations();
   const router = useRouter();
   const { creator } = useCreatorStore();
   const [loading, setLoading] = useState(false);

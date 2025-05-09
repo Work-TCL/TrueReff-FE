@@ -1,19 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { Eye, ImageOff, PencilLine, Search, Trash2 } from "lucide-react";
+import { Eye, ImageOff, PencilLine } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { translate } from "../../../../lib/utils/translate";
-import { getCategories } from "@/lib/web-api/auth";
-import { ICategoryData } from "../creator-registration/components/profile-setup";
-import Select from "react-select";
-import { Input } from "@/components/ui/input";
-import { useTranslations } from "next-intl";
 import { getCampaignList } from "@/lib/web-api/campaign";
 import { ICampaignData } from "@/lib/types-api/campaign";
 import Loader from "../../components-common/layout/loader";
@@ -21,14 +12,13 @@ import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import Loading from "@/app/vendor/loading";
 import { debounce } from "lodash";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
 import CampaignCard from "./_components/campaign-card";
 import { SearchInput } from "../../components-common/search-field";
 import { ViewToggle } from "../../components-common/view-toggle";
 import DataTable from "../../components-common/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import SingleSelect from "../../components-common/single-select";
+import { useTranslations } from "next-intl";
 
 export const campaignStatus: { [key: string]: string } = {
   ACTIVE: "Running",
@@ -37,6 +27,7 @@ export const campaignStatus: { [key: string]: string } = {
 };
 
 export default function CampaignList() {
+  const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoading, setInternalLoading] = useState<boolean>(false);

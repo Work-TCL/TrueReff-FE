@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
-import { translate } from "@/lib/utils/translate";
 import EditContactVendorForm from "./vendor-edit";
+import { useTranslations } from "next-intl";
 
 export default function EditContactProfile({
   contact,
@@ -10,6 +10,7 @@ export default function EditContactProfile({
   open = false,
   onClose = () => {},
 }: any) {
+  const translate = useTranslations();
   return (
     <DialogLayout
       open={Boolean(open)}

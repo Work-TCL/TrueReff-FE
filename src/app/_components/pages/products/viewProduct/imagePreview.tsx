@@ -1,6 +1,4 @@
 "use client";
-
-import Image from "next/image";
 interface ProductImageGalleryProps {
   images: string[];
 }

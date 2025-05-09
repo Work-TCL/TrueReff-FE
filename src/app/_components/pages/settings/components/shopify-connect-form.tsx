@@ -9,14 +9,17 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { translate } from "@/lib/utils/translate";
 import Input from "@/app/_components/ui/form/Input";
 import { useRouter } from "next/navigation";
 import axios from "@/lib/web-api/axios";
+import { useTranslations } from "next-intl";
 interface IShopifyStoreConnectProps {
   getConnectedChannel?: () => void;
 }
-export default function ShopifyStoreConnects({getConnectedChannel = () => {}}:IShopifyStoreConnectProps) {
+export default function ShopifyStoreConnects({
+  getConnectedChannel = () => {},
+}: IShopifyStoreConnectProps) {
+  const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = shopifyConnectSchema;

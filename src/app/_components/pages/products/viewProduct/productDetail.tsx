@@ -1,12 +1,14 @@
+"use client";
 import React from "react";
-import { translate } from "@/lib/utils/translate";
 import { IProduct } from "./viewDetailProduct";
+import { useTranslations } from "next-intl";
 
 interface IProductInfoProps {
   productData: IProduct;
 }
 
 export function ProductInfo({ productData }: IProductInfoProps) {
+  const translate = useTranslations();
   return (
     <div className="flex flex-1 flex-col gap-6 p-6 overflow-auto pr-2">
       <h1 className="sm:text-3xl text-xl font-bold text-gray-800">
@@ -52,39 +54,39 @@ export function ProductInfo({ productData }: IProductInfoProps) {
       )}
       <div className="border-t border-gray-200 pt-6">
         <h3 className="sm:text-lg text-base font-semibold text-gray-800 mb-3">
-          Pricing & Tax
+          {translate("Pricing_And_Tax")}
         </h3>
         <div className="space-y-2 sm:text-sm text-xs text-gray-700">
           <div className="flex justify-between">
-            <span>Base Price</span>
+            <span>{translate("BasePrice")}</span>
             <span>${productData.price}</span>
           </div>
           <div className="flex justify-between">
-            <span>Discount</span>
-            <span className="text-gray-500">None</span>
+            <span>{translate("Discount")}</span>
+            <span className="text-gray-500">{translate("None")}</span>
           </div>
           <div className="flex justify-between">
-            <span>Tax Class</span>
-            <span className="text-gray-500">Tax Free</span>
+            <span>{translate("Tax_Class")}</span>
+            <span className="text-gray-500">{translate("Tax_Free")}</span>
           </div>
           <div className="flex justify-between">
-            <span>VAT Amount</span>
+            <span>{translate("VAT_Amount")}</span>
             <span className="text-gray-500">12%</span>
           </div>
         </div>
       </div>
       <div className="border-t border-gray-200 pt-6">
         <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">
-          Variations
+          {translate("Variations")}
         </h3>
         <div className="space-y-2 sm:text-sm text-xs text-gray-700">
           <div className="flex justify-between">
-            <span>Variation</span>
-            <span>Rose Gold</span>
+            <span> {translate("Variation")}</span>
+            <span>{translate("Rose_Gold")}</span>
           </div>
           <div className="flex justify-between">
-            <span>Type</span>
-            <span>Color</span>
+            <span>{translate("Type")}</span>
+            <span>{translate("Color")}</span>
           </div>
         </div>
       </div>

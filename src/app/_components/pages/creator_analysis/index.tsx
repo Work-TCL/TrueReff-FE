@@ -3,10 +3,11 @@ import React from "react";
 import { StatsCard } from "../../components-common/states/StatesCard";
 import RecentActivities from "../../components-common/tables/RecentActivity";
 import MostSellingBrands from "../../components-common/charts/MostSellingBrands";
-import { translate } from "@/lib/utils/translate";
 import PerformanceSummaryChart from "../../components-common/charts/PerformanceChart";
+import { useTranslations } from "next-intl";
 
 export default function CreatorAnalysis() {
+  const translate = useTranslations();
   return (
     <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
       {" "}

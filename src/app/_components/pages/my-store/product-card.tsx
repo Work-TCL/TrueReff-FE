@@ -1,14 +1,14 @@
 "use client";
 import { IProduct } from "./list";
 import { useRouter } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
 import { ImageOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const ProductCard = ({ item: product }: { item: IProduct }) => {
   const router = useRouter();
-
+  const translate = useTranslations();
   return (
     <Card className="cursor-pointer w-full border border-stroke rounded-xl p-4 flex flex-col items-center text-center gap-3 hover:shadow-sm transition-shadow bg-white overflow-hidden">
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">

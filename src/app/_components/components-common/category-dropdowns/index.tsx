@@ -6,10 +6,9 @@ import DialogLayout from "../../ui/layout/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@sohanemon/utils";
 import { labelStyle } from "../../ui/form/Input";
-import { translate } from "@/lib/utils/translate";
 import { getCategories } from "@/lib/web-api/auth";
 import { ICategory } from "../../pages/product-management";
-import { boolean } from "yup";
+import { useTranslations } from "next-intl";
 
 type Option = {
   value: string;
@@ -71,6 +70,7 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
   onChange,
   xlBreakPoint,
 }) => {
+  const translate = useTranslations();
   const [openDialog, setOpenDialog] = useState(false);
 
   // Temporary States for Dialog

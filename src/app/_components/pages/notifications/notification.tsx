@@ -3,9 +3,9 @@
 import socketService from "@/lib/services/socket-service";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useVendorStore } from "@/lib/store/vendor";
-import { translate } from "@/lib/utils/translate";
 import axios from "@/lib/web-api/axios";
 import { Info, LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -47,6 +47,7 @@ function formatTimeAgo(date: string) {
   }
 }
 export default function Notification() {
+  const translate = useTranslations();
   const { vendor } = useVendorStore();
   const { creator } = useCreatorStore();
   const [loading, setLoading] = useState<boolean>(false);
@@ -125,7 +126,7 @@ export default function Notification() {
       fetchNotifications();
     }
   }, []);
-  
+
   useEffect(() => {
     socketService.connect();
     if (creator.creatorId || vendor.vendorId) {
@@ -226,6 +227,7 @@ export default function Notification() {
   );
 }
 export function EmptyPlaceHolder() {
+  const translate = useTranslations();
   return (
     <div className="flex items-center justify-center flex-col flex-1 col-span-full text-center h-full text-gray-500 p-4 bg-white ">
       <Info className="mx-auto mb-2 text-gray-400" />

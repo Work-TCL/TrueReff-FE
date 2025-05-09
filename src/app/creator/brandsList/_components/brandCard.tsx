@@ -1,8 +1,8 @@
 "use client";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
-import { translate } from "@/lib/utils/translate";
 import { ImageOff, Star, TrendingUp } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 interface BrandCardProps {
@@ -26,6 +26,7 @@ export default function BrandCard({
   reviews,
   logo,
 }: BrandCardProps) {
+  const translate = useTranslations();
   const router = useRouter();
   const handleBrand = (brandId: string) => {
     router.push(`/creator/brandsList/${brandId}`);

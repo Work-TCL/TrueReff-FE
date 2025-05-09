@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { Suspense } from "react";
 import Loader from "./_components/components-common/layout/loader";
 import InstallButton from "./_components/InstallButton";
+import LocaleSwitcher from "./_components/localSwitcher/LocaleSwitcher";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -34,6 +35,9 @@ export default async function RootLayout({
           <Suspense fallback={<Loader />}>
             <NextAuthProvider>
               <NextIntlClientProvider messages={messages}>
+                <div className="absolute right-8 top-8">
+                  <LocaleSwitcher />
+                </div>
                 {children}
                 <Dialogs />
                 <Toaster position="top-right" />

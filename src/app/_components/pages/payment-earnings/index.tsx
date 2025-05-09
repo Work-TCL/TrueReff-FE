@@ -2,15 +2,12 @@
 import React from "react";
 import { StatsCard } from "../../components-common/states/StatesCard";
 import RecentActivities from "../../components-common/tables/RecentActivity";
-import MostSellingBrands from "../../components-common/charts/MostSellingBrands";
-import VendorActivity from "../../components-common/charts/VendorActivityChart";
-import { translate } from "@/lib/utils/translate";
-import PerformanceSummaryChart from "../../components-common/charts/PerformanceChart";
-import DonutChart from "../../components-common/charts/DonutChat";
 import VideoWiseRevenueChart from "../../components-common/charts/videoWiseBarChart";
 import TrendingInsights from "../dashboard/trending-insights";
+import { useTranslations } from "next-intl";
 
 export default function PaymentEarnings() {
+  const translate = useTranslations();
   const chartData = [
     { name: translate("Revenue"), value: 76, color: "#BEDBFC" },
     { name: translate("Total_Views"), value: 24, color: "#FED6AF" },

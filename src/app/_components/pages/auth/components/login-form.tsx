@@ -13,7 +13,6 @@ import Link from "next/link";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
 import { loginAPI, SocialLoginAPI } from "@/lib/web-api/auth";
-import { translate } from "@/lib/utils/translate";
 import { IPostLoginResponse } from "@/lib/types-api/auth";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { USER_TYPE } from "@/lib/utils/constants";
@@ -25,8 +24,10 @@ import {
   saveRememberedUser,
 } from "@/lib/utils/rememberUtils";
 import Loader from "@/app/_components/components-common/layout/loader";
+import { useTranslations } from "next-intl";
 
 export default function LoginForm() {
+  const translate = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");

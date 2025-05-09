@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { translate } from "../../../../lib/utils/translate";
-import { getProfileAPI } from "@/lib/web-api/user";
 import Loader from "../../components-common/layout/loader";
 import EditProfileCreator from "../../components-common/dialogs/edit-profile-creator";
 import { useCreatorStore } from "@/lib/store/creator";
+import { useTranslations } from "next-intl";
 interface IProfileCreator {
   user_name: string;
   full_name: string;
@@ -15,6 +14,7 @@ interface IProfileCreator {
 }
 
 export default function ProfileCreator() {
+  const translate = useTranslations();
   const creator = useCreatorStore.getState().creator;
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -69,11 +69,14 @@ export default function ProfileCreator() {
               ["State", creator.state],
               ["City", creator.city],
               ["Gender", creator.gender],
-              ["Date_Of_Birth", new Date(creator.dob).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })],
+              [
+                "Date_Of_Birth",
+                new Date(creator.dob).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                }),
+              ],
             ].map(([label, value], idx) => (
               <div key={idx} className="flex items-start gap-2">
                 <div className="w-[120px] text-sm text-gray-500 text-nowrap">

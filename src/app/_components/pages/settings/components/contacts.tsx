@@ -3,15 +3,16 @@ import EditContactProfile from "@/app/_components/components-common/dialogs/cont
 import AnchorButton from "@/app/_components/ui/button/variant";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { translate } from "@/lib/utils/translate";
 import axios from "@/lib/web-api/axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ConfirmDialog from "./confirmDialog";
+import { useTranslations } from "next-intl";
 
 export default function ContactsProfile(props: any) {
+  const translate = useTranslations();
   const [isOpen, setIsOpen] = useState<any>(false);
   const [contacts, setContacts] = useState<any[]>([...(props?.contacts || [])]);
   const [currentContact, setCurrentContact] = useState<any>(null);

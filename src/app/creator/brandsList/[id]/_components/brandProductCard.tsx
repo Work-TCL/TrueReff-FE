@@ -6,8 +6,8 @@ import ToolTip from "@/app/_components/components-common/tool-tip";
 import StatusBadge from "@/app/_components/components-common/status-badge";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import { IBrand } from "./list";
-import { translate } from "@/lib/utils/translate";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface IProductCardProps {
   brand: IBrand;
@@ -16,6 +16,7 @@ interface IProductCardProps {
 }
 
 const ProductCard = ({ brand, onView, onAction }: IProductCardProps) => {
+  const translate = useTranslations();
   const router = useRouter();
   return (
     <div

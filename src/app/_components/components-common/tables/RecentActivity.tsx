@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { translate } from "@/lib/utils/translate";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -13,6 +12,7 @@ import Loading from "@/app/vendor/loading";
 import CollaborationTable from "../../pages/vendor-collobration/collaboration-table";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import { useTranslations } from "next-intl";
 
 // Sample Data
 interface IRequestCancel {
@@ -22,6 +22,7 @@ interface IRequestCancel {
 }
 
 export default function RecentActivities() {
+  const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const { account: user } = useAuthStore();
@@ -159,7 +160,7 @@ export default function RecentActivities() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="md:text-xl text-base text-text font-semibold">
           {" "}
-          {translate("Recent_Collobration")}
+          {translate("Recent_Collaboration")}
         </h2>
         <Button
           onClick={() => router?.push(`/vendor/creators/collaboration`)}

@@ -1,8 +1,7 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import StatesCardGraph from "./StatesCardGraph";
-import { translate } from "@/lib/utils/translate";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export const StatsCard = ({
   title,
@@ -10,7 +9,7 @@ export const StatsCard = ({
   growth,
   borderColor,
   bgColor,
-  link
+  link,
 }: {
   title: string;
   value: number | string;
@@ -22,7 +21,9 @@ export const StatsCard = ({
   const router = useRouter();
   return (
     <Card
-      className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} ${link ? "cursor-pointer":""} rounded-2xl`}
+      className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} ${
+        link ? "cursor-pointer" : ""
+      } rounded-2xl`}
       onClick={() => link && router.push(link)}
     >
       <CardContent className="p-5 gap-2 flex flex-col justify-between h-full">
@@ -35,9 +36,7 @@ export const StatsCard = ({
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span
-            className="md:text-3xl text-lg font-medium text-text"
-          >
+          <span className="md:text-3xl text-lg font-medium text-text">
             {value}
           </span>
           <div className="w-20 hidden h-8">
@@ -50,6 +49,7 @@ export const StatsCard = ({
 };
 
 export default function StatesCards() {
+  const translate = useTranslations();
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 gap-4 rounded-[20px] w-full">
       <StatsCard

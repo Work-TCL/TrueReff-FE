@@ -1,11 +1,10 @@
 "use client";
 import Input from "@/app/_components/ui/form/Input";
 import React, { useEffect, useState } from "react";
-import { translate } from "@/lib/utils/translate";
-import { Button } from "@/components/ui/button";
 import { getCategories } from "@/lib/web-api/auth";
 import { useFormContext } from "react-hook-form";
 import { Camera, Pencil, User } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export interface ICategoryData {
   _id: string;
@@ -26,6 +25,7 @@ export default function StoreSetup({
   bannerPreview,
   profilePreview,
 }: IProps) {
+  const translate = useTranslations();
   const methods = useFormContext();
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);

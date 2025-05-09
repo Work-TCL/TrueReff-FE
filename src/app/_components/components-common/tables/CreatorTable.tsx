@@ -7,9 +7,9 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CustomTableCell } from "./CustomTableCell";
 import { CustomTableHead } from "./CustomTableHead";
 import { TablePagination } from "./Pagination";
-import { translate } from "@/lib/utils/translate";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { ImageOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 // Sample Data
 const creators = [
@@ -136,6 +136,7 @@ const creators = [
 ];
 
 export default function CreatorTable() {
+  const translate = useTranslations();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const totalPages = Math.ceil(creators.length / pageSize);

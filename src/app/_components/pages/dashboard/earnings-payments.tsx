@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 // Data Type
 interface ChartData {
@@ -87,6 +87,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 };
 
 const EarningsPayments: React.FC = () => {
+  const translate = useTranslations();
   return (
     <Card className="p-5 w-full bg-white rounded-xl">
       <div className="flex justify-between items-center mb-4">

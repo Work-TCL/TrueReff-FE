@@ -7,9 +7,10 @@ import BackButton from "@/app/_components/ui/back-button";
 import AuthTitle from "./components/auth-title";
 import AuthDescription from "./components/auth-desc";
 import EmailVerifyOTPForm from "./components/email-verify";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 export default function EmailVerifyOtpPage() {
+  const translate = useTranslations();
   const searchParams = useSearchParams(); // ✅ Correct way to access search params in a Client Component
   // Ensure safe access to search parameters
   const email = searchParams.get("email") || "";

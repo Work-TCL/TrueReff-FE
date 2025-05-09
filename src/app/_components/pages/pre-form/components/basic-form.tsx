@@ -1,12 +1,12 @@
 "use client";
 import { Button as ButtonOutline } from "@/components/ui/button";
 import Input from "@/app/_components/ui/form/Input";
-import { translate } from "@/lib/utils/translate";
 import React from "react";
 import { get } from "lodash";
 import { useFormContext } from "react-hook-form";
 import Select from "react-select";
 import { cities, indianStates } from "@/lib/utils/constants";
+import { useTranslations } from "next-intl";
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,
@@ -20,16 +20,17 @@ const customStyles = {
   }),
   options: (base: any) => ({
     ...base,
-    zIndex: 999
-  })
+    zIndex: 999,
+  }),
 };
 export default function BasicInfoForm({
   handleImageSelect,
-  handleOnSelect = () => { },
+  handleOnSelect = () => {},
   methods,
   formState,
   profilePreview,
 }: any) {
+  const translate = useTranslations();
   const {
     formState: { errors, touchedFields, submitCount },
   } = useFormContext();
@@ -87,19 +88,20 @@ export default function BasicInfoForm({
       </div>
       <div className="col-span-1">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">{"State"}<span className="text-red-500">*</span></span>
+          <span className="mb-1 text-sm text-gray-500 font-semibold">
+            {"State"}
+            <span className="text-red-500">*</span>
+          </span>
           <Select
             styles={customStyles}
             value={[
               {
                 value: formState.state,
-                label: formState.state
-                  ? formState.state
-                  : "Select State",
+                label: formState.state ? formState.state : "Select State",
               },
             ]}
-            onChange={(value) => handleOnSelect(value?.value,"state")}
-            options={indianStates?.map(ele => ({ value: ele, label: ele }))}
+            onChange={(value) => handleOnSelect(value?.value, "state")}
+            options={indianStates?.map((ele) => ({ value: ele, label: ele }))}
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder="Select State"
           />
@@ -112,19 +114,27 @@ export default function BasicInfoForm({
       </div>
       <div className="col-span-1">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">{"City"}<span className="text-red-500">*</span></span>
+          <span className="mb-1 text-sm text-gray-500 font-semibold">
+            {"City"}
+            <span className="text-red-500">*</span>
+          </span>
           <Select
             styles={customStyles}
             value={[
               {
                 value: formState.city,
-                label: formState.city
-                  ? formState.city
-                  : "Select City",
+                label: formState.city ? formState.city : "Select City",
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "city")}
-            options={formState.state ? cities[formState?.state]?.map((ele: string) => ({ value: ele, label: ele })) : []}
+            options={
+              formState.state
+                ? cities[formState?.state]?.map((ele: string) => ({
+                    value: ele,
+                    label: ele,
+                  }))
+                : []
+            }
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder="Select State"
           />

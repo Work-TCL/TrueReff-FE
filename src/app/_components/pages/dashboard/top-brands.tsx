@@ -2,14 +2,15 @@
 
 import Loading from "@/app/creator/loading";
 import { ITopBrands } from "@/lib/types-api/creator-dashboard";
-import { translate } from "@/lib/utils/translate";
 import React from "react";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import { useTranslations } from "next-intl";
 interface ITopBrandsProps {
   data: ITopBrands[];
-  loading: boolean
+  loading: boolean;
 }
-const TopBrands = ({data,loading}:ITopBrandsProps) => {
+const TopBrands = ({ data, loading }: ITopBrandsProps) => {
+  const translate = useTranslations();
   return (
     <div className="flex flex-col flex-1 w-full p-4 bg-white rounded-2xl">
       <div className="flex justify-between items-center mb-3">
@@ -33,32 +34,41 @@ const TopBrands = ({data,loading}:ITopBrandsProps) => {
           </div>
         </div>
       </div>
-      {loading ? <Loading height="fit"/> : data?.length > 0 ? <ul className="space-y-4">
-        {data.map((item:ITopBrands, index:any) => (
-          <li key={index} className="flex flex-col">
-            <div className="flex justify-between items-center gap-2">
-              <span className="text-font-grey">{item.business_name}<span className="text-secondary">({item.activeCollaborationCount})</span></span>
-              <div className="flex gap-3">
-                <span className="text-primary">{item.percentage}%</span>
+      {loading ? (
+        <Loading height="fit" />
+      ) : data?.length > 0 ? (
+        <ul className="space-y-4">
+          {data.map((item: ITopBrands, index: any) => (
+            <li key={index} className="flex flex-col">
+              <div className="flex justify-between items-center gap-2">
+                <span className="text-font-grey">
+                  {item.business_name}
+                  <span className="text-secondary">
+                    ({item.activeCollaborationCount})
+                  </span>
+                </span>
+                <div className="flex gap-3">
+                  <span className="text-primary">{item.percentage}%</span>
+                </div>
               </div>
-            </div>
-            {/* Progress Bar */}
-            <div className="relative flex-grow h-[6px] bg-stroke rounded-full overflow-hidden">
-              <div
-                className="absolute top-0 left-0 h-full bg-secondary rounded-full"
-                style={{ width: `${item.percentage}%` }}
-              ></div>
-            </div>
-          </li>
-        ))}
-      </ul>:<div className="space-y-4 flex justify-center items-center h-full">
-                <EmptyPlaceHolder
-                  title={"No_Top_Brands_Yet"}
-                  description={
-                    "Top_brands_will_be_displayed_here_once_activity_data_is_available._Encourage_users_to_participate_to_see_leaderboard_ranking."
-                  }
-                />
-              </div>}
+              {/* Progress Bar */}
+              <div className="relative flex-grow h-[6px] bg-stroke rounded-full overflow-hidden">
+                <div
+                  className="absolute top-0 left-0 h-full bg-secondary rounded-full"
+                  style={{ width: `${item.percentage}%` }}
+                ></div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="space-y-4 flex justify-center items-center h-full">
+          <EmptyPlaceHolder
+            title={translate("No_Top_Brands_Yet")}
+            description={translate("No_Top_Brands_Yet_dec")}
+          />
+        </div>
+      )}
     </div>
   );
 };

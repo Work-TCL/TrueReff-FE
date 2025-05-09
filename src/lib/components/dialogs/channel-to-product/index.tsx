@@ -11,7 +11,6 @@ import {
   profileUpdateSchema,
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { translate } from "@/lib/utils/translate";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
 import Input, { inputStyle } from "@/app/_components/ui/form/Input";
 import ButtonSubmit from "@/app/_components/ui/button";
@@ -20,6 +19,7 @@ import { ICategoryData } from "@/lib/types-api/auth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import axios from "@/lib/web-api/axios";
+import { useTranslations } from "next-intl";
 
 interface IProduct {
   productId: string;
@@ -43,6 +43,7 @@ export default function ChannleToProduct({
   product,
   onClose = () => {},
 }: IProps) {
+  const translate = useTranslations();
   const [loading, setLoading] = useState(false);
   const schema = channlesToProduct;
   const methods = useForm<IChannelsToProduct>({

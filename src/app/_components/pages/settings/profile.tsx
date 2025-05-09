@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { translate } from "../../../../lib/utils/translate";
 import EditProfile from "@/app/_components/components-common/dialogs/edit-profile";
 import AddressesProfile from "./components/addresses";
 import ContactsProfile from "./components/contacts";
 import { getProfileAPI } from "@/lib/web-api/user";
 import Loader from "../../components-common/layout/loader";
 import { useVendorStore } from "@/lib/store/vendor";
+import { useTranslations } from "next-intl";
 interface IProfile {
   business_name: string;
   company_email: string;
@@ -21,6 +21,7 @@ interface IProfile {
 }
 
 export default function Profile() {
+  const translate = useTranslations();
   const [profile, setProfile] = useState<IProfile>({
     business_name: "",
     company_email: "",

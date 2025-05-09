@@ -1,10 +1,10 @@
 "use client";
-
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const DonutChart: React.FC = () => {
+  const translate = useTranslations();
   const data = [
     { name: translate("Most_selling_products"), value: 76, color: "#BEDBFC" },
     { name: translate("Low-Performing_products"), value: 24, color: "#FED6AF" },

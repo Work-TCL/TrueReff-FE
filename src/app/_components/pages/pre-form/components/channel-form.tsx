@@ -1,9 +1,8 @@
 "use client";
 import Input from "@/app/_components/ui/form/Input";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import MultiSelectPreForm from "../../../ui/form/multiSelectPreForm";
-import { translate } from "@/lib/utils/translate";
 const Options = [
   {
     label: "Flipkart",
@@ -19,6 +18,7 @@ const Options = [
   },
 ];
 export default function ChannelForm() {
+  const translate = useTranslations();
   const methods = useFormContext();
 
   return (

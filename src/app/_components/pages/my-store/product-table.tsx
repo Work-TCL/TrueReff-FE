@@ -1,7 +1,6 @@
 "use client";
 import React, { ReactElement } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { translate } from "@/lib/utils/translate";
 import { useRouter } from "next/navigation";
 import { ImageOff } from "lucide-react";
 import { IProduct } from "./list";
@@ -9,6 +8,7 @@ import Button from "../../ui/button";
 import DataTable from "../../components-common/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { useTranslations } from "next-intl";
 function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -29,6 +29,7 @@ export default function BrandProductTable({
   type = "table",
   CardComponent,
 }: IProductTableProps) {
+  const translate = useTranslations();
   const router = useRouter();
   const columns: ColumnDef<IProduct>[] = [
     {

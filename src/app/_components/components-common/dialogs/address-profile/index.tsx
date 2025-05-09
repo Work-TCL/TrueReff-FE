@@ -2,7 +2,7 @@
 import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
 import EditAddressVendorForm from "./vendor-edit";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 export default function EditAddressProfile({
   address,
@@ -10,6 +10,7 @@ export default function EditAddressProfile({
   onClose = () => {},
   open = false,
 }: any) {
+  const translate = useTranslations();
   return (
     <DialogLayout
       open={Boolean(open)}

@@ -3,9 +3,9 @@ import React from "react";
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
 import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { translate } from "@/lib/utils/translate";
 import { EmptyPlaceholder } from "./empty-place-holder";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { useTranslations } from "next-intl";
 
 export interface Column<T> {
   key: keyof T | string;
@@ -28,6 +28,7 @@ export function DynamicTable<T>({
   data,
   emptyText,
 }: DynamicTableProps<T>) {
+  const translate = useTranslations();
   return (
     <div className="overflow-hidden relative flex flex-col flex-1">
       {data.length > 0 && (
@@ -39,7 +40,7 @@ export function DynamicTable<T>({
                   key={idx}
                   className={`sticky top-0 z-10 ${col.className}`}
                 >
-                  {translate(col.label)}
+                  {col.label}
                 </CustomTableHead>
               ))}
             </TableRow>
@@ -66,12 +67,11 @@ export function DynamicTable<T>({
                 <td colSpan={columns.length}>
                   <EmptyPlaceholder
                     title={
-                      emptyText?.title ??
-                      translate("No_Products_Available")
+                      emptyText?.title ?? translate("No_Products_Available")
                     }
                     description={
                       emptyText?.description ??
-                      translate("It seems there are currently no products to display. Please check back later.")
+                      translate("No_Products_Available_Description")
                     }
                   />
                 </td>
@@ -85,7 +85,7 @@ export function DynamicTable<T>({
           title={emptyText?.title ?? translate("No_Products_Available")}
           description={
             emptyText?.description ??
-            translate("It seems there are currently no products to display. Please check back later.")
+            translate("No_Products_Available_Description")
           }
         />
       ) : null}

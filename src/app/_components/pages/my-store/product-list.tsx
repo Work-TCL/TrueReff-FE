@@ -11,8 +11,8 @@ import { Input } from "@/components/ui/input";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import { FaSlidersH } from "react-icons/fa";
-import { translate } from "@/lib/utils/translate";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { useTranslations } from "next-intl";
 
 interface IProducts {
   productImage: string;
@@ -119,6 +119,7 @@ const products: IProducts[] = [
 ];
 
 export default function ProductList() {
+  const translate = useTranslations();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const totalPages = Math.ceil(products.length / pageSize);

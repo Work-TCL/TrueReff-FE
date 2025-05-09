@@ -11,7 +11,6 @@ import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
-import { translate } from "@/lib/utils/translate";
 import { IPostSignupRequest, IPostSignupResponse } from "@/lib/types-api/auth";
 import {
   Select,
@@ -20,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslations } from "next-intl";
 interface IRedirectPaths {
   [key: string]: string;
 }
@@ -30,6 +30,7 @@ const redirectPaths: IRedirectPaths = {
 };
 
 export default function RegisterForm() {
+  const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [userType, setUserType] = useState("");
@@ -49,7 +50,7 @@ export default function RegisterForm() {
       ("use server");
       const payload: IPostSignupRequest = {
         email: data?.email,
-        password: data.password
+        password: data.password,
       };
       const response: IPostSignupResponse = await signUpAPI(payload);
 

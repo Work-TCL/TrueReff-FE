@@ -11,7 +11,6 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
@@ -19,6 +18,7 @@ import axios from "@/lib/web-api/axios";
 import Loading from "@/app/vendor/loading";
 import CommonBreadcrumb from "@/app/_components/components-common/breadcrumb-links";
 import NotFound from "@/app/_components/components-common/404";
+import { useTranslations } from "next-intl";
 
 interface ICategory {
   _id: string;
@@ -92,6 +92,7 @@ type ViewProductDetailProps = {
 export default function ViewProductDetail({
   isFromPublic,
 }: ViewProductDetailProps) {
+  const translate = useTranslations();
   const pathName = usePathname();
   const { account } = useAuthStore();
   const { creator } = useCreatorStore();
@@ -182,10 +183,14 @@ export default function ViewProductDetail({
     setLoading(true);
     try {
       const response = await axios.get(
-        pathName.includes("/creators/") ? `/auth/creator-store/product/${productId}`:`/product/${productId}`
+        pathName.includes("/creators/")
+          ? `/auth/creator-store/product/${productId}`
+          : `/product/${productId}`
       );
 
-      const product: any = pathName.includes("/creators/") ? response?.data?.data : response?.data?.data?.data;
+      const product: any = pathName.includes("/creators/")
+        ? response?.data?.data
+        : response?.data?.data?.data;
       if (product) {
         const images = product.media;
         // ✅ Update product state
@@ -253,7 +258,7 @@ export default function ViewProductDetail({
     }
   }, [productId]);
   useEffect(() => {
-    if (!pathName.includes("/creators/") && creator?.creatorId || creatorId) {
+    if ((!pathName.includes("/creators/") && creator?.creatorId) || creatorId) {
       fetchProductCollaborationStatus();
     }
   }, [creator?.creatorId]);
@@ -341,7 +346,8 @@ export default function ViewProductDetail({
               ]}
             />
 
-            {(!pathName.includes("/creators/") && creator?.creatorId || creatorId) && (
+            {((!pathName.includes("/creators/") && creator?.creatorId) ||
+              creatorId) && (
               <Button
                 disabled={
                   collaborationStatus === "REQUESTED" ||
@@ -351,7 +357,7 @@ export default function ViewProductDetail({
                 className={`${buttonColor[collaborationStatus]} text-white ml-auto`}
                 onClick={() => handleButtonClick(collaborationStatus)}
               >
-                {statusText[collaborationStatus]}
+                {translate(statusText[collaborationStatus]?.replace(/ /g, "_"))}
               </Button>
             )}
             {/* {(pathName.includes("/creators/")) && (

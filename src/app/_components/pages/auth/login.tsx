@@ -4,9 +4,10 @@ import HeaderAuth from "./components/header-auth";
 import Link from "next/link";
 import LoginForm from "./components/login-form";
 import SocialAuth from "./components/social-auth";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
+  const translate = useTranslations();
   return (
     <AuthLayoutPage>
       <div className="flex flex-col justify-center h-full w-full mx-auto max-w-lg min-h-fit">

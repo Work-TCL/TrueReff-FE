@@ -1,9 +1,9 @@
 "use client";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
-import { translate } from "@/lib/utils/translate";
 import { ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { useTranslations } from "next-intl";
 export interface ICategory {
   _id: string;
   name: string;
@@ -52,6 +52,7 @@ const CreatorCard = ({
   item: ICreator;
   handleCollaborateNow: (creatorId: string) => void;
 }) => {
+  const translate = useTranslations();
   const router = useRouter();
   return (
     <div
@@ -91,9 +92,7 @@ const CreatorCard = ({
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
             className="line-clamp-none truncate text-xs sm:text-sm"
-            text={`${translate("Categories")} : ${
-              creator.categories || "Uncategorized"
-            }`}
+            text={`${translate("Categories")} : ${creator.categories || "-"}`}
           />
         </div>
         -

@@ -16,7 +16,6 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { venderRegister } from "@/lib/web-api/auth";
 import { useRouter } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
 import {
   IPostVendorRegisterRequest,
   IPostVendorRegisterResponse,
@@ -24,6 +23,7 @@ import {
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
 import { fileUploadLimitValidator } from "@/lib/utils/constants";
+import { useTranslations } from "next-intl";
 
 let allTabs: {
   id: string;
@@ -53,7 +53,8 @@ const TABS_STATUS = {
   OMNI_CHANNEL: 2,
 };
 
-export default function   PreFormPage() {
+export default function PreFormPage() {
+  const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { setVendorData } = useVendorStore();
@@ -61,9 +62,11 @@ export default function   PreFormPage() {
   const [profilePreview, setProfilePreview] = useState<string>("");
   const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
   const initialState = {
-    state:"",city:"",channels:[]
-  }
-  const [formState,setFormState] = useState(initialState);
+    state: "",
+    city: "",
+    channels: [],
+  };
+  const [formState, setFormState] = useState(initialState);
   const methods = useForm<IPreFormSchema>({
     defaultValues: {
       business_name: "",
@@ -84,8 +87,8 @@ export default function   PreFormPage() {
       gst_number: "",
       type_of_business: "",
       website: "",
-      state:"",
-      city:"",
+      state: "",
+      city: "",
       omni_channels: [],
     },
     resolver: yupResolver(preFormSchema),
@@ -109,7 +112,7 @@ export default function   PreFormPage() {
           : [],
         gst_number: data.gst_number,
         omni_channels: Array.isArray(data.omni_channels)
-          ? data.omni_channels.map(ele => ele?.value)
+          ? data.omni_channels.map((ele) => ele?.value)
           : [],
         type_of_business: data.type_of_business,
         website: data.website,
@@ -163,7 +166,6 @@ export default function   PreFormPage() {
           "city",
           "type_of_business",
         ];
-        
 
         const isValid = await methods.trigger(basicInfoField);
         const response: any = await axios.get(
@@ -206,20 +208,20 @@ export default function   PreFormPage() {
     setProfilePreview(previewURL);
   };
 
-  const handleOnSelect = (value:any,name: any) => {
-    setFormState({...formState,[name]:value})
-    if(name === 'state'){
-      setFormState({...formState,[name]:value,city:""})
+  const handleOnSelect = (value: any, name: any) => {
+    setFormState({ ...formState, [name]: value });
+    if (name === "state") {
+      setFormState({ ...formState, [name]: value, city: "" });
       methods.setValue("city", "");
     }
     methods.setValue(name, value);
-    if(value){
-      methods.setError(name,{
+    if (value) {
+      methods.setError(name, {
         type: "manual",
         message: "",
-      })
+      });
     }
-  }
+  };
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">

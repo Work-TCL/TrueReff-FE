@@ -1,25 +1,19 @@
 "use client";
 import Loader from "@/app/_components/components-common/layout/loader";
 import Button from "@/app/_components/ui/button";
-import AnchorButton from "@/app/_components/ui/button/variant";
 import Input from "@/app/_components/ui/form/Input";
 import { useCreatorStore } from "@/lib/store/creator";
-import {
-  IConnectYoutubeChannelResponse,
-  IGetYTConnectChannelResponse,
-} from "@/lib/types-api/creator";
+import { IGetYTConnectChannelResponse } from "@/lib/types-api/creator";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
-import { translate } from "@/lib/utils/translate";
-import {
-  connectYoutubeChannel,
-  getConnectedChannel,
-} from "@/lib/web-api/creator";
+import { getConnectedChannel } from "@/lib/web-api/creator";
+import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import toast from "react-hot-toast";
 
 export default function ChannelsConnect() {
+  const translate = useTranslations();
   const methods = useForm();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
@@ -126,7 +120,7 @@ export default function ChannelsConnect() {
           </div>
           <div className="col-span-2 lg:col-span-1">
             <Input
-              label="Account Name"
+              label={translate("Account_Name")}
               name="channels[0].account_name"
               type="text"
               placeholder="JohnDoe_Style"
@@ -137,7 +131,7 @@ export default function ChannelsConnect() {
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="w-full">
                 <Input
-                  label="Handle Name"
+                  label={translate("Handle_Name")}
                   name="channels[0].handle_name"
                   type="text"
                   placeholder="@JohnDoe_Style"
@@ -164,7 +158,7 @@ export default function ChannelsConnect() {
           </div>
           <div className="col-span-2">
             <Input
-              label="Account Link"
+              label={translate("Account_Link")}
               name="channels[0].account_link"
               type="text"
               placeholder="https://instagram.com/JohnDoe_Style"
@@ -198,7 +192,7 @@ export default function ChannelsConnect() {
           </div>
           <div className="col-span-2 lg:col-span-1">
             <Input
-              label="Account Name"
+              label={translate("Account_Name")}
               name="channels[1].account_name"
               type="text"
               placeholder="John Doe Fashion"
@@ -209,7 +203,7 @@ export default function ChannelsConnect() {
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="w-full">
                 <Input
-                  label="Handle Name"
+                  label={translate("Handle_Name")}
                   name="channels[1].handle_name"
                   disabled
                   type="text"
@@ -235,7 +229,7 @@ export default function ChannelsConnect() {
           </div>
           <div className="col-span-2">
             <Input
-              label="Account Link"
+              label={translate("Account_Link")}
               name="channels[1].account_link"
               type="text"
               disabled

@@ -1,5 +1,4 @@
 "use client";
-
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Card } from "@/components/ui/card";
 import {
@@ -9,7 +8,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 // Data Type
 interface ChartData {
@@ -87,6 +86,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 };
 
 const VendorActivity: React.FC = () => {
+  const translate = useTranslations();
   return (
     <Card className="p-5 w-full bg-white rounded-xl h-full flex-1">
       <div className="flex justify-between items-center mb-4">

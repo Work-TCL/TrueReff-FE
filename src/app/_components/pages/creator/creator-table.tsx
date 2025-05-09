@@ -1,18 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
 import { IChannel, ICreator } from "./list";
 import { useRouter } from "next/navigation";
-import Loader from "../../components-common/layout/loader";
 import { useTranslations } from "next-intl";
-import CollaborateRequest from "../../components-common/dialogs/collaborate-creator-form";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
-import { ImageOff } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
 function formatNumber(num: number = 0) {

@@ -2,13 +2,12 @@ import Link from "next/link";
 import React from "react";
 import HeaderAuth from "./components/header-auth";
 import AuthLayoutPage from "./auth-layout";
-import LoginForm from "./components/login-form";
 import RegisterForm from "./components/register-form";
-import LightButton from "@/app/_components/ui/button/variant/light-button";
 import SocialAuth from "./components/social-auth";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 export default function RegisterPage() {
+  const translate = useTranslations();
   return (
     <AuthLayoutPage authImage="sign-up-image.svg">
       <div className="flex flex-col justify-center h-full w-full mx-auto max-w-lg min-h-fit">

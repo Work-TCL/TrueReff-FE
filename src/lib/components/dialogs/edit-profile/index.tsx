@@ -9,15 +9,16 @@ import {
   profileUpdateSchema,
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { translate } from "@/lib/utils/translate";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 import axios from "@/lib/web-api/axios";
+import { useTranslations } from "next-intl";
 
 const key = "profile";
 
 export default function EditProfile({ profile }: any) {
+  const translate = useTranslations();
   const router = useRouter();
   const auth = useSearchParams().get("edit");
   const dialogPath = auth === key;

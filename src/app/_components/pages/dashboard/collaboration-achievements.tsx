@@ -3,10 +3,10 @@
 import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle } from "lucide-react";
-import { translate } from "@/lib/utils/translate";
 import { CustomTableHead } from "../../components-common/tables/CustomTableHead";
 import { CustomTableCell } from "../../components-common/tables/CustomTableCell";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import { useTranslations } from "next-intl";
 
 // Sample Data
 const products = [
@@ -21,6 +21,7 @@ const products = [
   { brand: "Omega", product: "Seamaster", status: "Completed", bid: "$1200" },
 ];
 export default function CollaborationAchievements() {
+  const translate = useTranslations();
   return (
     <div className="p-4 bg-white shadow-sm rounded-[20px]">
       <div className="flex justify-between items-center mb-4">

@@ -1,23 +1,15 @@
 "use client";
-import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
 import ProductTable from "./product-table";
 import Loading from "@/app/vendor/loading";
-import { Button } from "@/components/ui/button";
-import { FaSlidersH } from "react-icons/fa";
 import Loader from "../../components-common/layout/loader";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
-import { getCategories } from "@/lib/web-api/auth";
-import Select from "react-select";
-import { Search } from "lucide-react";
 import ProductCard from "./product-card";
 import { ViewToggle } from "../../components-common/view-toggle";
 import CategorySubCategorySelect from "../../components-common/category-dropdowns";
@@ -234,7 +226,7 @@ export default function ProductList() {
                 handleUpdateProduct={handleUpdateProduct}
                 type={viewMode}
                 CardComponent={(item) => (
-                  <div key={item?._id} className="flex w-full h-fit">
+                  <div key={item?._id} className="flex w-full h-fit relative">
                     <ProductCard
                       key={item?.id}
                       item={item}
@@ -256,7 +248,9 @@ export default function ProductList() {
           ) : (
             <EmptyPlaceHolder
               title={"No_Products_Available"}
-              description={"It seems there are currently no products to display. Please check back later."}
+              description={
+                "It seems there are currently no products to display. Please check back later."
+              }
             />
           )}
         </>

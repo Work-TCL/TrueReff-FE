@@ -1,12 +1,10 @@
 "use client";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { translate } from "@/lib/utils/translate";
 import React from "react";
 import {
   LineChart,
@@ -19,6 +17,7 @@ import {
   TooltipProps,
 } from "recharts";
 import Button from "../../ui/button";
+import { useTranslations } from "next-intl";
 
 const data = [
   { month: "Jan", revenue: 120000, profit: 80000 },
@@ -52,6 +51,7 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
 };
 
 export default function PerformanceSummaryChart() {
+  const translate = useTranslations();
   return (
     <div className="w-full h-[310px] bg-white p-5 rounded-20">
       <div className="flex md:flex-row flex-col justify-between items-center mb-3">

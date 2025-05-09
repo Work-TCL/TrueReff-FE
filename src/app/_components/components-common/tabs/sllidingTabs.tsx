@@ -1,5 +1,6 @@
+"use client";
 import { cn } from "@sohanemon/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 interface ISlidingTabBar {
   tabs: {
@@ -19,9 +20,7 @@ export const SlidingTabBar = ({
   setActiveTabIndex,
 }: ISlidingTabBar) => {
   return (
-    <div
-      className={`relative flex`}
-    >
+    <div className={`relative flex`}>
       <span
         className="absolute bottom-0 top-0 -z-10 flex overflow-hidden  py-2 transition-all duration-300"
         style={{

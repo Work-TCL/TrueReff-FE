@@ -10,10 +10,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { translate } from "../../../../lib/utils/translate";
 import CreatorProfile from "./creator-profile";
+import { useTranslations } from "next-intl";
 
 export default function ViewCreatorDetail() {
+  const translate = useTranslations();
   return (
     <div className="flex flex-col gap-4 p-6 w-full">
       <div className="text-[20px] text-500">

@@ -1,10 +1,10 @@
 "use client";
 import Input from "@/app/_components/ui/form/Input";
 import React, { useEffect, useState } from "react";
-import { translate } from "@/lib/utils/translate";
 import { Button } from "@/components/ui/button";
 import { getCategories } from "@/lib/web-api/auth";
 import { useFormContext } from "react-hook-form";
+import { useTranslations } from "next-intl";
 export interface ICategoryData {
   _id: string;
   name: string;
@@ -23,6 +23,7 @@ export default function ProfileSetup({
   bannerPreview,
   profilePreview,
 }: IProps) {
+  const translate = useTranslations();
   const methods = useFormContext();
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
@@ -35,7 +36,7 @@ export default function ProfileSetup({
       let data = response?.data?.data;
       setCategories(data);
       setParentCategory(data?.filter((ele) => ele?.parentId === null));
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -137,7 +138,9 @@ export default function ProfileSetup({
         />
       </div>
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
-        <div className="text-sm font-medium text-gray-500">{translate("Profile_Image")}</div>
+        <div className="text-sm font-medium text-gray-500">
+          {translate("Profile_Image")}
+        </div>
         <div className="flex justify-center items-center border rounded-lg p-5">
           <div className="flex flex-col w-full gap-4 relative">
             <div className="flex justify-center">
@@ -171,7 +174,9 @@ export default function ProfileSetup({
         </div>
       </div>
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
-        <div className="text-sm font-medium text-gray-500">{translate("Banner_Image")}</div>
+        <div className="text-sm font-medium text-gray-500">
+          {translate("Banner_Image")}
+        </div>
         <div className="flex flex-col gap-1">
           <div
             className="flex justify-center items-center border border-dashed rounded-lg p-5 relative"
@@ -195,9 +200,7 @@ export default function ProfileSetup({
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 onChange={(e) => handleImageSelect(e, "banner")}
               />
-              <div className="text-[#656466]">
-                {translate("Upload_Banner")}
-              </div>
+              <div className="text-[#656466]">{translate("Upload_Banner")}</div>
               {/* <div className="text-[12px] text-[#89858C]">
                 {translate("Upload_Documents_INFO")}
               </div> */}

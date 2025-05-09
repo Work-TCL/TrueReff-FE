@@ -1,21 +1,22 @@
-import { translate } from "@/lib/utils/translate";
 import { cn } from "@sohanemon/utils";
 import { ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import React from "react";
 
 interface IProfileCompletionCard {
   progress?: number;
   className?: string;
-  gradientId?: string
+  gradientId?: string;
 }
 
 const ProfileCompletionCard = ({
   progress = 0,
   className,
-  gradientId = "gradient"
+  gradientId = "gradient",
 }: IProfileCompletionCard) => {
-  const router = useRouter()
+  const translate = useTranslations();
+  const router = useRouter();
   const getCompleteProfileMessage = () => {
     if (progress < 25) return translate("Complete_your_profile");
     else if (progress >= 25 && progress < 55)
@@ -24,16 +25,15 @@ const ProfileCompletionCard = ({
   };
 
   const getCompleteProfileDescription = () => {
-    if (progress < 25)
-      return translate("Complete_your_profile_Description");
+    if (progress < 25) return translate("Complete_your_profile_Description");
     else if (progress >= 25 && progress < 55)
       return translate("Connect_your_Youtube_Channel_or_Instagram_account");
     else return translate("Complete_your_Subscription_plan");
   };
-  
+
   const handleCompleteProfile = () => {
-    router.push('/creator/settings')
-  }
+    router.push("/creator/settings");
+  };
   return (
     <div
       className={cn(
@@ -41,35 +41,38 @@ const ProfileCompletionCard = ({
         className
       )}
     >
-      <div className="absolute top-4 right-4 md:hidden cursor-pointer" onClick={handleCompleteProfile}>
+      <div
+        className="absolute top-4 right-4 md:hidden cursor-pointer"
+        onClick={handleCompleteProfile}
+      >
         <ChevronRight className="w-5 h-5 text-gray-800" />
       </div>
       {/* Progress circle */}
       <div className="relative w-20 h-20 md:w-24 md:h-24 shrink-0 mx-auto md:mx-0">
-      <svg
-            className="absolute top-0 left-0 w-full h-full"
-            viewBox="0 0 100 100"
-          >
-            <circle
-              cx="50"
-              cy="50"
-              r="40"
-              strokeWidth="10"
-              fill="transparent"
-              stroke="#E5E7EB"
-            />
-            <circle
-              cx="50"
-              cy="50"
-              r="40"
-              strokeWidth="10"
-              fill="transparent"
-              stroke={`url(#${gradientId})`}
-              strokeDasharray={251}
-              strokeDashoffset={251 - (progress / 100) * 251}
-              strokeLinecap="round"
-              transform="rotate(-90 50 50)"
-            />
+        <svg
+          className="absolute top-0 left-0 w-full h-full"
+          viewBox="0 0 100 100"
+        >
+          <circle
+            cx="50"
+            cy="50"
+            r="40"
+            strokeWidth="10"
+            fill="transparent"
+            stroke="#E5E7EB"
+          />
+          <circle
+            cx="50"
+            cy="50"
+            r="40"
+            strokeWidth="10"
+            fill="transparent"
+            stroke={`url(#${gradientId})`}
+            strokeDasharray={251}
+            strokeDashoffset={251 - (progress / 100) * 251}
+            strokeLinecap="round"
+            transform="rotate(-90 50 50)"
+          />
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#9B5FE9" />
@@ -95,7 +98,10 @@ const ProfileCompletionCard = ({
       </div>
 
       {/* Chevron Icon on desktop only */}
-      <div className="hidden md:flex items-center justify-center w-10 h-10 cursor-pointer"  onClick={handleCompleteProfile}>
+      <div
+        className="hidden md:flex items-center justify-center w-10 h-10 cursor-pointer"
+        onClick={handleCompleteProfile}
+      >
         <ChevronRight className="w-6 h-6 text-gray-800" />
       </div>
     </div>

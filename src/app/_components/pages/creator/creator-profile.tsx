@@ -2,8 +2,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Facebook, Instagram, Youtube, Link, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function CreatorProfile() {
+  const translate = useTranslations();
   return (
     <Card className="bg-white rounded-[20PX] shadow-lg overflow-hidden border border-gray-200 ">
       <div className="relative w-full h-40 md:h-48 bg-blue-100 rounded-b-[20px]">

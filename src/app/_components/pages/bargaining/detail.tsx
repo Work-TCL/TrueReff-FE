@@ -2,18 +2,15 @@
 import React, { useState, useEffect } from "react";
 import Button from "@/app/_components/ui/button";
 import { useAuthStore } from "@/lib/store/auth-user";
-import dynamic from "next/dynamic";
-import { translate } from "@/lib/utils/translate";
 import { FaEdit, FaRegCalendarAlt } from "react-icons/fa";
 import DatePicker from "react-datepicker";
-import { Icon, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import ConfirmDialog from "../settings/components/confirmDialog";
 import "react-datepicker/dist/react-datepicker.css";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { toastMessage } from "@/lib/utils/toast-message";
 import axios from "@/lib/web-api/axios";
 import { useParams } from "next/navigation";
-import { vendored } from "next/dist/server/route-modules/app-page/module.compiled";
 
 export default function BargainingDetailView() {
   const params = useParams();

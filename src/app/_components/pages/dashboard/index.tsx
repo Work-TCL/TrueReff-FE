@@ -1,10 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  StatsCard,
-} from "../../components-common/states/StatesCard";
+import { StatsCard } from "../../components-common/states/StatesCard";
 import VendorActivity from "../../components-common/charts/VendorActivityChart";
-import { translate } from "@/lib/utils/translate";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import ProfileCompletionCard from "../../components-common/charts/profileComplete";
 import PerformanceSummaryChartDashBoard from "../../components-common/charts/performanceSummary";
@@ -12,13 +9,21 @@ import TrendingInsightsDiscoverability from "../../components-common/charts/tren
 import { getCreatorProgress } from "@/lib/web-api/auth";
 import { toastMessage } from "@/lib/utils/toast-message";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { ICreatorStateInfo, ITopBrands } from "@/lib/types-api/creator-dashboard";
-import { getCreatorStatesInfo, getTopPerformingBrand } from "@/lib/web-api/creator-dashboard";
+import {
+  ICreatorStateInfo,
+  ITopBrands,
+} from "@/lib/types-api/creator-dashboard";
+import {
+  getCreatorStatesInfo,
+  getTopPerformingBrand,
+} from "@/lib/web-api/creator-dashboard";
 import TopBrands from "./top-brands";
 import RecentCollaborations from "./recent-collaborations";
 import Loader from "../../components-common/layout/loader";
+import { useTranslations } from "next-intl";
 
 export default function Dashboard() {
+  const translate = useTranslations();
   const lg = useMediaQuery("(min-width: 1024px)");
   const [creatorDetails, setCreatorDetails] = useState<any>({ completed: 0 });
   const initialStateInfo = {
@@ -27,9 +32,10 @@ export default function Dashboard() {
     activeCampaigns: 0,
     last7DaysVendors: 0,
     revenue: 0,
-    commission:0
+    commission: 0,
   };
-  const [statesInfo, setStatesInfo] = useState<ICreatorStateInfo>(initialStateInfo);
+  const [statesInfo, setStatesInfo] =
+    useState<ICreatorStateInfo>(initialStateInfo);
   const [brands, setBrans] = useState<ITopBrands[]>([]);
   const [mainLoading, setMailLoading] = useState<boolean>(true);
   const [brandLoading, setBrandLoading] = useState<boolean>(true);
@@ -37,13 +43,13 @@ export default function Dashboard() {
     try {
       const creator = await getCreatorProgress();
       setCreatorDetails(creator);
-    } catch (e) { }
+    } catch (e) {}
   };
   useEffect(() => {
     getCreator();
     fetchStatesInfo();
     fetchTopPerformingBrand();
-  }, [])
+  }, []);
   const fetchStatesInfo = async () => {
     setMailLoading(true);
     try {
@@ -51,16 +57,16 @@ export default function Dashboard() {
       if (response) {
         setStatesInfo(response);
       } else {
-        setStatesInfo(initialStateInfo)
+        setStatesInfo(initialStateInfo);
       }
     } catch (error) {
       let errorMessage = await getErrorMessage(error);
       toastMessage.error(errorMessage);
-      setStatesInfo(initialStateInfo)
+      setStatesInfo(initialStateInfo);
     } finally {
       setMailLoading(false);
     }
-  }
+  };
   const fetchTopPerformingBrand = async () => {
     setBrandLoading(true);
     try {
@@ -68,19 +74,19 @@ export default function Dashboard() {
       if (response) {
         setBrans(response);
       } else {
-        setBrans([])
+        setBrans([]);
       }
     } catch (error) {
       let errorMessage = await getErrorMessage(error);
       toastMessage.error(errorMessage);
-      setBrans([])
+      setBrans([]);
     } finally {
       setBrandLoading(false);
     }
-  }
+  };
   return (
     <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
-      {mainLoading && <Loader/>}
+      {mainLoading && <Loader />}
       <div className="flex flex-col lg:flex-row w-full md:gap-6 gap-4">
         <div className="flex flex-col md:gap-6 gap-4 w-full lg:w-[60%]">
           {!lg && (
@@ -96,7 +102,7 @@ export default function Dashboard() {
               link="/creator/collaboration?status=ACTIVE"
             />
             <StatsCard
-              title={translate("Pending Collaborations")}
+              title={translate("Pending_Collaborations")}
               value={statesInfo.pendingCollaborations}
               growth={5}
               borderColor="border-[#EB815B]"
@@ -121,7 +127,7 @@ export default function Dashboard() {
           <PerformanceSummaryChartDashBoard />
         </div>
         <div className="flex flex-col gap-6 w-full lg:w-[40%]">
-        {lg && <ProfileCompletionCard progress={creatorDetails?.completed} />}
+          {lg && <ProfileCompletionCard progress={creatorDetails?.completed} />}
           <TopBrands data={brands} loading={brandLoading} />
         </div>
       </div>

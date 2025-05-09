@@ -10,12 +10,13 @@ import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 import { resetPasswordAPI } from "@/lib/web-api/auth";
 import { PiLockKey } from "react-icons/pi";
-import { translate } from "@/lib/utils/translate";
 import { IPostResetPasswordResponse } from "@/lib/types-api/auth";
+import { useTranslations } from "next-intl";
 
 export default function ResetPasswordForm() {
+  const translate = useTranslations();
   const searchParams = useSearchParams();
-  const email: string = searchParams.get("email") || '';
+  const email: string = searchParams.get("email") || "";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = resetPasswordSchema;

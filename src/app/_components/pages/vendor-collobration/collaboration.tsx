@@ -1,14 +1,8 @@
 "use client";
-
-import { Input } from "@/components/ui/input";
-import { Info, Search } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { translate } from "@/lib/utils/translate";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
 import Loading from "@/app/vendor/loading";
 import CollaborationTable from "./collaboration-table";
 import { useTranslations } from "next-intl";
@@ -17,7 +11,6 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
 import Loader from "../../components-common/layout/loader";
-import Select from "react-select";
 import { SearchInput } from "../../components-common/search-field";
 import SingleSelect from "../../components-common/single-select";
 export interface ICategory {

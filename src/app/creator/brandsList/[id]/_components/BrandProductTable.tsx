@@ -1,10 +1,6 @@
 "use client";
 import React from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { translate } from "@/lib/utils/translate";
 import { IBrand } from "./list";
 import { useRouter } from "next/navigation";
 import { UserPlus, XCircle } from "lucide-react";
@@ -13,6 +9,7 @@ import ToolTip from "@/app/_components/components-common/tool-tip";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/app/_components/components-common/data-table";
+import { useTranslations } from "next-intl";
 
 interface ICreatorTableProps {
   data: IBrand[];
@@ -24,6 +21,7 @@ export default function BrandProductTable({
   onView,
   onAction,
 }: ICreatorTableProps) {
+  const translate = useTranslations();
   const router = useRouter();
 
   const getRequestStatus = (brand: IBrand) => {

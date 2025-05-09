@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
@@ -12,8 +11,6 @@ import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/lib/store/auth-user";
 import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
-import { Search } from "lucide-react";
-import Select from "react-select";
 import SingleSelect from "../../components-common/single-select";
 import { SearchInput } from "../../components-common/search-field";
 import { useSearchParams } from "next/navigation";
@@ -87,7 +84,7 @@ export interface ICollaboration {
     business_name: string;
     profile_image: string;
   };
-  crmLink: string|null;
+  crmLink: string | null;
 }
 
 const customStyles = {
@@ -215,10 +212,9 @@ export default function CollaborationList() {
   );
 
   useEffect(() => {
-    if(dashboardStatus){
-      handleSelectStatus(dashboardStatus)
-    }
-    else fetchCollaboration(currentPage);
+    if (dashboardStatus) {
+      handleSelectStatus(dashboardStatus);
+    } else fetchCollaboration(currentPage);
   }, [dashboardStatus]);
   const debouncedSearch = useCallback(
     debounce((value: string, status: string) => {
@@ -241,7 +237,7 @@ export default function CollaborationList() {
     setSelectedStatus(selectedOption);
     fetchCollaboration(1, true, search, selectedOption);
   };
-  console.log("selectedStatus",selectedStatus)
+  console.log("selectedStatus", selectedStatus);
   return (
     <div className="p-4 rounded-lg flex flex-col gap-3 h-full">
       {loading ? (

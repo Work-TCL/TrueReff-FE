@@ -1,11 +1,10 @@
 "use client";
 import { ICreator } from "./list";
-import { FaInstagram, FaYoutube } from "react-icons/fa";
-import { translate } from "@/lib/utils/translate";
 import { ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 const CreatorCard = ({
   item: creator,
@@ -14,6 +13,7 @@ const CreatorCard = ({
   item: ICreator;
   handleCollaborateNow: (creatorId: string) => void;
 }) => {
+  const translate = useTranslations();
   const router = useRouter();
   return (
     <Card

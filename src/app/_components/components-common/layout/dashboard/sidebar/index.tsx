@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { translate } from "../../../../../../lib/utils/translate";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import { cn } from "@sohanemon/utils";
 import {
@@ -31,6 +30,7 @@ import {
 } from "@/app/_components/ui/tooltip/customTooltip";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { BsChevronDown } from "react-icons/bs";
+import { useTranslations } from "next-intl";
 
 type MenuItem = {
   label: string;
@@ -105,6 +105,7 @@ interface ISidebarProps {
   // role: string;
 }
 const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
+  const translate = useTranslations();
   const pathname = usePathname(); // Get the current path
   const { account: user } = useAuthStore();
 

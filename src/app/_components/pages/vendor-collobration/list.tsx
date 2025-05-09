@@ -1,19 +1,14 @@
 "use client";
-
-import { Input } from "@/components/ui/input";
-import { Info } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { translate } from "@/lib/utils/translate";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
 import CreatorTable from "./creator-table";
 import Loading from "@/app/vendor/loading";
 import axios from "@/lib/web-api/axios";
 import { SearchInput } from "../../components-common/search-field";
 import SingleSelect from "../../components-common/single-select";
+import { useTranslations } from "next-intl";
 export interface ICategory {
   _id: string;
   name: string;
@@ -58,6 +53,7 @@ const filterOption = [
   { value: "30", label: "Last 1 Month" },
 ];
 export default function CreatorList() {
+  const translate = useTranslations();
   const [loading, setLoading] = useState<boolean>(false);
   const [creators, setCreators] = useState<ICreator[]>([]);
   const [filter, setFilter] = useState<string>("5");

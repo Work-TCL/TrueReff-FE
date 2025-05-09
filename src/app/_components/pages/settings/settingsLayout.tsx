@@ -1,8 +1,8 @@
 "use client";
 import React, { ReactNode } from "react";
-import { translate } from "../../../../lib/utils/translate";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface ISettingsLayout {
   children: ReactNode;
@@ -12,7 +12,11 @@ interface ISettingsLayout {
   }[];
 }
 
-export default function SettingsLayout({ children, menus = [] }: ISettingsLayout) {
+export default function SettingsLayout({
+  children,
+  menus = [],
+}: ISettingsLayout) {
+  const translate = useTranslations();
   const pathname = usePathname();
   return (
     <div className="flex flex-col xl:flex-row p-4 xl:p-6 gap-4">

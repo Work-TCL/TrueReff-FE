@@ -1,8 +1,6 @@
 import React from "react";
-import ShopifyStoreConnects from "./components/shopify-connect-form";
-import { translate } from "@/lib/utils/translate";
-import ChannelCard from "../../components-common/channel-card";
 import { IChannel } from "@/lib/types-api/vendor";
+import { useTranslations } from "next-intl";
 
 interface IStoreConnects {
   channels: IChannel[];
@@ -17,6 +15,7 @@ export default function StoreConnects({
   ChannelCardComponent = () => {},
   StoreConnectsComponent = () => {},
 }: IStoreConnects) {
+  const translate = useTranslations();
   return (
     <div
       className={`flex flex-col w-full h-full rounded-xl p-4 gap-2 ${className}`}
@@ -28,9 +27,13 @@ export default function StoreConnects({
             : translate("store_integration")}
         </h2>
       </div>
-      { channels.length > 0 ? channels?.map((value, index) => {
-            return ChannelCardComponent && ChannelCardComponent(value);
-          }) : <StoreConnectsComponent />}
+      {channels.length > 0 ? (
+        channels?.map((value, index) => {
+          return ChannelCardComponent && ChannelCardComponent(value);
+        })
+      ) : (
+        <StoreConnectsComponent />
+      )}
     </div>
   );
 }

@@ -8,7 +8,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { translate } from "@/lib/utils/translate";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -20,6 +19,7 @@ import { IProductSchema, productSchema } from "@/lib/utils/validations";
 import Input from "../../../ui/form/Input";
 import AnchorButton from "../../../ui/button/variant";
 import axios from "@/lib/web-api/axios";
+import { useTranslations } from "next-intl";
 
 interface IAddProductDetailProps {
   type?: "view" | "edit" | "create";
@@ -42,6 +42,7 @@ interface IProduct {
 export default function CreateProduct({
   type = "view",
 }: IAddProductDetailProps) {
+  const translate = useTranslations();
   const params = useParams();
   const router = useRouter();
   const productId = params?.productId;
