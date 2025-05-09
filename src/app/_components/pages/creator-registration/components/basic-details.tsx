@@ -1,9 +1,10 @@
 "use client";
+import PhotoUpload from "@/app/_components/components-common/PhotoUpload";
 import Input from "@/app/_components/ui/form/Input";
-import { cities, gender, indianStates } from "@/lib/utils/constants";
+import { cities, fileUploadLimitValidator, gender, indianStates } from "@/lib/utils/constants";
 import { translate } from "@/lib/utils/translate";
 import { get } from "lodash";
-import React from "react";
+import React, { useState } from "react";
 import Select from "react-select";
 const customStyles = {
   placeholder: (base: any) => ({
@@ -12,14 +13,15 @@ const customStyles = {
     color: "#9CA3AF", // Tailwind slate-400
     fontWeight: 'normal',
   }),
-  control: (base: any,state:any) => {
-    console.log("state",state.getValue()[0]?.value === "")
+  control: (base: any, state: any) => {
+    console.log("state", state.getValue()[0]?.value === "")
     return ({
-    ...base,
-    height: "54px",
-    borderRadius: "8px",
-    color: state.getValue()[0]?.value === "" ? "#9CA3AF":"#000000"
-  })},
+      ...base,
+      height: "54px",
+      borderRadius: "8px",
+      color: state.getValue()[0]?.value === "" ? "#9CA3AF" : "#000000"
+    })
+  },
   menu: (base: any) => ({
     ...base,
     zIndex: 9999
@@ -28,9 +30,15 @@ const customStyles = {
 interface IBasicInfoFormProps {
   handleOnSelect: (value: any, name: any) => void;
   methods: any;
-  formState: { state: string, city: string;gender:string;dob: string; }
+  formState: { state: string, city: string; gender: string; dob: string; },
+  handleImageSelect: any;
+  profilePreview: any;
+  bannerPreview: any;
 }
-export default function BasicInfoForm({ handleOnSelect, methods, formState }: IBasicInfoFormProps) {
+
+export default function BasicInfoForm({ handleOnSelect, methods, formState, handleImageSelect, profilePreview,
+  bannerPreview }: IBasicInfoFormProps) {
+  
   return (
     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
       <div className="col-span-1">
@@ -38,7 +46,7 @@ export default function BasicInfoForm({ handleOnSelect, methods, formState }: IB
           label="Full Name"
           name="full_name"
           type="text"
-          placeholder="John Doe"
+          placeholder="Enter your full name"
           autoFocus
         />
       </div>
@@ -47,7 +55,7 @@ export default function BasicInfoForm({ handleOnSelect, methods, formState }: IB
           label="Username"
           name="user_name"
           type="text"
-          placeholder="john_doe_90"
+          placeholder="Enter your unique username"
         />
       </div>
       <div className="col-span-1">
@@ -55,7 +63,7 @@ export default function BasicInfoForm({ handleOnSelect, methods, formState }: IB
           label="Email"
           name="email"
           type="email"
-          placeholder="johndoe@gmail.com"
+          placeholder="Enter your email"
           disabled
         />
       </div>
@@ -64,7 +72,7 @@ export default function BasicInfoForm({ handleOnSelect, methods, formState }: IB
           label="Phone Number"
           name="phone_number"
           type="phone"
-          placeholder="+91 864 542 2548 "
+          placeholder="xxx xxx xxxx"
         />
       </div>
       <div className="col-span-1">
@@ -153,6 +161,33 @@ export default function BasicInfoForm({ handleOnSelect, methods, formState }: IB
             }
           />
         </div>
+      </div>
+      <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
+        <span className="text-sm text-gray-500 font-semibold">{"Profile Image"}<span className="text-red-500">*</span></span>
+        <PhotoUpload
+          name="profile"
+          previewUrl={profilePreview}
+          handleImageSelect={handleImageSelect}
+          showType="circle"
+        />
+        {methods?.formState?.errors?.profile_image?.message && (
+          <span className="text-red-600 text-sm">
+            {methods?.formState?.errors?.profile_image?.message}
+          </span>
+        )}
+      </div>
+      <div className="flex bg-white rounded-xl col-span-2 flex-col gap-2">
+        <span className="text-sm text-gray-500 font-semibold">{"Banner Image"}<span className="text-red-500">*</span></span>
+        <PhotoUpload
+          name="banner"
+          previewUrl={bannerPreview}
+          handleImageSelect={handleImageSelect}
+        />
+        {methods?.formState?.errors?.banner_image?.message && (
+          <span className="text-red-600 text-sm">
+            {methods?.formState?.errors?.banner_image?.message}
+          </span>
+        )}
       </div>
     </div>
   );

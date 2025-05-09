@@ -38,7 +38,7 @@ const customStyles = {
 };
 export default function StoreSetUp(props: any) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [dragActive, setDragActive] = useState<boolean>(false);
@@ -47,7 +47,7 @@ export default function StoreSetUp(props: any) {
   const [profilePreview, setProfilePreview] = useState<string>("");
   const [bannerPreview, setBannerPreview] = useState<string>("");
   const [isDetailView, setIsDetailView] = useState<boolean>(true);
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(true);
   const [store, setStore] = useState({
     creatorId: "",
     name: "",
@@ -141,7 +141,7 @@ export default function StoreSetUp(props: any) {
   }
   useEffect(() => {
     fetchCategory();
-    fetchStoreDetail();
+    // fetchStoreDetail();
   }, []);
   const onSubmit = async (data: ICreateStoreSchema) => {
     setLoading(true);

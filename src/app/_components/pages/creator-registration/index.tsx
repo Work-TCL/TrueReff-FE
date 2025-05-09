@@ -35,6 +35,8 @@ import Loader from "../../components-common/layout/loader";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { fileUploadLimitValidator } from "@/lib/utils/constants";
+import { toastMessage } from "@/lib/utils/toast-message";
+import StoreSetUp from "../my-store/store-set-up";
 
 let allTabs: {
   id: string;
@@ -48,13 +50,13 @@ let allTabs: {
   },
   {
     id: "2",
-    name: "Profile Setup",
-    Icon: GrDocumentText,
+    name: "Social Media",
+    Icon: FaRegUserCircle,
   },
   {
     id: "3",
-    name: "Social Media",
-    Icon: FaRegUserCircle,
+    name: "Profile Setup",
+    Icon: GrDocumentText,
   },
   {
     id: "4",
@@ -65,8 +67,8 @@ let allTabs: {
 
 const TABS_STATUS = {
   BASIC_DETAILS: 0,
-  PROFILE_SETUP: 1,
-  SOCIAL_MEDIA: 2,
+  SOCIAL_MEDIA: 1,
+  STORE_SETUP: 2,
   PAYMENT_DETAILS: 3,
 };
 export default function CreatorRegistrationPage() {
@@ -74,7 +76,7 @@ export default function CreatorRegistrationPage() {
   const { account } = useAuthStore();
   const { setCreatorData } = useCreatorStore();
   const router = useRouter();
-  const tab = searchParams.get("tab") ?? "0";
+  const tab = searchParams.get("tab") ?? "1";
   const activeTab = parseInt(tab);
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
   const [instagramConnected, setInstagramConnected] = useState<boolean>(false);
@@ -154,7 +156,6 @@ export default function CreatorRegistrationPage() {
         gender: data?.gender,
         dob: data?.dob
       };
-      console.log("payload",payload)
 
       if (bannerFile) {
         payload.banner_image = bannerFile;
@@ -236,7 +237,7 @@ export default function CreatorRegistrationPage() {
       } else if (isValid) {
         router.push(`?tab=1`); // Move to next tab
       }
-    } else if (TABS_STATUS.PROFILE_SETUP === activeTab) {
+    } else if (TABS_STATUS.STORE_SETUP === activeTab) {
       const profileSetUpFields: any = [
         "title",
         "long_description",
@@ -253,6 +254,8 @@ export default function CreatorRegistrationPage() {
     } else if (TABS_STATUS.SOCIAL_MEDIA === activeTab) {
       if (youtubeConnected || instagramConnected) {
         await onSubmitSocial();
+      } else {
+        toastMessage.error("Min 1 Channel required.")
       }
     }
     setLoading(false);
@@ -260,7 +263,7 @@ export default function CreatorRegistrationPage() {
 
   const handleValidTab = async () => {
     setIsCreatorLoading(true);
-    if (TABS_STATUS.PROFILE_SETUP === activeTab) {
+    if (TABS_STATUS.STORE_SETUP === activeTab) {
       const basicInfoField: any = [
         "full_name",
         "user_name",
@@ -272,9 +275,9 @@ export default function CreatorRegistrationPage() {
         user_name: methods.watch("user_name"),
       });
 
-      if (isExist || !isValid) {
-        router.push(`?tab=0`);
-      }
+      // if (isExist || !isValid) {
+      //   router.push(`?tab=0`);
+      // }
     }
     setIsCreatorLoading(false);
   };
@@ -328,31 +331,41 @@ export default function CreatorRegistrationPage() {
   }, [creatorDetails]);
   useEffect(() => {
     (async () => {
-      await getCreator();
+      // await getCreator();
       await handleValidTab();
     })();
   }, []);
 
   const handleImageSelect = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: "profile" | "banner"
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const isValid = await fileUploadLimitValidator(file.size);
-    if (!isValid) return;
-
-    const previewURL = URL.createObjectURL(file);
-
-    if (type === "profile") {
-      setProfileFile(file);
-      setProfilePreview(previewURL);
-    } else {
-      setBannerFile(file);
-      setBannerPreview(previewURL);
-    }
-  };
+      e: React.ChangeEvent<HTMLInputElement> | any,
+      type: "profile" | "banner"
+    ) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+  
+      const isValid = await fileUploadLimitValidator(file.size);
+      if (!isValid) return;
+  
+      const previewURL = URL.createObjectURL(file);
+  
+      if (type === "profile") {
+        setProfileFile(file);
+        setProfilePreview(previewURL);
+        methods.setValue("profile_image", previewURL);
+        methods.setError("profile_image", {
+          type: "manual",
+          message: "",
+        });
+      } else {
+        setBannerFile(file);
+        setBannerPreview(previewURL);
+        methods.setValue("banner_image", previewURL);
+        methods.setError("banner_image", {
+          type: "manual",
+          message: "",
+        });
+      }
+    };
 
   const handleOnSelect = (value:any,name: any) => {
     setFormState({...formState,[name]:value})
@@ -370,7 +383,7 @@ export default function CreatorRegistrationPage() {
   }
 
   return (
-    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 h-screen overflow-hidden flex flex-col">
+    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 pb-2 h-screen overflow-hidden flex flex-col">
       {isCreatorLoading && <Loader />}
       {!isCreatorLoading && (
         <>
@@ -380,7 +393,7 @@ export default function CreatorRegistrationPage() {
               {
                 {
                   [TABS_STATUS.BASIC_DETAILS]: "Creator Registration",
-                  [TABS_STATUS.PROFILE_SETUP]: "Complete Your Profile",
+                  [TABS_STATUS.STORE_SETUP]: "Setup your Store",
                   [TABS_STATUS.SOCIAL_MEDIA]: "Connect Your Social Accounts",
                   [TABS_STATUS.PAYMENT_DETAILS]: "Set Up Your Payment Info",
                 }[activeTab]
@@ -390,20 +403,15 @@ export default function CreatorRegistrationPage() {
               tabs={allTabs}
               setActiveTabIndex={(v) => {
                 if (
-                  [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(activeTab) &&
-                  [TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS].includes(v)
-                ) {
-                  router.push(`?tab=${v}`);
-                }
-
-                if (
                   [
                     TABS_STATUS.BASIC_DETAILS,
-                    TABS_STATUS.PROFILE_SETUP,
+                    TABS_STATUS.STORE_SETUP,
+                    TABS_STATUS.SOCIAL_MEDIA,
                   ].includes(activeTab) &&
                   [
                     TABS_STATUS.BASIC_DETAILS,
-                    TABS_STATUS.PROFILE_SETUP,
+                    TABS_STATUS.STORE_SETUP,
+                    TABS_STATUS.SOCIAL_MEDIA,
                   ].includes(v)
                 ) {
                   router.push(`?tab=${v}`);
@@ -412,7 +420,7 @@ export default function CreatorRegistrationPage() {
               activeTabIndex={activeTab}
               grid={4}
             />
-            {[TABS_STATUS.BASIC_DETAILS, TABS_STATUS.PROFILE_SETUP].includes(
+            {[TABS_STATUS.BASIC_DETAILS, TABS_STATUS.SOCIAL_MEDIA].includes(
               activeTab
             ) && (
               <FormProvider {...methods}>
@@ -422,12 +430,15 @@ export default function CreatorRegistrationPage() {
                 >
                   {
                     {
-                      [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm handleOnSelect={handleOnSelect} methods={methods} formState={formState}/>,
-                      [TABS_STATUS.PROFILE_SETUP]: (
-                        <ProfileSetup
-                          handleImageSelect={handleImageSelect}
-                          profilePreview={profilePreview}
-                          bannerPreview={bannerPreview}
+                      [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm handleOnSelect={handleOnSelect} handleImageSelect={handleImageSelect}
+                      profilePreview={profilePreview}
+                      bannerPreview={bannerPreview} methods={methods} formState={formState}/>,
+                      [TABS_STATUS.SOCIAL_MEDIA]: (
+                        <SocialMedia
+                          setYoutubeConnected={setYoutubeConnected}
+                          youtubeConnected={youtubeConnected}
+                          setInstagramConnected={setInstagramConnected}
+                          instagramConnected={instagramConnected}
                         />
                       ),
                     }[activeTab]
@@ -437,7 +448,7 @@ export default function CreatorRegistrationPage() {
                       type="submit"
                       className={cn(
                         "w-fit font-medium px-8",
-                        activeTab === TABS_STATUS.PROFILE_SETUP
+                        activeTab === TABS_STATUS.SOCIAL_MEDIA
                           ? "block"
                           : "hidden"
                       )}
@@ -450,7 +461,7 @@ export default function CreatorRegistrationPage() {
                     <Button
                       className={cn(
                         "w-fit font-medium px-8",
-                        activeTab === TABS_STATUS.PROFILE_SETUP
+                        activeTab === TABS_STATUS.SOCIAL_MEDIA
                           ? "hidden"
                           : "block"
                       )}
@@ -465,7 +476,7 @@ export default function CreatorRegistrationPage() {
                 </form>
               </FormProvider>
             )}
-            {[TABS_STATUS.SOCIAL_MEDIA, TABS_STATUS.PAYMENT_DETAILS].includes(
+            {[TABS_STATUS.STORE_SETUP,TABS_STATUS.PAYMENT_DETAILS].includes(
               activeTab
             ) && (
               <FormProvider {...methodsSocial}>
@@ -475,14 +486,7 @@ export default function CreatorRegistrationPage() {
                 >
                   {
                     {
-                      [TABS_STATUS.SOCIAL_MEDIA]: (
-                        <SocialMedia
-                          setYoutubeConnected={setYoutubeConnected}
-                          youtubeConnected={youtubeConnected}
-                          setInstagramConnected={setInstagramConnected}
-                          instagramConnected={instagramConnected}
-                        />
-                      ),
+                      [TABS_STATUS.STORE_SETUP]: <>Store Set Up</>,
                       [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
                     }[activeTab]
                   }
