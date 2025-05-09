@@ -37,6 +37,7 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { fileUploadLimitValidator } from "@/lib/utils/constants";
 import { toastMessage } from "@/lib/utils/toast-message";
 import StoreSetUp from "../my-store/store-set-up";
+import StoreSetup from "./components/store-setup";
 
 let allTabs: {
   id: string;
@@ -55,7 +56,7 @@ let allTabs: {
   },
   {
     id: "3",
-    name: "Profile Setup",
+    name: "Store Setup",
     Icon: GrDocumentText,
   },
   {
@@ -76,7 +77,7 @@ export default function CreatorRegistrationPage() {
   const { account } = useAuthStore();
   const { setCreatorData } = useCreatorStore();
   const router = useRouter();
-  const tab = searchParams.get("tab") ?? "1";
+  const tab = searchParams.get("tab") ?? "2";
   const activeTab = parseInt(tab);
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
   const [instagramConnected, setInstagramConnected] = useState<boolean>(false);
@@ -88,12 +89,12 @@ export default function CreatorRegistrationPage() {
   const [profilePreview, setProfilePreview] = useState<string>("");
   const [bannerPreview, setBannerPreview] = useState<string>("");
   const initialState = {
-    state:"",
-    city:"",
-    gender:"",
-    dob:""
-  }
-  const [formState,setFormState] = useState(initialState);
+    state: "",
+    city: "",
+    gender: "",
+    dob: "",
+  };
+  const [formState, setFormState] = useState(initialState);
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -154,7 +155,7 @@ export default function CreatorRegistrationPage() {
         state: data?.state,
         city: data?.city,
         gender: data?.gender,
-        dob: data?.dob
+        dob: data?.dob,
       };
 
       if (bannerFile) {
@@ -225,7 +226,7 @@ export default function CreatorRegistrationPage() {
         "state",
         "city",
         "gender",
-        "dob"
+        "dob",
       ];
       const isValid = await methods.trigger(basicInfoField);
       const isExist = await checkCreatorUserNameExist({
@@ -255,7 +256,7 @@ export default function CreatorRegistrationPage() {
       if (youtubeConnected || instagramConnected) {
         await onSubmitSocial();
       } else {
-        toastMessage.error("Min 1 Channel required.")
+        toastMessage.error("Min 1 Channel required.");
       }
     }
     setLoading(false);
@@ -307,7 +308,7 @@ export default function CreatorRegistrationPage() {
           state: creator?.state,
           city: creator?.city,
           gender: creator?.gender,
-          dob: creator?.dob
+          dob: creator?.dob,
         });
       }
     } catch (e) {
@@ -337,50 +338,50 @@ export default function CreatorRegistrationPage() {
   }, []);
 
   const handleImageSelect = async (
-      e: React.ChangeEvent<HTMLInputElement> | any,
-      type: "profile" | "banner"
-    ) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-  
-      const isValid = await fileUploadLimitValidator(file.size);
-      if (!isValid) return;
-  
-      const previewURL = URL.createObjectURL(file);
-  
-      if (type === "profile") {
-        setProfileFile(file);
-        setProfilePreview(previewURL);
-        methods.setValue("profile_image", previewURL);
-        methods.setError("profile_image", {
-          type: "manual",
-          message: "",
-        });
-      } else {
-        setBannerFile(file);
-        setBannerPreview(previewURL);
-        methods.setValue("banner_image", previewURL);
-        methods.setError("banner_image", {
-          type: "manual",
-          message: "",
-        });
-      }
-    };
+    e: React.ChangeEvent<HTMLInputElement> | any,
+    type: "profile" | "banner"
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  const handleOnSelect = (value:any,name: any) => {
-    setFormState({...formState,[name]:value})
-    methods.setValue(name, value);
-    if(name === 'state'){
-      setFormState({...formState,[name]:value,city:""})
-      methods.setValue("city", "");
-    }
-    if(value){
-      methods.setError(name,{
+    const isValid = await fileUploadLimitValidator(file.size);
+    if (!isValid) return;
+
+    const previewURL = URL.createObjectURL(file);
+
+    if (type === "profile") {
+      setProfileFile(file);
+      setProfilePreview(previewURL);
+      methods.setValue("profile_image", previewURL);
+      methods.setError("profile_image", {
         type: "manual",
         message: "",
-      })
+      });
+    } else {
+      setBannerFile(file);
+      setBannerPreview(previewURL);
+      methods.setValue("banner_image", previewURL);
+      methods.setError("banner_image", {
+        type: "manual",
+        message: "",
+      });
     }
-  }
+  };
+
+  const handleOnSelect = (value: any, name: any) => {
+    setFormState({ ...formState, [name]: value });
+    methods.setValue(name, value);
+    if (name === "state") {
+      setFormState({ ...formState, [name]: value, city: "" });
+      methods.setValue("city", "");
+    }
+    if (value) {
+      methods.setError(name, {
+        type: "manual",
+        message: "",
+      });
+    }
+  };
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 pb-2 h-screen overflow-hidden flex flex-col">
@@ -430,9 +431,16 @@ export default function CreatorRegistrationPage() {
                 >
                   {
                     {
-                      [TABS_STATUS.BASIC_DETAILS]: <BasicInfoForm handleOnSelect={handleOnSelect} handleImageSelect={handleImageSelect}
-                      profilePreview={profilePreview}
-                      bannerPreview={bannerPreview} methods={methods} formState={formState}/>,
+                      [TABS_STATUS.BASIC_DETAILS]: (
+                        <BasicInfoForm
+                          handleOnSelect={handleOnSelect}
+                          handleImageSelect={handleImageSelect}
+                          profilePreview={profilePreview}
+                          bannerPreview={bannerPreview}
+                          methods={methods}
+                          formState={formState}
+                        />
+                      ),
                       [TABS_STATUS.SOCIAL_MEDIA]: (
                         <SocialMedia
                           setYoutubeConnected={setYoutubeConnected}
@@ -476,7 +484,7 @@ export default function CreatorRegistrationPage() {
                 </form>
               </FormProvider>
             )}
-            {[TABS_STATUS.STORE_SETUP,TABS_STATUS.PAYMENT_DETAILS].includes(
+            {[TABS_STATUS.STORE_SETUP, TABS_STATUS.PAYMENT_DETAILS].includes(
               activeTab
             ) && (
               <FormProvider {...methodsSocial}>
@@ -486,7 +494,13 @@ export default function CreatorRegistrationPage() {
                 >
                   {
                     {
-                      [TABS_STATUS.STORE_SETUP]: <>Store Set Up</>,
+                      [TABS_STATUS.STORE_SETUP]: (
+                        <StoreSetup
+                          handleImageSelect={handleImageSelect}
+                          profilePreview={profilePreview}
+                          bannerPreview={bannerPreview}
+                        />
+                      ),
                       [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
                     }[activeTab]
                   }

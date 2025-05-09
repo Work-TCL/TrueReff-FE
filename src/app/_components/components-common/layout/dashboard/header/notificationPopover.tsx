@@ -6,12 +6,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { translate } from "@/lib/utils/translate";
 import { cn } from "@sohanemon/utils";
 import { BellRing, CircleX } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Notification {
   _id: string;
