@@ -10,6 +10,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Editor from "./editor";
+import { Tag, X } from "lucide-react";
 interface IInput
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
@@ -240,6 +241,59 @@ export default function Input({
     />
   );
 
+  const renderTagInputUpdated = () => (
+    <Controller
+      name={name}
+      control={control}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative w-full">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={addTag}
+              onBlur={field.onBlur}
+              placeholder={placeholder}
+              className="w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2"
+              {...props}
+            />
+            <Tag
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              size={16}
+            />
+          </div>
+          {tags?.length > 0 ? "" : getError()}
+          {tags.length > 0 && (
+            <div className="flex items-center py-2 mt-2 gap-4 flex-wrap">
+              {tags.map((tag: string, index: number) => (
+                <span
+                  key={index}
+                  className="bg-gray-darken text-white py-1 px-3 rounded-full flex items-center gap-2 cursor-pointer hover:bg-gray-darken/80 transition-colors"
+                  onClick={() => console.log(`Tag clicked: ${tag}`)} // Optional: Add click functionality
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering the onClick of the span
+                      removeTag(index);
+                    }}
+                    className="text-sm text-white hover:text-gray-200"
+                  >
+                    ✖
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    />
+  );
+
   const renderPasswordInput = () => (
     <Controller
       control={control}
@@ -394,6 +448,79 @@ export default function Input({
     />
   );
 
+  const multiSelectWithTags = () => {
+    return (
+      <Controller
+        control={control}
+        name={name}
+        rules={{ required: required ? `${label} is required` : false }}
+        render={({ field }) => {
+          const handleChange = (selected: any) => {
+            const updated = [...(field.value || []), selected];
+            field.onChange(updated);
+          };
+
+          const handleRemove = (valueToRemove: any) => {
+            const updated = (field.value || []).filter(
+              (item: any) => item.value !== valueToRemove
+            );
+            field.onChange(updated);
+          };
+
+          // Filter out selected options from available options
+          const selectedValues = (field.value || []).map(
+            (item: any) => item.value
+          );
+          const filteredOptions = options.filter(
+            (option: any) => !selectedValues.includes(option.value)
+          );
+
+          return (
+            <div className="flex flex-col gap-1">
+              {getLabel?.()}
+              <Select
+                value={null} // keep the value empty to always show placeholder
+                onChange={handleChange}
+                options={filteredOptions}
+                placeholder={placeholder ? placeholder : "Select option"}
+                classNamePrefix="select"
+                className="react-select-container"
+                isDisabled={props?.disabled}
+                menuPortalTarget={document.body}
+                menuPosition="fixed"
+                autoFocus={false}
+              />
+
+              {/* Custom Tag Display */}
+              {Array.isArray(field.value) && field.value.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {field.value.map((tag: any) => (
+                    <div
+                      key={tag.value}
+                      className={cn(
+                        "flex items-center gap-1 px-3 py-1 text-sm rounded-full bg-muted text-muted-foreground border border-muted-foreground"
+                      )}
+                    >
+                      {tag.label}
+                      <button
+                        type="button"
+                        onClick={() => handleRemove(tag.value)}
+                        className="hover:text-destructive focus:outline-none"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {getError?.()}
+            </div>
+          );
+        }}
+      />
+    );
+  };
+
   const renderInput = () => {
     switch (type) {
       case "radio":
@@ -471,6 +598,10 @@ export default function Input({
         return renderMultiSelectCategories();
       case "date":
         return renderDateInput();
+      case "multiSelectWithTags":
+        return multiSelectWithTags();
+      case "renderTagInputUpdated":
+        return renderTagInputUpdated();
       default:
         return renderTextInput();
     }

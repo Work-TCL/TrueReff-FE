@@ -2,6 +2,7 @@
 import Loader from "@/app/_components/components-common/layout/loader";
 import Button from "@/app/_components/ui/button";
 import { getConnectedChannel } from "@/lib/web-api/creator";
+import { random } from "lodash";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -123,7 +124,7 @@ export default function SocialMedia({
           <div className="bg-gray-light p-6 rounded-20 shadow-md">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-text flex-1 md:text-xl text:sm font-semibold">
-                Connect Instagram
+                {translate("Connect_Instagram")}
               </h3>
               {!instagramConnected && (
                 <Button
@@ -132,37 +133,37 @@ export default function SocialMedia({
                   size="small"
                   className="md:text-sm text-xs bg-primary-color text-white w-fit md:px-3 px-2 md:py-2 py-1"
                 >
-                  Connect
+                  {translate("Connect")}
                 </Button>
               )}
             </div>
             <p className="text-gray-color mb-4 md:text-base text-sm">
               {instagramConnected
-                ? "Your Instagram account is connected."
-                : "Connect your Instagram account to share your content seamlessly."}
+                ? translate("Instagram_Connected_text")
+                : translate("Connect_Instagram_text")}
             </p>
             <p className="text-xs text-gray-color mb-4">
-              Minimum 1,000 followers required to connect.
+              {translate("Minium_Followers_Text")}
             </p>
             {instagramConnected && (
               <div className="text-sm text-gray-color space-y-1 mt-4">
                 <div>
-                  <strong>Name:</strong>{" "}
+                  <strong>{translate("Name")}:</strong>{" "}
                   {methods.watch("channels[0].account_name")}
                 </div>
                 <div>
-                  <strong>Handle:</strong> @
+                  <strong>{translate("Handle")}:</strong> @
                   {methods.watch("channels[0].handle_name")}
                 </div>
                 <div>
-                  <strong>Link:</strong>{" "}
+                  <strong>{translate("Link")}:</strong>{" "}
                   <a
                     href={methods.watch("channels[0].account_link")}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue underline"
                   >
-                    Profile
+                    {translate("Profile")}
                   </a>
                 </div>
               </div>
@@ -182,7 +183,7 @@ export default function SocialMedia({
           <div className="bg-gray-light p-6 rounded-20 shadow-md">
             <div className="flex items-center justify-between mb-2 flex-1">
               <h3 className="text-text md:text-xl text:sm font-semibold">
-                Connect YouTube
+                {translate("Connect_YouTube")}
               </h3>
               {!youtubeConnected && (
                 <Button
@@ -191,37 +192,37 @@ export default function SocialMedia({
                   size="small"
                   className="md:text-sm text-xs bg-dark-orange text-white w-fit md:px-3 px-2 md:py-2 py-1"
                 >
-                  Connect
+                  {translate("Connect")}
                 </Button>
               )}
             </div>
             <p className="text-gray-color mb-4 md:text-base text-sm">
               {youtubeConnected
-                ? "Your YouTube channel is connected."
-                : "Connect your YouTube channel to manage your videos and analytics."}
+                ? translate("YouTube_Connected_text")
+                : translate("Connect_YouTube_text")}
             </p>
             <p className="text-xs text-gray-color mb-4">
-              Minimum 1,000 subscribers required to connect.
+              {translate("Minium_subscribers_Text")}
             </p>
             {youtubeConnected && (
               <div className="text-sm text-gray-color space-y-1 mt-4">
                 <div>
-                  <strong>Name:</strong>{" "}
+                  <strong>{translate("Name")}:</strong>{" "}
                   {methods.watch("channels[1].account_name")}
                 </div>
                 <div>
-                  <strong>Handle:</strong> @
+                  <strong>{translate("Handle")}:</strong> @
                   {methods.watch("channels[1].handle_name")}
                 </div>
                 <div>
-                  <strong>Link:</strong>{" "}
+                  <strong>{translate("Link")}:</strong>{" "}
                   <a
                     href={methods.watch("channels[1].account_link")}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue underline"
                   >
-                    Channel
+                    {translate("Channel")}
                   </a>
                 </div>
               </div>

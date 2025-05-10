@@ -50,7 +50,7 @@ export const SlidingTabBar = ({
             >
               <Icon
                 className={cn(
-                  "text-lg",
+                  "text-lg size-5",
                   isActive ? "text-primary-color" : "text-gray-color"
                 )}
               />

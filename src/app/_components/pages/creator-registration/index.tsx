@@ -38,33 +38,34 @@ import { fileUploadLimitValidator } from "@/lib/utils/constants";
 import { toastMessage } from "@/lib/utils/toast-message";
 import StoreSetUp from "../my-store/store-set-up";
 import StoreSetup from "./components/store-setup";
+import { CreditCard, FileText, Globe, Store } from "lucide-react";
 
 let allTabs: {
   id: string;
   name: string;
   Icon: any;
 }[] = [
-  {
-    id: "1",
-    name: "Basic Details",
-    Icon: HiOutlineSquare3Stack3D,
-  },
-  {
-    id: "2",
-    name: "Social Media",
-    Icon: FaRegUserCircle,
-  },
-  {
-    id: "3",
-    name: "Store Setup",
-    Icon: GrDocumentText,
-  },
-  {
-    id: "4",
-    name: "Payment Detail",
-    Icon: FaRegUserCircle,
-  },
-];
+    {
+      id: "1",
+      name: "Basic Details",
+      Icon: FileText ,
+    },
+    {
+      id: "2",
+      name: "Social Media",
+      Icon: Globe,
+    },
+    {
+      id: "3",
+      name: "Store Setup",
+      Icon: Store,
+    },
+    {
+      id: "4",
+      name: "Payment Detail",
+      Icon: CreditCard,
+    },
+  ];
 
 const TABS_STATUS = {
   BASIC_DETAILS: 0,
@@ -330,6 +331,7 @@ export default function CreatorRegistrationPage() {
       }
     }
   }, [creatorDetails]);
+
   useEffect(() => {
     (async () => {
       // await getCreator();
@@ -424,114 +426,114 @@ export default function CreatorRegistrationPage() {
             {[TABS_STATUS.BASIC_DETAILS, TABS_STATUS.SOCIAL_MEDIA].includes(
               activeTab
             ) && (
-              <FormProvider {...methods}>
-                <form
-                  onSubmit={methods.handleSubmit(onSubmit)}
-                  className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
-                >
-                  {
+                <FormProvider {...methods}>
+                  <form
+                    onSubmit={methods.handleSubmit(onSubmit)}
+                    className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
+                  >
                     {
-                      [TABS_STATUS.BASIC_DETAILS]: (
-                        <BasicInfoForm
-                          handleOnSelect={handleOnSelect}
-                          handleImageSelect={handleImageSelect}
-                          profilePreview={profilePreview}
-                          bannerPreview={bannerPreview}
-                          methods={methods}
-                          formState={formState}
-                        />
-                      ),
-                      [TABS_STATUS.SOCIAL_MEDIA]: (
-                        <SocialMedia
-                          setYoutubeConnected={setYoutubeConnected}
-                          youtubeConnected={youtubeConnected}
-                          setInstagramConnected={setInstagramConnected}
-                          instagramConnected={instagramConnected}
-                        />
-                      ),
-                    }[activeTab]
-                  }
-                  <div className="flex bg-white">
-                    <Button
-                      type="submit"
-                      className={cn(
-                        "w-fit font-medium px-8",
-                        activeTab === TABS_STATUS.SOCIAL_MEDIA
-                          ? "block"
-                          : "hidden"
-                      )}
-                      size="small"
-                      loading={loading}
-                      disabled={loading}
-                    >
-                      {"Save & Continue"}
-                    </Button>
-                    <Button
-                      className={cn(
-                        "w-fit font-medium px-8",
-                        activeTab === TABS_STATUS.SOCIAL_MEDIA
-                          ? "hidden"
-                          : "block"
-                      )}
-                      size="small"
-                      onClick={handleTriggerStepper}
-                      loading={loading}
-                      disabled={loading}
-                    >
-                      {"Save & Continue"}
-                    </Button>
-                  </div>
-                </form>
-              </FormProvider>
-            )}
+                      {
+                        [TABS_STATUS.BASIC_DETAILS]: (
+                          <BasicInfoForm
+                            handleOnSelect={handleOnSelect}
+                            handleImageSelect={handleImageSelect}
+                            profilePreview={profilePreview}
+                            bannerPreview={bannerPreview}
+                            methods={methods}
+                            formState={formState}
+                          />
+                        ),
+                        [TABS_STATUS.SOCIAL_MEDIA]: (
+                          <SocialMedia
+                            setYoutubeConnected={setYoutubeConnected}
+                            youtubeConnected={youtubeConnected}
+                            setInstagramConnected={setInstagramConnected}
+                            instagramConnected={instagramConnected}
+                          />
+                        ),
+                      }[activeTab]
+                    }
+                    <div className="flex bg-white">
+                      <Button
+                        type="submit"
+                        className={cn(
+                          "w-fit font-medium px-8",
+                          activeTab === TABS_STATUS.SOCIAL_MEDIA
+                            ? "block"
+                            : "hidden"
+                        )}
+                        size="small"
+                        loading={loading}
+                        disabled={loading}
+                      >
+                        {"Save & Continue"}
+                      </Button>
+                      <Button
+                        className={cn(
+                          "w-fit font-medium px-8",
+                          activeTab === TABS_STATUS.SOCIAL_MEDIA
+                            ? "hidden"
+                            : "block"
+                        )}
+                        size="small"
+                        onClick={handleTriggerStepper}
+                        loading={loading}
+                        disabled={loading}
+                      >
+                        {"Save & Continue"}
+                      </Button>
+                    </div>
+                  </form>
+                </FormProvider>
+              )}
             {[TABS_STATUS.STORE_SETUP, TABS_STATUS.PAYMENT_DETAILS].includes(
               activeTab
             ) && (
-              <FormProvider {...methodsSocial}>
-                <form
-                  onSubmit={methodsSocial.handleSubmit(onSubmitSocial)}
-                  className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
-                >
-                  {
+                <FormProvider {...methodsSocial}>
+                  <form
+                    onSubmit={methodsSocial.handleSubmit(onSubmitSocial)}
+                    className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
+                  >
                     {
-                      [TABS_STATUS.STORE_SETUP]: (
-                        <StoreSetup
-                          handleImageSelect={handleImageSelect}
-                          profilePreview={profilePreview}
-                          bannerPreview={bannerPreview}
-                        />
-                      ),
-                      [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
-                    }[activeTab]
-                  }
-                  <div className="flex bg-white">
-                    <Button
-                      type="button"
-                      className="w-fit bg-white text-black font-medium px-8"
-                      size="small"
-                      onClick={() => {
-                        activeTab < 2 && router.push(`?tab=${activeTab + 1}`);
-                        if (activeTab === TABS_STATUS.SOCIAL_MEDIA) {
-                          router.push("/creator/dashboard");
-                        }
-                      }}
-                    >
-                      {"Skip"}
-                    </Button>
+                      {
+                        [TABS_STATUS.STORE_SETUP]: (
+                          <StoreSetup
+                            handleImageSelect={handleImageSelect}
+                            profilePreview={profilePreview}
+                            bannerPreview={bannerPreview}
+                          />
+                        ),
+                        [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
+                      }[activeTab]
+                    }
+                    <div className="flex bg-white">
+                      <Button
+                        type="button"
+                        className="w-fit bg-white text-black font-medium px-8"
+                        size="small"
+                        onClick={() => {
+                          activeTab < 2 && router.push(`?tab=${activeTab + 1}`);
+                          if (activeTab === TABS_STATUS.SOCIAL_MEDIA) {
+                            router.push("/creator/dashboard");
+                          }
+                        }}
+                      >
+                        {"Skip"}
+                      </Button>
 
-                    <Button
-                      className={cn("w-fit font-medium px-8", "block")}
-                      size="small"
-                      onClick={handleTriggerStepper}
-                      loading={loading}
-                      disabled={loading}
-                    >
-                      {"Save & Continue"}
-                    </Button>
-                  </div>
-                </form>
-              </FormProvider>
-            )}
+                      <Button
+                        className={cn("w-fit font-medium px-8", "block")}
+                        size="small"
+                        onClick={handleTriggerStepper}
+                        loading={loading}
+                        disabled={loading}
+                      >
+                        {"Save & Continue"}
+                      </Button>
+                    </div>
+                  </form>
+                </FormProvider>
+              )}
           </div>{" "}
         </>
       )}

@@ -433,6 +433,7 @@
   "Live": "Live",
   "Expired": "Expired",
   "Send_Request": "Send Request",
+
   "CancelRequest": {
     "title": "Are you sure you would like to cancel this request?",
     "description": "Note: Once you cancel this request, you won’t be able to send another request for this collaboration again.",
@@ -444,5 +445,21 @@
     "Cancel": "Cancel",
     "Ok": "Ok"
   },
-  "Copy": "Copy"
+  "Copy": "Copy",
+  "Select_Category": "Select Category",
+  "Select_Sub_Category": "Select Sub Category",
+  "Enter_your_tags": "Enter your tags",
+  "Enter_Store_Name":"Enter Store Name",
+  "Connect_Instagram":"Connect Instagram",
+  "Connect":"Connect",
+  "Instagram_Connected_text":"Your Instagram account is connected.",
+  "Connect_Instagram_text":"Connect your Instagram account to share your content seamlessly.",
+  "Minium_Followers_Text":"Minimum 1,000 followers required to connect.",
+  "Handle":"Handle",
+  "Link":"Link",
+  "Connect_YouTube":"Connect YouTube",
+  "YouTube_Connected_text":"Your YouTube channel is connected.",
+  "Connect_YouTube_text":"Connect your YouTube channel to manage your videos and analytics.",
+  "Minium_subscribers_Text":"Minimum 1,000 subscribers required to connect."
+ 
 }

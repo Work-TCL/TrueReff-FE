@@ -3,7 +3,7 @@ import Input from "@/app/_components/ui/form/Input";
 import React, { useEffect, useState } from "react";
 import { getCategories } from "@/lib/web-api/auth";
 import { useFormContext } from "react-hook-form";
-import { Camera, Pencil, User } from "lucide-react";
+import { Camera, ImageIcon, Pencil, User } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export interface ICategoryData {
@@ -37,7 +37,7 @@ export default function StoreSetup({
       let data = response?.data?.data;
       setCategories(data);
       setParentCategory(data?.filter((ele) => ele?.parentId === null));
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -79,7 +79,15 @@ export default function StoreSetup({
               className="w-full h-full object-cover"
               alt="Banner"
             />
-          ) : null}
+          ) : (
+            <div className="flex flex-col items-center justify-center text-gray-500 pt-6">
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow mb-2">
+                <ImageIcon className="w-6 h-6" />
+              </div>
+              <p className="text-sm font-medium">Click to upload banner</p>
+            </div>
+
+          )}
         </div>
         <div className="absolute top-1 right-3 z-10">
           <div
@@ -141,26 +149,26 @@ export default function StoreSetup({
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2">
           <Input
-            label="Store Name"
+            label={translate("Store_Name")}
             name="short_description"
             type="text"
-            placeholder="Helping men stay stylish with the latest fashion trends."
-          />
+            placeholder={translate("Enter_Store_Name")}
+            />
         </div>
         <div className="col-span-2">
           <Input
-            label="Tags"
+            label={translate("Tags")}
             name="tags"
-            type="tag"
-            placeholder="Enter your tags"
+            type="renderTagInputUpdated"
+            placeholder={translate("Enter_your_tags")}
           />
         </div>
         <div className="md:col-span-1 col-span-2">
           <Input
             label={translate("Category")}
-            placeholder={translate("Fashion_Beauty")}
+            placeholder={translate("Select_Category")}
             name="category"
-            type="select-multiple"
+            type="multiSelectWithTags"
             options={parentCategory?.map((ele) => ({
               value: ele?._id,
               label: ele?.name,
@@ -169,7 +177,7 @@ export default function StoreSetup({
           />
         </div>
         <div className="md:col-span-1 col-span-2">
-          <Input
+          {/* <Input
             label={translate("Sub_category")}
             placeholder={translate("Men_Fashion")}
             name="sub_category"
@@ -179,11 +187,22 @@ export default function StoreSetup({
               label: ele?.name,
             }))}
             autoFocus={false}
+          /> */}
+          <Input
+            label={translate("Sub_category")}
+            placeholder={translate("Select_Sub_Category")}
+            name="sub_category"
+            type="multiSelectWithTags"
+            options={subCategory.map((ele) => ({
+              value: ele?._id,
+              label: ele?.name,
+            }))}
+            autoFocus={false}
           />
         </div>
-        <div className="col-span-1 lg:col-span-2">
+        <div className="col-span-2 ">
           <Input
-            label="Store Description"
+            label={translate("Store_Description")}
             name="description"
             type="editor"
             rows={4}
