@@ -151,7 +151,7 @@ export default function ChannelsConnect() {
                   onClick={handleInstaLogin}
                   disabled={isLoading}
                 >
-                  {"Connect"}
+                  {translate("Connect")}
                 </Button>
               </div>
             </div>
@@ -177,7 +177,7 @@ export default function ChannelsConnect() {
               onClick={handleInstaLogin}
               disabled={isLoading}
             >
-              {"Connect"}
+              {translate("Connect")}
             </Button>
           </div>
           <div className="col-span-2">
@@ -222,7 +222,7 @@ export default function ChannelsConnect() {
                   loading={isLoading}
                   disabled={isLoading}
                 >
-                  {"Connect"}
+                  {translate("Connect")}
                 </Button>
               </div>
             </div>
@@ -248,7 +248,7 @@ export default function ChannelsConnect() {
               loading={isLoading}
               disabled={isLoading}
             >
-              {"Connect"}
+              {translate("Connect")}
             </Button>
           </div>
         </div>

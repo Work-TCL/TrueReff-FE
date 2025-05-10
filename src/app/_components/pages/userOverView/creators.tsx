@@ -233,10 +233,8 @@ export default function Creators({ title }: ITableProps) {
         </div>
       ) : (
         <EmptyPlaceHolder
-          title={"No_Creators_Available"}
-          description={
-            "It seems there are currently no creators to display. Please check back later."
-          }
+          title={translate("No_Creators_Available_Title")}
+          description={translate("No_Creators_Available_Description")}
         />
       )}
       {totalPages > 1 && (

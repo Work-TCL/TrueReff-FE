@@ -11,13 +11,13 @@ export default function StoreConnectsRedirect() {
       <div className=" flex items-center justify-center flex-col flex-1 col-span-full text-center h-[200px] text-gray-500 p-4 bg-white gap-2">
         <Info className="mx-auto text-gray-400" />
         <h2 className="text-lg font-semibold">
-          {translate("No_Channels_Available")}
+          {translate("No_Channels_Available_Title")}
         </h2>
         <p className="text-sm">
-          {"To view your channels, please connect your store first"}
+          {translate("No_Channels_Available_Description")}
         </p>
         <AnchorButton className="w-[150px]" href="/vendor/settings/store">
-          Connect
+          {translate("Connect")}
         </AnchorButton>
       </div>
     </div>

@@ -262,8 +262,8 @@ export default function CollaborationList() {
             </>
           ) : (
             <EmptyPlaceHolder
-              title={"No_Collaborations_Available_Title"}
-              description={"No_Collaborations_Available_Description"}
+              title={t("No_Collaborations_Available_Title")}
+              description={t("No_Collaborations_Available_Description")}
             />
           )}
         </>

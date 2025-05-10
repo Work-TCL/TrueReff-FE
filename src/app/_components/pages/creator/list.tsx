@@ -119,14 +119,16 @@ export default function CreatorList() {
       page: number,
       isInternalLoader?: boolean,
       searchValue: string = "",
-      filterState?:any
+      filterState?: any
     ) => {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
           `/auth/creator/list?page=${page}&limit=${pageSize}${
             searchValue ? `&search=${searchValue}` : ""
-          }${filterState?.state ? `&state=${filterState?.state}`:""}${filterState?.city ? `&city=${filterState?.city}`:""}`
+          }${filterState?.state ? `&state=${filterState?.state}` : ""}${
+            filterState?.city ? `&city=${filterState?.city}` : ""
+          }`
         );
         if (response.status === 200) {
           const creatorData = response.data.data;
@@ -188,9 +190,9 @@ export default function CreatorList() {
     debouncedSearch(value);
     setSearch(value);
   };
-  const handleOnFilter = (filterState:any) => {
-    getCreatorList(1,true,search,filterState)
-  }
+  const handleOnFilter = (filterState: any) => {
+    getCreatorList(1, true, search, filterState);
+  };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
@@ -204,7 +206,7 @@ export default function CreatorList() {
               placeholder={translate("Search_creator")}
             />
             <div className="flex items-center gap-[10px] md:w-fit w-full">
-              <CreatorFilter onChange={handleOnFilter}/>
+              <CreatorFilter onChange={handleOnFilter} />
               <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>
@@ -245,8 +247,8 @@ export default function CreatorList() {
             </>
           ) : (
             <EmptyPlaceHolder
-              title={"No_Creators_Available_Title"}
-              description={"No_Creators_Available_Description"}
+              title={translate("No_Creators_Available_Title")}
+              description={translate("No_Creators_Available_Description")}
             />
           )}
         </>

@@ -165,10 +165,8 @@ export default function Brands({ title }: ITableProps) {
         </div>
       ) : (
         <EmptyPlaceHolder
-          title={"No_Brands_Available"}
-          description={
-            "It seems there are currently no brands to display. Please check back later."
-          }
+          title={translate("No_Brands_Available_Title")}
+          description={translate("No_Brands_Available_Description")}
         />
       )}
       {totalPages > 1 && (
