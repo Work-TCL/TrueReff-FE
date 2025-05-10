@@ -119,7 +119,7 @@ const BrandFilter: React.FC<IBrandFilterProps> = ({ onChange }) => {
         <div className="bg-white rounded-2xl p-4 lg:hidden">
           <div className="space-y-6">
             <div>
-              <label className={cn(labelStyle)}>State</label>
+              <label className={cn(labelStyle)}>{translate("State")}</label>
               <Select
                 styles={filterCustomStyles}
                 value={[
@@ -127,12 +127,12 @@ const BrandFilter: React.FC<IBrandFilterProps> = ({ onChange }) => {
                     value: filterState?.state,
                     label: filterState?.state
                       ? filterState?.state
-                      : "Select State",
+                      : translate("Select_State"),
                   },
                 ]}
                 onChange={(val) => handleOnSelect(val?.value, "state", true)}
                 options={[
-                  { value: "", label: "Select State" },
+                  { value: "", label: translate("Select_State") },
                   ...indianStates.map((ele) => ({
                     value: ele,
                     label: ele,
@@ -140,12 +140,12 @@ const BrandFilter: React.FC<IBrandFilterProps> = ({ onChange }) => {
                 ]}
                 className="basic-multi-select"
                 classNamePrefix="select"
-                placeholder="State"
+                placeholder={translate("State")}
                 isClearable
               />
             </div>
             <div>
-              <label className={cn(labelStyle)}>City</label>
+              <label className={cn(labelStyle)}>{translate("City")}</label>
               <Select
                 styles={filterCustomStyles}
                 value={[
@@ -153,14 +153,14 @@ const BrandFilter: React.FC<IBrandFilterProps> = ({ onChange }) => {
                     value: filterState?.city,
                     label: filterState?.city
                       ? filterState?.city
-                      : "Select City",
+                      : translate("selectCity"),
                   },
                 ]}
                 onChange={(val) => handleOnSelect(val?.value, "city", true)}
                 options={
                   filterState.state
                     ? [
-                        { value: "", label: "Select City" },
+                        { value: "", label: translate("selectCity") },
                         ...cities[filterState.state].map((ele: any) => ({
                           value: ele,
                           label: ele,
@@ -180,7 +180,7 @@ const BrandFilter: React.FC<IBrandFilterProps> = ({ onChange }) => {
               onClick={handleApplyFilters}
               className="w-full bg-primary text-white rounded-md"
             >
-              OK
+              {translate("Ok")}
             </Button>
           </div>
         </div>
@@ -193,12 +193,14 @@ const BrandFilter: React.FC<IBrandFilterProps> = ({ onChange }) => {
           value={[
             {
               value: filterState?.state,
-              label: filterState?.state ? filterState?.state : "Select State",
+              label: filterState?.state
+                ? filterState?.state
+                : translate("Select_State"),
             },
           ]}
           onChange={(val) => handleOnSelect(val?.value, "state")}
           options={[
-            { value: "", label: "Select State" },
+            { value: "", label: translate("Select_State") },
             ...indianStates.map((ele) => ({
               value: ele,
               label: ele,
@@ -214,14 +216,16 @@ const BrandFilter: React.FC<IBrandFilterProps> = ({ onChange }) => {
           value={[
             {
               value: filterState?.city,
-              label: filterState?.city ? filterState?.city : "Select City",
+              label: filterState?.city
+                ? filterState?.city
+                : translate("SelectCity"),
             },
           ]}
           onChange={(val) => handleOnSelect(val?.value, "city")}
           options={
             filterState.state
               ? [
-                  { value: "", label: "Select City" },
+                  { value: "", label: translate("SelectCity") },
                   ...cities[filterState.state].map((ele: any) => ({
                     value: ele,
                     label: ele,
@@ -231,7 +235,7 @@ const BrandFilter: React.FC<IBrandFilterProps> = ({ onChange }) => {
           }
           className="basic-multi-select"
           classNamePrefix="select"
-          placeholder="Select City"
+          placeholder={translate("SelectCity")}
           isClearable
         />
       </div>

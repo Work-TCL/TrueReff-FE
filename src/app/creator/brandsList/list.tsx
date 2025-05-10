@@ -36,7 +36,7 @@ export default function BrandList() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  // const translate = useTranslations();
+  const t = useTranslations();
   const [viewMode, setViewMode] = useState<"table" | "card">("card");
 
   const itemsPerPage = 20;
@@ -46,14 +46,16 @@ export default function BrandList() {
     page: number,
     isInternalLoader: boolean = false,
     searchValue: string = "",
-    filterState?:any
+    filterState?: any
   ) => {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response: any = await axios.get(
         `/product/vendor-product/vendor/list?page=${page}&limit=${itemsPerPage}${
           searchValue ? `&search=${searchValue}` : ""
-        }${filterState?.state ? `&state=${filterState?.state}`:""}${filterState?.city ? `&city=${filterState?.city}`:""}`
+        }${filterState?.state ? `&state=${filterState?.state}` : ""}${
+          filterState?.city ? `&city=${filterState?.city}` : ""
+        }`
       );
       if (response.status === 200) {
         const brandData = response.data.data;
@@ -110,9 +112,9 @@ export default function BrandList() {
     setSearch(value);
     debouncedSearch(value); // call debounce on value
   };
-  const handleOnFilter = (filterState:any) => {
-    getBrandList(1,true,search,filterState)
-  }
+  const handleOnFilter = (filterState: any) => {
+    getBrandList(1, true, search, filterState);
+  };
   return (
     <div className={`flex flex-col p-4 gap-4 h-full`}>
       {loading ? (
@@ -123,10 +125,10 @@ export default function BrandList() {
             <SearchInput
               value={search}
               onChange={handleSearch}
-              placeholder={"Search Brand"}
+              placeholder={t("SearchBrand")}
             />
             <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
-              <BrandFilter onChange={handleOnFilter}/>
+              <BrandFilter onChange={handleOnFilter} />
               <PiListChecksLight
                 className={`cursor-pointer md:size-[30px] size-6 ${
                   viewMode === "table" ? "text-blue-600" : "text-gray-400"
@@ -165,8 +167,8 @@ export default function BrandList() {
             </>
           ) : (
             <EmptyPlaceHolder
-              title={"No_Brands_Available_Title"}
-              description={"No_Brands_Available_Description"}
+              title={t("No_Brands_Available_Title")}
+              description={t("No_Brands_Available_Description")}
             />
           )}
         </>

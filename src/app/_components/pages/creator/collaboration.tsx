@@ -255,7 +255,7 @@ export default function CollaborationList() {
                 value={selectedStatus}
                 onChange={handleSelectStatus}
                 options={statusOptions}
-                placeholder="Select Status"
+                placeholder={translate("SelectStatus")}
               />
             </div>
           </div>
@@ -277,8 +277,8 @@ export default function CollaborationList() {
             </>
           ) : (
             <EmptyPlaceHolder
-              title={"No_Collaborations_Available_Title"}
-              description={"No_Collaborations_Available_Description"}
+              title={translate("No_Collaborations_Available_Title")}
+              description={translate("No_Collaborations_Available_Description")}
             />
           )}
         </>

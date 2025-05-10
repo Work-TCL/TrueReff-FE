@@ -205,7 +205,7 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
           <div className="space-y-6">
             <div>
               <label className={cn(labelStyle)}>
-                Parent Categories (max 3)
+                {translate("Parent_Categories")}
               </label>
               <Select
                 styles={customStyles}
@@ -225,7 +225,10 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
               />
             </div>
             <div>
-              <label className={cn(labelStyle)}>Subcategories (max 3)</label>
+              <label className={cn(labelStyle)}>
+                {" "}
+                {translate("Subcategories")}
+              </label>
               <Select
                 styles={customStyles}
                 value={tempSelectedSubOptions}
@@ -249,7 +252,7 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
               onClick={handleApplyFilters}
               className="w-full bg-primary text-white rounded-md"
             >
-              OK
+              {translate("Ok")}
             </Button>
           </div>
         </div>

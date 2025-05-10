@@ -247,10 +247,8 @@ export default function ProductList() {
             </>
           ) : (
             <EmptyPlaceHolder
-              title={"No_Products_Available"}
-              description={
-                "It seems there are currently no products to display. Please check back later."
-              }
+              title={translate("No_Products_Available")}
+              description={translate("No_Products_Available_Description")}
             />
           )}
         </>

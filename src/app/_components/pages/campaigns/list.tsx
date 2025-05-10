@@ -295,8 +295,8 @@ export default function CampaignList() {
             </>
           ) : (
             <EmptyPlaceHolder
-              title="No_Campaigns_Available_Title"
-              description="NO_Campaigns_Available_Description"
+              title={translate("No_Campaigns_Available_Title")}
+              description={translate("No_Campaigns_Available_Description")}
             />
           )}
         </>

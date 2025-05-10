@@ -433,6 +433,29 @@
   "Live": "Live",
   "Expired": "Expired",
   "Send_Request": "Send Request",
+  "Parent_Categories": "Parent Categories (max 3)",
+  "Subcategories": "Subcategories (max 3)",
+  "SearchBrand": "Search Brand",
+  "SelectCity": "Select City",
+  "SelectStatus": "Select Status",
+  "Connect": "Connect",
+  "Products_Sales": "Products Sales",
+  "Pending_Collaboration": "Pending Collaboration",
+  "New_Creators": "New Creators",
+  "No_Active_Collaborations": "No Active Collaborations",
+  "No_Active_Collaborations_Desc": "Collaborations will appear here once you've created or joined one. Share data and insights with your team effortlessly.",
+  "statusMessage": {
+    "REQUESTED": "Request Sent",
+    "PENDING": "Collaboration Pending",
+    "REJECTED": "Request Rejected",
+    "LIVE": "Collaboration Live",
+    "EXPIRED": "Collaboration Expired",
+    "ACTIVE": "Collaboration Active",
+    "REQUESTED_CREATOR_TO_VENDOR": "Creator Requested",
+    "REQUESTED_VENDOR_TO_CREATOR": "Requested creator",
+    "REQUESTED_CREATOR_FROM_VENDOR": "Requested vendor",
+    "REQUESTED_VENDOR_FROM_CREATOR": "Vendor invited"
+  },
   "CancelRequest": {
     "title": "Are you sure you would like to cancel this request?",
     "description": "Note: Once you cancel this request, you won’t be able to send another request for this collaboration again.",
@@ -444,5 +467,6 @@
     "Cancel": "Cancel",
     "Ok": "Ok"
   },
+  "Ok": "Ok",
   "Copy": "Copy"
 }

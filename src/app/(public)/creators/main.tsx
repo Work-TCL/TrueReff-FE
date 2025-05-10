@@ -593,8 +593,8 @@ export default function CreatorList() {
             </>
           ) : (
             <EmptyPlaceHolder
-              title={"No_Creators_Available_Title"}
-              description={"No_Creators_Available_Description"}
+              title={translate("No_Creators_Available_Title")}
+              description={translate("No_Creators_Available_Description")}
             />
           )}
         </>

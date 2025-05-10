@@ -114,10 +114,8 @@ export default function RecentCollaborations() {
             />
           ) : (
             <EmptyPlaceHolder
-              title={"No_Active_Collaborations"}
-              description={
-                "Collaborations_will_appear_here_once_you've_created_or_joined_one._Share_data_and_insights_with_your_team_effortlessly."
-              }
+              title={translate("No_Active_Collaborations")}
+              description={translate("No_Active_Collaborations_Desc")}
             />
           )}
         </div>
