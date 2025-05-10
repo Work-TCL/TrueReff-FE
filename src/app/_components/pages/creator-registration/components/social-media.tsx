@@ -13,6 +13,7 @@ interface IProps {
   youtubeConnected: boolean;
   setInstagramConnected: (value: boolean) => void;
   instagramConnected: boolean;
+  methods: any;
 }
 
 export default function SocialMedia({
@@ -20,9 +21,10 @@ export default function SocialMedia({
   youtubeConnected,
   instagramConnected,
   setInstagramConnected,
+  methods
 }: IProps) {
   const translate = useTranslations();
-  const methods = useFormContext();
+  // const methods = useFormContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const searchParams = useSearchParams();

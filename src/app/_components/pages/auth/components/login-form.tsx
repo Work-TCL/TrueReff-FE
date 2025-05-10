@@ -69,25 +69,31 @@ export default function LoginForm() {
     ) {
       if (res?.data?.type === USER_TYPE.Creator) {
         setCreatorData("creator", {
-          creatorId: res?.data?.creator?._id,
-          accountId: res?.data?._id,
+          creatorId: res?.data?.creator?.id,
+          accountId: res?.data?.creator?.accountId,
           full_name: res?.data?.creator?.full_name,
           user_name: res?.data?.creator?.user_name,
-          title: res?.data?.creator?.title,
+          email: res?.data?.creator?.email,
           phone: res?.data?.creator?.phone,
-          banner_image: res?.data?.creator?.banner_image,
-          profile_image: res?.data?.creator?.profile_image,
+          dob: res?.data?.creator?.dob,
+          gender: res?.data?.creator?.gender,
+          state: res?.data?.creator?.state,
+          city: res?.data?.creator?.city,
           category: res?.data?.creator?.category,
           sub_category: res?.data?.creator?.sub_category,
           tags: res?.data?.creator?.tags,
           channels: res?.data?.creator?.channels,
+          completed_step: res?.data?.creator?.completed_step,
+          status: res?.data?.creator?.status,
+          createdAt: res?.data?.creator?.createdAt,
+          updatedAt: res?.data?.creator?.updatedAt,
           completed: res?.data?.creator?.completed,
-          short_description: res?.data?.creator?.short_description,
-          long_description: res?.data?.creator?.long_description,
-          state: res?.data?.creator?.state,
-          city: res?.data?.creator?.city,
-          gender: res?.data?.creator?.gender,
-          dob: res?.data?.creator?.dob,
+          instagram_link: res?.data?.creator?.instagram_link,
+          youtube_link: res?.data?.creator?.youtube_link,
+          banner_image: res?.data?.creator?.banner_image,
+          profile_image: res?.data?.creator?.profile_image,
+          store_description: res?.data?.creator?.store_description,
+          store_name: res?.data?.creator?.store_name,
         });
       }
       if (res?.data?.type === USER_TYPE.Vendor) {
@@ -111,8 +117,11 @@ export default function LoginForm() {
       setIsAuthStatus("authenticated");
       if (res?.data?.type === USER_TYPE.Vendor) {
         router?.push("/vendor-register");
-      } else if (res?.data?.creator?.completed === 50) {
-        router.push("/creator/dashboard");
+      } else if (res?.data?.type === USER_TYPE.Creator) {
+        if(res?.data?.creator?.status !== "APPROVED"){
+          router.push("/creator-registration")
+        }
+        else router.push("/creator/dashboard");
       } else {
         router?.push(`/creator-registration`);
       }
@@ -120,7 +129,10 @@ export default function LoginForm() {
       if (res?.data?.type === USER_TYPE.Vendor) {
         router?.push("/vendor/dashboard");
       } else if (res?.data?.type === USER_TYPE.Creator) {
-        router.push("/creator/dashboard");
+        if(res?.data?.creator?.status !== "APPROVED"){
+          router.push("/creator-registration")
+        }
+        else router.push("/creator/dashboard");
       } else {
         router?.push(`/dashboard`);
       }

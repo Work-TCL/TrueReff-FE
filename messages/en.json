@@ -292,7 +292,6 @@
   "Diverted_to_Brand_Pages": "Diverted to Brand Pages",
   "Add_Details_For_Store_Set_Up": "Add Details For Store Set-Up",
   "Store_Banner_Image": "Store Banner Image",
-  "Drag_and_drop_image_here_or_click_Add_Image": "Drag and drop image here, or click Add Image",
   "Store_Profile_Image": "Store Profile Image",
   "Store_Name": "Store Name",
   "Type_product_category_here": "Type product category here...",
@@ -429,7 +428,7 @@
   "Requested": "Requested",
   "Rejected": "Rejected",
   "Start Bargaining": "Start Bargaining",
-  "Collobrate": "Collobrate",
+  "Collobrate": "Collaborate",
   "Live": "Live",
   "Expired": "Expired",
   "Send_Request": "Send Request",
@@ -460,5 +459,10 @@
   "YouTube_Connected_text":"Your YouTube channel is connected.",
   "Connect_YouTube_text":"Connect your YouTube channel to manage your videos and analytics.",
   "Minium_subscribers_Text":"Minimum 1,000 subscribers required to connect.",
-  "Ok": "Ok"
+  "Ok": "Ok",
+  "Select_date_of_birth": "Select date of birth",
+  "Date_of_Birth": "Date of Birth",
+  "Your_profile_is_sent_for_admin_approval": "Your profile has been submitted and is pending admin approval.",
+  "Back_to_login": "Back to Login",
+  "Profile_Submitted_for_Approval":"Thank you!"
 }

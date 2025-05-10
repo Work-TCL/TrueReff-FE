@@ -75,14 +75,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       full_name: creator?.full_name,
       user_name: creator?.user_name,
       phone: creator?.phone,
-      title: creator.title,
-      long_description: creator?.long_description,
-      short_description: creator?.short_description,
-      category: [],
-      sub_category: [],
-      banner_image: creator?.banner_image || "",
       profile_image: creator?.profile_image || "",
-      tags: creator?.tags || [],
       state: creator?.state || "",
       city: creator?.city || "",
       gender: creator?.gender || "",
@@ -92,74 +85,6 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     mode: "onChange",
   });
 
-  const fetchCategory = async () => {
-    try {
-      const response = await getCategories({ page: 0, limit: 0 });
-      let data = response?.data?.data;
-      setCategories((prev) => {
-        prev = data;
-        return prev;
-      });
-      setParentCategory(data?.filter((ele) => ele?.parentId === null));
-      const selectedCategories: any = data
-        ?.filter((ele) => ele?.parentId === null)
-        .filter(
-          (v) =>
-            Array.isArray(creator.category) && creator.category.includes(v._id)
-        )
-        .map((c) => ({ label: c.name, value: c._id }));
-      await methods.setValue("category", selectedCategories || []);
-      reSetSubCategories(
-        data || [],
-        selectedCategories?.map((v: any) => v.value),
-        creator.sub_category || []
-      );
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    fetchCategory();
-  }, []);
-
-  const reSetSubCategories = async (
-    defaultCategories: any = [],
-    defaultCategoriesId: string[] = [],
-    defaultValue: string[] = []
-  ) => {
-    const categoriesId =
-      (await methods.watch("category")?.map((v: any) => v.value)) || [];
-
-    const optionsSubCategory = await [
-      ...categories,
-      ...defaultCategories,
-    ].filter(
-      (ele) =>
-        categoriesId?.includes(ele?.parentId) ||
-        defaultCategoriesId?.includes(ele?.parentId)
-    );
-
-    setSubCategory(optionsSubCategory);
-    const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
-    const defaultAvailbleSet: any = optionsSubCategory
-      .filter((v) => defaultValue.includes(v?._id))
-      .map((v) => ({ label: v.name, value: v._id }));
-
-    const subCategoroies = [
-      ...(methods.watch("sub_category") || []),
-      ...(Array.isArray(defaultAvailbleSet) ? defaultAvailbleSet : []),
-    ];
-    methods.setValue(
-      "sub_category",
-      subCategoroies.filter((v: any) =>
-        availableSubCategoriesIds.includes(v.value)
-      )
-    );
-  };
-
-  useEffect(() => {
-    reSetSubCategories();
-  }, [methods.watch("category")?.length]);
-
   const onSubmit = async (data: ICreatorProfileUpdateSchema) => {
     setLoading(true);
     try {
@@ -167,15 +92,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       const payload: IPutUpdateCreatorRequest = {
         user_name: data.user_name,
         full_name: data.full_name,
-        phone: data.phone,
-        title: data.title,
-        long_description: data.long_description,
-        short_description: data.short_description,
-        category: data.category.map((v) => v.value) || [],
-        sub_category: data.sub_category.map((v) => v.value) || [],
-        tags: data.tags || [],
         profile_image: profileFile,
-        banner_image: bannerFile,
         state: data?.state,
         city: data?.city,
         gender: data?.gender,
@@ -192,21 +109,27 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           accountId: res?.accountId,
           full_name: res?.full_name,
           user_name: res?.user_name,
-          title: res?.title,
+          email: res?.email,
           phone: res?.phone,
-          banner_image: res?.banner_image,
-          profile_image: res?.profile_image,
+          dob: res?.dob,
+          gender: res?.gender,
+          state: res?.state,
+          city: res?.city,
           category: res?.category,
           sub_category: res?.sub_category,
           tags: res?.tags,
           channels: res?.channels,
+          completed_step: res?.completed_step,
+          status: res?.status,
+          createdAt: res?.createdAt,
+          updatedAt: res?.updatedAt,
           completed: res?.completed,
-          short_description: res?.short_description,
-          long_description: res?.long_description,
-          state: res?.state,
-          city: res?.city,
-          gender: res?.gender,
-          dob: res?.dob,
+          instagram_link: res?.instagram_link,
+          youtube_link: res?.youtube_link,
+          banner_image: res?.banner_image,
+          profile_image: res?.profile_image,
+          store_description: res?.store_description,
+          store_name: res?.store_name,
         });
         onClose && onClose(true);
       }
@@ -303,32 +226,8 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               label={translate("PhoneNumber")}
               name="phone"
               type="phone"
-              placeholder="+91 864 542 2548 "
-            />
-          </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("ProfileTitle")}
-              name="title"
-              type="text"
-              placeholder={translate("MenTrends")}
-            />
-          </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("Long_Description")}
-              name="long_description"
-              type="textarea"
-              rows={2}
-              placeholder={translate("Long_Description_placeholder")}
-            />
-          </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("Short_Description")}
-              name="short_description"
-              type="text"
-              placeholder={translate("Short_Description_placeholder")}
+              placeholder="XXXXX XXXXX"
+              disabled
             />
           </div>
           <div className="col-span-1">
@@ -436,39 +335,6 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               />
             </div>
           </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("Tags")}
-              name="tags"
-              type="tag"
-              placeholder={translate("Enteryourtags")}
-            />
-            {/* <Input label="Tags" name="tags" type="text" placeholder="#ABC" /> */}
-          </div>
-          <div className="md:col-span-1 col-span-2">
-            <Input
-              label={translate("Category")}
-              placeholder={translate("Fashion_Beauty")}
-              name="category"
-              type="select-multiple"
-              options={parentCategory?.map((ele) => ({
-                value: ele?._id,
-                label: ele?.name,
-              }))}
-            />
-          </div>
-          <div className="md:col-span-1 col-span-2">
-            <Input
-              label={translate("Sub_category")}
-              placeholder={translate("Men_Fashion")}
-              name="sub_category"
-              type="select-multiple"
-              options={subCategory.map((ele) => ({
-                value: ele?._id,
-                label: ele?.name,
-              }))}
-            />
-          </div>
           <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
             <div className="text-sm">{translate("Profile_Image")}</div>
             <div
@@ -505,41 +371,6 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
                 >
                   {translate("Upload_your_photo")}
                 </Button> */}
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
-            <div className="text-sm">{translate("Banner_Image")}</div>
-            <div className="flex flex-col gap-1">
-              <div
-                className="flex justify-center items-center border border-dashed rounded-lg p-5"
-                onClick={() => document.getElementById("banner_image")?.click()}
-                onDrop={(e) => handleDropImage(e, "banner")}
-                onDragOver={(e) => e.preventDefault()}
-              >
-                <div className="flex flex-col items-center gap-4">
-                  <img
-                    src={
-                      bannerPreview ||
-                      methods.watch("banner_image") ||
-                      "/assets/product/image-square.svg"
-                    }
-                    className="w-full max-h-[200px] object-cover rounded-lg"
-                  />
-                  <input
-                    type="file"
-                    id="banner_image"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={(e) => handleImageSelect(e, "banner")}
-                  />
-                  <div className="text-[#656466]">
-                    {translate("Upload_Documents")}
-                  </div>
-                  <div className="text-[12px] text-[#89858C]">
-                    {translate("Upload_Documents_INFO")}
-                  </div>
-                </div>
               </div>
             </div>
           </div>

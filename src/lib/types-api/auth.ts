@@ -189,28 +189,15 @@ export interface IPostVendorRegisterRequest {
   city: string;
 }
 // POST Creator Register
-export interface IPostCreatorRegisterRequest {
+export interface IPostCreatorRegisterStepOneRequest {
   full_name: string;
   user_name: string;
-  // email: string;
+  email: string;
   state: string;
   city: string;
   gender: string;
   dob: string;
   phone: string;
-  title: string;
-  long_description: string;
-  short_description: string;
-  tags: string[];
-  category: string[];
-  sub_category: string[];
-  profile_image?: any;
-  banner_image?: any;
-  // channels: {
-  //   account_name: string;
-  //   handle_name: string;
-  //   account_link: string;
-  // }[]
 }
 export interface IPutUpdateCreatorResponse {
   status: number;
@@ -221,24 +208,12 @@ export interface IPutUpdateCreatorRequest {
   full_name: string;
   user_name: string;
   // email: string;
-  phone: string;
+  // phone: string;
   state: string;
   city: string;
   gender: string;
   dob: string;
-  title: string;
-  long_description: string;
-  short_description: string;
-  tags: string[];
-  category: string[];
-  sub_category: string[];
   profile_image: any;
-  banner_image: any;
-  // channels: {
-  //   account_name: string;
-  //   handle_name: string;
-  //   account_link: string;
-  // }[]
 }
 export interface IPostVendorRegisterResponse {
   status: number;
@@ -304,6 +279,10 @@ export interface IGetCreatorProgressResponse {
   sub_category?: string[];
   channels?: string[];
   tags?: string[];
+}
+
+export interface IGetUserNameExistsResponse {
+  exists: boolean
 }
 export interface IPostCreatorCheckExistRequest {
   user_name: string;

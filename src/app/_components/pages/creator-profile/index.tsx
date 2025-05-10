@@ -37,8 +37,8 @@ export default function CreatorProfile() {
           profile_image={creatorData.profile_image}
           full_name={creatorData.full_name}
           user_name={creatorData.user_name}
-          short_description={creatorData.short_description}
-          long_description={creatorData.long_description}
+          short_description={creatorData.store_name}
+          long_description={creatorData.store_description}
           tags={creatorData.tags}
           categories={[...creatorData.category.map((v: any) => v.name)]}
         />

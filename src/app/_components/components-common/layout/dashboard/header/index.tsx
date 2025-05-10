@@ -114,9 +114,8 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       setLoading(false);
     }
   };
-  console.log("objectobject", pathName);
   useEffect(() => {
-    if (pathName !== "/dashboard") {
+    if (pathName !== "/dashboard" && pathName !== "/creator-registration") {
       fetchNotifications();
     }
   }, []);
@@ -206,7 +205,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       <h2 className="md:text-2xl text-lg font-medium text-gray-black">
         {getHeaderName()}
       </h2>
-      {pathName !== "/dashboard" && (
+      {(pathName !== "/dashboard" && pathName !== "/creator-registration") && (
         <div className="ml-auto flex items-center md:gap-3 gap-2">
           <NotificationPopover
             notifications={notifications}
@@ -246,7 +245,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         </div>
       )}
       <div
-        className={pathName === "/dashboard" ? "flex justify-end w-full" : ""}
+        className={(pathName === "/dashboard" || pathName === "/creator-registration") ? "flex justify-end w-full" : ""}
       >
         <Link href="?auth=logout" className="mx-4 block">
           <IoLogOutOutline className="text-2xl text-primary" />

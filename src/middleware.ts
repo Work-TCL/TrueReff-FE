@@ -28,7 +28,8 @@ const USER_PUBLIC_ROUTES = ["/store",'/product-detail'];
 const withAuthMiddleware: MiddlewareFactory = (next) => {
   return async (request: NextRequest) => {
     const { pathname } = request.nextUrl;
-    const user = await getToken({req: request});
+    const user:any = await getToken({req: request});
+    console.log("user",user)
     const token =
       request.cookies.get("next-auth.session-token") ||
       request.cookies.get("__Secure-next-auth.session-token");
@@ -52,6 +53,9 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     //   return NextResponse.redirect(new URL(pathname, request.url));
     // }
     // Redirect Authenticated Users Away from Auth Pages
+    if(user?.creator && !pathname.startsWith("/creator-registration") && user?.creator?.status !== "APPROVED"){
+      return NextResponse.redirect(new URL('/creator-registration', request.url));
+    }
     if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request)) {
       return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard`:`/dashboard`, request.url));
     }
@@ -59,7 +63,7 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
-    if(token && user?.type === "creator" && ((!pathname.startsWith("/vendor/profile")) && pathname.startsWith("/vendor") || ['/vendor-register',"/creator-registration",'/dashboard'].includes(pathname))){
+    if(token && user?.type === "creator" && ((!pathname.startsWith("/vendor/profile")) && pathname.startsWith("/vendor") || ['/vendor-register','/dashboard'].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 

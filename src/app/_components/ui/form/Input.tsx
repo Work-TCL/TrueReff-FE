@@ -391,7 +391,25 @@ export default function Input({
       )}
     />
   );
-
+  const customStyles = {
+    placeholder: (base: any) => ({
+      ...base,
+      fontSize: "0.875rem ", // Tailwind text-sm
+      color: "#9CA3AF", // Tailwind slate-400
+      fontWeight: 'normal',
+    }),
+    control: (base: any, state: any) => {
+      return ({
+        ...base,
+        height: "54px",
+        borderRadius: "8px"
+      })
+    },
+    menu: (base: any) => ({
+      ...base,
+      zIndex: 9999
+    })
+  };
   const renderMultiSelectInput = () => (
     <Controller
       control={control}
@@ -402,6 +420,7 @@ export default function Input({
           {getLabel()}
           <div className="relative">
             <Select
+            styles={customStyles}
               isMulti
               options={options}
               className="basic-multi-select focus:outline-none focus:shadow-none"

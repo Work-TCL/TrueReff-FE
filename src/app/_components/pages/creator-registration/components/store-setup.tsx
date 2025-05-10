@@ -5,6 +5,7 @@ import { getCategories } from "@/lib/web-api/auth";
 import { useFormContext } from "react-hook-form";
 import { Camera, ImageIcon, Pencil, User } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { get } from "lodash";
 
 export interface ICategoryData {
   _id: string;
@@ -18,15 +19,16 @@ interface IProps {
   handleImageSelect: any;
   profilePreview: any;
   bannerPreview: any;
+  methods:any;
 }
 
 export default function StoreSetup({
   handleImageSelect,
   bannerPreview,
   profilePreview,
+  methods
 }: IProps) {
   const translate = useTranslations();
-  const methods = useFormContext();
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
@@ -141,6 +143,18 @@ export default function StoreSetup({
           </div>
         </div>
       </div>
+      <div className="flex justify-between">
+      {Boolean(get(methods.formState.errors, "banner_image")) && (
+        <span className="text-red-600 text-sm p-2 block">
+          {methods.formState.errors["banner_image"]?.message}
+        </span>
+      )}
+      {Boolean(get(methods.formState.errors, "profile_image")) && (
+        <span className="text-red-600 text-sm p-2 block">
+          {methods.formState.errors["profile_image"]?.message}
+        </span>
+      )}
+      </div>
 
       {/* Spacer below for overlap */}
       <div className="h-[60px]" />
@@ -150,7 +164,7 @@ export default function StoreSetup({
         <div className="col-span-2">
           <Input
             label={translate("Store_Name")}
-            name="short_description"
+            name="store_name"
             type="text"
             placeholder={translate("Enter_Store_Name")}
             />
@@ -203,7 +217,7 @@ export default function StoreSetup({
         <div className="col-span-2 ">
           <Input
             label={translate("Store_Description")}
-            name="description"
+            name="store_description"
             type="editor"
             rows={4}
             placeholder="I'm John, a fashion influencer sharing style tips, outfit inspiration, and grooming advice for men. Follow me for daily fashion insights!"

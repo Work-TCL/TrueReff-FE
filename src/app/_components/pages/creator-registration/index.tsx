@@ -8,22 +8,23 @@ import { FaRegUserCircle } from "react-icons/fa";
 import {
   creatorOnBoardingSchema,
   creatorSocialConnectSchema,
+  creatorStoreSetUpSchema,
   ICreatorOnBoardingSchema,
   ICreatorSocialConnectSchema,
+  ICreatorStoreSetUpSchema,
 } from "@/lib/utils/validations";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/app/_components/ui/button";
 import BasicInfoForm from "./components/basic-details";
 import SocialMedia from "./components/social-media";
-import ProfileSetup from "./components/profile-setup";
 import toast from "react-hot-toast";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { useRouter, useSearchParams } from "next/navigation";
 import PaymentDetails from "./components/payment-details";
 import {
-  IPostCreatorRegisterRequest,
   IPostCreatorRegisterResponse,
+  IPostCreatorRegisterStepOneRequest,
 } from "@/lib/types-api/auth";
 import {
   checkCreatorUserNameExist,
@@ -36,9 +37,9 @@ import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { fileUploadLimitValidator } from "@/lib/utils/constants";
 import { toastMessage } from "@/lib/utils/toast-message";
-import StoreSetUp from "../my-store/store-set-up";
 import StoreSetup from "./components/store-setup";
 import { CreditCard, FileText, Globe, Store } from "lucide-react";
+import ProfileAccess from "../../components-common/dialogs/profile-approval";
 
 let allTabs: {
   id: string;
@@ -78,8 +79,9 @@ export default function CreatorRegistrationPage() {
   const { account } = useAuthStore();
   const { setCreatorData } = useCreatorStore();
   const router = useRouter();
-  const tab = searchParams.get("tab") ?? "2";
-  const activeTab = parseInt(tab);
+  const tab = searchParams.get("tab") ?? "0";
+  const [activeTab,setActiveTab] = useState(0);
+  const [open, setOpen] = useState<boolean>(false);
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
   const [instagramConnected, setInstagramConnected] = useState<boolean>(false);
   const [isCreatorLoading, setIsCreatorLoading] = useState(true);
@@ -89,11 +91,13 @@ export default function CreatorRegistrationPage() {
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string>("");
   const [bannerPreview, setBannerPreview] = useState<string>("");
+  const [channelError, setChannelError] = useState<string>("");
   const initialState = {
     state: "",
     city: "",
     gender: "",
     dob: "",
+    userName:""
   };
   const [formState, setFormState] = useState(initialState);
   const methods = useForm<ICreatorOnBoardingSchema>({
@@ -102,16 +106,25 @@ export default function CreatorRegistrationPage() {
       user_name: "",
       email: "",
       phone_number: "",
-      profile_title: "",
-      short_description: "",
-      long_description: "",
+      state:"",
+      city: "",
+      gender: "",
+      dob:""
+    },
+    resolver: yupResolver(creatorOnBoardingSchema),
+    mode: "onSubmit",
+  });
+  const storeMethods = useForm<ICreatorStoreSetUpSchema>({
+    defaultValues: {
+      store_name:"",
+      store_description: "",
       tags: [],
       category: [],
       sub_category: [],
-      profile_image: null,
-      banner_image: null,
+      profile_image: "",
+      banner_image: "",
     },
-    resolver: yupResolver(creatorOnBoardingSchema),
+    resolver: yupResolver(creatorStoreSetUpSchema),
     mode: "onSubmit",
   });
 
@@ -133,6 +146,11 @@ export default function CreatorRegistrationPage() {
     resolver: yupResolver(creatorSocialConnectSchema),
     mode: "onSubmit",
   });
+  useEffect(()=> {
+    if(tab){
+      setActiveTab(parseInt(tab));
+    }
+  },[tab])
   useEffect(() => {
     if (account?.email) {
       methods.setValue("email", account?.email);
@@ -140,58 +158,113 @@ export default function CreatorRegistrationPage() {
   }, [account?.email]);
   const onSubmit = async (data: ICreatorOnBoardingSchema) => {
     setLoading(true);
-
     try {
-      const payload: IPostCreatorRegisterRequest = {
+      const payload: IPostCreatorRegisterStepOneRequest = {
         full_name: data.full_name,
-        // email: data.email,
+        email: data?.email,
         phone: data.phone_number,
         user_name: data.user_name,
-        title: data.profile_title,
-        long_description: data.long_description,
-        short_description: data.short_description,
-        category: data.category.map((v) => v.value),
-        sub_category: data.sub_category.map((v) => v.value),
-        tags: data.tags || [],
         state: data?.state,
         city: data?.city,
         gender: data?.gender,
         dob: data?.dob,
       };
 
-      if (bannerFile) {
-        payload.banner_image = bannerFile;
-      }
-      if (profileFile) {
-        payload.profile_image = profileFile;
-      }
-
-      const response: IPostCreatorRegisterResponse = await creatorRegister(
-        payload
+      const response: any = await creatorRegister(
+        payload,1
       );
-      if (response?.status === 201) {
+      if (response?.status === 200) {
         setCreatorData("creator", {
-          creatorId: response?.data?._id,
+          creatorId: response?.data?.id,
           accountId: response?.data?.accountId,
           full_name: response?.data?.full_name,
           user_name: response?.data?.user_name,
-          title: response?.data?.title,
+          email: response?.data?.email,
           phone: response?.data?.phone,
-          banner_image: response?.data?.banner_image,
-          profile_image: response?.data?.profile_image,
+          dob: response?.data?.dob,
+          gender: response?.data?.gender,
+          state: response?.data?.state,
+          city: response?.data?.city,
           category: response?.data?.category,
           sub_category: response?.data?.sub_category,
           tags: response?.data?.tags,
           channels: response?.data?.channels,
+          completed_step: response?.data?.completed_step,
+          status: response?.data?.status,
+          createdAt: response?.data?.createdAt,
+          updatedAt: response?.data?.updatedAt,
           completed: response?.data?.completed,
-          short_description: response?.data?.short_description,
-          long_description: response?.data?.long_description,
+          instagram_link: response?.data?.instagram_link,
+          youtube_link: response?.data?.youtube_link,
+          banner_image: response?.data?.banner_image,
+          profile_image: response?.data?.profile_image,
+          store_description: response?.data?.store_description,
+          store_name: response?.data?.store_name,
+        });
+        router.push(`?tab=1&creatorId=${response?.data?._id}`);
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const onStoreSetUpSubmit = async (data: ICreatorStoreSetUpSchema) => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("store_name",data?.store_name);
+      formData.append("store_description",data?.store_description);
+      data.category.length > 0 && data.category.forEach((ele,index) => {
+        formData.append(`category[${index}]`,ele?.value);
+      })
+      data.sub_category.length > 0 && data.sub_category.forEach((ele,index) => {
+        formData.append(`sub_category[${index}]`,ele?.value);
+      })
+      data.tags.length > 0 && data.tags.forEach((ele,index) => {
+        formData.append(`tags[${index}]`,ele);
+      })
+      if (bannerFile) {
+        formData.append("banner_image",bannerFile);
+      }
+      if (profileFile) {
+        formData.append("profile_image",profileFile);
+      }
+      console.log("formData",formData)
+      const response: any = await creatorRegister(
+        formData,3
+      );
+      if (response?.status === 200) {
+        setOpen(true);
+        setCreatorData("creator", {
+          creatorId: response?.data?.id,
+          accountId: response?.data?.accountId,
+          full_name: response?.data?.full_name,
+          user_name: response?.data?.user_name,
+          email: response?.data?.email,
+          phone: response?.data?.phone,
+          dob: response?.data?.dob,
+          gender: response?.data?.gender,
           state: response?.data?.state,
           city: response?.data?.city,
-          gender: response?.data?.gender,
-          dob: response?.data?.dob,
+          category: response?.data?.category,
+          sub_category: response?.data?.sub_category,
+          tags: response?.data?.tags,
+          channels: response?.data?.channels,
+          completed_step: response?.data?.completed_step,
+          status: response?.data?.status,
+          createdAt: response?.data?.createdAt,
+          updatedAt: response?.data?.updatedAt,
+          completed: response?.data?.completed,
+          instagram_link: response?.data?.instagram_link,
+          youtube_link: response?.data?.youtube_link,
+          banner_image: response?.data?.banner_image,
+          profile_image: response?.data?.profile_image,
+          store_description: response?.data?.store_description,
+          store_name: response?.data?.store_name,
         });
-        router.push(`?tab=2&creatorId=${response?.data?._id}`);
+        // router.push(`?tab=1&creatorId=${response?.data?._id}`);
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -203,10 +276,47 @@ export default function CreatorRegistrationPage() {
 
   const onSubmitSocial = async () => {
     setLoading(true);
-    try {
-      const response = await socialMediaAdded({});
+    try {    
+      const formData = new FormData();
+      let youtubeChannelLink = methodsSocial.getValues('channels.1.account_link');
+      let instagramChannelLink = methodsSocial.getValues('channels.0.account_link');
+      if (youtubeChannelLink || instagramChannelLink) {
+        formData.append("instagram_link",instagramChannelLink);
+        formData.append("youtube_link",youtubeChannelLink);
+        const response: any = await creatorRegister(formData,2);
       if (response?.status === 200) {
-        router.push("/creator/dashboard");
+        setCreatorData("creator", {
+          creatorId: response?.data,
+          accountId: response?.data?._id,
+          full_name: response?.data?.full_name,
+          user_name: response?.data?.user_name,
+          email: response?.data?.email,
+          phone: response?.data?.phone,
+          dob: response?.data?.dob,
+          gender: response?.data?.gender,
+          state: response?.data?.state,
+          city: response?.data?.city,
+          category: response?.data?.category,
+          sub_category: response?.data?.sub_category,
+          tags: response?.data?.tags,
+          channels: response?.data?.channels,
+          completed_step: response?.data?.completed_step,
+          status: response?.data?.status,
+          createdAt: response?.data?.createdAt,
+          updatedAt: response?.data?.updatedAt,
+          completed: response?.data?.completed,
+          instagram_link: response?.data?.instagram_link,
+          youtube_link: response?.data?.youtube_link,
+          banner_image: response?.data?.banner_image,
+          profile_image: response?.data?.profile_image,
+          store_description: response?.data?.store_description,
+          store_name: response?.data?.store_name,
+        });
+        router.push(`?tab=2`);
+        setChannelError("");
+      }
+      } else {
+        setChannelError("Min 1 Channel required.");
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -218,28 +328,7 @@ export default function CreatorRegistrationPage() {
 
   const handleTriggerStepper = async () => {
     setLoading(true);
-    if (TABS_STATUS.BASIC_DETAILS === activeTab) {
-      const basicInfoField: any = [
-        "full_name",
-        "user_name",
-        "email",
-        "phone_number",
-        "state",
-        "city",
-        "gender",
-        "dob",
-      ];
-      const isValid = await methods.trigger(basicInfoField);
-      const isExist = await checkCreatorUserNameExist({
-        user_name: methods.watch("user_name"),
-      });
-
-      if (isExist) {
-        toast.error("user_name already exists");
-      } else if (isValid) {
-        router.push(`?tab=1`); // Move to next tab
-      }
-    } else if (TABS_STATUS.STORE_SETUP === activeTab) {
+    if (TABS_STATUS.STORE_SETUP === activeTab) {
       const profileSetUpFields: any = [
         "title",
         "long_description",
@@ -253,35 +342,8 @@ export default function CreatorRegistrationPage() {
       if (isValid) {
         router.push(`?tab=2`); // Move to next tab
       }
-    } else if (TABS_STATUS.SOCIAL_MEDIA === activeTab) {
-      if (youtubeConnected || instagramConnected) {
-        await onSubmitSocial();
-      } else {
-        toastMessage.error("Min 1 Channel required.");
-      }
     }
     setLoading(false);
-  };
-
-  const handleValidTab = async () => {
-    setIsCreatorLoading(true);
-    if (TABS_STATUS.STORE_SETUP === activeTab) {
-      const basicInfoField: any = [
-        "full_name",
-        "user_name",
-        "email",
-        "phone_number",
-      ];
-      const isValid = await methods.trigger(basicInfoField);
-      const isExist = await checkCreatorUserNameExist({
-        user_name: methods.watch("user_name"),
-      });
-
-      // if (isExist || !isValid) {
-      //   router.push(`?tab=0`);
-      // }
-    }
-    setIsCreatorLoading(false);
   };
 
   const getCreator = async () => {
@@ -289,27 +351,81 @@ export default function CreatorRegistrationPage() {
     try {
       const creator: any = await getCreatorProgress();
       setCreatorDetails(creator);
+      if (creator) {
+        if (creator?.completed_step === 1) {
+          router.push(
+            `?tab=1`
+          );
+          setIsCreatorLoading(false);
+        } else if (creator?.completed_step === 2) {
+          router.push(
+            `?tab=2`
+          );
+          setIsCreatorLoading(false);
+        } else if (
+          creator?.completed_step === 3 && creator?.status !== "APPROVED"
+        ) {
+          setOpen(true);
+          setIsCreatorLoading(false);
+          router.push(
+            `?tab=2`
+          );
+          // router.push(`/creator/dashboard`);
+        } else if(creator?.completed_step === 3 && creator?.status === "APPROVED"){
+          router.push(`/creator/dashboard`);
+        }
+      }
       if (creator?._id) {
-        setCreatorData("creator", {
-          creatorId: creator?._id,
-          accountId: creator?.accountId,
-          full_name: creator?.full_name,
-          user_name: creator?.user_name,
-          title: creator?.title,
-          phone: creator?.phone,
-          banner_image: creator?.banner_image,
-          profile_image: creator?.profile_image,
-          category: creator?.category,
-          sub_category: creator?.sub_category,
-          tags: creator?.tags,
-          channels: creator?.channels,
-          completed: creator?.completed,
-          short_description: creator?.short_description,
-          long_description: creator?.long_description,
+        methods.setValue("full_name",creator?.full_name);
+        methods.setValue("user_name",creator?.user_name        );
+        methods.setValue("email",creator?.email);
+        methods.setValue("phone_number",creator?.phone);
+        methods.setValue("state",creator?.state);
+        methods.setValue("city",creator?.city);
+        methods.setValue("gender",creator?.gender);
+        methods.setValue("dob",new Date(creator?.dob).toLocaleDateString());
+        setFormState({
           state: creator?.state,
           city: creator?.city,
           gender: creator?.gender,
           dob: creator?.dob,
+          userName: creator?.user_name
+        })
+        storeMethods.setValue("store_name",creator?.store_name);
+        storeMethods.setValue("store_description",creator?.store_description);
+        storeMethods.setValue("tags",creator?.tags);
+        storeMethods.setValue("category",creator?.category);
+        storeMethods.setValue("sub_category",creator?.sub_category);
+        storeMethods.setValue("profile_image",creator?.profile_image);
+        storeMethods.setValue("banner_image",creator?.banner_image);
+        setBannerPreview(creator?.banner_image);
+        setProfilePreview(creator?.profile_image);
+        setCreatorData("creator", {
+          creatorId: creator?.data?._id,
+          accountId: creator?.data?.accountId,
+          full_name: creator?.data?.full_name,
+          user_name: creator?.data?.user_name,
+          email: creator?.data?.email,
+          phone: creator?.data?.phone,
+          dob: creator?.data?.dob,
+          gender: creator?.data?.gender,
+          state: creator?.data?.state,
+          city: creator?.data?.city,
+          category: creator?.data?.category,
+          sub_category: creator?.data?.sub_category,
+          tags: creator?.data?.tags,
+          channels: creator?.data?.channels,
+          completed_step: creator?.data?.completed_step,
+          status: creator?.data?.status,
+          createdAt: creator?.data?.createdAt,
+          updatedAt: creator?.data?.updatedAt,
+          completed: creator?.data?.completed,
+          instagram_link: creator?.data?.instagram_link,
+          youtube_link: creator?.data?.youtube_link,
+          banner_image: creator?.data?.banner_image,
+          profile_image: creator?.data?.profile_image,
+          store_description: creator?.data?.store_description,
+          store_name: creator?.data?.store_name,
         });
       }
     } catch (e) {
@@ -319,23 +435,8 @@ export default function CreatorRegistrationPage() {
   };
 
   useEffect(() => {
-    if (creatorDetails) {
-      if (Boolean(creatorDetails?.completed === 25 && creatorDetails?._id)) {
-        router.push(
-          `/creator-registration?tab=2&creatorId=${creatorDetails?._id}`
-        );
-      } else if (
-        Boolean(creatorDetails?.completed === 50 && creatorDetails?._id)
-      ) {
-        router.push(`/creator/dashboard`);
-      }
-    }
-  }, [creatorDetails]);
-
-  useEffect(() => {
     (async () => {
-      // await getCreator();
-      await handleValidTab();
+      await getCreator();
     })();
   }, []);
 
@@ -354,16 +455,16 @@ export default function CreatorRegistrationPage() {
     if (type === "profile") {
       setProfileFile(file);
       setProfilePreview(previewURL);
-      methods.setValue("profile_image", previewURL);
-      methods.setError("profile_image", {
+      storeMethods.setValue("profile_image", previewURL);
+      storeMethods.setError("profile_image", {
         type: "manual",
         message: "",
       });
     } else {
       setBannerFile(file);
       setBannerPreview(previewURL);
-      methods.setValue("banner_image", previewURL);
-      methods.setError("banner_image", {
+      storeMethods.setValue("banner_image", previewURL);
+      storeMethods.setError("banner_image", {
         type: "manual",
         message: "",
       });
@@ -386,7 +487,7 @@ export default function CreatorRegistrationPage() {
   };
 
   return (
-    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-10 pt-5 pb-2 h-screen overflow-hidden flex flex-col">
+    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-5 pt-5 pb-2 h-screen overflow-hidden flex flex-col">
       {isCreatorLoading && <Loader />}
       {!isCreatorLoading && (
         <>
@@ -405,78 +506,42 @@ export default function CreatorRegistrationPage() {
             <SlidingTabBar
               tabs={allTabs}
               setActiveTabIndex={(v) => {
-                if (
-                  [
-                    TABS_STATUS.BASIC_DETAILS,
-                    TABS_STATUS.STORE_SETUP,
-                    TABS_STATUS.SOCIAL_MEDIA,
-                  ].includes(activeTab) &&
-                  [
-                    TABS_STATUS.BASIC_DETAILS,
-                    TABS_STATUS.STORE_SETUP,
-                    TABS_STATUS.SOCIAL_MEDIA,
-                  ].includes(v)
-                ) {
-                  router.push(`?tab=${v}`);
-                }
+                // if (
+                //   [
+                //     TABS_STATUS.BASIC_DETAILS,
+                //     TABS_STATUS.STORE_SETUP,
+                //     TABS_STATUS.SOCIAL_MEDIA,
+                //   ].includes(activeTab) &&
+                //   [
+                //     TABS_STATUS.BASIC_DETAILS,
+                //     TABS_STATUS.STORE_SETUP,
+                //     TABS_STATUS.SOCIAL_MEDIA,
+                //   ].includes(v)
+                // ) {
+                //   router.push(`?tab=${v}`);
+                // }
               }}
               activeTabIndex={activeTab}
               grid={4}
             />
-            {[TABS_STATUS.BASIC_DETAILS, TABS_STATUS.SOCIAL_MEDIA].includes(
-              activeTab
-            ) && (
-                <FormProvider {...methods}>
+            {
+              {
+                [TABS_STATUS.BASIC_DETAILS]: <FormProvider {...methods}>
                   <form
                     onSubmit={methods.handleSubmit(onSubmit)}
-                    className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
+                    className="md:pt-6 mt-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
                   >
-                    {
-                      {
-                        [TABS_STATUS.BASIC_DETAILS]: (
-                          <BasicInfoForm
-                            handleOnSelect={handleOnSelect}
-                            handleImageSelect={handleImageSelect}
-                            profilePreview={profilePreview}
-                            bannerPreview={bannerPreview}
-                            methods={methods}
-                            formState={formState}
-                          />
-                        ),
-                        [TABS_STATUS.SOCIAL_MEDIA]: (
-                          <SocialMedia
-                            setYoutubeConnected={setYoutubeConnected}
-                            youtubeConnected={youtubeConnected}
-                            setInstagramConnected={setInstagramConnected}
-                            instagramConnected={instagramConnected}
-                          />
-                        ),
-                      }[activeTab]
-                    }
+                    <BasicInfoForm
+                      handleOnSelect={handleOnSelect}
+                      methods={methods}
+                      formState={formState}
+                    />
                     <div className="flex bg-white">
                       <Button
                         type="submit"
                         className={cn(
-                          "w-fit font-medium px-8",
-                          activeTab === TABS_STATUS.SOCIAL_MEDIA
-                            ? "block"
-                            : "hidden"
-                        )}
+                          "w-fit font-medium px-8")}
                         size="small"
-                        loading={loading}
-                        disabled={loading}
-                      >
-                        {"Save & Continue"}
-                      </Button>
-                      <Button
-                        className={cn(
-                          "w-fit font-medium px-8",
-                          activeTab === TABS_STATUS.SOCIAL_MEDIA
-                            ? "hidden"
-                            : "block"
-                        )}
-                        size="small"
-                        onClick={handleTriggerStepper}
                         loading={loading}
                         disabled={loading}
                       >
@@ -484,28 +549,64 @@ export default function CreatorRegistrationPage() {
                       </Button>
                     </div>
                   </form>
-                </FormProvider>
-              )}
-            {[TABS_STATUS.STORE_SETUP, TABS_STATUS.PAYMENT_DETAILS].includes(
-              activeTab
-            ) && (
-                <FormProvider {...methodsSocial}>
+                </FormProvider>,
+                [TABS_STATUS.SOCIAL_MEDIA]: <FormProvider {...methodsSocial}>
+                  <form
+                    className="md:pt-6 mt-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
+                  >
+                    <SocialMedia
+                      setYoutubeConnected={setYoutubeConnected}
+                      youtubeConnected={youtubeConnected}
+                      setInstagramConnected={setInstagramConnected}
+                      instagramConnected={instagramConnected}
+                      methods={methodsSocial}
+                    />
+                    <div className="flex items-center gap-4 bg-white">
+                      <Button
+                        className={cn(
+                          "w-fit font-medium px-8"
+                        )}
+                        size="small"
+                        onClick={onSubmitSocial}
+                        loading={loading}
+                        disabled={loading||!(instagramConnected||youtubeConnected)}
+                      >
+                        {"Save & Continue"}
+                      </Button>
+                      {channelError && <span className="text-red-600 text-sm">{channelError}</span>}
+                    </div>
+                  </form>
+                </FormProvider>,
+                [TABS_STATUS.STORE_SETUP]: <FormProvider {...storeMethods}>
+                  <form
+                    onSubmit={storeMethods.handleSubmit(onStoreSetUpSubmit)}
+                    className="md:pt-6 mt-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
+                  >
+                    <StoreSetup
+                      handleImageSelect={handleImageSelect}
+                      profilePreview={profilePreview}
+                      bannerPreview={bannerPreview}
+                      methods={storeMethods}
+                    />
+                    <div className="flex bg-white">
+                      <Button
+                        type="submit"
+                        className={cn("w-fit font-medium px-8", "block")}
+                        size="small"
+                        loading={loading}
+                        disabled={loading}
+                      >
+                        {"Save & Continue"}
+                      </Button>
+                    </div>
+                  </form>
+                </FormProvider>,
+                [TABS_STATUS.PAYMENT_DETAILS]: <FormProvider {...methodsSocial}>
                   <form
                     onSubmit={methodsSocial.handleSubmit(onSubmitSocial)}
-                    className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col gap-3 relative"
+                    className="md:pt-6 mt-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
                   >
-                    {
-                      {
-                        [TABS_STATUS.STORE_SETUP]: (
-                          <StoreSetup
-                            handleImageSelect={handleImageSelect}
-                            profilePreview={profilePreview}
-                            bannerPreview={bannerPreview}
-                          />
-                        ),
-                        [TABS_STATUS.PAYMENT_DETAILS]: <PaymentDetails />,
-                      }[activeTab]
-                    }
+                    <PaymentDetails />
                     <div className="flex bg-white">
                       <Button
                         type="button"
@@ -532,11 +633,13 @@ export default function CreatorRegistrationPage() {
                       </Button>
                     </div>
                   </form>
-                </FormProvider>
-              )}
-          </div>{" "}
+                </FormProvider>,
+              }[activeTab]
+            }
+          </div>
         </>
       )}
+      {open && <ProfileAccess />}
     </div>
   );
 }

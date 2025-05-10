@@ -35,21 +35,27 @@ export interface ICreator {
   accountId: string;
   full_name: string;
   user_name: string;
-  title: string;
+  email: string;
   phone: string;
-  banner_image: string;
-  profile_image: string;
+  dob: string;
+  gender: string;
+  state: string;
+  city: string;
   category: string[];
   sub_category: string[];
   tags: string[];
   channels: string[];
-  completed: number;
-  short_description: string;
-  long_description: string;
-  state: string;
-  city: string;
-  gender: string;
-  dob: string;
+  completed_step: number;
+  status: "IN_PROGRESS"| "PENDING_APPROVAL"| "APPROVED"| "REJECTED";
+  createdAt: string;
+  updatedAt: string;
+  completed: number,
+  instagram_link: string;
+  youtube_link: string;
+  banner_image: string;
+  profile_image: string;
+  store_description: string;
+  store_name: string;
 }
 
 export interface ICreatorByIdRequest {

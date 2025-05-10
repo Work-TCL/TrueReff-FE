@@ -51,8 +51,14 @@ export default function ProfileCreator() {
               ["User_Name", creator.user_name],
               ["Name", creator.full_name],
               ["Mobile", creator.phone],
-              ["Short_Description", creator.short_description],
-              ["Long_Description", creator.long_description],
+              [
+                "Date_Of_Birth",
+                new Date(creator.dob).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                }),
+              ],
             ].map(([label, value], idx) => (
               <div key={idx} className="flex items-start gap-2">
                 <div className="w-[120px] text-sm text-gray-500 text-nowrap">
@@ -69,14 +75,6 @@ export default function ProfileCreator() {
               ["State", creator.state],
               ["City", creator.city],
               ["Gender", creator.gender],
-              [
-                "Date_Of_Birth",
-                new Date(creator.dob).toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                }),
-              ],
             ].map(([label, value], idx) => (
               <div key={idx} className="flex items-start gap-2">
                 <div className="w-[120px] text-sm text-gray-500 text-nowrap">

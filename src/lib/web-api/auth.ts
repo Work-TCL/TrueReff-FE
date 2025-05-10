@@ -7,12 +7,13 @@ import {
   IGetCategoryParams,
   IGetCategoryResponse,
   IGetCreatorProgressResponse,
+  IGetUserNameExistsResponse,
   IGetUserResponse,
   IPostContactUsRequest,
   IPostContactUsResponse,
   IPostCreatorCheckExistRequest,
   IPostCreatorCheckExistResponse,
-  IPostCreatorRegisterRequest,
+  IPostCreatorRegisterStepOneRequest,
   IPostCreatorRegisterResponse,
   IPostForgotPasswordRequest,
   IPostForgotPasswordResponse,
@@ -56,7 +57,7 @@ export const loginAPI = async (
   try {
     const response = await axios.post("/auth/login", params);
     const user = response?.data;
-    if(user){
+    if (user) {
       useAuthStore.getState().setAccountData({
         email: user?.email,
         id: user?._id,
@@ -86,7 +87,7 @@ export const SocialLoginAPI = async (
       if (user?.token) {
         useAuthStore.getState().setIsAuthStatus("authenticated");
         useAuthStore.getState().setToken(user?.token);
-    }
+      }
     }
     return response?.data;
   } catch (error) {
@@ -114,24 +115,30 @@ export const getUserApi = async (): Promise<IGetUserResponse> => {
       const creator = response.data?.data?.creator;
       useCreatorStore.getState().setCreatorData("creator", {
         creatorId: creator?._id,
-        accountId: response.data?.data?._id,
+        accountId: creator?.accountId,
         full_name: creator?.full_name,
         user_name: creator?.user_name,
-        title: creator?.title,
+        email: creator?.email,
         phone: creator?.phone,
-        banner_image: creator?.banner_image,
-        profile_image: creator?.profile_image,
+        dob: creator?.dob,
+        gender: creator?.gender,
+        state: creator?.state,
+        city: creator?.city,
         category: creator?.category,
         sub_category: creator?.sub_category,
         tags: creator?.tags,
         channels: creator?.channels,
+        completed_step: creator?.completed_step,
+        status: creator?.status,
+        createdAt: creator?.createdAt,
+        updatedAt: creator?.updatedAt,
         completed: creator?.completed,
-        short_description: creator?.short_description,
-        long_description: creator?.long_description,
-        state: creator?.state,
-        city: creator?.city,
-        gender: creator?.gender,
-        dob: creator?.dob,
+        instagram_link: creator?.instagram_link,
+        youtube_link: creator?.youtube_link,
+        banner_image: creator?.banner_image,
+        profile_image: creator?.profile_image,
+        store_description: creator?.store_description,
+        store_name: creator?.store_name,
       });
     }
     // vendor
@@ -208,24 +215,30 @@ export const verifyEmail = async (
       const creator = response.data?.data?.creator;
       useCreatorStore.getState().setCreatorData("creator", {
         creatorId: creator?._id,
-        accountId: response.data?.data?._id,
+        accountId: creator?.accountId,
         full_name: creator?.full_name,
         user_name: creator?.user_name,
-        title: creator?.title,
+        email: creator?.email,
         phone: creator?.phone,
-        banner_image: creator?.banner_image,
-        profile_image: creator?.profile_image,
+        dob: creator?.dob,
+        gender: creator?.gender,
+        state: creator?.state,
+        city: creator?.city,
         category: creator?.category,
         sub_category: creator?.sub_category,
         tags: creator?.tags,
         channels: creator?.channels,
+        completed_step: creator?.completed_step,
+        status: creator?.status,
+        createdAt: creator?.createdAt,
+        updatedAt: creator?.updatedAt,
         completed: creator?.completed,
-        short_description: creator?.short_description,
-        long_description: creator?.long_description,
-        state: creator?.state,
-        city: creator?.city,
-        gender: creator?.gender,
-        dob: creator?.dob,
+        instagram_link: creator?.instagram_link,
+        youtube_link: creator?.youtube_link,
+        banner_image: creator?.banner_image,
+        profile_image: creator?.profile_image,
+        store_description: creator?.store_description,
+        store_name: creator?.store_name,
       });
     }
     // vendor
@@ -313,10 +326,11 @@ export const venderRegister = async (
 };
 
 export const creatorRegister = async (
-  params: IPostCreatorRegisterRequest
+  params: IPostCreatorRegisterStepOneRequest|any,
+  step: number
 ): Promise<IPostCreatorRegisterResponse> => {
   try {
-    const response = await axios.post("/auth/creator/add", params, {
+    const response = await axios.post(`/auth/creator/register?step=${step}`, params, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -379,6 +393,17 @@ export const getCreatorProgress =
       };
     }
   };
+  // get username exists or not
+export const fetchUserNameExists =
+  async (params:{user_name:string}): Promise<IGetUserNameExistsResponse> => {
+    try {
+      const response = await axios.post(`/auth/creator/check-exists`,params);
+      return response?.data?.data;
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error);
+      throw errorMessage || new Error("Error While fetching user name.");
+    }
+  };
 export const checkCreatorUserNameExist = async (
   params: IPostCreatorCheckExistRequest
 ): Promise<IPostCreatorCheckExistResponse | null> => {
@@ -393,7 +418,7 @@ export const checkCreatorUserNameExist = async (
 };
 
 export const getCreatorList =
-  async (page:number,limit:number): Promise<any> => {
+  async (page: number, limit: number): Promise<any> => {
     try {
       const response = await axios.get(`/auth/creator/list?page=${page}&limit=${limit}`);
       return response?.data?.data;
@@ -403,8 +428,8 @@ export const getCreatorList =
     }
   };
 
-  export const getVendorList =
-  async (page:number,limit:number): Promise<any> => {
+export const getVendorList =
+  async (page: number, limit: number): Promise<any> => {
     try {
       const response = await axios.get(`/auth/vendor/list?page=${page}&limit=${limit}`);
       return response?.data?.data;
@@ -414,7 +439,7 @@ export const getCreatorList =
     }
   };
 
-  export const getVendorCreatorCount =
+export const getVendorCreatorCount =
   async (): Promise<any> => {
     try {
       const response = await axios.get(`/auth/creator/creator-vendor-count`);

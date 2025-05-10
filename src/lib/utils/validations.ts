@@ -391,15 +391,19 @@ export const creatorOnBoardingSchema = Yup.object().shape({
   phone_number: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
-
-  // Profile
-  profile_title: Yup.string().required("Title is required"),
-  short_description: Yup.string().required("Short description is required"),
-  long_description: Yup.string().required("Long description is required"),
   state: Yup.string().required("State is required"),
   city: Yup.string().required("City is required"),
   gender: Yup.string().required("Gender is required"),
   dob: Yup.string().required("Date of Birth is required"),
+  
+});
+
+export interface ICreatorOnBoardingSchema
+  extends Yup.Asserts<typeof creatorOnBoardingSchema> {}
+
+  export const creatorStoreSetUpSchema = Yup.object().shape({
+    store_name: Yup.string().required("Store name is required"),
+    store_description: Yup.string().required("Store description is required"),  
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
@@ -422,12 +426,10 @@ export const creatorOnBoardingSchema = Yup.object().shape({
     )
     .min(1, "Sub-category is required")
     .required("Sub-Category is required"), // Ensure at least one sub-category is selected
-  profile_image: Yup.string().nullable(),
-  banner_image: Yup.string().nullable(),
-});
-
-export interface ICreatorOnBoardingSchema
-  extends Yup.Asserts<typeof creatorOnBoardingSchema> {}
+  profile_image: Yup.string().required("Profile Image is required"),
+  banner_image: Yup.string().required("Banner Image is required"),
+  })
+  export interface ICreatorStoreSetUpSchema extends Yup.Asserts<typeof creatorStoreSetUpSchema>{}
 
 export const shopifyConnectSchema = Yup.object().shape({
   id_string: Yup.string().required("Shopify ID is required"),
@@ -550,42 +552,14 @@ export interface IUTMSchema extends Yup.Asserts<typeof utmSchema> {}
 export const creatorProfileUpdateSchema = Yup.object().shape({
   full_name: Yup.string().required("Full name is required"),
   user_name: Yup.string().required("User name is required"),
-  phone: Yup.string()
-    .required("Phone is required")
-    .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
-
-  // Profile
-  title: Yup.string().required("Title is required"),
-  short_description: Yup.string().required("Short description is required"),
-  long_description: Yup.string().required("Long description is required"),
+  phone: Yup.string(),
+    // .required("Phone is required")
+    // .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
   state: Yup.string().required("State is required"),
   city: Yup.string().required("City is required"),
   gender: Yup.string().required("Gender is required"),
   dob: Yup.string().required("Date of Birth is required"),
-  tags: Yup.array()
-    .of(Yup.string().required("Each tag must be a string"))
-    .min(1, "At least one tag is required")
-    .required("Tags are required"),
-  category: Yup.array()
-    .of(
-      Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
-      })
-    )
-    .min(1, "Category is required")
-    .required("Category is required"), // Ensure at least one category is selected
-  sub_category: Yup.array()
-    .of(
-      Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
-      })
-    )
-    .min(1, "Sub-category is required")
-    .required("Sub-Category is required"), // Ensure at least one sub-category is selected
-  profile_image: Yup.string().nullable(),
-  banner_image: Yup.string().nullable(),
+  profile_image: Yup.string().nullable()
 });
 
 export interface ICreatorProfileUpdateSchema

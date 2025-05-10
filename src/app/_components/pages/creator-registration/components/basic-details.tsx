@@ -7,10 +7,13 @@ import {
   gender,
   indianStates,
 } from "@/lib/utils/constants";
-import { get } from "lodash";
-import React, { useState } from "react";
+import { debounce, get } from "lodash";
+import React, { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import Select from "react-select";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { toastMessage } from "@/lib/utils/toast-message";
+import { fetchUserNameExists } from "@/lib/web-api/auth";
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,
@@ -19,14 +22,18 @@ const customStyles = {
     fontWeight: "normal",
   }),
   control: (base: any, state: any) => {
-    console.log("state", state.getValue()[0]?.value === "");
-    return {
+    return ({
       ...base,
       height: "54px",
       borderRadius: "8px",
       color: state.getValue()[0]?.value === "" ? "#9CA3AF" : "#000000",
-    };
+    })
   },
+  singleValue: (provided: any,state:any) => ({
+    ...provided,
+    color: state.getValue()[0]?.value === "" ? "gray" : "#000000",
+    fontSize: '14px',
+  }),
   menu: (base: any) => ({
     ...base,
     zIndex: 9999,
@@ -35,21 +42,45 @@ const customStyles = {
 interface IBasicInfoFormProps {
   handleOnSelect: (value: any, name: any) => void;
   methods: any;
-  formState: { state: string; city: string; gender: string; dob: string };
-  handleImageSelect: any;
-  profilePreview: any;
-  bannerPreview: any;
+  formState: { state: string; city: string; gender: string; dob: string,userName: string; };
 }
 
 export default function BasicInfoForm({
   handleOnSelect,
   methods,
-  formState,
-  handleImageSelect,
-  profilePreview,
-  bannerPreview,
+  formState
 }: IBasicInfoFormProps) {
   const translate = useTranslations();
+  const [userName,setUserName] = useState<string>("");
+  const getUserNameExists = async (value:string) => {
+    try {
+      const response = await fetchUserNameExists({user_name: value});
+      if(!response?.exists){
+        methods.setError("user_name", {
+          type: "manual",
+          message: "",
+        });
+      }
+    } catch(error) {
+      let errMessage = await getErrorMessage(error);
+      methods.setError("user_name", {
+        type: "manual",
+        message: errMessage,
+      });
+    }
+  }
+  const debouncedSearch = useCallback(
+      debounce((value: string) => {
+        getUserNameExists(value)
+      }, 500),
+      []
+    );
+    const handleUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
+      let value = e.target.value;
+      debouncedSearch(value);
+      handleOnSelect(value,'userName');
+      methods.setValue("user_name",value)
+    };
   return (
     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
       <div className="col-span-1">
@@ -63,6 +94,8 @@ export default function BasicInfoForm({
       </div>
       <div className="col-span-1">
         <Input
+          value={formState?.userName}
+          onChange={handleUserName}
           label="Username"
           name="user_name"
           type="text"
@@ -83,7 +116,7 @@ export default function BasicInfoForm({
           label="Phone Number"
           name="phone_number"
           type="phone"
-          placeholder="xxx xxx xxxx"
+          placeholder="xxxxx xxxxx"
         />
       </div>
       <div className="col-span-1">
@@ -101,7 +134,9 @@ export default function BasicInfoForm({
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "state")}
-            options={indianStates?.map((ele) => ({ value: ele, label: ele }))}
+            options={indianStates?.map(ele => ({ value: ele, label: ele }))}
+            menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
+            menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder="Select State"
           />
@@ -127,14 +162,9 @@ export default function BasicInfoForm({
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "city")}
-            options={
-              formState.state
-                ? cities[formState?.state]?.map((ele: string) => ({
-                    value: ele,
-                    label: ele,
-                  }))
-                : []
-            }
+            options={formState.state ? cities[formState?.state]?.map((ele: string) => ({ value: ele, label: ele })) : []}
+            menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
+            menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder="Select City"
           />
@@ -160,7 +190,9 @@ export default function BasicInfoForm({
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "gender")}
-            options={gender?.map((ele) => ({ value: ele, label: ele }))}
+            options={gender?.map(ele => ({ value: ele, label: ele }))}
+            menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
+            menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder="Select State"
           />
@@ -177,43 +209,10 @@ export default function BasicInfoForm({
             name="dob"
             type="date"
             placeholder={translate("Select_date_of_birth")}
-            label={translate("Date of Birth")}
+            label={translate("Date_of_Birth")}
             maxDate={new Date(new Date().setDate(new Date().getDate()))}
           />
         </div>
-      </div>
-      <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
-        <span className="text-sm text-gray-500 font-semibold">
-          {"Profile Image"}
-          <span className="text-red-500">*</span>
-        </span>
-        <PhotoUpload
-          name="profile"
-          previewUrl={profilePreview}
-          handleImageSelect={handleImageSelect}
-          showType="circle"
-        />
-        {methods?.formState?.errors?.profile_image?.message && (
-          <span className="text-red-600 text-sm">
-            {methods?.formState?.errors?.profile_image?.message}
-          </span>
-        )}
-      </div>
-      <div className="flex bg-white rounded-xl col-span-2 flex-col gap-2">
-        <span className="text-sm text-gray-500 font-semibold">
-          {"Banner Image"}
-          <span className="text-red-500">*</span>
-        </span>
-        <PhotoUpload
-          name="banner"
-          previewUrl={bannerPreview}
-          handleImageSelect={handleImageSelect}
-        />
-        {methods?.formState?.errors?.banner_image?.message && (
-          <span className="text-red-600 text-sm">
-            {methods?.formState?.errors?.banner_image?.message}
-          </span>
-        )}
       </div>
     </div>
   );

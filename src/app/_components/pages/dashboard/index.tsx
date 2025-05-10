@@ -89,9 +89,9 @@ export default function Dashboard() {
       {mainLoading && <Loader />}
       <div className="flex flex-col lg:flex-row w-full md:gap-6 gap-4">
         <div className="flex flex-col md:gap-6 gap-4 w-full lg:w-[60%]">
-          {!lg && (
+          {/* {!lg && (
             <ProfileCompletionCard progress={creatorDetails?.completed} />
-          )}
+          )} */}
           <div className="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-3 gap-4 rounded-[20px] w-full bg-white p-4">
             <StatsCard
               title={translate("Active_Collaborations")}
@@ -127,7 +127,7 @@ export default function Dashboard() {
           <PerformanceSummaryChartDashBoard />
         </div>
         <div className="flex flex-col gap-6 w-full lg:w-[40%]">
-          {lg && <ProfileCompletionCard progress={creatorDetails?.completed} />}
+          {/* {lg && <ProfileCompletionCard progress={creatorDetails?.completed} />} */}
           <TopBrands data={brands} loading={brandLoading} />
         </div>
       </div>
