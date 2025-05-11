@@ -6,8 +6,10 @@ import Header from "@/app/_components/components-common/layout/dashboard/header"
 export default async function page() {
   return (
     <Suspense fallback={<Loader />}>
+      <div className="flex flex-col h-screen overflow-hidden">
       <Header/>
       <CreatorRegistration />
+      </div>
     </Suspense>
   );
 }

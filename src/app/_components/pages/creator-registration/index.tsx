@@ -40,6 +40,7 @@ import { toastMessage } from "@/lib/utils/toast-message";
 import StoreSetup from "./components/store-setup";
 import { CreditCard, FileText, Globe, Store } from "lucide-react";
 import ProfileAccess from "../../components-common/dialogs/profile-approval";
+import { useTranslations } from "next-intl";
 
 let allTabs: {
   id: string;
@@ -76,6 +77,7 @@ const TABS_STATUS = {
 };
 export default function CreatorRegistrationPage() {
   const searchParams = useSearchParams();
+  const translate = useTranslations();
   const { account } = useAuthStore();
   const { setCreatorData } = useCreatorStore();
   const router = useRouter();
@@ -487,7 +489,7 @@ export default function CreatorRegistrationPage() {
   };
 
   return (
-    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-5 pt-5 pb-2 h-screen overflow-hidden flex flex-col">
+    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-5 pt-5 pb-2  overflow-hidden flex flex-col">
       {isCreatorLoading && <Loader />}
       {!isCreatorLoading && (
         <>
@@ -545,7 +547,7 @@ export default function CreatorRegistrationPage() {
                         loading={loading}
                         disabled={loading}
                       >
-                        {"Save & Continue"}
+                        {translate("Save_and_Continue")}
                       </Button>
                     </div>
                   </form>
@@ -560,6 +562,7 @@ export default function CreatorRegistrationPage() {
                       setInstagramConnected={setInstagramConnected}
                       instagramConnected={instagramConnected}
                       methods={methodsSocial}
+                      creator={creatorDetails}
                     />
                     <div className="flex items-center gap-4 bg-white">
                       <Button
@@ -571,7 +574,7 @@ export default function CreatorRegistrationPage() {
                         loading={loading}
                         disabled={loading||!(instagramConnected||youtubeConnected)}
                       >
-                        {"Save & Continue"}
+                        {translate("Save_and_Continue")}
                       </Button>
                       {channelError && <span className="text-red-600 text-sm">{channelError}</span>}
                     </div>
@@ -596,7 +599,7 @@ export default function CreatorRegistrationPage() {
                         loading={loading}
                         disabled={loading}
                       >
-                        {"Save & Continue"}
+                        {translate("Save_and_Continue")}
                       </Button>
                     </div>
                   </form>
@@ -629,7 +632,7 @@ export default function CreatorRegistrationPage() {
                         loading={loading}
                         disabled={loading}
                       >
-                        {"Save & Continue"}
+                        {translate("Save_and_Continue")}
                       </Button>
                     </div>
                   </form>

@@ -86,7 +86,7 @@ export default function StoreSetup({
               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow mb-2">
                 <ImageIcon className="w-6 h-6" />
               </div>
-              <p className="text-sm font-medium">Click to upload banner</p>
+              <p className="text-sm font-medium">{translate("Click_to_upload_banner")}</p>
             </div>
 
           )}
@@ -191,17 +191,6 @@ export default function StoreSetup({
           />
         </div>
         <div className="md:col-span-1 col-span-2">
-          {/* <Input
-            label={translate("Sub_category")}
-            placeholder={translate("Men_Fashion")}
-            name="sub_category"
-            type="select-multiple"
-            options={subCategory.map((ele) => ({
-              value: ele?._id,
-              label: ele?.name,
-            }))}
-            autoFocus={false}
-          /> */}
           <Input
             label={translate("Sub_category")}
             placeholder={translate("Select_Sub_Category")}

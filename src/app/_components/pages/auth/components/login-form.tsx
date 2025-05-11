@@ -118,10 +118,12 @@ export default function LoginForm() {
       if (res?.data?.type === USER_TYPE.Vendor) {
         router?.push("/vendor-register");
       } else if (res?.data?.type === USER_TYPE.Creator) {
-        if(res?.data?.creator?.status !== "APPROVED"){
-          router.push("/creator-registration")
+        if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status !== "APPROVED"){
+          router.push("/creator-registration");
+        } else if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status === "APPROVED"){
+          router.push("/creator/dashboard");
         }
-        else router.push("/creator/dashboard");
+        else router.push("/dashboard");
       } else {
         router?.push(`/creator-registration`);
       }
@@ -129,10 +131,12 @@ export default function LoginForm() {
       if (res?.data?.type === USER_TYPE.Vendor) {
         router?.push("/vendor/dashboard");
       } else if (res?.data?.type === USER_TYPE.Creator) {
-        if(res?.data?.creator?.status !== "APPROVED"){
-          router.push("/creator-registration")
+        if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status !== "APPROVED"){
+          router.push("/creator-registration");
+        } else if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status === "APPROVED"){
+          router.push("/creator/dashboard");
         }
-        else router.push("/creator/dashboard");
+        else router.push("/dashboard");
       } else {
         router?.push(`/dashboard`);
       }

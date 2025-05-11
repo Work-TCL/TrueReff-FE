@@ -482,9 +482,18 @@
   "YouTube_Connected_text": "आपका यूट्यूब चैनल कनेक्ट हो गया है।",
   "Connect_YouTube_text": "अपने वीडियो और एनालिटिक्स को प्रबंधित करने के लिए यूट्यूब चैनल कनेक्ट करें।",
   "Minium_subscribers_Text": "कनेक्ट करने के लिए कम से कम 1,000 सब्सक्राइबर्स आवश्यक हैं।",
-  "Select_date_of_birth": "जन्म तिथि चुनें",
-  "Date_of_Birth": "जन्म तिथि",
   "Your_profile_is_sent_for_admin_approval": "आपकी प्रोफ़ाइल सबमिट कर दी गई है और व्यवस्थापक की स्वीकृति लंबित है।",
   "Back_to_login": "लॉगिन पर वापस जाएं",
-  "Profile_Submitted_for_Approval": "धन्यवाद!"
+  "Profile_Submitted_for_Approval": "धन्यवाद!",
+  "Full_Name": "पूरा नाम",
+  "Enter_your_full_name": "अपना पूरा नाम दर्ज करें",
+  "Enter_your_unique_username": "अपना विशिष्ट उपयोगकर्ता नाम दर्ज करें",
+  "Enter_your_email": "अपना ईमेल दर्ज करें",
+  "Phone_Number": "फोन नंबर",
+  "Select_City": "शहर चुनें",
+  "Select_Gender": "लिंग चुनें",
+  "Date_of_Birth": "जन्म तिथि",
+  "Select_date_of_birth": "जन्म तिथि चुनें",
+  "Save_and_Continue": "सहेजें और जारी रखें",
+  "Click_to_upload_banner": "बैनर अपलोड करने के लिए क्लिक करें"
 }

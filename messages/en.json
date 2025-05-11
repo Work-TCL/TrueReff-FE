@@ -460,9 +460,18 @@
   "Connect_YouTube_text":"Connect your YouTube channel to manage your videos and analytics.",
   "Minium_subscribers_Text":"Minimum 1,000 subscribers required to connect.",
   "Ok": "Ok",
-  "Select_date_of_birth": "Select date of birth",
-  "Date_of_Birth": "Date of Birth",
   "Your_profile_is_sent_for_admin_approval": "Your profile has been submitted and is pending admin approval.",
   "Back_to_login": "Back to Login",
-  "Profile_Submitted_for_Approval":"Thank you!"
+  "Profile_Submitted_for_Approval":"Thank you!",
+  "Full_Name": "Full Name",
+  "Enter_your_full_name": "Enter your full name",
+  "Enter_your_unique_username": "Enter your unique username",
+  "Enter_your_email": "Enter your email",
+  "Phone_Number": "Phone Number",
+  "Select_City": "Select City",
+  "Select_Gender": "Select Gender",
+  "Date_of_Birth": "Date of Birth",
+  "Select_date_of_birth": "Select date of birth",
+  "Save_and_Continue": "Save & Continue",
+  "Click_to_upload_banner": "Click to upload banner"
 }

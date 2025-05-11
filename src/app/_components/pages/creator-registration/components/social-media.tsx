@@ -1,6 +1,7 @@
 "use client";
 import Loader from "@/app/_components/components-common/layout/loader";
 import Button from "@/app/_components/ui/button";
+import { ICreator } from "@/lib/types-api/creator";
 import { getConnectedChannel } from "@/lib/web-api/creator";
 import { random } from "lodash";
 import { useTranslations } from "next-intl";
@@ -14,6 +15,7 @@ interface IProps {
   setInstagramConnected: (value: boolean) => void;
   instagramConnected: boolean;
   methods: any;
+  creator: any;
 }
 
 export default function SocialMedia({
@@ -21,7 +23,8 @@ export default function SocialMedia({
   youtubeConnected,
   instagramConnected,
   setInstagramConnected,
-  methods
+  methods,
+  creator
 }: IProps) {
   const translate = useTranslations();
   // const methods = useFormContext();
@@ -29,7 +32,7 @@ export default function SocialMedia({
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const creatorId = searchParams.get("creatorId") ?? "";
+  const creatorId = searchParams.get("creatorId") ?? creator?._id??"";
   const message = searchParams.get("message") ?? "";
   const error = searchParams.get("error") ?? "";
 

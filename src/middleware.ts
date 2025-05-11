@@ -63,7 +63,7 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
-    if(token && user?.type === "creator" && ((!pathname.startsWith("/vendor/profile")) && pathname.startsWith("/vendor") || ['/vendor-register','/dashboard'].includes(pathname))){
+    if(token && user?.type === "creator" && user?.creator?._id && ((!pathname.startsWith("/vendor/profile")) && pathname.startsWith("/vendor") || ['/vendor-register','/dashboard'].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 

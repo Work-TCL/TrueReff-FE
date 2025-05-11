@@ -1,9 +1,7 @@
 "use client";
-import PhotoUpload from "@/app/_components/components-common/PhotoUpload";
 import Input from "@/app/_components/ui/form/Input";
 import {
   cities,
-  fileUploadLimitValidator,
   gender,
   indianStates,
 } from "@/lib/utils/constants";
@@ -12,7 +10,6 @@ import React, { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import Select from "react-select";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { toastMessage } from "@/lib/utils/toast-message";
 import { fetchUserNameExists } from "@/lib/web-api/auth";
 const customStyles = {
   placeholder: (base: any) => ({
@@ -51,7 +48,6 @@ export default function BasicInfoForm({
   formState
 }: IBasicInfoFormProps) {
   const translate = useTranslations();
-  const [userName,setUserName] = useState<string>("");
   const getUserNameExists = async (value:string) => {
     try {
       const response = await fetchUserNameExists({user_name: value});
@@ -85,10 +81,10 @@ export default function BasicInfoForm({
     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
       <div className="col-span-1">
         <Input
-          label="Full Name"
+          label={translate("Full_Name")}
           name="full_name"
           type="text"
-          placeholder="Enter your full name"
+          placeholder={translate("Enter_your_full_name")}
           autoFocus
         />
       </div>
@@ -96,24 +92,24 @@ export default function BasicInfoForm({
         <Input
           value={formState?.userName}
           onChange={handleUserName}
-          label="Username"
+          label={translate("Username")}
           name="user_name"
           type="text"
-          placeholder="Enter your unique username"
+          placeholder={translate("Enter_your_unique_username")}
         />
       </div>
       <div className="col-span-1">
         <Input
-          label="Email"
+          label={translate("Email")}
           name="email"
           type="email"
-          placeholder="Enter your email"
+          placeholder={translate("Enter_your_email")}
           disabled
         />
       </div>
       <div className="col-span-1">
         <Input
-          label="Phone Number"
+          label={translate("Phone_Number")}
           name="phone_number"
           type="phone"
           placeholder="xxxxx xxxxx"
@@ -122,7 +118,7 @@ export default function BasicInfoForm({
       <div className="col-span-1">
         <div className="flex flex-col">
           <span className="mb-1 text-sm text-gray-500 font-semibold">
-            {"State"}
+            {translate("State")}
             <span className="text-red-500">*</span>
           </span>
           <Select
@@ -130,7 +126,7 @@ export default function BasicInfoForm({
             value={[
               {
                 value: formState.state,
-                label: formState.state ? formState.state : "Select State",
+                label: formState.state ? formState.state : translate("Select_State"),
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "state")}
@@ -138,9 +134,9 @@ export default function BasicInfoForm({
             menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
             menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder="Select State"
+            placeholder={translate("Select_State")}
           />
-          {Boolean(get(methods.formState.errors, "state")) && (
+          {Boolean(get(methods.formState.errors, "state")) && methods.formState.errors["state"]?.message && (
             <span className="text-red-600 text-sm p-2 block">
               {methods.formState.errors["state"]?.message}
             </span>
@@ -150,7 +146,7 @@ export default function BasicInfoForm({
       <div className="col-span-1">
         <div className="flex flex-col">
           <span className="mb-1 text-sm text-gray-500 font-semibold">
-            {"City"}
+            {translate("City")}
             <span className="text-red-500">*</span>
           </span>
           <Select
@@ -158,7 +154,7 @@ export default function BasicInfoForm({
             value={[
               {
                 value: formState.city,
-                label: formState.city ? formState.city : "Select City",
+                label: formState.city ? formState.city : translate("Select_City"),
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "city")}
@@ -166,9 +162,9 @@ export default function BasicInfoForm({
             menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
             menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder="Select City"
+            placeholder={translate("Select_City")}
           />
-          {Boolean(get(methods.formState.errors, "city")) && (
+          {Boolean(get(methods.formState.errors, "city")) && methods.formState.errors["city"]?.message && (
             <span className="text-red-600 text-sm p-2 block">
               {methods.formState.errors["city"]?.message}
             </span>
@@ -178,7 +174,7 @@ export default function BasicInfoForm({
       <div className="col-span-1">
         <div className="flex flex-col">
           <span className="mb-1 text-sm text-gray-500 font-semibold">
-            {"Gender"}
+            {translate("Gender")}
             <span className="text-red-500">*</span>
           </span>
           <Select
@@ -186,7 +182,7 @@ export default function BasicInfoForm({
             value={[
               {
                 value: formState.gender,
-                label: formState.gender ? formState.gender : "Select Gender",
+                label: formState.gender ? formState.gender : translate("Select_Gender"),
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "gender")}
@@ -194,9 +190,9 @@ export default function BasicInfoForm({
             menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
             menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder="Select State"
+            placeholder={translate("Select_Gender")}
           />
-          {Boolean(get(methods.formState.errors, "gender")) && (
+          {Boolean(get(methods.formState.errors, "gender")) && methods.formState.errors["gender"]?.message && (
             <span className="text-red-600 text-sm p-2 block">
               {methods.formState.errors["gender"]?.message}
             </span>
