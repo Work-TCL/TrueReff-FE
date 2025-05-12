@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
-import { CircleUserRound, Menu, User, UserRound } from "lucide-react";
+import { ArrowLeft, CircleUserRound, Menu, User, UserRound } from "lucide-react";
 import toast from "react-hot-toast";
 import socketService from "@/lib/services/socket-service";
 import { useAuthStore } from "@/lib/store/auth-user";
@@ -88,7 +88,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor/profile": translate("Brand_Profile"),
     "/vendor/creators/collaboration": translate("Collaboration"),
     "/creator/collaboration": translate("Collaboration"),
-    "/vendor/creators/available-creators": translate("Available_Creators"),
+    "/vendor/creators/available-creators": translate("Available_Creators")
   };
   const fetchNotifications = async () => {
     setLoading(true);
@@ -115,7 +115,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     }
   };
   useEffect(() => {
-    if (pathName !== "/dashboard" && pathName !== "/creator-registration") {
+    if (pathName !== "/dashboard" && pathName !== "/creator-registration" && pathName !== "/vendor-register") {
       fetchNotifications();
     }
   }, []);
@@ -197,7 +197,8 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   };
 
   return (
-    <header className="bg-white px-3 py-3 flex items-center gap-1">
+    <>
+    {(pathName !== "/dashboard" && pathName !== "/creator-registration" && pathName !== "/vendor-register") ? (<header className="bg-white px-3 py-3 flex items-center gap-1">
       <Menu
         className="size-5 shrink-0 cursor-pointer lg:hidden"
         onClick={handleExpandSidebar}
@@ -205,7 +206,6 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       <h2 className="md:text-2xl text-lg font-medium text-gray-black">
         {getHeaderName()}
       </h2>
-      {(pathName !== "/dashboard" && pathName !== "/creator-registration") && (
         <div className="ml-auto flex items-center md:gap-3 gap-2">
           <NotificationPopover
             notifications={notifications}
@@ -243,14 +243,25 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             </p>
           </Link>
         </div>
-      )}
       <div
-        className={(pathName === "/dashboard" || pathName === "/creator-registration") ? "flex justify-end w-full" : ""}
+        className={(pathName === "/dashboard" || pathName === "/creator-registration" || pathName === "/vendor-register") ? "flex justify-end w-full" : ""}
       >
         <Link href="?auth=logout" className="mx-4 block">
           <IoLogOutOutline className="text-2xl text-primary" />
         </Link>
       </div>
-    </header>
+    </header>):<header className="bg-white px-3 py-3 flex items-center gap-1">
+      <div
+        className={`flex ${pathName !== "/dashboard" ? "justify-between":"justify-end"} w-full`}
+      >
+        {pathName !== "/dashboard" && <Link href="/dashboard" className="mx-4 block">
+          <ArrowLeft className="text-2xl text-primary" />
+        </Link>}
+        <Link href="?auth=logout" className="mx-4 block">
+          <IoLogOutOutline className="text-2xl text-primary" />
+        </Link>
+      </div>
+    </header>}
+    </>
   );
 }
