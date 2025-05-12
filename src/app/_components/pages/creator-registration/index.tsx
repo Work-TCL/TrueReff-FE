@@ -379,7 +379,7 @@ export default function CreatorRegistrationPage() {
       }
       if (creator?._id) {
         methods.setValue("full_name",creator?.full_name);
-        methods.setValue("user_name",creator?.user_name        );
+        methods.setValue("user_name",creator?.user_name);
         methods.setValue("email",creator?.email);
         methods.setValue("phone_number",creator?.phone);
         methods.setValue("state",creator?.state);

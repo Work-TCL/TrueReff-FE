@@ -220,3 +220,17 @@ body {
     background-position: 0% 50%;
   }
 }
+@media(max-width: 350px), (max-height: 600px) {
+  .banner-placeholder {
+    max-width: 100% !important;
+    max-height: 220px !important;
+    height: 220px !important;
+  }
+  .banner-icon {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .banner-text {
+    font-size: 1rem !important;
+  }
+}

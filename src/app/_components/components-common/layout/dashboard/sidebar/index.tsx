@@ -134,7 +134,10 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       children: [
         // { label: translate("Add_New_Product"), link: "/vendor/products/add" },
         { label: translate("Product_List"), link: "/vendor/products" },
-        { label: translate("Channels"), link: "/vendor/products/channels" },
+        {
+          label: translate("Channels"),
+          link: "/vendor/products/channel-products",
+        },
       ],
     },
     {

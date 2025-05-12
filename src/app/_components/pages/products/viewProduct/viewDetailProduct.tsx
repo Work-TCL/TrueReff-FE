@@ -99,8 +99,8 @@ export default function ViewProductDetail({
   const params = useParams();
   const router = useRouter();
   const productId = params?.productId;
-  const channelType = params?.channelType;
   const searchParams = useSearchParams();
+  const channelType = searchParams.get("channelName");
   const shopifyId = searchParams.get("id");
   const creatorId = searchParams.get("creatorId");
   const [notFounded, setNotFounded] = useState(false);
@@ -253,7 +253,7 @@ export default function ViewProductDetail({
   }, [shopifyId]);
 
   useEffect(() => {
-    if (productId) {
+    if (!channelType && productId) {
       fetchProductById();
     }
   }, [productId]);
@@ -313,8 +313,8 @@ export default function ViewProductDetail({
       }
     } else return "SEND_REQUEST";
   };
-
-  if (notFounded || !productId) {
+// Product id required condition removed as it is not required.
+  if (notFounded) {
     return <NotFound />;
   }
 
@@ -337,7 +337,7 @@ export default function ViewProductDetail({
                       ? `/creator/product-management`
                       : `/creator/brandsList/${params.id}`
                     : channelType
-                    ? `/vendor/products/${channelType}`
+                    ? `/vendor/products/channel-products`
                     : `/vendor/products`,
                 },
                 {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { startTransition, useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CircleFadingPlus, ImageOff } from "lucide-react";
 import {
@@ -23,6 +23,8 @@ import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/Truncat
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/app/_components/components-common/data-table";
 import { SearchInput } from "@/app/_components/components-common/search-field";
+import ChannelBar from "./chaneelBar";
+import { getConnectedChannelsList } from "@/lib/web-api/channel";
 
 interface IProduct {
   handle: string;
@@ -57,8 +59,20 @@ export default function ChannelProductList({
     hasNextPage: false,
     hasPreviousPage: false,
   });
-
+  const [activeChannelTabId, setActiveChannelTabId] = useState("");
+  const [channels, setChannels] = useState<any[]>([]);
   const translate = useTranslations();
+
+  // Fetch Chanel list
+  useEffect(() => {
+    startTransition(async () => {
+      const res: any[] = await getConnectedChannelsList();
+      if (Array.isArray(res)) {
+        setChannels(res);
+        setActiveChannelTabId(res?.[0]?.channelType);
+      }
+    });
+  }, []);
 
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
@@ -137,7 +151,11 @@ export default function ChannelProductList({
         return (
           <div
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() => router.push(`shopify/view?id=${product.id}`)}
+            onClick={() =>
+              router.push(
+                `channel-products/view?id=${product.id}&channelName=${activeChannelTabId} `
+              )
+            }
           >
             {product.image ? (
               <Avatar className="w-8 h-8">
@@ -239,14 +257,19 @@ export default function ChannelProductList({
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center gap-2">
+          <ChannelBar
+            channels={channels}
+            activeChannelTabId={activeChannelTabId}
+            setActiveChannelTabId={setActiveChannelTabId}
+          />
+          {/* <div className="flex justify-between items-center gap-2">
             <SearchInput
               value={search}
               onChange={handleSearch}
               placeholder={translate("Search_Product")}
-              className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
+              // className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
             />
-          </div>
+          </div> */}
           {internalLoader && <Loader />}
           {productList?.length > 0 ? (
             <>
