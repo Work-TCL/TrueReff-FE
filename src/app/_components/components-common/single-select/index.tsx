@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@sohanemon/utils";
 import { useState, useEffect } from "react";
 import Select from "react-select";
 
@@ -13,6 +14,7 @@ interface SingleSelectProps {
   options: Option[];
   placeholder?: string;
   disabled?: boolean;
+  className?:string;
 }
 
 const customStyles = {
@@ -47,11 +49,12 @@ const SingleSelect: React.FC<SingleSelectProps> = ({
   options,
   placeholder = "Select...",
   disabled = false,
+  className
 }) => {
   const selectedOption = options.find((opt) => opt.value === value) || null;
 
   return (
-    <div className="md:w-[200px] w-full relative z-[999]">
+    <div className={cn('md:w-[200px] w-full relative z-[999]',className)}>
       <Select
         styles={customStyles}
         value={selectedOption}

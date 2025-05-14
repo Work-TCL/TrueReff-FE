@@ -103,22 +103,22 @@ export default function ChannelBar({
               }}
             >
               <span
-                className={`flex justify-center h-full items-center whitespace-nowrap ${
+                className={`flex justify-center h-full items-center whitespace-nowrap text-sm ${
                   el.channelType === activeChannelTabId ? "font-semibold" : ""
                 }`}
               >
-                {channelLabel.length > 15
-                  ? channelLabel.substring(0, 15) + "..."
+                {channelLabel.length > 20
+                  ? channelLabel.substring(0, 20) + "..."
                   : channelLabel}
               </span>
             </div>
           );
-          return channelLabel.length > 15 ? (
+          return channelLabel.length > 20 ? (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>{renderedChannel}</TooltipTrigger>
                 <TooltipContent
-                  className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-igray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                  className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
                   side="bottom"
                 >
                   {channelLabel}

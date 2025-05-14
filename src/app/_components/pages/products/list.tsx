@@ -18,6 +18,8 @@ import DataTable from "../../components-common/data-table";
 import CategorySubCategorySelect from "../../components-common/category-dropdowns";
 import { ViewToggle } from "../../components-common/view-toggle";
 import { SearchInput } from "../../components-common/search-field";
+import SingleSelect from "../../components-common/single-select";
+import ProductManageMentFilter from "./viewProduct/productManagementFilter";
 
 export interface ICategory {
   _id: string;
@@ -68,10 +70,12 @@ export default function ProductList() {
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<"table" | "card">("table");
+  const [viewMode, setViewMode] = useState<"table" | "card">("card");
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+
   const pageLimit = 20;
 
   // Update fetProductsList to set both cursors
@@ -250,20 +254,26 @@ export default function ProductList() {
     return <DataTable columns={productColumns} data={productList} />;
   };
 
+  const handleSelectStatus = (selectedOptions: any) => {
+    setSelectedStatus(selectedOptions);
+  };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center gap-2 flex-wrap">
+          <div className="flex justify-between items-center gap-2">
             <SearchInput
               value={search}
               onChange={handleSearch}
               placeholder={translate("Search_Product")}
             />
             <div className="flex flex-row gap-2 justify-end items-center ml-auto">
-              <CategorySubCategorySelect onChange={handleSelectCategory} />
+              <ProductManageMentFilter
+                onChange={handleSelectCategory}
+                handleSelectStatus={handleSelectStatus}
+              />
               <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>
