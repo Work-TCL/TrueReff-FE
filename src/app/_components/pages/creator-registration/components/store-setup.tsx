@@ -84,41 +84,11 @@ export default function StoreSetup({
               alt="Banner"
             />
           ) : (
-            // <div className="flex flex-col items-center justify-center text-gray-500 pt-6">
-            //   {/* <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow mb-2">
-            //     <ImageIcon className="w-6 h-6" />
-            //   </div> */}
-            //   <div className="flex items-center justify-center mb-3">
-            //     <Layout className="w-8 h-8 text-gray-400 mr-2" />
-            //     <Image className="w-8 h-8 text-gray-400" />
-            //   </div>
-            //   <p className="text-sm font-medium">
-            //     {translate("Click_to_upload_banner_Images")}
-            //   </p>
-            <main
-              role="img"
-              aria-label="Empty banner placeholder"
-              className="banner-placeholder max-w-4xl w-full max-h-[300px] h-[30vh] min-h-[150px] rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-400 to-blue-400 flex flex-col items-center justify-center text-white select-none shadow-lg shadow-indigo-300/50 p-8 text-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="banner-icon w-16 h-16 mb-[100px] stroke-current stroke-2 fill-none"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
-              {/* <p className="banner-text font-semibold text-xl tracking-wide drop-shadow-md">
-                Your banner will appear here
-              </p> */}
-            </main>
+            <img
+              src={"/assets/banner-image.png"}
+              className="w-full h-full object-cover"
+              alt="Banner"
+            />
           )}
         </div>
         <div className="absolute top-1 right-3 z-10">

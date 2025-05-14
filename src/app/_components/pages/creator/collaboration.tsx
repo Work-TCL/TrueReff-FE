@@ -13,7 +13,7 @@ import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
 import SingleSelect from "../../components-common/single-select";
 import { SearchInput } from "../../components-common/search-field";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export interface ICategory {
   _id: string;
@@ -105,6 +105,7 @@ export interface IStatus {
 }
 export default function CollaborationList() {
   const translate = useTranslations();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const dashboardStatus = searchParams.get("status");
   const { account: user } = useAuthStore();
@@ -213,8 +214,12 @@ export default function CollaborationList() {
 
   useEffect(() => {
     if (dashboardStatus) {
-      handleSelectStatus(dashboardStatus);
-    } else fetchCollaboration(currentPage);
+      setSelectedStatus(dashboardStatus);
+      fetchCollaboration(1, true, search, dashboardStatus);
+    } else {
+      setSelectedStatus("");
+      fetchCollaboration(currentPage);
+    }
   }, [dashboardStatus]);
   const debouncedSearch = useCallback(
     debounce((value: string, status: string) => {
@@ -234,8 +239,7 @@ export default function CollaborationList() {
       fetchCollaboration(page, true, search, selectedStatus);
   };
   const handleSelectStatus = (selectedOption: string) => {
-    setSelectedStatus(selectedOption);
-    fetchCollaboration(1, true, search, selectedOption);
+    router.push(`?status=${selectedOption}`)
   };
   console.log("selectedStatus", selectedStatus);
   return (

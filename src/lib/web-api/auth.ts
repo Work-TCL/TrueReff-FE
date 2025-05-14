@@ -146,19 +146,30 @@ export const getUserApi = async (): Promise<IGetUserResponse> => {
       const vendor = response.data?.data?.vendor;
       useVendorStore.getState().setVendorData("vendor", {
         vendorId: vendor?._id,
-        accountId: response.data?.data?._id,
+        accountId: response?.data?.data?._id,
+        category: vendor?.category,
+        sub_category: vendor?.sub_category,
+        completed_step: vendor?.completed_step,
+        contacts: vendor?.contacts,
         business_name: vendor?.business_name,
         company_email: vendor?.company_email,
-        company_phone: vendor?.company_phone,
-        gst_number: vendor?.gst_number,
-        website: vendor?.website,
+        pin_code: vendor?.pin_code,
         type_of_business: vendor?.type_of_business,
-        contacts: vendor?.contacts,
-        omni_channels: vendor?.omni_channels,
-        brand_documents: vendor?.brand_documents,
-        addresses: vendor?.addresses,
+        website: vendor?.website,
         state: vendor?.state,
         city: vendor?.city,
+        address: vendor?.address,
+        profile_image: vendor?.profile_image,
+        banner_image: vendor?.banner_image,
+        createdAt: vendor?.createdAt,
+        updatedAt: vendor?.updatedAt,
+        gst_certificate: vendor?.gst_certificate,
+        gst_number: vendor?.gst_number,
+        pan_number: vendor?.pan_number,
+        channelConfig: vendor?.channelConfig,
+        channelId: vendor?.channelId,
+        channelStatus: vendor?.channelStatus,
+        channelType: vendor?.channelType,
       });
     }
     useAuthStore.getState().setIsAuthStatus("authenticated");
@@ -246,17 +257,30 @@ export const verifyEmail = async (
       const vendor = response.data?.data?.vendor;
       useVendorStore.getState().setVendorData("vendor", {
         vendorId: vendor?._id,
-        accountId: response.data?.data?._id,
+        accountId: response?.data?.data?._id,
+        category: vendor?.category,
+        sub_category: vendor?.sub_category,
+        completed_step: vendor?.completed_step,
+        contacts: vendor?.contacts,
         business_name: vendor?.business_name,
         company_email: vendor?.company_email,
-        company_phone: vendor?.company_phone,
-        gst_number: vendor?.gst_number,
-        website: vendor?.website,
+        pin_code: vendor?.pin_code,
         type_of_business: vendor?.type_of_business,
-        contacts: vendor?.contacts,
-        omni_channels: vendor?.omni_channels,
-        brand_documents: vendor?.brand_documents,
-        addresses: vendor?.addresses,
+        website: vendor?.website,
+        state: vendor?.state,
+        city: vendor?.city,
+        address: vendor?.address,
+        profile_image: vendor?.profile_image,
+        banner_image: vendor?.banner_image,
+        createdAt: vendor?.createdAt,
+        updatedAt: vendor?.updatedAt,
+        gst_certificate: vendor?.gst_certificate,
+        gst_number: vendor?.gst_number,
+        pan_number: vendor?.pan_number,
+        channelConfig: vendor?.channelConfig,
+        channelId: vendor?.channelId,
+        channelStatus: vendor?.channelStatus,
+        channelType: vendor?.channelType,
       });
     }
     if (response.data?.data?.token) {
@@ -306,11 +330,11 @@ export const contactUsAPI = async (
 };
 
 export const venderRegister = async (
-  params: IPostVendorRegisterRequest
+  params: IPostVendorRegisterRequest,step:number
 ): Promise<IPostVendorRegisterResponse> => {
   try {
     const response = await axios.post(
-      "/auth/vendor/add-vendor-details",
+      `/auth/vendor/register?step=${step}`,
       params,
       {
         headers: {
@@ -324,6 +348,17 @@ export const venderRegister = async (
     throw errorMessage || new Error("Error While Signup");
   }
 };
+
+export const getVendor =
+  async (): Promise<any> => {
+    try {
+      const response = await axios.get(`/auth/vendor`);
+      return response?.data?.data?.vendor;
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error);
+      throw errorMessage || new Error("Error While fetching creator progress.");
+    }
+  };
 
 export const creatorRegister = async (
   params: IPostCreatorRegisterStepOneRequest|any,

@@ -97,28 +97,44 @@ export default function LoginForm() {
         });
       }
       if (res?.data?.type === USER_TYPE.Vendor) {
+        let vendorData = res?.data?.vendor;
         setVendorData("vendor", {
-          vendorId: res?.data?.vendor?._id,
-          accountId: res?.data?._id,
-          business_name: res?.data?.vendor?.business_name,
-          company_email: res?.data?.vendor?.company_email,
-          company_phone: res?.data?.vendor?.company_phone,
-          gst_number: res?.data?.vendor?.gst_number,
-          website: res?.data?.vendor?.website,
-          type_of_business: res?.data?.vendor?.type_of_business,
-          contacts: res?.data?.vendor?.contacts,
-          omni_channels: res?.data?.vendor?.omni_channels,
-          brand_documents: res?.data?.vendor?.brand_documents,
-          addresses: res?.data?.vendor?.addresses,
-          state: res?.data?.vendor?.state,
-          city: res?.data?.vendor?.city,
-        });
+          vendorId: vendorData?._id,
+          accountId: vendorData?.accountId,
+          category: vendorData?.category,
+          sub_category: vendorData?.sub_category,
+          completed_step: vendorData?.completed_step,
+          contacts: vendorData?.contacts,
+          business_name: vendorData?.business_name,
+          company_email: vendorData?.company_email,
+          pin_code: vendorData?.pin_code,
+          type_of_business: vendorData?.type_of_business,
+          website: vendorData?.website,
+          state: vendorData?.state,
+          city: vendorData?.city,
+          address: vendorData?.address,
+          profile_image: vendorData?.profile_image,
+          banner_image: vendorData?.banner_image,
+          createdAt: vendorData?.createdAt,
+          updatedAt: vendorData?.updatedAt,
+          gst_certificate: vendorData?.gst_certificate,
+          gst_number: vendorData?.gst_number,
+          pan_number: vendorData?.pan_number,
+          channelConfig: vendorData?.channelConfig,
+          channelId: vendorData?.channelId,
+          channelStatus: vendorData?.channelStatus,
+          channelType: vendorData?.channelType,
+        })
       }
       setIsAuthStatus("authenticated");
       if (res?.data?.type === USER_TYPE.Vendor) {
-        router?.push("/vendor-register");
+        if((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2)){
+          router.push("/vendor-register");
+        } else if(res?.data?.vendor?.completed_step === 3){
+          router.push("/vendor/dashboard");
+        } else router.push("/dashboard");
       } else if (res?.data?.type === USER_TYPE.Creator) {
-        if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status !== "APPROVED"){
+        if((res?.data?.creator?.completed_step === 1 || res?.data?.creator?.completed_step === 2 ||res?.data?.creator?.completed_step === 3) &&  res?.data?.creator?.status !== "APPROVED"){
           router.push("/creator-registration");
         } else if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status === "APPROVED"){
           router.push("/creator/dashboard");
@@ -129,9 +145,13 @@ export default function LoginForm() {
       }
     } else {
       if (res?.data?.type === USER_TYPE.Vendor) {
-        router?.push("/vendor/dashboard");
+        if((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2)){
+          router.push("/vendor-register");
+        } else if(res?.data?.vendor?.completed_step === 3){
+          router.push("/vendor/dashboard");
+        } else router.push("/dashboard");
       } else if (res?.data?.type === USER_TYPE.Creator) {
-        if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status !== "APPROVED"){
+        if((res?.data?.creator?.completed_step === 1 || res?.data?.creator?.completed_step === 2 ||res?.data?.creator?.completed_step === 3) &&  res?.data?.creator?.status !== "APPROVED"){
           router.push("/creator-registration");
         } else if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status === "APPROVED"){
           router.push("/creator/dashboard");

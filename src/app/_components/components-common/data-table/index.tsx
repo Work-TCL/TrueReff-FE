@@ -83,7 +83,7 @@ const DataTable: React.FC<DataTableProps> = ({
           ? table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className="hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                className="hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
@@ -102,7 +102,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <div className=" border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
-      <div className="max-w-full h-full overflow-auto pr-2 ">
+      <div className="max-w-full h-full overflow-auto">
         {data.length > 0 && type === "table" ? (
           tableContent()
         ) : data.length > 0 && type === "card" && CardComponent ? (

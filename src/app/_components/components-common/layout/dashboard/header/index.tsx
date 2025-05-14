@@ -67,7 +67,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const [totalNotification, setTotalNotification] = useState<number>(0);
   const pageLimit: number = 10;
   const pageNames: IPageName = {
-    "/vendor/dashboard": translate("Overview"),
+    "/vendor/dashboard": translate("Dashboard"),
     "/vendor/products/add": translate("Add_New_Product"),
     "/vendor/products": translate("Product_Lists"),
     "/vendor/products/view": translate("View_Product"),

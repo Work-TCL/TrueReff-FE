@@ -184,6 +184,18 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
 
     return (
         <>
+        {/* Desktop view */}
+        <div className={cn("hidden gap-4 relative z-[999] md:flex")}>
+                <SingleSelect
+                    value={selectedStatus}
+                    onChange={(value) => { 
+                        setSelectedStatus(value);
+                        handleSelectStatus(value) }}
+                    options={statusOptions}
+                    placeholder="Select Status"
+                    className="!w-full"
+                />
+            </div>
             {/* Mobile Button */}
             <Button
                 variant="outline"
@@ -250,6 +262,7 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
                                 value={selectedStatus}
                                 onChange={(value) => {
                                     setSelectedStatus(value);
+                                    handleSelectStatus(value);
                                 }}
                                 options={statusOptions}
                                 placeholder="Select Status"
@@ -267,17 +280,6 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
                     </div>
                 </div>
             </DialogLayout>
-
-            {/* Desktop view */}
-            <div className={cn("hidden gap-4 relative z-[999] md:flex")}>
-                <SingleSelect
-                    value={selectedStatus}
-                    onChange={(value) => { handleSelectStatus(value) }}
-                    options={statusOptions}
-                    placeholder="Select Status"
-                    className="!w-full"
-                />
-            </div>
         </>
     );
 };

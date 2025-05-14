@@ -26,6 +26,7 @@ interface IInput
     label: string;
     value: string;
   }[];
+  menuPortalTarget?: any;
   lableClassName?: string;
 }
 
@@ -44,6 +45,7 @@ export default function Input({
   Icon,
   hideError,
   lableClassName,
+  menuPortalTarget = typeof document !== "undefined" ? document.body:null,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -427,7 +429,7 @@ export default function Input({
               classNamePrefix="select"
               {...field}
               isDisabled={props?.disabled}
-              menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
+              menuPortalTarget={typeof document !== "undefined" ? document.body:null} // Renders the dropdown outside of the current scrollable container
               menuPosition="fixed" // Makes the dropdown position fixed
               autoFocus={false} // Prevents focus behavior causing auto-scroll
             />
@@ -454,10 +456,15 @@ export default function Input({
               classNamePrefix="select"
               {...field}
               isDisabled={props?.disabled}
-              menuPortalTarget={document.body} // render dropdown outside the parent container
+              menuPortalTarget={typeof document !== "undefined" ? document.body:null} // render dropdown outside the parent container
               styles={{
                 menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                 menu: (base) => ({ ...base, zIndex: 9999 }),
+                control: (base: any) => ({
+                  ...base,
+                  height: "54px",
+                  borderRadius: "8px",
+                }),
               }}
             />
           </div>
@@ -505,9 +512,21 @@ export default function Input({
                 classNamePrefix="select"
                 className="react-select-container"
                 isDisabled={props?.disabled}
-                menuPortalTarget={document.body}
+                menuPortalTarget={menuPortalTarget ? (typeof document !== "undefined") ? document.body:null:null}
                 menuPosition="fixed"
                 autoFocus={false}
+                styles={{
+                  control: (base: any) => ({
+                    ...base,
+                    height: "54px",
+                    borderRadius: "8px",
+                  }),
+                  placeholder: (base: any) => ({
+                    ...base,
+                    fontSize: "0.875rem ", // Tailwind text-sm
+                    color: "#a1a1aa", // Tailwind slate-400
+                  }),
+                }}
               />
 
               {/* Custom Tag Display */}

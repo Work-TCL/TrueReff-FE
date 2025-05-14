@@ -1428,6 +1428,13 @@ export const cities:any = {
   ]
 }
 
+export const businessTypes = [
+  "Proprietorship", 
+  "LLP",
+  "Pvt Ltd",
+  "Partnership"
+]
+
 export const gender:string[] = [
   "Male","Female"
 ]

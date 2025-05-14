@@ -78,13 +78,15 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account, trigger }) {
+    async jwt({ token, user,session, account, trigger }) {
       if (trigger === "update") {
         // ✅ This is triggered from `update()` on client
+        if(session){
+          token.vendor = session.user.vendor;
+        }
         try {
           const updatedUser = await getUserApi();
           const user = updatedUser?.data;
-
           if (user) {
             token._id = user?._id;
             token.name = user?.name;
@@ -100,7 +102,7 @@ const authOptions: NextAuthOptions = {
 
           return token;
         } catch (error) {
-          console.error("Failed to fetch updated user:", error);
+          console.log("Failed to fetch updated user:", error);
           return token; // return current token to avoid breaking session
         }
       }
@@ -143,7 +145,9 @@ const authOptions: NextAuthOptions = {
       return session;
     },
   },
-
+  session: {
+    strategy: 'jwt',
+  },
   pages: {
     signIn: "/",
     error: "/",

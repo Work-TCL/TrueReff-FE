@@ -55,6 +55,7 @@ export default function Overview() {
           growth={5}
           bgColor="bg-white bg-[#f2f1fd]"
           borderColor={"border-[#7877EE]"}
+          link="/vendor/creators/collaboration?status=ACTIVE"
         />
         <StatsCard
           title={translate("Products_Sales")}
@@ -69,6 +70,7 @@ export default function Overview() {
           growth={5}
           borderColor="border-[#77EE8D]"
           bgColor="bg-[#f1fdf4]"
+          link="/vendor/campaign?status=ACTIVE"
         />
         <StatsCard
           title={translate("Pending_Collaboration")}
@@ -76,6 +78,7 @@ export default function Overview() {
           growth={5}
           borderColor="border-[#9773C8]"
           bgColor="bg-[#f5f1fa]"
+          link="/vendor/creators/collaboration?status=PENDING"
         />
         <StatsCard
           title={translate("New_Creators")}
@@ -83,6 +86,7 @@ export default function Overview() {
           growth={5}
           borderColor="border-[#C861A0]"
           bgColor="bg-[#faeff6]"
+          link="/vendor/creators"
         />
       </div>
       <div className="flex flex-col gap-5 w-full">
@@ -106,17 +110,9 @@ export default function Overview() {
           </div>
         </div>
 
-        {/* Row 2: RecentActivities and VendorActivity */}
-        <div className="flex flex-col xl:flex-row gap-4 items-stretch w-full">
-          {/* Left block: RecentActivities */}
-          <div className="xl:w-3/4 w-full flex">
-            <RecentActivities />
-          </div>
-
-          {/* Right block: VendorActivity */}
-          <div className="xl:w-1/4 w-full flex">
-            <VendorActivity />
-          </div>
+        {/* Row 2: RecentActivities */}
+        <div className="w-full flex">
+          <RecentActivities />
         </div>
       </div>
     </div>

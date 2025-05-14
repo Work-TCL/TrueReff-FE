@@ -2,7 +2,7 @@
 import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { ImageOff, Search } from "lucide-react";
+import { CircleFadingPlus, Eye, ImageOff, PencilLine, Search } from "lucide-react";
 import Loading from "@/app/vendor/loading";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import Loader from "../../components-common/layout/loader";
@@ -20,6 +20,8 @@ import { ViewToggle } from "../../components-common/view-toggle";
 import { SearchInput } from "../../components-common/search-field";
 import SingleSelect from "../../components-common/single-select";
 import ProductManageMentFilter from "./viewProduct/productManagementFilter";
+import ToolTip from "../../components-common/tool-tip";
+import StatusBadge from "../../components-common/status-badge";
 
 export interface ICategory {
   _id: string;
@@ -49,6 +51,20 @@ export interface IProduct {
   subCategories?: string;
   tag?: string;
   price?: string;
+  lifeTime: boolean;
+  startDate: string;
+  endDate: string;
+  status: string;
+  commission: number;
+  commission_type: string;
+  referenceLinks: string[];
+  creatorMaterial: any[];
+  videoType: string;
+  channels: string[];
+  notes: string;
+  discount: number;
+  discountType: string;
+  couponCode: string;
 }
 
 const customStyles = {
@@ -70,7 +86,7 @@ export default function ProductList() {
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<"table" | "card">("card");
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -83,31 +99,31 @@ export default function ProductList() {
     page: number = currentPage,
     isInternalLoader: boolean = false,
     searchValue: string = "",
-    categoryIds: string[] = []
+    categoryIds: string[] = [],
+    status: string = ''
   ) => {
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${
-          searchValue ? `&search=${searchValue}` : ""
-        }${categoryIds?.length > 0 ? `&categories=${categoryIds}` : ""}`
+        `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${searchValue ? `&search=${searchValue}` : ""
+        }${categoryIds?.length > 0 ? `&categories=${categoryIds}` : ""}${status ? `&status=${status}`:""}`
       );
-      if (response.data.data?.data) {
+      if (response.data.data?.list) {
         setProductList(
-          response.data.data?.data.map((product: IProduct) => {
+          response.data.data?.list.map((product: IProduct) => {
             let categories =
               product.category?.length > 0
                 ? product.category
-                    .filter((cat: ICategory) => cat.parentId === null)
-                    .map((cat: ICategory) => cat?.name)
-                    ?.join(", ")
+                  .filter((cat: ICategory) => cat.parentId === null)
+                  .map((cat: ICategory) => cat?.name)
+                  ?.join(", ")
                 : "";
             let subCategories =
               product.category?.length > 0
                 ? product.category
-                    .filter((cat: ICategory) => cat.parentId !== null)
-                    .map((cat: ICategory) => cat?.name)
-                    ?.join(", ")
+                  .filter((cat: ICategory) => cat.parentId !== null)
+                  .map((cat: ICategory) => cat?.name)
+                  ?.join(", ")
                 : "";
             let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
             return { ...product, categories, tag, subCategories };
@@ -201,51 +217,66 @@ export default function ProductList() {
       ),
     },
     {
-      id: "subCategories",
-      header: () => translate("Sub_category"),
-      accessorKey: "subCategories",
+      id: "commission",
+      header: () => translate("Commission"),
+      accessorKey: "commission",
       cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.subCategories ?? ""}
-        />
+        <span>{row?.original?.commission_type === "FIXED_AMOUNT" ? `₹ ` : `$ `}{row?.original?.commission}</span>
       ),
     },
     {
-      id: "tags",
-      header: () => translate("Tags"),
-      accessorKey: "tags",
+      id: "status",
+      header: () => translate("Status"),
+      accessorKey: "status",
       cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.tags?.join(", ") ?? ""}
-        />
+        <div className="flex justify-center">
+          <StatusBadge
+            status={row?.original?.status}
+          />
+        </div>
       ),
     },
     {
-      id: "sku",
-      header: () => translate("SKU"),
-      accessorKey: "sku",
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.sku ?? ""}
-        />
-      ),
+      id: "endDate",
+      header: () => translate("End_Date"),
+      accessorKey: "endDate",
+      // cell: ({ row }) => (
+      //   <TruncateWithToolTip
+      //     checkHorizontalOverflow={false}
+      //     linesToClamp={2}
+      //     text={row.original.tags?.join(", ") ?? ""}
+      //   />
+      // ),
     },
     {
       id: "price",
-      header: () => <>Selling {translate("Price")}</>,
+      header: () => <>{translate("Action")}</>,
       accessorKey: "price",
       cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.price ?? ""}
-        />
+        <div className="flex items-center gap-3">
+          {/* View button (currently commented) */}
+          <ToolTip content="View Product" delayDuration={1000}>
+            <Eye
+              strokeWidth={1.5}
+              color="#FF4979"
+              className="cursor-pointer"
+              onClick={() => router.push(`/vendor/products/view/${row?.original?._id}`)}
+            />
+          </ToolTip>
+
+          <div
+            onClick={() => router.push(`/vendor/campaign/product/${row?.original?._id}`)}
+            className="cursor-pointer"
+          >
+            <ToolTip content="Add Product to CRM" delayDuration={1000}>
+              <PencilLine
+                strokeWidth={1.5}
+                color="#3b82f680"
+                className="cursor-pointer"
+              />
+            </ToolTip>
+          </div>
+        </div>
       ),
     },
   ];
@@ -255,6 +286,7 @@ export default function ProductList() {
   };
 
   const handleSelectStatus = (selectedOptions: any) => {
+    fetProductsList(1,true,search,selectedCategories,selectedOptions)
     setSelectedStatus(selectedOptions);
   };
   return (
