@@ -1,7 +1,8 @@
 "use client";
-import { labelStyle } from "@/app/_components/ui/form/Input";
+import Input, { labelStyle } from "@/app/_components/ui/form/Input";
 import { cn } from "@sohanemon/utils";
 import { Video } from "lucide-react";
+import { useTranslations } from "next-intl";
 import React, { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -9,6 +10,7 @@ type MediaUploaderProps = {
   onMediaChange: (media: { images: File[]; video: File | null }) => void;
   setMediaPriview: (media: { images: string[]; video: string | null }) => void;
   mediaPreview: { images: string[]; video: string | null };
+  videoTypeComponent?: () => any;
   disabled: boolean;
 };
 
@@ -16,8 +18,10 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
   onMediaChange,
   mediaPreview,
   setMediaPriview,
+  videoTypeComponent,
   disabled = false,
 }) => {
+  const translate = useTranslations();
   const [images, setImages] = useState<File[]>([]);
   const [video, setVideo] = useState<File | null>(null);
 
@@ -187,6 +191,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
           ))}
         </div>
       </div>
+      {videoTypeComponent && videoTypeComponent()}
 
       <div>
         {!disabled && (

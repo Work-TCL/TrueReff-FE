@@ -54,6 +54,7 @@ export default function CreateCampaign(props: IAddProductDetailProps) {
   });
   const methods = useForm<ICampaignValidationSchema>({
     defaultValues: {},
+    //@ts-ignore
     resolver: campaignId
       ? yupResolver(campaignValidationUpdateSchema)
       : yupResolver(campaignValidationSchema),

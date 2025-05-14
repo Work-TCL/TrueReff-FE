@@ -26,7 +26,7 @@ import { SearchInput } from "@/app/_components/components-common/search-field";
 import ChannelBar from "./chaneelBar";
 import { getConnectedChannelsList } from "@/lib/web-api/channel";
 
-interface IProduct {
+export interface IProduct {
   handle: string;
   id: string;
   image: string;
@@ -235,7 +235,11 @@ export default function ChannelProductList({
           </ToolTip> */}
 
             <div
-              onClick={() => setCurrentData(product)}
+              onClick={() =>
+                router?.push(
+                  `/vendor/campaign/product/add?productId=${product?.id}`
+                )
+              }
               className="cursor-pointer"
             >
               <ToolTip content="Add Product to CRM" delayDuration={1000}>

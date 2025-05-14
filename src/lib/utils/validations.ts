@@ -395,15 +395,14 @@ export const creatorOnBoardingSchema = Yup.object().shape({
   city: Yup.string().required("City is required"),
   gender: Yup.string().required("Gender is required"),
   dob: Yup.string().required("Date of Birth is required"),
-  
 });
 
 export interface ICreatorOnBoardingSchema
   extends Yup.Asserts<typeof creatorOnBoardingSchema> {}
 
-  export const creatorStoreSetUpSchema = Yup.object().shape({
-    store_name: Yup.string().required("Store name is required"),
-    store_description: Yup.string().required("Store description is required"),  
+export const creatorStoreSetUpSchema = Yup.object().shape({
+  store_name: Yup.string().required("Store name is required"),
+  store_description: Yup.string().required("Store description is required"),
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
@@ -428,8 +427,9 @@ export interface ICreatorOnBoardingSchema
     .required("Sub-Category is required"), // Ensure at least one sub-category is selected
   profile_image: Yup.string().required("Profile Image is required"),
   banner_image: Yup.string().required("Banner Image is required"),
-  })
-  export interface ICreatorStoreSetUpSchema extends Yup.Asserts<typeof creatorStoreSetUpSchema>{}
+});
+export interface ICreatorStoreSetUpSchema
+  extends Yup.Asserts<typeof creatorStoreSetUpSchema> {}
 
 export const shopifyConnectSchema = Yup.object().shape({
   id_string: Yup.string().required("Shopify ID is required"),
@@ -553,13 +553,13 @@ export const creatorProfileUpdateSchema = Yup.object().shape({
   full_name: Yup.string().required("Full name is required"),
   user_name: Yup.string().required("User name is required"),
   phone: Yup.string(),
-    // .required("Phone is required")
-    // .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+  // .required("Phone is required")
+  // .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
   state: Yup.string().required("State is required"),
   city: Yup.string().required("City is required"),
   gender: Yup.string().required("Gender is required"),
   dob: Yup.string().required("Date of Birth is required"),
-  profile_image: Yup.string().nullable()
+  profile_image: Yup.string().nullable(),
 });
 
 export interface ICreatorProfileUpdateSchema
@@ -657,6 +657,110 @@ export const campaignValidationUpdateSchema = Yup.object().shape({
 
 export interface ICampaignValidationSchema
   extends Yup.Asserts<typeof campaignValidationSchema> {}
+
+export const campaignProductValidationSchema = Yup.object().shape({
+  name: Yup.string().required("Campaign name is required"),
+  description: Yup.string().required("Description is required"),
+  campaignLifeTime: Yup.boolean().default(false).required(),
+  category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().required("Label is required"),
+        value: Yup.string().required("Value is required"),
+      })
+    )
+    .min(1, "Category is required")
+    .required("Category is required"), // Ensure at least one category is selected
+  sub_category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().required("Label is required"),
+        value: Yup.string().required("Value is required"),
+      })
+    )
+    .min(1, "Sub-category is required")
+    .required("Sub-Category is required"), // Ensure at least one sub-category is selected
+  startDate: Yup.date()
+    .nullable()
+    .when("campaignLifeTime", {
+      is: false,
+      then: (schema) =>
+        schema
+          .required("Start date is required")
+          .test(
+            "is-future-date",
+            "Start date must be in the future (not today)",
+            (value) => {
+              if (!value) return false;
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+              return value > today;
+            }
+          ),
+      otherwise: (schema) => schema.notRequired().nullable(),
+    }),
+
+  endDate: Yup.date()
+    .nullable()
+    .when(["campaignLifeTime", "startDate"], {
+      is: (campaignLifeTime: boolean, startDate: any) =>
+        campaignLifeTime === false && !!startDate,
+      then: (schema) =>
+        schema
+          .required("End date is required")
+          .test(
+            "is-after-start",
+            "End date must be after start date",
+            function (endDate) {
+              const { startDate } = this.parent;
+              if (!startDate || !endDate) return false;
+              return new Date(endDate) > new Date(startDate);
+            }
+          ),
+      otherwise: (schema) => schema.notRequired().nullable(),
+    }),
+
+  productId: Yup.string().required("Product is required"),
+  tearmAndCondition: Yup.boolean().oneOf([true]).required(),
+  couponCode: Yup.string().optional(),
+  videoType: Yup.string().required(),
+  notes: Yup.string().required(),
+  references: Yup.array()
+    .of(Yup.string().url("Invalid URL").required("Reference link is required"))
+    .min(1, "At least one reference link is required"),
+  channels: Yup.array()
+    .min(1, "At least one channel is required")
+    .required("Channels are required"),
+
+  commission_type: Yup.string()
+    .oneOf(
+      ["FIXED_AMOUNT", "PERCENTAGE"],
+      "Discount type must be either FIXED_AMOUNT or PERCENTAGE"
+    )
+    .required("Discount type is required"),
+  discount_type: Yup.string()
+    .oneOf(
+      ["FIXED_AMOUNT", "PERCENTAGE"],
+      "Discount type must be either FIXED_AMOUNT or PERCENTAGE"
+    )
+    .required("Discount type is required"),
+
+  discount_value: Yup.number()
+    .typeError("Discount value is required")
+    .required("Discount value is required")
+    .moreThan(0, "Discount value must be greater than 0"),
+  commission: Yup.number()
+    .typeError("Discount value is required")
+    .required("Discount value is required")
+    .moreThan(0, "Discount value must be greater than 0"),
+  price: Yup.number()
+    .typeError("Discount value is required")
+    .required("Discount value is required")
+    .moreThan(0, "Discount value must be greater than 0"),
+});
+
+export interface ICampaignProductValidationSchema
+  extends Yup.Asserts<typeof campaignProductValidationSchema> {}
 
 export const createStoreSchema = Yup.object().shape({
   name: Yup.string().required("Name is required."),
