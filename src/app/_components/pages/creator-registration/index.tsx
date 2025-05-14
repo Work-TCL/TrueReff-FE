@@ -233,7 +233,6 @@ export default function CreatorRegistrationPage() {
       if (profileFile) {
         formData.append("profile_image",profileFile);
       }
-      console.log("formData",formData)
       const response: any = await creatorRegister(
         formData,3
       );

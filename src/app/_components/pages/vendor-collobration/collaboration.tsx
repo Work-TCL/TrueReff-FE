@@ -13,6 +13,7 @@ import { debounce } from "lodash";
 import Loader from "../../components-common/layout/loader";
 import { SearchInput } from "../../components-common/search-field";
 import SingleSelect from "../../components-common/single-select";
+import { useRouter, useSearchParams } from "next/navigation";
 export interface ICategory {
   _id: string;
   name: string;
@@ -103,7 +104,10 @@ const customStyles = {
 };
 export default function CollaborationList() {
   const t = useTranslations();
+  const router = useRouter();
   const { account: user } = useAuthStore();
+  const searchParams = useSearchParams();
+  const status = searchParams.get("status")??"";
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
@@ -114,7 +118,7 @@ export default function CollaborationList() {
     { value: "REQUESTED", label: "Requested" },
     { value: "REJECTED", label: "Rejected" },
     { value: "PENDING", label: "Pending" },
-    { value: "LIVE", label: "Live" },
+    { value: "ACTIVE", label: "Active" },
     { value: "EXPIRED", label: "Expired" },
   ];
   const [currentPage, setCurrentPage] = useState(1);
@@ -200,8 +204,14 @@ export default function CollaborationList() {
   );
 
   useEffect(() => {
-    fetchCollaboration(currentPage);
-  }, []);
+    if(status){
+      setSelectedStatus(status);
+      fetchCollaboration(currentPage, true, search, status);
+    }
+    else {
+      setSelectedStatus("");
+      fetchCollaboration(currentPage);}
+  }, [status]);
   const handlePageChange = (page: number) => {
     page !== currentPage &&
       fetchCollaboration(page, true, search, selectedStatus);
@@ -219,8 +229,7 @@ export default function CollaborationList() {
     debouncedSearch(value, selectedStatus);
   };
   const handleSelectStatus = (selectedOptions: any) => {
-    setSelectedStatus(selectedOptions);
-    fetchCollaboration(currentPage, true, search, selectedOptions);
+    router.push(`?status=${selectedOptions}`)
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">

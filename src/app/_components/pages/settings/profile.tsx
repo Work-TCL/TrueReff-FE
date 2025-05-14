@@ -10,8 +10,19 @@ import { useTranslations } from "next-intl";
 interface IProfile {
   business_name: string;
   company_email: string;
-  company_phone: string;
-  addresses: any[];
+  pin_code: string;
+  type_of_business: string;
+  website: string;
+  state: string;
+  city: string;
+  address: string;
+  profile_image: string;
+  banner_image: string;
+  createdAt: string;
+  updatedAt: string;
+  gst_certificate: string;
+  gst_number: string;
+  pan_number: string;
   contacts: {
     name: string;
     phone: string;
@@ -22,20 +33,30 @@ interface IProfile {
 
 export default function Profile() {
   const translate = useTranslations();
-  const [profile, setProfile] = useState<IProfile>({
+  const initialState = {
+    contacts: [{
+      name: "",
+      phone: "",
+      email: "",
+      isDefault: false,
+    },],
     business_name: "",
     company_email: "",
-    company_phone: "",
-    addresses: [],
-    contacts: [
-      {
-        name: "",
-        phone: "",
-        email: "",
-        isDefault: false,
-      },
-    ],
-  });
+    pin_code: "",
+    type_of_business: "",
+    website: "",
+    state: "",
+    city: "",
+    address: "",
+    profile_image: "",
+    banner_image: "",
+    createdAt: "",
+    updatedAt: "",
+    gst_certificate: "",
+    gst_number: "",
+    pan_number: "",
+  };
+  const [profile, setProfile] = useState<IProfile>(initialState);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const { vendor } = useVendorStore();
@@ -49,20 +70,7 @@ export default function Profile() {
       setProfile({ ...response?.vendor });
     } else {
       setLoading(false);
-      setProfile({
-        business_name: "",
-        company_email: "",
-        company_phone: "",
-        addresses: [],
-        contacts: [
-          {
-            name: "",
-            phone: "",
-            email: "",
-            isDefault: false,
-          },
-        ],
-      });
+      setProfile(initialState);
     }
   };
 
@@ -84,30 +92,90 @@ export default function Profile() {
             {translate("edit_profile")}
           </div>
         </div>
-        <div className="flex gap-3 xl:gap-4">
+        {/* <div className="flex flex-col items-center">
+          <div className="flex justify-center min-w-fit">
+            <img
+              src={vendor.profile_image || "/assets/product/image-square.svg"}
+              className="w-[150px] h-[150px] object-cover rounded-full"
+            />
+          </div>
+          <h2 className="text-lg font-semibold mt-4">{profile.business_name}</h2>
+          <p className="text-zinc-400 text-sm">{profile.company_email}</p>
+        </div>
+        <div className="grid grid-cols-2 justify-center gap-x-6 gap-y-4 mt-6 text-sm">
+          {[
+            ["Website", profile.website || "-"],
+            ["Business_Type", profile.type_of_business || "-"],
+            ["Address", profile.address || "-"],
+            ["Pin_Code", profile.pin_code || "-"],
+            ["State", profile.state || "-"],
+            ["City", profile.city || "-"],
+            ["GST_Number", profile.gst_number || "-"],
+            ["PAN_Number", profile.pan_number || "-"],
+          ].map(([label, value], idx) => (
+            <div className="flex gap-2">
+              <p className="text-zinc-500">{translate(label as string)}:</p>
+              <p className="text-black">{value}</p>
+            </div>
+          ))}
+        </div> */}
+        <div className="flex flex-col md:flex-row gap-5 xl:gap-4">
           <div className="flex justify-center min-w-fit">
             <img
               src={vendor.profile_image || "/assets/product/image-square.svg"}
               className="w-[100px] h-[100px] object-cover rounded-full"
             />
           </div>
-          <div className="flex flex-col gap-2 text-[14px] xl:text-[16px] text-gray-500">
-            <span>{translate("Name")}:</span>
-            <span>{translate("Email")}:</span>
-            <span>{translate("Mobile")}:</span>
+          <div className="flex flex-col gap-3">
+            {[
+              ["Name", profile.business_name || "-"],
+              ["Email", profile.company_email || "-"],
+              ["Website", profile.website || "-"],
+              ["Business_Type", profile.type_of_business || "-"],
+            ].map(([label, value], idx) => (
+              <div key={idx} className="flex flex-col md:flex-row items-start gap-2">
+                <div className="w-[120px] text-sm text-gray-500 text-nowrap">
+                  {translate(label as string)}:
+                </div>
+                <div className="font-medium text-sm break-words">
+                  {value || "-"}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="flex flex-col text-[14px] xl:text-[16px] gap-2">
-            <span className="font-medium">{profile.business_name || "-"}</span>
-            <span className="font-medium">{profile.company_email || "-"}</span>
-            <span className="font-medium">{profile.company_phone || "-"}</span>
+          <div className="flex flex-col gap-3">
+            {[
+              ["Address", profile.address || "-"],
+              ["Pin_Code", profile.pin_code || "-"],
+              ["State", profile.state || "-"],
+              ["City", profile.city || "-"],
+            ].map(([label, value], idx) => (
+              <div key={idx} className="flex flex-col md:flex-row items-start gap-2">
+                <div className="w-[120px] text-sm text-gray-500 text-nowrap">
+                  {translate(label as string)}:
+                </div>
+                <div className="font-medium text-sm break-words">
+                  {value || "-"}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col gap-3">
+            {[
+              ["GST_Number", profile.gst_number || "-"],
+              ["PAN_Number", profile.pan_number || "-"],
+            ].map(([label, value], idx) => (
+              <div key={idx} className="flex flex-col md:flex-row items-start gap-2">
+                <div className="w-[120px] text-sm text-gray-500 text-nowrap">
+                  {translate(label as string)}:
+                </div>
+                <div className="font-medium text-sm break-words">
+                  {value || "-"}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        <AddressesProfile
-          addresses={
-            Array.isArray(profile?.addresses) ? profile?.addresses : []
-          }
-          refreshCentral={() => getProfile()}
-        />
         <ContactsProfile
           contacts={Array.isArray(profile?.contacts) ? profile?.contacts : []}
           refreshCentral={() => getProfile()}

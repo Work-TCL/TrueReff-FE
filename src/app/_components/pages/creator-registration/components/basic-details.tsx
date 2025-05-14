@@ -131,7 +131,7 @@ export default function BasicInfoForm({
             ]}
             onChange={(value) => handleOnSelect(value?.value, "state")}
             options={indianStates?.map(ele => ({ value: ele, label: ele }))}
-            menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
+            menuPortalTarget={typeof document !== "undefined" ? document.body:null} // Renders the dropdown outside of the current scrollable container
             menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder={translate("Select_State")}
@@ -159,7 +159,7 @@ export default function BasicInfoForm({
             ]}
             onChange={(value) => handleOnSelect(value?.value, "city")}
             options={formState.state ? cities[formState?.state]?.map((ele: string) => ({ value: ele, label: ele })) : []}
-            menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
+            menuPortalTarget={typeof document !== "undefined" ? document.body:null} // Renders the dropdown outside of the current scrollable container
             menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder={translate("Select_City")}
@@ -187,7 +187,7 @@ export default function BasicInfoForm({
             ]}
             onChange={(value) => handleOnSelect(value?.value, "gender")}
             options={gender?.map(ele => ({ value: ele, label: ele }))}
-            menuPortalTarget={document.body} // Renders the dropdown outside of the current scrollable container
+            menuPortalTarget={typeof document !== "undefined" ? document.body:null} // Renders the dropdown outside of the current scrollable container
             menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder={translate("Select_Gender")}

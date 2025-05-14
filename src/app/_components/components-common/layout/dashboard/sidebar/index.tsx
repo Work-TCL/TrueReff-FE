@@ -127,18 +127,28 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     }));
   };
   const menuItems: MenuItem[] = [
-    { label: translate("Overview"), icon: Home, link: "/vendor/dashboard" },
+    { label: translate("Dashboard"), icon: Home, link: "/vendor/dashboard" },
+    // {
+    //   label: translate("Product_Catalog"),
+    //   icon: Box,
+    //   children: [
+    //     // { label: translate("Add_New_Product"), link: "/vendor/products/add" },
+    //     { label: translate("Product_List"), link: "/vendor/products" },
+    //     {
+    //       label: translate("Channels"),
+    //       link: "/vendor/products/channel-products",
+    //     },
+    //   ],
+    // },
     {
-      label: translate("Product_Catalog"),
+      label: translate("Product_Management"),
       icon: Box,
-      children: [
-        // { label: translate("Add_New_Product"), link: "/vendor/products/add" },
-        { label: translate("Product_List"), link: "/vendor/products" },
-        {
-          label: translate("Channels"),
-          link: "/vendor/products/channel-products",
-        },
-      ],
+      link: "/vendor/products",
+    },
+    {
+      label: translate("Channels"),
+      icon: Store,
+      link: "/vendor/products/channel-products",
     },
     {
       label: translate("Creators"),

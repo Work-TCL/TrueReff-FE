@@ -37,10 +37,10 @@ export default function VendorProfile() {
           banner_image={vendorData.banner_image}
           profile_image={vendorData.profile_image}
           full_name={vendorData.business_name}
-          user_name={vendorData.user_name}
-          short_description={vendorData.short_description}
-          long_description={vendorData.long_description}
-          tags={vendorData.omni_channels}
+          user_name={""}
+          short_description={""}
+          long_description={""}
+          tags={[]}
         />
         <div className="flex flex-col gap-5">
           {/* <ProfileCompletionCard progress={60} /> */}

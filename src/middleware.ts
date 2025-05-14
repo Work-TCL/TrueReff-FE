@@ -55,10 +55,13 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     if(user?.creator && !pathname.startsWith("/creator-registration") && user?.creator?.status !== "APPROVED"){
       return NextResponse.redirect(new URL('/creator-registration', request.url));
     }
+    if(user?.vendor && !pathname.startsWith("/vendor-register") && user?.vendor?.completed_step !== 3){
+      return NextResponse.redirect(new URL('/vendor-register', request.url));
+    }
     if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request)) {
       return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard`:`/dashboard`, request.url));
     }
-    if(token && user?.type === "vendor" && ((!pathname.startsWith("/creator/profile") && !pathname.includes("/store/")) && pathname.startsWith("/creator") || ['/vendor-register',"/creator-registration","/dashboard"].includes(pathname))){
+    if(token && user?.type === "vendor" && ((!pathname.startsWith("/creator/profile") && !pathname.includes("/store/")) && pathname.startsWith("/creator") || ["/creator-registration","/dashboard"].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 

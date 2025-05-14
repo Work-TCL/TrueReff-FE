@@ -27,11 +27,19 @@ const Button = ({
       className={cn(baseStyles, sizeStyles, className)}
       {...props}
     >
-      {loading ? (
+      <div className="relative inline-flex items-center justify-center">
+        {loading && (
+          <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
+        )}
+        <span className={`${loading ? 'opacity-0' : ''}`}>
+          {children}
+        </span>
+      </div>
+      {/* {loading ? (
         <RiLoader3Fill className="animate-spin duration-300 text-xl" />
       ) : (
         children
-      )}
+      )} */}
     </button>
   );
 };

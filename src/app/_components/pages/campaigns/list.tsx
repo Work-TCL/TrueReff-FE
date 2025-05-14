@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { Eye, ImageOff, PencilLine } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getCampaignList } from "@/lib/web-api/campaign";
 import { ICampaignData } from "@/lib/types-api/campaign";
 import Loader from "../../components-common/layout/loader";
@@ -29,6 +29,8 @@ export const campaignStatus: { [key: string]: string } = {
 export default function CampaignList() {
   const translate = useTranslations();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const campaignFilter = searchParams.get("status")??"";
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -40,6 +42,15 @@ export default function CampaignList() {
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const pageSize = 20;
   const [totalPages, setTotalPages] = useState<number>(0);
+  useEffect(()=> {
+    if(campaignFilter){
+      setSelectedStatus(campaignFilter);
+      fetchCampaignList(1, true, search, campaignFilter);
+    } else {
+      setSelectedStatus("");
+      fetchCampaignList(currentPage);
+    }
+  },[campaignFilter])
   const fetchCampaignList = async (
     page: number,
     internalLoader: boolean = false,
@@ -76,10 +87,6 @@ export default function CampaignList() {
     }
   };
 
-  useEffect(() => {
-    fetchCampaignList(currentPage);
-  }, []);
-
   const customStyles = {
     placeholder: (base: any) => ({
       ...base,
@@ -112,8 +119,7 @@ export default function CampaignList() {
   };
 
   const handleOnSelectStatus = (selectedOption: any) => {
-    setSelectedStatus(selectedOption?.value ?? "");
-    fetchCampaignList(1, true, search, selectedOption?.value);
+    router.push(`?status=${selectedOption}`)
   };
 
   const campaignColumns: ColumnDef<ICampaignData>[] = [

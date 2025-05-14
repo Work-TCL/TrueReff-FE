@@ -35,8 +35,7 @@ export default function EditContactVendorForm({
     defaultValues: {
       name: profile?.name || "",
       phone: profile?.phone || "",
-      email: profile?.email || "",
-      isDefault: profile?.isDefault || false,
+      email: profile?.email || ""
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -48,7 +47,7 @@ export default function EditContactVendorForm({
       let response: any;
 
       if (profile) {
-        response = await axios.put(`/auth/vendor/contact/${id}`, payload);
+        response = await axios.put(`/auth/vendor/contact/${profile?._id}`, payload);
       } else {
         response = await axios.post("/auth/vendor/contact", payload);
       }
@@ -89,14 +88,6 @@ export default function EditContactVendorForm({
           </div>
           <div className="col-span-2">
             <Input name="email" type="email" placeholder={translate("Email")} />
-          </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("Set_as_default_address")}
-              name="isDefault"
-              type="checkbox"
-              className="items-center gap-2"
-            />
           </div>
 
           <div className="pt-6 col-span-2 sticky bottom-0 bg-white">

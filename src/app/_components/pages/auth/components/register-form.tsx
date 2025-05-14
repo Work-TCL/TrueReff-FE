@@ -12,13 +12,6 @@ import Button from "@/app/_components/ui/button";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
 import { IPostSignupRequest, IPostSignupResponse } from "@/lib/types-api/auth";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useTranslations } from "next-intl";
 interface IRedirectPaths {
   [key: string]: string;

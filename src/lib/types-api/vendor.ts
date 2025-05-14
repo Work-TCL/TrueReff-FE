@@ -17,27 +17,38 @@ export interface VendorContact {
   email: string;
   isDefault?: boolean;
 }
-
+export interface IChannelConfig { 
+  domain: string;
+  name: string;
+  shopify_store_id: number; 
+  access_token: string;
+}
 export interface IVendor {
   vendorId: string;
   accountId: string;
+  category: string[];
+  sub_category: string[];
+  completed_step: number;
+  contacts: VendorContact[];
   business_name: string;
   company_email: string;
-  company_phone: string;
-  gst_number: string;
-  website: string;
+  pin_code: string;
   type_of_business: string;
-  profile_image: string;
-  contacts: VendorContact[];
-  omni_channels: string[];
-  brand_documents: any[];
-  addresses: any[];
-  banner_image?: string;
-  user_name?: string;
-  short_description?: string;
-  long_description?: string;
+  website: string;
   state: string;
   city: string;
+  address: string;
+  profile_image: string;
+  banner_image: string;
+  createdAt: string;
+  updatedAt: string;
+  gst_certificate: string;
+  gst_number: string;
+  pan_number: string;
+  channelConfig: IChannelConfig;
+  channelId: string;
+  channelStatus: string;
+  channelType: string;
 }
 export interface ICategory {
   _id: string;
