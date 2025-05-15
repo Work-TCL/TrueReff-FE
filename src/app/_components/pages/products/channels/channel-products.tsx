@@ -25,6 +25,7 @@ import DataTable from "@/app/_components/components-common/data-table";
 import { SearchInput } from "@/app/_components/components-common/search-field";
 import ChannelBar from "./chaneelBar";
 import { getConnectedChannelsList } from "@/lib/web-api/channel";
+import { toastMessage } from "@/lib/utils/toast-message";
 
 export interface IProduct {
   handle: string;
@@ -84,8 +85,7 @@ export default function ChannelProductList({
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product/list?per_page=${ItemPerPage}${
-          cursor ? `&cursor=${cursor}` : ""
+        `channel/shopify/product/list?per_page=${ItemPerPage}${cursor ? `&cursor=${cursor}` : ""
         }${searchValue ? `&search=${searchValue}` : ""}`
       );
       if (response.data.data.products) {
@@ -133,6 +133,26 @@ export default function ChannelProductList({
     setSearch(value);
     debouncedSearch(value);
   };
+
+  const handleOnCheckExists = async (productId: string) => {
+    setInternalLoader(true);
+    try {
+      const response = await axios.post(
+        `/product/vendor-product/check-existing-product`, { productId: productId }
+      );
+      if (response?.status === 200) {
+        router?.push(
+          `/vendor/campaign/product/add?productId=${productId}`
+        )
+      }
+      // setPlusLoading(false);
+    } catch (error: any) {
+      if (error?.status === 409) {
+        toastMessage.info("Product already exists in the platform")
+      }
+      setInternalLoader(false);
+    }
+  }
 
   const columns: ColumnDef<IProduct>[] = [
     {
@@ -236,9 +256,7 @@ export default function ChannelProductList({
 
             <div
               onClick={() =>
-                router?.push(
-                  `/vendor/campaign/product/add?productId=${product?.id}`
-                )
+                handleOnCheckExists(product.id)
               }
               className="cursor-pointer"
             >
@@ -307,11 +325,10 @@ export default function ChannelProductList({
                     <PaginationContent className="flex items-center gap-2">
                       <PaginationItem>
                         <PaginationPrevious
-                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                            !cursors.hasPreviousPage
+                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${!cursors.hasPreviousPage
                               ? "cursor-not-allowed opacity-50"
                               : "cursor-pointer"
-                          }`}
+                            }`}
                           showArrow={false}
                           onClick={handlePreviousPage}
                         />
@@ -319,11 +336,10 @@ export default function ChannelProductList({
 
                       <PaginationItem>
                         <PaginationNext
-                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                            !cursors.hasNextPage
+                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${!cursors.hasNextPage
                               ? "cursor-not-allowed opacity-50"
                               : "cursor-pointer"
-                          }`}
+                            }`}
                           showArrow={false}
                           onClick={handleNextPage}
                         />

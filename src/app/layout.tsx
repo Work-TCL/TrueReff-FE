@@ -35,9 +35,9 @@ export default async function RootLayout({
           <Suspense fallback={<Loader />}>
             <NextAuthProvider>
               <NextIntlClientProvider messages={messages}>
-                <div className="absolute right-8 top-8">
+                {/* <div className="absolute right-8 top-8">
                   <LocaleSwitcher />
-                </div>
+                </div> */}
                 {children}
                 <Dialogs />
                 <Toaster position="top-right" />

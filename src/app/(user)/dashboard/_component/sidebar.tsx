@@ -107,7 +107,6 @@ interface ISidebarProps {
 const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const translate = useTranslations();
   const pathname = usePathname(); // Get the current path
-  const { account: user } = useAuthStore();
 
   const lg = useMediaQuery("(min-width: 1024px)");
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -126,126 +125,20 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       [label]: !(isSubMenu ? obj : prev)[label],
     }));
   };
-  const menuItems: MenuItem[] = [
-    { label: translate("Dashboard"), icon: Home, link: "/vendor/dashboard" },
-    // {
-    //   label: translate("Product_Catalog"),
-    //   icon: Box,
-    //   children: [
-    //     // { label: translate("Add_New_Product"), link: "/vendor/products/add" },
-    //     { label: translate("Product_List"), link: "/vendor/products" },
-    //     {
-    //       label: translate("Channels"),
-    //       link: "/vendor/products/channel-products",
-    //     },
-    //   ],
-    // },
-    {
-      label: translate("Product_Management"),
-      icon: Box,
-      link: "/vendor/products",
-    },
-    {
-      label: translate("Channels"),
-      icon: Store,
-      link: "/vendor/products/channel-products",
-    },
-    {
-      label: translate("Creators"),
-      icon: UsersRound,
-      children: [
-        { label: translate("Creator_List"), link: "/vendor/creators" },
-        // {
-        //   label: translate("Available_Creators"),
-        //   link: "/vendor/creators/available-creators",
-        // },
-      ],
-    },
-    {
-      label: translate("Collaboration"),
-      icon: UserRound,
-      link: "/vendor/creators/collaboration",
-    },
-    {
-      label: translate("Campaign"),
-      icon: Megaphone,
-      children: [
-        { label: translate("Add_New_Campaign"), link: "/vendor/campaign/add" },
-        { label: translate("Campaign_List"), link: "/vendor/campaign" },
-        // { label: 'Campaign Metrics', link: '/campaign/metrics' },
-      ],
-    },
-    // { label: translate("Bids"), icon: BarChart, link: "/bids" },
-    // {
-    //   label: translate("Brand_Analysis"),
-    //   icon: BarChart,
-    //   link: "/brand-analysis",
-    // },
-    // {
-    //   label: translate("Account_Recharge"),
-    //   icon: DollarSign,
-    //   link: "/recharge",
-    // },
-    // { label: translate("Payments"), icon: DollarSign, link: "/payments" },
-    // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
-    { label: translate("Settings"), icon: Settings, link: "/vendor/settings" },
-  ];
-  const creatorMenuItem: MenuItem[] = [
+
+  const menu: MenuItem[] = [
     {
       label: translate("Dashboard"),
       icon: LayoutGrid,
-      link: "/creator/dashboard",
+      link: "/dashboard",
     },
     {
-      label: translate("My_Store"),
-      icon: Store,
-      children: [
-        {
-          label: translate("Store_set_up"),
-          link: "/creator/my-store/store-setup",
-        },
-        { label: translate("Product_List"), link: "/creator/my-store" },
-      ],
-    },
-    {
-      label: translate("Product_Management"),
+      label: translate("Wishlist"),
       icon: Box,
-      link: "/creator/product-management",
+      link: "/wishlist",
     },
-    // {
-    //   label: translate("Bidding_Management"),
-    //   icon: BarChart,
-    //   link: "/brand-analysis",
-    // },
-    {
-      label: translate("Brands_List"),
-      icon: Store,
-      link: "/creator/brandsList",
-    },
-    // {
-    //   label: translate("Creator_Analysis"),
-    //   icon: BarChart,
-    //   link: "/creator/creator_analysis",
-    // },
-    {
-      label: translate("Collaboration"),
-      icon: UserRound,
-      link: "/creator/collaboration",
-    },
-    {
-      label: translate("Payment_Earnings"),
-      icon: DollarSign,
-      link: "/creator/payment-earnings",
-    },
-    { label: translate("Settings"), icon: Settings, link: "/creator/settings" },
-    // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
-    // { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
 
-  const menu = {
-    vendor: menuItems,
-    creator: creatorMenuItem,
-  }[user?.role || "vendor"];
 
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(

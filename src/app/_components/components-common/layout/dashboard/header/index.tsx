@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
-import { ArrowLeft, CircleUserRound, Menu, User, UserRound } from "lucide-react";
+import { ArrowLeft, Menu, UserRound } from "lucide-react";
 import toast from "react-hot-toast";
 import socketService from "@/lib/services/socket-service";
 import { useAuthStore } from "@/lib/store/auth-user";
@@ -12,6 +12,8 @@ import { useCreatorStore } from "@/lib/store/creator";
 import axios from "@/lib/web-api/axios";
 import NotificationPopover from "./notificationPopover";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils/commonUtils";
+
 interface IPageName {
   [key: string]: string;
 }
@@ -55,6 +57,7 @@ function formatTimeAgo(date: string) {
   }
 }
 export default function Header({ handleExpandSidebar }: IHeaderProps) {
+  const router = useRouter();
   const translate = useTranslations();
   const pathName = usePathname();
   const { account } = useAuthStore();
@@ -88,7 +91,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor/profile": translate("Brand_Profile"),
     "/vendor/creators/collaboration": translate("Collaboration"),
     "/creator/collaboration": translate("Collaboration"),
-    "/vendor/creators/available-creators": translate("Available_Creators")
+    "/vendor/creators/available-creators": translate("Available_Creators"),
+    "/dashboard": translate("Dashboard"),
+    "/wishlist": translate("Wishlist")
   };
   const fetchNotifications = async () => {
     setLoading(true);
@@ -115,7 +120,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     }
   };
   useEffect(() => {
-    if (pathName !== "/dashboard" && pathName !== "/creator-registration" && pathName !== "/vendor-register") {
+    if (account?.role) {
       fetchNotifications();
     }
   }, []);
@@ -195,15 +200,20 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       return pageNames[pathName];
     }
   };
-
+  const routes = [
+    "/dashboard",
+    "/creator-registration",
+    "/vendor-register",
+    "/wishlist"
+  ]
   return (
     <>
-    {(pathName !== "/dashboard" && pathName !== "/creator-registration" && pathName !== "/vendor-register") ? (<header className="bg-white px-3 py-3 flex items-center gap-1">
+    {(!routes.includes(pathName)) ? (<header className="bg-white px-3 py-3 flex items-center gap-1">
       <Menu
-        className="size-5 shrink-0 cursor-pointer lg:hidden"
+        className="size-5 shrink-0 text-primary cursor-pointer lg:hidden"
         onClick={handleExpandSidebar}
       />
-      <h2 className="md:text-2xl text-lg font-medium text-gray-black">
+      <h2 className="md:text-2xl text-lg font-medium text-primary">
         {getHeaderName()}
       </h2>
         <div className="ml-auto flex items-center md:gap-3 gap-2">
@@ -244,20 +254,42 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
           </Link>
         </div>
       <div
-        className={(pathName === "/dashboard" || pathName === "/creator-registration" || pathName === "/vendor-register") ? "flex justify-end w-full" : ""}
+        className={(!account?.role) ? "flex justify-end w-full" : ""}
       >
         <Link href="?auth=logout" className="mx-4 block">
           <IoLogOutOutline className="text-2xl text-primary" />
         </Link>
       </div>
     </header>):<header className="bg-white px-3 py-3 flex items-center gap-1">
+    <Menu
+        className="size-5 shrink-0 cursor-pointer lg:hidden"
+        onClick={handleExpandSidebar}
+      />
+      <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-medium text-primary">
+        {getHeaderName()}
+      </h2>
       <div
-        className={`flex ${pathName !== "/dashboard" ? "justify-between":"justify-end"} w-full`}
+        className={`flex ${(pathName === "/creator-registration" || pathName === "/vendor-register") ? "justify-between":"justify-end"} items-center gap-4 w-full`}
       >
-        {pathName !== "/dashboard" && <Link href="/dashboard" className="mx-4 block">
+        {(pathName === "/creator-registration" || pathName === "/vendor-register") && <Link href="/dashboard" className="mx-4 block">
           <ArrowLeft className="text-2xl text-primary" />
         </Link>}
-        <Link href="?auth=logout" className="mx-4 block">
+        {/* <ButtonPopover/> */}
+          {(pathName !== "/creator-registration" && pathName !== "/vendor-register") && <><div onClick={() => router.push("/vendor-register")}
+            className={cn(
+              "text-black cursor-pointer md:text-[12px] lg:text-base  box-border border border-black rounded-[8px] py-[6px] px-[20px] hover:bg-secondary hover:text-white")}
+          >
+            <span className="hidden sm:block">{translate("Become_a_Brand")}</span>
+            <span className="block sm:hidden">{translate("Brand")}</span>
+          </div>
+          <div onClick={() => router.push("/vendor-register")}
+            className={cn(
+              "text-black cursor-pointer md:text-[12px] lg:text-base  box-border border border-black rounded-[8px] py-[6px] px-[20px] hover:bg-secondary hover:text-white")}
+          >
+            <span className="hidden sm:block">{translate("Become_a_Creator")}</span>
+            <span className="block sm:hidden">{translate("Creator")}</span>
+          </div></>}
+        <Link href="?auth=logout" className="mx-2 block">
           <IoLogOutOutline className="text-2xl text-primary" />
         </Link>
       </div>

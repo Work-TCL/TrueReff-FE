@@ -529,5 +529,18 @@
   "Back_to_dashboard": "Go to dashboard",
   "Shopify_Store_connected": "Shopify Store connected",
   "End_Date": "End Date",
-  "Creator_Commision":"Creator Commision"
+  "Creator_Commision":"Creator Commision",
+  "statusMessage":{
+    "REQUESTED": "Request Sent",
+    "PENDING": "Collaboration Pending",
+    "REJECTED": "Request Rejected",
+    "LIVE": "Collaboration Live",
+    "EXPIRED": "Collaboration Expired",
+    "ACTIVE": "Collaboration Active",
+    "REQUESTED_CREATOR_TO_VENDOR": "Creator Requested",
+    "REQUESTED_VENDOR_TO_CREATOR": "Requested creator",
+    "REQUESTED_CREATOR_FROM_VENDOR": "Requested vendor",
+    "REQUESTED_VENDOR_FROM_CREATOR": "Vendor invited"
+  },
+  "Wishlist":"Wishlist"
 }
