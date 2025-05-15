@@ -86,9 +86,10 @@ export default function EmailVerifyOTPForm() {
             onChange={setOtp}
             numInputs={6}
             renderSeparator={<span> </span>}
-            renderInput={(props) => (
+            renderInput={(props,index) => (
               <input
                 {...props}
+                autoFocus={index === 0}
                 className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] 
                   focus:outline-none focus:border-black text-lg ${
                     props?.value ? "border-black" : "border-gray-dark"

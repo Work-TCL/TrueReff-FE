@@ -53,7 +53,7 @@ const DataTable: React.FC<DataTableProps> = ({
         {table.getHeaderGroups().map((headerGroup) => (
           <tr
             key={headerGroup.id}
-            className="bg-gray-2 text-left dark:bg-meta-4"
+            className={"bg-gray-2 text-left dark:bg-meta-4"}
           >
             {headerGroup.headers.map((header) => (
               <th

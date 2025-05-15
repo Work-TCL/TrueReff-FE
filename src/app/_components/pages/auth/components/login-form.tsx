@@ -225,7 +225,6 @@ export default function LoginForm() {
               token: token,
               redirect: false,
             });
-            console.log("response", response);
 
             if (response?.ok) {
               toast.success("Login Successfully.");

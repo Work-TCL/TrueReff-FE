@@ -24,6 +24,7 @@ const match = (matcher: string[], request: NextRequest) =>
 // Define public (non-authenticated) routes
 const PUBLIC_ROUTES = ["/aboutus", "/contact", "/help","/login","/register","/email-verify","/reset-password","/forgot-password","/send-otp"];
 const USER_PUBLIC_ROUTES = ["/store",'/product-detail'];
+const routes = ["/dashboard","/wishlist"];
 
 const withAuthMiddleware: MiddlewareFactory = (next) => {
   return async (request: NextRequest) => {
@@ -51,11 +52,12 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     // if(USER_PUBLIC_ROUTES.includes(pathname)){
     //   return NextResponse.redirect(new URL(pathname, request.url));
     // }
-    // Redirect Authenticated Users Away from Auth Pages
-    if(user?.creator && !pathname.startsWith("/creator-registration") && user?.creator?.status !== "APPROVED"){
+    // Redirect Authenticated Users Away from Auth 
+    
+    if(user?.creator && !pathname.startsWith("/creator-registration") && !routes.includes(pathname) && user?.creator?.status !== "APPROVED"){
       return NextResponse.redirect(new URL('/creator-registration', request.url));
     }
-    if(user?.vendor && !pathname.startsWith("/vendor-register") && user?.vendor?.completed_step !== 3){
+    if(user?.vendor && !pathname.startsWith("/vendor-register") && !routes.includes(pathname) && user?.vendor?.completed_step !== 3){
       return NextResponse.redirect(new URL('/vendor-register', request.url));
     }
     if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request)) {

@@ -535,5 +535,18 @@
   "Creator_Commision": "Creator Commision",
   "Never_Expires": "Never Expires",
   "End_Date": "End Date",
-  "Reference_Links":"Reference_Links"
+  "Reference_Links": "Reference_Links",
+  "statusMessage": {
+    "REQUESTED": "Request Sent",
+    "PENDING": "Collaboration Pending",
+    "REJECTED": "Request Rejected",
+    "LIVE": "Collaboration Live",
+    "EXPIRED": "Collaboration Expired",
+    "ACTIVE": "Collaboration Active",
+    "REQUESTED_CREATOR_TO_VENDOR": "Creator Requested",
+    "REQUESTED_VENDOR_TO_CREATOR": "Requested creator",
+    "REQUESTED_CREATOR_FROM_VENDOR": "Requested vendor",
+    "REQUESTED_VENDOR_FROM_CREATOR": "Vendor invited"
+  },
+  "Wishlist": "Wishlist"
 }
