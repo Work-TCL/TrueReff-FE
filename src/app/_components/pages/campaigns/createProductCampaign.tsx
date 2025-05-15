@@ -22,6 +22,7 @@ import {
   createCampaign,
   createCampaignProduct,
   updateCampaign,
+  updateCampaignProduct,
 } from "@/lib/web-api/campaign";
 import Button from "../../ui/button";
 import Loader from "../../components-common/layout/loader";
@@ -38,6 +39,7 @@ import { getCategories } from "@/lib/web-api/auth";
 import CreatorMaterial from "./_components/creator-material";
 import CampaignProductView from "./_components/product-view";
 import { VIDEO_TYPE } from "@/lib/utils/constants";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const Input = dynamic(() => import("../../ui/form/Input"), { ssr: false });
 
@@ -64,23 +66,12 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const campaignId: any = params?.id !== "add" ? params?.id : null;
+  const productId: any = params?.productId !== "add" ? params?.productId : null;
   const shopifyId: any = searchParams?.get("productId");
   const isDisabled: any = props?.isDetailView;
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const [campaignData, setCampaignData] = useState<ICampaign | null>(null);
+  const [campaignData, setCampaignData] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [media, setMedia] = useState<{ images: File[]; video: File | null }>({
-    images: [],
-    video: null,
-  });
-  const [mediaPreview, setMediaPriview] = useState<{
-    images: string[];
-    video: string | null;
-  }>({
-    images: [],
-    video: null,
-  });
   // campaign mixin
   const [mediaMixin, setMediaMixin] = useState<{
     images: File[];
@@ -99,6 +90,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
+  const [showDiscountSection, setShowDiscountSection] = useState(true);
 
   const fetchCategory = async () => {
     try {
@@ -106,6 +98,15 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       let data = response?.data?.data;
       setCategories(data);
       setParentCategory(data?.filter((ele) => ele?.parentId === null));
+      methods.setValue(
+        "sub_category",
+        categories
+          ?.filter((ele) => campaignData?.subCategory?.includes(ele?._id))
+          ?.map((v: any) => ({
+            label: v?.name,
+            value: v?._id,
+          }))
+      );
     } catch (error: any) {
       console.log("Error Fetching channels", error.message);
     }
@@ -116,8 +117,8 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       references: [""],
     },
     //@ts-ignore
-    resolver: campaignId
-      ? yupResolver(campaignValidationUpdateSchema)
+    resolver: productId
+      ? yupResolver(campaignProductValidationSchema)
       : yupResolver(campaignProductValidationSchema),
     mode: "onChange",
   });
@@ -171,7 +172,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       data?.sub_category?.forEach((opt: any, i: number) => {
         formData.append(`subCategory[${i}]`, opt?.value);
       });
-      selectedProduct?.tags.forEach((tag: string, i: number) => {
+      data.tags.forEach((tag: string, i: number) => {
         formData.append(`tags[${i}]`, tag);
       });
       data?.references?.forEach((link: string, i: number) => {
@@ -190,7 +191,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
       // Make API call with formData
       let response: any;
-      if (campaignId) {
+      if (productId) {
         // const deletedImages: string[] =
         //   campaignData?.imageUrls?.filter(
         //     (url) => !mediaPreview.images.includes(url)
@@ -208,7 +209,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         //   formData.append("deleteMedias", JSON.stringify(deletedFiles));
         // }
 
-        response = await updateCampaign(formData, campaignId);
+        response = await updateCampaignProduct(formData);
       } else {
         response = await createCampaignProduct(formData);
       }
@@ -267,7 +268,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         (v: any) => v?.image?.url && v?.image?.url
       );
 
-      // setSelectedProduct({ ...product, media: images });
+      // productId({ ...product, media: images });
       handleProductSelect({ ...product, media: images });
     } catch (error: any) {
       toast.error(error?.message || "Product Fetch Failed.");
@@ -276,10 +277,41 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     }
   };
 
-  useEffect(() => {
-    fetchCategory();
-  }, []);
+  const fetchProductById = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`/product/${productId}`);
 
+      console.log("response -->>", response);
+      const product: any = response?.data?.data?.data;
+
+      if (product) {
+        const images = product.media;
+        // // ✅ Update product state
+        const updatedProduct = {
+          id: product._id,
+          productId: product._id,
+          media: images,
+          title: product.title,
+          tags: product?.tags || [],
+          description: product?.description || "", // Add description if available
+          price: product?.price || 0,
+          sku: product?.sku || "",
+          totalInventory: product?.totalInventory || 0,
+          variants: product?.variants?.nodes || [],
+        };
+        setSelectedProduct(updatedProduct);
+        return product;
+      } else {
+        throw "Data not found";
+      }
+    } catch (error: any) {
+      toast.error(error?.message || "Product Fetch Failed.");
+      // setNotFounded(true);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     if (fields.length === 0) {
       append(""); // adds an empty string if none exists
@@ -308,44 +340,78 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   }, [methods.watch("category")?.length]);
 
   useEffect(() => {
+    fetchCategory();
     if (shopifyId) {
       fetchShopifyProductById();
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (campaignId) {
-  //     (async () => {
-  //       setLoading(true);
-  //       try {
-  //         const response = await getCampaign({ id: campaignId });
-  //         methods.setValue("name", response.name);
-  //         methods.setValue("description", response.description);
-  //         methods.setValue("channels", response.channels);
-  //         methods.setValue("discount_type", response.discount_type);
-  //         methods.setValue("discount_value", response.discount_value);
-  //         //@ts-ignore
-  //         methods.setValue("endDate", formatForDateInput(response.endDate));
-  //         //@ts-ignore
-  //         methods.setValue("startDate", formatForDateInput(response.startDate));
-  //         methods.setValue("productId", response.productId._id);
-  //         methods.setValue("price", 200);
-  //         setMediaPriview((prev: any) => {
-  //           prev.images = response.imageUrls;
-  //           prev.video = response?.videoUrl;
-  //           return prev;
-  //         });
+  useEffect(() => {
+    console.log("productId", params, productId, productId);
+    if (productId) {
+      (async () => {
+        setLoading(true);
+        try {
+          const response = await fetchProductById();
+          methods.setValue("tags", response.tags);
+          methods.setValue(
+            "category",
+            response.category?.map((v: any) => ({
+              label: v?.name,
+              value: v?._id,
+            }))
+          );
+          methods.setValue(
+            "sub_category",
+            categories
+              ?.filter((ele) => response?.subCategory?.includes(ele?._id))
+              ?.map((v: any) => ({
+                label: v?.name,
+                value: v?._id,
+              }))
+          );
+          methods.setValue("name", response?.title);
+          methods.setValue("description", response?.description || "-");
+          methods.setValue("notes", response?.notes);
+          methods.setValue("campaignLifeTime", Boolean(response?.lifeTime));
+          methods.setValue("videoType", response?.videoType);
+          methods.setValue("commission", response?.commission);
+          methods.setValue("commission_type", response?.commission_type);
+          methods.setValue("references", response?.referenceLinks);
+          methods.setValue("channels", response?.channels);
+          methods.setValue("couponCode", response?.couponCode);
+          methods.setValue("discount_type", response?.discountType);
+          methods.setValue("discount_value", response?.discount);
+          //@ts-ignore
+          methods.setValue("endDate", formatForDateInput(response?.endDate));
+          methods.setValue(
+            "startDate",
+            //@ts-ignore
+            formatForDateInput(response?.startDate)
+          );
+          methods.setValue("tearmAndCondition", true);
+          methods.setValue("productId", response?._id);
+          methods.setValue("price", 200);
+          setMediaPriviewMixin((prev: any) => {
+            prev.images = response.creatorMaterial.filter(
+              (v: string) => !Boolean(v.endsWith(".mp4"))
+            );
+            prev.video = response?.creatorMaterial?.find((url: string) =>
+              url.endsWith(".mp4")
+            );
+            return prev;
+          });
 
-  //         setSelectedProduct(response.productId);
-  //         setCampaignData(response);
-  //       } catch (e) {
-  //         console.log("while fetch campaign");
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     })();
-  //   }
-  // }, [campaignId]);
+          // setSelectedProduct(response.productId);
+          setCampaignData(response);
+        } catch (e) {
+          console.log("while fetch campaign");
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+  }, [productId]);
 
   const startDateRaw = methods.watch("startDate");
   const startDate = startDateRaw ? new Date(startDateRaw) : null;
@@ -695,6 +761,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       name="notes"
                       rows={5}
                       disabled={isDisabled}
+                      required={false}
                     />
                     {/* </div> */}
                     {/* <ProductSelectDropdown
@@ -750,50 +817,65 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               </div>
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
-              <div className="text-lg font-medium text-gray-500">
-                {translate("Discount/Price Range")}
+              <div className="flex items-center gap-4">
+                <div className="text-lg font-medium text-gray-500">
+                  {translate("Discount/Price Range")}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowDiscountSection(!showDiscountSection)}
+                  className="text-gray-400 hover:text-gray-600 px-4 py-1"
+                >
+                  {showDiscountSection ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </button>
               </div>
-              <div className="flex flex-col gap-3">
-                <div className="flex flex-col md:flex-row gap-3">
-                  <div className="flex flex-col w-full gap-1">
-                    <Input
-                      name="couponCode"
-                      type="text"
-                      placeholder={"COUP0nC0dE"}
-                      label={translate("couponCode")}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full gap-1">
-                    <Input
-                      name="discount_type"
-                      type="select"
-                      placeholder={translate("Select_Discount_Type")}
-                      label={translate("Discount_Type")}
-                      options={[
-                        {
-                          label: "Amount",
-                          value: "FIXED_AMOUNT",
-                        },
-                        {
-                          label: "Percentage",
-                          value: "PERCENTAGE",
-                        },
-                      ]}
-                      disabled={isDisabled}
-                    />
-                  </div>
+              {showDiscountSection && (
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col md:flex-row gap-3">
+                    <div className="flex flex-col w-full gap-1">
+                      <Input
+                        name="couponCode"
+                        type="text"
+                        placeholder={"COUP0nC0dE"}
+                        label={translate("couponCode")}
+                      />
+                    </div>
+                    <div className="flex flex-col w-full gap-1">
+                      <Input
+                        name="discount_type"
+                        type="select"
+                        placeholder={translate("Select_Discount_Type")}
+                        label={translate("Discount_Type")}
+                        options={[
+                          {
+                            label: "Amount",
+                            value: "FIXED_AMOUNT",
+                          },
+                          {
+                            label: "Percentage",
+                            value: "PERCENTAGE",
+                          },
+                        ]}
+                        disabled={isDisabled}
+                      />
+                    </div>
 
-                  <div className="flex flex-col w-full gap-1">
-                    <Input
-                      name="discount_value"
-                      type="number"
-                      placeholder={"10"}
-                      label={translate("Discount")}
-                      disabled={isDisabled}
-                    />
+                    <div className="flex flex-col w-full gap-1">
+                      <Input
+                        name="discount_value"
+                        type="number"
+                        placeholder={"10"}
+                        label={translate("Discount")}
+                        disabled={isDisabled}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="flex flex-col gap-4 pb-5">
@@ -840,7 +922,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     variant="default"
                     className="rounded-[10px]"
                   >
-                    {!campaignId
+                    {!productId
                       ? translate("Create_Campaign")
                       : translate("Edit_Campaign")}
                   </ButtonOutline>

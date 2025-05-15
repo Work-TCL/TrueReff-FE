@@ -784,6 +784,10 @@ export const campaignProductValidationSchema = Yup.object().shape({
   name: Yup.string().required("Campaign name is required"),
   description: Yup.string().required("Description is required"),
   campaignLifeTime: Yup.boolean().default(false).required(),
+  tags: Yup.array()
+    .of(Yup.string().required("Each tag must be a string"))
+    .min(1, "At least one tag is required")
+    .required("Tags are required"),
   category: Yup.array()
     .of(
       Yup.object().shape({

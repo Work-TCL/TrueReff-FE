@@ -23,6 +23,8 @@ function CampaignProductView({
   const [activeImage, setActiveImage] = useState(
     images && images?.length > 0 ? images[0] : undefined
   );
+  console.log("activeImage", activeImage);
+
   return (
     <section className="py-8 bg-white md:py-16 dark:bg-gray-900 antialiased">
       <div className="px-4 2xl:px-0">
@@ -30,7 +32,7 @@ function CampaignProductView({
           <div className="shrink-0 max-w-sm lg:max-w-sm mx-auto flex justify-center items-center flex-col border-r pr-3 h-full w-full">
             {activeImage || images?.length > 0 ? (
               <img
-                className="w-full hidden dark:block h-56 object-contain"
+                className="w-full dark:block h-56 object-contain"
                 src={activeImage || images[0]}
                 alt=""
               />

@@ -24,6 +24,21 @@ export const createCampaignProduct = async (
     throw errorMessage || new Error("Error While create campaign.");
   }
 };
+export const updateCampaignProduct = async (
+  params: FormData
+): Promise<IPOSTCreateCampaignResponse> => {
+  try {
+    const response = await axios.put(`/product/vendor-product/update`, params, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While create campaign.");
+  }
+};
 export const createCampaign = async (
   params: FormData
 ): Promise<IPOSTCreateCampaignResponse> => {
