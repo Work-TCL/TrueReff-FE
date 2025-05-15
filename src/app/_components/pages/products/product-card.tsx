@@ -11,48 +11,7 @@ import { cn } from "@sohanemon/utils";
 const ProductCard = ({ item: product }: { item: IProduct }) => {
   const translate = useTranslations();
   const router = useRouter();
- 
-  function getStatusChip(product: IProduct) {
-    const now = new Date();
-    const endDate = new Date(product.endDate || "");
-    const isExpired =
-      !product.lifeTime &&
-      product.endDate &&
-      endDate.getTime() <= now.getTime();
-
-    let chipText = product.status || "Unknown";
-    let chipColor = "bg-gray-800 text-white";
-
-    if (isExpired) {
-      chipText = "Expired";
-      chipColor = "bg-red-700 text-white";
-    } else if (product.status === "ACTIVE") {
-      const diffMs = endDate.getTime() - now.getTime();
-      const minutes = Math.floor(diffMs / (1000 * 60));
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
-      const weeks = Math.floor(days / 7);
-
-      if (weeks > 0) chipText = `${weeks} Week${weeks > 1 ? "s" : ""} Left`;
-      else if (days > 0) chipText = `${days} Day${days > 1 ? "s" : ""} Left`;
-      else if (hours > 0)
-        chipText = `${hours} Hour${hours > 1 ? "s" : ""} Left`;
-      else chipText = `${minutes} Minute${minutes > 1 ? "s" : ""} Left`;
-
-      chipColor = "bg-green-700 text-white";
-    } else if (product.status === "PENDING") {
-      chipText = "Pending";
-      chipColor = "bg-yellow-100 text-yellow-700";
-    }
-
-    return (
-      <div
-        className={`absolute top-2 right-2 md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold uppercase ${chipColor}`}
-      >
-        {chipText}
-      </div>
-    );
-  }
+  const { chipText, chipColor } = calculateStatusChip(product);
 
   return (
     <Card
@@ -60,7 +19,11 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
       className="cursor-pointer w-full border border-stroke rounded-xl p-4 flex flex-col items-center text-center gap-3 hover:shadow-sm transition-shadow bg-white overflow-hidden relative"
     >
       {/* Status / Expiration Chip */}
-      {getStatusChip(product)}
+      <div
+        className={`absolute top-2 right-2 md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold uppercase ${chipColor}`}
+      >
+        {chipText}
+      </div>
 
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
         {/* Product Image */}
@@ -126,3 +89,39 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
 };
 
 export default ProductCard;
+
+export function calculateStatusChip(product: IProduct) {
+  const now = new Date();
+  const endDate = new Date(product.endDate || "");
+  const isExpired =
+    !product.lifeTime &&
+    product.endDate &&
+    endDate.getTime() <= now.getTime();
+
+  let chipText = product.status || "Unknown";
+  let chipColor = "bg-gray-800 text-white";
+
+  if (isExpired) {
+    chipText = "Expired";
+    chipColor = "bg-red-700 text-white";
+  } else if (product.status === "ACTIVE") {
+    const diffMs = endDate.getTime() - now.getTime();
+    const minutes = Math.floor(diffMs / (1000 * 60));
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+
+    if (weeks > 0) chipText = `${weeks} Week${weeks > 1 ? "s" : ""} Left`;
+    else if (days > 0) chipText = `${days} Day${days > 1 ? "s" : ""} Left`;
+    else if (hours > 0)
+      chipText = `${hours} Hour${hours > 1 ? "s" : ""} Left`;
+    else chipText = `${minutes} Minute${minutes > 1 ? "s" : ""} Left`;
+
+    chipColor = "bg-green-700 text-white";
+  } else if (product.status === "PENDING") {
+    chipText = "Pending";
+    chipColor = "bg-yellow-100 text-yellow-700";
+  }
+
+  return { chipText, chipColor };
+}

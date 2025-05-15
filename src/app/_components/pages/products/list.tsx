@@ -2,7 +2,15 @@
 import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CircleFadingPlus, Eye, ImageOff, PencilLine, Search } from "lucide-react";
+import {
+  CircleFadingPlus,
+  Eye,
+  ImageOff,
+  Pencil,
+  PencilLine,
+  Search,
+  UserRoundPen,
+} from "lucide-react";
 import Loading from "@/app/vendor/loading";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import Loader from "../../components-common/layout/loader";
@@ -12,7 +20,7 @@ import { debounce } from "lodash";
 import { useRouter } from "next/navigation";
 import { TablePagination } from "../../components-common/tables/Pagination";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
-import ProductCard from "./product-card";
+import ProductCard, { calculateStatusChip } from "./product-card";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
 import CategorySubCategorySelect from "../../components-common/category-dropdowns";
@@ -22,6 +30,7 @@ import SingleSelect from "../../components-common/single-select";
 import ProductManageMentFilter from "./viewProduct/productManagementFilter";
 import ToolTip from "../../components-common/tool-tip";
 import StatusBadge from "../../components-common/status-badge";
+import { cn } from "@sohanemon/utils";
 
 export interface ICategory {
   _id: string;
@@ -100,13 +109,16 @@ export default function ProductList() {
     isInternalLoader: boolean = false,
     searchValue: string = "",
     categoryIds: string[] = [],
-    status: string = ''
+    status: string = ""
   ) => {
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${searchValue ? `&search=${searchValue}` : ""
-        }${categoryIds?.length > 0 ? `&categories=${categoryIds}` : ""}${status ? `&status=${status}`:""}`
+        `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${
+          searchValue ? `&search=${searchValue}` : ""
+        }${categoryIds?.length > 0 ? `&categories=${categoryIds}` : ""}${
+          status ? `&status=${status}` : ""
+        }`
       );
       if (response.data.data?.list) {
         setProductList(
@@ -114,16 +126,16 @@ export default function ProductList() {
             let categories =
               product.category?.length > 0
                 ? product.category
-                  .filter((cat: ICategory) => cat.parentId === null)
-                  .map((cat: ICategory) => cat?.name)
-                  ?.join(", ")
+                    .filter((cat: ICategory) => cat.parentId === null)
+                    .map((cat: ICategory) => cat?.name)
+                    ?.join(", ")
                 : "";
             let subCategories =
               product.category?.length > 0
                 ? product.category
-                  .filter((cat: ICategory) => cat.parentId !== null)
-                  .map((cat: ICategory) => cat?.name)
-                  ?.join(", ")
+                    .filter((cat: ICategory) => cat.parentId !== null)
+                    .map((cat: ICategory) => cat?.name)
+                    ?.join(", ")
                 : "";
             let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
             return { ...product, categories, tag, subCategories };
@@ -205,6 +217,18 @@ export default function ProductList() {
       },
     },
     {
+      id: "sku",
+      header: () => translate("SKU"),
+      accessorKey: "sku",
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.sku ?? ""}
+        />
+      ),
+    },
+    {
       id: "categories",
       header: () => translate("Categories"),
       accessorKey: "categories",
@@ -216,37 +240,106 @@ export default function ProductList() {
         />
       ),
     },
+    // {
+    //   id: "status",
+    //   header: () => translate("Status"),
+    //   accessorKey: "status",
+    //   cell: ({ row }) => {
+    //     return(
+    //     <div className="flex justify-center">
+    //       <StatusBadge
+    //         status={row?.original?.status}
+    //       />
+    //     </div>
+    //     )
+    //   },
+
+    // },
+    // {
+    //   id: "endDate",
+    //   header: () => translate("End_Date"),
+    //   accessorKey: "endDate",
+    //   // cell: ({ row }) => (
+    //   //   <TruncateWithToolTip
+    //   //     checkHorizontalOverflow={false}
+    //   //     linesToClamp={2}
+    //   //     text={row.original.tags?.join(", ") ?? ""}
+    //   //   />
+    //   // ),
+    // },
+    {
+      id: "tags",
+      header: () => translate("Tags"),
+      accessorKey: "tags",
+      cell: ({ row }) =>
+        row.original.tags?.length > 0 ? (
+          <div className="flex gap-2 w-full">
+            {row.original.tags.slice(0, 2).map((tag, index) => (
+              <TruncateWithToolTip
+                key={index}
+                checkHorizontalOverflow={true}
+                className={cn(
+                  "flex items-center gap-1 text-[10px] md:px-3 text-center px-1 py-0.5 rounded-full bg-muted text-muted-foreground border border-muted-foreground"
+                )}
+                text={`#${tag}`}
+              />
+            ))}
+          </div>
+        ) : (
+          <span className="text-xs text-gray-400">-</span>
+        ),
+    },
     {
       id: "commission",
-      header: () => translate("Commission"),
+      header: () => (
+        <span className="flex items-center justify-center">
+          {translate("Commission")}
+        </span>
+      ),
       accessorKey: "commission",
       cell: ({ row }) => (
-        <span>{row?.original?.commission_type === "FIXED_AMOUNT" ? `₹ ` : `$ `}{row?.original?.commission}</span>
+        <span className="w-full flex items-center justify-center">
+          {row?.original?.commission_type === "FIXED_AMOUNT" ? `₹ ` : `$ `}
+          {row?.original?.commission}
+        </span>
+      ),
+    },
+    {
+      id: "price",
+      header: () => (
+        <span className="flex items-center justify-center">
+          {translate("Price")}
+        </span>
+      ),
+      accessorKey: "price",
+      cell: ({ row }) => (
+        <span className="w-full flex items-center justify-center">
+          {row?.original?.price ? row?.original?.price : ''}
+        </span>
       ),
     },
     {
       id: "status",
-      header: () => translate("Status"),
-      accessorKey: "status",
-      cell: ({ row }) => (
-        <div className="flex justify-center">
-          <StatusBadge
-            status={row?.original?.status}
-          />
-        </div>
+      header: () => (
+        <span className="flex items-center justify-center">
+          {translate("Status")}
+        </span>
       ),
-    },
-    {
-      id: "endDate",
-      header: () => translate("End_Date"),
-      accessorKey: "endDate",
-      // cell: ({ row }) => (
-      //   <TruncateWithToolTip
-      //     checkHorizontalOverflow={false}
-      //     linesToClamp={2}
-      //     text={row.original.tags?.join(", ") ?? ""}
-      //   />
-      // ),
+      accessorKey: "status",
+      cell: ({ row }) => {
+        const { chipText, chipColor } = calculateStatusChip(row.original);
+        console.log("chipText", chipText, chipColor);
+
+        return (
+          <div className="flex items-center justify-center">
+          <div
+            className={`flex justify-center item min-w-[100px] w-fit md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold uppercase ${chipColor}`}
+          >
+            {chipText}
+          </div>
+          </div>
+        );
+      },
     },
     {
       id: "price",
@@ -259,20 +352,24 @@ export default function ProductList() {
             <Eye
               strokeWidth={1.5}
               color="#FF4979"
-              className="cursor-pointer"
-              onClick={() => router.push(`/vendor/products/view/${row?.original?._id}`)}
+              className="cursor-pointer size-5 "
+              onClick={() =>
+                router.push(`/vendor/products/view/${row?.original?._id}`)
+              }
             />
           </ToolTip>
 
           <div
-            onClick={() => router.push(`/vendor/campaign/product/${row?.original?._id}`)}
+            onClick={() =>
+              router.push(`/vendor/campaign/product/${row?.original?._id}`)
+            }
             className="cursor-pointer"
           >
             <ToolTip content="Add Product to CRM" delayDuration={1000}>
-              <PencilLine
+              <UserRoundPen
                 strokeWidth={1.5}
                 color="#3b82f680"
-                className="cursor-pointer"
+                className="cursor-pointer size-5"
               />
             </ToolTip>
           </div>
@@ -286,7 +383,7 @@ export default function ProductList() {
   };
 
   const handleSelectStatus = (selectedOptions: any) => {
-    fetProductsList(1,true,search,selectedCategories,selectedOptions)
+    fetProductsList(1, true, search, selectedCategories, selectedOptions);
     setSelectedStatus(selectedOptions);
   };
   return (
