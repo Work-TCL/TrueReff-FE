@@ -2,54 +2,81 @@
 import EditContactProfile from "@/app/_components/components-common/dialogs/contacts-profile";
 import AnchorButton from "@/app/_components/ui/button/variant";
 import { Button } from "@/components/ui/button";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { translate } from "@/lib/utils/translate";
+import axios from "@/lib/web-api/axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import ConfirmDialog from "./confirmDialog";
+import { useTranslations } from "next-intl";
 
 export default function ContactsProfile(props: any) {
-  const [contacts, setContacts] = useState<any[]>(props?.contacts || []);
+  const translate = useTranslations();
+  const [isOpen, setIsOpen] = useState<any>(false);
+  const [contacts, setContacts] = useState<any[]>([...(props?.contacts || [])]);
   const [currentContact, setCurrentContact] = useState<any>(null);
-  const navigate = useRouter();
-  const axios = useAxiosAuth();
+  const [showConfirm, setShowConfirm] = useState(false); // <-- new
+  const [selectedDeleteIndex, setSelectedDeleteIndex] = useState<number | null>(
+    null
+  );
+
   const handleRemoveContact = async (index: number) => {
     try {
       let response: any = await axios.delete(`/auth/vendor/contact/${index}`);
-
       if (response?.status === 200) {
-        // setAddresses(addresses.filter((_: any, i: number) => i != index));
-        toast.success(response?.message);
-        if (typeof window !== undefined) window.location.reload();
+        toast.success(response?.data?.message);
+        props.refreshCentral && props.refreshCentral();
         return true;
       }
       throw response;
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
-    } finally {
     }
   };
+
   const handleEditContact = async (index: number) => {
     setCurrentContact(index);
   };
+
+  const confirmRemove = (index: number) => {
+    setSelectedDeleteIndex(index);
+    setShowConfirm(true);
+  };
+
+  const handleConfirmRemove = async () => {
+    if (selectedDeleteIndex !== null) {
+      await handleRemoveContact(selectedDeleteIndex);
+      setSelectedDeleteIndex(null);
+      setShowConfirm(false);
+    }
+  };
+
+  useEffect(() => {
+    setContacts([...(props?.contacts || [])]);
+  }, [props?.contacts]);
+
+  const removeText = translate("Remove");
+  const editText = translate("Edit");
+
   return (
     <div>
       <div className="flex justify-between items-center border-b border-gray-300 pb-4 mt-6 mb-4">
-        <h2 className="text-sm xl:text-xl font-medium">
+        <h2 className="text-sm xl:text-xl font-medium capitalize">
           {translate("saved_contacts")}
         </h2>
-        <Link
-          href="?edit=contact"
-          onClick={() => setCurrentContact(null)}
-          className="text-sm text-primary"
+        <div
+          onClick={() => {
+            setIsOpen(true);
+            setCurrentContact(null);
+          }}
+          className="text-sm text-primary cursor-pointer capitalize"
         >
           {translate("add_new_contact")}
-        </Link>
+        </div>
       </div>
-      <div className="items-center gap-4 flex-wrap w-full grid lg:grid-cols-2 grid-cols-1">
+      <div className="items-center gap-4 flex-wrap w-full flex">
         {contacts?.map((value, index, array) => {
           return (
             <div
@@ -73,30 +100,45 @@ export default function ContactsProfile(props: any) {
               </div>
               <div className="flex gap-4 mt-2 xl:mt-2">
                 <Button
-                  onClick={() => handleRemoveContact(index)}
+                  onClick={() => confirmRemove(index)}
                   className="w-24 h-10 rounded-xl border border-gray-300 bg-white text-black"
                 >
-                  {translate("Remove")}
+                  {removeText}
                 </Button>
-                <AnchorButton
-                  href="?edit=contact"
-                  onClick={() => handleEditContact(index)}
-                  className="w-24 h-10 rounded-xl"
+                <Button
+                  onClick={() => {
+                    handleEditContact(index);
+                    setIsOpen(true);
+                  }}
+                  className="w-24 h-10 rounded-xl border border-gray-300 bg-black text-white"
                 >
-                  {translate("Edit")}
-                </AnchorButton>
+                  {editText}
+                </Button>
               </div>
             </div>
           );
         })}
       </div>
+      {showConfirm && (
+        <ConfirmDialog
+          open={showConfirm}
+          description="Are you sure you want to remove this contact?"
+          warning="Note: This action cannot be undone."
+          onClose={() => {
+            setShowConfirm(false);
+            setSelectedDeleteIndex(null);
+          }}
+          onConfirm={handleConfirmRemove}
+        />
+      )}
       <EditContactProfile
-        contact={contacts[currentContact]}
-        id={currentContact}
-        editKey={props?.editKey}
-        onClose={() => {
+        open={isOpen}
+        contact={currentContact !== null && contacts[currentContact]}
+        id={currentContact ?? "new-contacts"}
+        onClose={(refresh = false) => {
           setCurrentContact(null);
-          if (typeof window !== undefined) window.location.reload();
+          setIsOpen(false);
+          refresh && props.refreshCentral && props.refreshCentral();
         }}
       />
     </div>

@@ -10,10 +10,11 @@ import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
 import { forgotPassword } from "@/lib/web-api/auth";
 import { MdOutlineEmail } from "react-icons/md";
-import { translate } from "@/lib/utils/translate";
 import { IPostForgotPasswordResponse } from "@/lib/types-api/auth";
+import { useTranslations } from "next-intl";
 
 export default function ForgotPasswordForm() {
+  const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = forgotSchema;
@@ -30,7 +31,9 @@ export default function ForgotPasswordForm() {
       const payload: IForgotSchema = {
         email: data?.email,
       };
-      const response: IPostForgotPasswordResponse = await forgotPassword(payload);
+      const response: IPostForgotPasswordResponse = await forgotPassword(
+        payload
+      );
 
       if (response?.status === 200) {
         toast.success(response?.data?.message);
@@ -56,6 +59,7 @@ export default function ForgotPasswordForm() {
           type="email"
           placeholder={translate("Email")}
           Icon={MdOutlineEmail}
+          autoFocus
         />
         <Button
           type="submit"

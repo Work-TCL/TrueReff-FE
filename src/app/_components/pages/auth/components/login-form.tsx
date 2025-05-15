@@ -1,7 +1,7 @@
 "use client";
 import { ILoginSchema, loginSchema } from "@/lib/utils/validations";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -12,17 +12,32 @@ import Button from "@/app/_components/ui/button";
 import Link from "next/link";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
-import { loginAPI } from "@/lib/web-api/auth";
-import { translate } from "@/lib/utils/translate";
+import { loginAPI, SocialLoginAPI } from "@/lib/web-api/auth";
 import { IPostLoginResponse } from "@/lib/types-api/auth";
-import { useAuthStore } from "@/lib/store/auth";
+import { useAuthStore } from "@/lib/store/auth-user";
 import { USER_TYPE } from "@/lib/utils/constants";
+import { useCreatorStore } from "@/lib/store/creator";
+import { useVendorStore } from "@/lib/store/vendor";
+import {
+  clearRememberedUser,
+  getRememberedUser,
+  saveRememberedUser,
+} from "@/lib/utils/rememberUtils";
+import Loader from "@/app/_components/components-common/layout/loader";
+import { useTranslations } from "next-intl";
 
 export default function LoginForm() {
+  const translate = useTranslations();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
   const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
+  const [isRemember, setIsRemember] = useState(false);
   const schema = loginSchema;
-  const { setAuthData } = useAuthStore();
+  const { setAccountData, setIsAuthStatus, setToken } = useAuthStore();
+  const { setCreatorData } = useCreatorStore();
+  const { setVendorData } = useVendorStore();
   const methods = useForm<ILoginSchema>({
     defaultValues: {
       email: "",
@@ -32,11 +47,128 @@ export default function LoginForm() {
     mode: "onChange",
   });
 
+  const commonLogin = (res: any) => {
+    setIsAuthStatus("authenticated");
+    setToken(res?.data?.token);
+
+    if (isRemember) {
+      saveRememberedUser(methods.watch("email"), methods.watch("password"));
+    } else {
+      clearRememberedUser();
+    }
+
+    setAccountData({
+      email: res?.data?.email,
+      id: res?.data?._id,
+      role: res?.data?.type,
+      name: res?.data?.name,
+    });
+    if (
+      !res?.data?.detailsFilled &&
+      [USER_TYPE.Creator, USER_TYPE.Vendor].includes(res?.data?.type)
+    ) {
+      if (res?.data?.type === USER_TYPE.Creator) {
+        setCreatorData("creator", {
+          creatorId: res?.data?.creator?.id,
+          accountId: res?.data?.creator?.accountId,
+          full_name: res?.data?.creator?.full_name,
+          user_name: res?.data?.creator?.user_name,
+          email: res?.data?.creator?.email,
+          phone: res?.data?.creator?.phone,
+          dob: res?.data?.creator?.dob,
+          gender: res?.data?.creator?.gender,
+          state: res?.data?.creator?.state,
+          city: res?.data?.creator?.city,
+          category: res?.data?.creator?.category,
+          sub_category: res?.data?.creator?.sub_category,
+          tags: res?.data?.creator?.tags,
+          channels: res?.data?.creator?.channels,
+          completed_step: res?.data?.creator?.completed_step,
+          status: res?.data?.creator?.status,
+          createdAt: res?.data?.creator?.createdAt,
+          updatedAt: res?.data?.creator?.updatedAt,
+          completed: res?.data?.creator?.completed,
+          instagram_link: res?.data?.creator?.instagram_link,
+          youtube_link: res?.data?.creator?.youtube_link,
+          banner_image: res?.data?.creator?.banner_image,
+          profile_image: res?.data?.creator?.profile_image,
+          store_description: res?.data?.creator?.store_description,
+          store_name: res?.data?.creator?.store_name,
+        });
+      }
+      if (res?.data?.type === USER_TYPE.Vendor) {
+        let vendorData = res?.data?.vendor;
+        setVendorData("vendor", {
+          vendorId: vendorData?._id,
+          accountId: vendorData?.accountId,
+          category: vendorData?.category,
+          sub_category: vendorData?.sub_category,
+          completed_step: vendorData?.completed_step,
+          contacts: vendorData?.contacts,
+          business_name: vendorData?.business_name,
+          company_email: vendorData?.company_email,
+          pin_code: vendorData?.pin_code,
+          type_of_business: vendorData?.type_of_business,
+          website: vendorData?.website,
+          state: vendorData?.state,
+          city: vendorData?.city,
+          address: vendorData?.address,
+          profile_image: vendorData?.profile_image,
+          banner_image: vendorData?.banner_image,
+          createdAt: vendorData?.createdAt,
+          updatedAt: vendorData?.updatedAt,
+          gst_certificate: vendorData?.gst_certificate,
+          gst_number: vendorData?.gst_number,
+          pan_number: vendorData?.pan_number,
+          channelConfig: vendorData?.channelConfig,
+          channelId: vendorData?.channelId,
+          channelStatus: vendorData?.channelStatus,
+          channelType: vendorData?.channelType,
+        })
+      }
+      setIsAuthStatus("authenticated");
+      if (res?.data?.type === USER_TYPE.Vendor) {
+        if((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2)){
+          router.push("/vendor-register");
+        } else if(res?.data?.vendor?.completed_step === 3){
+          router.push("/vendor/dashboard");
+        } else router.push("/dashboard");
+      } else if (res?.data?.type === USER_TYPE.Creator) {
+        if((res?.data?.creator?.completed_step === 1 || res?.data?.creator?.completed_step === 2 ||res?.data?.creator?.completed_step === 3) &&  res?.data?.creator?.status !== "APPROVED"){
+          router.push("/creator-registration");
+        } else if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status === "APPROVED"){
+          router.push("/creator/dashboard");
+        }
+        else router.push("/dashboard");
+      } else {
+        router?.push(`/creator-registration`);
+      }
+    } else {
+      if (res?.data?.type === USER_TYPE.Vendor) {
+        if((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2)){
+          router.push("/vendor-register");
+        } else if(res?.data?.vendor?.completed_step === 3){
+          router.push("/vendor/dashboard");
+        } else router.push("/dashboard");
+      } else if (res?.data?.type === USER_TYPE.Creator) {
+        if((res?.data?.creator?.completed_step === 1 || res?.data?.creator?.completed_step === 2 ||res?.data?.creator?.completed_step === 3) &&  res?.data?.creator?.status !== "APPROVED"){
+          router.push("/creator-registration");
+        } else if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status === "APPROVED"){
+          router.push("/creator/dashboard");
+        }
+        else router.push("/dashboard");
+      } else {
+        router?.push(`/dashboard`);
+      }
+    }
+  };
+
   const onSubmit = async (data: ILoginSchema) => {
     setLoading(true);
+    setIsAuthStatus("loading");
     try {
       ("use server");
-      const res: IPostLoginResponse = await loginAPI({
+      const res: IPostLoginResponse | any = await loginAPI({
         email: data?.email,
         password: data?.password,
       });
@@ -51,48 +183,79 @@ export default function LoginForm() {
           password: data?.password,
           redirect: false,
         });
-
         if (response?.ok) {
           toast.success("Login Successfully.");
-          if (
-            !res?.data?.detailsFilled &&
-            [USER_TYPE.Creator, USER_TYPE.Vendor].includes(res?.data?.type)
-          ) {
-            res?.data?.type === USER_TYPE.Vendor
-              ? router?.push("/vendor-register")
-              : router?.push(`/creator-registration?email=${data?.email}`);
-          } else {
-            router?.push(`/${res?.data?.type}/dashboard`);
-          }
+          await commonLogin(res);
           methods?.reset();
-          return true;
-        }
-        if (res?.status === 200) {
-          toast.success("Login Successfully.");
-          methods?.reset();
-          router.push("/products");
           return true;
         }
         throw "Internal server error";
       }
     } catch (error) {
+      setIsAuthStatus("unauthenticated");
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const remembered = getRememberedUser();
+    if (remembered?.email) {
+      methods.setValue("email", remembered.email);
+      methods.setValue("password", remembered.password);
+      setIsRemember(true);
+      methods.trigger(["email", "password"]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      (async () => {
+        setLoadingPage(true);
+        try {
+          const res: any = await SocialLoginAPI({
+            accessToken: token,
+          });
+
+          if (res?.status === 200 || res?.status === 201) {
+            const response = await signIn("credentials", {
+              username: res?.data?.email,
+              token: token,
+              redirect: false,
+            });
+
+            if (response?.ok) {
+              toast.success("Login Successfully.");
+              await commonLogin(res);
+              methods?.reset();
+              return true;
+            }
+            throw "Internal server error";
+          }
+        } catch (error) {
+          toast.error("social login failed.");
+        } finally {
+          setLoadingPage(false);
+        }
+      })();
+    }
+  }, [token]);
+
   return (
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-3"
       >
+        {loadingPage && <Loader />}
         <Input
           name="email"
           type="email"
           placeholder={translate("Email")}
           Icon={MdOutlineEmail}
+          autoFocus
         />
         <Input
           name="password"
@@ -102,7 +265,14 @@ export default function LoginForm() {
         />
         <div className="mt-3 text-[16px] flex align-middle justify-between  text-gray-600">
           <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" className="w-4 h-4" />
+            <input
+              type="checkbox"
+              checked={isRemember}
+              className="w-4 h-4"
+              onChange={(e) => {
+                setIsRemember(e?.target?.checked);
+              }}
+            />
             <span className="">{translate("Remember_Me")}</span>
           </label>
           <Link href="/forgot-password" className="cursor-pointer text-sm">

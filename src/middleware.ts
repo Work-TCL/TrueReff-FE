@@ -5,7 +5,6 @@ export type MiddlewareFactory = (
   next: (request: NextRequest) => Promise<NextResponse> | NextResponse
 ) => (request: NextRequest) => Promise<NextResponse> | NextResponse;
 
-// Function to stack middlewares
 export function stackMiddlewares(
   functions: MiddlewareFactory[] = [],
   index = 0
@@ -24,12 +23,13 @@ const match = (matcher: string[], request: NextRequest) =>
 
 // Define public (non-authenticated) routes
 const PUBLIC_ROUTES = ["/aboutus", "/contact", "/help","/login","/register","/email-verify","/reset-password","/forgot-password","/send-otp"];
+const USER_PUBLIC_ROUTES = ["/store",'/product-detail'];
+const routes = ["/dashboard","/wishlist"];
 
-// Middleware for authentication handling
 const withAuthMiddleware: MiddlewareFactory = (next) => {
   return async (request: NextRequest) => {
     const { pathname } = request.nextUrl;
-    const user = await getToken({req: request});
+    const user:any = await getToken({req: request});
     const token =
       request.cookies.get("next-auth.session-token") ||
       request.cookies.get("__Secure-next-auth.session-token");
@@ -37,8 +37,10 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     if (
       pathname.startsWith("/_next") || // Next.js internals
       pathname.startsWith("/api") || // API routes
-      pathname.startsWith("/public")  // Public assets
-    //   match(PUBLIC_ROUTES, request) // Allow public routes
+      pathname.startsWith("/public") || // Public assets
+      pathname.startsWith("/store") ||  // Allow store
+      pathname.startsWith("/product-detail") ||   // Allow product detail
+      pathname.startsWith("/creators")   // Allow creators
     ) {
       return next(request);
     }
@@ -47,17 +49,25 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     if (!token && !PUBLIC_ROUTES.includes(pathname)) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-
-    // Redirect Authenticated Users Away from Auth Pages
-    if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp","/dashboard"], request)) {
-      return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
+    // if(USER_PUBLIC_ROUTES.includes(pathname)){
+    //   return NextResponse.redirect(new URL(pathname, request.url));
+    // }
+    // Redirect Authenticated Users Away from Auth 
+    
+    if(user?.creator && !pathname.startsWith("/creator-registration") && !routes.includes(pathname) && user?.creator?.status !== "APPROVED"){
+      return NextResponse.redirect(new URL('/creator-registration', request.url));
     }
-
-    if(token && user?.type === "vendor" && pathname.startsWith("/creator")){
+    if(user?.vendor && !pathname.startsWith("/vendor-register") && !routes.includes(pathname) && user?.vendor?.completed_step !== 3){
+      return NextResponse.redirect(new URL('/vendor-register', request.url));
+    }
+    if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request)) {
+      return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard`:`/dashboard`, request.url));
+    }
+    if(token && user?.type === "vendor" && ((!pathname.startsWith("/creator/profile") && !pathname.includes("/store/")) && pathname.startsWith("/creator") || ["/creator-registration","/dashboard"].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
-    if(token && user?.type === "creator" && pathname.startsWith("/vendor")){
+    if(token && user?.type === "creator" && user?.creator?._id && ((!pathname.startsWith("/vendor/profile")) && pathname.startsWith("/vendor") || ['/vendor-register','/dashboard'].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
@@ -65,14 +75,12 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
   };
 };
 
-// Combine all middlewares using stack
 const middlewares = [withAuthMiddleware];
 
 export default stackMiddlewares(middlewares);
 
 export const config = {
-  matcher: [
-    "/((?!_next|api|public|favicon.ico|robots.txt|sitemap.xml|images|static|assets).*)",
-  ],
-};
-
+    matcher: [
+      '/((?!_next/static|_next/image|favicon.ico|manifest.json|service-worker.js|icons|assets|web-app-manifest-192x192.png|web-app-manifest-512x512.png|api).*)',
+    ],
+  };

@@ -9,9 +9,10 @@ interface IDialogLayout {
   open: boolean;
   skipClose?: boolean;
   size?: string;
-  handleClose?: () => void;
+  onClose?: () => void;
   isCustomDesign?: boolean;
   title?: string;
+  titleClassName?: string;
 }
 
 export default function DialogLayout({
@@ -19,7 +20,9 @@ export default function DialogLayout({
   open,
   size = "",
   skipClose,
+  onClose = undefined,
   title = "",
+  titleClassName,
   ...props
 }: IDialogLayout) {
   useEffect(() => {
@@ -37,12 +40,23 @@ export default function DialogLayout({
     open && (
       <Fragment>
         <div className="fixed inset-0 z-[40] sm:w-screen h-screen overflow-hidden">
-          <div className="flex h-full items-center justify-center text-center sm:items-center sm:py-0 cursor-pointer relative">
-            <Link
-              href="?"
-              className="block fixed inset-0 bg-black bg-opacity-60 transition-opacity z-1 lg:backdrop-blur-none backdrop-blur-sm"
-              aria-hidden="true"
-            ></Link>
+          <div className="flex h-full items-center cursor-pointer justify-center text-center sm:items-center sm:py-0 relative">
+            {onClose ? (
+              <div
+                onClick={() => onClose()}
+                className="block fixed inset-0 bg-black bg-opacity-60 transition-opacity z-1 lg:backdrop-blur-none backdrop-blur-sm"
+                aria-hidden="true"
+              ></div>
+            ) : (<>
+              {skipClose ? <div
+                className="block fixed inset-0 bg-black bg-opacity-60 transition-opacity z-1 lg:backdrop-blur-none backdrop-blur-sm"
+                aria-hidden="true"
+              ></div> :<Link
+                href="?"
+                className="block fixed inset-0 bg-black bg-opacity-60 transition-opacity z-1 lg:backdrop-blur-none backdrop-blur-sm"
+                aria-hidden="true"
+              ></Link>}</>
+            )}
 
             <div
               className={cn(
@@ -51,13 +65,26 @@ export default function DialogLayout({
               )}
             >
               {title || !skipClose ? (
-                <div className="flex items-center justify-between px-4 sm:px-10 pt-6 sm:pt-6  ">
+                <div
+                  className={cn(
+                    "flex items-center justify-between px-4 pb-3 pt-2 mt-2 m-0 mb-1",
+                    titleClassName
+                  )}
+                >
                   {title && (
-                    <h3 className="text-xl text-gray-black font-medium flex-1 truncate">
+                    <h3 className="text-md text-gray-black font-medium flex-1 truncate">
                       {title}
                     </h3>
                   )}
-                  {skipClose ? null : (
+                  {skipClose ? null : onClose ? (
+                    <div onClick={() => onClose()} className="block ml-auto">
+                      <IoClose
+                        fontSize={25}
+                        color="#000"
+                        className="text-white"
+                      />
+                    </div>
+                  ) : (
                     <Link href="?" className="block ml-auto">
                       <IoClose
                         fontSize={25}

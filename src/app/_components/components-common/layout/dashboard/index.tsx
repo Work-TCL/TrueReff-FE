@@ -1,20 +1,30 @@
 "use client";
 import Sidebar from "@/app/_components/components-common/layout/dashboard/sidebar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./header";
-import { useSession } from "next-auth/react";
+import { getUserApi } from "@/lib/web-api/auth";
+import { useAuthStore } from "@/lib/store/auth-user";
 import LoadingPage from "@/lib/components/loading-page";
+// import { useAuthStore } from "@/lib/store/auth-user";
+// import { useRouter } from "next/navigation";
 
 interface IDashboardLayout {
   children: React.ReactNode;
 }
 
 export default function DashboardLayout({ children }: IDashboardLayout) {
-  const { status } = useSession();
+  const { status } = useAuthStore();
+  // const navigate = useRouter();
   const [expanded, setExpanded] = useState(true);
   const handleExpandSidebar = () => {
     setExpanded((prev) => !prev);
   };
+  useEffect(() => {
+    getUserApi();
+  }, []);
+  // if (status === "unauthenticated") {
+  //   return navigate?.push("/login");
+  // }
   if (status === "loading") {
     return <LoadingPage />;
   }

@@ -1,26 +1,24 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
-import EditAddressVendorForm from "./vendor-edit";
-import { translate } from "@/lib/utils/translate";
 import EditContactVendorForm from "./vendor-edit";
-
-const key = "contact";
+import { useTranslations } from "next-intl";
 
 export default function EditContactProfile({
   contact,
   id,
-  editKey = "",
+  open = false,
   onClose = () => {},
 }: any) {
-  const dialogPath = editKey === key;
+  const translate = useTranslations();
   return (
     <DialogLayout
-      open={Boolean(dialogPath)}
-      size="!max-w-[600px] w-full overflow-auto"
+      open={Boolean(open)}
+      size="!max-w-[600px] w-full overflow-auto p-4"
       title={contact ? translate("edit_contact") : translate("add_new_contact")}
+      onClose={onClose}
     >
-      <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
+      <div className="px-4 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
         <EditContactVendorForm profile={contact} id={id} onClose={onClose} />
       </div>
     </DialogLayout>

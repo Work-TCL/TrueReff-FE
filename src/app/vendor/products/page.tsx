@@ -1,11 +1,11 @@
-import ChannelCard from "@/app/_components/components-common/channel-card";
+import React, { Suspense } from "react";
 import ProductList from "@/app/_components/pages/products/list";
-import StoreConnectsRedirect from "@/app/_components/pages/products/store-connect";
-import StoreConnects from "@/app/_components/pages/settings/store-connects";
-import { IChannel } from "@/lib/types-api/vendor";
-import { getConnectedChannelsList } from "@/lib/web-api/channel";
-import React from "react";
+import Loader from "@/app/_components/components-common/layout/loader";
 
-export default async function ProductListPage(props: any) {
- return <ProductList/>
+export default function ProductListPage() {
+  return (
+    <Suspense fallback={<Loader />}>
+      <ProductList />
+    </Suspense>
+  );
 }

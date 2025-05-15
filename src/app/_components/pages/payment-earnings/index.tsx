@@ -2,22 +2,20 @@
 import React from "react";
 import { StatsCard } from "../../components-common/states/StatesCard";
 import RecentActivities from "../../components-common/tables/RecentActivity";
-import MostSellingBrands from "../../components-common/charts/MostSellingBrands";
-import VendorActivity from "../../components-common/charts/VendorActivityChart";
-import { translate } from "@/lib/utils/translate";
-import PerformanceSummaryChart from "../../components-common/charts/PerformanceChart";
-import DonutChart from "../../components-common/charts/DonutChat";
 import VideoWiseRevenueChart from "../../components-common/charts/videoWiseBarChart";
 import TrendingInsights from "../dashboard/trending-insights";
+import { useTranslations } from "next-intl";
 
 export default function PaymentEarnings() {
+  const translate = useTranslations();
   const chartData = [
     { name: translate("Revenue"), value: 76, color: "#BEDBFC" },
-    { name: translate("Total Views"), value: 24, color: "#FED6AF" },
+    { name: translate("Total_Views"), value: 24, color: "#FED6AF" },
   ];
 
   return (
-    <div className="flex flex-col gap-4 p-6 w-full">
+    <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
+      {" "}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 gap-4 col-span-3 ">
         <StatsCard
           title={translate("Active_Collaborations")}
@@ -64,7 +62,7 @@ export default function PaymentEarnings() {
         <div className="flex flex-col w-full xl:flex-col md:flex-row xl:w-1/4 gap-4">
           {/* <PerformanceSummaryChart /> */}
           <TrendingInsights
-            header={translate("Product View Revenue")}
+            header={translate("Product_View_Revenue")}
             data={chartData}
             legendClassName="flex-row whitespace-nowrap "
           />

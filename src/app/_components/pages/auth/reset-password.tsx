@@ -4,9 +4,10 @@ import AuthDescription from "./components/auth-desc";
 import AuthTitle from "./components/auth-title";
 import BackButton from "@/app/_components/ui/back-button";
 import ResetPasswordForm from "./components/reset-password-form";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
 export default function ResetPasswordPage() {
+  const translate = useTranslations();
   return (
     <AuthLayoutPage authImage="forgot-pass-image.svg">
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full min-h-fit">

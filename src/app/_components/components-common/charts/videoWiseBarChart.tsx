@@ -15,8 +15,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { translate } from "@/lib/utils/translate";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 const data = [
   { day: "Mon", views: 50, revenue: 90, conversions: 30 },
@@ -55,20 +55,24 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 };
 
 const VideoWiseRevenueChart = () => {
+  const translate = useTranslations();
   return (
     <div className="bg-white p-4 rounded-lg shadow-md w-full">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-semibold">Video-Wise Revenue</h3>
+        <h3 className="text-lg font-semibold">
+          {translate("Video_Wise_Revenue")}
+        </h3>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="text-gray-700 bg-gray-100 px-3 py-0 text-sm rounded-md">
+            <Button className="text-gray-700 bg-gray-100 px-3 py-0 text-sm rounded-md md:h-10 h-8">
+              {" "}
               {translate("Yearly")} ▼
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-white">
-            <DropdownMenuItem>{translate("This Week")}</DropdownMenuItem>
-            <DropdownMenuItem>{translate("Last Week")}</DropdownMenuItem>
-            <DropdownMenuItem>{translate("This Month")}</DropdownMenuItem>
+            <DropdownMenuItem>{translate("This_week")}</DropdownMenuItem>
+            <DropdownMenuItem>{translate("Last_week")}</DropdownMenuItem>
+            <DropdownMenuItem>{translate("This_month")}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>{" "}
       </div>

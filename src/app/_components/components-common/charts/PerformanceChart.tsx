@@ -1,12 +1,10 @@
 "use client";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { translate } from "@/lib/utils/translate";
 import React from "react";
 import {
   LineChart,
@@ -19,6 +17,7 @@ import {
   TooltipProps,
 } from "recharts";
 import Button from "../../ui/button";
+import { useTranslations } from "next-intl";
 
 const data = [
   { month: "Jan", revenue: 120000, profit: 80000 },
@@ -52,42 +51,38 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
 };
 
 export default function PerformanceSummaryChart() {
+  const translate = useTranslations();
   return (
     <div className="w-full h-[310px] bg-white p-5 rounded-20">
-      <div className="flex justify-between items-center mb-3">
-        <h3 className="text-xl font-medium text-text">
+      <div className="flex md:flex-row flex-col justify-between items-center mb-3">
+        <h3 className="md:text-xl text-base  font-medium text-text">
           {translate("Performance_Summary")}
         </h3>
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-1">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <span className="w-3 h-3 bg-[#7877EE] rounded-full"></span>
-            <span className="text-font-grey text-sm font-medium">
+            <span className="text-font-grey md:text-sm text-xs whitespace-nowrap">
               {translate("Earnings")}
             </span>
           </div>
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center gap-1">
             <span className="w-3 h-3 bg-secondary rounded-full"></span>
-            <span className="text-font-grey text-sm font-medium">
+            <span className="text-font-grey md:text-sm text-xs font-medium">
               {translate("Followers")}
             </span>
           </div>
-          <div className="flex justify-between items-center mb-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  // variant="outline"
-                  className="text-gray-600 bg-gray-100 px-3 py-1 rounded-md"
-                >
-                  {translate("This_week")} ▼
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>{translate("This_week")}</DropdownMenuItem>
-                <DropdownMenuItem>{translate("Last_week")}</DropdownMenuItem>
-                <DropdownMenuItem>{translate("This_month")}</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="text-gray-600 bg-gray-100 px-3 py-1 md:text-sm text-xs rounded-md md:h-10 h-7">
+                {translate("This_week")} ▼
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>{translate("This_week")}</DropdownMenuItem>
+              <DropdownMenuItem>{translate("Last_week")}</DropdownMenuItem>
+              <DropdownMenuItem>{translate("This_month")}</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

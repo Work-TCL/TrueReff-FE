@@ -1,10 +1,10 @@
 "use client";
 import Input from "@/app/_components/ui/form/Input";
 import React, { useEffect, useState } from "react";
-import { translate } from "@/lib/utils/translate";
 import { Button } from "@/components/ui/button";
 import { getCategories } from "@/lib/web-api/auth";
 import { useFormContext } from "react-hook-form";
+import { useTranslations } from "next-intl";
 export interface ICategoryData {
   _id: string;
   name: string;
@@ -12,7 +12,18 @@ export interface ICategoryData {
   createdAt: string;
   updatedAt: string;
 }
-export default function ProfileSetup() {
+interface IProps {
+  handleImageSelect: any;
+  profilePreview: any;
+  bannerPreview: any;
+}
+
+export default function ProfileSetup({
+  handleImageSelect,
+  bannerPreview,
+  profilePreview,
+}: IProps) {
+  const translate = useTranslations();
   const methods = useFormContext();
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
@@ -70,7 +81,8 @@ export default function ProfileSetup() {
           label="Profile Title"
           name="profile_title"
           type="text"
-          placeholder="ABC"
+          placeholder="Men’s Style Guide & Trends"
+          autoFocus
         />
       </div>
       <div className="col-span-2">
@@ -79,7 +91,7 @@ export default function ProfileSetup() {
           name="long_description"
           type="textarea"
           rows={2}
-          placeholder="ABC"
+          placeholder="I'm John, a fashion influencer sharing style tips, outfit inspiration, and grooming advice for men. Follow me for daily fashion insights!"
         />
       </div>
       <div className="col-span-2">
@@ -87,55 +99,74 @@ export default function ProfileSetup() {
           label="Short Description"
           name="short_description"
           type="text"
-          placeholder="ABC"
+          placeholder="Helping men stay stylish with the latest fashion trends."
         />
       </div>
       <div className="col-span-2">
-        <Input label="Tags" name="tags" type="tag" placeholder="#ABC" />
+        <Input
+          label="Tags"
+          name="tags"
+          type="tag"
+          placeholder="Enter your tags"
+        />
         {/* <Input label="Tags" name="tags" type="text" placeholder="#ABC" /> */}
       </div>
       <div className="md:col-span-1 col-span-2">
         <Input
           label={translate("Category")}
-          placeholder={translate("Select_category")}
+          placeholder={translate("Fashion_Beauty")}
           name="category"
           type="select-multiple"
           options={parentCategory?.map((ele) => ({
             value: ele?._id,
             label: ele?.name,
           }))}
+          autoFocus={false}
         />
       </div>
       <div className="md:col-span-1 col-span-2">
         <Input
           label={translate("Sub_category")}
-          placeholder={translate("Select_sub_category")}
+          placeholder={translate("Men_Fashion")}
           name="sub_category"
           type="select-multiple"
           options={subCategory.map((ele) => ({
             value: ele?._id,
             label: ele?.name,
           }))}
+          autoFocus={false}
         />
       </div>
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
-        <div className="text-sm">{translate("Profile_Image")}</div>
-        <div className="flex justify-center items-center border rounded-lg p-5 cursor-not-allowed opacity-50">
-          <div className="flex flex-col w-full gap-4">
+        <div className="text-sm font-medium text-gray-500">
+          {translate("Profile_Image")}
+        </div>
+        <div className="flex justify-center items-center border rounded-lg p-5">
+          <div className="flex flex-col w-full gap-4 relative">
             <div className="flex justify-center">
               <img
-                src="/assets/product/image-square.svg"
-                className="w-[50px] h-[50px]"
+                src={
+                  profilePreview ||
+                  methods.watch("profile_image") ||
+                  "/assets/product/image-square.svg"
+                }
+                className="w-[100px] h-[100px] object-cover rounded-full"
               />
             </div>
-            <input type="file" id="profile-image" className="hidden" />
+            <input
+              type="file"
+              id="profile-image"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              accept="image/*"
+              onChange={(e) => handleImageSelect(e, "profile")}
+            />
             <Button
               variant="outline"
+              type="button"
               className="w-full disabled:cursor-not-allowed"
               onClick={() => {
-                // document.getElementById("profile-image")?.click();
+                document.getElementById("profile-image")?.click();
               }}
-              disabled
             >
               {translate("Upload_your_photo")}
             </Button>
@@ -143,26 +174,36 @@ export default function ProfileSetup() {
         </div>
       </div>
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
-        <div className="text-sm">{translate("Banner_Image")}</div>
+        <div className="text-sm font-medium text-gray-500">
+          {translate("Banner_Image")}
+        </div>
         <div className="flex flex-col gap-1">
           <div
-            className="flex justify-center items-center border border-dashed rounded-lg p-5 cursor-not-allowed opacity-50"
+            className="flex justify-center items-center border border-dashed rounded-lg p-5 relative"
             onClick={() => {
-              // document.getElementById("banner_image")?.click();
+              document.getElementById("banner_image")?.click();
             }}
           >
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-4 relative">
               <img
-                src="/assets/product/image-square.svg"
-                className="w-[50px] h-[50px]"
+                src={
+                  bannerPreview ||
+                  methods.watch("banner_image") ||
+                  "/assets/product/image-square.svg"
+                }
+                className="w-full max-h-[200px] object-cover rounded-lg"
               />
-              <input type="file" id="banner_image" className="hidden" />
-              <div className="text-[#656466]">
-                {translate("Upload_Documents")}
-              </div>
-              <div className="text-[12px] text-[#89858C]">
+              <input
+                type="file"
+                id="banner_image"
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={(e) => handleImageSelect(e, "banner")}
+              />
+              <div className="text-[#656466]">{translate("Upload_Banner")}</div>
+              {/* <div className="text-[12px] text-[#89858C]">
                 {translate("Upload_Documents_INFO")}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

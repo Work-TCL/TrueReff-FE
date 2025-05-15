@@ -1,287 +1,441 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { Input } from "@/components/ui/input";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
-import { FaSlidersH } from "react-icons/fa";
-import { Eye, PencilLine, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
-import axiosInstance from "@/lib/web-api/http-common";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-// import axios from "axios";
+  CircleFadingPlus,
+  Eye,
+  ImageOff,
+  Pencil,
+  PencilLine,
+  Search,
+  UserRoundPen,
+} from "lucide-react";
+import Loading from "@/app/vendor/loading";
+import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import Loader from "../../components-common/layout/loader";
+import { useTranslations } from "next-intl";
+import axios from "@/lib/web-api/axios";
+import { debounce } from "lodash";
+import { useRouter } from "next/navigation";
+import { TablePagination } from "../../components-common/tables/Pagination";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
+import ProductCard, { calculateStatusChip } from "./product-card";
+import { ColumnDef } from "@tanstack/react-table";
+import DataTable from "../../components-common/data-table";
+import CategorySubCategorySelect from "../../components-common/category-dropdowns";
+import { ViewToggle } from "../../components-common/view-toggle";
+import { SearchInput } from "../../components-common/search-field";
+import SingleSelect from "../../components-common/single-select";
+import ProductManageMentFilter from "./viewProduct/productManagementFilter";
+import ToolTip from "../../components-common/tool-tip";
+import StatusBadge from "../../components-common/status-badge";
+import { cn } from "@sohanemon/utils";
 
-// Sample Data
-const products = [
-  {
-    productId: "#15646",
-    productImageUrl: "/monica.png",
-    productName: "Tiffany Diamond Ring",
-    category: "Jewelry",
-    tags: "Elegant, Timeless",
-    SKU: "TDR-3050",
-    sellingPrice: "$850",
-    discount: "15%",
-    status: "Inactive",
-  },
-  {
-    productId: "#15647",
-    productImageUrl: "/omega_watch.png",
-    productName: "Omega Seamaster",
-    category: "Watches",
-    tags: "Luxury, Classic",
-    SKU: "OSM-1248",
-    sellingPrice: "$4,200",
-    discount: "10%",
-    status: "Active",
-  },
-  {
-    productId: "#15648",
-    productImageUrl: "/leather_bag.png",
-    productName: "Louis Vuitton Leather Bag",
-    category: "Bags",
-    tags: "Stylish, Premium",
-    SKU: "LVL-7890",
-    sellingPrice: "$3,150",
-    discount: "20%",
-    status: "Active",
-  },
-  {
-    productId: "#15649",
-    productImageUrl: "/airpods_pro.png",
-    productName: "Apple AirPods Pro",
-    category: "Electronics",
-    tags: "Wireless, Noise-cancelling",
-    SKU: "AAP-9988",
-    sellingPrice: "$249",
-    discount: "5%",
-    status: "Inactive",
-  },
-  {
-    productId: "#15650",
-    productImageUrl: "/sneakers.png",
-    productName: "Nike Air Max 270",
-    category: "Footwear",
-    tags: "Comfort, Sporty",
-    SKU: "NAM-270X",
-    sellingPrice: "$150",
-    discount: "12%",
-    status: "Active",
-  },
-];
+export interface ICategory {
+  _id: string;
+  name: string;
+  parentId: string | null;
+  createdAt: string; // or Date if parsed
+  updatedAt: string; // or Date
+}
+
+export interface IProduct {
+  vendor: any;
+  collaboration: any;
+  request: any;
+  _id: string;
+  title: string;
+  channelProductId: string;
+  vendorId: string;
+  sku: string;
+  description: string;
+  media: string[]; // assuming media is an array of image/video URLs or paths
+  channelName: string; // extend as needed
+  category: ICategory[];
+  tags: string[]; // if tags are strings
+  createdAt: string; // or Date
+  updatedAt: string;
+  categories?: string;
+  subCategories?: string;
+  tag?: string;
+  price?: string;
+  lifeTime: boolean;
+  startDate: string;
+  endDate: string;
+  status: string;
+  commission: number;
+  commission_type: string;
+  referenceLinks: string[];
+  creatorMaterial: any[];
+  videoType: string;
+  channels: string[];
+  notes: string;
+  discount: number;
+  discountType: string;
+  couponCode: string;
+}
+
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+  control: (base: any) => ({
+    ...base,
+    borderRadius: "8px",
+  }),
+};
 
 export default function ProductList() {
+  const translate = useTranslations();
   const router = useRouter();
-  const axios = useAxiosAuth();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productList, setProductList] = useState<
-    { handle: string; id: string; image: string; title: string }[]
-  >([]);
-  const pageSize = 10;
-  const totalPages = Math.ceil(products.length / pageSize);
-  const [cursors, setCursors] = useState<{
-    next: string | null;
-    previous: string | null;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  }>({
-    next: null,
-    previous: null,
-    hasNextPage: false,
-    hasPreviousPage: false,
-  });
-  const paginatedData = products.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const [internalLoading, setInternalLoading] = useState<boolean>(false);
+  const [productList, setProductList] = useState<IProduct[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<"table" | "card">("card");
+  const [search, setSearch] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+
+  const pageLimit = 20;
 
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
-    ItemPerPage: number,
-    cursor: string | null = null
+    page: number = currentPage,
+    isInternalLoader: boolean = false,
+    searchValue: string = "",
+    categoryIds: string[] = [],
+    status: string = ""
   ) => {
+    isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product/list?per_page=${ItemPerPage}${
-          cursor ? `&cursor=${cursor}` : ""
+        `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${
+          searchValue ? `&search=${searchValue}` : ""
+        }${categoryIds?.length > 0 ? `&categories=${categoryIds}` : ""}${
+          status ? `&status=${status}` : ""
         }`
       );
-      if (response.data.data.products) {
-        setProductList(response.data.data.products);
-        setCursors({
-          next: response.data.data.page_info.next_cursor,
-          previous: response.data.data.page_info.previous_cursor,
-          hasNextPage: response.data.data.page_info.has_next_page,
-          hasPreviousPage: response.data.data.page_info.has_previous_page,
-        });
+      if (response.data.data?.list) {
+        setProductList(
+          response.data.data?.list.map((product: IProduct) => {
+            let categories =
+              product.category?.length > 0
+                ? product.category
+                    .filter((cat: ICategory) => cat.parentId === null)
+                    .map((cat: ICategory) => cat?.name)
+                    ?.join(", ")
+                : "";
+            let subCategories =
+              product.category?.length > 0
+                ? product.category
+                    .filter((cat: ICategory) => cat.parentId !== null)
+                    .map((cat: ICategory) => cat?.name)
+                    ?.join(", ")
+                : "";
+            let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
+            return { ...product, categories, tag, subCategories };
+          })
+        );
+        setTotalPages(Math.ceil(response.data.data?.count / pageLimit));
+        setCurrentPage(page);
       }
-    } catch (error) {}
+      setLoading(false);
+      setInternalLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setProductList([]);
+      setTotalPages(0);
+      setCurrentPage(1);
+      setInternalLoading(false);
+    }
   };
 
   // Update useEffect to fetch the initial product list
   useEffect(() => {
-    fetProductsList(20);
+    fetProductsList(currentPage);
   }, []);
 
   // Update the onClick handlers for pagination buttons
-  const handleNextPage = () => {
-    if (cursors.next) {
-      fetProductsList(2, cursors.next);
-    }
+  const handlePageChange = (page: number) => {
+    page !== currentPage &&
+      fetProductsList(page, true, search, [...selectedCategories]);
   };
 
-  const handlePreviousPage = () => {
-    if (cursors.previous) {
-      fetProductsList(2, cursors.previous);
-    }
+  const debouncedSearch = useCallback(
+    debounce((value: string, categoryIds: string[]) => {
+      fetProductsList(1, true, value, categoryIds);
+    }, 500),
+    []
+  );
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setSearch(value);
+    debouncedSearch(value, [...selectedCategories]);
+  };
+  const handleSelectCategory = (selectedOptions: any) => {
+    setSelectedCategories(selectedOptions);
+    fetProductsList(1, true, search, [...selectedOptions]);
+  };
+
+  const productColumns: ColumnDef<IProduct>[] = [
+    {
+      id: "channelName",
+      header: () => translate("Channel"),
+      accessorKey: "channelName",
+      cell: ({ row }) => row.original.channelName,
+    },
+    {
+      id: "title",
+      header: () => translate("Product_Name"),
+      accessorKey: "title",
+      cell: ({ row }) => {
+        const product = row.original;
+        return (
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push(`/vendor/products/view/${product._id}`)}
+          >
+            {product.media?.length > 0 && product.media[0] ? (
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={product.media[0]} />
+              </Avatar>
+            ) : (
+              <ImageOff className="w-6 h-6 text-gray-400" />
+            )}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={product.title ?? ""}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      id: "sku",
+      header: () => translate("SKU"),
+      accessorKey: "sku",
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.sku ?? ""}
+        />
+      ),
+    },
+    {
+      id: "categories",
+      header: () => translate("Categories"),
+      accessorKey: "categories",
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.categories ?? ""}
+        />
+      ),
+    },
+    // {
+    //   id: "status",
+    //   header: () => translate("Status"),
+    //   accessorKey: "status",
+    //   cell: ({ row }) => {
+    //     return(
+    //     <div className="flex justify-center">
+    //       <StatusBadge
+    //         status={row?.original?.status}
+    //       />
+    //     </div>
+    //     )
+    //   },
+
+    // },
+    // {
+    //   id: "endDate",
+    //   header: () => translate("End_Date"),
+    //   accessorKey: "endDate",
+    //   // cell: ({ row }) => (
+    //   //   <TruncateWithToolTip
+    //   //     checkHorizontalOverflow={false}
+    //   //     linesToClamp={2}
+    //   //     text={row.original.tags?.join(", ") ?? ""}
+    //   //   />
+    //   // ),
+    // },
+    {
+      id: "tags",
+      header: () => translate("Tags"),
+      accessorKey: "tags",
+      cell: ({ row }) =>
+        row.original.tags?.length > 0 ? (
+          <div className="flex gap-2 w-full">
+            {row.original.tags.slice(0, 2).map((tag, index) => (
+              <TruncateWithToolTip
+                key={index}
+                checkHorizontalOverflow={true}
+                className={cn(
+                  "flex items-center gap-1 text-[10px] md:px-3 text-center px-1 py-0.5 rounded-full bg-muted text-muted-foreground border border-muted-foreground"
+                )}
+                text={`#${tag}`}
+              />
+            ))}
+          </div>
+        ) : (
+          <span className="text-xs text-gray-400">-</span>
+        ),
+    },
+    {
+      id: "commission",
+      header: () => (
+        <span className="flex items-center justify-center">
+          {translate("Commission")}
+        </span>
+      ),
+      accessorKey: "commission",
+      cell: ({ row }) => (
+        <span className="w-full flex items-center justify-center">
+          {row?.original?.commission_type === "FIXED_AMOUNT" ? `₹ ` : `$ `}
+          {row?.original?.commission}
+        </span>
+      ),
+    },
+    {
+      id: "price",
+      header: () => (
+        <span className="flex items-center justify-center">
+          {translate("Price")}
+        </span>
+      ),
+      accessorKey: "price",
+      cell: ({ row }) => (
+        <span className="w-full flex items-center justify-center">
+          {row?.original?.price ? row?.original?.price : ''}
+        </span>
+      ),
+    },
+    {
+      id: "status",
+      header: () => (
+        <span className="flex items-center justify-center">
+          {translate("Status")}
+        </span>
+      ),
+      accessorKey: "status",
+      cell: ({ row }) => {
+        const { chipText, chipColor } = calculateStatusChip(row.original);
+        console.log("chipText", chipText, chipColor);
+
+        return (
+          <div className="flex items-center justify-center">
+          <div
+            className={`flex justify-center item min-w-[100px] w-fit md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold uppercase ${chipColor}`}
+          >
+            {chipText}
+          </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: "price",
+      header: () => <>{translate("Action")}</>,
+      accessorKey: "price",
+      cell: ({ row }) => (
+        <div className="flex items-center gap-3">
+          {/* View button (currently commented) */}
+          <ToolTip content="View Product" delayDuration={1000}>
+            <Eye
+              strokeWidth={1.5}
+              color="#FF4979"
+              className="cursor-pointer size-5 "
+              onClick={() =>
+                router.push(`/vendor/products/view/${row?.original?._id}`)
+              }
+            />
+          </ToolTip>
+
+          <div
+            onClick={() =>
+              router.push(`/vendor/campaign/product/${row?.original?._id}`)
+            }
+            className="cursor-pointer"
+          >
+            <ToolTip content="Add Product to CRM" delayDuration={1000}>
+              <UserRoundPen
+                strokeWidth={1.5}
+                color="#3b82f680"
+                className="cursor-pointer size-5"
+              />
+            </ToolTip>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  const tableContent = () => {
+    return <DataTable columns={productColumns} data={productList} />;
+  };
+
+  const handleSelectStatus = (selectedOptions: any) => {
+    fetProductsList(1, true, search, selectedCategories, selectedOptions);
+    setSelectedStatus(selectedOptions);
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
-      <div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="text-[20px] text-500">
-          <Input placeholder={translate("Search_product")} />
-        </div>
-        <div className="flex items-center gap-[10px]">
-          <PiListChecksLight size={35} />
-          <IoGridOutline size={30} />
-          <Button
-            variant="outline"
-            className="text-black w-[100px] rounded-[4px]"
-          >
-            <FaSlidersH /> {translate("Filters")}
-          </Button>
-        </div>
-      </div>
-      <div className="overflow-auto flex-1">
-        <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-          <TableHeader className="bg-stroke">
-            <TableRow>
-              <CustomTableHead className="w-1/6">
-                {translate("Product_ID")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/4">
-                {translate("Product_Name")}
-              </CustomTableHead>
-              {/* <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Tags")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("SKU")}</CustomTableHead>
-                            <CustomTableHead className="w-1/6">Selling {translate("Price")}</CustomTableHead>
-                            <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
-              <CustomTableHead className="w-1/6 text-center">
-                {translate("Action")}
-              </CustomTableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {/* {paginatedData.map((product, index) => (
-                            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-                                <CustomTableCell >{product.productId}</CustomTableCell>
-                                <CustomTableCell>
-                                    <div className="flex items-center gap-2">
-                                        <Avatar className="w-8 h-8">
-                                            <AvatarImage src={'/assets/product/image-square.svg'} />
-                                        </Avatar>
-                                        {product.productName}
-                                    </div>
-                                </CustomTableCell>
-                                <CustomTableCell >{product.category}</CustomTableCell>
-                                <CustomTableCell>{product.tags}</CustomTableCell>
-                                <CustomTableCell>{product.SKU}</CustomTableCell>
-                                <CustomTableCell>{product.sellingPrice}</CustomTableCell>
-                                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell>
-                                <CustomTableCell>
-                                    <div className="flex justify-center gap-3">
-                                        <Eye color="#FF4979" className="cursor-pointer" onClick={() => router.push(`/product/${index}?view=true`)} />
-                                        <PencilLine className="cursor-pointer" onClick={() => router.push(`/product/${index}`)} />
-                                        <Trash2 color="#FF3B30" className="cursor-pointer" />
-                                    </div>
-                                </CustomTableCell>
-                            </TableRow>
-                        ))} */}
-            {productList.map((product, index) => (
-              <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-                <CustomTableCell>{product.id.split("/").pop()}</CustomTableCell>
-                <CustomTableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={product.image} />
-                    </Avatar>
-                    {product.title}
-                  </div>
-                </CustomTableCell>
-                {/* <CustomTableCell >{product.category}</CustomTableCell>
-                                <CustomTableCell>{product.tags}</CustomTableCell>
-                                <CustomTableCell>{product.SKU}</CustomTableCell>
-                                <CustomTableCell>{product.sellingPrice}</CustomTableCell>
-                                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
-                <CustomTableCell>
-                  <div className="flex justify-center gap-3">
-                    <Eye
-                      color="#FF4979"
-                      className="cursor-pointer"
-                      onClick={() => router.push(`/product/${index}?view=true`)}
-                    />
-                    <PencilLine
-                      className="cursor-pointer"
-                      onClick={() => router.push(`/product/${index}`)}
-                    />
-                    <Trash2 color="#FF3B30" className="cursor-pointer" />
-                  </div>
-                </CustomTableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-      {/* Pagination */}
-      {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
-        <div className="flex justify-end items-center mt-4">
-          <Pagination className="flex justify-end mt-4">
-            <PaginationContent className="flex items-center gap-2">
-              <PaginationItem>
-                <PaginationPrevious
-                  className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                    !cursors.hasPreviousPage
-                      ? "cursor-not-allowed opacity-50"
-                      : ""
-                  }`}
-                  showArrow={false}
-                  onClick={handlePreviousPage}
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="flex justify-between items-center gap-2">
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_Product")}
+            />
+            <div className="flex flex-row gap-2 justify-end items-center ml-auto">
+              <ProductManageMentFilter
+                onChange={handleSelectCategory}
+                handleSelectStatus={handleSelectStatus}
+              />
+              <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
+            </div>
+          </div>
+          {internalLoading && <Loader />}
+          {productList?.length > 0 ? (
+            <>
+              {viewMode === "table" && tableContent()}
+              {viewMode === "card" && (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 bg-white p-4 rounded-[20px] overflow-auto h-full">
+                  {productList.map((item: any, i) => (
+                    <div key={i} className="flex h-fit w-full">
+                      <ProductCard key={i + "666"} item={item} />
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <TablePagination
+                  totalPages={totalPages}
+                  activePage={currentPage}
+                  onPageChange={handlePageChange}
                 />
-              </PaginationItem>
-
-              <PaginationItem>
-                <PaginationNext
-                  className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                    !cursors.hasNextPage ? "cursor-not-allowed opacity-50" : ""
-                  }`}
-                  showArrow={false}
-                  onClick={handleNextPage}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>{" "}
-        </div>
-      ) : null}
+              )}
+            </>
+          ) : (
+            <EmptyPlaceHolder
+              title={translate("No_Products_Available")}
+              description={translate("No_Products_Available_Description")}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

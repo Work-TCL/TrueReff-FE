@@ -17,17 +17,20 @@ import {
   X,
   StepForward,
   StepBack,
+  UserRound,
+  UsersRound,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { translate } from "../../../../../../lib/utils/translate";
-import { useSession } from "next-auth/react";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
-import { cn } from "@sohanemon/utils";
 import {
   Tooltip,
   ToolTipProvider,
 } from "@/app/_components/ui/tooltip/customTooltip";
+import { useAuthStore } from "@/lib/store/auth-user";
+import { BsChevronDown } from "react-icons/bs";
+import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils/commonUtils";
 
 type MenuItem = {
   label: string;
@@ -46,6 +49,7 @@ const NavLink = ({
   expended = false,
   isChild = false,
   childIndex,
+  childClassName,
 }: any) => {
   const childLinkClasses = `relative block px-4 py-2 rounded-md ${
     isActive
@@ -53,7 +57,7 @@ const NavLink = ({
       : "text-gray-500 hover:text-gray-700"
   } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${
     childIndex === 0 ? "before:h-7" : "before:h-16"
-  } text-nowrap text-[14px]`;
+  } text-nowrap text-[14px] ${childClassName}`;
 
   const classNames = isChild
     ? childLinkClasses
@@ -62,10 +66,10 @@ const NavLink = ({
       } items-center text-[16px] cursor-pointer px-4 py-3 rounded-md text-nowrap  ${
         isActive
           ? hasSubmenu
-            ? "bg-[#FF49791A] text-black"
+            ? "bg-pink-100 text-black"
             : "bg-primary-color text-white"
           : "text-font-grey hover:bg-pink-100"
-      }`;
+      } `;
   const iconClassNames = `w-5 h-5 shrink-0 ${
     isActive ? (hasSubmenu ? "text-black" : "text-white") : "text-font-grey"
   }`;
@@ -77,11 +81,11 @@ const NavLink = ({
           <div>{label}</div>
         </div>
         <div>
-          {expended ? (
-            <ChevronUp className="ml-auto w-4 h-4" />
-          ) : (
-            <ChevronDown className="ml-auto w-4 h-4" />
-          )}
+          <BsChevronDown
+            className={`ml-auto w-5 h-5 transition-transform duration-300 ease-in-out ${
+              expended ? "rotate-180" : ""
+            }`}
+          />
         </div>
       </div>
     );
@@ -94,15 +98,16 @@ const NavLink = ({
     </Link>
   );
 };
+
 interface ISidebarProps {
   handleExpandSidebar: () => void;
   expanded: boolean;
   // role: string;
 }
 const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
+  const translate = useTranslations();
   const pathname = usePathname(); // Get the current path
-  const { data: session, ...sessionData } = useSession();
-  let user = session?.user ?? { type: "vendor" };
+  const { account: user } = useAuthStore();
 
   const lg = useMediaQuery("(min-width: 1024px)");
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -122,24 +127,44 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     }));
   };
   const menuItems: MenuItem[] = [
-    { label: translate("Overview"), icon: Home, link: "/vendor/dashboard" },
+    { label: translate("Dashboard"), icon: Home, link: "/vendor/dashboard" },
+    // {
+    //   label: translate("Product_Catalog"),
+    //   icon: Box,
+    //   children: [
+    //     // { label: translate("Add_New_Product"), link: "/vendor/products/add" },
+    //     { label: translate("Product_List"), link: "/vendor/products" },
+    //     {
+    //       label: translate("Channels"),
+    //       link: "/vendor/products/channel-products",
+    //     },
+    //   ],
+    // },
     {
-      label: translate("Product_Catalog"),
+      label: translate("Product_Management"),
       icon: Box,
-      children: [
-        { label: translate("Add_New_Product"), link: "/vendor/products/add" },
-        { label: translate("Product_List"), link: "/vendor/products" },
-        { label: translate("Channels"), link: "/vendor/products/channels" },
-      ],
+      link: "/vendor/products",
+    },
+    {
+      label: translate("Channels"),
+      icon: Store,
+      link: "/vendor/products/channel-products",
     },
     {
       label: translate("Creators"),
-      icon: User,
+      icon: UsersRound,
       children: [
         { label: translate("Creator_List"), link: "/vendor/creators" },
-        { label: translate("Available_Creators"), link: "/vendor/creators/available-creators" },
-        { label: translate("Collaboration"), link: "/vendor/creators/collaboration" },
+        // {
+        //   label: translate("Available_Creators"),
+        //   link: "/vendor/creators/available-creators",
+        // },
       ],
+    },
+    {
+      label: translate("Collaboration"),
+      icon: UserRound,
+      link: "/vendor/creators/collaboration",
     },
     {
       label: translate("Campaign"),
@@ -197,17 +222,22 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       icon: Store,
       link: "/creator/brandsList",
     },
+    // {
+    //   label: translate("Creator_Analysis"),
+    //   icon: BarChart,
+    //   link: "/creator/creator_analysis",
+    // },
     {
-      label: translate("Creator_Analysis"),
-      icon: BarChart,
-      link: "/creator/creator_analysis",
+      label: translate("Collaboration"),
+      icon: UserRound,
+      link: "/creator/collaboration",
     },
-    // { label: translate("Collaboration"), icon: UserRound, link: "/payments" },
     {
       label: translate("Payment_Earnings"),
       icon: DollarSign,
       link: "/creator/payment-earnings",
     },
+    { label: translate("Settings"), icon: Settings, link: "/creator/settings" },
     // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     // { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
@@ -215,7 +245,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const menu = {
     vendor: menuItems,
     creator: creatorMenuItem,
-  }[user?.type || "vendor"];
+  }[user?.role || "vendor"];
 
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
@@ -234,12 +264,20 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       >
         <div className="flex justify-center gap-10  ">
           <div
-            className={`p-4 pb-8 text-primary-color font-bold text-4xl text-center`}
+            className={`p-4 text-primary-color font-bold text-4xl text-center`}
           >
-            {!isSidebarExpanded ? <PackageOpen /> : "truereff"}
+            {!isSidebarExpanded ? (
+              <PackageOpen />
+            ) : (
+              <img
+                src="/assets/TrueReff-logo.svg"
+                alt="Logo Image"
+                className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"
+              />
+            )}
           </div>
         </div>
-        <nav className="flex flex-col space-y-2 px-3 overflow-auto flex-1">
+        <nav className="flex flex-col space-y-2 px-3 overflow-auto overflow-x-hidden flex-1">
           {(menu ?? []).map((item, idx) => (
             <div key={idx} className="group">
               {isSidebarExpanded ? (
@@ -247,8 +285,8 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                   <div>
                     <NavLink
                       key={idx}
-                      isActive={item.children.some(
-                        (child) => pathname.includes(child.link)
+                      isActive={item.children.some((child) =>
+                        pathname.includes(child.link)
                       )}
                       handleToggle={() => toggleMenu(item.label, false)}
                       label={isSidebarExpanded && item.label}
@@ -265,6 +303,13 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                               link={child.link}
                               handleToggle={() => toggleMenu(item.label, true)}
                               isActive={pathname === child.link}
+                              childClassName={cn(
+                                "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ",
+                                pathname === child.link
+                                  ? "bg-primary-color text-white"
+                                  : "text-gray-500 hover:text-gray-700",
+                                pathname !== child.link && "hover:bg-pink-100"
+                              )}
                               label={
                                 !lg
                                   ? child.label
@@ -351,9 +396,18 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                       className="bg-white rounded-r-md px-2 py-[9px] text-gray-500 hover:text-gray-700"
                       side="right"
                     >
-                      <p className={`${"text-gray-500 hover:text-gray-700"}`}>
-                        {item.label}
-                      </p>
+                      <div className="flex flex-col gap-1 pl-4 ">
+                        <Link
+                          key={item.link}
+                          href={item.link ?? ""}
+                          className={cn(
+                            "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ",
+                            "text-gray-500 hover:text-gray-700 hover:bg-pink-100"
+                          )}
+                        >
+                          {item.label}
+                        </Link>
+                      </div>
                     </Tooltip.Content>
                   </Tooltip>
                 </ToolTipProvider>
@@ -383,7 +437,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       <aside
         id="sidebar-multi-level-sidebar"
         className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-40 transition-transform ${
-          expanded ? "-translate-x-full" : ""
+          expanded ? "-translate-x-full" : "shadow-lg"
         }`}
       >
         <div className="flex justify-end  gap-10">
@@ -431,7 +485,6 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                 </div>
               ) : (
                 <NavLink
-                  key={idx}
                   handleToggle={() => {
                     handleToggleMenu();
                   }}

@@ -11,6 +11,7 @@ export default {
       colors: {
         foreground: "hsl(var(--foreground))",
         "primary-color": "#FF4979",
+        "light-primary": "#ff497917",
         "secondary-color": "#090919",
         // 'secondary': '#090919',
         "gray-color": "#89858C",
@@ -75,6 +76,17 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
         20: "20px",
+      },
+      backgroundImage: {
+        "custom-gradient": `
+          linear-gradient(0deg, #ffffff00, #ffffff00),
+          linear-gradient(87.38deg, 
+            rgba(155, 95, 233, 0.4) -35.64%, 
+            rgba(102, 132, 240, 0.4) 13.71%, 
+            rgba(222, 89, 142, 0.4) 77.99%, 
+            rgba(251, 177, 30, 0.4) 129.39%
+          )
+        `,
       },
     },
   },

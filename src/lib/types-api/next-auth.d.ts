@@ -14,6 +14,8 @@ declare module "next-auth" {
         createdAt?: string,
         updatedAt?: string,
         token?: string,
+        creator?: any,
+        vendor?: any,
     }
     interface Session {
        user:{
@@ -27,6 +29,8 @@ declare module "next-auth" {
         updatedAt?: string,
         token?: string,
        },
+       creator?: any,
+       vendor?: any,
        accessToken: string;
     }
     interface JWT {

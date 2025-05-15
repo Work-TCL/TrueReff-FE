@@ -1,220 +1,240 @@
 "use client";
+import Loader from "@/app/_components/components-common/layout/loader";
 import Button from "@/app/_components/ui/button";
-import AnchorButton from "@/app/_components/ui/button/variant";
-import Input from "@/app/_components/ui/form/Input";
-import {
-  IConnectYoutubeChannelResponse,
-  IGetYTConnectChannelResponse,
-} from "@/lib/types-api/creator";
-import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
-import {
-  connectYoutubeChannel,
-  getConnectedChannel,
-} from "@/lib/web-api/creator";
-import axiosInstance from "@/lib/web-api/http-common";
+import { ICreator } from "@/lib/types-api/creator";
+import { getConnectedChannel } from "@/lib/web-api/creator";
+import { random } from "lodash";
+import { useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import toast from "react-hot-toast";
-
 interface IProps {
-  code?: string;
+  setYoutubeConnected: (value: boolean) => void;
+  youtubeConnected: boolean;
+  setInstagramConnected: (value: boolean) => void;
+  instagramConnected: boolean;
+  methods: any;
+  creator: any;
 }
 
-export default function SocialMedia({ code = "" }: IProps) {
-  const methods = useFormContext();
-  const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
+export default function SocialMedia({
+  setYoutubeConnected,
+  youtubeConnected,
+  instagramConnected,
+  setInstagramConnected,
+  methods,
+  creator
+}: IProps) {
+  const translate = useTranslations();
+  // const methods = useFormContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const creatorId = searchParams.get("creatorId") ?? creator?._id??"";
+  const message = searchParams.get("message") ?? "";
+  const error = searchParams.get("error") ?? "";
+
   useEffect(() => {
     fetchConnectedChannel();
   }, []);
-  const fetchConnectedChannel = async () => {
-    const response: IGetYTConnectChannelResponse = await getConnectedChannel();
-    if (response?.data?.length) {
-      let youtube = response?.data.findLast(
-        (ele) => ele?.channelType === "youtube"
-      );
-      if (youtube) {
-        methods.setValue(`channels[1].account_name`, youtube?.channelName);
-        methods.setValue(
-          `channels[1].account_link`,
-          `https://youtube.com/${youtube?.handleName}`
-        );
-        methods.setValue(`channels[1].handle_name`, youtube?.handleName);
-        setYoutubeConnected(true);
-      } else setYoutubeConnected(false);
-    }
-  };
-
-  const handleConnectChannel = async () => {
-    const channels: any = ["channels[1].handle_name"];
-    const isValid = await methods.trigger(channels);
-    const values = methods.getValues();
-    if (isValid) {
-      try {
-        const response = await axiosInstance.post(
-          "/channel/creator/youtube/validate/channel",
-          { channelName: values.channels[1].handle_name }
-        );
-        if (response?.data?.status === 200) {
-          toast.success(response?.data?.message);
-        }
-        methods.setValue(
-          `channels[1].account_name`,
-          response?.data?.data?.channelName
-        );
-        methods.setValue(
-          `channels[1].account_link`,
-          `https://youtube.com/${values.channels[1].handle_name}`
-        );
-        setYoutubeConnected(true);
-      } catch (error: unknown) {
-        const errorMessage = getErrorMessage(error);
-        if (errorMessage) {
-          toast.error(errorMessage);
-          setYoutubeConnected(false);
-        } else throw new Error("Error While validating youtube channel");
-      }
-    }
-  };
-
-  const handleConnectInstagram = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axiosInstance.get(
-        `/channel/creator/instagram/auth/callback/?code=${code}`
-      );
-      if (response?.data?.status === 200) {
-        toast.success(response?.data?.message);
-      }
-      methods.setValue(
-        `channels[0].account_name`,
-        response?.data?.data?.channelName
-      );
-      methods.setValue(
-        `channels[0].handle_name`,
-        response?.data?.data?.channelName
-      );
-      // methods.setValue(
-      //   `channels[0].account_link`,
-      //   `https://youtube.com/${values.channels[1].handle_name}`
-      // );
-      // setYoutubeConnected(true);
-    } catch (error: unknown) {
-      const errorMessage = getErrorMessage(error);
-      if (errorMessage) {
-        toast.error(errorMessage);
-        // setYoutubeConnected(false);
-      } else throw new Error("Error While validating youtube channel");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
-    if (code) {
-      handleConnectInstagram();
+    if (message) {
+      toast.success(message);
+      removeQueryParam("message");
+    } else if (error) {
+      toast.error(error);
+      removeQueryParam("error");
     }
-  }, [code]);
+  }, [message, error]);
+
+  const removeQueryParam = (key: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(key);
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  const fetchConnectedChannel = async () => {
+    setIsPageLoading(true);
+    try {
+      const response = await getConnectedChannel();
+      if (response?.data?.length) {
+        const youtube = response.data.findLast(
+          (ele) => ele?.channelType === "youtube"
+        );
+        if (youtube) {
+          methods.setValue(`channels[1].account_name`, youtube?.channelName);
+          methods.setValue(
+            `channels[1].account_link`,
+            `https://youtube.com/${youtube?.handleName}`
+          );
+          methods.setValue(`channels[1].handle_name`, youtube?.handleName);
+          setYoutubeConnected(true);
+        } else setYoutubeConnected(false);
+
+        const instagram = response.data.findLast(
+          (ele) => ele?.channelType === "instagram"
+        );
+        if (instagram) {
+          methods.setValue(`channels[0].account_name`, instagram?.channelName);
+          methods.setValue(
+            `channels[0].account_link`,
+            `https://instagram.com/${instagram?.handleName}`
+          );
+          methods.setValue(`channels[0].handle_name`, instagram?.handleName);
+          setInstagramConnected(true);
+        } else setInstagramConnected(false);
+      }
+    } catch (error) {
+      console.error("Error fetching connected channels:", error);
+    } finally {
+      setIsPageLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    const redirectUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/channel/creator/youtube/auth/callback`;
+    const scope = encodeURIComponent(
+      "https://www.googleapis.com/auth/youtube.readonly"
+    );
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${creatorId}`;
+    window.location.href = authUrl;
+  };
+
+  const handleInstaLogin = () => {
+    const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID;
+    const callBackUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/channel/creator/instagram/auth/callback`;
+    const scope =
+      "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish";
+    const authUrl = `https://www.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${callBackUri}&response_type=code&scope=${scope}&state=${creatorId}`;
+    window.location.href = authUrl;
+  };
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="col-span-2">
-        <div className="flex gap-4 items-center">
-          <img
-            src="/assets/creator/Instagram-icon.svg"
-            width={40}
-            height={40}
-          />
-          <div>Instagram</div>
-        </div>
-      </div>
-      <div className="col-span-2 lg:col-span-1">
-        <Input
-          label="Account Name"
-          name="channels[0].account_name"
-          type="text"
-          placeholder="Account_name"
-          disabled
-        />
-      </div>
-      <div className="col-span-2 lg:col-span-1">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="w-full">
-            <Input
-              label="Handle Name"
-              name="channels[0].handle_name"
-              type="text"
-              placeholder="@Handle_name"
-              disabled
+    <>
+      {isPageLoading && <Loader />}
+      <div className="relative border-l-2 border-gray-dark ">
+        {/* Instagram Step */}
+        <div className="mb-4 ml-6 relative">
+          <div className="absolute -left-6 top-0 w-12 h-12 bg-primary-color rounded-full flex items-center justify-center shadow-lg">
+            <img
+              src="/assets/creator/Instagram-icon.svg"
+              alt="Instagram"
+              className="w-7 h-7"
             />
           </div>
-          <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
-            <AnchorButton
-              href="https://www.instagram.com/oauth/authorize?client_id=9535212806541456&redirect_uri=https://trurereff-new.vercel.app/creator-registration&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish"
-              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
-              size="small"
-              // onClick={handleConnectInstagram}
-            >
-              {"Connect"}
-            </AnchorButton>
+          <div className="bg-gray-light p-6 rounded-20 shadow-md">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-text flex-1 md:text-xl text:sm font-semibold">
+                {translate("Connect_Instagram")}
+              </h3>
+              {!instagramConnected && (
+                <Button
+                  loading={isLoading}
+                  onClick={handleInstaLogin}
+                  size="small"
+                  className="md:text-sm text-xs bg-primary-color text-white w-fit md:px-3 px-2 md:py-2 py-1"
+                >
+                  {translate("Connect")}
+                </Button>
+              )}
+            </div>
+            <p className="text-gray-color mb-4 md:text-base text-sm">
+              {instagramConnected
+                ? translate("Instagram_Connected_text")
+                : translate("Connect_Instagram_text")}
+            </p>
+            <p className="text-xs text-gray-color mb-4">
+              {translate("Minium_Followers_Text")}
+            </p>
+            {instagramConnected && (
+              <div className="text-sm text-gray-color space-y-1 mt-4">
+                <div>
+                  <strong>{translate("Name")}:</strong>{" "}
+                  {methods.watch("channels[0].account_name")}
+                </div>
+                <div>
+                  <strong>{translate("Handle")}:</strong> @
+                  {methods.watch("channels[0].handle_name")}
+                </div>
+                <div>
+                  <strong>{translate("Link")}:</strong>{" "}
+                  <a
+                    href={methods.watch("channels[0].account_link")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue underline"
+                  >
+                    {translate("Profile")}
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      </div>
-      <div className="col-span-2">
-        <Input
-          label="Account Link"
-          name="channels[0].account_link"
-          type="text"
-          placeholder="https://instagram.com/Account_name"
-          disabled
-        />
-      </div>
-      <div className="col-span-2">
-        <div className="flex gap-4 items-center">
-          <img src="/assets/creator/Youtube-icon.svg" width={40} height={40} />
-          <div>Youtube</div>
-        </div>
-      </div>
-      <div className="col-span-2 lg:col-span-1">
-        <Input
-          label="Account Name"
-          name="channels[1].account_name"
-          type="text"
-          placeholder="Account name"
-          disabled
-        />
-      </div>
-      <div className="col-span-2 lg:col-span-1">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="w-full">
-            <Input
-              label="Handle Name"
-              name="channels[1].handle_name"
-              disabled={youtubeConnected}
-              type="text"
-              placeholder="Handlename"
+
+        {/* YouTube Step */}
+        <div className="mb-1 ml-6 relative">
+          <div className="absolute -left-6 top-0 w-12 h-12 bg-dark-orange rounded-full flex items-center justify-center shadow-lg">
+            <img
+              src="/assets/creator/Youtube-icon.svg"
+              alt="YouTube"
+              className="w-7 h-7"
             />
           </div>
-          <div className={`flex mt-5 ${youtubeConnected ? "hidden" : ""}`}>
-            <Button
-              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
-              size="small"
-              onClick={handleConnectChannel}
-            >
-              {"Connect"}
-            </Button>
+          <div className="bg-gray-light p-6 rounded-20 shadow-md">
+            <div className="flex items-center justify-between mb-2 flex-1">
+              <h3 className="text-text md:text-xl text:sm font-semibold">
+                {translate("Connect_YouTube")}
+              </h3>
+              {!youtubeConnected && (
+                <Button
+                  loading={isLoading}
+                  onClick={handleGoogleLogin}
+                  size="small"
+                  className="md:text-sm text-xs bg-dark-orange text-white w-fit md:px-3 px-2 md:py-2 py-1"
+                >
+                  {translate("Connect")}
+                </Button>
+              )}
+            </div>
+            <p className="text-gray-color mb-4 md:text-base text-sm">
+              {youtubeConnected
+                ? translate("YouTube_Connected_text")
+                : translate("Connect_YouTube_text")}
+            </p>
+            <p className="text-xs text-gray-color mb-4">
+              {translate("Minium_subscribers_Text")}
+            </p>
+            {youtubeConnected && (
+              <div className="text-sm text-gray-color space-y-1 mt-4">
+                <div>
+                  <strong>{translate("Name")}:</strong>{" "}
+                  {methods.watch("channels[1].account_name")}
+                </div>
+                <div>
+                  <strong>{translate("Handle")}:</strong> @
+                  {methods.watch("channels[1].handle_name")}
+                </div>
+                <div>
+                  <strong>{translate("Link")}:</strong>{" "}
+                  <a
+                    href={methods.watch("channels[1].account_link")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue underline"
+                  >
+                    {translate("Channel")}
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-      <div className="col-span-2">
-        <Input
-          label="Account Link"
-          name="channels[1].account_link"
-          type="text"
-          disabled
-          placeholder="https://youtube.com/@Handle_name"
-        />
-      </div>
-    </div>
+    </>
   );
 }

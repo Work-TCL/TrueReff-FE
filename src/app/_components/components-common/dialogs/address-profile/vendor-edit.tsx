@@ -1,32 +1,28 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import {
   addAddressVendorSchema,
   IAddAddressVendorSchema,
-  IVendorProfileUpdateSchema,
-  vendorProfileUpdateSchema,
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { translate } from "@/lib/utils/translate";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
+import axios from "@/lib/web-api/axios";
+import { useTranslations } from "next-intl";
 
 export default function EditAddressVendorForm({
   profile,
   id,
   onClose,
 }: {
-  profile: any;
+  profile?: any;
   id: any;
   onClose: any;
 }) {
-  const router = useRouter();
-  const axios = useAxiosAuth();
+  const translate = useTranslations();
   const [loading, setLoading] = useState(false);
   const schema = addAddressVendorSchema;
   const methods = useForm<IAddAddressVendorSchema>({
@@ -59,9 +55,8 @@ export default function EditAddressVendorForm({
       }
       if (response?.status === 201 || response?.status === 200) {
         toast.success(response?.message);
-        router.push("?");
         methods?.reset();
-        onClose && onClose();
+        onClose && onClose(true);
         return true;
       }
       throw response;
@@ -112,16 +107,14 @@ export default function EditAddressVendorForm({
               placeholder={translate("Road_Name_Area_Name_Colony")}
             />
           </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("Set_as_default_address")}
-              name="isDefault"
-              type="checkbox"
-              className=""
-            />
+          <div className="col-span-2 flex gap-1 cursor-pointer">
+            <label className="flex items-center gap-2 pl-2">
+              <Input name="isDefault" type="checkbox" className="" />
+              <span className="">{translate("Set_as_default_address")}</span>
+            </label>
           </div>
 
-          <div className="mt-6 col-span-2 sticky bottom-0 bg-white">
+          <div className="py-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
               {translate("Save")}
             </Button>

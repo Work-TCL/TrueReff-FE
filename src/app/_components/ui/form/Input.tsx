@@ -6,25 +6,35 @@ import { cn } from "@sohanemon/utils";
 import { GoChevronDown } from "react-icons/go";
 import Select from "react-select";
 import { get } from "lodash";
-
+import { FaRegCalendarAlt } from "react-icons/fa";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Editor from "./editor";
+import { Tag, X } from "lucide-react";
 interface IInput
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
   name: string;
   type?: string;
   required?: boolean;
+  hideError?: boolean;
   rows?: number;
   Icon?: any;
+  minDate?: any;
+  maxDate?: any;
   options?: {
     label: string;
     value: string;
   }[];
+  menuPortalTarget?: any;
+  lableClassName?: string;
+  inputClassName?: string;
 }
 
 export const inputStyle =
-  "w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white";
+  "w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white disabled:cursor-not-allowed";
 
-export const labelStyle = "mb-1 text-sm text-gray-darken";
+export const labelStyle = "mb-1 text-sm text-gray-500 font-semibold";
 
 export default function Input({
   label = "",
@@ -34,6 +44,10 @@ export default function Input({
   placeholder = "",
   options = [],
   Icon,
+  hideError,
+  lableClassName,
+  inputClassName,
+  menuPortalTarget = typeof document !== "undefined" ? document.body : null,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -75,7 +89,8 @@ export default function Input({
 
   const getError = () => {
     return (
-      Boolean(get(errors, name)) && (
+      Boolean(get(errors, name)) &&
+      !hideError && (
         <span className="text-red-600 text-sm p-2">
           {getErrorMessage(name)}
         </span>
@@ -85,7 +100,7 @@ export default function Input({
 
   const getLabel = () =>
     label && (
-      <label className={cn(labelStyle)}>
+      <label className={cn(labelStyle, lableClassName)}>
         {label}
         {required && <span className="text-red-500">*</span>}
       </label>
@@ -105,8 +120,76 @@ export default function Input({
               className={cn(inputStyle, Icon ? "!pl-12" : "")}
               placeholder={placeholder}
               {...field}
+              onChange={(e) => {
+                if (type === "email") {
+                  e.target.value = e?.target?.value?.toLowerCase();
+                  field.onChange(e);
+                } else {
+                  field?.onChange(e);
+                }
+              }}
               autoComplete="off"
               {...props}
+            />
+            {Icon ? (
+              <Icon
+                fontSize={25}
+                className="absolute top-[50%] left-4 text-gray-black z-10 translate-y-[-50%]"
+              />
+            ) : null}
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
+  const renderEditorInput = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative">
+            <Editor
+              onChange={(val: any) => field?.onChange(val)}
+              value={field?.value}
+            />
+            {Icon ? (
+              <Icon
+                fontSize={25}
+                className="absolute top-[50%] left-4 text-gray-black z-10 translate-y-[-50%]"
+              />
+            ) : null}
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
+  const renderDateInput = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-[1]">
+              <FaRegCalendarAlt />
+            </span>
+            <DatePicker
+              onChange={field?.onChange}
+              selected={field.value}
+              className={cn(inputStyle, "!pl-10")}
+              placeholderText={placeholder}
+              dateFormat="MM/dd/yyyy"
+              wrapperClassName="w-full"
+              {...(props?.minDate ? { minDate: props.minDate } : {})}
+              {...(props?.maxDate ? { maxDate: props.maxDate } : {})}
+              {...(props?.disabled ? { disabled: true } : {})}
             />
             {Icon ? (
               <Icon
@@ -128,7 +211,7 @@ export default function Input({
       render={({ field }) => (
         <div className="flex flex-col">
           {getLabel()}
-          <div className="w-full px-4 py-4 rounded-xl font-medium border border-gray-light placeholder:text-gray-color placeholder:font-normal text-sm focus:outline-none focus:border-gray-light focus:bg-white">
+          <div className="w-full ">
             <input
               type="text"
               value={inputValue}
@@ -136,12 +219,13 @@ export default function Input({
               onKeyDown={addTag}
               onBlur={field.onBlur}
               placeholder={placeholder}
-              className="flex-1 outline-none"
+              className={inputStyle}
+              {...props}
             />
           </div>
           {tags?.length > 0 ? "" : getError()}
           {tags.length > 0 && (
-            <div className="flex items-center py-2 mt-2 gap-4">
+            <div className="flex items-center py-2 mt-2 gap-4 flex-wrap">
               {tags.map((tag: string, index: number) => (
                 <span key={index} className="bg-gray-small-light py-3 px-4">
                   {tag}
@@ -149,6 +233,59 @@ export default function Input({
                     type="button"
                     onClick={() => removeTag(index)}
                     className="ml-1 text-sm"
+                  >
+                    ✖
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    />
+  );
+
+  const renderTagInputUpdated = () => (
+    <Controller
+      name={name}
+      control={control}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative w-full">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={addTag}
+              onBlur={field.onBlur}
+              placeholder={placeholder}
+              className={cn('w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2',inputClassName)}
+              {...props}
+            />
+            <Tag
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              size={16}
+            />
+          </div>
+          {tags?.length > 0 ? "" : getError()}
+          {tags.length > 0 && (
+            <div className="flex items-center py-2 mt-2 gap-4 flex-wrap">
+              {tags.map((tag: string, index: number) => (
+                <span
+                  key={index}
+                  className="bg-gray-darken text-white py-1 px-3 rounded-full flex items-center gap-2 cursor-pointer hover:bg-gray-darken/80 transition-colors"
+                  onClick={() => console.log(`Tag clicked: ${tag}`)} // Optional: Add click functionality
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering the onClick of the span
+                      removeTag(index);
+                    }}
+                    className="text-sm text-white hover:text-gray-200"
                   >
                     ✖
                   </button>
@@ -234,8 +371,14 @@ export default function Input({
         <div className="flex flex-col">
           {getLabel()}
           <div className="relative">
-            <select className={cn(inputStyle, "appearance-none")} {...field}>
-              <option selected>{placeholder || "Select..."}</option>
+            <select
+              className={cn(inputStyle, "appearance-none")}
+              {...field}
+              disabled={props?.disabled}
+            >
+              <option value={placeholder || "Select..."}>
+                {placeholder || "Select..."}
+              </option>
               {options?.map((item) => (
                 <option key={item?.value} value={item?.value}>
                   {item?.label}
@@ -252,7 +395,25 @@ export default function Input({
       )}
     />
   );
-
+  const customStyles = {
+    placeholder: (base: any) => ({
+      ...base,
+      fontSize: "0.875rem ", // Tailwind text-sm
+      color: "#9CA3AF", // Tailwind slate-400
+      fontWeight: "normal",
+    }),
+    control: (base: any, state: any) => {
+      return {
+        ...base,
+        height: "54px",
+        borderRadius: "8px",
+      };
+    },
+    menu: (base: any) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+  };
   const renderMultiSelectInput = () => (
     <Controller
       control={control}
@@ -263,12 +424,18 @@ export default function Input({
           {getLabel()}
           <div className="relative">
             <Select
-              defaultValue={field?.value || []}
+              styles={customStyles}
               isMulti
               options={options}
               className="basic-multi-select focus:outline-none focus:shadow-none"
               classNamePrefix="select"
               {...field}
+              isDisabled={props?.disabled}
+              menuPortalTarget={
+                typeof document !== "undefined" ? document.body : null
+              } // Renders the dropdown outside of the current scrollable container
+              menuPosition="fixed" // Makes the dropdown position fixed
+              autoFocus={false} // Prevents focus behavior causing auto-scroll
             />
           </div>
           {getError()}
@@ -276,6 +443,133 @@ export default function Input({
       )}
     />
   );
+
+  const renderMultiSelectCategories = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative z-50">
+            <Select
+              isMulti
+              options={options}
+              className="basic-multi-select focus:outline-none focus:shadow-none"
+              classNamePrefix="select"
+              {...field}
+              isDisabled={props?.disabled}
+              menuPortalTarget={
+                typeof document !== "undefined" ? document.body : null
+              } // render dropdown outside the parent container
+              styles={{
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                menu: (base) => ({ ...base, zIndex: 9999 }),
+                control: (base: any) => ({
+                  ...base,
+                  height: "54px",
+                  borderRadius: "8px",
+                }),
+              }}
+            />
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
+
+  const multiSelectWithTags = () => {
+    return (
+      <Controller
+        control={control}
+        name={name}
+        rules={{ required: required ? `${label} is required` : false }}
+        render={({ field }) => {
+          const handleChange = (selected: any) => {
+            const updated = [...(field.value || []), selected];
+            field.onChange(updated);
+          };
+
+          const handleRemove = (valueToRemove: any) => {
+            const updated = (field.value || []).filter(
+              (item: any) => item.value !== valueToRemove
+            );
+            field.onChange(updated);
+          };
+
+          // Filter out selected options from available options
+          const selectedValues = (field.value || []).map(
+            (item: any) => item.value
+          );
+          const filteredOptions = options.filter(
+            (option: any) => !selectedValues.includes(option.value)
+          );
+
+          return (
+            <div className="flex flex-col gap-1">
+              {getLabel?.()}
+              <Select
+                value={null} // keep the value empty to always show placeholder
+                onChange={handleChange}
+                options={filteredOptions}
+                placeholder={placeholder ? placeholder : "Select option"}
+                classNamePrefix="select"
+                className="react-select-container"
+                isDisabled={props?.disabled}
+                menuPortalTarget={
+                  menuPortalTarget
+                    ? typeof document !== "undefined"
+                      ? document.body
+                      : null
+                    : null
+                }
+                menuPosition="fixed"
+                autoFocus={false}
+                styles={{
+                  control: (base: any) => ({
+                    ...base,
+                    height: "54px",
+                    borderRadius: "8px",
+                  }),
+                  placeholder: (base: any) => ({
+                    ...base,
+                    fontSize: "0.875rem ", // Tailwind text-sm
+                    color: "#a1a1aa", // Tailwind slate-400
+                  }),
+                }}
+              />
+
+              {/* Custom Tag Display */}
+              {Array.isArray(field.value) && field.value.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {field.value.map((tag: any) => (
+                    <div
+                      key={tag.value}
+                      className={cn(
+                        "flex items-center gap-1 px-3 py-1 text-sm rounded-full bg-muted text-muted-foreground border border-muted-foreground"
+                      )}
+                    >
+                      {tag.label}
+                      <button
+                        type="button"
+                        onClick={() => handleRemove(tag.value)}
+                        className="hover:text-destructive focus:outline-none"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {getError?.()}
+            </div>
+          );
+        }}
+      />
+    );
+  };
 
   const renderInput = () => {
     switch (type) {
@@ -289,14 +583,15 @@ export default function Input({
               <div className="flex flex-col">
                 <label
                   className={`flex items-center mb-2 text-black font-medium ${
-                    props?.className ? props?.className : ""
-                  }`}
+                    props?.disabled ? "opacity-50 cursor-not-allowed" : ""
+                  } ${props?.className ? props?.className : ""}`}
                 >
                   <input
                     type="radio"
                     className="mr-2"
                     checked={field?.value}
                     {...field}
+                    {...props}
                   />
                   {label}
                 </label>
@@ -316,14 +611,15 @@ export default function Input({
               <div className="flex flex-col">
                 <label
                   className={`flex items-start text-black font-medium sm:text-base text-sm ${
-                    props?.className ? props?.className : ""
-                  }`}
+                    props?.disabled ? "opacity-50 cursor-not-allowed" : ""
+                  } ${props?.className ? props?.className : ""}`}
                 >
                   <input
                     type="checkbox"
                     className="mr-3 mt-1 w-4 h-4"
                     checked={field?.value}
                     {...field}
+                    {...props}
                   />
                   {label}
                 </label>
@@ -343,10 +639,19 @@ export default function Input({
 
       case "password":
         return renderPasswordInput();
+      case "editor":
+        return renderEditorInput();
 
       case "tag":
         return renderTagInput();
-
+      case "productCategories":
+        return renderMultiSelectCategories();
+      case "date":
+        return renderDateInput();
+      case "multiSelectWithTags":
+        return multiSelectWithTags();
+      case "renderTagInputUpdated":
+        return renderTagInputUpdated();
       default:
         return renderTextInput();
     }

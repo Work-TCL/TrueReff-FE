@@ -1,22 +1,17 @@
 "use client";
 import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
-import { useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import AnchorButton from "@/app/_components/ui/button/variant";
 import SignOut from "./signOut";
+import { useTranslations } from "next-intl";
 
 const LOGOUT = "logout";
 
 export default function Logout() {
-  const { status } = useSession();
-  const navigate = useRouter();
+  const t = useTranslations();
   const auth = useSearchParams().get("auth");
-  const dialogPath = status === "authenticated" && auth === LOGOUT;
-
-  // if (auth === LOGOUT && status !== "authenticated") {
-  //   navigate.push("?");
-  // }
+  const dialogPath = Boolean(auth === LOGOUT);
 
   return (
     <DialogLayout
@@ -37,10 +32,10 @@ export default function Logout() {
           </svg>
         </span>
 
-        <h3 className="mb-2 text-2xl font-bold text-gray-800">Sign out</h3>
-        <p className="text-gray-500">
-          Are you sure you would like to sign out of your account?
-        </p>
+        <h3 className="mb-2 text-2xl font-bold text-gray-800">
+          {t("Signout")}
+        </h3>
+        <p className="text-gray-500">{t("SignoutConfirm")}</p>
 
         <div className="mt-6 grid grid-cols-2 gap-x-4">
           <AnchorButton
@@ -48,7 +43,7 @@ export default function Logout() {
             size="medium"
             className="bg-transparent text-secondary-color"
           >
-            Cancel
+            {t("Cancel")}
           </AnchorButton>
           <SignOut />
         </div>

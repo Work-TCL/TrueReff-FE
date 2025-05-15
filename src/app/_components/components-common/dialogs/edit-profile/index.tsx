@@ -1,21 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
 import EditVendorForm from "./vendor-edit";
-import { translate } from "@/lib/utils/translate";
+import { useTranslations } from "next-intl";
 
-const key = "profile";
-
-export default function EditProfile({ profile, editKey = "" }: any) {
-  const dialogPath = editKey === key;
+export default function EditProfile({ profile, open = false, onClose }: any) {
+  const translate = useTranslations();
   return (
     <DialogLayout
-      open={Boolean(dialogPath)}
-      size="!max-w-[682px] w-full overflow-auto"
+      open={Boolean(open)}
+      size="!max-w-[682px] w-full overflow-auto p-4"
       title={translate("Edit_Profile")}
+      onClose={onClose}
+      titleClassName="m-0 !p-0 mb-3"
     >
-      <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
-        <EditVendorForm profile={profile} />
+      <div className="px-4 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
+        <EditVendorForm profile={profile} onClose={onClose} />
       </div>
     </DialogLayout>
   );

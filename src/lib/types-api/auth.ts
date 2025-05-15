@@ -2,7 +2,6 @@
 export interface IPostSignupRequest {
   email: string;
   password: string;
-  type: string;
 }
 export interface IPostSignupResponse {
   status: number;
@@ -14,6 +13,9 @@ export interface IPostSignupResponse {
 }
 
 // POST Login
+export interface IPostSocialLoginRequest {
+  accessToken: string;
+}
 export interface IPostLoginRequest {
   email: string;
   password?: string;
@@ -26,6 +28,70 @@ export interface IPostLoginResponse {
     otpSent?: boolean;
     type: string;
     detailsFilled?: boolean;
+    creator?: ICreator;
+  };
+}
+interface IContacts {
+  name: string;
+  phone: string;
+  email: string;
+  isDefault: boolean;
+  _id: string;
+}
+interface IVendor {
+  _id: string;
+  accountId: string;
+  business_name: string;
+  company_email: string;
+  company_phone: string;
+  gst_number: string;
+  website: string;
+  type_of_business: string;
+  contacts: IContacts[];
+  omni_channels: string[];
+  brand_documents: any[];
+  addresses: any[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ICreator {
+  _id: string;
+  accountId: string;
+  full_name: string;
+  user_name: string;
+  phone: string;
+  title: string;
+  long_description: string;
+  short_description: string;
+  tags: string[];
+  category: string[];
+  sub_category: string[];
+  profile_image: string;
+  banner_image: string;
+  channels: string[];
+  completed: number;
+  createdAt: string;
+  updatedAt: string;
+  state: string;
+  city: string;
+  gender: string;
+  dob: string;
+}
+export interface IGetUserResponse {
+  status: number;
+  data: {
+    _id: string;
+    name: string;
+    email: string;
+    password: string;
+    type: string;
+    isActive: boolean;
+    isEmailVerified: boolean;
+    createdAt: string;
+    updatedAt: string;
+    vendor?: IVendor;
+    creator?: ICreator;
   };
 }
 
@@ -118,32 +184,40 @@ export interface IPostVendorRegisterRequest {
     email: string;
   }[];
   omni_channels: string[];
+  profile_image?: any;
+  state: string;
+  city: string;
 }
 // POST Creator Register
-export interface IPostCreatorRegisterRequest {
+export interface IPostCreatorRegisterStepOneRequest {
+  full_name: string;
+  user_name: string;
+  email: string;
+  state: string;
+  city: string;
+  gender: string;
+  dob: string;
+  phone: string;
+}
+export interface IPutUpdateCreatorResponse {
+  status: number;
+  data: ICreator;
+}
+// PUT Creator Update
+export interface IPutUpdateCreatorRequest {
   full_name: string;
   user_name: string;
   // email: string;
-  phone: string;
-  title: string;
-  long_description: string;
-  short_description: string;
-  tags: string[];
-  category: string[];
-  sub_category: string[];
-  profile_image?: string;
-  banner_image?: string;
-  // channels: {
-  //   account_name: string;
-  //   handle_name: string;
-  //   account_link: string;
-  // }[]
+  // phone: string;
+  state: string;
+  city: string;
+  gender: string;
+  dob: string;
+  profile_image: any;
 }
 export interface IPostVendorRegisterResponse {
   status: number;
-  data: {
-    message: string;
-  };
+  data: IVendor;
 }
 
 // POST Creator Register
@@ -164,9 +238,7 @@ export interface IPostVendorRegisterResponse {
 
 export interface IPostCreatorRegisterResponse {
   status: number;
-  data: {
-    message: string;
-  };
+  data: ICreator;
 }
 
 export interface IGetCategoryParams {
@@ -192,6 +264,29 @@ export interface IGetCategoryResponse {
 }
 
 export interface IGetCreatorProgressResponse {
-  channelesFilled: boolean;
-  creatorFilled: boolean;
+  completed: number;
+  accountId?: string;
+  banner_image?: string;
+  profile_image?: string;
+  long_description?: string;
+  short_description?: string;
+  title?: string;
+  user_name?: string;
+  _id?: string;
+  phone?: string;
+  full_name?: string;
+  category?: string[];
+  sub_category?: string[];
+  channels?: string[];
+  tags?: string[];
+}
+
+export interface IGetUserNameExistsResponse {
+  exists: boolean
+}
+export interface IPostCreatorCheckExistRequest {
+  user_name: string;
+}
+export interface IPostCreatorCheckExistResponse {
+  _id?: string;
 }

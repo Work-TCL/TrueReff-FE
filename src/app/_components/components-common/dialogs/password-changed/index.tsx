@@ -4,10 +4,12 @@ import DialogLayout from "@/app/_components/ui/layout/dialog";
 import { useSearchParams } from "next/navigation";
 import AnchorButton from "@/app/_components/ui/button/variant";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 const CHANGE_PASS_SUCCESS = "change-password-success";
 
 export default function PasswordSuccess() {
+  const t = useTranslations();
   const auth = useSearchParams().get("auth");
   const dialogPath = auth === CHANGE_PASS_SUCCESS;
 
@@ -27,12 +29,8 @@ export default function PasswordSuccess() {
           />
         </span>
 
-        <h3 className="mb-2 text-2xl text-gray-800">
-          Password Changed Successfully
-        </h3>
-        <p className="text-gray-500 text-sm">
-          Your password has been updated successfully
-        </p>
+        <h3 className="mb-2 text-2xl text-gray-800">{t("password_changes")}</h3>
+        <p className="text-gray-500 text-sm">{t("password_changes_success")}</p>
 
         <div className="mt-6">
           {/* <AnchorButton
@@ -43,7 +41,7 @@ export default function PasswordSuccess() {
             Cancel
           </AnchorButton> */}
           <AnchorButton href="/login" className="text-sm">
-            Back to Login
+            {t("BacktoLogin")}
           </AnchorButton>
         </div>
       </div>

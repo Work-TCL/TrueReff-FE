@@ -13,10 +13,10 @@ import {
   vendorProfileUpdateSchema,
 } from "@/lib/utils/validations";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { translate } from "@/lib/utils/translate";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import Input from "@/app/_components/ui/form/Input";
 import Button from "@/app/_components/ui/button";
+import axios from "@/lib/web-api/axios";
+import { useTranslations } from "next-intl";
 
 export default function EditContactVendorForm({
   profile,
@@ -27,16 +27,15 @@ export default function EditContactVendorForm({
   id: any;
   onClose: any;
 }) {
+  const translate = useTranslations();
   const router = useRouter();
-  const axios = useAxiosAuth();
   const [loading, setLoading] = useState(false);
   const schema = addContactVendorSchema;
   const methods = useForm<IAddContactVendorSchema>({
     defaultValues: {
       name: profile?.name || "",
       phone: profile?.phone || "",
-      email: profile?.email || "",
-      isDefault: profile?.isDefault || false,
+      email: profile?.email || ""
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -48,7 +47,7 @@ export default function EditContactVendorForm({
       let response: any;
 
       if (profile) {
-        response = await axios.put(`/auth/vendor/contact/${id}`, payload);
+        response = await axios.put(`/auth/vendor/contact/${profile?._id}`, payload);
       } else {
         response = await axios.post("/auth/vendor/contact", payload);
       }
@@ -59,7 +58,7 @@ export default function EditContactVendorForm({
         toast.success(response?.message);
         router.push("?");
         methods?.reset();
-        onClose && onClose();
+        onClose && onClose(true);
         return true;
       }
       throw response;
@@ -90,16 +89,8 @@ export default function EditContactVendorForm({
           <div className="col-span-2">
             <Input name="email" type="email" placeholder={translate("Email")} />
           </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("Set_as_default_address")}
-              name="isDefault"
-              type="checkbox"
-              className=""
-            />
-          </div>
 
-          <div className="mt-6 col-span-2 sticky bottom-0 bg-white">
+          <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
             <Button type="submit" loading={loading}>
               {translate("Save")}
             </Button>

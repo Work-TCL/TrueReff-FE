@@ -2,21 +2,24 @@
 import Button from "@/app/_components/ui/button";
 import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import {
   IShopifyConnectSchema,
   shopifyConnectSchema,
-  vendorProfileUpdateSchema,
 } from "@/lib/utils/validations";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { translate } from "@/lib/utils/translate";
 import Input from "@/app/_components/ui/form/Input";
 import { useRouter } from "next/navigation";
-
-export default function ShopifyStoreConnects() {
-  const axios = useAxiosAuth();
+import axios from "@/lib/web-api/axios";
+import { useTranslations } from "next-intl";
+interface IShopifyStoreConnectProps {
+  getConnectedChannel?: () => void;
+}
+export default function ShopifyStoreConnects({
+  getConnectedChannel = () => {},
+}: IShopifyStoreConnectProps) {
+  const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = shopifyConnectSchema;
@@ -38,6 +41,7 @@ export default function ShopifyStoreConnects() {
       if (response?.status === 200) {
         toast.success(response?.message);
         router.refresh();
+        getConnectedChannel();
         methods?.reset();
         return true;
       }

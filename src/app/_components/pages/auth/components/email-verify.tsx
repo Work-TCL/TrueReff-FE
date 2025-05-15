@@ -9,9 +9,11 @@ import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
 import { signIn } from "next-auth/react";
-import { translate } from "@/lib/utils/translate";
+import { verifyEmail } from "@/lib/web-api/auth";
+import { useTranslations } from "next-intl";
 
 export default function EmailVerifyOTPForm() {
+  const translate = useTranslations();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -45,25 +47,22 @@ export default function EmailVerifyOTPForm() {
 
     setLoading(true);
     try {
-      const response: any = await signIn("credentials", {
+      const response = await verifyEmail({
+        email: email,
+        otpCode: data?.otpCode,
+      });
+      const userData = response?.data;
+      const result = await signIn("credentials", {
+        redirect: false,
         username: email,
         otp: data?.otpCode,
-        redirect: false,
+        // Optional: Pass additional fields to "authorize"
+        userData: JSON.stringify(userData), // send everything you want stored
       });
-
-      if (response?.status === 200 || response?.status === 201) {
+      if (result?.status === 200 || result?.status === 201) {
         toast.success("Email Verified Successfully.");
         methods.reset();
-
-        localStorage.setItem("userType", userType);
-
-        if (userType === "vendor") {
-          router.push("/vendor-register");
-        } else if (userType === "creator") {
-          router.push(`/creator-registration?email=${email}`);
-        } else {
-          router.push("/");
-        }
+        router.push("/dashboard");
         return;
       }
 
@@ -87,9 +86,10 @@ export default function EmailVerifyOTPForm() {
             onChange={setOtp}
             numInputs={6}
             renderSeparator={<span> </span>}
-            renderInput={(props) => (
+            renderInput={(props,index) => (
               <input
                 {...props}
+                autoFocus={index === 0}
                 className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] 
                   focus:outline-none focus:border-black text-lg ${
                     props?.value ? "border-black" : "border-gray-dark"

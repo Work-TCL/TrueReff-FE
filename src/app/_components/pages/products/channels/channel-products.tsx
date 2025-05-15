@@ -1,100 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { startTransition, useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
-import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { Input } from "@/components/ui/input";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
-import { FaSlidersH } from "react-icons/fa";
-import { Eye, PencilLine, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
-import axiosInstance from "@/lib/web-api/http-common";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+import { CircleFadingPlus, ImageOff } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-// import axios from "axios";
+import Loading from "@/app/vendor/loading";
+import ChannleToProduct from "@/lib/components/dialogs/channel-to-product";
+import { useTranslations } from "next-intl";
+import Loader from "@/app/_components/components-common/layout/loader";
+import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
+import { useRouter } from "next/navigation";
+import axios from "@/lib/web-api/axios";
+import { debounce } from "lodash";
+import ToolTip from "@/app/_components/components-common/tool-tip";
+import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
+import { ColumnDef } from "@tanstack/react-table";
+import DataTable from "@/app/_components/components-common/data-table";
+import { SearchInput } from "@/app/_components/components-common/search-field";
+import ChannelBar from "./chaneelBar";
+import { getConnectedChannelsList } from "@/lib/web-api/channel";
+import { toastMessage } from "@/lib/utils/toast-message";
 
-// Sample Data
-const products = [
-  {
-    productId: "#15646",
-    productImageUrl: "/monica.png",
-    productName: "Tiffany Diamond Ring",
-    category: "Jewelry",
-    tags: "Elegant, Timeless",
-    SKU: "TDR-3050",
-    sellingPrice: "$850",
-    discount: "15%",
-    status: "Inactive",
-  },
-  {
-    productId: "#15647",
-    productImageUrl: "/omega_watch.png",
-    productName: "Omega Seamaster",
-    category: "Watches",
-    tags: "Luxury, Classic",
-    SKU: "OSM-1248",
-    sellingPrice: "$4,200",
-    discount: "10%",
-    status: "Active",
-  },
-  {
-    productId: "#15648",
-    productImageUrl: "/leather_bag.png",
-    productName: "Louis Vuitton Leather Bag",
-    category: "Bags",
-    tags: "Stylish, Premium",
-    SKU: "LVL-7890",
-    sellingPrice: "$3,150",
-    discount: "20%",
-    status: "Active",
-  },
-  {
-    productId: "#15649",
-    productImageUrl: "/airpods_pro.png",
-    productName: "Apple AirPods Pro",
-    category: "Electronics",
-    tags: "Wireless, Noise-cancelling",
-    SKU: "AAP-9988",
-    sellingPrice: "$249",
-    discount: "5%",
-    status: "Inactive",
-  },
-  {
-    productId: "#15650",
-    productImageUrl: "/sneakers.png",
-    productName: "Nike Air Max 270",
-    category: "Footwear",
-    tags: "Comfort, Sporty",
-    SKU: "NAM-270X",
-    sellingPrice: "$150",
-    discount: "12%",
-    status: "Active",
-  },
-];
-
-export default function ChannelProductList() {
+export interface IProduct {
+  handle: string;
+  id: string;
+  image: string;
+  title: string;
+  category: string;
+  tags: string[];
+  sku: string;
+  price: string;
+}
+interface IProps {
+  channelName: string;
+}
+export default function ChannelProductList({
+  channelName = "shopify",
+}: IProps) {
   const router = useRouter();
-  const axios = useAxiosAuth();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productList, setProductList] = useState<
-    { handle: string; id: string; image: string; title: string }[]
-  >([]);
-  const pageSize = 10;
-  const totalPages = Math.ceil(products.length / pageSize);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [internalLoader, setInternalLoader] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
+  const [currentData, setCurrentData] = useState<IProduct | null>(null);
+  const [productList, setProductList] = useState<IProduct[]>([]);
   const [cursors, setCursors] = useState<{
     next: string | null;
     previous: string | null;
@@ -106,21 +60,33 @@ export default function ChannelProductList() {
     hasNextPage: false,
     hasPreviousPage: false,
   });
-  const paginatedData = products.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  const [activeChannelTabId, setActiveChannelTabId] = useState("");
+  const [channels, setChannels] = useState<any[]>([]);
+  const translate = useTranslations();
+
+  // Fetch Chanel list
+  useEffect(() => {
+    startTransition(async () => {
+      const res: any[] = await getConnectedChannelsList();
+      if (Array.isArray(res)) {
+        setChannels(res);
+        setActiveChannelTabId(res?.[0]?.channelType);
+      }
+    });
+  }, []);
 
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
     ItemPerPage: number,
-    cursor: string | null = null
+    cursor: string | null = null,
+    isInternalLoader = false,
+    searchValue: string = ""
   ) => {
+    isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product/list?per_page=${ItemPerPage}${
-          cursor ? `&cursor=${cursor}` : ""
-        }`
+        `channel/shopify/product/list?per_page=${ItemPerPage}${cursor ? `&cursor=${cursor}` : ""
+        }${searchValue ? `&search=${searchValue}` : ""}`
       );
       if (response.data.data.products) {
         setProductList(response.data.data.products);
@@ -131,7 +97,12 @@ export default function ChannelProductList() {
           hasPreviousPage: response.data.data.page_info.has_previous_page,
         });
       }
-    } catch (error) {}
+      setLoading(false);
+      setInternalLoader(false);
+    } catch (error) {
+      setLoading(false);
+      setInternalLoader(false);
+    }
   };
 
   // Update useEffect to fetch the initial product list
@@ -141,147 +112,251 @@ export default function ChannelProductList() {
 
   // Update the onClick handlers for pagination buttons
   const handleNextPage = () => {
-    if (cursors.next) {
-      fetProductsList(2, cursors.next);
+    if (cursors.next && cursors.hasNextPage) {
+      fetProductsList(20, cursors.next, true);
     }
   };
 
   const handlePreviousPage = () => {
-    if (cursors.previous) {
-      fetProductsList(2, cursors.previous);
+    if (cursors.previous && cursors.hasPreviousPage) {
+      fetProductsList(20, cursors.previous, true);
     }
   };
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      fetProductsList(20, cursors.previous, true, value);
+    }, 500),
+    []
+  );
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setSearch(value);
+    debouncedSearch(value);
+  };
+
+  const handleOnCheckExists = async (productId: string) => {
+    setInternalLoader(true);
+    try {
+      const response = await axios.post(
+        `/product/vendor-product/check-existing-product`, { productId: productId }
+      );
+      if (response?.status === 200) {
+        router?.push(
+          `/vendor/campaign/product/add?productId=${productId}`
+        )
+      }
+      // setPlusLoading(false);
+    } catch (error: any) {
+      if (error?.status === 409) {
+        toastMessage.info("Product already exists in the platform")
+      }
+      setInternalLoader(false);
+    }
+  }
+
+  const columns: ColumnDef<IProduct>[] = [
+    {
+      accessorKey: "id",
+      header: () => translate("Product_ID"),
+      cell: ({ row }) => {
+        const product = row.original;
+        return product.id.split("/").pop();
+      },
+    },
+    {
+      accessorKey: "title",
+      header: () => translate("Product_Name"),
+      cell: ({ row }) => {
+        const product = row.original;
+        return (
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() =>
+              router.push(
+                `channel-products/view?id=${product.id}&channelName=${activeChannelTabId} `
+              )
+            }
+          >
+            {product.image ? (
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={product.image} />
+              </Avatar>
+            ) : (
+              <ImageOff className="w-6 h-6 text-gray-400" />
+            )}
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={product.title ?? ""}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "category",
+      header: () => translate("Categories"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.category ?? ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "tags",
+      header: () => translate("Tags"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.tags?.join(", ") ?? ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "sku",
+      header: () => translate("SKU"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.sku ?? ""}
+        />
+      ),
+    },
+    {
+      accessorKey: "price",
+      header: () => <>Selling {translate("Price")}</>,
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.price ?? ""}
+        />
+      ),
+    },
+    {
+      id: "actions",
+      header: () => <div className="text-center">{translate("Action")}</div>,
+      cell: ({ row }) => {
+        const product = row.original;
+        return (
+          <div className="flex justify-center items-center gap-3">
+            {/* View button (currently commented) */}
+            {/* <ToolTip content="View Product" delayDuration={1000}>
+            <Eye
+              strokeWidth={1.5}
+              color="#FF4979"
+              className="cursor-pointer"
+              onClick={() => router.push(`shopify/view?id=${product.id}`)}
+            />
+          </ToolTip> */}
+
+            <div
+              onClick={() =>
+                handleOnCheckExists(product.id)
+              }
+              className="cursor-pointer"
+            >
+              <ToolTip content="Add Product to CRM" delayDuration={1000}>
+                <CircleFadingPlus
+                  strokeWidth={1.5}
+                  color="#3b82f680"
+                  className="cursor-pointer"
+                />
+              </ToolTip>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
-      <div className="flex justify-between items-center flex-wrap gap-2">
-        <div className="text-[20px] text-500">
-          <Input placeholder={translate("Search_product")} />
-        </div>
-        <div className="flex items-center gap-[10px]">
-          <PiListChecksLight size={35} />
-          <IoGridOutline size={30} />
-          <Button
-            variant="outline"
-            className="text-black w-[100px] rounded-[4px]"
-          >
-            <FaSlidersH /> {translate("Filters")}
-          </Button>
-        </div>
-      </div>
-      <div className="overflow-auto flex-1">
-        <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-          <TableHeader className="bg-stroke">
-            <TableRow>
-              <CustomTableHead className="w-1/6">
-                {translate("Product_ID")}
-              </CustomTableHead>
-              <CustomTableHead className="w-1/4">
-                {translate("Product_Name")}
-              </CustomTableHead>
-              {/* <CustomTableHead className="w-1/6">{translate("Categories")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Tags")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("SKU")}</CustomTableHead>
-                            <CustomTableHead className="w-1/6">Selling {translate("Price")}</CustomTableHead>
-                            <CustomTableHead className="w-1/8">{translate("Discount")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Status")}</CustomTableHead> */}
-              <CustomTableHead className="w-1/6 text-center">
-                {translate("Action")}
-              </CustomTableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {/* {paginatedData.map((product, index) => (
-                            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-                                <CustomTableCell >{product.productId}</CustomTableCell>
-                                <CustomTableCell>
-                                    <div className="flex items-center gap-2">
-                                        <Avatar className="w-8 h-8">
-                                            <AvatarImage src={'/assets/product/image-square.svg'} />
-                                        </Avatar>
-                                        {product.productName}
-                                    </div>
-                                </CustomTableCell>
-                                <CustomTableCell >{product.category}</CustomTableCell>
-                                <CustomTableCell>{product.tags}</CustomTableCell>
-                                <CustomTableCell>{product.SKU}</CustomTableCell>
-                                <CustomTableCell>{product.sellingPrice}</CustomTableCell>
-                                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell>
-                                <CustomTableCell>
-                                    <div className="flex justify-center gap-3">
-                                        <Eye color="#FF4979" className="cursor-pointer" onClick={() => router.push(`/product/${index}?view=true`)} />
-                                        <PencilLine className="cursor-pointer" onClick={() => router.push(`/product/${index}`)} />
-                                        <Trash2 color="#FF3B30" className="cursor-pointer" />
-                                    </div>
-                                </CustomTableCell>
-                            </TableRow>
-                        ))} */}
-            {productList.map((product, index) => (
-              <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-                <CustomTableCell>{product.id.split("/").pop()}</CustomTableCell>
-                <CustomTableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={product.image} />
-                    </Avatar>
-                    {product.title}
-                  </div>
-                </CustomTableCell>
-                {/* <CustomTableCell >{product.category}</CustomTableCell>
-                                <CustomTableCell>{product.tags}</CustomTableCell>
-                                <CustomTableCell>{product.SKU}</CustomTableCell>
-                                <CustomTableCell>{product.sellingPrice}</CustomTableCell>
-                                <CustomTableCell>{product.discount}</CustomTableCell>
-                                <CustomTableCell><div className={`${product.status === "Active" ? "bg-[#0982281A] text-[#098228]" : "bg-[#FF3B301A] text-[#FF3B30]"} p-2 rounded-md`}>{product.status}</div></CustomTableCell> */}
-                <CustomTableCell>
-                  <div className="flex justify-center gap-3">
-                    <Eye
-                      color="#FF4979"
-                      className="cursor-pointer"
-                      onClick={() => router.push(`/product/${index}?view=true`)}
-                    />
-                    <PencilLine
-                      className="cursor-pointer"
-                      onClick={() => router.push(`/product/${index}`)}
-                    />
-                    <Trash2 color="#FF3B30" className="cursor-pointer" />
-                  </div>
-                </CustomTableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-      {/* Pagination */}
-      {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
-        <div className="flex justify-end items-center mt-4">
-          <Pagination className="flex justify-end mt-4">
-            <PaginationContent className="flex items-center gap-2">
-              <PaginationItem>
-                <PaginationPrevious
-                  className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                    !cursors.hasPreviousPage
-                      ? "cursor-not-allowed opacity-50"
-                      : ""
-                  }`}
-                  showArrow={false}
-                  onClick={handlePreviousPage}
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <ChannelBar
+            channels={channels}
+            activeChannelTabId={activeChannelTabId}
+            setActiveChannelTabId={setActiveChannelTabId}
+          />
+          {/* <div className="flex justify-between items-center gap-2">
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_Product")}
+              // className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
+            />
+          </div> */}
+          {internalLoader && <Loader />}
+          {productList?.length > 0 ? (
+            <>
+              <DataTable columns={columns} data={productList} />
+              {currentData !== null && (
+                <ChannleToProduct
+                  product={{
+                    productId: currentData.id,
+                    channelName: channelName,
+                    handle: currentData.handle,
+                    id: currentData.id,
+                    image: currentData.image,
+                    title: currentData.title,
+                    category: currentData.category,
+                    tags: currentData.tags,
+                    sku: currentData.sku,
+                    price: currentData.price,
+                  }}
+                  onClose={(refresh = false) => {
+                    setCurrentData(null);
+                    if (refresh) {
+                      fetProductsList(20, null, true);
+                    }
+                  }}
                 />
-              </PaginationItem>
+              )}
+              {/* Pagination */}
+              {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
+                <div className="flex justify-center items-center">
+                  <Pagination className="flex justify-center mt-1">
+                    <PaginationContent className="flex items-center gap-2">
+                      <PaginationItem>
+                        <PaginationPrevious
+                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${!cursors.hasPreviousPage
+                              ? "cursor-not-allowed opacity-50"
+                              : "cursor-pointer"
+                            }`}
+                          showArrow={false}
+                          onClick={handlePreviousPage}
+                        />
+                      </PaginationItem>
 
-              <PaginationItem>
-                <PaginationNext
-                  className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${
-                    !cursors.hasNextPage ? "cursor-not-allowed opacity-50" : ""
-                  }`}
-                  showArrow={false}
-                  onClick={handleNextPage}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>{" "}
-        </div>
-      ) : null}
+                      <PaginationItem>
+                        <PaginationNext
+                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${!cursors.hasNextPage
+                              ? "cursor-not-allowed opacity-50"
+                              : "cursor-pointer"
+                            }`}
+                          showArrow={false}
+                          onClick={handleNextPage}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>{" "}
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <EmptyPlaceHolder
+              title={translate("No_Products_Available")}
+              description={translate("No_Products_Available_Description")}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

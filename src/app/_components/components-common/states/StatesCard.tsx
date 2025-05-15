@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import StatesCardGraph from "./StatesCardGraph";
-import { translate } from "@/lib/utils/translate";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export const StatsCard = ({
   title,
@@ -8,29 +9,37 @@ export const StatsCard = ({
   growth,
   borderColor,
   bgColor,
+  link,
 }: {
   title: string;
   value: number | string;
   growth: number;
   borderColor: string;
   bgColor: string;
+  link?: string;
 }) => {
+  const router = useRouter();
   return (
     <Card
-      className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} rounded-2xl`}
+      className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} ${
+        link ? "cursor-pointer" : ""
+      } rounded-2xl`}
+      onClick={() => link && router.push(link)}
     >
-      <CardContent className="p-5 flex flex-col justify-between h-full">
+      <CardContent className="p-5 gap-2 flex flex-col justify-between h-full">
         <div className="flex justify-between items-start">
           <h3 className=" text-secondary  md:text-[14px] lg:text-[14px]">
             {title}
           </h3>
-          <div className="text-success bg-success-light text-sm px-2 py-1 rounded-sm">
+          <div className="text-success hidden bg-success-light md:text-sm text-xs px-2 py-1 rounded-sm">
             +{growth}%
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-3xl font-medium text-text">{value}</span>
-          <div className="w-20 h-8">
+          <span className="md:text-3xl text-lg font-medium text-text">
+            {value}
+          </span>
+          <div className="w-20 hidden h-8">
             <StatesCardGraph />
           </div>
         </div>
@@ -40,6 +49,7 @@ export const StatsCard = ({
 };
 
 export default function StatesCards() {
+  const translate = useTranslations();
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 gap-4 rounded-[20px] w-full">
       <StatsCard
@@ -70,7 +80,13 @@ export default function StatesCards() {
         borderColor="border-[#9773C8]"
         bgColor="bg-[#f5f1fa]"
       />
-      <StatsCard title={translate("New_Brands")} value={200} growth={5} borderColor="border-[#C861A0]" bgColor="bg-[#faeff6]" />
+      <StatsCard
+        title={translate("New_Brands")}
+        value={200}
+        growth={5}
+        borderColor="border-[#C861A0]"
+        bgColor="bg-[#faeff6]"
+      />
     </div>
   );
 }

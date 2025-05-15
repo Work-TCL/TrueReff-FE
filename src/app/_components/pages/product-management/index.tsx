@@ -1,244 +1,258 @@
 "use client";
-
-import { useState } from "react";
-import { Table, TableHeader, TableRow, TableBody } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch"
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CustomTableHead } from "@/app/_components/components-common/tables/CustomTableHead";
-import { CustomTableCell } from "@/app/_components/components-common/tables/CustomTableCell";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
+import toast from "react-hot-toast";
+import { useCallback, useEffect, useState } from "react";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
-import { Input } from "@/components/ui/input";
-import { PiListChecksLight } from "react-icons/pi";
-import { IoGridOutline } from "react-icons/io5";
-import { FaSlidersH } from "react-icons/fa";
-import { translate } from "@/lib/utils/translate";
-import { PencilLine } from "lucide-react";
-
-interface IProducts {
-    productImage: string,
-    name: string,
-    category: string,
-    trendingTag: string,
-    affiliateLink: string
+import ProductTable from "./product-table";
+import Loading from "@/app/vendor/loading";
+import Loader from "../../components-common/layout/loader";
+import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import { useTranslations } from "next-intl";
+import axios from "@/lib/web-api/axios";
+import { debounce } from "lodash";
+import ProductCard from "./product-card";
+import { ViewToggle } from "../../components-common/view-toggle";
+import CategorySubCategorySelect from "../../components-common/category-dropdowns";
+import { SearchInput } from "../../components-common/search-field";
+export interface ICategory {
+  _id: string;
+  name: string;
+  parentId: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
-// Sample Data
-const products = [
-    {
-        productImage: "/monica.png",
-        name: "Monica Bing",
-        category: "Jewelry",
-        trendingTag: 'Top Product',
-        affiliateLink: "https://affiliate.com/bag1"
-    },
-    {
-        productImage: "/lucy.png",
-        name: "Lucy Hall",
-        category: "Clothing",
-        trendingTag: 'New Arrival',
-        affiliateLink: "https://affiliate.com/bag2"
-    },
-    {
-        productImage: "/sophia.png",
-        name: "Sophia Lopez",
-        category: "Accessories",
-        trendingTag: 'Best Seller',
-        affiliateLink: "https://affiliate.com/bag3"
-    },
-    {
-        productImage: "/emma.png",
-        name: "Emma Stone",
-        category: "Beauty",
-        trendingTag: 'Limited Edition',
-        affiliateLink: "https://affiliate.com/bag4"
-    },
-    {
-        productImage: "/ava.png",
-        name: "Ava Green",
-        category: "Home Decor",
-        trendingTag: 'Most Popular',
-        affiliateLink: "https://affiliate.com/bag5"
-    },
-    {
-        productImage: "/mia.png",
-        name: "Mia Bright",
-        category: "Footwear",
-        trendingTag: 'Top Seller',
-        affiliateLink: "https://affiliate.com/bag6"
-    },
-    {
-        productImage: "/olivia.png",
-        name: "Olivia Brown",
-        category: "Jewelry",
-        trendingTag: 'Trending',
-        affiliateLink: "https://affiliate.com/bag7"
-    },
-    {
-        productImage: "/isabella.png",
-        name: "Isabella Rose",
-        category: "Accessories",
-        trendingTag: 'Hot Deal',
-        affiliateLink: "https://affiliate.com/bag8"
-    },
-    {
-        productImage: "/chloe.png",
-        name: "Chloe Harris",
-        category: "Electronics",
-        trendingTag: 'On Sale',
-        affiliateLink: "https://affiliate.com/bag9"
-    },
-    {
-        productImage: "/ella.png",
-        name: "Ella White",
-        category: "Clothing",
-        trendingTag: 'Summer Collection',
-        affiliateLink: "https://affiliate.com/bag10"
-    },
-    {
-        productImage: "/lucas.png",
-        name: "Lucas Turner",
-        category: "Jewelry",
-        trendingTag: 'Top Seller',
-        affiliateLink: "https://affiliate.com/bag11"
-    },
-    {
-        productImage: "/mia2.png",
-        name: "Mia Clark",
-        category: "Footwear",
-        trendingTag: 'Exclusive',
-        affiliateLink: "https://affiliate.com/bag12"
-    },
-    {
-        productImage: "/james.png",
-        name: "James Bond",
-        category: "Clothing",
-        trendingTag: 'New Style',
-        affiliateLink: "https://affiliate.com/bag13"
-    },
-    {
-        productImage: "/lucy2.png",
-        name: "Lucy Perez",
-        category: "Accessories",
-        trendingTag: 'Hot Pick',
-        affiliateLink: "https://affiliate.com/bag14"
-    },
-    {
-        productImage: "/max.png",
-        name: "Max Taylor",
-        category: "Home Decor",
-        trendingTag: 'Fresh Finds',
-        affiliateLink: "https://affiliate.com/bag15"
-    },
-    {
-        productImage: "/chris.png",
-        name: "Chris Walker",
-        category: "Electronics",
-        trendingTag: 'Latest Tech',
-        affiliateLink: "https://affiliate.com/bag16"
-    },
-    {
-        productImage: "/julia.png",
-        name: "Julia Thomas",
-        category: "Beauty",
-        trendingTag: 'Natural Products',
-        affiliateLink: "https://affiliate.com/bag17"
-    },
-    {
-        productImage: "/diana.png",
-        name: "Diana Smith",
-        category: "Footwear",
-        trendingTag: 'Stylish',
-        affiliateLink: "https://affiliate.com/bag18"
-    },
-    {
-        productImage: "/olga.png",
-        name: "Olga Davis",
-        category: "Jewelry",
-        trendingTag: 'Luxury',
-        affiliateLink: "https://affiliate.com/bag19"
-    },
-    {
-        productImage: "/nina.png",
-        name: "Nina Green",
-        category: "Accessories",
-        trendingTag: 'Best Offer',
-        affiliateLink: "https://affiliate.com/bag20"
-    }
-];
 
+export interface IVendor {
+  _id: string;
+  business_name: string;
+  profile_image?: string;
+}
 
+export interface IRequest {
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  collaborationStatus: string;
+  requestFrom: "CREATOR" | "VENDOR" | string;
+  createdAt: string;
+  updatedAt: string;
+}
 
+export interface ICollaboration {
+  _id: string;
+  creatorId: string;
+  productId: string;
+  vendorId: string;
+  requestId: string;
+  collaborationStatus: string;
+  utmLink: string | null;
+  discountType: string;
+  discountValue: number;
+  couponCode: string;
+  commissionPercentage: number;
+  expiresAt: string;
+  agreedByCreator: boolean;
+  agreedByVendor: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
-export default function ProductManagement() {
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 10;
-    const totalPages = Math.ceil(products.length / pageSize);
+export interface IProduct {
+  _id: string;
+  title: string;
+  channelProductId: string;
+  vendorId: string;
+  sku: string;
+  description: string;
+  media: any[]; // replace with IMedia[] if you define media type later
+  channelName: string;
+  category: ICategory[];
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+  vendor: IVendor;
+  request: IRequest | null;
+  collaboration: ICollaboration | null;
+  categories?: string;
+  subCategories?: string;
+  tag?: string;
+}
 
-    const paginatedData = products.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+  control: (base: any) => ({
+    ...base,
+    borderRadius: "8px",
+  }),
+};
 
-    return (
-        <div className="p-4 rounded-lg flex flex-col gap-4">
-            <div className="flex justify-between items-center flex-wrap gap-2">
-                <div className="text-[20px] text-500">
-                    <Input placeholder={translate("Search_product")} />
-                </div>
-                <div className="flex items-center gap-[10px]">
-                    <PiListChecksLight size={35} />
-                    <IoGridOutline size={30} />
-                    <Button variant="outline" className="text-black w-[100px] rounded-[4px]">
-                        <FaSlidersH /> {translate("Filters")}
-                    </Button>
-                </div>
+export default function ProductList() {
+  const translate = useTranslations();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [internalLoader, setInternalLoader] = useState<boolean>(false);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [search, setSearch] = useState<string>("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // parent and sub both categories
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const pageSize = 20;
+
+  // Get Creator list
+  const getProductList = useCallback(
+    async (
+      page: number,
+      isInternalLoader = false,
+      searchValue: string = "",
+      categoryIds: string[] = []
+    ) => {
+      isInternalLoader ? setInternalLoader(true) : setLoading(true);
+      try {
+        const response = await axios.get(
+          `/product/list?page=${page}&limit=${pageSize}${
+            searchValue ? `&search=${searchValue}` : ""
+          }${
+            categoryIds?.length > 0
+              ? `&categories=${categoryIds.join(",")}`
+              : ""
+          }`
+        );
+        if (response.status === 200) {
+          const productData = response.data.data;
+          if (productData && typeof productData === "object") {
+            const productsArray = productData.data || [];
+            const productsCount = productData.count || 0;
+
+            if (Array.isArray(productsArray)) {
+              let result = productsArray.map((ele) => {
+                ele.tag = ele.tags.join(", ");
+                ele.categories = ele?.category?.length
+                  ? ele.category
+                      .filter((ele: ICategory) => ele?.parentId === null)
+                      .map((ele: ICategory) => ele?.name)
+                      .join(", ")
+                  : "";
+                ele.subCategories = ele?.category?.length
+                  ? ele.category
+                      .filter((ele: ICategory) => ele?.parentId !== null)
+                      .map((ele: ICategory) => ele?.name)
+                      .join(", ")
+                  : "";
+                return { ...ele };
+              });
+              setProducts([...result]);
+              setTotalPages(Math.ceil(productsCount / pageSize));
+              setCurrentPage(page);
+            } else {
+              setProducts([]);
+              setCurrentPage(1);
+            }
+            setLoading(false);
+            setInternalLoader(false);
+          } else {
+            setProducts([]);
+            setCurrentPage(1);
+            setLoading(false);
+            setInternalLoader(false);
+          }
+        }
+      } catch (error) {
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+        setLoading(false);
+        setInternalLoader(false);
+      }
+    },
+    [pageSize]
+  );
+
+  useEffect(() => {
+    getProductList(currentPage);
+  }, []);
+
+  const debouncedSearch = useCallback(
+    debounce((value: string, categoryIds: string[]) => {
+      getProductList(currentPage, true, value, categoryIds);
+    }, 500),
+    []
+  );
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value);
+    debouncedSearch(value, [...selectedCategories]); // call debounce on value
+  };
+  const handlePageChange = (page: number) => {
+    page !== currentPage &&
+      getProductList(page, true, search, [...selectedCategories]);
+  };
+  const handleUpdateProduct = () => {
+    getProductList(currentPage, true);
+  };
+
+  const handleSelectCategory = (selectedOptions: any) => {
+    setSelectedCategories(selectedOptions);
+    getProductList(currentPage, true, search, [...selectedOptions]);
+  };
+
+  return (
+    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="flex justify-between items-center gap-2 flex-wrap">
+            <SearchInput
+              value={search}
+              onChange={handleSearch}
+              placeholder={translate("Search_Product")}
+              // className="p-3 rounded-lg bg-white pl-10 w-full gray-color" // Add padding to the left for the icon
+            />
+            <div className="flex flex-row gap-2 justify-end relative z-[99] flex-wrap ml-auto">
+              <CategorySubCategorySelect onChange={handleSelectCategory} />
+              <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
-            <div className="overflow-auto">
-                <Table className="min-w-full border border-gray-200 overflow-hidden rounded-2xl">
-                    <TableHeader className="bg-stroke">
-                        <TableRow >
-                            <CustomTableHead className="w-1/6">{translate("Product_Image")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Products_Name")}</CustomTableHead>
-                            <CustomTableHead className="w-1/6">{translate("Category")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Trending_Tag")}</CustomTableHead>
-                            <CustomTableHead className="w-1/4">{translate("Affiliate_Link")}</CustomTableHead>
-                            <CustomTableHead className="w-1/6 text-center">{translate("Action")}</CustomTableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {paginatedData.map((creator, index) => (
-                            <TableRow key={index} className="even:bg-gray-100 odd:bg-white">
-                                <CustomTableCell>
-                                    <div className="flex items-center gap-2">
-                                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="32" height="32" rx="4" fill="#F2F4F5" />
-                                            <rect width="32" height="32" rx="4" fill="url(#pattern0_1206_3031)" />
-                                            <defs>
-                                                <pattern id="pattern0_1206_3031" patternContentUnits="objectBoundingBox" width="1" height="1">
-                                                    <use transform="scale(0.000520833)" />
-                                                </pattern>
-                                                <image id="image0_1206_3031" width="1920" height="1920" preserveAspectRatio="none" />
-                                            </defs>
-                                        </svg>
+          </div>
+          {internalLoader && <Loader />}
+          {products?.length > 0 ? (
+            <>
+              <ProductTable
+                data={products}
+                handleUpdateProduct={handleUpdateProduct}
+                type={viewMode}
+                CardComponent={(item) => (
+                  <div key={item?._id} className="flex w-full h-fit relative">
+                    <ProductCard
+                      key={item?.id}
+                      item={item}
+                      handleUpdateProduct={handleUpdateProduct}
+                    />
+                  </div>
+                )}
+              />
 
-                                        {/* <Avatar className="w-8 h-8">
-                                            <AvatarImage src={creator.productImage} />
-                                        </Avatar> */}
-                                    </div>
-                                </CustomTableCell>
-                                <CustomTableCell >{creator.name}</CustomTableCell>
-                                <CustomTableCell>{creator.category}</CustomTableCell>
-                                <CustomTableCell>{creator.trendingTag}</CustomTableCell>
-                                <CustomTableCell><span className="text-[#007AFF]">{creator.affiliateLink}</span></CustomTableCell>
-                                <CustomTableCell>
-                                    <PencilLine color="#FF4979" />
-                                </CustomTableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
-            {/* Pagination */}
-            <div className="flex justify-end items-center mt-4">
-                <TablePagination totalPages={totalPages} activePage={currentPage} onPageChange={setCurrentPage} />
-            </div>
-        </div>
-    );
+              {/* Pagination */}
+              {/* {totalPages > 1 && ( */}
+              <TablePagination
+                totalPages={totalPages}
+                activePage={currentPage}
+                onPageChange={handlePageChange}
+              />
+              {/* )} */}
+            </>
+          ) : (
+            <EmptyPlaceHolder
+              title={translate("No_Products_Available")}
+              description={translate("No_Products_Available_Description")}
+            />
+          )}
+        </>
+      )}
+    </div>
+  );
 }

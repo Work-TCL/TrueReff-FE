@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/app/_components/ui/button";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import OtpInput from "react-otp-input";
@@ -10,12 +10,16 @@ import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
 import { verifyOtp } from "@/lib/web-api/auth";
 import { useSearchParams } from "next/navigation";
-import { translate } from "@/lib/utils/translate";
-import { IPostVerifyOTPRequest, IPostVerifyOTPResponse } from "@/lib/types-api/auth";
+import {
+  IPostVerifyOTPRequest,
+  IPostVerifyOTPResponse,
+} from "@/lib/types-api/auth";
+import { useTranslations } from "next-intl";
 
 export default function VerifyOTPForm() {
+  const translate = useTranslations();
   const searchParams = useSearchParams();
-  const email: string = searchParams.get("email") || '';
+  const email: string = searchParams.get("email") || "";
   const [otp, setOtp] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -28,6 +32,7 @@ export default function VerifyOTPForm() {
   useEffect(() => {
     methods.setValue("otpCode", otp);
   }, [otp, methods]);
+
   const onSubmit = async (data: IOtpSchema) => {
     setLoading(true);
     try {
@@ -51,6 +56,7 @@ export default function VerifyOTPForm() {
       setLoading(false);
     }
   };
+
   return (
     <FormProvider {...methods}>
       <form
@@ -63,9 +69,10 @@ export default function VerifyOTPForm() {
             onChange={setOtp}
             numInputs={6}
             renderSeparator={<span> </span>}
-            renderInput={(props) => (
+            renderInput={(props, index) => (
               <input
                 {...props}
+                autoFocus={index === 0}
                 className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] focus:outline-none focus:border-black text-lg ${
                   props?.value ? "border-black" : "border-gray-dark"
                 }`}
