@@ -28,6 +28,7 @@ interface IInput
   }[];
   menuPortalTarget?: any;
   lableClassName?: string;
+  inputClassName?: string;
 }
 
 export const inputStyle =
@@ -45,6 +46,7 @@ export default function Input({
   Icon,
   hideError,
   lableClassName,
+  inputClassName,
   menuPortalTarget = typeof document !== "undefined" ? document.body : null,
   ...props
 }: IInput) {
@@ -259,7 +261,7 @@ export default function Input({
               onKeyDown={addTag}
               onBlur={field.onBlur}
               placeholder={placeholder}
-              className="w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2"
+              className={cn('w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2',inputClassName)}
               {...props}
             />
             <Tag

@@ -1,5 +1,6 @@
 "use client";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
+import { ImageOff } from "lucide-react";
 import React, { useState } from "react";
 
 interface IProps {
@@ -26,20 +27,7 @@ function CampaignProductView({
     <section className="py-8 bg-white md:py-16 dark:bg-gray-900 antialiased">
       <div className="px-4 2xl:px-0">
         <div className="lg:grid lg:grid-cols-4 lg:gap-8 xl:gap-16">
-          <div className="shrink-0 max-w-sm lg:max-w-sm mx-auto flex justify-center items-center flex-col border-r pr-3">
-            {activeImage || images?.length > 0 ? (
-              <img
-                className="w-full dark:hidden h-56 object-contain"
-                src={activeImage || images[0]}
-                alt=""
-              />
-            ) : (
-              <img
-                className="w-full dark:hidden"
-                src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg"
-                alt=""
-              />
-            )}
+          <div className="shrink-0 max-w-sm lg:max-w-sm mx-auto flex justify-center items-center flex-col border-r pr-3 h-full w-full">
             {activeImage || images?.length > 0 ? (
               <img
                 className="w-full hidden dark:block h-56 object-contain"
@@ -47,16 +35,14 @@ function CampaignProductView({
                 alt=""
               />
             ) : (
-              <img
-                className="w-full hidden dark:block"
-                src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg"
-                alt=""
-              />
+              <div className="h-full w-[60%] flex flex-1 items-center justify-center bg-gray-light rounded-md">
+                <ImageOff className="w-8 h-8 text-gray-400" />
+              </div>
             )}
-            <div className="flex gap-4 py-4 justify-center overflow-x-auto">
-              {Array.isArray(images) &&
-                images?.length > 1 &&
-                images?.map((s: string, i: number) => (
+            {Array.isArray(images) &&
+              images?.length > 1 &&
+              images?.map((s: string, i: number) => (
+                <div className="flex gap-4 py-4 justify-center overflow-x-auto">
                   <img
                     key={i}
                     src={s}
@@ -65,8 +51,8 @@ function CampaignProductView({
                     className="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
                     // onclick="changeImage(this.src)"
                   />
-                ))}
-            </div>
+                </div>
+              ))}
           </div>
 
           <div className="mt-6 sm:mt-8 lg:mt-0 col-span-3">

@@ -409,14 +409,92 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 totalInventory={selectedProduct?.totalInventory}
               />
               <div className="grid md:grid-cols-2 grid-cols-1 gap-3 mb-2">
-                <div className="md:col-span-2 col-span-2">
-                  <Input
-                    label={translate("Tags")}
-                    name="tags"
-                    type="renderTagInputUpdated"
-                    placeholder={translate("Enter_your_tags")}
-                  />
+                {/* <div className="md:col-span-2 col-span-2"> */}
+                <Input
+                  label={translate("Tags")}
+                  name="tags"
+                  type="renderTagInputUpdated"
+                  placeholder={translate("Enter_your_tags")}
+                  inputClassName="h-[50]"
+                />
+
+                <div className="flex flex-col">
+                  <label className={cn(labelStyle)}>
+                    {translate("Campaign_Channels")}
+                  </label>
+                  <div className="flex items-center h-full">
+                    <div className="flex flex-col md:flex-row gap-6">
+                      {!isDisabled ? (
+                        <div className="flex gap-1 cursor-pointer">
+                          <Input
+                            name="channels"
+                            type="checkbox"
+                            placeholder={translate("Add_link")}
+                            label={translate("Instagram")}
+                            checked={Boolean(
+                              methods.watch("channels")?.includes("instagram")
+                            )}
+                            onChange={(v) => {
+                              handleChannelChange("instagram");
+                            }}
+                            hideError={true}
+                            disabled={isDisabled}
+                          />
+                        </div>
+                      ) : null}
+
+                      {!isDisabled ? (
+                        <div className="flex gap-1 cursor-pointer">
+                          <Input
+                            name="chanls"
+                            type="checkbox"
+                            placeholder={translate("Add_link")}
+                            label={translate("You_tube")}
+                            checked={Boolean(
+                              methods.watch("channels")?.includes("youtube")
+                            )}
+                            onChange={(v) => {
+                              handleChannelChange("youtube");
+                            }}
+                            disabled={isDisabled}
+                          />
+                        </div>
+                      ) : null}
+                      {!isDisabled ? (
+                        <div className="flex gap-1 cursor-pointer">
+                          <Input
+                            name="cha"
+                            type="checkbox"
+                            placeholder={translate("Add_link")}
+                            label={translate("Facebook")}
+                            checked={Boolean(
+                              methods.watch("channels")?.includes("facebook")
+                            )}
+                            onChange={(v) => {
+                              handleChannelChange("facebook");
+                            }}
+                            disabled
+                          />
+                        </div>
+                      ) : null}
+                      {isDisabled
+                        ? methods
+                            .watch("channels")
+                            ?.map((v) => (
+                              <div className="flex gap-1 bg-background p-2 rounded-md">
+                                {v}
+                              </div>
+                            ))
+                        : null}
+                    </div>
+                    {Boolean(get(methods.formState.errors, "channels")) && (
+                      <span className="text-red-600 text-sm p-2 block">
+                        {methods.formState.errors["channels"]?.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
+                {/* </div> */}
                 <div className="md:col-span-1 col-span-2">
                   <Input
                     label={translate("Category")}
@@ -523,83 +601,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   /> */}
                 </div>
               </div>
-
-              <div className="flex flex-col">
-                <label className={cn(labelStyle)}>
-                  {translate("Campaign_Channels")}
-                </label>
-                <div className="">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    {!isDisabled ? (
-                      <div className="flex gap-1 cursor-pointer">
-                        <Input
-                          name="channels"
-                          type="checkbox"
-                          placeholder={translate("Add_link")}
-                          label={translate("Instagram")}
-                          checked={Boolean(
-                            methods.watch("channels")?.includes("instagram")
-                          )}
-                          onChange={(v) => {
-                            handleChannelChange("instagram");
-                          }}
-                          hideError={true}
-                          disabled={isDisabled}
-                        />
-                      </div>
-                    ) : null}
-
-                    {!isDisabled ? (
-                      <div className="flex gap-1 cursor-pointer">
-                        <Input
-                          name="chanls"
-                          type="checkbox"
-                          placeholder={translate("Add_link")}
-                          label={translate("You_tube")}
-                          checked={Boolean(
-                            methods.watch("channels")?.includes("youtube")
-                          )}
-                          onChange={(v) => {
-                            handleChannelChange("youtube");
-                          }}
-                          disabled={isDisabled}
-                        />
-                      </div>
-                    ) : null}
-                    {!isDisabled ? (
-                      <div className="flex gap-1 cursor-pointer">
-                        <Input
-                          name="cha"
-                          type="checkbox"
-                          placeholder={translate("Add_link")}
-                          label={translate("Facebook")}
-                          checked={Boolean(
-                            methods.watch("channels")?.includes("facebook")
-                          )}
-                          onChange={(v) => {
-                            handleChannelChange("facebook");
-                          }}
-                          disabled
-                        />
-                      </div>
-                    ) : null}
-                    {isDisabled
-                      ? methods
-                          .watch("channels")
-                          ?.map((v) => (
-                            <div className="flex gap-1 bg-background p-2 rounded-md">
-                              {v}
-                            </div>
-                          ))
-                      : null}
-                  </div>
-                  {Boolean(get(methods.formState.errors, "channels")) && (
-                    <span className="text-red-600 text-sm p-2 block">
-                      {methods.formState.errors["channels"]?.message}
-                    </span>
-                  )}
-                </div>
-              </div>
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
               <div className="text-lg font-medium text-gray-500">
@@ -637,46 +638,52 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     disabled={isDisabled}
                   />
                 </div>
-                <div className="flex flex-col w-full gap-1">
-                  {fields.map((field, index) => (
-                    <div
-                      key={field.id}
-                      className="flex items-center gap-3 mb-1"
-                    >
-                      <div className="flex-1">
-                        <Input
-                          name={`references.${index}`}
-                          type="text"
-                          placeholder="https://example.com"
-                          label={`Reference Link #${index + 1}`}
-                        />
-                        {/* {errors.references?.[index] && (
+                <div className="flex flex-col w-full gap-2">
+                  <label className={cn(labelStyle)}>
+                    {translate("Reference_Links")}
+                  </label>
+                  <div className="flex flex-col w-full gap-1">
+                    {fields.map((field, index) => (
+                      <div
+                        key={field.id}
+                        className="flex items-center gap-3 mb-1 md:w-[50%]"
+                      >
+                        <label className={cn(labelStyle)}>{index + 1}.</label>
+                        <div className="flex-1">
+                          <Input
+                            name={`references.${index}`}
+                            type="text"
+                            placeholder="https://example.com"
+                            label={``}
+                          />
+                          {/* {errors.references?.[index] && (
                           <p className="text-sm text-red-500">
                             {errors.references[index]?.message}
                           </p>
                         )} */}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className="text-red-500 hover:underline h-full mt-2"
+                        >
+                          Remove
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="text-red-500 hover:underline h-full mt-2"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
-                  <LightButton
-                    type="button"
-                    onClick={() => append("")}
-                    className="text-blue-600 hover:underline me-auto mt-2 mb-3"
-                  >
-                    + {translate("Add_References_Link")}
-                  </LightButton>
-                  {Boolean(get(methods.formState.errors, "references")) && (
-                    <span className="text-red-600 text-sm p-2 block">
-                      {methods.formState.errors["references"]?.message}
-                    </span>
-                  )}
+                    ))}
+                    <LightButton
+                      type="button"
+                      onClick={() => append("")}
+                      className="text-blue-600 hover:underline me-auto mt-2 mb-3"
+                    >
+                      + {translate("Add_References_Link")}
+                    </LightButton>
+                    {Boolean(get(methods.formState.errors, "references")) && (
+                      <span className="text-red-600 text-sm p-2 block">
+                        {methods.formState.errors["references"]?.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex flex-col lg:flex-row gap-3">
                   <div className="flex flex-col w-full gap-1">
@@ -789,7 +796,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               </div>
             </div>
 
-            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3 mb-20">
+            <div className="flex flex-col gap-4 pb-5">
               <div className="pt-2">
                 <div className="flex flex-col md:flex-row gap-6">
                   {!isDisabled ? (
@@ -820,23 +827,23 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 )}
               </div>
               {!isDisabled ? (
-                <div className="flex gap-[10px] mt-2">
-                  <ButtonOutline
+                <div className="flex gap-[10px] ">
+                  <Button
                     type="button"
-                    variant="outline"
-                    className="rounded-[12px]"
+                    className="rounded-[10px] w-fit h-10 px-4 py-2 text-sm font-medium"
                     onClick={() => router?.push("/vendor/campaign")}
                   >
                     {translate("Cancel")}
-                  </ButtonOutline>
-                  <Button
+                  </Button>
+                  <ButtonOutline
                     type="submit"
-                    className="text-white rounded-[12px] text-sm py-2 w-fit"
+                    variant="default"
+                    className="rounded-[10px]"
                   >
                     {!campaignId
                       ? translate("Create_Campaign")
                       : translate("Edit_Campaign")}
-                  </Button>
+                  </ButtonOutline>
                 </div>
               ) : null}
             </div>
