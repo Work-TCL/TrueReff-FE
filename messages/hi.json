@@ -529,5 +529,8 @@
   "End_Date": "समाप्ति तिथि",
   "Creator_Commision": "निर्माता कमीशन",
   "Reference_Links": "संदर्भ लिंक",
-  "Wishlist": "इच्छा सूची"
+  "Wishlist": "इच्छा सूची",
+  "Orders": "ऑर्डर",
+  "Revenues": "राजस्व",
+  "Conversion_Rate": "रूपांतरण दर"
 }

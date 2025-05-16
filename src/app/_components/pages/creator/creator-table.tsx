@@ -32,26 +32,6 @@ const CreatorTable = ({
 }: ICreatorTableProps) => {
   const translate = useTranslations();
   const router = useRouter();
-  const getInstagramView: (channels: IChannel[]) => string = (
-    channels: IChannel[]
-  ) => {
-    let instagram = channels.find(
-      (ele: { channelType: string }) => ele.channelType === "instagram"
-    );
-    return "";
-  };
-  const getYoutubeView: (channels: IChannel[]) => string = (
-    channels: IChannel[]
-  ) => {
-    let youtube = channels.find(
-      (ele: { channelType: string }) => ele.channelType === "youtube"
-    );
-    return youtube
-      ? formatNumber(
-          filter === "5" ? youtube?.lastFiveVideoViews : youtube?.lastMonthViews
-        )
-      : "-";
-  };
   const handleViewCreatorDetails = (id: string) => {
     router.push(`/creator/profile/${id}`);
   };
@@ -83,17 +63,6 @@ const CreatorTable = ({
       },
     },
     {
-      id: "bio",
-      header: () => translate("Creator_Bio"),
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.short_description || row.original.long_description}
-        />
-      ),
-    },
-    {
       id: "categories",
       header: () => translate("Categories"),
       cell: ({ row }) => (
@@ -118,28 +87,57 @@ const CreatorTable = ({
     {
       id: "instagram_view",
       header: () => (
-        <div className="text-center">{translate("Instagram_View")}</div>
+        <div className="text-center">{translate("Followers")}</div>
       ),
       cell: ({ row }) => (
-        <div className="text-center">
-          {getInstagramView(row.original.channels)}
+          <div className="flex gap-2 justify-center">
+          <div className="flex flex-col items-center p-2">
+            <div>
+              <img
+                src="/assets/creator/Instagram-icon.svg"
+                width={30}
+                height={30}
+              />
+            </div>
+              <div>{row?.original?.instagramFollowers}</div>
+          </div>
+          <div className="flex flex-col items-center p-2">
+            <div>
+              <img
+                src="/assets/creator/Youtube-icon.svg"
+                width={30}
+                height={30}
+              />
+            </div>
+              <div>{row?.original?.youtubeFollowers}</div>
+          </div>
         </div>
       ),
     },
+    // {
+    //   id: "youtube_view",
+    //   header: () => (
+    //     <div className="text-center">{translate("Youtube_followers")}</div>
+    //   ),
+    //   cell: ({ row }) => (
+    //     <div className="text-center">
+    //       {getYoutubeView(row.original.channels)}
+    //     </div>
+    //   ),
+    // },
     {
-      id: "youtube_view",
-      header: () => (
-        <div className="text-center">{translate("YouTube_View")}</div>
-      ),
-      cell: ({ row }) => (
-        <div className="text-center">
-          {getYoutubeView(row.original.channels)}
-        </div>
-      ),
+      id: "orders",
+      header: () => translate("Orders"),
+      cell: ({ row }) => row.original.pastSales ?? "",
     },
     {
-      id: "past_sales",
-      header: () => translate("Past_Sales"),
+      id: "revenue",
+      header: () => translate("Revenues"),
+      cell: ({ row }) => row.original.pastSales ?? "",
+    },
+    {
+      id: "conversion_rate",
+      header: () => translate("Conversion_Rate"),
       cell: ({ row }) => row.original.pastSales ?? "",
     },
     {

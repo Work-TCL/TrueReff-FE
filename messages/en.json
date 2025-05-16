@@ -548,5 +548,8 @@
     "REQUESTED_CREATOR_FROM_VENDOR": "Requested vendor",
     "REQUESTED_VENDOR_FROM_CREATOR": "Vendor invited"
   },
-  "Wishlist": "Wishlist"
+  "Wishlist": "Wishlist",
+  "Orders": "Orders",
+  "Revenues": "Revenues",
+  "Conversion_Rate":"Conversion Rate"
 }

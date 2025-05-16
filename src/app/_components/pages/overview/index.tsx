@@ -13,6 +13,7 @@ import { getStatesInfo } from "@/lib/web-api/vendor-dashboard";
 import Loading from "@/app/vendor/loading";
 import { IStateInfo } from "@/lib/types-api/vendor-dashboard";
 import { useTranslations } from "next-intl";
+import Loader from "../../components-common/layout/loader";
 
 export default function Overview() {
   const translate = useTranslations();
@@ -47,7 +48,7 @@ export default function Overview() {
   };
   return (
     <div className="flex flex-col gap-4 md:p-6 p-4  w-full">
-      {mainLoading && <Loading />}
+      {mainLoading && <Loader />}
       <div className="grid grid-cols-1 2xl:grid-cols-5 md:grid-cols-3 gap-4 rounded-[20px] w-full">
         <StatsCard
           title={translate("Active_Collaborations")}

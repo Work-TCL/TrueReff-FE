@@ -21,11 +21,13 @@ export default function RegisterPage() {
           <div className="mt-5">
             <RegisterForm />
           </div>
-          <div className="my-6 border-b text-center">
-            <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-              {translate("Or_Continue_with")}
+          <div className="flex items-center justify-center gap-4 my-6">
+              <div className="flex-1 h-px bg-gray-300" />
+              <span className="text-sm text-gray-500 whitespace-nowrap">
+                {translate("Or_Continue_with")}
+              </span>
+              <div className="flex-1 h-px bg-gray-300" />
             </div>
-          </div>
           <SocialAuth />
           <div className="my-6 text-center">
             <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">

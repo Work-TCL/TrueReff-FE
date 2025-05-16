@@ -20,23 +20,25 @@ import SingleSelect from "../../components-common/single-select";
 import { ViewToggle } from "../../components-common/view-toggle";
 import { SearchInput } from "../../components-common/search-field";
 import CreatorFilter from "./creator-filter";
+import { getCategories } from "@/lib/web-api/auth";
 export interface ICategory {
   _id: string;
   name: string;
+  parentId: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IChannel {
+  followers: number;
   _id: string;
   creatorId: string;
   channelId: string;
   channelName: string;
   handleName: string;
-  token: string;
   channelType: string;
   createdAt: string;
   updatedAt: string;
-  lastFiveVideoViews: number;
-  lastMonthViews: number;
 }
 export interface ICreator {
   _id: string;
@@ -57,8 +59,8 @@ export interface ICreator {
   channels: IChannel[];
   categories?: string;
   tag?: string;
-  instagramViews?: string;
-  youtubeViews?: string;
+  instagramFollowers?: string;
+  youtubeFollowers?: string;
   pastSales?: string;
 }
 const customStyles = {
@@ -84,22 +86,31 @@ export default function CreatorList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
 
   const initialValue = { show: false, creatorId: "" };
   const [isOpen, setIsOpen] = useState(initialValue);
   const [pageSize] = useState(20);
-  const filterOption = [
-    { value: "5", label: "Last 5 Videos" },
-    { value: "30", label: "Last 1 Month" },
-  ];
-
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories({ page: 0, limit: 0 });
+      const data = response?.data?.data || [];
+      setCategories(data);
+      setParentCategory(data.filter((ele) => ele?.parentId === null));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
   const getInstagramView: (channels: IChannel[]) => string = (
     channels: IChannel[]
   ) => {
     let instagram = channels.find(
       (ele: { channelType: string }) => ele.channelType === "instagram"
     );
-    return "";
+    return instagram
+      ? formatNumber(instagram?.followers)
+      : "-";
   };
   const getYoutubeView: (channels: IChannel[]) => string = (
     channels: IChannel[]
@@ -108,9 +119,7 @@ export default function CreatorList() {
       (ele: { channelType: string }) => ele.channelType === "youtube"
     );
     return youtube
-      ? formatNumber(
-          filter === "5" ? youtube?.lastFiveVideoViews : youtube?.lastMonthViews
-        )
+      ? formatNumber(youtube?.followers)
       : "-";
   };
   // Get Creator list
@@ -124,10 +133,8 @@ export default function CreatorList() {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/auth/creator/list?page=${page}&limit=${pageSize}${
-            searchValue ? `&search=${searchValue}` : ""
-          }${filterState?.state ? `&state=${filterState?.state}` : ""}${
-            filterState?.city ? `&city=${filterState?.city}` : ""
+          `/auth/creator/list?page=${page}&limit=${pageSize}${searchValue ? `&search=${searchValue}` : ""
+          }${filterState?.category?.length > 0 ? `&category=${filterState?.category?.join(",")}` : ""}${filterState?.sub_category?.length > 0 ? `&subcategory=${filterState?.sub_category?.join(",")}` : ""
           }`
         );
         if (response.status === 200) {
@@ -142,10 +149,10 @@ export default function CreatorList() {
                   ?.map((ele: { name: string }) => ele?.name)
                   .join(",");
                 ele.tag = ele.tags?.join(",");
-                ele.instagramViews = getInstagramView(ele.channels);
-                ele.youtubeViews = getYoutubeView(ele.channels);
+                ele.instagramFollowers = getInstagramView(ele.channels);
+                ele.youtubeFollowers = getYoutubeView(ele.channels);
                 //@ts-ignore
-                ele.pastSales = ele?.pastSales || "";
+                // ele.pastSales = ele?.pastSales || "";
                 return { ...ele };
               });
               setCreators([...result]);
@@ -175,6 +182,7 @@ export default function CreatorList() {
 
   useEffect(() => {
     getCreatorList(currentPage);
+    fetchCategory();
   }, []);
   const handlePageChange = (page: number) => {
     page !== currentPage && getCreatorList(page, true, search);
@@ -206,7 +214,7 @@ export default function CreatorList() {
               placeholder={translate("Search_creator")}
             />
             <div className="flex items-center gap-[10px] md:w-fit w-full">
-              <CreatorFilter onChange={handleOnFilter} />
+              <CreatorFilter categories={categories} parentCategory={parentCategory} onChange={handleOnFilter} />
               <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>

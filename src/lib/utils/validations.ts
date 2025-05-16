@@ -175,7 +175,7 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
   website: Yup.string().url().required("Website is required"),
   type_of_business: Yup.string().required("Type of business is required"),
   profile_image: Yup.string().required("Profile Image is required"),
-  banner_image: Yup.string().required("Banner Image is required"),
+  banner_image: Yup.string().nullable(),
   category: Yup.array()
     .of(
       Yup.object().shape({

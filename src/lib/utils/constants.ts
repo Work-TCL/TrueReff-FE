@@ -96,7 +96,7 @@ export function formatNumber(num: number = 0) {
   } else if (num >= 1_000) {
     return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
   }
-  return num === 0 ? "" : num.toString();
+  return num === 0 ? "-" : num.toString();
 }
 
 export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
@@ -107,7 +107,10 @@ export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
   }
   return true;
 };
-
+export interface IOption { 
+  label: string; 
+  value: any;
+}
 export const indianStates: string[] = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
@@ -139,7 +142,7 @@ export const indianStates: string[] = [
   "West Bengal",
 ];
 
-export const VIDEO_TYPE: { label: string; value: string }[] = [
+export const VIDEO_TYPE: IOption[] = [
   {
     label: "UGC",
     value: "UGC",
@@ -1437,5 +1440,45 @@ export const businessTypes = [
   "Pvt Ltd",
   "Partnership",
 ];
+
+export const daysFilter:IOption[] = [
+  {label:"Past 7 Days",value:"7"},
+  {label:"Past 28 Days",value:"28"},
+  {label:"Past 90 Days",value:"90"},
+  {label:"Past 365 Days",value:"365"},
+];
+
+export const sortOptions:IOption[] = [
+  { label: "Top to Bottom", value: "desc" },
+  { label: "Bottom to Top", value: "asc" },
+];
+
+export const minFollowersOptions:IOption[] = [
+  { label: "1K+", value: 1000 },
+  { label: "5K+", value: 5000 },
+  { label: "10K+", value: 10000 },
+  { label: "50K+", value: 50000 },
+  { label: "100K+", value: 100000 },
+  { label: "500K+", value: 500000 },
+  { label: "1M+", value: 1000000 },
+];
+
+export const minOrdersOptions:IOption[] = [
+  { label: "10+", value: 10 },
+  { label: "50+", value: 50 },
+  { label: "100+", value: 100 },
+  { label: "500+", value: 500 },
+  { label: "1000+", value: 1000 },
+];
+
+export const minRevenueOptions:IOption[] = [
+  { label: "$100+", value: 100 },
+  { label: "$500+", value: 500 },
+  { label: "$1,000+", value: 1000 },
+  { label: "$5,000+", value: 5000 },
+  { label: "$10,000+", value: 10000 },
+  { label: "$50,000+", value: 50000 },
+];
+
 
 export const gender: string[] = ["Male", "Female"];
