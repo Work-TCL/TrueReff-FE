@@ -194,7 +194,7 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
     )
     .min(1, "Sub-category is required")
     .required("Sub-Category is required"),
-    contacts: Yup.array()
+  contacts: Yup.array()
     .of(
       Yup.object().shape({
         name: Yup.string().test(
@@ -244,7 +244,8 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
     .min(1, "At least one contact is required"), // Ensure at least one contact
 });
 
-export interface IVendorRegisterFirstStepSchema extends Yup.Asserts<typeof vendorRegisterFirstStepSchema> {}
+export interface IVendorRegisterFirstStepSchema
+  extends Yup.Asserts<typeof vendorRegisterFirstStepSchema> {}
 export const vendorRegisterSecondStepSchema = Yup.object().shape({
   gst_number: Yup.string()
     .required("GST Number is required")
@@ -265,11 +266,15 @@ export const vendorRegisterSecondStepSchema = Yup.object().shape({
     ),
   gst_certificate: Yup.string().required("GST Certificate is required"),
   pan_number: Yup.string()
-  .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN number (e.g. ABCDE1234F)")
-  .required("PAN number is required"),
+    .matches(
+      /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+      "Invalid PAN number (e.g. ABCDE1234F)"
+    )
+    .required("PAN number is required"),
 });
 
-export interface IVendorRegisterSecondStepSchema extends Yup.Asserts<typeof vendorRegisterSecondStepSchema> {}
+export interface IVendorRegisterSecondStepSchema
+  extends Yup.Asserts<typeof vendorRegisterSecondStepSchema> {}
 export const preFormSchema = Yup.object().shape({
   business_name: Yup.string()
     .required("Business Name is required")
@@ -360,11 +365,11 @@ export const preFormSchema = Yup.object().shape({
     .min(1, "At least one channel is required"),
 });
 export const vendorRegisterThirdStepSchema = Yup.object().shape({
-  shopify_store_id: Yup.string()
-    .required("Shopify store id is required")
+  shopify_store_id: Yup.string().required("Shopify store id is required"),
 });
 
-export interface IVendorRegisterThirdStepSchema extends Yup.Asserts<typeof vendorRegisterThirdStepSchema> {}
+export interface IVendorRegisterThirdStepSchema
+  extends Yup.Asserts<typeof vendorRegisterThirdStepSchema> {}
 export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
 
 export const creatorFormSchema = Yup.object().shape({
@@ -431,7 +436,7 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
   business_name: Yup.string()
     .required("Business Name is required")
     .min(2, "Business Name must be at least 2 characters"),
-    zip_code: Yup.string()
+  zip_code: Yup.string()
     .required("Pin code is required")
     .matches(/^[0-9]{6}$/, "Pin code must be a valid 6-digit number"),
   address: Yup.string().required("Address is required"),
@@ -779,6 +784,10 @@ export const campaignProductValidationSchema = Yup.object().shape({
   name: Yup.string().required("Campaign name is required"),
   description: Yup.string().required("Description is required"),
   campaignLifeTime: Yup.boolean().default(false).required(),
+  tags: Yup.array()
+    .of(Yup.string().required("Each tag must be a string"))
+    .min(1, "At least one tag is required")
+    .required("Tags are required"),
   category: Yup.array()
     .of(
       Yup.object().shape({
@@ -798,24 +807,17 @@ export const campaignProductValidationSchema = Yup.object().shape({
     .min(1, "Sub-category is required")
     .required("Sub-Category is required"), // Ensure at least one sub-category is selected
   startDate: Yup.date()
-    .nullable()
-    .when("campaignLifeTime", {
-      is: false,
-      then: (schema) =>
-        schema
-          .required("Start date is required")
-          .test(
-            "is-future-date",
-            "Start date must be in the future (not today)",
-            (value) => {
-              if (!value) return false;
-              const today = new Date();
-              today.setHours(0, 0, 0, 0);
-              return value > today;
-            }
-          ),
-      otherwise: (schema) => schema.notRequired().nullable(),
-    }),
+    .required("Start date is required")
+    .test(
+      "is-future-date",
+      "Start date must be in the future (not today)",
+      (value) => {
+        if (!value) return false;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return value > today;
+      }
+    ),
 
   endDate: Yup.date()
     .nullable()
@@ -834,13 +836,18 @@ export const campaignProductValidationSchema = Yup.object().shape({
               return new Date(endDate) > new Date(startDate);
             }
           ),
-      otherwise: (schema) => schema.notRequired().nullable(),
+      otherwise: (schema) => schema.nullable(),
     }),
 
   productId: Yup.string().required("Product is required"),
-  tearmAndCondition: Yup.boolean().oneOf([true]).required(),
+  tearmAndCondition: Yup.boolean()
+    .oneOf([true], "Tearm & Condition required")
+    .required(),
   couponCode: Yup.string().optional(),
-  videoType: Yup.string().required(),
+  videoType: Yup.array()
+    .of(Yup.string().required("Each video type is required"))
+    .min(1, "Select at least one video type")
+    .required("Video type is required"),
   notes: Yup.string().required(),
   references: Yup.array()
     .of(Yup.string().url("Invalid URL").required("Reference link is required"))

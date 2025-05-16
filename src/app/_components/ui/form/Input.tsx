@@ -28,6 +28,7 @@ interface IInput
   }[];
   menuPortalTarget?: any;
   lableClassName?: string;
+  inputClassName?: string;
 }
 
 export const inputStyle =
@@ -45,7 +46,8 @@ export default function Input({
   Icon,
   hideError,
   lableClassName,
-  menuPortalTarget = typeof document !== "undefined" ? document.body:null,
+  inputClassName,
+  menuPortalTarget = typeof document !== "undefined" ? document.body : null,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -179,7 +181,7 @@ export default function Input({
               <FaRegCalendarAlt />
             </span>
             <DatePicker
-              {...field}
+              onChange={field?.onChange}
               selected={field.value}
               className={cn(inputStyle, "!pl-10")}
               placeholderText={placeholder}
@@ -259,7 +261,7 @@ export default function Input({
               onKeyDown={addTag}
               onBlur={field.onBlur}
               placeholder={placeholder}
-              className="w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2"
+              className={cn('w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2',inputClassName)}
               {...props}
             />
             <Tag
@@ -398,19 +400,19 @@ export default function Input({
       ...base,
       fontSize: "0.875rem ", // Tailwind text-sm
       color: "#9CA3AF", // Tailwind slate-400
-      fontWeight: 'normal',
+      fontWeight: "normal",
     }),
     control: (base: any, state: any) => {
-      return ({
+      return {
         ...base,
         height: "54px",
-        borderRadius: "8px"
-      })
+        borderRadius: "8px",
+      };
     },
     menu: (base: any) => ({
       ...base,
-      zIndex: 9999
-    })
+      zIndex: 9999,
+    }),
   };
   const renderMultiSelectInput = () => (
     <Controller
@@ -422,14 +424,16 @@ export default function Input({
           {getLabel()}
           <div className="relative">
             <Select
-            styles={customStyles}
+              styles={customStyles}
               isMulti
               options={options}
               className="basic-multi-select focus:outline-none focus:shadow-none"
               classNamePrefix="select"
               {...field}
               isDisabled={props?.disabled}
-              menuPortalTarget={typeof document !== "undefined" ? document.body:null} // Renders the dropdown outside of the current scrollable container
+              menuPortalTarget={
+                typeof document !== "undefined" ? document.body : null
+              } // Renders the dropdown outside of the current scrollable container
               menuPosition="fixed" // Makes the dropdown position fixed
               autoFocus={false} // Prevents focus behavior causing auto-scroll
             />
@@ -456,7 +460,9 @@ export default function Input({
               classNamePrefix="select"
               {...field}
               isDisabled={props?.disabled}
-              menuPortalTarget={typeof document !== "undefined" ? document.body:null} // render dropdown outside the parent container
+              menuPortalTarget={
+                typeof document !== "undefined" ? document.body : null
+              } // render dropdown outside the parent container
               styles={{
                 menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                 menu: (base) => ({ ...base, zIndex: 9999 }),
@@ -512,7 +518,13 @@ export default function Input({
                 classNamePrefix="select"
                 className="react-select-container"
                 isDisabled={props?.disabled}
-                menuPortalTarget={menuPortalTarget ? (typeof document !== "undefined") ? document.body:null:null}
+                menuPortalTarget={
+                  menuPortalTarget
+                    ? typeof document !== "undefined"
+                      ? document.body
+                      : null
+                    : null
+                }
                 menuPosition="fixed"
                 autoFocus={false}
                 styles={{

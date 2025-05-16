@@ -108,7 +108,7 @@ export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
   return true;
 };
 
-export const indianStates:string[] = [
+export const indianStates: string[] = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
   "Assam",
@@ -136,13 +136,51 @@ export const indianStates:string[] = [
   "Tripura",
   "Uttar Pradesh",
   "Uttarakhand",
-  "West Bengal"
+  "West Bengal",
 ];
-export const cities:any = {
-  "Andaman and Nicobar Islands": [
-    "Port Blair"
-  ],
-  "Haryana": [
+
+export const VIDEO_TYPE: { label: string; value: string }[] = [
+  {
+    label: "UGC",
+    value: "UGC",
+  },
+  {
+    label: "Product Reviews",
+    value: "Product Reviews",
+  },
+  {
+    label: "Unboxing Videos",
+    value: "Unboxing Videos",
+  },
+  {
+    label: "How-To / Tutorials",
+    value: "How-To / Tutorials",
+  },
+  {
+    label: "Comparison Videos",
+    value: "Comparison Videos",
+  },
+  {
+    label: "Top 5 / Top 10 Lists",
+    value: "Top 5 / Top 10 Lists",
+  },
+  {
+    label: "Vlogs with Product Integration",
+    value: "Vlogs with Product Integration",
+  },
+  {
+    label: "Challenges or Trends",
+    value: "Challenges or Trends",
+  },
+  {
+    label: "Testimonials / Personal Experience",
+    value: "Testimonials / Personal Experience",
+  },
+];
+
+export const cities: any = {
+  "Andaman and Nicobar Islands": ["Port Blair"],
+  Haryana: [
     "Faridabad",
     "Gurgaon",
     "Hisar",
@@ -179,7 +217,7 @@ export const cities:any = {
     "Mahendragarh",
     "Ratia",
     "Rania",
-    "Sarsod"
+    "Sarsod",
   ],
   "Tamil Nadu": [
     "Chennai",
@@ -293,7 +331,7 @@ export const cities:any = {
     "Sivagiri",
     "Punjaipugalur",
     "Padmanabhapuram",
-    "Thirupuvanam"
+    "Thirupuvanam",
   ],
   "Madhya Pradesh": [
     "Indore",
@@ -377,9 +415,9 @@ export const cities:any = {
     "Rau",
     "Mhowgaon",
     "Vijaypur",
-    "Narsinghgarh"
+    "Narsinghgarh",
   ],
-  "Jharkhand": [
+  Jharkhand: [
     "Dhanbad",
     "Ranchi",
     "Jamshedpur",
@@ -406,20 +444,16 @@ export const cities:any = {
     "Mihijam",
     "Patratu",
     "Lohardaga",
-    "Tenu dam-cum-Kathhara"
+    "Tenu dam-cum-Kathhara",
   ],
-  "Mizoram": [
-    "Aizawl",
-    "Lunglei",
-    "Saiha"
-  ],
-  "Nagaland": [
+  Mizoram: ["Aizawl", "Lunglei", "Saiha"],
+  Nagaland: [
     "Dimapur",
     "Kohima",
     "Zunheboto",
     "Tuensang",
     "Wokha",
-    "Mokokchung"
+    "Mokokchung",
   ],
   "Himachal Pradesh": [
     "Shimla",
@@ -428,16 +462,16 @@ export const cities:any = {
     "Nahan",
     "Sundarnagar",
     "Palampur",
-    "Kullu"
+    "Kullu",
   ],
-  "Tripura": [
+  Tripura: [
     "Agartala",
     "Udaipur",
     "Dharmanagar",
     "Pratapgarh",
     "Kailasahar",
     "Belonia",
-    "Khowai"
+    "Khowai",
   ],
   "Andhra Pradesh": [
     "Visakhapatnam",
@@ -522,9 +556,9 @@ export const cities:any = {
     "Puttur",
     "Renigunta",
     "Rajam",
-    "Srisailam Project (Right Flank Colony) Township"
+    "Srisailam Project (Right Flank Colony) Township",
   ],
-  "Punjab": [
+  Punjab: [
     "Ludhiana",
     "Patiala",
     "Amritsar",
@@ -578,12 +612,10 @@ export const cities:any = {
     "Qadian",
     "Sujanpur",
     "Mukerian",
-    "Talwara"
+    "Talwara",
   ],
-  "Chandigarh": [
-    "Chandigarh"
-  ],
-  "Rajasthan": [
+  Chandigarh: ["Chandigarh"],
+  Rajasthan: [
     "Jaipur",
     "Jodhpur",
     "Bikaner",
@@ -660,9 +692,9 @@ export const cities:any = {
     "Mandawa",
     "Pindwara",
     "Mandalgarh",
-    "Takhatgarh"
+    "Takhatgarh",
   ],
-  "Assam": [
+  Assam: [
     "Guwahati",
     "Silchar",
     "Dibrugarh",
@@ -687,9 +719,9 @@ export const cities:any = {
     "Mangaldoi",
     "Silapathar",
     "Mariani",
-    "Marigaon"
+    "Marigaon",
   ],
-  "Odisha": [
+  Odisha: [
     "Bhubaneswar",
     "Cuttack",
     "Raurkela",
@@ -723,9 +755,9 @@ export const cities:any = {
     "Soro",
     "Malkangiri",
     "Rairangpur",
-    "Tarbha"
+    "Tarbha",
   ],
-  "Chhattisgarh": [
+  Chhattisgarh: [
     "Raipur",
     "Bhilai Nagar",
     "Korba",
@@ -744,7 +776,7 @@ export const cities:any = {
     "Tilda Newra",
     "Mungeli",
     "Manendragarh",
-    "Sakti"
+    "Sakti",
   ],
   "Jammu and Kashmir": [
     "Srinagar",
@@ -755,9 +787,9 @@ export const cities:any = {
     "KathUrban Agglomeration",
     "Rajauri",
     "Punch",
-    "Udhampur"
+    "Udhampur",
   ],
-  "Karnataka": [
+  Karnataka: [
     "Bengaluru",
     "Hubli-Dharwad",
     "Belagavi",
@@ -837,15 +869,10 @@ export const cities:any = {
     "Mundargi",
     "Sadalagi",
     "Piriyapatna",
-    "Adyar"
+    "Adyar",
   ],
-  "Manipur": [
-    "Imphal",
-    "Thoubal",
-    "Lilong",
-    "Mayang Imphal"
-  ],
-  "Kerala": [
+  Manipur: ["Imphal", "Thoubal", "Lilong", "Mayang Imphal"],
+  Kerala: [
     "Thiruvananthapuram",
     "Kochi",
     "Kozhikode",
@@ -896,22 +923,12 @@ export const cities:any = {
     "Panniyannur",
     "Guruvayoor",
     "Puthuppally",
-    "Panamattom"
+    "Panamattom",
   ],
-  "Delhi": [
-    "Delhi",
-    "New Delhi"
-  ],
-  "Dadra and Nagar Haveli": [
-    "Silvassa"
-  ],
-  "Puducherry": [
-    "Pondicherry",
-    "Karaikal",
-    "Yanam",
-    "Mahe"
-  ],
-  "Uttarakhand": [
+  Delhi: ["Delhi", "New Delhi"],
+  "Dadra and Nagar Haveli": ["Silvassa"],
+  Puducherry: ["Pondicherry", "Karaikal", "Yanam", "Mahe"],
+  Uttarakhand: [
     "Dehradun",
     "Hardwar",
     "Haldwani-cum-Kathgodam",
@@ -929,7 +946,7 @@ export const cities:any = {
     "Pauri",
     "Nagla",
     "Sitarganj",
-    "Bageshwar"
+    "Bageshwar",
   ],
   "Uttar Pradesh": [
     "Lucknow",
@@ -1049,9 +1066,9 @@ export const cities:any = {
     "Pukhrayan",
     "Obra",
     "Niwai",
-    "Mirzapur"
+    "Mirzapur",
   ],
-  "Bihar": [
+  Bihar: [
     "Patna",
     "Gaya",
     "Bhagalpur",
@@ -1121,9 +1138,9 @@ export const cities:any = {
     "Maharajganj",
     "Silao",
     "Barh",
-    "Asarganj"
+    "Asarganj",
   ],
-  "Gujarat": [
+  Gujarat: [
     "Ahmedabad",
     "Surat",
     "Vadodara",
@@ -1196,9 +1213,9 @@ export const cities:any = {
     "Lathi",
     "Adalaj",
     "Chhapra",
-    "Gandhinagar"
+    "Gandhinagar",
   ],
-  "Telangana": [
+  Telangana: [
     "Hyderabad",
     "Warangal",
     "Nizamabad",
@@ -1238,21 +1255,12 @@ export const cities:any = {
     "Yellandu",
     "Manuguru",
     "Kyathampalle",
-    "Nagarkurnool"
+    "Nagarkurnool",
   ],
-  "Meghalaya": [
-    "Shillong",
-    "Tura",
-    "Nongstoin"
-  ],
-  "Himachal Praddesh": [
-    "Manali"
-  ],
-  "Arunachal Pradesh": [
-    "Naharlagun",
-    "Pasighat"
-  ],
-  "Maharashtra": [
+  Meghalaya: ["Shillong", "Tura", "Nongstoin"],
+  "Himachal Praddesh": ["Manali"],
+  "Arunachal Pradesh": ["Naharlagun", "Pasighat"],
+  Maharashtra: [
     "Mumbai",
     "Pune",
     "Nagpur",
@@ -1372,14 +1380,9 @@ export const cities:any = {
     "Mhaswad",
     "Loha",
     "Nandgaon",
-    "Warud"
+    "Warud",
   ],
-  "Goa": [
-    "Marmagao",
-    "Panaji",
-    "Margao",
-    "Mapusa"
-  ],
+  Goa: ["Marmagao", "Panaji", "Margao", "Mapusa"],
   "West Bengal": [
     "Kolkata",
     "Siliguri",
@@ -1424,17 +1427,15 @@ export const cities:any = {
     "Mathabhanga",
     "Monoharpur",
     "Srirampore",
-    "Adra"
-  ]
-}
+    "Adra",
+  ],
+};
 
 export const businessTypes = [
-  "Proprietorship", 
+  "Proprietorship",
   "LLP",
   "Pvt Ltd",
-  "Partnership"
-]
+  "Partnership",
+];
 
-export const gender:string[] = [
-  "Male","Female"
-]
+export const gender: string[] = ["Male", "Female"];

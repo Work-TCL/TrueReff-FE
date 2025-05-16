@@ -1,4 +1,7 @@
 {
+  "SearchBrand": "Search Brand",
+  "SelectCity": "Select City",
+  "SelectStatus": "Select Status",
   "notFound": {
     "notfoundTitle": "Page not found",
     "notfoundDesc": "Sorry, we couldn’t find the page you’re looking for.",
@@ -173,6 +176,7 @@
   "Omni_Channel": "Omni Channel",
   "Campaign_Details_Form": "Campaign Details Form",
   "Start_Campaign": "Start Campaign",
+  "Create_Campaign": "Create Campaign",
   "Edit_Campaign": "Edit Campaign",
   "Campaign_Name": "Campaign Name",
   "Type_campaign_name_here": "Type campaign name here",
@@ -528,9 +532,11 @@
   "Shopify_Store_Connect": "Shopify Store Connect",
   "Back_to_dashboard": "Go to dashboard",
   "Shopify_Store_connected": "Shopify Store connected",
+  "Creator_Commision": "Creator Commision",
+  "Never_Expires": "Never Expires",
   "End_Date": "End Date",
-  "Creator_Commision":"Creator Commision",
-  "statusMessage":{
+  "Reference_Links": "Reference_Links",
+  "statusMessage": {
     "REQUESTED": "Request Sent",
     "PENDING": "Collaboration Pending",
     "REJECTED": "Request Rejected",
@@ -542,5 +548,5 @@
     "REQUESTED_CREATOR_FROM_VENDOR": "Requested vendor",
     "REQUESTED_VENDOR_FROM_CREATOR": "Vendor invited"
   },
-  "Wishlist":"Wishlist"
+  "Wishlist": "Wishlist"
 }
