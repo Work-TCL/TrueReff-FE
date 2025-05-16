@@ -189,26 +189,21 @@ const PreviewCard = ({
   onRemove: () => void;
   disabled: boolean;
 }) => {
-  return type === "image" ? (
-    <div className="relative w-24 h-24 hover:bg-gray-100 cursor-pointer rounded overflow-hidden">
+  return (
+    <div className="relative w-32 h-32 rounded overflow-hidden hover:bg-gray-100 cursor-pointer">
       {type === "image" ? (
-        <img src={src} alt="preview" className="w-full h-full object-cover" />
+        <img
+          src={src}
+          alt="preview"
+          className="w-full h-full object-cover rounded"
+        />
       ) : (
-        <video src={src} className="w-full h-full object-cover" controls />
+        <video
+          src={src}
+          className="w-full h-full object-cover rounded"
+          controls
+        />
       )}
-      {!disabled && (
-        <button
-          type="button"
-          onClick={onRemove}
-          className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-        >
-          ×
-        </button>
-      )}
-    </div>
-  ) : (
-    <div className="relative mt-2 hover:bg-gray-100 cursor-pointer w-fit">
-      <video src={src} controls className="w-64 max-h-40 rounded" />
       {!disabled && (
         <button
           type="button"

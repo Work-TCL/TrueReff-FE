@@ -261,7 +261,10 @@ export default function Input({
               onKeyDown={addTag}
               onBlur={field.onBlur}
               placeholder={placeholder}
-              className={cn('w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2',inputClassName)}
+              className={cn(
+                "w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2",
+                inputClassName
+              )}
               {...props}
             />
             <Tag
@@ -356,6 +359,37 @@ export default function Input({
             {...field}
             {...props}
           />
+          {getError()}
+        </div>
+      )}
+    />
+  );
+
+  const renderNewSelectInput = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative">
+            <Select
+              styles={customStyles}
+              options={options}
+              className="basic-multi-select focus:outline-none focus:shadow-none"
+              classNamePrefix="select"
+              {...field}
+              onChange={(v) => setValue(name, v?.value)}
+              value={options?.find((v) => v?.value === field?.value)}
+              isDisabled={props?.disabled}
+              menuPortalTarget={
+                typeof document !== "undefined" ? document.body : null
+              } // Renders the dropdown outside of the current scrollable container
+              menuPosition="fixed" // Makes the dropdown position fixed
+              autoFocus={false} // Prevents focus behavior causing auto-scroll
+            />
+          </div>
           {getError()}
         </div>
       )}
@@ -616,7 +650,7 @@ export default function Input({
                 >
                   <input
                     type="checkbox"
-                    className="mr-3 mt-1 w-4 h-4"
+                    className="mr-3 mt-1 w-4 h-4 cursor-pointer"
                     checked={field?.value}
                     {...field}
                     {...props}
@@ -631,6 +665,8 @@ export default function Input({
 
       case "select":
         return renderSelectInput();
+      case "react-select":
+        return renderNewSelectInput();
       case "select-multiple":
         return renderMultiSelectInput();
 

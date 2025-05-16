@@ -39,7 +39,7 @@ import { getCategories } from "@/lib/web-api/auth";
 import CreatorMaterial from "./_components/creator-material";
 import CampaignProductView from "./_components/product-view";
 import { VIDEO_TYPE } from "@/lib/utils/constants";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, CircleX } from "lucide-react";
 
 const Input = dynamic(() => import("../../ui/form/Input"), { ssr: false });
 
@@ -90,7 +90,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
-  const [showDiscountSection, setShowDiscountSection] = useState(true);
+  const [showDiscountSection, setShowDiscountSection] = useState(false);
 
   const fetchCategory = async () => {
     try {
@@ -113,9 +113,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   };
 
   const methods = useForm<ICampaignProductValidationSchema>({
-    defaultValues: {
-      references: [""],
-    },
+    defaultValues: {},
     //@ts-ignore
     resolver: productId
       ? yupResolver(campaignProductValidationSchema)
@@ -146,16 +144,20 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       formData.append("description", data.description);
       formData.append("channelName", "shopify");
       // formData.append("videoType", );
-      formData.append("notes", data?.notes);
-      formData.append("discount_type", data.discount_type);
-      formData.append("discount_value", data.discount_value.toString());
+      if (data?.notes) formData.append("notes", data?.notes);
+      if (data.discount_type)
+        formData.append("discount_type", data.discount_type);
+      if (data.discount_value)
+        formData.append("discount_value", data.discount_value.toString());
       formData.append("productId", selectedProduct?.id || "");
       //@ts-ignore
       formData.append("commission", data.commission);
       formData.append("commission_type", data?.commission_type);
 
       //@ts-ignore
-      formData.append("lifeTime", data?.campaignLifeTime);
+      formData.append("freeProduct", data?.freeProduct);
+      //@ts-ignore
+      formData.append("lifeTime", Boolean(data?.campaignLifeTime));
       formData.append("startDate", String(data.startDate));
       if (!data?.campaignLifeTime) {
         formData.append("endDate", String(data.endDate));
@@ -218,7 +220,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       if (response?.status === 201 || response?.status === 200) {
         toast.success(response?.message);
         methods?.reset();
-        router?.push("/vendor/products/channel-products");
+        router?.push("/vendor/products");
         return true;
       }
       throw response;
@@ -269,7 +271,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       );
 
       // productId({ ...product, media: images });
-      handleProductSelect({ ...product, media: images });
+      handleProductSelect({
+        ...product,
+        media: [...images],
+      });
     } catch (error: any) {
       toast.error(error?.message || "Product Fetch Failed.");
     } finally {
@@ -312,11 +317,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    if (fields.length === 0) {
-      append(""); // adds an empty string if none exists
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (fields.length === 0) {
+  //     append(""); // adds an empty string if none exists
+  //   }
+  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -348,8 +353,8 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
   useEffect(() => {
     console.log("productId", params, productId, productId);
-    if (productId) {
-      (async () => {
+    if (productId && !campaignData && categories) {
+      setTimeout(async () => {
         setLoading(true);
         try {
           const response = await fetchProductById();
@@ -374,6 +379,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
           methods.setValue("description", response?.description || "-");
           methods.setValue("notes", response?.notes);
           methods.setValue("campaignLifeTime", Boolean(response?.lifeTime));
+          methods.setValue("freeProduct", Boolean(response?.freeProduct));
           methods.setValue("videoType", response?.videoType);
           methods.setValue("commission", response?.commission);
           methods.setValue("commission_type", response?.commission_type);
@@ -409,9 +415,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         } finally {
           setLoading(false);
         }
-      })();
+      }, 0);
     }
-  }, [productId]);
+  }, [productId, categories]);
 
   const startDateRaw = methods.watch("startDate");
   const startDate = startDateRaw ? new Date(startDateRaw) : null;
@@ -443,16 +449,17 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         className="flex flex-col gap-5 h-full px-4 py-3"
       >
         {loading && <Loader />}
-        <div className="flex justify-between items-center flex-wrap gap-3">
+        {/* <div className="flex justify-between items-center flex-wrap gap-3">
           <div className="md:text-[20px] text-base text-500">
             {translate("Campaign_Details_Form")}
           </div>
-        </div>
+        </div> */}
         <div className="flex flex-col lg:flex-row gap-5 w-full">
           <div className="flex flex-col gap-5 w-full">
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
               <div className="text-lg font-medium text-gray-500">
-                {translate("General_Information")}
+                {/* {translate("General_In/formation")} */}
+                {translate("Product_Information")}
               </div>
               <CampaignProductView
                 images={
@@ -474,22 +481,26 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 }
                 totalInventory={selectedProduct?.totalInventory}
               />
-              <div className="grid md:grid-cols-2 grid-cols-1 gap-3 mb-2">
-                {/* <div className="md:col-span-2 col-span-2"> */}
-                <Input
-                  label={translate("Tags")}
-                  name="tags"
-                  type="renderTagInputUpdated"
-                  placeholder={translate("Enter_your_tags")}
-                  inputClassName="h-[50]"
-                />
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2
+"
+              >
+                <div className="md:col-span-1 col-span-2">
+                  <Input
+                    label={translate("Tags")}
+                    name="tags"
+                    type="renderTagInputUpdated"
+                    placeholder={translate("Enter_your_tags")}
+                    inputClassName="h-[50]"
+                  />
+                </div>
 
-                <div className="flex flex-col">
+                <div className="md:col-span-1 col-span-2">
                   <label className={cn(labelStyle)}>
                     {translate("Campaign_Channels")}
                   </label>
-                  <div className="flex items-center h-full">
-                    <div className="flex flex-col md:flex-row gap-6">
+                  <div className="py-3">
+                    <div className="flex flex-row flex-wrap lg:gap-6 gap-3">
                       {!isDisabled ? (
                         <div className="flex gap-1 cursor-pointer">
                           <Input
@@ -554,7 +565,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                         : null}
                     </div>
                     {Boolean(get(methods.formState.errors, "channels")) && (
-                      <span className="text-red-600 text-sm p-2 block">
+                      <span className="text-red-600 text-sm p-2 block mt-2">
                         {methods.formState.errors["channels"]?.message}
                       </span>
                     )}
@@ -619,7 +630,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 {/* // )} */}
 
                 <div className="flex flex-col gap-2 cursor-pointer">
-                  <label className={cn(labelStyle, "opacity-0")}>
+                  <label
+                    className={cn(labelStyle, "opacity-0 md:block hidden")}
+                  >
                     {translate("CampaignLifeTime")}
                   </label>
                   <label className="mt-3 text-xs flex align-middle gap-2 text-gray-600">
@@ -682,7 +695,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       <button
                         key={option.value}
                         type="button"
-                        onClick={() => toggleChip(option.value)}
+                        onClick={() => {
+                          toggleChip(option.value);
+                          methods.trigger("videoType");
+                        }}
                         className={cn(
                           "text-sm px-3 py-1 rounded-full border transition",
                           methods.watch("videoType")?.includes(option?.value)
@@ -695,6 +711,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       </button>
                     ))}
                   </div>
+                  {Boolean(get(methods.formState.errors, "videoType")) && (
+                    <span className="text-red-600 text-sm p-2 block">
+                      {methods.formState.errors["videoType"]?.message}
+                    </span>
+                  )}
                 </div>
                 <div className="flex flex-col w-full gap-1">
                   <CreatorMaterial
@@ -712,9 +733,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     {fields.map((field, index) => (
                       <div
                         key={field.id}
-                        className="flex items-center gap-3 mb-1 md:w-[50%]"
+                        className="flex items-center gap-3 mb-1 lg:w-[50%]"
                       >
-                        <label className={cn(labelStyle)}>{index + 1}.</label>
+                        <label className={cn(labelStyle, "py-[15px] h-fit")}>
+                          {index + 1}.
+                        </label>
                         <div className="flex-1">
                           <Input
                             name={`references.${index}`}
@@ -731,16 +754,19 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                         <button
                           type="button"
                           onClick={() => remove(index)}
-                          className="text-red-500 hover:underline h-full mt-2"
+                          className="text-red-500 hover:underline h-fit my-[15px] cursor-pointer"
                         >
-                          Remove
+                          <span className="md:inline-block hidden">Remove</span>
+                          <span className="md:hidden">
+                            <CircleX />
+                          </span>
                         </button>
                       </div>
                     ))}
                     <LightButton
                       type="button"
                       onClick={() => append("")}
-                      className="text-blue-600 hover:underline me-auto mt-2 mb-3"
+                      className="text-blue-600 me-auto mt-2 mb-3 cursor-pointer"
                     >
                       + {translate("Add_References_Link")}
                     </LightButton>
@@ -787,7 +813,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   <div className="flex flex-col w-full gap-1">
                     <Input
                       name="commission_type"
-                      type="select"
+                      type="react-select"
                       placeholder={translate("Select_Commission_Type")}
                       label={translate("Commission_Type")}
                       options={[
@@ -813,69 +839,146 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       disabled={isDisabled}
                     />
                   </div>
+                  <div className="flex flex-col gap-2 cursor-pointer">
+                    <label
+                      htmlFor="freeProduct"
+                      className={cn(labelStyle, "opacity-0 md:block hidden")}
+                    >
+                      {translate("free_promotional_product")}
+                    </label>
+                    <label
+                      htmlFor="freeProduct"
+                      className="mt-3 text-xs flex align-middle gap-2 text-gray-600"
+                    >
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 cursor-pointer"
+                        {...methods.register("freeProduct")}
+                        checked={Boolean(methods.watch("freeProduct"))}
+                        onChange={(v) => {
+                          methods.setValue(
+                            "freeProduct",
+                            !Boolean(methods.watch("freeProduct"))
+                          );
+                          // methods.trigger(["startDate", "endDate"]);
+                        }}
+                      />
+                      <span
+                        className="text-sm cursor-pointer"
+                        onClick={(v) => {
+                          methods.setValue(
+                            "freeProduct",
+                            !Boolean(methods.watch("freeProduct"))
+                          );
+                          // methods.trigger(["startDate", "endDate"]);
+                        }}
+                      >
+                        {translate("free_promotional_product")}
+                        {/* {translate("CampaignLifeTime")}{" "}
+                      <span className="text-primary-color font-medium">
+                        {translate("CampaignLifeTime")}
+                      </span>{" "}
+                      &{" "}
+                      <span className="text-primary-color font-medium">
+                        {translate("CampaignLifeTime")}.
+                      </span> */}
+                      </span>
+                    </label>
+                    {/* <Input
+                    name="channels"
+                    type="checkbox"
+                    placeholder={translate("Add_link")}
+                    label={translate("CampaignLifeTime")}
+                    checked={Boolean(methods.watch("campaignLifeTime"))}
+                    onChange={(v) => {
+                      methods.setValue(
+                        "campaignLifeTime",
+                        !Boolean(methods.watch("campaignLifeTime"))
+                      );
+                      methods.trigger(["startDate", "endDate"]);
+                    }}
+                    hideError={true}
+                    disabled={isDisabled}
+                  /> */}
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
+            <div className="flex flex-col bg-white rounded-xl p-[24px]">
               <div className="flex items-center gap-4">
                 <div className="text-lg font-medium text-gray-500">
-                  {translate("Discount/Price Range")}
+                  {translate("additional_offers")}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowDiscountSection(!showDiscountSection)}
-                  className="text-gray-400 hover:text-gray-600 px-4 py-1"
-                >
-                  {showDiscountSection ? (
-                    <ChevronUp size={20} />
-                  ) : (
-                    <ChevronDown size={20} />
-                  )}
-                </button>
+                <label className="inline-flex items-center cursor-pointer relative">
+                  <input
+                    type="checkbox"
+                    value=""
+                    checked={showDiscountSection}
+                    className="sr-only peer"
+                    onChange={() =>
+                      setShowDiscountSection(!showDiscountSection)
+                    }
+                  />
+                  <div
+                    className={`relative w-11 h-6 ${
+                      showDiscountSection ? "bg-primary" : "bg-gray-200"
+                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                  ></div>
+                </label>
               </div>
-              {showDiscountSection && (
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-col md:flex-row gap-3">
-                    <div className="flex flex-col w-full gap-1">
-                      <Input
-                        name="couponCode"
-                        type="text"
-                        placeholder={"COUP0nC0dE"}
-                        label={translate("couponCode")}
-                      />
-                    </div>
-                    <div className="flex flex-col w-full gap-1">
-                      <Input
-                        name="discount_type"
-                        type="select"
-                        placeholder={translate("Select_Discount_Type")}
-                        label={translate("Discount_Type")}
-                        options={[
-                          {
-                            label: "Amount",
-                            value: "FIXED_AMOUNT",
-                          },
-                          {
-                            label: "Percentage",
-                            value: "PERCENTAGE",
-                          },
-                        ]}
-                        disabled={isDisabled}
-                      />
-                    </div>
+              {/* {showDiscountSection && ( */}
+              <div
+                className={`
+                flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden
+                ${
+                  showDiscountSection
+                    ? "max-h-[1000px] opacity-100 pt-3"
+                    : "max-h-0 opacity-0"
+                }
+              `}
+              >
+                <div className="flex flex-col md:flex-row gap-3">
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="couponCode"
+                      type="text"
+                      placeholder={"COUP0nC0dE"}
+                      label={translate("couponCode")}
+                      required={false}
+                    />
+                  </div>
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="discount_type"
+                      type="react-select"
+                      placeholder={translate("Select_Discount_Type")}
+                      label={translate("Discount_Type")}
+                      options={[
+                        {
+                          label: "Amount",
+                          value: "FIXED_AMOUNT",
+                        },
+                        {
+                          label: "Percentage",
+                          value: "PERCENTAGE",
+                        },
+                      ]}
+                      disabled={isDisabled}
+                    />
+                  </div>
 
-                    <div className="flex flex-col w-full gap-1">
-                      <Input
-                        name="discount_value"
-                        type="number"
-                        placeholder={"10"}
-                        label={translate("Discount")}
-                        disabled={isDisabled}
-                      />
-                    </div>
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="discount_value"
+                      type="number"
+                      placeholder={"10"}
+                      label={translate("Discount")}
+                      disabled={isDisabled}
+                    />
                   </div>
                 </div>
-              )}
+              </div>
+              {/* )} */}
             </div>
 
             <div className="flex flex-col gap-4 pb-5">
@@ -913,7 +1016,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   <Button
                     type="button"
                     className="rounded-[10px] w-fit h-10 px-4 py-2 text-sm font-medium"
-                    onClick={() => router?.push("/vendor/campaign")}
+                    onClick={() => router?.push("/vendor/products")}
                   >
                     {translate("Cancel")}
                   </Button>

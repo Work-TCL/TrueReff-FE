@@ -61,7 +61,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const translate = useTranslations();
   const pathName = usePathname();
   const searchParams = useSearchParams();
-  const tab = searchParams.get("tab")??"0";
+  const tab = searchParams.get("tab") ?? "0";
   const { account } = useAuthStore();
   const { vendor } = useVendorStore();
   const { creator } = useCreatorStore();
@@ -80,6 +80,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor/creators": translate("Creators"),
     "/vendor/creator/details": translate("Creator_Details"),
     "/vendor/campaign/add": translate("Add_New_Campaign"),
+    "/vendor/campaign/product/add": translate("Campaign_Details_Form"),
     "/vendor/campaign": translate("Campaign_List"),
     "/vendor/settings": translate("Settings"),
     "/creator/dashboard": translate("Overview"),
@@ -95,7 +96,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/creator/collaboration": translate("Collaboration"),
     "/vendor/creators/available-creators": translate("Available_Creators"),
     "/dashboard": translate("Dashboard"),
-    "/wishlist": translate("Wishlist")
+    "/wishlist": translate("Wishlist"),
   };
   const fetchNotifications = async () => {
     setLoading(true);
@@ -206,104 +207,132 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/dashboard",
     "/creator-registration",
     "/vendor-register",
-    "/wishlist"
-  ]
+    "/wishlist",
+  ];
   const handleOnBack = () => {
     let activeTab = parseInt(tab);
-    if(activeTab > 0){
-      router.push(`?tab=${activeTab-1}`)
+    if (activeTab > 0) {
+      router.push(`?tab=${activeTab - 1}`);
     } else {
       router.push("/dashboard");
     }
-  }
+  };
   return (
     <>
-    {(!routes.includes(pathName)) ? (<header className="bg-white px-3 py-3 flex items-center gap-1">
-      <Menu
-        className="size-5 shrink-0 text-primary cursor-pointer lg:hidden"
-        onClick={handleExpandSidebar}
-      />
-      <h2 className="md:text-2xl text-lg font-medium text-primary">
-        {getHeaderName()}
-      </h2>
-        <div className="ml-auto flex items-center md:gap-3 gap-2">
-          <NotificationPopover
-            notifications={notifications}
-            unreadNotifications={unreadNotifications}
-            fetchNotifications={fetchNotifications}
-            readNotifications={readNotifications}
-            formatTimeAgo={formatTimeAgo}
+      {!routes.includes(pathName) ? (
+        <header className="bg-white px-3 py-3 flex items-center gap-1">
+          <Menu
+            className="size-5 shrink-0 text-primary cursor-pointer lg:hidden"
+            onClick={handleExpandSidebar}
           />
-          <Link
-            href={
-              creator.creatorId
-                ? `/creator/profile/${creator.creatorId}`
-                : `/vendor/profile/${vendor?.vendorId}`
-            }
-            className="flex gap-3 items-center w-fit"
-          >
-            <div
-              className="w-8 h-8 bg-background rounded-full bg-cover bg-center flex items-center justify-center"
-              style={{
-                ...(creator.profile_image || vendor.profile_image
-                  ? {
-                      backgroundImage: `url(${
-                        creator.profile_image || vendor.profile_image
-                      })`,
-                    }
-                  : {}),
-              }}
+          <h2 className="md:text-2xl text-lg font-medium text-primary">
+            {getHeaderName()}
+          </h2>
+          <div className="ml-auto flex items-center md:gap-3 gap-2">
+            <NotificationPopover
+              notifications={notifications}
+              unreadNotifications={unreadNotifications}
+              fetchNotifications={fetchNotifications}
+              readNotifications={readNotifications}
+              formatTimeAgo={formatTimeAgo}
+            />
+            <Link
+              href={
+                creator.creatorId
+                  ? `/creator/profile/${creator.creatorId}`
+                  : `/vendor/profile/${vendor?.vendorId}`
+              }
+              className="flex gap-3 items-center w-fit"
             >
-              {!(creator.profile_image || vendor.profile_image) && (
-                <UserRound className="" color="#656466" />
-              )}
-            </div>
-            <p className="text-gray-black md:text-base text-sm md:block hidden">
-              {creator.full_name || vendor.business_name}
-            </p>
-          </Link>
-        </div>
-      <div
-        className={(!account?.role) ? "flex justify-end w-full" : ""}
-      >
-        <Link href="?auth=logout" className="mx-4 block">
-          <IoLogOutOutline className="text-2xl text-primary" />
-        </Link>
-      </div>
-    </header>):<header className="bg-white px-3 py-3 flex items-center gap-1">
-    <Menu
-        className="size-5 shrink-0 cursor-pointer lg:hidden"
-        onClick={handleExpandSidebar}
-      />
-      <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-medium text-primary">
-        {getHeaderName()}
-      </h2>
-      <div
-        className={`flex ${(pathName === "/creator-registration" || pathName === "/vendor-register") ? "justify-between":"justify-end"} items-center gap-4 w-full`}
-      >
-        {(pathName === "/creator-registration" || pathName === "/vendor-register") && 
-          <ArrowLeft className="text-2xl text-primary cursor-pointer" onClick={handleOnBack}/>
-        }
-        {/* <ButtonPopover/> */}
-          {(pathName !== "/creator-registration" && pathName !== "/vendor-register") && <><div onClick={() => router.push("/vendor-register")}
-            className={cn(
-              "text-black cursor-pointer md:text-[12px] lg:text-base  box-border border border-black rounded-[8px] py-[6px] px-[20px] hover:bg-secondary hover:text-white")}
-          >
-            <span className="hidden sm:block">{translate("Become_a_Brand")}</span>
-            <span className="block sm:hidden">{translate("Brand")}</span>
+              <div
+                className="w-8 h-8 bg-background rounded-full bg-cover bg-center flex items-center justify-center"
+                style={{
+                  ...(creator.profile_image || vendor.profile_image
+                    ? {
+                        backgroundImage: `url(${
+                          creator.profile_image || vendor.profile_image
+                        })`,
+                      }
+                    : {}),
+                }}
+              >
+                {!(creator.profile_image || vendor.profile_image) && (
+                  <UserRound className="" color="#656466" />
+                )}
+              </div>
+              <p className="text-gray-black md:text-base text-sm md:block hidden">
+                {creator.full_name || vendor.business_name}
+              </p>
+            </Link>
           </div>
-          <div onClick={() => router.push("/creator-registration")}
-            className={cn(
-              "text-black cursor-pointer md:text-[12px] lg:text-base  box-border border border-black rounded-[8px] py-[6px] px-[20px] hover:bg-secondary hover:text-white")}
+          <div className={!account?.role ? "flex justify-end w-full" : ""}>
+            <Link href="?auth=logout" className="mx-4 block">
+              <IoLogOutOutline className="text-2xl text-primary" />
+            </Link>
+          </div>
+        </header>
+      ) : (
+        <header className="bg-white px-3 py-3 flex items-center gap-1">
+          <Menu
+            className="size-5 shrink-0 cursor-pointer lg:hidden"
+            onClick={handleExpandSidebar}
+          />
+          <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-medium text-primary">
+            {getHeaderName()}
+          </h2>
+          <div
+            className={`flex ${
+              pathName === "/creator-registration" ||
+              pathName === "/vendor-register"
+                ? "justify-between"
+                : "justify-end"
+            } items-center gap-4 w-full`}
           >
-            <span className="hidden sm:block">{translate("Become_a_Creator")}</span>
-            <span className="block sm:hidden">{translate("Creator")}</span>
-          </div></>}
-        <Link href="?auth=logout" className="mx-2 block">
-          <IoLogOutOutline className="text-2xl text-primary" />
-        </Link>
-      </div>
-    </header>}
+            {(pathName === "/creator-registration" ||
+              pathName === "/vendor-register") && (
+              <ArrowLeft
+                className="text-2xl text-primary cursor-pointer"
+                onClick={handleOnBack}
+              />
+            )}
+            {/* <ButtonPopover/> */}
+            {pathName !== "/creator-registration" &&
+              pathName !== "/vendor-register" && (
+                <>
+                  <div
+                    onClick={() => router.push("/vendor-register")}
+                    className={cn(
+                      "text-black cursor-pointer md:text-[12px] lg:text-base  box-border border border-black rounded-[8px] py-[6px] px-[20px] hover:bg-secondary hover:text-white"
+                    )}
+                  >
+                    <span className="hidden sm:block">
+                      {translate("Become_a_Brand")}
+                    </span>
+                    <span className="block sm:hidden">
+                      {translate("Brand")}
+                    </span>
+                  </div>
+                  <div
+                    onClick={() => router.push("/creator-registration")}
+                    className={cn(
+                      "text-black cursor-pointer md:text-[12px] lg:text-base  box-border border border-black rounded-[8px] py-[6px] px-[20px] hover:bg-secondary hover:text-white"
+                    )}
+                  >
+                    <span className="hidden sm:block">
+                      {translate("Become_a_Creator")}
+                    </span>
+                    <span className="block sm:hidden">
+                      {translate("Creator")}
+                    </span>
+                  </div>
+                </>
+              )}
+            <Link href="?auth=logout" className="mx-2 block">
+              <IoLogOutOutline className="text-2xl text-primary" />
+            </Link>
+          </div>
+        </header>
+      )}
     </>
   );
 }

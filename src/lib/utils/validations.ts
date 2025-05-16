@@ -784,6 +784,7 @@ export const campaignProductValidationSchema = Yup.object().shape({
   name: Yup.string().required("Campaign name is required"),
   description: Yup.string().required("Description is required"),
   campaignLifeTime: Yup.boolean().default(false).required(),
+  freeProduct: Yup.boolean().default(false).required(),
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
@@ -804,8 +805,8 @@ export const campaignProductValidationSchema = Yup.object().shape({
         value: Yup.string().required("Value is required"),
       })
     )
-    .min(1, "Sub-category is required")
-    .required("Sub-Category is required"), // Ensure at least one sub-category is selected
+    .min(1, "Sub Category is required")
+    .required("Sub Category is required"), // Ensure at least one sub-category is selected
   startDate: Yup.date()
     .required("Start date is required")
     .test(
@@ -842,16 +843,16 @@ export const campaignProductValidationSchema = Yup.object().shape({
   productId: Yup.string().required("Product is required"),
   tearmAndCondition: Yup.boolean()
     .oneOf([true], "Tearm & Condition required")
-    .required(),
+    .required("Tearm & Condition required"),
   couponCode: Yup.string().optional(),
   videoType: Yup.array()
     .of(Yup.string().required("Each video type is required"))
     .min(1, "Select at least one video type")
     .required("Video type is required"),
-  notes: Yup.string().required(),
+  notes: Yup.string().notRequired(),
   references: Yup.array()
     .of(Yup.string().url("Invalid URL").required("Reference link is required"))
-    .min(1, "At least one reference link is required"),
+    .notRequired(),
   channels: Yup.array()
     .min(1, "At least one channel is required")
     .required("Channels are required"),
@@ -859,28 +860,57 @@ export const campaignProductValidationSchema = Yup.object().shape({
   commission_type: Yup.string()
     .oneOf(
       ["FIXED_AMOUNT", "PERCENTAGE"],
-      "Discount type must be either FIXED_AMOUNT or PERCENTAGE"
+      "Commission type must be either FIXED_AMOUNT or PERCENTAGE"
     )
-    .required("Discount type is required"),
+    .required("Commission type is required"),
   discount_type: Yup.string()
     .oneOf(
       ["FIXED_AMOUNT", "PERCENTAGE"],
-      "Discount type must be either FIXED_AMOUNT or PERCENTAGE"
+      "Discount type must be FIXED_AMOUNT or PERCENTAGE"
     )
-    .required("Discount type is required"),
+    .notRequired()
+    .test(
+      "require-if-value-exists",
+      "Discount type is required",
+      function (value) {
+        const { discount_value } = this.parent;
+        const hasValue =
+          discount_value !== undefined &&
+          discount_value !== null &&
+          discount_value !== "";
+        if (hasValue && !value) {
+          return false;
+        }
+        return true;
+      }
+    ),
 
   discount_value: Yup.number()
-    .typeError("Discount value is required")
-    .required("Discount value is required")
-    .moreThan(0, "Discount value must be greater than 0"),
+    .typeError("Discount value must be a number")
+    .moreThan(0, "Discount value must be greater than 0")
+    .notRequired()
+    .test(
+      "require-if-type-exists",
+      "Discount value is required",
+      function (value) {
+        const { discount_type } = this.parent;
+        const hasType = !!discount_type;
+        // @ts-ignore
+        const hasValue = value !== undefined && value !== null && value !== "";
+        if (hasType && !hasValue) {
+          return false;
+        }
+        return true;
+      }
+    ),
   commission: Yup.number()
-    .typeError("Discount value is required")
-    .required("Discount value is required")
-    .moreThan(0, "Discount value must be greater than 0"),
+    .typeError("Cmmission value is required")
+    .required("Cmmission value is required")
+    .moreThan(0, "Cmmission value must be greater than 0"),
   price: Yup.number()
-    .typeError("Discount value is required")
-    .required("Discount value is required")
-    .moreThan(0, "Discount value must be greater than 0"),
+    .typeError("Price is required")
+    .required("Price is required")
+    .moreThan(0, "Price must be greater than 0"),
 });
 
 export interface ICampaignProductValidationSchema
