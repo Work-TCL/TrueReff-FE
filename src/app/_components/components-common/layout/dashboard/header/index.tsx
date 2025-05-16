@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IoLogOutOutline } from "react-icons/io5";
 import Link from "next/link";
 import { ArrowLeft, Menu, UserRound } from "lucide-react";
@@ -60,6 +60,8 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const router = useRouter();
   const translate = useTranslations();
   const pathName = usePathname();
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab")??"0";
   const { account } = useAuthStore();
   const { vendor } = useVendorStore();
   const { creator } = useCreatorStore();
@@ -206,6 +208,14 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor-register",
     "/wishlist"
   ]
+  const handleOnBack = () => {
+    let activeTab = parseInt(tab);
+    if(activeTab > 0){
+      router.push(`?tab=${activeTab-1}`)
+    } else {
+      router.push("/dashboard");
+    }
+  }
   return (
     <>
     {(!routes.includes(pathName)) ? (<header className="bg-white px-3 py-3 flex items-center gap-1">
@@ -271,9 +281,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       <div
         className={`flex ${(pathName === "/creator-registration" || pathName === "/vendor-register") ? "justify-between":"justify-end"} items-center gap-4 w-full`}
       >
-        {(pathName === "/creator-registration" || pathName === "/vendor-register") && <Link href="/dashboard" className="mx-4 block">
-          <ArrowLeft className="text-2xl text-primary" />
-        </Link>}
+        {(pathName === "/creator-registration" || pathName === "/vendor-register") && 
+          <ArrowLeft className="text-2xl text-primary cursor-pointer" onClick={handleOnBack}/>
+        }
         {/* <ButtonPopover/> */}
           {(pathName !== "/creator-registration" && pathName !== "/vendor-register") && <><div onClick={() => router.push("/vendor-register")}
             className={cn(
@@ -282,7 +292,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             <span className="hidden sm:block">{translate("Become_a_Brand")}</span>
             <span className="block sm:hidden">{translate("Brand")}</span>
           </div>
-          <div onClick={() => router.push("/vendor-register")}
+          <div onClick={() => router.push("/creator-registration")}
             className={cn(
               "text-black cursor-pointer md:text-[12px] lg:text-base  box-border border border-black rounded-[8px] py-[6px] px-[20px] hover:bg-secondary hover:text-white")}
           >

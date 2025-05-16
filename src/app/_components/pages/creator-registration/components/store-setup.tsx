@@ -1,11 +1,10 @@
 "use client";
 import Input from "@/app/_components/ui/form/Input";
 import React, { useEffect, useState } from "react";
-import { getCategories } from "@/lib/web-api/auth";
-import { useFormContext } from "react-hook-form";
-import { Camera, Image, ImageIcon, Layout, Pencil, User } from "lucide-react";
+import { Camera, User } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { get } from "lodash";
+import { useCreatorStore } from "@/lib/store/creator";
 
 export interface ICategoryData {
   _id: string;
@@ -20,6 +19,7 @@ interface IProps {
   profilePreview: any;
   bannerPreview: any;
   methods: any;
+  categories: ICategoryData[];
 }
 
 export default function StoreSetup({
@@ -27,33 +27,23 @@ export default function StoreSetup({
   bannerPreview,
   profilePreview,
   methods,
+  categories
 }: IProps) {
   const translate = useTranslations();
-  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const {creator} = useCreatorStore();
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
 
-  const fetchCategory = async () => {
-    try {
-      const response = await getCategories({ page: 0, limit: 0 });
-      let data = response?.data?.data;
-      setCategories(data);
-      setParentCategory(data?.filter((ele) => ele?.parentId === null));
-    } catch (error:any) {
-      console.log("Error Fetching channels",error.message);
-     }
-  };
-
-  useEffect(() => {
-    fetchCategory();
-  }, []);
+   useEffect(() => {
+      setParentCategory(categories?.filter((ele:ICategoryData) => ele?.parentId === null));
+    }, [categories]);
 
   useEffect(() => {
     (async () => {
       const categoriesId =
         (await methods.watch("category")?.map((v: any) => v.value)) || [];
 
-      const optionsSubCategory = await categories.filter((ele) =>
+      const optionsSubCategory = await categories.filter((ele:ICategoryData) =>
         categoriesId?.includes(ele?.parentId)
       );
 
@@ -67,7 +57,7 @@ export default function StoreSetup({
         )
       );
     })();
-  }, [methods.watch("category")?.length]);
+  }, [methods.watch("category")?.length,creator?.category]);
 
   return (
     <div className="flex flex-col gap-4">

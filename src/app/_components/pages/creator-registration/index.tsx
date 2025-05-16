@@ -2,9 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { SlidingTabBar } from "../../components-common/tabs/sllidingTabs";
 import HeaderAuth from "../auth/components/header-auth";
-import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
-import { GrDocumentText } from "react-icons/gr";
-import { FaRegUserCircle } from "react-icons/fa";
 import {
   creatorOnBoardingSchema,
   creatorSocialConnectSchema,
@@ -18,29 +15,27 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/app/_components/ui/button";
 import BasicInfoForm from "./components/basic-details";
 import SocialMedia from "./components/social-media";
-import toast from "react-hot-toast";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { useRouter, useSearchParams } from "next/navigation";
 import PaymentDetails from "./components/payment-details";
 import {
-  IPostCreatorRegisterResponse,
   IPostCreatorRegisterStepOneRequest,
 } from "@/lib/types-api/auth";
 import {
-  checkCreatorUserNameExist,
   creatorRegister,
+  getCategories,
   getCreatorProgress,
-  socialMediaAdded,
 } from "@/lib/web-api/auth";
 import Loader from "../../components-common/layout/loader";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { fileUploadLimitValidator } from "@/lib/utils/constants";
 import { toastMessage } from "@/lib/utils/toast-message";
-import StoreSetup from "./components/store-setup";
+import StoreSetup, { ICategoryData } from "./components/store-setup";
 import { CreditCard, FileText, Globe, Store } from "lucide-react";
 import ProfileAccess from "../../components-common/dialogs/profile-approval";
 import { useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
 
 let allTabs: {
   id: string;
@@ -50,7 +45,7 @@ let allTabs: {
     {
       id: "1",
       name: "Basic Details",
-      Icon: FileText ,
+      Icon: FileText,
     },
     {
       id: "2",
@@ -79,10 +74,11 @@ export default function CreatorRegistrationPage() {
   const searchParams = useSearchParams();
   const translate = useTranslations();
   const { account } = useAuthStore();
-  const { setCreatorData } = useCreatorStore();
+  const { creator, setCreatorData } = useCreatorStore();
+  const { update } = useSession();
   const router = useRouter();
   const tab = searchParams.get("tab") ?? "0";
-  const [activeTab,setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
   const [open, setOpen] = useState<boolean>(false);
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
   const [instagramConnected, setInstagramConnected] = useState<boolean>(false);
@@ -99,26 +95,27 @@ export default function CreatorRegistrationPage() {
     city: "",
     gender: "",
     dob: "",
-    userName:""
+    userName: ""
   };
   const [formState, setFormState] = useState(initialState);
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
       user_name: "",
       email: "",
       phone_number: "",
-      state:"",
+      state: "",
       city: "",
       gender: "",
-      dob:""
+      dob: ""
     },
     resolver: yupResolver(creatorOnBoardingSchema),
     mode: "onSubmit",
   });
   const storeMethods = useForm<ICreatorStoreSetUpSchema>({
     defaultValues: {
-      store_name:"",
+      store_name: "",
       store_description: "",
       tags: [],
       category: [],
@@ -148,11 +145,11 @@ export default function CreatorRegistrationPage() {
     resolver: yupResolver(creatorSocialConnectSchema),
     mode: "onSubmit",
   });
-  useEffect(()=> {
-    if(tab){
+  useEffect(() => {
+    if (tab) {
       setActiveTab(parseInt(tab));
     }
-  },[tab])
+  }, [tab])
   useEffect(() => {
     if (account?.email) {
       methods.setValue("email", account?.email);
@@ -173,11 +170,16 @@ export default function CreatorRegistrationPage() {
       };
 
       const response: any = await creatorRegister(
-        payload,1
+        payload, 1
       );
       if (response?.status === 200) {
+        await update({
+          user: {
+            creator: response?.data,
+          },
+        });
         setCreatorData("creator", {
-          creatorId: response?.data?.id,
+          creatorId: response?.data?._id,
           accountId: response?.data?.accountId,
           full_name: response?.data?.full_name,
           user_name: response?.data?.user_name,
@@ -207,7 +209,7 @@ export default function CreatorRegistrationPage() {
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
+      toastMessage.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -216,30 +218,35 @@ export default function CreatorRegistrationPage() {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("store_name",data?.store_name);
-      formData.append("store_description",data?.store_description);
-      data.category.length > 0 && data.category.forEach((ele,index) => {
-        formData.append(`category[${index}]`,ele?.value);
+      formData.append("store_name", data?.store_name);
+      formData.append("store_description", data?.store_description);
+      data.category.length > 0 && data.category.forEach((ele, index) => {
+        formData.append(`category[${index}]`, ele?.value);
       })
-      data.sub_category.length > 0 && data.sub_category.forEach((ele,index) => {
-        formData.append(`sub_category[${index}]`,ele?.value);
+      data.sub_category.length > 0 && data.sub_category.forEach((ele, index) => {
+        formData.append(`sub_category[${index}]`, ele?.value);
       })
-      data.tags.length > 0 && data.tags.forEach((ele,index) => {
-        formData.append(`tags[${index}]`,ele);
+      data.tags.length > 0 && data.tags.forEach((ele, index) => {
+        formData.append(`tags[${index}]`, ele);
       })
       if (bannerFile) {
-        formData.append("banner_image",bannerFile);
+        formData.append("banner_image", bannerFile);
       }
       if (profileFile) {
-        formData.append("profile_image",profileFile);
+        formData.append("profile_image", profileFile);
       }
       const response: any = await creatorRegister(
-        formData,3
+        formData, 3
       );
       if (response?.status === 200) {
-        setOpen(true);
+        await update({
+          user: {
+            creator: response?.data,
+          },
+        });
+        setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
         setCreatorData("creator", {
-          creatorId: response?.data?.id,
+          creatorId: response?.data?._id,
           accountId: response?.data?.accountId,
           full_name: response?.data?.full_name,
           user_name: response?.data?.user_name,
@@ -269,7 +276,7 @@ export default function CreatorRegistrationPage() {
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
+      toastMessage.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -277,51 +284,56 @@ export default function CreatorRegistrationPage() {
 
   const onSubmitSocial = async () => {
     setLoading(true);
-    try {    
+    try {
       const formData = new FormData();
       let youtubeChannelLink = methodsSocial.getValues('channels.1.account_link');
       let instagramChannelLink = methodsSocial.getValues('channels.0.account_link');
       if (youtubeChannelLink || instagramChannelLink) {
-        formData.append("instagram_link",instagramChannelLink);
-        formData.append("youtube_link",youtubeChannelLink);
-        const response: any = await creatorRegister(formData,2);
-      if (response?.status === 200) {
-        setCreatorData("creator", {
-          creatorId: response?.data,
-          accountId: response?.data?._id,
-          full_name: response?.data?.full_name,
-          user_name: response?.data?.user_name,
-          email: response?.data?.email,
-          phone: response?.data?.phone,
-          dob: response?.data?.dob,
-          gender: response?.data?.gender,
-          state: response?.data?.state,
-          city: response?.data?.city,
-          category: response?.data?.category,
-          sub_category: response?.data?.sub_category,
-          tags: response?.data?.tags,
-          channels: response?.data?.channels,
-          completed_step: response?.data?.completed_step,
-          status: response?.data?.status,
-          createdAt: response?.data?.createdAt,
-          updatedAt: response?.data?.updatedAt,
-          completed: response?.data?.completed,
-          instagram_link: response?.data?.instagram_link,
-          youtube_link: response?.data?.youtube_link,
-          banner_image: response?.data?.banner_image,
-          profile_image: response?.data?.profile_image,
-          store_description: response?.data?.store_description,
-          store_name: response?.data?.store_name,
-        });
-        router.push(`?tab=2`);
-        setChannelError("");
-      }
+        formData.append("instagram_link", instagramChannelLink);
+        formData.append("youtube_link", youtubeChannelLink);
+        const response: any = await creatorRegister(formData, 2);
+        if (response?.status === 200) {
+          await update({
+            user: {
+              creator: response?.data,
+            },
+          });
+          setCreatorData("creator", {
+            creatorId: response?.data?._id,
+            accountId: response?.data?.accountId,
+            full_name: response?.data?.full_name,
+            user_name: response?.data?.user_name,
+            email: response?.data?.email,
+            phone: response?.data?.phone,
+            dob: response?.data?.dob,
+            gender: response?.data?.gender,
+            state: response?.data?.state,
+            city: response?.data?.city,
+            category: response?.data?.category,
+            sub_category: response?.data?.sub_category,
+            tags: response?.data?.tags,
+            channels: response?.data?.channels,
+            completed_step: response?.data?.completed_step,
+            status: response?.data?.status,
+            createdAt: response?.data?.createdAt,
+            updatedAt: response?.data?.updatedAt,
+            completed: response?.data?.completed,
+            instagram_link: response?.data?.instagram_link,
+            youtube_link: response?.data?.youtube_link,
+            banner_image: response?.data?.banner_image,
+            profile_image: response?.data?.profile_image,
+            store_description: response?.data?.store_description,
+            store_name: response?.data?.store_name,
+          });
+          router.push(`?tab=2`);
+          setChannelError("");
+        }
       } else {
         setChannelError("Min 1 Channel required.");
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
+      toastMessage.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -372,19 +384,19 @@ export default function CreatorRegistrationPage() {
             `?tab=2`
           );
           // router.push(`/creator/dashboard`);
-        } else if(creator?.completed_step === 3 && creator?.status === "APPROVED"){
+        } else if (creator?.completed_step === 3 && creator?.status === "APPROVED") {
           router.push(`/creator/dashboard`);
         }
       }
       if (creator?._id) {
-        methods.setValue("full_name",creator?.full_name);
-        methods.setValue("user_name",creator?.user_name);
-        methods.setValue("email",creator?.email);
-        methods.setValue("phone_number",creator?.phone);
-        methods.setValue("state",creator?.state);
-        methods.setValue("city",creator?.city);
-        methods.setValue("gender",creator?.gender);
-        methods.setValue("dob",new Date(creator?.dob).toLocaleDateString());
+        methods.setValue("full_name", creator?.full_name);
+        methods.setValue("user_name", creator?.user_name);
+        methods.setValue("email", creator?.email);
+        methods.setValue("phone_number", creator?.phone);
+        methods.setValue("state", creator?.state);
+        methods.setValue("city", creator?.city);
+        methods.setValue("gender", creator?.gender);
+        methods.setValue("dob", new Date(creator?.dob).toLocaleDateString());
         setFormState({
           state: creator?.state,
           city: creator?.city,
@@ -392,41 +404,39 @@ export default function CreatorRegistrationPage() {
           dob: creator?.dob,
           userName: creator?.user_name
         })
-        storeMethods.setValue("store_name",creator?.store_name);
-        storeMethods.setValue("store_description",creator?.store_description);
-        storeMethods.setValue("tags",creator?.tags);
-        storeMethods.setValue("category",creator?.category);
-        storeMethods.setValue("sub_category",creator?.sub_category);
-        storeMethods.setValue("profile_image",creator?.profile_image);
-        storeMethods.setValue("banner_image",creator?.banner_image);
+        storeMethods.setValue("store_name", creator?.store_name);
+        storeMethods.setValue("store_description", creator?.store_description);
+        storeMethods.setValue("tags", creator?.tags);
+        storeMethods.setValue("profile_image", creator?.profile_image);
+        storeMethods.setValue("banner_image", creator?.banner_image);
         setBannerPreview(creator?.banner_image);
         setProfilePreview(creator?.profile_image);
         setCreatorData("creator", {
-          creatorId: creator?.data?._id,
-          accountId: creator?.data?.accountId,
-          full_name: creator?.data?.full_name,
-          user_name: creator?.data?.user_name,
-          email: creator?.data?.email,
-          phone: creator?.data?.phone,
-          dob: creator?.data?.dob,
-          gender: creator?.data?.gender,
-          state: creator?.data?.state,
-          city: creator?.data?.city,
-          category: creator?.data?.category,
-          sub_category: creator?.data?.sub_category,
-          tags: creator?.data?.tags,
-          channels: creator?.data?.channels,
-          completed_step: creator?.data?.completed_step,
-          status: creator?.data?.status,
-          createdAt: creator?.data?.createdAt,
-          updatedAt: creator?.data?.updatedAt,
-          completed: creator?.data?.completed,
-          instagram_link: creator?.data?.instagram_link,
-          youtube_link: creator?.data?.youtube_link,
-          banner_image: creator?.data?.banner_image,
-          profile_image: creator?.data?.profile_image,
-          store_description: creator?.data?.store_description,
-          store_name: creator?.data?.store_name,
+          creatorId: creator?._id,
+          accountId: creator?.accountId,
+          full_name: creator?.full_name,
+          user_name: creator?.user_name,
+          email: creator?.email,
+          phone: creator?.phone,
+          dob: creator?.dob,
+          gender: creator?.gender,
+          state: creator?.state,
+          city: creator?.city,
+          category: creator?.category,
+          sub_category: creator?.sub_category,
+          tags: creator?.tags,
+          channels: creator?.channels,
+          completed_step: creator?.completed_step,
+          status: creator?.status,
+          createdAt: creator?.createdAt,
+          updatedAt: creator?.updatedAt,
+          completed: creator?.completed,
+          instagram_link: creator?.instagram_link,
+          youtube_link: creator?.youtube_link,
+          banner_image: creator?.banner_image,
+          profile_image: creator?.profile_image,
+          store_description: creator?.store_description,
+          store_name: creator?.store_name,
         });
       }
     } catch (e) {
@@ -434,12 +444,33 @@ export default function CreatorRegistrationPage() {
       setIsCreatorLoading(false);
     }
   };
-
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories({ page: 0, limit: 0 });
+      let data = response?.data?.data;
+      setCategories(data);
+    } catch (error: any) {
+      console.log("Error Fetching channels", error.message);
+    }
+  };
   useEffect(() => {
     (async () => {
       await getCreator();
+      await fetchCategory();
     })();
   }, []);
+
+  useEffect(() => {
+    if (creator?.category?.length > 0) {
+      let parentCategory = categories?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      storeMethods.setValue("category", parentCategory);
+      console.log("parentCategory", parentCategory)
+    }
+    if (creator?.sub_category?.length > 0) {
+      let subCategory = categories?.filter((ele: ICategoryData) => creator?.sub_category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      storeMethods.setValue("sub_category", subCategory);
+    }
+  }, [categories, creator?.category, creator?.sub_category, tab])
 
   const handleImageSelect = async (
     e: React.ChangeEvent<HTMLInputElement> | any,
@@ -506,22 +537,7 @@ export default function CreatorRegistrationPage() {
             </div>
             <SlidingTabBar
               tabs={allTabs}
-              setActiveTabIndex={(v) => {
-                // if (
-                //   [
-                //     TABS_STATUS.BASIC_DETAILS,
-                //     TABS_STATUS.STORE_SETUP,
-                //     TABS_STATUS.SOCIAL_MEDIA,
-                //   ].includes(activeTab) &&
-                //   [
-                //     TABS_STATUS.BASIC_DETAILS,
-                //     TABS_STATUS.STORE_SETUP,
-                //     TABS_STATUS.SOCIAL_MEDIA,
-                //   ].includes(v)
-                // ) {
-                //   router.push(`?tab=${v}`);
-                // }
-              }}
+              setActiveTabIndex={(v) => router.push(`?tab=${v}`)}
               activeTabIndex={activeTab}
               grid={4}
             />
@@ -571,7 +587,7 @@ export default function CreatorRegistrationPage() {
                         size="small"
                         onClick={onSubmitSocial}
                         loading={loading}
-                        disabled={loading||!(instagramConnected||youtubeConnected)}
+                        disabled={loading || !(instagramConnected || youtubeConnected)}
                       >
                         {translate("Save_and_Continue")}
                       </Button>
@@ -589,6 +605,7 @@ export default function CreatorRegistrationPage() {
                       profilePreview={profilePreview}
                       bannerPreview={bannerPreview}
                       methods={storeMethods}
+                      categories={categories}
                     />
                     <div className="flex bg-white">
                       <Button

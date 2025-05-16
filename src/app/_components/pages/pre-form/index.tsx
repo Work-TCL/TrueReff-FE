@@ -9,12 +9,12 @@ import { IVendorRegisterFirstStepSchema, IVendorRegisterSecondStepSchema,  IVend
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/app/_components/ui/button";
-import BasicInfoForm from "./components/basic-form";
+import BasicInfoForm, { ICategoryData } from "./components/basic-form";
 import ChannelForm from "./components/channel-form";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { getVendor, venderRegister } from "@/lib/web-api/auth";
-import { useRouter } from "next/navigation";
+import { getCategories, getVendor, venderRegister } from "@/lib/web-api/auth";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useVendorStore } from "@/lib/store/vendor";
 import { fileUploadLimitValidator } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
@@ -60,6 +60,8 @@ export default function PreFormPage() {
   const [terms, setTerms] = useState(false);
   const { update } = useSession();
   const { vendor,setVendorData } = useVendorStore();
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab")??"0";
   const { account } = useAuthStore();
   const [isVendorLoading, setIsVendorLoading] = useState<boolean>(false);
   const [profileFile, setProfileFile] = useState<File | null>(null);
@@ -67,15 +69,15 @@ export default function PreFormPage() {
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string>("");
   const [bannerPreview, setBannerPreview] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
+  const activeTab = parseInt(tab);
   const [channels, setChannels] = useState<any[]>([]);
   const initialState = {
     state: "",
     city: "",
-    channels: [],
     type_of_business: ""
   };
   const [formState, setFormState] = useState(initialState);
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
   const methods = useForm<IVendorRegisterFirstStepSchema>({
     defaultValues: {
       business_name: "",
@@ -122,16 +124,37 @@ export default function PreFormPage() {
       methods.setValue("company_email",account?.email)
     }
   },[account])
+  const fetchCategory = async () => {
+      try {
+        const response = await getCategories({ page: 0, limit: 0 });
+        let data = response?.data?.data;
+        setCategories(data);
+      } catch (error) { }
+    };
+  
+    useEffect(() => {
+      fetchCategory();
+    }, []);
+    useEffect(() => {
+      if(vendor?.category?.length > 0){
+        let parentCategory = categories?.filter((ele:ICategoryData) => vendor?.category?.includes(ele?._id))?.map((ele:ICategoryData) => ({value: ele?._id,label:ele?.name}));
+        methods.setValue("category",parentCategory);
+      }
+      if(vendor?.sub_category?.length > 0){
+        let subCategory = categories?.filter((ele:ICategoryData) => vendor?.sub_category?.includes(ele?._id))?.map((ele:ICategoryData) => ({value: ele?._id,label:ele?.name}));
+        methods.setValue("sub_category",subCategory);
+      }
+    },[categories,vendor])
   const getVendorData = async () => {
     setIsVendorLoading(true);
     try {
       const vendorData: any = await getVendor();
             if (vendorData) {
         if (vendorData?.completed_step === 1) {
-          setActiveTab(TABS_STATUS.DOCUMENT_INFO)
+          router.push('?tab=1');          
           setIsVendorLoading(false);
         } else if (vendorData?.completed_step === 2) {
-          setActiveTab(TABS_STATUS.OMNI_CHANNEL)
+          router.push('?tab=2');
           setIsVendorLoading(false);
         } else if (vendorData?.completed_step === 3) {
           router.push(`/vendor/dashboard`);
@@ -139,7 +162,6 @@ export default function PreFormPage() {
         methods.setValue("business_name",vendorData?.business_name);
         methods.setValue("company_email",vendorData?.company_email);
         methods.setValue("contacts",vendorData?.contacts);
-        methods.setValue("category",vendorData?.category);
         methods.setValue("sub_category",vendorData?.sub_category);
         methods.setValue("address",vendorData?.address);
         methods.setValue("pin",vendorData?.pin_code);
@@ -149,6 +171,9 @@ export default function PreFormPage() {
         methods.setValue("website",vendorData?.website);
         methods.setValue("profile_image",vendorData?.profile_image);
         methods.setValue("banner_image",vendorData?.banner_image);
+        documentMethods.setValue("pan_number",vendorData?.pan_number);
+        documentMethods.setValue("gst_number",vendorData?.gst_number);
+        setFormState({state:vendorData?.state,city: vendorData?.city,type_of_business: vendorData?.type_of_business})
         setVendorData("vendor", {
           vendorId: vendorData?._id,
           accountId: vendorData?.accountId,
@@ -205,6 +230,7 @@ export default function PreFormPage() {
   useEffect(() => {
     (async () => {
       await getVendorData();
+      await fetchCategory();
     })();
   }, []);
   useEffect(() => {
@@ -282,7 +308,7 @@ export default function PreFormPage() {
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
         })
-        setActiveTab(TABS_STATUS.DOCUMENT_INFO)
+        router.push(`?tab=${TABS_STATUS.DOCUMENT_INFO}`)
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -340,7 +366,7 @@ export default function PreFormPage() {
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
         })
-        setActiveTab(TABS_STATUS.OMNI_CHANNEL)
+        router.push(`?tab=${TABS_STATUS.OMNI_CHANNEL}`)
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -395,7 +421,7 @@ export default function PreFormPage() {
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
         })
-        setActiveTab(TABS_STATUS.OMNI_CHANNEL)
+        router.push(`?tab=${TABS_STATUS.OMNI_CHANNEL}`)
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -482,7 +508,7 @@ export default function PreFormPage() {
       <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
         <SlidingTabBar
           tabs={allTabs}
-          setActiveTabIndex={() => { }}
+          setActiveTabIndex={(value) => router.push(`?tab=${value}`) }
           activeTabIndex={activeTab}
           grid={3}
         />
@@ -500,6 +526,7 @@ export default function PreFormPage() {
                   formState={formState}
                   bannerPreview={bannerPreview}
                   methods={methods}
+                  categories={categories}
                 />
                 <div className="bg-white">
                   <Button
@@ -539,7 +566,7 @@ export default function PreFormPage() {
                 onSubmit={documentMethods.handleSubmit(handleOnDocumentSubmit)}
                 className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
               >
-                <DocumentDetailsForm terms={terms} handleCheckTerms={handleCheckTerms} methods={documentMethods} handleDocumentUpload={handleDocumentUpload} />
+                <DocumentDetailsForm gstCertificateFile={gstCertificateFile} terms={terms} handleCheckTerms={handleCheckTerms} methods={documentMethods} handleDocumentUpload={handleDocumentUpload} />
                 <div className="bg-white">
                   <Button
                     type="submit"

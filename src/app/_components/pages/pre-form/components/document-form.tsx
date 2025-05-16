@@ -9,8 +9,9 @@ interface IDocumentDetailsFormProps {
     methods: any;
     terms: boolean;
     handleCheckTerms: (e: any) => void;
+    gstCertificateFile: File | null;
 }
-export default function DocumentDetailsForm({methods,handleDocumentUpload,handleCheckTerms,terms}:IDocumentDetailsFormProps) {
+export default function DocumentDetailsForm({methods,handleDocumentUpload,handleCheckTerms,terms,gstCertificateFile}:IDocumentDetailsFormProps) {
     const translate = useTranslations();
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -36,7 +37,7 @@ export default function DocumentDetailsForm({methods,handleDocumentUpload,handle
             {translate("GST_Certificate")}
             <span className="text-red-500">*</span>
         </span>
-        <FileUploadBox handleUploadFile={(file:any)=> handleDocumentUpload(file,"")}/>
+        <FileUploadBox uploadedFile={gstCertificateFile} handleUploadFile={(file:any)=> handleDocumentUpload(file,"")}/>
         {methods.formState.errors["gst_certificate"]?.message && (
             <span className="text-red-600 text-sm p-2 block">
               {methods.formState.errors["gst_certificate"]?.message}

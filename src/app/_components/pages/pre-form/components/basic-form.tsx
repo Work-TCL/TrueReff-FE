@@ -7,7 +7,7 @@ import Select from "react-select";
 import { cities, indianStates, businessTypes } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import { Camera, ImageIcon, Pencil, User } from "lucide-react";
-import { getCategories } from "@/lib/web-api/auth";
+import { useVendorStore } from "@/lib/store/vendor";
 
 export interface ICategoryData {
   _id: string;
@@ -44,40 +44,32 @@ export default function BasicInfoForm({
   methods,
   formState,
   profilePreview,
-  bannerPreview
+  bannerPreview,
+  categories = []
 }: any) {
   const translate = useTranslations();
   const {
     formState: { errors, touchedFields, submitCount },
   } = useFormContext();
-  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const {vendor} = useVendorStore();
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
 
-  const fetchCategory = async () => {
-    try {
-      const response = await getCategories({ page: 0, limit: 0 });
-      let data = response?.data?.data;
-      setCategories(data);
-      setParentCategory(data?.filter((ele) => ele?.parentId === null));
-    } catch (error) { }
-  };
-
   useEffect(() => {
-    fetchCategory();
-  }, []);
+    setParentCategory(categories?.filter((ele:ICategoryData) => ele?.parentId === null));
+  }, [categories]);
 
   useEffect(() => {
     (async () => {
       const categoriesId =
         (await methods.watch("category")?.map((v: any) => v.value)) || [];
 
-      const optionsSubCategory = await categories.filter((ele) =>
+      const optionsSubCategory = await categories.filter((ele:ICategoryData) =>
         categoriesId?.includes(ele?.parentId)
       );
 
       setSubCategory(optionsSubCategory);
-      const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+      const availableSubCategoriesIds = optionsSubCategory.map((v:ICategoryData) => v?._id);
       const subCategoroies = methods.watch("sub_category") || [];
       methods.setValue(
         "sub_category",
@@ -86,7 +78,7 @@ export default function BasicInfoForm({
         )
       );
     })();
-  }, [methods.watch("category")?.length]);
+  }, [methods.watch("category")?.length,vendor?.category]);
   const getErrorMessage = (name: string) => {
     const error = get(errors, name);
     if (error && error.message) {

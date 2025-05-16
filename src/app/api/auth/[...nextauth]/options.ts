@@ -81,8 +81,11 @@ const authOptions: NextAuthOptions = {
     async jwt({ token, user,session, account, trigger }) {
       if (trigger === "update") {
         // ✅ This is triggered from `update()` on client
-        if(session){
+        if(session && session.user.vendor){
           token.vendor = session.user.vendor;
+        }
+        if(session && session.user.creator){
+          token.creator = session.user.creator;
         }
         try {
           const updatedUser = await getUserApi();
