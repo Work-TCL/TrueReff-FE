@@ -1,6 +1,6 @@
-import LandingMain from "./(landing)/page";
+import LandingPage from "./_landingpage/landing_main";
 
   
 export default function App() {
-  return <LandingMain />;
+  return <LandingPage />;
 }

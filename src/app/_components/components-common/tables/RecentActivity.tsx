@@ -67,7 +67,7 @@ export default function RecentActivities() {
     setLoading(true);
     try {
       const response: any = await axios.delete(
-        `/product/collaboration/request/cancel/${isOpen?.collaborationId}`
+        `/product/collaboration/vendor/cancel-request/${isOpen?.collaborationId}`
       );
       if (response.status === 200) {
         toast.success(response.data.message);
@@ -97,7 +97,7 @@ export default function RecentActivities() {
   const fetchCollaboration = async () => {
     try {
       const response = await axios.get(
-        `/product/collaboration/list?page=${1}&limit=${pageSize}`
+        `/product/collaboration/vendor/list?page=${1}&limit=${pageSize}`
       );
       if (response.status === 200) {
         const collaborationData = response.data.data;
@@ -106,9 +106,9 @@ export default function RecentActivities() {
 
           if (Array.isArray(collaborationArray)) {
             let result = collaborationArray.map((ele: ICollaboration) => {
-              ele.product.category =
-                ele.product.categories?.length > 0
-                  ? ele.product.categories
+              ele.productId.categories =
+                ele.productId.category?.length > 0
+                  ? ele.productId.category
                       .filter(
                         (category: ICategory) => category?.parentId === null
                       )
@@ -117,18 +117,7 @@ export default function RecentActivities() {
                       })
                       .join(", ")
                   : "";
-              ele.product.subCategories =
-                ele.product.categories?.length > 0
-                  ? ele.product.categories
-                      .filter(
-                        (category: ICategory) => category?.parentId !== null
-                      )
-                      .map((category: ICategory) => {
-                        return category?.name;
-                      })
-                      .join(", ")
-                  : "";
-              ele.product.tag = ele.product.tags.join(", ");
+              ele.productId.tag = ele.productId.tags.join(", ");
               return { ...ele };
             });
             setCollaborations([...result]);
