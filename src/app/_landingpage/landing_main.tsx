@@ -1,9 +1,14 @@
 "use client";
 
 import { MoveRight } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeroSection from "./heroSection";
 import EarningsSection from "./earningsSection";
+import SocialMedia from "./SocialMediaSections";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import ContentCategories from "./ContentCategories";
+import Launchpad from "./Launchpad";
 
 export default function LandingPage() {
   const [activeLink, setActiveLink] = useState("creator");
@@ -11,6 +16,15 @@ export default function LandingPage() {
   const handleLinkClick = (linkName: string) => {
     setActiveLink(linkName);
   };
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: false,
+      mirror: true,
+    });
+  
+  }, []);
 
   return (
     <div className="relative w-full h-screen overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -27,7 +41,7 @@ export default function LandingPage() {
 
       {/* Navbar */}
       <nav className="flex justify-between items-start p-4 text-white h-full ">
-        <div className="flex items-center gap-2 text-2xl font-bold">
+        <div data-aos="fade-down" className="flex items-center gap-2 text-2xl font-bold fade">
           <img
             src="/assets/landing/logo_TrueReff.svg"
             alt="Truerreff Logo"
@@ -39,6 +53,7 @@ export default function LandingPage() {
             {["creator", "brand", "about"].map((link) => (
               <li
                 key={link}
+                data-aos="fade-right"
                 className="relative cursor-pointer"
                 onClick={() => handleLinkClick(link)}
               >
@@ -52,7 +67,7 @@ export default function LandingPage() {
             ))}
           </ul>
 
-          <button className="group relative flex items-center justify-between pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white w-[215px]">
+          <button data-aos="zoom-out" className="group relative flex items-center justify-between pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white w-[215px]">
             <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-300 ease-in-out group-hover:scale-x-100 z-0" />
             <span className="relative z-10 transition-colors duration-300 ease-in-out group-hover:text-primary">
               Get Started
@@ -87,6 +102,9 @@ export default function LandingPage() {
       </div>
       <HeroSection />
       <EarningsSection />
+      <SocialMedia />
+      <ContentCategories />
+      <Launchpad />
     </div>
   );
 }
