@@ -68,24 +68,12 @@ const CollaborationTable = ({
       setIsOpen(initialValue);
     }
   };
-  const getRequestStatus = (collaboration: ICollaboration) => {
-    const { request } = collaboration;
-    if (request) {
-      if (
-        request?.collaborationStatus === "REQUESTED" ||
-        request?.collaborationStatus === "REJECTED"
-      ) {
-        return request?.collaborationStatus;
-      } else {
-        return collaboration?.collaborationStatus;
-      }
-    } else return "SEND_REQUEST";
-  };
+  
   const handleCancelRequest = async () => {
     setLoading(true);
     try {
       const response: any = await axios.delete(
-        `/product/collaboration/request/cancel/${isOpen?.collaborationId}`
+        `/product/collaboration/vendor/cancel-request/${isOpen?.collaborationId}`
       );
       if (response.status === 200) {
         toast.success(response.data.message);
@@ -133,13 +121,13 @@ const CollaborationTable = ({
             className="flex items-center gap-2 cursor-pointer"
             onClick={() =>
               router.push(
-                `/vendor/products/view/${collaboration?.product?._id}`
+                `/vendor/products/view/${collaboration?.productId?._id}`
               )
             }
           >
-            {collaboration?.product?.media?.[0] ? (
+            {collaboration?.productId?.media?.[0] ? (
               <Avatar className="w-8 h-8">
-                <AvatarImage src={collaboration.product.media[0]} />
+                <AvatarImage src={collaboration.productId.media[0]} />
                 <AvatarImage src="/assets/collaboration/collaboration-image.svg" />
               </Avatar>
             ) : (
@@ -148,7 +136,7 @@ const CollaborationTable = ({
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
               linesToClamp={2}
-              text={collaboration?.product?.title}
+              text={collaboration?.productId?.title}
             />
           </div>
         );
@@ -161,7 +149,7 @@ const CollaborationTable = ({
         <TruncateWithToolTip
           checkHorizontalOverflow={false}
           linesToClamp={2}
-          text={row.original.product?.category ?? ""}
+          text={row.original.productId?.categories ?? ""}
         />
       ),
     },
@@ -172,7 +160,7 @@ const CollaborationTable = ({
         <TruncateWithToolTip
           checkHorizontalOverflow={false}
           linesToClamp={2}
-          text={row.original.product?.tag ?? ""}
+          text={row.original.productId?.tag ?? ""}
         />
       ),
     },
@@ -186,17 +174,17 @@ const CollaborationTable = ({
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() =>
-              router.push(`/creator/profile/${collaboration?.fromUser?._id}`)
+              router.push(`/creator/profile/${collaboration?.creatorId?._id}`)
             }
           >
             <Avatar className="w-8 h-8">
               <AvatarImage
                 className={
-                  collaboration?.fromUser?.profile_image ? "" : "opacity-50"
+                  collaboration?.creatorId?.profile_image ? "" : "opacity-50"
                 }
                 src={
-                  collaboration?.fromUser?.profile_image
-                    ? collaboration?.fromUser?.profile_image
+                  collaboration?.creatorId?.profile_image
+                    ? collaboration?.creatorId?.profile_image
                     : "/assets/profile/profile-image.png"
                 }
               />
@@ -204,7 +192,7 @@ const CollaborationTable = ({
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
               linesToClamp={2}
-              text={collaboration?.fromUser?.user_name}
+              text={collaboration?.creatorId?.user_name}
             />
           </div>
         );
@@ -215,13 +203,12 @@ const CollaborationTable = ({
       header: () => <div className="text-center">{translate("Status")}</div>,
       cell: ({ row }) => {
         const collaboration = row.original;
-        const status = getRequestStatus(collaboration);
         return (
           <div className="flex justify-center">
-            {status ? (
+            {collaboration?.collaborationStatus ? (
               <StatusBadge
-                status={status}
-                messageStatus={getMessages(status, collaboration?.request)}
+                status={collaboration?.collaborationStatus}
+                // messageStatus={getMessages(status, collaboration?.request)}
               />
             ) : null}
           </div>
@@ -234,7 +221,6 @@ const CollaborationTable = ({
       cell: ({ row }) => {
         const collaboration = row.original;
         const router = useRouter();
-        const status = getRequestStatus(collaboration);
 
         return (
           <div className="flex gap-4 justify-center">
@@ -242,7 +228,7 @@ const CollaborationTable = ({
               {
                 REQUESTED:
                   {
-                    CREATOR: (
+                    creator: (
                       <div className="flex justify-between gap-3">
                         <ToolTip content="Accept Request" delayDuration={1000}>
                           <CheckCircle
@@ -275,7 +261,7 @@ const CollaborationTable = ({
                         </ToolTip>
                       </div>
                     ),
-                    VENDOR: (
+                    vendor: (
                       <ToolTip content="Cancel Request" delayDuration={1000}>
                         <XCircle
                           strokeWidth={1.5}
@@ -292,7 +278,7 @@ const CollaborationTable = ({
                         />
                       </ToolTip>
                     ),
-                  }[collaboration?.request?.requestFrom ?? ""] ?? null,
+                  }[collaboration?.requestedBy ?? ""] ?? null,
                 PENDING: (
                   <ToolTip content="Start Bargaining" delayDuration={1000}>
                     <MessagesSquare
@@ -308,7 +294,7 @@ const CollaborationTable = ({
                     />
                   </ToolTip>
                 ),
-              }[status]
+              }[collaboration?.collaborationStatus]
             }
           </div>
         );

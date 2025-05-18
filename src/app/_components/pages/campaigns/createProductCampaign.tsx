@@ -4,10 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import {
   campaignProductValidationSchema,
-  campaignValidationSchema,
-  campaignValidationUpdateSchema,
   ICampaignProductValidationSchema,
-  ICampaignValidationSchema,
 } from "@/lib/utils/validations";
 import toast from "react-hot-toast";
 import {
@@ -16,30 +13,25 @@ import {
   getErrorMessage,
 } from "@/lib/utils/commonUtils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import MediaUploader from "./_components/mediaUploader";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
-  createCampaign,
   createCampaignProduct,
-  updateCampaign,
   updateCampaignProduct,
 } from "@/lib/web-api/campaign";
 import Button from "../../ui/button";
 import Loader from "../../components-common/layout/loader";
 import { get } from "lodash";
 import dynamic from "next/dynamic";
-import { ICampaign } from "@/lib/types-api/campaign";
 import { useTranslations } from "next-intl";
 import LightButton from "../../ui/button/variant/light-button";
 import { labelStyle } from "../../ui/form/Input";
-import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import axios from "@/lib/web-api/axios";
 import { ICategoryData } from "@/lib/types-api/auth";
 import { getCategories } from "@/lib/web-api/auth";
 import CreatorMaterial from "./_components/creator-material";
 import CampaignProductView from "./_components/product-view";
 import { VIDEO_TYPE } from "@/lib/utils/constants";
-import { ChevronDown, ChevronUp, CircleX } from "lucide-react";
+import { CircleX } from "lucide-react";
 
 const Input = dynamic(() => import("../../ui/form/Input"), { ssr: false });
 
@@ -127,10 +119,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     name: "references",
   });
 
-  console.log("------errors", methods.formState.errors);
-
   const onSubmit = async (data: ICampaignProductValidationSchema) => {
-    console.log("data-->>", data);
 
     if (!selectedProduct) {
       toast.error("select product required.");
@@ -215,7 +204,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       } else {
         response = await createCampaignProduct(formData);
       }
-      console.log("response", response);
 
       if (response?.status === 201 || response?.status === 200) {
         toast.success(response?.message);
@@ -232,7 +220,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     }
   };
   const handleProductSelect = (product: IProduct) => {
-    console.log("Selected product:", product);
     setSelectedProduct(product);
     methods.setValue("name", String(product?.title));
     methods.setValue("description", String(product?.description || "-"));
@@ -264,10 +251,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       );
 
       const product: any = response?.data?.data;
-      console.log("product", product);
 
-      const images = product?.media?.nodes?.map(
-        (v: any) => v?.image?.url && v?.image?.url
+      const images = product?.media?.nodes?.filter((v:any) => v?.image?.url)?.map(
+        (v: any) => v?.image?.url
       );
 
       // productId({ ...product, media: images });
@@ -286,8 +272,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     setLoading(true);
     try {
       const response = await axios.get(`/product/${productId}`);
-
-      console.log("response -->>", response);
       const product: any = response?.data?.data?.data;
 
       if (product) {
@@ -352,7 +336,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   }, []);
 
   useEffect(() => {
-    console.log("productId", params, productId, productId);
     if (productId && !campaignData && categories) {
       setTimeout(async () => {
         setLoading(true);
@@ -428,7 +411,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const endMinDate = startDate
     ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000) // next day after startDate
     : new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // 2 days from now
-  console.log("selectedProduct", selectedProduct);
 
   const toggleChip = (value: string) => {
     const existingVal = methods.watch("videoType") || [];
@@ -733,7 +715,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     {fields.map((field, index) => (
                       <div
                         key={field.id}
-                        className="flex items-center gap-3 mb-1 lg:w-[50%]"
+                        className="flex items-start gap-3 mb-1 lg:w-[50%]"
                       >
                         <label className={cn(labelStyle, "py-[15px] h-fit")}>
                           {index + 1}.
@@ -745,11 +727,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                             placeholder="https://example.com"
                             label={``}
                           />
-                          {/* {errors.references?.[index] && (
-                          <p className="text-sm text-red-500">
-                            {errors.references[index]?.message}
-                          </p>
-                        )} */}
                         </div>
                         <button
                           type="button"
@@ -842,7 +819,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   <div className="flex flex-col gap-2 cursor-pointer">
                     <label
                       htmlFor="freeProduct"
-                      className={cn(labelStyle, "opacity-0 md:block hidden")}
+                      className={cn(labelStyle, "opacity-0 lg:block hidden")}
                     >
                       {translate("free_promotional_product")}
                     </label>
@@ -942,7 +919,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     <Input
                       name="couponCode"
                       type="text"
-                      placeholder={"COUP0nC0dE"}
+                      placeholder={"Enter your coupen code"}
                       label={translate("couponCode")}
                       required={false}
                     />
@@ -971,7 +948,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     <Input
                       name="discount_value"
                       type="number"
-                      placeholder={"10"}
+                      placeholder={"Enter Your Discount"}
                       label={translate("Discount")}
                       disabled={isDisabled}
                     />

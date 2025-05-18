@@ -40,6 +40,11 @@ export default function CreatorProfile() {
           short_description={creatorData.store_name}
           long_description={creatorData.store_description}
           tags={creatorData.tags}
+          channels={{
+            youtube_link: creatorData.youtube_link,
+            instagram_link: creatorData.instagram_link,
+            }}
+            store_name={creatorData?.store_name}
           categories={[...creatorData.category.map((v: any) => v.name)]}
         />
         <div className="flex flex-col gap-5">

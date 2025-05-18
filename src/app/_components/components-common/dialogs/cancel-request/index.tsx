@@ -21,9 +21,9 @@ export default function CancelRequest({
     >
       <div className="p-2 sm:p-4 sm:bg-white sm:rounded-md sm:shadow-sm w-full flex flex-col gap-4 overflow-y-auto">
         <p className="text-xs md:text-sm text-gray-500">{translate("title")}</p>
-        <p className="text-xs md:text-sm text-red-500">
+        {/* <p className="text-xs md:text-sm text-red-500">
           {translate("description")}
-        </p>
+        </p> */}
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4">
           <div />

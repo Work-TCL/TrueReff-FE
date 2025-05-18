@@ -23,6 +23,7 @@ export interface ICategory {
 }
 
 export interface IProduct {
+  freeProduct: boolean;
   _id: string;
   title: string;
   channelProductId: string;
@@ -30,19 +31,53 @@ export interface IProduct {
   sku: string;
   description: string;
   media: string[];
+  price: number;
   channelName: string;
-  categories: ICategory[];
-  category?: string;
-  subCategories?: string;
-  tag?: string;
+  category: ICategory[];
+  subCategory: string[];
   tags: string[];
+  lifeTime: boolean;  
+  startDate: string;
+  endDate: string | null;
+  status: string;
+  commission: number;
+  commission_type: string;
+  referenceLinks: string[];
+  creatorMaterial: string[];
+  videoType: string[];
+  channels: string[];
   createdAt: string;
   updatedAt: string;
+  categories?: string;
+  tag?: string;
 }
 
 export interface ICreator {
   _id: string;
+  accountId: string;
+  full_name: string;
   user_name: string;
+  email: string;
+  phone: string;
+  dob: string; // or Date if you parse it
+  gender: "Male" | "Female" | "Other" | string;
+  state: string;
+  city: string;
+  category: string[]; // Array of category IDs
+  sub_category: string[]; // Array of subcategory IDs
+  tags: string[];
+  channels: string[]; // Channel IDs
+  completed_step: number;
+  status: "APPROVED" | "PENDING" | "REJECTED" | string;
+  createdAt: string; // or Date
+  updatedAt: string; // or Date
+  completed: number;
+  instagram_link?: string;
+  youtube_link?: string;
+  banner_image?: string;
+  profile_image?: string;
+  store_description?: string; // HTML string
+  store_name: string;
 }
 
 export interface IRequest {
@@ -59,30 +94,28 @@ export interface IVendor {
   _id: string;
   business_name: string;
 }
-export interface ICollaboration {
-  _id: string;
-  creatorId: string;
-  productId: string;
-  vendorId: string;
-  requestId: string;
-  collaborationStatus: string;
-  utmLink: string | null;
-  discountType: string;
-  discountValue: number;
-  couponCode: string;
-  commissionPercentage: number;
-  expiresAt: string;
-  agreedByCreator: boolean;
+
+interface INegotiation {
   agreedByVendor: boolean;
+  agreedByCreator: boolean;
+};
+export interface ICollaboration {
+  negotiation: INegotiation;
+  _id: string;
+  creatorId: ICreator;
+  productId: IProduct;
+  vendorId: string;
+  requestedBy: string;
+  collaborationStatus: string;
+  utmLink: string | null,
+  crmLink: string | null,
+  commissionValue: number;
+  commissionType: string;
+  startAt: string | null,
+  expiresAt: string;
+  bids: any[],
   createdAt: string;
   updatedAt: string;
-  product: IProduct;
-  request: IRequest;
-  fromUser: {
-    _id: string;
-    user_name: string;
-    profile_image: string;
-  };
 }
 
 export interface IStatus {
@@ -140,21 +173,22 @@ export default function CollaborationList() {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/product/collaboration/list?page=${page}&limit=${pageSize}${
+          `/product/collaboration/vendor/list?page=${page}&limit=${pageSize}${
             searchValue ? `&search=${searchValue}` : ""
-          }${status ? `&collaborationStatus=${status}` : ""}`
+          }${status ? `&status=${status}` : ""}`
         );
+        console.log("response",response)
         if (response.status === 200) {
           const collaborationData = response.data.data;
           if (collaborationData && typeof collaborationData === "object") {
-            const collaborationArray = collaborationData.data || [];
+            const collaborationArray = collaborationData.list || [];
             const collaborationCount = collaborationData.total || 0;
 
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
-                ele.product.category =
-                  ele.product.categories?.length > 0
-                    ? ele.product.categories
+                ele.productId.categories =
+                  ele.productId.category?.length > 0
+                    ? ele.productId.category
                         .filter(
                           (category: ICategory) => category?.parentId === null
                         )
@@ -163,18 +197,7 @@ export default function CollaborationList() {
                         })
                         .join(", ")
                     : "";
-                ele.product.subCategories =
-                  ele.product.categories?.length > 0
-                    ? ele.product.categories
-                        .filter(
-                          (category: ICategory) => category?.parentId !== null
-                        )
-                        .map((category: ICategory) => {
-                          return category?.name;
-                        })
-                        .join(", ")
-                    : "";
-                ele.product.tag = ele.product.tags.join(", ");
+                ele.productId.tag = ele.productId.tags.join(", ");
                 return { ...ele };
               });
               setCollaborations([...result]);

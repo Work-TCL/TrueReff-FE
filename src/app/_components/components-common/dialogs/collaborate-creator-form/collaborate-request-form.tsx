@@ -1,16 +1,16 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import Button from "@/app/_components/ui/button";
-import { useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
-import { Info, LoaderCircle } from "lucide-react";
+import { Info } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Loading from "@/app/creator/loading";
+import { badgeColor, statusMessage } from "@/lib/utils/constants";
 interface ICollaborateRequestFormProps {
   onClose: () => void;
   creatorId: string;
@@ -23,84 +23,44 @@ export default function CollaborateRequestForm({
   submitting,
   setSubmitting,
 }: ICollaborateRequestFormProps) {
-  const loadingRef = useRef<HTMLDivElement | null>(null);
   const translate = useTranslations();
   const [loading, setLoading] = useState(true);
   const { vendor } = useVendorStore();
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [products, setProducts] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [productCount, setProductCount] = useState<number>(0);
-  const [hasMore, setHasMore] = useState(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
-    if (!hasMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting && !isLoading) {
-          setCurrentPage((prev) => prev + 1);
-        }
-      },
-      { root: null, rootMargin: "0px", threshold: 1.0 }
-    );
-
-    const currentRef = loadingRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [loadingRef, hasMore, isLoading]);
-  useEffect(() => {
-    fetchProductsList(currentPage);
-  }, [currentPage]);
-  const fetchProductsList = async (
-    page: number,
-    isLoadMore: boolean = false
-  ) => {
-    isLoadMore ? setLoading(true) : setIsLoading(true);
+    fetchProductsList();
+  }, []);
+  const fetchProductsList = async () => {
+    setLoading(true)
     try {
       const response = await axios.get(
-        `product/vendor-product/product/list?page=${page}&limit=10`
+        `product/collaboration/vendor/creator/product/list/${creatorId}`
       );
       if (response?.status === 200) {
-        if (response?.data?.data?.data) {
-          const productsArray: any[] = response?.data?.data?.data;
-          const count = response?.data?.data?.count;
-          setProductCount(count);
-          setProducts([...products, ...productsArray]);
-          setHasMore(products.length + productsArray.length < count);
+        console.log("response", response?.data?.data)
+        if (response?.data?.data?.productList) {
+          const productsArray: any[] = response?.data?.data?.productList;
+          setProducts([...productsArray]);
           setLoading(false);
-          setIsLoading(false);
         } else {
           setLoading(false);
-          setIsLoading(false);
-          setHasMore(false);
         }
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       setLoading(false);
-      setIsLoading(false);
-      setHasMore(false);
     }
   };
   const handleSendRequest = async () => {
     setSubmitting(true);
     try {
       const response: any = await axios.post(
-        `/product/collaboration/creator/request`,
+        `/product/collaboration/vendor/request-creator`,
         {
-          productIds: selectedProducts,
           creatorId: creatorId,
-          vendorId: vendor?.vendorId,
+          productIds: selectedProducts
         }
       );
       if (response.status === 201) {
@@ -131,43 +91,48 @@ export default function CollaborateRequestForm({
   return (
     <div className="flex flex-col gap-3">
       <div
-        className={`flex ${
-          loading ? "" : "flex-col"
-        } max-h-80 h-80 overflow-scroll`}
+        className={`flex ${loading ? "" : "flex-col"
+          } ${products?.length > 0 ? "" : "justify-center"
+            } max-h-80 h-80 overflow-scroll`}
       >
         <div
-          className={`flex flex-col gap-2 ${
-            products?.length > 0 ? "" : "w-full"
-          }`}
+          className={`flex flex-col gap-2 ${products?.length > 0 ? "" : "w-full"
+            }`}
         >
           {loading ? (
             <Loading />
           ) : products?.length > 0 ? (
             products?.map((product: any, index: number) => {
               return (
-                <div className="flex items-center gap-4" key={index}>
-                  <Input
+                <div className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-lg" key={index}>
+                  <div className="flex items-center gap-4"><Input
                     type="checkbox"
                     name="product"
                     className="w-5 h-5 cursor-pointer"
                     checked={selectedProducts.includes(product?._id)}
-                    disabled={submitting}
+                    disabled={product?.collaborationStatus !== null || submitting}
                     onChange={() => handleOnSelectProduct(product?._id)}
                   />
-                  <div
-                    onClick={() =>
-                      !submitting && handleOnSelectProduct(product?._id)
-                    }
-                  >
-                    <div className="flex items-center gap-2">
-                      {product?.media?.length > 0 && (
-                        <Avatar className="w-8 h-8">
-                          <AvatarImage src={product?.media[0]} />
-                        </Avatar>
-                      )}
-                      {product?.title}
+                    <div
+                      onClick={() =>
+                        !submitting && handleOnSelectProduct(product?._id)
+                      }
+                    >
+                      <div className="flex items-center gap-2">
+                        {product?.media?.length > 0 && (
+                          <Avatar className={`w-8 h-8 ${product?.collaborationStatus !== null ? "opacity-50" : ""}`}>
+                            <AvatarImage src={product?.media[0]} />
+                          </Avatar>
+                        )}
+                        <span className={`${product?.collaborationStatus !== null ? "text-gray-500" : "text-black"}`}>{product?.title}</span>
+                      </div>
                     </div>
                   </div>
+                  {product?.collaborationStatus && <div
+                    className={`md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold bg-opacity-10 ${badgeColor[product?.collaborationStatus]}`}
+                  >
+                    {statusMessage[product?.collaborationStatus]}
+                  </div>}
                 </div>
               );
             })
@@ -187,14 +152,6 @@ export default function CollaborateRequestForm({
             </div>
           )}
         </div>
-        {hasMore && (
-          <div
-            className="flex justify-center py-2 text-gray-400"
-            ref={loadingRef}
-          >
-            <LoaderCircle className="animate-spin" color="#ff4979" size={40} />
-          </div>
-        )}
       </div>
       <div className="flex justify-center">
         <Button

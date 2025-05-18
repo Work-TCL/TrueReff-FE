@@ -54,7 +54,7 @@ const SingleSelect: React.FC<SingleSelectProps> = ({
   const selectedOption = options.find((opt) => opt.value === value) || null;
 
   return (
-    <div className={cn('md:w-[200px] w-full relative z-[999]',className)}>
+    <div className={cn('md:w-[200px] w-full relative z-[11]',className)}>
       <Select
         styles={customStyles}
         value={selectedOption}

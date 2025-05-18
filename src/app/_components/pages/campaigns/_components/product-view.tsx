@@ -23,13 +23,12 @@ function CampaignProductView({
   const [activeImage, setActiveImage] = useState(
     images && images?.length > 0 ? images[0] : undefined
   );
-  console.log("activeImage", activeImage);
 
   return (
     <section className="py-5 bg-white md:py-5 dark:bg-gray-900 antialiased">
       <div className="px-4 2xl:px-0">
         <div className="lg:grid lg:grid-cols-4 lg:gap-8 xl:gap-16">
-          <div className="shrink-0 mx-auto flex justify-center items-center flex-col border-r pr-3 w-full">
+          <div className="shrink-0 mx-auto flex justify-center items-center flex-col lg:border-r pr-3 w-full">
             {activeImage || images?.length > 0 ? (
               <img
                 className="w-full dark:block h-56 object-contain"
@@ -84,7 +83,7 @@ function CampaignProductView({
                 {description}
               </p>
             )}
-            {tags && tags?.length > 0 ? (
+            {(tags && tags?.length > 0) && (
               <div className="flex gap-2 mt-1">
                 {tags.map((tag: string, index: number) => (
                   <TruncateWithToolTip
@@ -95,8 +94,6 @@ function CampaignProductView({
                   />
                 ))}
               </div>
-            ) : (
-              "-"
             )}
           </div>
         </div>
