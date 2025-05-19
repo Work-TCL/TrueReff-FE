@@ -8,10 +8,11 @@ import {
   Copy,
   Eye,
   ImageOff,
+  MessageSquareText,
   MessagesSquare,
   XCircle,
 } from "lucide-react";
-import { ICollaboration, IRequest } from "./collaboration";
+import { ICollaboration } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import CancelRequest from "../../components-common/dialogs/cancel-request";
@@ -125,17 +126,7 @@ const CollaborationTable = ({
   };
 
   const getRequestStatus = (collaboration: ICollaboration) => {
-    const { request } = collaboration;
-    if (request) {
-      if (
-        request?.collaborationStatus === "REQUESTED" ||
-        request?.collaborationStatus === "REJECTED"
-      ) {
-        return request?.collaborationStatus;
-      } else {
-        return collaboration?.collaborationStatus;
-      }
-    } else return "SEND_REQUEST";
+    return collaboration?.collaborationStatus;
   };
   const handleCopyLink = async (textToCopy: string | null) => {
     try {
@@ -145,13 +136,13 @@ const CollaborationTable = ({
       toastMessage.error("Failed to copy!");
     }
   };
-  const getMessages = (status: string, request: IRequest) => {
+  const getMessages = (status: string, request:string) => {
     let userStatus: { [key: string]: string } = {
-      CREATOR: "REQUESTED_CREATOR_FROM_VENDOR",
-      VENDOR: "REQUESTED_VENDOR_FROM_CREATOR",
+      creator: "REQUESTED_CREATOR_FROM_VENDOR",
+      vendor: "REQUESTED_VENDOR_FROM_CREATOR",
     };
-    return status === "REQUESTED" && request?.requestFrom
-      ? userStatus[request?.requestFrom]
+    return status === "REQUESTED" && request
+      ? userStatus[request]
       : status;
   };
 
@@ -160,7 +151,7 @@ const CollaborationTable = ({
       accessorKey: "product.title",
       header: () => translate("Product_Name"),
       cell: ({ row }) => {
-        const product = row.original.product;
+        const product = row.original.productId;
         return (
           <div
             className="flex items-center gap-2 cursor-pointer"
@@ -192,7 +183,7 @@ const CollaborationTable = ({
               <TruncateWithToolTip
                 checkHorizontalOverflow={false}
                 linesToClamp={2}
-                text={row.original.product?.category ?? ""}
+                text={row.original.productId?.categories?.join(", ") ?? ""}
               />
             ),
           },
@@ -203,7 +194,7 @@ const CollaborationTable = ({
               <TruncateWithToolTip
                 checkHorizontalOverflow={false}
                 linesToClamp={2}
-                text={row.original.product?.tag ?? ""}
+                text={row.original.productId?.tag ?? ""}
               />
             ),
           },
@@ -213,7 +204,7 @@ const CollaborationTable = ({
       accessorKey: "fromUser.business_name",
       header: () => translate("Brand"),
       cell: ({ row }) => {
-        const fromUser = row.original.fromUser;
+        const fromUser = row.original.vendorId;
         return (
           <div
             className="flex items-center gap-2 cursor-pointer"
@@ -248,7 +239,7 @@ const CollaborationTable = ({
           <div className="flex justify-center">
             <StatusBadge
               status={status}
-              messageStatus={getMessages(status, collaboration?.request)}
+              messageStatus={status}
             />
           </div>
         ) : null;
@@ -259,7 +250,7 @@ const CollaborationTable = ({
       header: () => <div className="text-center">{translate("Action")}</div>,
       cell: ({ row }) => {
         const collaboration = row.original;
-        const product = row.original.product;
+        const product = row.original.productId;
         const status = getRequestStatus(collaboration);
 
         if (isDashboard) {
@@ -289,7 +280,7 @@ const CollaborationTable = ({
           );
         } else {
           if (status === "REQUESTED") {
-            if (collaboration?.request?.requestFrom === "VENDOR") {
+            if (collaboration?.requestedBy === "vendor") {
               return (
                 <div className="flex justify-between w-fit gap-3 mx-auto">
                   <ToolTip content="Accept Request" delayDuration={1000}>
@@ -320,7 +311,7 @@ const CollaborationTable = ({
                   </ToolTip>
                 </div>
               );
-            } else if (collaboration?.request?.requestFrom === "CREATOR") {
+            } else if (collaboration?.requestedBy === "creator") {
               return (
                 <div className="flex gap-3 mx-auto w-fit">
                   <ToolTip content="Cancel Request" delayDuration={1000}>
@@ -345,8 +336,8 @@ const CollaborationTable = ({
             return (
               <div className="flex gap-3 mx-auto w-fit">
                 <ToolTip content="Start Bargaining" delayDuration={1000}>
-                  <MessagesSquare
-                    strokeWidth={1.5}
+                  <MessageSquareText
+                    strokeWidth={1}
                     color="#3b82f680"
                     className="cursor-pointer"
                     size={25}

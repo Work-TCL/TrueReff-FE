@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 export default function RecentCollaborations() {
   const translate = useTranslations();
   const router = useRouter();
-  const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
+  const [collaborations, setCollaborations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchCollaboration = async () => {
@@ -33,34 +33,33 @@ export default function RecentCollaborations() {
           if (Array.isArray(collaborationArray)) {
             let result = collaborationArray.map((ele: ICollaboration) => {
               let category =
-                ele.product.categories?.length > 0
-                  ? ele.product.categories
+                ele.productId.category?.length > 0
+                  ? ele.productId.category
                       .filter(
                         (category: ICategory) => category?.parentId === null
                       )
                       .map((category: ICategory) => {
                         return category?.name;
                       })
-                      .join(", ")
                   : "";
-              let subCategory =
-                ele.product.categories?.length > 0
-                  ? ele.product.categories
-                      .filter(
-                        (category: ICategory) => category?.parentId !== null
-                      )
-                      .map((category: ICategory) => {
-                        return category?.name;
-                      })
-                      .join(", ")
-                  : "";
-              let tag = ele.product.tags.join(", ");
+              // let subCategory =
+              //   ele.productId.category?.length > 0
+              //     ? ele.productId.category
+              //         .filter(
+              //           (category: ICategory) => category?.parentId !== null
+              //         )
+              //         .map((category: ICategory) => {
+              //           return category?.name;
+              //         })
+              //         .join(", ")
+              //     : "";
+              let tag = ele.productId.tags.join(", ");
               return {
                 ...ele,
-                product: {
-                  ...ele?.product,
-                  category: category,
-                  subCategories: subCategory,
+                productId: {
+                  ...ele?.productId,
+                  categories: category,
+                  // subCategories: subCategory,
                   tag,
                 },
               };

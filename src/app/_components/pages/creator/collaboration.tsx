@@ -24,6 +24,7 @@ export interface ICategory {
 }
 
 export interface IProduct {
+  freeProduct: boolean;
   _id: string;
   title: string;
   channelProductId: string;
@@ -31,60 +32,84 @@ export interface IProduct {
   sku: string;
   description: string;
   media: string[];
+  price: number;
   channelName: string;
-  categories: ICategory[];
-  category?: string;
-  subCategories?: string;
-  tag?: string;
+  category: ICategory[];
+  subCategory: string[];
   tags: string[];
+  lifeTime: boolean;
+  startDate: string;
+  endDate: string;
+  status: string;
+  commission: number;
+  commission_type: string;
+  referenceLinks: string[];
+  creatorMaterial: string[];
+  videoType: string[];
+  channels: string[];
+  notes: string;
+  discount: number;
+  discountType: string;
+  couponCode: string;
   createdAt: string;
   updatedAt: string;
+  categories?: string[];
+  tag?: string;
 }
 
-export interface ICreator {
+export interface IVendorContact {
+  name: string;
+  email: string;
+  phone: string;
   _id: string;
-  user_name: string;
 }
 
-export interface IRequest {
-  _id: string;
-  creatorId: string;
-  productId: string;
-  vendorId: string;
-  collaborationStatus: string;
-  requestFrom: string;
-  createdAt: string;
-  updatedAt: string;
-}
 export interface IVendor {
   _id: string;
+  accountId: string;
+  category: string[];
+  sub_category: string[];
+  completed_step: number;
+  contacts: IVendorContact[];
   business_name: string;
-}
-export interface ICollaboration {
-  _id: string;
-  creatorId: string;
-  productId: string;
-  vendorId: string;
-  requestId: string;
-  collaborationStatus: string;
-  utmLink: string | null;
-  discountType: string;
-  discountValue: number;
-  couponCode: string;
-  commissionPercentage: number;
-  expiresAt: string;
-  agreedByCreator: boolean;
-  agreedByVendor: boolean;
+  company_email: string;
+  type_of_business: string;
+  address: string;
+  state: string;
+  city: string;
+  pin_code: string;
+  website: string;
   createdAt: string;
   updatedAt: string;
-  product: IProduct;
-  request: IRequest;
-  fromUser: {
-    _id: string;
-    business_name: string;
-    profile_image: string;
-  };
+  banner_image: string;
+  profile_image: string;
+  gst_certificate: string;
+  gst_number: string;
+  pan_number: string;
+}
+
+export interface INegotiation {
+  agreedByVendor: boolean;
+  agreedByCreator: boolean;
+}
+
+export interface ICollaboration {
+  negotiation: INegotiation;
+  _id: string;
+  creatorId: string;
+  productId: IProduct;
+  vendorId: IVendor;
+  requestedBy: string;
+  collaborationStatus: string;
+  utmLink: string | null;
   crmLink: string | null;
+  commissionValue: number;
+  commissionType: string;
+  startAt: string | null;
+  expiresAt: string | null;
+  bids: any[]; // Replace `any` with a specific type if bids have a defined structure
+  createdAt: string;
+  updatedAt: string;
 }
 
 const customStyles = {
@@ -141,47 +166,35 @@ export default function CollaborationList() {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/product/collaboration/list?page=${page}&limit=${pageSize}${
+          `/product/collaboration/creator/list?page=${page}&limit=${pageSize}${
             searchValue ? `&search=${searchValue}` : ""
           }${status ? `&collaborationStatus=${status}` : ""}`
         );
+        console.log("response",response?.data?.data)
         if (response.status === 200) {
           const collaborationData = response.data.data;
           if (collaborationData && typeof collaborationData === "object") {
-            const collaborationArray = collaborationData.data || [];
+            const collaborationArray = collaborationData.list || [];
             const collaborationCount = collaborationData.total || 0;
 
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
                 let category =
-                  ele.product.categories?.length > 0
-                    ? ele.product.categories
+                  ele.productId.category?.length > 0
+                    ? ele.productId.category
                         .filter(
                           (category: ICategory) => category?.parentId === null
                         )
                         .map((category: ICategory) => {
                           return category?.name;
                         })
-                        .join(", ")
-                    : "";
-                let subCategory =
-                  ele.product.categories?.length > 0
-                    ? ele.product.categories
-                        .filter(
-                          (category: ICategory) => category?.parentId !== null
-                        )
-                        .map((category: ICategory) => {
-                          return category?.name;
-                        })
-                        .join(", ")
-                    : "";
-                let tag = ele.product.tags.join(", ");
+                    : [];
+                let tag = ele.productId.tags.join(", ");
                 return {
                   ...ele,
-                  product: {
-                    ...ele?.product,
-                    category: category,
-                    subCategories: subCategory,
+                  productId: {
+                    ...ele?.productId,
+                    categories: category,
                     tag,
                   },
                 };

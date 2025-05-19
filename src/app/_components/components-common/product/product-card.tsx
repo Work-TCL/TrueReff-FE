@@ -45,7 +45,7 @@ const ProductCard = ({
   const router = useRouter();
   return (
     <Card
-      onClick={() => router?.push(`${product?.crmLink}`)}
+      onClick={() => router?.push(`/product-detail/${product?._id}`)}
       className="cursor-pointer w-full  border border-stroke rounded-xl p-4 flex flex-col items-center text-center gap-3 hover:shadow-sm transition-shadow bg-white overflow-hidden"
     >
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">

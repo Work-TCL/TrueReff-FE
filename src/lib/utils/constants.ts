@@ -98,7 +98,15 @@ export function formatNumber(num: number = 0) {
   }
   return num === 0 ? "-" : num.toString();
 }
-
+export const formatDate = (dateString: string | null): string => {
+  if (!dateString) return "-"; // Handle empty or null dates
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+  }).format(date);
+};
 export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
   const maxSizeInBytes = mb * 1024 * 1024; // 20MB
   if (size > maxSizeInBytes) {

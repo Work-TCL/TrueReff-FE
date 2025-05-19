@@ -8,9 +8,12 @@ import { toastMessage } from "@/lib/utils/toast-message";
 import ProductList from "./product-list";
 import Loading from "@/app/vendor/loading";
 import NotFound from "@/app/_components/components-common/404";
+import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
+import { useTranslations } from "next-intl";
 
 export default function PublicCreatorStore() {
   const params = useParams();
+  const translate = useTranslations();
   let storeName: any = params?.storeName;
   const [notFounded, setNotFounded] = useState(false);
   const [store, setStore] = useState({
@@ -58,14 +61,14 @@ export default function PublicCreatorStore() {
     }
   }
 
-  if (notFounded || !storeName) {
+  if (!storeName) {
     return <NotFound />;
   }
   return (
     <>
       {loading ? (
         <Loading className="h-screen" />
-      ) : (
+      ) : notFounded ? <div className="grid grid-cols-1 h-screen p-4"><EmptyPlaceHolder title={translate("No_Store_Available_Title")} description={translate("No_Store_Available_Description")}/></div> : (
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-4 gap-y-4 h-screen overflow-auto p-4">
           <div className="col-span-1 overflow-auto">
             <StoreDetailCard store={store} />

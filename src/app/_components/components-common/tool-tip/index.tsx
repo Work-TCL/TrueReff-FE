@@ -17,7 +17,7 @@ const ToolTip = ({
       <Tooltip>
         <Tooltip.Trigger>{children}</Tooltip.Trigger>
         <Tooltip.Content
-          className="bg-white border  rounded-md w-full p-1 text-gray-500"
+          className="bg-white border z-[999] rounded-md w-full p-1 text-gray-500"
           side={position}
         >
           {content}

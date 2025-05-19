@@ -1,5 +1,6 @@
 "use client";
 import { Input } from "@/components/ui/input"; // adjust path as needed
+import { cn } from "@/lib/utils/commonUtils";
 import { Search } from "lucide-react";
 
 interface SearchInputProps {
@@ -17,7 +18,7 @@ export const SearchInput = ({
 }: SearchInputProps) => {
   return (
     <div
-      className={`relative md:text-[20px] text-base text-500 md:max-w-[350px] w-full ${className}`}
+      className={cn(`relative md:text-[20px] text-base text-500 md:max-w-[350px] w-full`,className)}
     >
       <Input
         value={value}

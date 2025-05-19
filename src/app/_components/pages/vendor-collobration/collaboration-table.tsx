@@ -208,7 +208,7 @@ const CollaborationTable = ({
             {collaboration?.collaborationStatus ? (
               <StatusBadge
                 status={collaboration?.collaborationStatus}
-                // messageStatus={getMessages(status, collaboration?.request)}
+                messageStatus={collaboration?.collaborationStatus}
               />
             ) : null}
           </div>

@@ -8,12 +8,12 @@ import DataTable from "@/app/_components/components-common/data-table";
 import { useTranslations } from "next-intl";
 
 interface BrandListProps {
-  brand: Brand[];
+  brand: any[];
 }
 export default function BrandListView({ brand }: BrandListProps) {
   const translate = useTranslations();
   const router = useRouter();
-  const brandColumns: ColumnDef<Brand>[] = [
+  const brandColumns: ColumnDef<any>[] = [
     {
       accessorKey: "name",
       header: () => translate("Brand_Name"),

@@ -11,11 +11,15 @@ export default function StatusBadge({
   messageStatus?: string;
 }) {
   const t = useTranslations("statusMessage");
+
+  function capitalizeFirstLetter(string:string = "") {
+    return string.charAt(0).toUpperCase() + string.toLocaleLowerCase().slice(1);
+  }
   return (
     <div
       className={`${badgeColor[status]} text-sm bg-opacity-10 font-medium me-2 px-2.5 py-0.5 rounded-sm text-center`}
     >
-      {t(messageStatus ?? status)}
+      {messageStatus ? capitalizeFirstLetter(messageStatus) : statusMessage[status]}
     </div>
   );
 }

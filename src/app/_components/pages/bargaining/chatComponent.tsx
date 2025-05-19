@@ -31,7 +31,7 @@ export default function ChatComponent({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     socketService.connect();
@@ -55,7 +55,7 @@ export default function ChatComponent({
     page: number,
     isLoadMore: boolean = false
   ) => {
-    if (!hasMore || isLoading) return;
+    if ( isLoading) return;
     isLoadMore ? setLoading(true) : setIsLoading(true);
 
     try {
@@ -135,7 +135,7 @@ export default function ChatComponent({
   }, [loadingRef, hasMore, isLoading]);
 
   return (
-    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden flex flex-col md:h-full h-[80vh] md:sticky md:top-0">
+    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden shadow-md flex flex-col md:h-full h-[80vh] md:sticky md:top-0">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
         <Avatar>
           {collaborationData.creatorId?.profile_image ||
@@ -152,10 +152,10 @@ export default function ChatComponent({
           <p className="font-medium text-text md:text-lg text-base">
             {getUserName()}
           </p>
-          <p className="text-[#13AD3A] md:text-sm text-xs">Online</p>
+          <p className="text-[#13AD3A] md:text-sm text-xs">{translate("Online")}</p>
         </div>
       </div>
-      <div className="h-px w-full bg-stroke mx-2"></div>{" "}
+      {/* <div className="h-px w-full bg-stroke mx-2"></div>{" "} */}
       <CardContent className="flex flex-col-reverse overflow-y-auto gap-3 h-full">
         {/* {isLoading && <Loading />} */}
         {!isLoading && message?.length < 0 && (
@@ -181,7 +181,7 @@ export default function ChatComponent({
               >
                 <div className="flex items-end overflow-hidden">
                   {!owner && (
-                    <Avatar>
+                    <Avatar key={idx}>
                       <AvatarImage
                         src={
                           user?.role === "creator"
@@ -212,7 +212,7 @@ export default function ChatComponent({
                   </div>
                 </div>
                 {owner && (
-                  <Avatar>
+                  <Avatar key={idx}>
                     <AvatarImage
                       src={
                         user?.role === "creator"

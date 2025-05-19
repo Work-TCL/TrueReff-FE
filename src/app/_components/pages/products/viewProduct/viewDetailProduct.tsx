@@ -331,11 +331,11 @@ export default function ViewProductDetail({
                 {
                   label: translate("Product_List"),
                   href: isFromPublic
-                    ? "/store/creatorstore"
+                    ? "go_back"
                     : creator?.creatorId
                     ? pathName.includes("/product-management")
                       ? `/creator/product-management`
-                      : `/creator/brandsList/${params.id}`
+                      : `/creator/brandsList`
                     : channelType
                     ? `/vendor/products/channel-products`
                     : `/vendor/products`,

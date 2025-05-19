@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_SERVER_URL = "http://localhost:5004"; // Update this with your actual backend URL
+const SOCKET_SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_URL; // Update this with your actual backend URL
 
 class SocketService {
   private socket: Socket | null = null;
@@ -103,6 +103,27 @@ class SocketService {
       this.socket.on("notification", callback);
     }
   }
+  //receive bid
+  newBidReceived(callback: (data: any) => void): void {
+    if (this.socket) {
+      this.socket.on("newBid", callback);
+    }
+  }
+
+  //send new bid
+  sendNewBid(data: any): void {
+    if (this.socket) {
+      console.log("0 bid");
+      this.socket.emit("bidRequest", data);
+    }
+  }
+
+  //bid send fail
+  errorSendBid(callback: (data: any) => void): void {
+    if (this.socket) {
+      this.socket.on("bid-error", callback);
+    }
+  }
 
   /**
    * Disconnect the socket connection
