@@ -14,10 +14,10 @@ export default function Launchpad() {
                 </div>
             </div>
 
-            <div className='flex justify-center items-center relative bottom-[150px] h-[300px]'>
-                <div className='relative py-[100px]  flex justify-between align-middle bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff] max-w-[1200px] rounded-[15px] w-full px-[60px]'>
+            <div className='flex justify-center items-center relative bottom-[150px] h-[300px] mb-[300px]'>
+                <div className='relative py-[125px]  flex justify-between align-middle bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff] max-w-[1200px] rounded-[15px] w-full px-[60px]'>
                     <p className='text-5xl font-medium text-gray-900'>Try <span className="text-primary font-bold "> Truereff</span> for free</p>
-                    <img src='/assets/landing/iphoneTwo.png' className='absolute top-[-130px] right-[230px] h-[550px] w-[500px]' />
+                    <img src='/assets/landing/iphoneTwo.png' className='absolute top-[-140px] right-[200px] h-[620px] w-[550px]' />
 
                     <button className="group relative flex items-center justify-between pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white w-[215px]">
                         <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-300 ease-in-out group-hover:scale-x-100 z-0" />

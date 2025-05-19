@@ -9,6 +9,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import ContentCategories from "./ContentCategories";
 import Launchpad from "./Launchpad";
+import LandingPageFooter from "./LandingPageFooter";
 
 export default function LandingPage() {
   const [activeLink, setActiveLink] = useState("creator");
@@ -105,6 +106,7 @@ export default function LandingPage() {
       <SocialMedia />
       <ContentCategories />
       <Launchpad />
+      <LandingPageFooter />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import EarningHeans from '../../../public/assets/svg/EarningHeans';
 
 export default function SocialMediaSections() {
     return (
-        <section className="w-full  bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff] flex flex-col gap-20">
+        <section className="bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff] flex flex-col gap-36">
             <div className='flex flex-col justify-center'>
                 <div className="flex justify-center text-center pt-16">
                     <p className="text-5xl font-medium text-gray-900 leading-[60px]">
@@ -15,7 +15,7 @@ export default function SocialMediaSections() {
                     </p>
                 </div>
 
-                <div className="w-full flex justify-center ml-[140px]">
+                <div className=" flex justify-center ml-[140px]">
                     <div className=' flex justify-center items-center'>
                         <div className="h-[114px] w-[291px] py-[10px] px-[20] flex flex-col gap-1 bg-white bg-opacity-80 backdrop-blur-sm rounded-[15px] shadow-md">
                             <p className="text-3xl font-medium">Smith Jain</p>
@@ -46,20 +46,20 @@ export default function SocialMediaSections() {
                 </div>
             </div>
 
-            <div className='w-full flex flex-col justify-center items-center gap-5 pb-20'>
+            <div className='flex flex-col justify-center items-center gap-5'>
                 <p className="text-5xl font-medium text-gray-900 leading-6 pb-10">
                     Join <span className="text-primary font-bold">Truereff</span> and start earning
                 </p>
 
                 <div className='flex gap-4 h-[551px]'>
-                    <div className='rounded-xl h-full w-[300px] flex flex-col text-center align-middle justify-end  p-[40px] bg-[#38a2f5]'>
+                    <div className='rounded-tl-xl rounded-tr-xl h-full w-[300px] flex flex-col text-center align-middle justify-end  p-[40px] bg-[#38a2f5]'>
                         <p className='font-black text-5xl text-white opacity-25'>1</p>
                         <p className='text-2xl font-medium text-white pt-4 pb-8'>Sign up on Truereff</p>
                         <div className='flex pb-12 align-center justify-center'>
                         <SignUpImage />
                         </div>
                     </div>
-                    <div className='rounded-xl w-[600px] bg-primary flex flex-col align-middle text-center justify-end'>
+                    <div className='rounded-tl-xl rounded-tr-xl w-[600px] bg-primary flex flex-col align-middle text-center justify-end'>
                         <p className='font-black text-white  text-5xl'>2</p>
                         <p className='ont-medium text-white pt-4 text-3xl'>Link your social media</p>
                         <p className='text-white'>Connect either your Instagram <br /> or YouTube account</p>
@@ -67,7 +67,7 @@ export default function SocialMediaSections() {
                         <img src="/assets/landing/iPhone.png" alt="iphone"  className="h-[380px] w-[400px]" />
                         </div>
                     </div>
-                     <div className='rounded-xl h-full w-[300px] flex flex-col  text-center align-middle justify-end  p-[40px] bg-[#38a2f5]'>
+                     <div className='rounded-tl-xl rounded-tr-xl h-full w-[300px] flex flex-col  text-center align-middle justify-end  p-[40px] bg-[#38a2f5]'>
                         <p className='font-black text-5xl text-white opacity-25'>1</p>
                         <p className='text-2xl font-medium text-white pt-4 pb-8'>Kickstart your earninas</p>
                         <div className='flex pb-12 align-center justify-center'>

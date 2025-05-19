@@ -8,6 +8,10 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'xs': '320px',         
+        'mobile': {'max': '640px'}, 
+      },
       colors: {
         foreground: "hsl(var(--foreground))",
         "primary-color": "#FF4979",
