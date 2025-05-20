@@ -26,16 +26,18 @@ import { SearchInput } from "@/app/_components/components-common/search-field";
 import ChannelBar from "./chaneelBar";
 import { getConnectedChannelsList } from "@/lib/web-api/channel";
 import { toastMessage } from "@/lib/utils/toast-message";
+import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 
 export interface IProduct {
+  id: number;
+  name: string;
   handle: string;
-  id: string;
-  image: string;
-  title: string;
   category: string;
-  tags: string[];
-  sku: string;
+  sub_category: string;
   price: string;
+  main_image: string;
+  total_variants: number;
+  status: string;
 }
 interface IProps {
   channelName: string;
@@ -49,19 +51,11 @@ export default function ChannelProductList({
   const [search, setSearch] = useState<string>("");
   const [currentData, setCurrentData] = useState<IProduct | null>(null);
   const [productList, setProductList] = useState<IProduct[]>([]);
-  const [cursors, setCursors] = useState<{
-    next: string | null;
-    previous: string | null;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  }>({
-    next: null,
-    previous: null,
-    hasNextPage: false,
-    hasPreviousPage: false,
-  });
   const [activeChannelTabId, setActiveChannelTabId] = useState("");
   const [channels, setChannels] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const pageSize = 20;
   const translate = useTranslations();
 
   // Fetch Chanel list
@@ -77,54 +71,39 @@ export default function ChannelProductList({
 
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
-    ItemPerPage: number,
-    cursor: string | null = null,
+    page: number = 1,
     isInternalLoader = false,
     searchValue: string = ""
   ) => {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product/list?per_page=${ItemPerPage}${cursor ? `&cursor=${cursor}` : ""
-        }${searchValue ? `&search=${searchValue}` : ""}`
+        `channel/shopify/product/list?limit=${pageSize}&page=${page}${searchValue ? `&search=${searchValue}` : ""}`
       );
-      if (response.data.data.products) {
-        setProductList(response.data.data.products);
-        setCursors({
-          next: response.data.data.page_info.next_cursor,
-          previous: response.data.data.page_info.previous_cursor,
-          hasNextPage: response.data.data.page_info.has_next_page,
-          hasPreviousPage: response.data.data.page_info.has_previous_page,
-        });
+      if (response?.data?.data?.list?.length > 0) {
+        const dataCount = response.data.data.count;
+        setProductList(response.data.data.list);
+        setCurrentPage(page);
+        setTotalPages(Math.ceil(dataCount / pageSize));  
       }
       setLoading(false);
       setInternalLoader(false);
     } catch (error) {
       setLoading(false);
       setInternalLoader(false);
+      setCurrentPage(1);
+      setTotalPages(0);
     }
   };
 
   // Update useEffect to fetch the initial product list
   useEffect(() => {
-    fetProductsList(20);
+    fetProductsList(1);
   }, []);
 
-  // Update the onClick handlers for pagination buttons
-  const handleNextPage = () => {
-    if (cursors.next && cursors.hasNextPage) {
-      fetProductsList(20, cursors.next, true);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (cursors.previous && cursors.hasPreviousPage) {
-      fetProductsList(20, cursors.previous, true);
-    }
-  };
   const debouncedSearch = useCallback(
     debounce((value: string) => {
-      fetProductsList(20, cursors.previous, true, value);
+      fetProductsList(1, true, value);
     }, 500),
     []
   );
@@ -133,8 +112,12 @@ export default function ChannelProductList({
     setSearch(value);
     debouncedSearch(value);
   };
+  const handlePageChange = (page: number) => {
+    page !== currentPage &&
+    fetProductsList(page, true, search);
+  };
 
-  const handleOnCheckExists = async (productId: string) => {
+  const handleOnCheckExists = async (productId: number) => {
     setInternalLoader(true);
     try {
       const response = await axios.post(
@@ -160,7 +143,7 @@ export default function ChannelProductList({
       header: () => translate("Product_ID"),
       cell: ({ row }) => {
         const product = row.original;
-        return product.id.split("/").pop();
+        return product.id;
       },
     },
     {
@@ -177,9 +160,9 @@ export default function ChannelProductList({
               )
             }
           >
-            {product.image ? (
+            {product.main_image ? (
               <Avatar className="w-8 h-8">
-                <AvatarImage src={product.image} />
+                <AvatarImage src={product.main_image} />
               </Avatar>
             ) : (
               <ImageOff className="w-6 h-6 text-gray-400" />
@@ -187,7 +170,7 @@ export default function ChannelProductList({
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
               linesToClamp={2}
-              text={product.title ?? ""}
+              text={product.name ?? ""}
             />
           </div>
         );
@@ -205,26 +188,19 @@ export default function ChannelProductList({
       ),
     },
     {
-      accessorKey: "tags",
-      header: () => translate("Tags"),
+      accessorKey: "sub_category",
+      header: () => translate("Sub_Category"),
       cell: ({ row }) => (
         <TruncateWithToolTip
           checkHorizontalOverflow={false}
           linesToClamp={2}
-          text={row.original.tags?.join(", ") ?? ""}
+          text={row.original.sub_category ?? ""}
         />
       ),
     },
     {
-      accessorKey: "sku",
-      header: () => translate("SKU"),
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.sku ?? ""}
-        />
-      ),
+      accessorKey: "total_variants",
+      header: () => translate("Variants"),
     },
     {
       accessorKey: "price",
@@ -233,7 +209,7 @@ export default function ChannelProductList({
         <TruncateWithToolTip
           checkHorizontalOverflow={false}
           linesToClamp={2}
-          text={row.original.price ?? ""}
+          text={`₹ ${row.original.price ?? ""}`}
         />
       ),
     },
@@ -303,51 +279,27 @@ export default function ChannelProductList({
                     channelName: channelName,
                     handle: currentData.handle,
                     id: currentData.id,
-                    image: currentData.image,
-                    title: currentData.title,
+                    image: currentData.main_image,
+                    title: currentData.name,
                     category: currentData.category,
-                    tags: currentData.tags,
-                    sku: currentData.sku,
+                    tags: [],
+                    sku: "",
                     price: currentData.price,
                   }}
                   onClose={(refresh = false) => {
                     setCurrentData(null);
                     if (refresh) {
-                      fetProductsList(20, null, true);
+                      fetProductsList(currentPage, true,search);
                     }
                   }}
                 />
               )}
               {/* Pagination */}
-              {cursors.next || cursors.previous ? ( // Only show pagination if either cursor is available
-                <div className="flex justify-center items-center">
-                  <Pagination className="flex justify-center mt-1">
-                    <PaginationContent className="flex items-center gap-2">
-                      <PaginationItem>
-                        <PaginationPrevious
-                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${!cursors.hasPreviousPage
-                              ? "cursor-not-allowed opacity-50"
-                              : "cursor-pointer"
-                            }`}
-                          showArrow={false}
-                          onClick={handlePreviousPage}
-                        />
-                      </PaginationItem>
-
-                      <PaginationItem>
-                        <PaginationNext
-                          className={`text-sm px-3 py-2 rounded-lg text-gray-500 bg-gray-100 hover:bg-gray-200 ${!cursors.hasNextPage
-                              ? "cursor-not-allowed opacity-50"
-                              : "cursor-pointer"
-                            }`}
-                          showArrow={false}
-                          onClick={handleNextPage}
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>{" "}
-                </div>
-              ) : null}
+              <TablePagination
+                  totalPages={totalPages}
+                  activePage={currentPage}
+                  onPageChange={handlePageChange}
+                />
             </>
           ) : (
             <EmptyPlaceHolder

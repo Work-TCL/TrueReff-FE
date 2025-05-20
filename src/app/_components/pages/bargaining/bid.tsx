@@ -42,7 +42,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
 
     const [viewAllBids, setViewAllBids] = useState(false);
 
-    const handleOfferChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleOfferChange = (e: any) => {
         const inputValue = e.target.value;
 
         // If the first character is "0" and the length is greater than 1, remove the first character
@@ -197,7 +197,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
 
 
                     {(!isYourOffer && !isEditing) && <><button
-                        onClick={() => setYourOffer((prev: any) => Math.max(0, prev - 1))}
+                        onClick={() => handleOfferChange({target:{value: Math.max(0, yourOffer - 1).toString()}})}
                         className="absolute bottom-2 left-2 bg-gray-200 hover:bg-gray-300 p-1 rounded-full"
                     >
                         <Minus className="w-4 h-4" />
@@ -205,7 +205,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
 
                         {/* Plus Button - Bottom Right */}
                         <button
-                            onClick={() => setYourOffer((prev: any) => prev + 1)}
+                            onClick={() => handleOfferChange({target:{value: (yourOffer + 1).toString()}})}
                             className="absolute bottom-2 right-2 bg-gray-200 hover:bg-gray-300 p-1 rounded-full"
                         >
                             <Plus className="w-4 h-4" />

@@ -39,18 +39,36 @@ interface IAddProductDetailProps {
   isDetailView?: boolean;
 }
 
-interface IProduct {
-  handle: string;
-  id: string;
-  image: string;
+export interface IImage {
+  id: number;
+  src: string;
+  alt: string;
+}
+
+export interface IVariant {
+  id: number;
   title: string;
-  category: string;
-  tags: string[];
-  sku: string;
   price: string;
-  totalInventory: number;
-  description: string;
-  createdAt: string;
+  sku: string;
+  inventory_quantity: number;
+  available_quantity: number;
+  barcode: string | null;
+  image_id: number | null;
+}
+
+export interface IProduct {
+  id: number;
+  name: string;
+  handle: string;
+  description_html: string;
+  vendor: string;
+  product_type: string;
+  status: string;
+  tags: string;
+  images: IImage[];
+  variants: IVariant[];
+  title?: string;
+  description?: string;
 }
 
 export default function CreateProductCampaign(props: IAddProductDetailProps) {
@@ -63,7 +81,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const isDisabled: any = props?.isDetailView;
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [campaignData, setCampaignData] = useState<any | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   // campaign mixin
   const [mediaMixin, setMediaMixin] = useState<{
     images: File[];
@@ -252,13 +270,15 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
       const product: any = response?.data?.data;
 
-      const images = product?.media?.nodes?.filter((v:any) => v?.image?.url)?.map(
-        (v: any) => v?.image?.url
+      const images = product?.images?.filter((v:any) => v?.src)?.map(
+        (v: any) => v?.src
       );
 
       // productId({ ...product, media: images });
       handleProductSelect({
         ...product,
+        title: product?.name,
+        description: product?.description_html,
         media: [...images],
       });
     } catch (error: any) {
@@ -267,7 +287,33 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       setLoading(false);
     }
   };
+//   const handleOfferChange = (e: any) => {
+//     const inputValue = e.target.value;
 
+//     // If the first character is "0" and the length is greater than 1, remove the first character
+//     if (inputValue.charAt(0) === "0" && inputValue.length > 1) {
+//         setYourOffer(parseFloat(inputValue.slice(1)));
+//     } else {
+//         const value = parseFloat(inputValue);
+//         if (!isNaN(value)) {
+//             if (bid === bidAmount.percentage) {
+//                 // For percentage-based commission, calculate the maximum offer
+//                 const maxOffer = (collaborationData?.productId?.price * value) / 100;
+//                 if (maxOffer > collaborationData?.productId?.price) {
+//                     setOfferError("Offer cannot exceed the product price.");
+//                 } else setOfferError("");
+//             } else if (bid === bidAmount.fixedPercentage) {
+//                 // For fixed amount, ensure the offer does not exceed the product price
+//                 if (value > collaborationData?.productId?.price) {
+//                     setOfferError("Offer cannot exceed the product price.");
+//                 } else setOfferError("");
+//             }
+//             setYourOffer(value);
+//         } else {
+//             setYourOffer(null);
+//         }
+//     }
+// };
   const fetchProductById = async () => {
     setLoading(true);
     try {
@@ -451,16 +497,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 }
                 title={selectedProduct?.title}
                 description={selectedProduct?.description}
-                // tags={
-                //   Array.isArray(selectedProduct?.tags)
-                //     ? selectedProduct?.tags
-                //     : undefined
-                // }
-                price={
-                  selectedProduct?.variants?.nodes?.length > 0
-                    ? selectedProduct?.variants?.nodes[0]?.price || undefined
-                    : undefined
+                price={selectedProduct?.price ? selectedProduct?.price : undefined
                 }
+                variants={selectedProduct?.variants}
                 totalInventory={selectedProduct?.totalInventory}
               />
               <div

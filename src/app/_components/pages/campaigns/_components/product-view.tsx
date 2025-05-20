@@ -1,6 +1,7 @@
 "use client";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import { ImageOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 interface IProps {
@@ -10,6 +11,7 @@ interface IProps {
   tags?: string[];
   price?: string;
   totalInventory?: string;
+  variants?: any[];
 }
 
 function CampaignProductView({
@@ -19,7 +21,9 @@ function CampaignProductView({
   tags = [],
   totalInventory,
   price,
+  variants = [],
 }: IProps) {
+  const translate = useTranslations();
   const [activeImage, setActiveImage] = useState(
     images && images?.length > 0 ? images[0] : undefined
   );
@@ -57,7 +61,7 @@ function CampaignProductView({
             )}
           </div>
 
-          <div className="mt-6 sm:mt-8 lg:mt-0 col-span-3">
+          <div className="mt-6 sm:mt-8 lg:mt-0 col-span-2">
             <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
               {title}
             </h1>
@@ -71,7 +75,7 @@ function CampaignProductView({
                   href="#"
                   className="text-sm font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white"
                 >
-                  {totalInventory} Inventory
+                  {totalInventory ? `${totalInventory} Inventory` : ""} 
                 </a>
               </div>
             </div>
@@ -79,9 +83,9 @@ function CampaignProductView({
             <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800" />
 
             {description && (
-              <p className="mb-6 text-gray-500 dark:text-gray-400">
-                {description}
-              </p>
+              <p className="mb-6 text-gray-500 dark:text-gray-400" dangerouslySetInnerHTML={{
+                __html: description,
+              }}/>
             )}
             {(tags && tags?.length > 0) && (
               <div className="flex gap-2 mt-1">
@@ -95,6 +99,21 @@ function CampaignProductView({
                 ))}
               </div>
             )}
+          </div>
+          <div className="mt-6 sm:mt-8 lg:mt-0 col-span-1 lg:border-l px-20">
+            <h3 className="text-md font-semibold text-gray-900 sm:text-2xl dark:text-white">
+              {translate("variants")}
+            </h3>
+            {variants && variants?.length > 0 && variants.map((variant: any, index: number) => (
+              <div key={index} className="flex flex-col md:flex-row items-start gap-2">
+              <div className="w-[120px] text-sm text-gray-500 text-nowrap">
+                {variant?.title}:
+              </div>
+              <div className="font-medium text-sm break-words">
+                {variant?.price ?  `₹ ${variant?.price}`  : "-"}
+              </div>
+            </div>
+            ))}
           </div>
         </div>
       </div>

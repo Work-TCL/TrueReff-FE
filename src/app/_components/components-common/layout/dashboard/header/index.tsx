@@ -274,7 +274,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       ) : (
         <header className="bg-white px-3 py-3 flex items-center gap-1">
           <Menu
-            className="size-5 shrink-0 cursor-pointer lg:hidden"
+            className="size-5 shrink-0 cursor-pointer hidden"
             onClick={handleExpandSidebar}
           />
           <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-medium text-primary">

@@ -379,7 +379,8 @@ export default function PreFormPage() {
     setLoading(true);
     try {
       const payload: any = {
-        id_string: data.shopify_store_id,
+        uniqueId: data.shopify_store_id,
+        shopUrl: data.shopify_store_domain,
       };
       let { data: response }: any = await axios.post(
         "/channel/shopify/connect",

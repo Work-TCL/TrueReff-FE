@@ -366,6 +366,7 @@ export const preFormSchema = Yup.object().shape({
 });
 export const vendorRegisterThirdStepSchema = Yup.object().shape({
   shopify_store_id: Yup.string().required("Shopify store id is required"),
+  shopify_store_domain: Yup.string().required("Shopify store domain is required"),
 });
 
 export interface IVendorRegisterThirdStepSchema
