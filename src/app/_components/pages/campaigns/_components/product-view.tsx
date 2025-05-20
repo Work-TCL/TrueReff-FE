@@ -30,7 +30,7 @@ function CampaignProductView({
 
   return (
     <section className="py-5 bg-white md:py-5 dark:bg-gray-900 antialiased">
-      <div className="px-4 2xl:px-0">
+      <div className="">
         <div className="lg:grid lg:grid-cols-4 lg:gap-8 xl:gap-16">
           <div className="shrink-0 mx-auto flex justify-center items-center flex-col lg:border-r pr-3 w-full">
             {activeImage || images?.length > 0 ? (
@@ -61,13 +61,13 @@ function CampaignProductView({
             )}
           </div>
 
-          <div className="mt-6 sm:mt-8 lg:mt-0 col-span-2">
+          <div className="mt-6 sm:mt-8 lg:mt-0 col-span-3">
             <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
               {title}
             </h1>
             <div className="mt-4 sm:items-center sm:gap-4 sm:flex">
               <p className="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">
-                {price}
+                {price ? `₹${price}` : "-"}
               </p>
 
               <div className="flex items-center gap-2 mt-2 sm:mt-0">
@@ -99,22 +99,23 @@ function CampaignProductView({
                 ))}
               </div>
             )}
-          </div>
-          <div className="mt-6 sm:mt-8 lg:mt-0 col-span-1 lg:border-l px-20">
+            <div className="mt-6 sm:mt-8 lg:mt-0">
             <h3 className="text-md font-semibold text-gray-900 sm:text-2xl dark:text-white">
               {translate("variants")}
             </h3>
             {variants && variants?.length > 0 && variants.map((variant: any, index: number) => (
-              <div key={index} className="flex flex-col md:flex-row items-start gap-2">
-              <div className="w-[120px] text-sm text-gray-500 text-nowrap">
+              <div key={index} className="flex  md:flex-row items-start gap-2">
+              <div className="w-auto text-sm text-gray-500">
                 {variant?.title}:
               </div>
-              <div className="font-medium text-sm break-words">
-                {variant?.price ?  `₹ ${variant?.price}`  : "-"}
+              <div className="font-medium text-sm ">
+                {variant?.price ?  `₹${variant?.price}`  : "-"}
               </div>
             </div>
             ))}
           </div>
+          </div>
+          
         </div>
       </div>
     </section>

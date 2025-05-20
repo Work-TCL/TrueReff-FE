@@ -99,6 +99,7 @@ export default function CreatorRegistrationPage() {
   };
   const [formState, setFormState] = useState(initialState);
   const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const [showTrending, setShowTrending] = useState(false);
   const methods = useForm<ICreatorOnBoardingSchema>({
     defaultValues: {
       full_name: "",
@@ -221,6 +222,7 @@ export default function CreatorRegistrationPage() {
       const formData = new FormData();
       formData.append("store_name", data?.store_name);
       formData.append("store_description", data?.store_description);
+      formData.append("showTrending", showTrending ? "true" : "false");
       data.category.length > 0 && data.category.forEach((ele, index) => {
         formData.append(`category[${index}]`, ele?.value);
       })
@@ -607,6 +609,8 @@ export default function CreatorRegistrationPage() {
                       bannerPreview={bannerPreview}
                       methods={storeMethods}
                       categories={categories}
+                      showTrending={showTrending} 
+                      setShowTrending={setShowTrending}
                     />
                     <div className="flex bg-white">
                       <Button

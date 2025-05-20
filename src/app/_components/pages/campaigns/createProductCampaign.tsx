@@ -70,7 +70,20 @@ export interface IProduct {
   title?: string;
   description?: string;
 }
-
+const types = {
+  FIXED_AMOUNT: "FIXED_AMOUNT",
+  PERCENTAGE: "PERCENTAGE",
+}
+const typOptions = [
+  {
+    label: "Fixed Amount",
+    value: "FIXED_AMOUNT",
+  },
+  {
+    label: "Percentage",
+    value: "PERCENTAGE",
+  },
+]
 export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const translate = useTranslations();
   const params = useParams();
@@ -81,7 +94,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const isDisabled: any = props?.isDetailView;
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [campaignData, setCampaignData] = useState<any | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   // campaign mixin
   const [mediaMixin, setMediaMixin] = useState<{
     images: File[];
@@ -101,6 +114,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
   const [showDiscountSection, setShowDiscountSection] = useState(false);
+
+  const [formState, setFormState] = useState({
+    discount_value: "",
+    commission: "",
+  })
 
   const fetchCategory = async () => {
     try {
@@ -145,91 +163,169 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     }
     setLoading(true);
     try {
-      const formData: FormData = new FormData();
-
-      formData.append("name", data.name);
-      formData.append("description", data.description);
-      formData.append("channelName", "shopify");
-      // formData.append("videoType", );
-      if (data?.notes) formData.append("notes", data?.notes);
-      if (data.discount_type)
-        formData.append("discount_type", data.discount_type);
-      if (data.discount_value)
-        formData.append("discount_value", data.discount_value.toString());
-      formData.append("productId", selectedProduct?.id || "");
-      //@ts-ignore
-      formData.append("commission", data.commission);
-      formData.append("commission_type", data?.commission_type);
-
-      //@ts-ignore
-      formData.append("freeProduct", data?.freeProduct);
-      //@ts-ignore
-      formData.append("lifeTime", Boolean(data?.campaignLifeTime));
-      formData.append("startDate", String(data.startDate));
-      if (!data?.campaignLifeTime) {
-        formData.append("endDate", String(data.endDate));
+      let price = selectedProduct?.variants?.length > 0 ? selectedProduct?.variants[0]?.price : 0;
+      let discountError = "";
+      let commissionError = "";
+      // If the first character is "0" and the length is greater than 1, remove the first character
+      const commissionValue = data?.commission;
+      const discountValue = data?.discount_value;
+      if (!isNaN(commissionValue)) {
+        if (data?.commission_type === types.PERCENTAGE) {
+          // For percentage-based commission, calculate the maximum offer
+          const maxOffer = (parseFloat(price) * commissionValue) / 100;
+          if (price && maxOffer > parseFloat(price)) {
+            methods.setError("commission", {
+              type: "manual",
+              message: "Commission cannot exceed the product price."
+            });
+            commissionError = "Commission cannot exceed the product price."
+          } else {
+            commissionError = "";
+            methods.setError("commission", {
+            type: "manual",
+            message: ""
+          });}
+        } if (data.commission_type === types.FIXED_AMOUNT) {
+          // For fixed amount, ensure the offer does not exceed the product price
+          
+          if (price && commissionValue > parseFloat(price)) {
+            methods.setError("commission", {
+              type: "manual",
+              message: "Commission cannot exceed the product price."
+            });
+            commissionError = "Commission cannot exceed the product price."
+          } else {
+            commissionError = ""
+            methods.setError("commission", {
+            type: "manual",
+            message: ""
+          });}
+        }
+      } 
+       if (discountValue && !isNaN(discountValue)) {
+        if (data.discount_type === types.PERCENTAGE) {
+          // For percentage-based commission, calculate the maximum offer
+          const maxOffer = (parseFloat(price) * discountValue) / 100;
+          if (price && maxOffer > parseFloat(price)) {
+            discountError = "Discount cannot exceed the product price."
+            methods.setError("discount_value", {
+              type: "manual",
+              message: "Discount cannot exceed the product price."
+            });
+          } else {
+            discountError = "";
+            methods.setError("discount_value", {
+            type: "manual",
+            message: ""
+          });}
+        } else if (data.discount_type === types.FIXED_AMOUNT) {
+          // For fixed amount, ensure the offer does not exceed the product price
+          if (price && discountValue > parseFloat(price)) {
+            discountError = "Discount cannot exceed the product price."
+            methods.setError("discount_value", {
+              type: "manual",
+              message: "Discount cannot exceed the product price."
+            });
+          } else {
+            discountError = "";
+            methods.setError("discount_value", {
+            type: "manual",
+            message: ""
+          });;}
+        }
       }
-      data.channels.forEach((channel) => {
-        formData.append("channels[]", channel);
-      });
-      data.videoType.forEach((v: string, i: number) => {
-        formData.append(`videoType[${i}]`, v);
-      });
-      data?.category?.forEach((opt: any, i: number) => {
-        formData.append(`category[${i}]`, opt?.value);
-      });
-      data?.sub_category?.forEach((opt: any, i: number) => {
-        formData.append(`subCategory[${i}]`, opt?.value);
-      });
-      data.tags.forEach((tag: string, i: number) => {
-        formData.append(`tags[${i}]`, tag);
-      });
-      data?.references?.forEach((link: string, i: number) => {
-        formData.append(`referenceLinks[${i}]`, link);
-      });
+      
+      const isValid = (discountError === "" && commissionError === "");
 
-      // If you're including images as an array
-      if (mediaMixin.images && mediaMixin.images.length > 0) {
-        mediaMixin.images.forEach((image: File, index: number) => {
-          formData.append("creatorMaterial", image); // backend should expect array under 'images'
+
+      if (isValid) {
+        const formData: FormData = new FormData();
+
+        formData.append("name", data.name);
+        formData.append("description", data.description);
+        formData.append("channelName", "shopify");
+        // formData.append("videoType", );
+        if (data?.notes) formData.append("notes", data?.notes);
+        if (data.discount_type)
+          formData.append("discount_type", data.discount_type);
+        if (data.discount_value)
+          formData.append("discount_value", data.discount_value.toString());
+        formData.append("productId", selectedProduct?.id || "");
+        //@ts-ignore
+        formData.append("commission", data.commission);
+        formData.append("commission_type", data?.commission_type);
+
+        //@ts-ignore
+        formData.append("freeProduct", data?.freeProduct);
+        //@ts-ignore
+        formData.append("lifeTime", Boolean(data?.campaignLifeTime));
+        formData.append("startDate", String(data.startDate));
+        if (!data?.campaignLifeTime) {
+          formData.append("endDate", String(data.endDate));
+        }
+        data.channels.forEach((channel) => {
+          formData.append("channels[]", channel);
         });
+        data.videoType.forEach((v: string, i: number) => {
+          formData.append(`videoType[${i}]`, v);
+        });
+        data?.category?.forEach((opt: any, i: number) => {
+          formData.append(`category[${i}]`, opt?.value);
+        });
+        data?.sub_category?.forEach((opt: any, i: number) => {
+          formData.append(`subCategory[${i}]`, opt?.value);
+        });
+        data.tags.forEach((tag: string, i: number) => {
+          formData.append(`tags[${i}]`, tag);
+        });
+        data?.references?.forEach((link: string, i: number) => {
+          formData.append(`referenceLinks[${i}]`, link);
+        });
+
+        // If you're including images as an array
+        if (mediaMixin.images && mediaMixin.images.length > 0) {
+          mediaMixin.images.forEach((image: File, index: number) => {
+            formData.append("creatorMaterial", image); // backend should expect array under 'images'
+          });
+        }
+        if (mediaMixin?.video) {
+          formData.append("creatorMaterial", mediaMixin.video);
+        }
+
+        // Make API call with formData
+        let response: any;
+        if (productId) {
+          // const deletedImages: string[] =
+          //   campaignData?.imageUrls?.filter(
+          //     (url) => !mediaPreview.images.includes(url)
+          //   ) || [];
+
+          // // 2. If there was a video on the campaign but the preview no longer has one, mark that for deletion
+          // const deletedVideo: string[] =
+          //   campaignData?.videoUrl && !mediaPreview.video
+          //     ? [campaignData.videoUrl]
+          //     : [];
+
+          // // 3. Combine into one array
+          // const deletedFiles = [...deletedImages, ...deletedVideo];
+          // if (deletedFiles && deletedFiles.length > 0) {
+          //   formData.append("deleteMedias", JSON.stringify(deletedFiles));
+          // }
+
+          response = await updateCampaignProduct(formData);
+        } else {
+          response = await createCampaignProduct(formData);
+        }
+
+        if (response?.status === 201 || response?.status === 200) {
+          toast.success(response?.message);
+          methods?.reset();
+          router?.push("/vendor/products");
+          return true;
+        }
+        throw response;
       }
-      if (mediaMixin?.video) {
-        formData.append("creatorMaterial", mediaMixin.video);
-      }
 
-      // Make API call with formData
-      let response: any;
-      if (productId) {
-        // const deletedImages: string[] =
-        //   campaignData?.imageUrls?.filter(
-        //     (url) => !mediaPreview.images.includes(url)
-        //   ) || [];
-
-        // // 2. If there was a video on the campaign but the preview no longer has one, mark that for deletion
-        // const deletedVideo: string[] =
-        //   campaignData?.videoUrl && !mediaPreview.video
-        //     ? [campaignData.videoUrl]
-        //     : [];
-
-        // // 3. Combine into one array
-        // const deletedFiles = [...deletedImages, ...deletedVideo];
-        // if (deletedFiles && deletedFiles.length > 0) {
-        //   formData.append("deleteMedias", JSON.stringify(deletedFiles));
-        // }
-
-        response = await updateCampaignProduct(formData);
-      } else {
-        response = await createCampaignProduct(formData);
-      }
-
-      if (response?.status === 201 || response?.status === 200) {
-        toast.success(response?.message);
-        methods?.reset();
-        router?.push("/vendor/products");
-        return true;
-      }
-      throw response;
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
@@ -270,7 +366,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
       const product: any = response?.data?.data;
 
-      const images = product?.images?.filter((v:any) => v?.src)?.map(
+      const images = product?.images?.filter((v: any) => v?.src)?.map(
         (v: any) => v?.src
       );
 
@@ -281,39 +377,13 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         description: product?.description_html,
         media: [...images],
       });
+      setLoading(false);
     } catch (error: any) {
       toast.error(error?.message || "Product Fetch Failed.");
     } finally {
       setLoading(false);
     }
   };
-//   const handleOfferChange = (e: any) => {
-//     const inputValue = e.target.value;
-
-//     // If the first character is "0" and the length is greater than 1, remove the first character
-//     if (inputValue.charAt(0) === "0" && inputValue.length > 1) {
-//         setYourOffer(parseFloat(inputValue.slice(1)));
-//     } else {
-//         const value = parseFloat(inputValue);
-//         if (!isNaN(value)) {
-//             if (bid === bidAmount.percentage) {
-//                 // For percentage-based commission, calculate the maximum offer
-//                 const maxOffer = (collaborationData?.productId?.price * value) / 100;
-//                 if (maxOffer > collaborationData?.productId?.price) {
-//                     setOfferError("Offer cannot exceed the product price.");
-//                 } else setOfferError("");
-//             } else if (bid === bidAmount.fixedPercentage) {
-//                 // For fixed amount, ensure the offer does not exceed the product price
-//                 if (value > collaborationData?.productId?.price) {
-//                     setOfferError("Offer cannot exceed the product price.");
-//                 } else setOfferError("");
-//             }
-//             setYourOffer(value);
-//         } else {
-//             setYourOffer(null);
-//         }
-//     }
-// };
   const fetchProductById = async () => {
     setLoading(true);
     try {
@@ -497,10 +567,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 }
                 title={selectedProduct?.title}
                 description={selectedProduct?.description}
-                price={selectedProduct?.price ? selectedProduct?.price : undefined
+                price={selectedProduct?.variants?.length ? selectedProduct?.variants[0]?.price : undefined
                 }
                 variants={selectedProduct?.variants}
-                totalInventory={selectedProduct?.totalInventory}
+                totalInventory={selectedProduct?.variants?.length ? selectedProduct?.variants[0]?.inventory_quantity : undefined}
               />
               <div
                 className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2
@@ -577,12 +647,12 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       ) : null}
                       {isDisabled
                         ? methods
-                            .watch("channels")
-                            ?.map((v) => (
-                              <div className="flex gap-1 bg-background p-2 rounded-md">
-                                {v}
-                              </div>
-                            ))
+                          .watch("channels")
+                          ?.map((v) => (
+                            <div className="flex gap-1 bg-background p-2 rounded-md">
+                              {v}
+                            </div>
+                          ))
                         : null}
                     </div>
                     {Boolean(get(methods.formState.errors, "channels")) && (
@@ -673,32 +743,8 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     <span className="text-sm">
                       {translate("Never_Expires")} ({" "}
                       {translate("CampaignLifeTime")} )
-                      {/* {translate("CampaignLifeTime")}{" "}
-                      <span className="text-primary-color font-medium">
-                        {translate("CampaignLifeTime")}
-                      </span>{" "}
-                      &{" "}
-                      <span className="text-primary-color font-medium">
-                        {translate("CampaignLifeTime")}.
-                      </span> */}
                     </span>
                   </label>
-                  {/* <Input
-                    name="channels"
-                    type="checkbox"
-                    placeholder={translate("Add_link")}
-                    label={translate("CampaignLifeTime")}
-                    checked={Boolean(methods.watch("campaignLifeTime"))}
-                    onChange={(v) => {
-                      methods.setValue(
-                        "campaignLifeTime",
-                        !Boolean(methods.watch("campaignLifeTime"))
-                      );
-                      methods.trigger(["startDate", "endDate"]);
-                    }}
-                    hideError={true}
-                    disabled={isDisabled}
-                  /> */}
                 </div>
               </div>
             </div>
@@ -832,16 +878,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       type="react-select"
                       placeholder={translate("Select_Commission_Type")}
                       label={translate("Commission_Type")}
-                      options={[
-                        {
-                          label: "Amount",
-                          value: "FIXED_AMOUNT",
-                        },
-                        {
-                          label: "Percentage",
-                          value: "PERCENTAGE",
-                        },
-                      ]}
+                      options={typOptions}
                       disabled={isDisabled}
                     />
                   </div>
@@ -850,7 +887,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     <Input
                       name="commission"
                       type="number"
-                      placeholder={"10"}
+                      placeholder={"Enter Your Commission"}
                       label={translate("commission")}
                       disabled={isDisabled}
                     />
@@ -886,36 +923,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                             "freeProduct",
                             !Boolean(methods.watch("freeProduct"))
                           );
-                          // methods.trigger(["startDate", "endDate"]);
                         }}
                       >
                         {translate("free_promotional_product")}
-                        {/* {translate("CampaignLifeTime")}{" "}
-                      <span className="text-primary-color font-medium">
-                        {translate("CampaignLifeTime")}
-                      </span>{" "}
-                      &{" "}
-                      <span className="text-primary-color font-medium">
-                        {translate("CampaignLifeTime")}.
-                      </span> */}
                       </span>
                     </label>
-                    {/* <Input
-                    name="channels"
-                    type="checkbox"
-                    placeholder={translate("Add_link")}
-                    label={translate("CampaignLifeTime")}
-                    checked={Boolean(methods.watch("campaignLifeTime"))}
-                    onChange={(v) => {
-                      methods.setValue(
-                        "campaignLifeTime",
-                        !Boolean(methods.watch("campaignLifeTime"))
-                      );
-                      methods.trigger(["startDate", "endDate"]);
-                    }}
-                    hideError={true}
-                    disabled={isDisabled}
-                  /> */}
                   </div>
                 </div>
               </div>
@@ -936,9 +948,8 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     }
                   />
                   <div
-                    className={`relative w-11 h-6 ${
-                      showDiscountSection ? "bg-primary" : "bg-gray-200"
-                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                    className={`relative w-11 h-6 ${showDiscountSection ? "bg-primary" : "bg-gray-200"
+                      } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
                   ></div>
                 </label>
               </div>
@@ -946,11 +957,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               <div
                 className={`
                 flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden
-                ${
-                  showDiscountSection
+                ${showDiscountSection
                     ? "max-h-[1000px] opacity-100 pt-3"
                     : "max-h-0 opacity-0"
-                }
+                  }
               `}
               >
                 <div className="flex flex-col md:flex-row gap-3">
@@ -958,7 +968,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     <Input
                       name="couponCode"
                       type="text"
-                      placeholder={"Enter your coupen code"}
+                      placeholder={"Enter your coupon code"}
                       label={translate("couponCode")}
                       required={false}
                     />
@@ -969,16 +979,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       type="react-select"
                       placeholder={translate("Select_Discount_Type")}
                       label={translate("Discount_Type")}
-                      options={[
-                        {
-                          label: "Amount",
-                          value: "FIXED_AMOUNT",
-                        },
-                        {
-                          label: "Percentage",
-                          value: "PERCENTAGE",
-                        },
-                      ]}
+                      options={typOptions}
                       disabled={isDisabled}
                     />
                   </div>
@@ -1022,10 +1023,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 {Boolean(
                   get(methods.formState.errors, "tearmAndCondition")
                 ) && (
-                  <span className="text-red-600 text-sm p-2 block">
-                    {methods.formState.errors["tearmAndCondition"]?.message}
-                  </span>
-                )}
+                    <span className="text-red-600 text-sm p-2 block">
+                      {methods.formState.errors["tearmAndCondition"]?.message}
+                    </span>
+                  )}
               </div>
               {!isDisabled ? (
                 <div className="flex gap-[10px] ">

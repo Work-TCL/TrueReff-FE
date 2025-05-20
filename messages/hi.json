@@ -559,5 +559,12 @@
   "Make_Offer": "प्रस्ताव भेजें",
   "Last Bid": "अंतिम बोली",
   "View_History": "इतिहास देखें",
-  "Online": "ऑनलाइन"
+  "Online": "ऑनलाइन",
+  "Off": "बंद",
+  "Shopify_Store_Domain": "शॉपिफाई स्टोर डोमेन",
+  "Shopify_Store_Id": "शॉपिफाई स्टोर आईडी",
+  "Variants": "वेरिएंट्स",
+  "variants": "वेरिएंट्स",
+  "Edit_Store": "स्टोर संपादित करें",
+  "Trending_Products": "प्रचलित उत्पाद"
 }

@@ -362,10 +362,11 @@ export const getVendor =
 
 export const creatorRegister = async (
   params: IPostCreatorRegisterStepOneRequest|any,
-  step: number
+  step: number,
+  storeEdit: boolean = false
 ): Promise<IPostCreatorRegisterResponse> => {
   try {
-    const response = await axios.post(`/auth/creator/register?step=${step}`, params, {
+    const response = await axios.post(`/auth/creator/register?step=${step}&storeEdit=${storeEdit}`, params, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

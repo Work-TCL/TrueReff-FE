@@ -31,6 +31,7 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { BsChevronDown } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/commonUtils";
+import { useCreatorStore } from "@/lib/store/creator";
 
 type MenuItem = {
   label: string;
@@ -108,6 +109,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const translate = useTranslations();
   const pathname = usePathname(); // Get the current path
   const { account: user } = useAuthStore();
+  const { creator } = useCreatorStore();
 
   const lg = useMediaQuery("(min-width: 1024px)");
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -202,7 +204,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       children: [
         {
           label: translate("Store_set_up"),
-          link: "/creator/my-store/store-setup",
+          link: `/creator/store/${creator?.store_name}`,
         },
         { label: translate("Product_List"), link: "/creator/my-store" },
       ],
@@ -210,18 +212,18 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     {
       label: translate("Product_Management"),
       icon: Box,
-      link: "/creator/product-management",
+      link: "/creator/brandsList",
     },
     // {
     //   label: translate("Bidding_Management"),
     //   icon: BarChart,
     //   link: "/brand-analysis",
     // },
-    {
-      label: translate("Brands_List"),
-      icon: Store,
-      link: "/creator/brandsList",
-    },
+    // {
+    //   label: translate("Brands_List"),
+    //   icon: Store,
+    //   link: "/creator/brandsList",
+    // },
     // {
     //   label: translate("Creator_Analysis"),
     //   icon: BarChart,

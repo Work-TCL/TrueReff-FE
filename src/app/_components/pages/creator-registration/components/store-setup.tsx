@@ -20,6 +20,8 @@ interface IProps {
   bannerPreview: any;
   methods: any;
   categories: ICategoryData[];
+  showTrending: boolean;
+  setShowTrending: (value: boolean) => void;
 }
 
 export default function StoreSetup({
@@ -27,23 +29,25 @@ export default function StoreSetup({
   bannerPreview,
   profilePreview,
   methods,
-  categories
+  categories,
+  showTrending,
+  setShowTrending
 }: IProps) {
   const translate = useTranslations();
-  const {creator} = useCreatorStore();
+  const { creator } = useCreatorStore();
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
 
-   useEffect(() => {
-      setParentCategory(categories?.filter((ele:ICategoryData) => ele?.parentId === null));
-    }, [categories]);
+  useEffect(() => {
+    setParentCategory(categories?.filter((ele: ICategoryData) => ele?.parentId === null));
+  }, [categories]);
 
   useEffect(() => {
     (async () => {
       const categoriesId =
         (await methods.watch("category")?.map((v: any) => v.value)) || [];
 
-      const optionsSubCategory = await categories.filter((ele:ICategoryData) =>
+      const optionsSubCategory = await categories.filter((ele: ICategoryData) =>
         categoriesId?.includes(ele?.parentId)
       );
 
@@ -57,7 +61,7 @@ export default function StoreSetup({
         )
       );
     })();
-  }, [methods.watch("category")?.length,creator?.category]);
+  }, [methods.watch("category")?.length, creator?.category]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -151,13 +155,32 @@ export default function StoreSetup({
 
       {/* Form Fields */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-2">
+        <div className="col-span-1">
           <Input
             label={translate("Store_Name")}
             name="store_name"
             type="text"
             placeholder={translate("Enter_Store_Name")}
           />
+        </div>
+        <div className="col-span-1 flex flex-col gap-4">
+          <div className="text-md font-medium text-gray-500">
+            {translate("Trending_Products")}
+          </div>
+          <label className="inline-flex items-center cursor-pointer relative">
+            <input
+              type="checkbox"
+              checked={showTrending}
+              className="sr-only peer"
+              onChange={() =>
+                setShowTrending(!showTrending)
+              }
+            />
+            <div
+              className={`relative w-11 h-6 ${showTrending ? "bg-primary" : "bg-gray-200"
+                } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+            ></div>
+          </label>
         </div>
         <div className="col-span-2">
           <Input
