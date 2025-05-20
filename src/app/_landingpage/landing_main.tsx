@@ -18,13 +18,14 @@ export default function LandingPage() {
     setActiveLink(linkName);
   };
 
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: false,
-      mirror: true,
-    });
-  
+ useEffect(() => {
+  AOS.init({
+    duration: 1000, 
+    once: false,    
+    mirror: true,   
+    easing: 'ease-in-out',
+  });
+
   }, []);
 
   return (
@@ -68,7 +69,7 @@ export default function LandingPage() {
             ))}
           </ul>
 
-          <button data-aos="zoom-out" className="group relative flex items-center justify-between pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white w-[215px]">
+          <button data-aos="fade-up" className="group relative flex items-center justify-between pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white w-[215px]">
             <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-300 ease-in-out group-hover:scale-x-100 z-0" />
             <span className="relative z-10 transition-colors duration-300 ease-in-out group-hover:text-primary">
               Get Started
