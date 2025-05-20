@@ -580,5 +580,8 @@
   "Off": "Off",
   "Shopify_Store_Domain": "Shopify Store Domain",
   "Shopify_Store_Id": "Shopify Store Id",
-  "Variants": "Variants"
+  "Variants": "Variants",
+  "variants": "Variants",
+  "Edit_Store": "Edit Store",
+  "Trending_Products" : "Trending Products"
 }

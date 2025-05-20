@@ -23,6 +23,7 @@ import PhotoUpload from "../../components-common/PhotoUpload";
 import { cn } from "@sohanemon/utils";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import PublicCreatorStore from "@/app/(public)/store/[storeName]/main";
 
 const customStyles = {
   placeholder: (base: any) => ({
@@ -286,178 +287,11 @@ export default function StoreSetUp(props: any) {
   return (
     <>
       {loading && <Loader />}
-      {isDetailView ? (
+      {/* {isDetailView ? (
         <StoreDetailView handleOnEdit={handleOnEdit} store={store} />
-      ) : (
-        <div className="flex flex-col gap-2 lg:gap-5 h-full p-2 lg:p-4">
-          <FormProvider {...methods}>
-            <form
-              onSubmit={methods.handleSubmit(onSubmit)}
-              className="w-full h-full overflow-auto flex-1 flex flex-col gap-3 relative"
-            >
-              <div className="flex justify-between items-center flex-wrap gap-2">
-                <div className="md:text-xl text-base text-500">
-                  {translate("Add_Details_For_Store_Set_Up")}
-                </div>
-                <div className="flex gap-[10px]">
-                  {store?.name && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-[140px] rounded-[12px]"
-                      onClick={() => {
-                        setIsDetailView(true);
-                        setIsEdit(false);
-                      }}
-                    >
-                      {translate("Cancel")}
-                    </Button>
-                  )}
-                  <Button
-                    type="submit"
-                    variant="secondary"
-                    className="text-white w-[140px] rounded-[12px]"
-                  >
-                    {translate("Save")}
-                  </Button>
-                </div>
-              </div>
-              <div className="flex flex-col lg:flex-row gap-5 w-full">
-                <div className="flex bg-white rounded-xl col-span-2 flex-col gap-2 lg:w-1/2 p-4">
-                  <div className="text-sm lg:text-lg">
-                    {translate("Banner_Image")}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {translate("Store_Banner_Image")}
-                    <span className="text-[red]">*</span>
-                  </div>
-                  <PhotoUpload
-                    name="banner"
-                    previewUrl={bannerPreview}
-                    handleImageSelect={handleImageSelect}
-                  />
-                  {methods?.formState?.errors?.banner_image?.message && (
-                    <span className="text-red-600 text-sm">
-                      {methods?.formState?.errors?.banner_image?.message}
-                    </span>
-                  )}
-                </div>
-                <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2 lg:w-1/2  p-4">
-                  <div className="text-sm lg:text-lg">
-                    {translate("Profile_Image")}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {translate("Store_Profile_Image")}
-                    <span className="text-[red]">*</span>
-                  </div>
-                  <PhotoUpload
-                    name="profile"
-                    previewUrl={profilePreview}
-                    handleImageSelect={handleImageSelect}
-                    showType="circle"
-                  />
-                  {methods?.formState?.errors?.profile_image?.message && (
-                    <span className="text-red-600 text-sm">
-                      {methods?.formState?.errors?.profile_image?.message}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col bg-white rounded-xl p-4 gap-2">
-                <div className="text-sm lg:text-lg">
-                  {translate("Category")}
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <div className="col-span-1 gap-1">
-                    <label className="text-sm text-[#7E7E80]">
-                      {translate("Product_Category")}
-                      <span className="text-[red]">*</span>
-                    </label>
-                    <Select
-                      name="category"
-                      styles={customStyles}
-                      value={selectedCategories.map((id) => {
-                        const match = parentCategory.find(
-                          (cat) => cat._id === id
-                        );
-                        return { value: id, label: match?.name || id };
-                      })}
-                      isMulti
-                      onChange={handleSelectCategory}
-                      options={parentCategory.map((ele) => ({
-                        value: ele._id,
-                        label: ele.name,
-                      }))}
-                      isOptionDisabled={() => selectedCategories.length >= 3}
-                      className="basic-multi-select focus:outline-none focus:shadow-none"
-                      placeholder="Product Categories"
-                    />
-                    {methods?.formState?.errors?.category?.message && (
-                      <span className="text-red-600 text-sm p-2">
-                        {methods?.formState?.errors?.category?.message}
-                      </span>
-                    )}
-                  </div>
-                  <div className="col-span-1">
-                    <Input
-                      label="Tags"
-                      name="tags"
-                      type="tag"
-                      placeholder="Enter your tags"
-                    />
-                  </div>
-                </div>
-                <div className="text-sm lg:text-lg">
-                  {translate("General_Information")}
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <div className="col-span-1">
-                    <Input
-                      label={translate("Store_Name")}
-                      name="name"
-                      type="text"
-                      placeholder="Men’s Style Guide & Trends"
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <label className={cn(labelStyle)}>
-                      {translate("Store_Link")}
-                    </label>
-                    <div
-                      className={cn(
-                        inputStyle,
-                        "py-1.5 flex justify-between items-center"
-                      )}
-                    >
-                      <span className="flex-1">
-                        {`${
-                          process.env.NEXT_PUBLIC_FRONTEND_URL
-                        }/store/${methods.watch("name")}`}
-                      </span>
-                      <Button
-                        onClick={handleStoreLinkCopy}
-                        type="button"
-                        className="text-white ml-auto cursor-pointer"
-                      >
-                        {translate("Copy")}
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="col-span-1 lg:col-span-2">
-                    <Input
-                      label="Store Description"
-                      name="description"
-                      type="editor"
-                      rows={4}
-                      placeholder="I'm John, a fashion influencer sharing style tips, outfit inspiration, and grooming advice for men. Follow me for daily fashion insights!"
-                    />
-                  </div>
-                </div>
-              </div>
-            </form>
-          </FormProvider>
-        </div>
-      )}
+      ) : ( */}
+        <PublicCreatorStore />
+      {/* )} */}
     </>
   );
 }

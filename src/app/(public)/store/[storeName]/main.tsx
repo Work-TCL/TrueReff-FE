@@ -1,15 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import StoreDetailCard from "./StoreDetailCard";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { getCreatorStore } from "@/lib/web-api/my-store";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { toastMessage } from "@/lib/utils/toast-message";
 import ProductList from "./product-list";
 import Loading from "@/app/vendor/loading";
 import NotFound from "@/app/_components/components-common/404";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import { useTranslations } from "next-intl";
+import Button from "@/app/_components/ui/button";
+import StoreSetup from "@/app/_components/pages/creator-registration/components/store-setup";
+import { FormProvider, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { creatorStoreSetUpSchema, ICreatorStoreSetUpSchema } from "@/lib/utils/validations";
+import { fileUploadLimitValidator } from "@/lib/utils/constants";
+import { creatorRegister, getCategories } from "@/lib/web-api/auth";
+import { useCreatorStore } from "@/lib/store/creator";
+import { useSession } from "next-auth/react";
+import { ICategoryData } from "@/lib/types-api/auth";
 
 interface ICategory {
   _id: string;
@@ -47,11 +57,18 @@ export interface IStore {
   facebook_link?: string;
   twitter_link?: string;
 }
-export default function PublicCreatorStore() {
+interface IPublicCreatorStoreProps {
+  isCreator?: boolean;
+}
+export default function PublicCreatorStore({ isCreator }: IPublicCreatorStoreProps) {
+  const router = useRouter();
   const params = useParams();
   const translate = useTranslations();
   let storeName: any = params?.storeName;
+  const { creator, setCreatorData } = useCreatorStore();
+  const { update } = useSession();
   const [notFounded, setNotFounded] = useState(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [store, setStore] = useState({
     _id: "",
     accountId: "",
@@ -79,9 +96,11 @@ export default function PublicCreatorStore() {
     store_name: "",
     store_link: "",
     facebook_link: "",
-  twitter_link: ""
+    twitter_link: "",
+    showTrending: false
   });
   const [loading, setLoading] = useState<boolean>(true);
+  const [saveLoader, setSaveLoader] = useState<boolean>(false);
   useEffect(() => {
     fetchStoreDetail();
   }, []);
@@ -110,26 +129,181 @@ export default function PublicCreatorStore() {
     }
   }
   const [showProfile, setShowProfile] = useState(true);
-const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [showTrending, setShowTrending] = useState(false);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [profileFile, setProfileFile] = useState<File | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [profilePreview, setProfilePreview] = useState<string>("");
+  const [bannerPreview, setBannerPreview] = useState<string>("");
+  const storeMethods = useForm<ICreatorStoreSetUpSchema>({
+    defaultValues: {
+      store_name: "",
+      store_description: "",
+      tags: [],
+      category: [],
+      sub_category: [],
+      profile_image: "",
+      banner_image: "",
+    },
+    resolver: yupResolver(creatorStoreSetUpSchema),
+    mode: "onChange",
+    reValidateMode: "onSubmit"
+  });
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
 
-useEffect(() => {
-  const handleScroll = () => {
-    const currentScroll = window.scrollY;
+      if (currentScroll > lastScrollTop) {
+        setShowProfile(false); // scrolling down
+      } else {
+        setShowProfile(true); // scrolling up
+      }
 
-    if (currentScroll > lastScrollTop) {
-      setShowProfile(false); // scrolling down
-    } else {
-      setShowProfile(true); // scrolling up
+      setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollTop]);
+  useEffect(() => {
+    if (store) {
+      storeMethods.setValue("store_name", store?.store_name);
+      storeMethods.setValue("store_description", store?.store_description);
+      storeMethods.setValue("tags", store?.tags);
+      storeMethods.setValue("banner_image", store?.banner_image);
+      storeMethods.setValue("profile_image", store?.profile_image);
+      setShowTrending(store?.showTrending);
+      setProfilePreview(store?.profile_image);
+      setBannerPreview(store?.banner_image);
     }
-
-    setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
+  }, [store])
+  useEffect(() => {
+    if (isCreator) {
+      fetchCategory();
+    }
+  }, [isCreator]);
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories({ page: 0, limit: 0 });
+      let data = response?.data?.data;
+      setCategories(data);
+    } catch (error: any) {
+      console.log("Error Fetching channels", error.message);
+    }
   };
+  useEffect(() => {
+    if (store?.category?.length > 0) {
+      let parentCategory = categories?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      storeMethods.setValue("category", parentCategory);
+    }
+    if (store?.sub_category?.length > 0) {
+      let subCategory = categories?.filter((ele: ICategoryData) => creator?.sub_category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      storeMethods.setValue("sub_category", subCategory);
+    }
+  }, [categories, store?.category, store?.sub_category])
+  const onStoreSetUpSubmit = async (data: ICreatorStoreSetUpSchema) => {
+    setSaveLoader(true);
+    try {
+      const formData = new FormData();
+      formData.append("store_name", data?.store_name);
+      formData.append("store_description", data?.store_description);
+      formData.append("showTrending", showTrending ? "true" : "false");
+      data.category.length > 0 && data.category.forEach((ele, index) => {
+        formData.append(`category[${index}]`, ele?.value);
+      })
+      data.sub_category.length > 0 && data.sub_category.forEach((ele, index) => {
+        formData.append(`sub_category[${index}]`, ele?.value);
+      })
+      data.tags.length > 0 && data.tags.forEach((ele, index) => {
+        formData.append(`tags[${index}]`, ele);
+      })
+      if (bannerFile) {
+        formData.append("banner_image", bannerFile);
+      }
+      if (profileFile) {
+        formData.append("profile_image", profileFile);
+      }
+      const response: any = await creatorRegister(
+        formData, 3,true
+      );
+      if (response?.status === 200) {
+        await update({
+          user: {
+            creator: response?.data,
+          },
+        });
+        setCreatorData("creator", {
+          creatorId: response?.data?._id,
+          accountId: response?.data?.accountId,
+          full_name: response?.data?.full_name,
+          user_name: response?.data?.user_name,
+          email: response?.data?.email,
+          phone: response?.data?.phone,
+          dob: response?.data?.dob,
+          gender: response?.data?.gender,
+          state: response?.data?.state,
+          city: response?.data?.city,
+          category: response?.data?.category,
+          sub_category: response?.data?.sub_category,
+          tags: response?.data?.tags,
+          channels: response?.data?.channels,
+          completed_step: response?.data?.completed_step,
+          status: response?.data?.status,
+          createdAt: response?.data?.createdAt,
+          updatedAt: response?.data?.updatedAt,
+          completed: response?.data?.completed,
+          instagram_link: response?.data?.instagram_link,
+          youtube_link: response?.data?.youtube_link,
+          banner_image: response?.data?.banner_image,
+          profile_image: response?.data?.profile_image,
+          store_description: response?.data?.store_description,
+          store_name: response?.data?.store_name,
+        });
+        // setIsEdit(false);
+        router.push(`/creator/store/${response?.data?.store_name}`);
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toastMessage.error(errorMessage);
+    } finally {
+      setSaveLoader(false);
+    }
+  };
+  const handleOnClick = () => {
+    setIsEdit(true);
+  }
+  const handleImageSelect = async (
+    e: React.ChangeEvent<HTMLInputElement> | any,
+    type: "profile" | "banner"
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  window.addEventListener("scroll", handleScroll);
+    const isValid = await fileUploadLimitValidator(file.size);
+    if (!isValid) return;
 
-  return () => window.removeEventListener("scroll", handleScroll);
-}, [lastScrollTop]);
+    const previewURL = URL.createObjectURL(file);
 
+    if (type === "profile") {
+      setProfileFile(file);
+      setProfilePreview(previewURL);
+      storeMethods.setValue("profile_image", previewURL);
+      storeMethods.setError("profile_image", {
+        type: "manual",
+        message: "",
+      });
+    } else {
+      setBannerFile(file);
+      setBannerPreview(previewURL);
+      storeMethods.setValue("banner_image", previewURL);
+      storeMethods.setError("banner_image", {
+        type: "manual",
+        message: "",
+      });
+    }
+  };
   if (!storeName) {
     return <NotFound />;
   }
@@ -137,22 +311,70 @@ useEffect(() => {
     <>
       {loading ? (
         <Loading className="h-screen" />
-      ) : notFounded ? <div className="grid grid-cols-1 h-screen p-4"><EmptyPlaceHolder title={translate("No_Store_Available_Title")} description={translate("No_Store_Available_Description")} /></div> : (
-        <div className="bg-custom-gradient min-h-screen w-full overflow-y-auto">
-        <div className="flex flex-col gap-3 max-w-[1200px] mx-auto p-4">
-          {/* Sticky Profile with hide-on-scroll */}
-          <div className="sticky top-0 z-10 transition-transform duration-500" style={{ transform: showProfile ? "translateY(0)" : "translateY(-100%)" }}>
-            <StoreDetailCard store={store} />
+      ) : notFounded ? <div className="grid grid-cols-1 h-screen p-4"><EmptyPlaceHolder title={translate("No_Store_Available_Title")} description={translate("No_Store_Available_Description")} /></div> :
+        isEdit ? <div className="bg-custom-gradient min-h-screen w-full overflow-y-auto"><FormProvider {...storeMethods}>
+          <form
+            onSubmit={storeMethods.handleSubmit(onStoreSetUpSubmit)}
+            className="md:pt-6 mt-3 max-w-[1200px] bg-white rounded-lg mx-auto w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
+          >
+            <StoreSetup
+              handleImageSelect={handleImageSelect}
+              profilePreview={profilePreview}
+              bannerPreview={bannerPreview}
+              methods={storeMethods}
+              categories={categories}
+              showTrending={showTrending}
+              setShowTrending={setShowTrending}
+            />
+            <div className="flex justify-end gap-2 bg-white mb-2">
+            <Button
+                type="button"
+                className={cn("w-fit bg-white border text-black font-medium px-8", "block")}
+                size="small"
+                loading={saveLoader}
+                disabled={saveLoader}
+                onClick={() => {
+                  setIsEdit(false);
+                }}
+              >
+                {translate("Cancel")}
+              </Button>
+              <Button
+                type="submit"
+                className={cn("w-fit font-medium px-8", "block")}
+                size="small"
+                loading={saveLoader}
+                disabled={saveLoader}
+              >
+                {translate("Save_and_Continue")}
+              </Button>
+            </div>
+          </form>
+        </FormProvider></div> : (
+          <div className="bg-custom-gradient min-h-screen w-full overflow-y-auto">
+            {isCreator && <div className="flex justify-end p-2"><Button
+              type="button"
+              // disabled={channels?.length === 0}
+              className="w-fit font-medium px-8"
+              size="small"
+              onClick={handleOnClick}
+            >
+              {translate("Edit_Store")}
+            </Button></div>}
+            <div className="flex flex-col gap-3 max-w-[1200px] mx-auto p-4">
+              {/* Sticky Profile with hide-on-scroll */}
+              <div className="sticky top-0 z-10 transition-transform duration-500" style={{ transform: showProfile ? "translateY(0)" : "translateY(-100%)" }}>
+                <StoreDetailCard store={store} />
+              </div>
+
+              {/* Scrollable Product List */}
+              <div className="h-[calc(100vh-80px)] overflow-y-auto">
+                <ProductList storeName={storeName ?? ""} showTrending={store?.showTrending} />
+              </div>
+            </div>
           </div>
-      
-          {/* Scrollable Product List */}
-          <div className="h-[calc(100vh-80px)] overflow-y-auto">
-            <ProductList storeName={storeName ?? ""} />
-          </div>
-        </div>
-      </div>
-      
-      )}
+
+        )}
     </>
   );
 }

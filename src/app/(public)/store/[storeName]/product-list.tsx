@@ -63,7 +63,7 @@ const customStyles = {
   }),
 };
 
-export default function ProductList({ storeName }: { storeName: string }) {
+export default function ProductList({ storeName,showTrending }: { storeName: string,showTrending: boolean }) {
   const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
@@ -223,7 +223,7 @@ export default function ProductList({ storeName }: { storeName: string }) {
             </div>
           )}
           {internalLoading && <Loader />}
-          {trendingProductList?.length > 0 && <div>
+          {(showTrending && trendingProductList?.length > 0) && <div>
             <h3 className="font-semibold">Trending Products</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6  2xl:grid-cols-8 whitespace-nowrap gap-2 py-2 text-sm font-medium px-2">
               {trendingProductList.map((item: any) => (
