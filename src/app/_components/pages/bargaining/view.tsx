@@ -105,7 +105,7 @@ export default function BargainingView() {
   const router = useRouter();
   const collaborationId = params?.collaborationId;
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [offerAccepted, setOfferAccepted] = useState(false);
   const [collaborationData, setCollaborationData] = useState<ICollaboration>({
     "negotiation": {

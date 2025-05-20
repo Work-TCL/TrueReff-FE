@@ -38,7 +38,7 @@ export const useAuthStore = create<IAuthDataState & IAuthStoreSetterState>()(
         name: "",
         email: "",
         id: "",
-        role: USER_TYPE.Vendor,
+        role: "",
       },
       token: "",
       status: "unauthenticated",

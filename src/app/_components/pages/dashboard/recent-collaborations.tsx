@@ -23,12 +23,12 @@ export default function RecentCollaborations() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `/product/collaboration/list?page=1&limit=3`
+        `/product/collaboration/creator/list?page=1&limit=3`
       );
       if (response.status === 200) {
         const collaborationData = response.data.data;
         if (collaborationData && typeof collaborationData === "object") {
-          const collaborationArray = collaborationData.data || [];
+          const collaborationArray = collaborationData.list || [];
 
           if (Array.isArray(collaborationArray)) {
             let result = collaborationArray.map((ele: ICollaboration) => {

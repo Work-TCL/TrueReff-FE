@@ -124,7 +124,8 @@ export default function CreatorRegistrationPage() {
       banner_image: "",
     },
     resolver: yupResolver(creatorStoreSetUpSchema),
-    mode: "onSubmit",
+    mode: "onChange",
+    reValidateMode: "onSubmit"
   });
 
   const methodsSocial = useForm<ICreatorSocialConnectSchema>({

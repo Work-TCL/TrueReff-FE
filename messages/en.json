@@ -576,5 +576,6 @@
   "View_History": "View History",
   "Online": "Online",
   "No_Store_Available_Title": "Creator Store Not Found",
-  "No_Store_Available_Description": "It seems there are currently no store created by creator. Please check back later."
+  "No_Store_Available_Description": "It seems there are currently no store created by creator. Please check back later.",
+  "Off": "Off"
 }

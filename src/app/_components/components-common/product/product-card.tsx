@@ -1,9 +1,11 @@
 "use client";
-import { ImageOff } from "lucide-react";
+import { Heart, ImageOff, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils/commonUtils";
+import ToolTip from "../tool-tip";
 
 export interface ICategory {
   _id: string;
@@ -13,43 +15,46 @@ export interface ICategory {
   updatedAt: string; // or Date
 }
 export interface IProduct {
-  vendor: any;
-  collaboration: any;
-  request: any;
   _id: string;
   title: string;
   channelProductId: string;
-  vendorId: string;
   sku: string;
   description: string;
-  media: string[]; // assuming media is an array of image/video URLs or paths
-  channelName: string; // extend as needed
-  category: ICategory[];
-  tags: string[]; // if tags are strings
-  createdAt: string; // or Date
-  updatedAt: string;
-  categories?: string;
-  subCategories?: string;
-  tag?: string;
-  price?: string;
-  crmLink?: string;
+  media: string[]; // Array of image/video URLs
+  price: number;
+  channelName: string;
+  category: ICategory[]; // Array of categories
+  subCategory: string[]; // Array of sub-category IDs
+  tags: string[]; // Array of tags
+  lifeTime: boolean;
+  startDate: string | null; // You can use `Date` if parsed
+  endDate: string | null; // You can use `Date` if parsed
+  status: string; // e.g., "ACTIVE"
+  commission: number; // Commission value
+  commission_type: "PERCENTAGE" | "FIXED_AMOUNT"; // Commission type
+  videoType: string[]; // Array of video types
+  channels: string[]; // Array of channel names
+  createdAt: string; // You can use `Date` if parsed
+  updatedAt: string; // You can use `Date` if parsed
+  crmLink: string; // CRM link
+  categories?: string; // Comma-separated string of category names
+  tag?: string; // Comma-separated string of tags
 }
 const ProductCard = ({
   item: product,
-  productDetailLink,
 }: {
   item: IProduct;
-  productDetailLink: string;
 }) => {
   const translate = useTranslations();
   const router = useRouter();
   return (
-    <Card
-      onClick={() => router?.push(`/product-detail/${product?._id}`)}
-      className="cursor-pointer w-full  border border-stroke rounded-xl p-4 flex flex-col items-center text-center gap-3 hover:shadow-sm transition-shadow bg-white overflow-hidden"
-    >
+    <Card className="relative cursor-pointer w-full border border-stroke rounded-xl p-2 md:p-3 flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow bg-white overflow-hidden">
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
-        <div className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden">
+        {/* Image */}
+        <div
+          className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
+          onClick={() => router.push(`/product-detail/${product?._id}`)}
+        >
           {product.media?.length > 0 ? (
             <img
               src={product.media[0]}
@@ -60,37 +65,36 @@ const ProductCard = ({
             <ImageOff className="w-8 h-8 text-gray-400" />
           )}
         </div>
+
+        {/* Info */}
         <div className="flex flex-col gap-2 text-start w-full overflow-hidden">
+          {/* Title */}
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
-            className="text-xs sm:text-sm md:text-lg font-semibold w-full line-clamp-none truncate"
+            className="text-md font-semibold w-full truncate"
             text={product.title}
           />
-          <TruncateWithToolTip
-            checkHorizontalOverflow={true}
-            className="text-gray-700 text-sm mt-1 w-full line-clamp-none truncate"
-            text={`${product.description ? product.description : "-"}`}
-          />
-          <TruncateWithToolTip
-            checkHorizontalOverflow={true}
-            className="text-gray-500 text-[10px] sm:text-sm  mt-1 w-full line-clamp-none truncate"
-            text={`${translate("Categories")} : ${
-              product.categories || "Uncategorized"
-            }`}
-          />
-          {product.tags?.length > 0 ? (
-            <div className="flex gap-2 mt-1">
-              {product.tags.slice(0, 2).map((tag, index) => (
-                <TruncateWithToolTip
-                  checkHorizontalOverflow={true}
-                  className="md:text-xs text-[10px] md:px-3 text-center px-1 py-1 bg-gray-100 text-gray-800 rounded-full border border-gray-300 w-fit line-clamp-none truncate"
-                  text={`#${tag}`}
-                />
-              ))}
-            </div>
-          ) : (
-            "-"
-          )}
+          {/* Price and Discount */}
+          <div className="flex justify-between items-center w-full text-sm">
+            <span className="text-green-600 px-2 py-1 font-bold">
+              ₹ {" "}{product.price || "0.00"}
+            </span>
+            {product.commission && (
+              <span className="text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
+                {product.commission} {product.commission_type === "PERCENTAGE" ? "% " : "₹ "}{translate("Off")}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between w-full">
+            <button
+              className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+              onClick={() => {
+                
+              }}
+            >
+              <Heart size={15} /> Add </button>
+          </div>
         </div>
       </CardContent>
     </Card>

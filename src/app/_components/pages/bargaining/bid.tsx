@@ -26,7 +26,7 @@ interface IBidProps {
     setOfferAccepted: (value: boolean) => void;
     offerAccepted: boolean;
 }
-function Bid({ collaborationData, setCollaborationData,offerAccepted,setOfferAccepted }: IBidProps) {
+function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferAccepted }: IBidProps) {
     const params = useParams();
     const translate = useTranslations();
     const { account } = useAuthStore();
@@ -39,7 +39,7 @@ function Bid({ collaborationData, setCollaborationData,offerAccepted,setOfferAcc
     const [offerBid, setIsOfferBid] = useState("");
     const [offerError, setOfferError] = useState("");
     const [loading, setLoading] = useState(false);
-    
+
     const [viewAllBids, setViewAllBids] = useState(false);
 
     const handleOfferChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +106,7 @@ function Bid({ collaborationData, setCollaborationData,offerAccepted,setOfferAcc
             setIsOfferBid(data?.data?.type)
             setIsYourOffer(false);
         }
-        setCollaborationData({...collaborationData, bids: [...collaborationData?.bids, data?.data] });
+        setCollaborationData({ ...collaborationData, bids: [...collaborationData?.bids, data?.data] });
     }
 
     const errorWhileSendBid = (error: any): void => {
@@ -125,13 +125,11 @@ function Bid({ collaborationData, setCollaborationData,offerAccepted,setOfferAcc
     }
 
     const getDisabled = () => {
-        if (!yourOffer) {
-            if (account?.role === "vendor") {
-                return !collaborationData?.negotiation?.agreedByCreator;
-            } else {
-                return !collaborationData?.negotiation?.agreedByVendor;
-            }
-        } else return false;
+        if (account?.role === "vendor") {
+            return !collaborationData?.negotiation?.agreedByCreator;
+        } else {
+            return !collaborationData?.negotiation?.agreedByVendor;
+        }
     }
 
     const handleAcceptOffer = async () => {
@@ -175,13 +173,13 @@ function Bid({ collaborationData, setCollaborationData,offerAccepted,setOfferAcc
                     </div>
                 )}
                 <div
-                    className={`relative flex flex-col border justify-center items-center bg-white text-black gap-3 px-4 py-4 rounded-md transition-all duration-300 ${isYourOffer ? "w-full" : "w-1/2"
+                    className={`relative flex flex-col border justify-center items-center ${isYourOffer ? "bg-primary-color text-white" :"bg-white text-black"} gap-3 px-4 py-4 rounded-md transition-all duration-300 ${isYourOffer ? "w-full" : "w-1/2"
                         }`}
                 >
                     <span className="text-sm">{translate("Your_Offer")}</span>
 
-                    {isEditing ? (
-                        <input
+                    {isYourOffer ? <span className="text-lg">{yourOffer} {bid === bidAmount.percentage ? "%" : "₹"}</span> :
+                        <div className='flex justify-center items-center gap-2'><input
                             type="number"
                             value={yourOffer ?? ""}
                             onChange={handleOfferChange}
@@ -189,17 +187,16 @@ function Bid({ collaborationData, setCollaborationData,offerAccepted,setOfferAcc
                             className="w-1/2 text-center text-sm border border-gray-300 rounded-md px-2 py-1"
                             autoFocus
                         />
-                    ) : (
-                        <span
-                            className="text-lg cursor-pointer"
-                            onClick={() => setIsEditing(true)}
-                        >
-                            {yourOffer} {bid === bidAmount.percentage ? "%" : "₹"}
-                        </span>
-                    )}
+                            <span
+                                className="text-lg cursor-pointer"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                {bid === bidAmount.percentage ? "%" : "₹"}
+                            </span></div>}
 
-                    {/* Minus Button - Bottom Left */}
-                    {!isEditing && <><button
+
+
+                    {(!isYourOffer && !isEditing) && <><button
                         onClick={() => setYourOffer((prev: any) => Math.max(0, prev - 1))}
                         className="absolute bottom-2 left-2 bg-gray-200 hover:bg-gray-300 p-1 rounded-full"
                     >
@@ -218,22 +215,22 @@ function Bid({ collaborationData, setCollaborationData,offerAccepted,setOfferAcc
             {offerError && <p className="text-red-500 text-sm">{offerError}</p>}
 
             <div className="flex justify-center gap-2">
-                <Button
+                {!isYourOffer && <Button
                     type="button"
                     className={cn("w-fit font-medium px-8", "block border bg-white border-black hover:bg-black text-black hover:text-white")}
                     size="small"
                     loading={loading}
                     onClick={handleAcceptOffer}
-                    disabled={getDisabled()}
+                // disabled={getDisabled()}
                 >
                     {translate("Accept_Offer")}
-                </Button>
+                </Button>}
                 <Button
                     type="button"
                     className={cn("w-fit font-medium px-10", "block border bg-white border-black hover:bg-black text-black hover:text-white")}
                     size="small"
                     // loading={loading}
-                    disabled={(offerError !== "" || !yourOffer)}
+                    disabled={(isYourOffer) || (offerError !== "" || !yourOffer)}
                     onClick={sendNewBid}
                 >
                     {translate("Make_Offer")}

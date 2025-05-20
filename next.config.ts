@@ -4,6 +4,9 @@ import createNextIntlPlugin from "next-intl/plugin";
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
+  images: {
+    domains: ['localhost', 'trf.trinitysystems.in' , 'cdn.shopify.com'], // Add the domain here
+  },
 };
 const withPWA = require("next-pwa")({
   dest: "public",
