@@ -1,4 +1,5 @@
 "use client";
+import { IRevenueData } from "@/lib/types-api/creator-dashboard";
 import { useTranslations } from "next-intl";
 import React from "react";
 import {
@@ -8,25 +9,26 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   TooltipProps,
 } from "recharts";
 
-const data = [
-  { month: "Jan", revenue: 120000, profit: 80000 },
-  { month: "Feb", revenue: 500000, profit: 350000 },
-  { month: "Mar", revenue: 200000, profit: 150000 },
-  { month: "Apr", revenue: 400000, profit: 300000 },
-  { month: "May", revenue: 100000, profit: 70000 },
-  { month: "Jun", revenue: 600000, profit: 400000 },
-  { month: "Jul", revenue: 450000, profit: 250000 },
-  { month: "Aug", revenue: 520000, profit: 300000 },
-  { month: "Sep", revenue: 380000, profit: 200000 },
-  { month: "Oct", revenue: 650000, profit: 450000 },
-  { month: "Nov", revenue: 500000, profit: 300000 },
-  { month: "Dec", revenue: 200000, profit: 150000 },
-];
+// Provided data
+const rawData = {
+  current: [
+    {
+      date: "2025-05-19",
+      totalRevenue: 10,
+    },
+    {
+      date: "2025-05-21",
+      totalRevenue: 20,
+    },
+  ],
+  past: [],
+};
+
+
 
 const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
   active,
@@ -36,7 +38,8 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
   if (active && payload && payload.length) {
     return (
       <div className="bg-black text-white p-2 rounded-lg">
-        <p className="text-sm m-0">${(payload[0].value! / 1000).toFixed(2)}k</p>
+        <p className="text-sm m-0">Current: {payload[0]?.value || 0}</p>
+        <p className="text-sm m-0">Past: {payload[1]?.value || 0}</p>
         <p className="text-xs m-0">{label}</p>
       </div>
     );
@@ -44,39 +47,47 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
   return null;
 };
 
-export default function SalesChart() {
+export default function SalesChart(props: {data?: IRevenueData}) {
   const translate = useTranslations();
+  const data = props?.data??{
+    current: [],
+    past:[]
+  }
+  const totalCurrentRevenue = (data??{current:[]}).current.reduce(
+    (total, item) => total + item.totalRevenue,
+    0
+  );
   return (
     <div className="w-full h-[410px] bg-white p-5 rounded-20 h-full flex-1">
       <div className="flex md:flex-row flex-col justify-between md:items-center items-start mb-3">
         <h3 className="md:text-xl text-base font-semibold whitespace-nowrap text-text">
-          {translate("Sales_Performance")}
+          {translate("Revenue")}
         </h3>
-        <div className="flex items-center space-x-4">
+        {/* <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1">
-            <span className="w-3 h-3 bg-secondary rounded-full"></span>
+            <span className="w-3 h-3 bg-red-500 rounded-full"></span>
             <span className="text-font-grey text-sm font-medium">
-              {translate("Revenue")}
+              {translate("Current")}
             </span>
           </div>
-          {/* <div className="flex items-center space-x-1">
-            <span className="w-3 h-3 bg-primary rounded-full"></span>
+          <div className="flex items-center space-x-1">
+            <span className="w-3 h-3 bg-black rounded-full"></span>
             <span className="text-font-grey text-sm font-medium">
-              {translate("Profit")}
+              {translate("Past")}
             </span>
-          </div> */}
-        </div>
+          </div>
+        </div> */}
       </div>
       <div className="flex gap-4 items-center">
-        <p className="text-2xl text-text ">$50.4K</p>
-        <p className="text-sm text-success ">↑ 5% {translate('thenLastMonth')}</p>
+        <p className="text-2xl text-text ">{totalCurrentRevenue}</p>
+        {/* <p className="text-sm text-success ">↑ 5% {translate("thenLastMonth")}</p> */}
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={data} margin={{ top: 26 }}>
+        <LineChart data={[...data?.current,...data?.past]} margin={{ top: 26 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#F2F4F5" />
           <XAxis
-            dataKey="month"
+            dataKey="date"
             tick={{ fill: "#7E7E80", fontSize: 12 }}
             stroke="#F2F4F5"
           />
@@ -88,15 +99,15 @@ export default function SalesChart() {
           <Tooltip content={<CustomTooltip />} />
           <Line
             type="monotone"
-            dataKey="revenue"
-            stroke="#090919"
+            dataKey="current"
+            stroke="#FF4979" // Red line for current data
             strokeWidth={2}
             dot={false}
           />
           <Line
             type="monotone"
-            dataKey="profit"
-            stroke="#FF4979"
+            dataKey="past"
+            stroke="#090919" // Black line for past data
             strokeWidth={2}
             dot={false}
           />

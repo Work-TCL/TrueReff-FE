@@ -85,7 +85,7 @@ export default function RecentCollaborations() {
     fetchCollaboration();
   }, []);
   return (
-    <div className="p-4 bg-white rounded-[20px]">
+    <div className="w-full p-4 bg-white rounded-[20px]">
       <div className="flex justify-between items-center mb-4">
         <h2 className="md:text-xl text-base text-text font-semibold">
           {" "}

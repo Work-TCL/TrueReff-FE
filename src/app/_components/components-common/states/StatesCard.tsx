@@ -12,7 +12,7 @@ export const StatsCard = ({
   link,
 }: {
   title: string;
-  value: number | string;
+  value: any;
   growth: number;
   borderColor: string;
   bgColor: string;

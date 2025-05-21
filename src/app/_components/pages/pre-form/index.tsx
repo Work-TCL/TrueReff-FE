@@ -47,18 +47,18 @@ let allTabs: {
       name: "Omni-channel",
       Icon: FaRegUserCircle,
     },
-    {
-      id: "4",
-      name: "Payment Detail",
-      Icon: CreditCard,
-    },
+    // {
+    //   id: "4",
+    //   name: "Payment Detail",
+    //   Icon: CreditCard,
+    // },
   ];
 
 const TABS_STATUS = {
   BASIC_INFO: 0,
   DOCUMENT_INFO: 1,
   OMNI_CHANNEL: 2,
-  PAYMENT_DETAIL: 3,
+  // PAYMENT_DETAIL: 3,
 };
 
 export default function PreFormPage() {
@@ -507,7 +507,7 @@ export default function PreFormPage() {
   }
 
   const handleOnClick = async () => {
-    router.push(`?tab=${TABS_STATUS.PAYMENT_DETAIL}`)
+    router.push(`/creator/dashboard`)
   }
 
   return (
@@ -519,7 +519,7 @@ export default function PreFormPage() {
           tabs={allTabs}
           setActiveTabIndex={(value) => router.push(`?tab=${value}`) }
           activeTabIndex={activeTab}
-          grid={4}
+          grid={3}
         />
         {
           {
@@ -565,7 +565,7 @@ export default function PreFormPage() {
                     size="small"
                     onClick={handleOnClick}
                   >
-                    {translate("Save_and_Continue")}
+                    {translate("Back_to_dashboard")}
                   </Button>
                 </div>
               </form>
@@ -589,19 +589,19 @@ export default function PreFormPage() {
                 </div>
               </form>
             </FormProvider>,
-            [TABS_STATUS.PAYMENT_DETAIL]: 
-            <div className="flex flex-col items-center overflow-auto">
-            <PackageDetails/>
-            <Button
-                    type="submit"
-                    size="small"
-                    loading={loading}
-                    disabled={!terms || loading}
-                    className="w-fit font-medium px-8 md:text-base text-sm"
-                  >
-                    {translate("Save_and_Continue")}
-                  </Button>
-            </div>,
+            // [TABS_STATUS.PAYMENT_DETAIL]: 
+            // <div className="flex flex-col items-center overflow-auto">
+            // <PackageDetails/>
+            // <Button
+            //         type="submit"
+            //         size="small"
+            //         loading={loading}
+            //         disabled={!terms || loading}
+            //         className="w-fit font-medium px-8 md:text-base text-sm"
+            //       >
+            //         {translate("Save_and_Continue")}
+            //       </Button>
+            // </div>,
           }[activeTab]
         }
       </div>

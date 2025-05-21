@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
   images: {
-    domains: ['localhost', 'trf.trinitysystems.in' , 'cdn.shopify.com'], // Add the domain here
+    domains: ['localhost', 'trf.trinitysystems.in' , 'cdn.shopify.com',"truereff-bucket.s3.eu-north-1.amazonaws.com"], // Add the domain here
   },
 };
 const withPWA = require("next-pwa")({

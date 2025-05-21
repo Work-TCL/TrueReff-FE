@@ -138,10 +138,8 @@ export default function ChannelsConnect() {
                   disabled
                 />
               </div>
-              <div
-                className={`lg:flex hidden mt-5 ${
-                  instagramConnected ? "hidden" : ""
-                }`}
+              {!instagramConnected && <div
+                className={`lg:flex hidden mt-5`}
               >
                 {/* main button */}
                 <Button
@@ -153,7 +151,7 @@ export default function ChannelsConnect() {
                 >
                   {translate("Connect")}
                 </Button>
-              </div>
+              </div>}
             </div>
           </div>
           <div className="col-span-2">
@@ -165,10 +163,8 @@ export default function ChannelsConnect() {
               disabled
             />
           </div>
-          <div
-            className={`col-span-2 lg:hidden mt-5 w-full ${
-              instagramConnected ? "hidden" : ""
-            }`}
+          {!instagramConnected && <div
+            className={`col-span-2 lg:hidden mt-5 w-full `}
           >
             <Button
               loading={isLoading}
@@ -179,7 +175,7 @@ export default function ChannelsConnect() {
             >
               {translate("Connect")}
             </Button>
-          </div>
+          </div>}
           <div className="col-span-2">
             <div className="flex gap-4 items-center">
               <img
@@ -210,10 +206,8 @@ export default function ChannelsConnect() {
                   placeholder="@JohnDoeFashion"
                 />
               </div>
-              <div
-                className={`lg:flex hidden mt-5 ${
-                  youtubeConnected ? "hidden" : ""
-                }`}
+              {!youtubeConnected && <div
+                className={`lg:flex hidden mt-5`}
               >
                 <Button
                   className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
@@ -224,7 +218,7 @@ export default function ChannelsConnect() {
                 >
                   {translate("Connect")}
                 </Button>
-              </div>
+              </div>}
             </div>
           </div>
           <div className="col-span-2">
@@ -236,10 +230,8 @@ export default function ChannelsConnect() {
               placeholder="https://youtube.com/@JohnDoeFashion"
             />
           </div>
-          <div
-            className={`col-span-2 lg:hidden w-full mt-5 ${
-              youtubeConnected ? "hidden" : ""
-            }`}
+          {!youtubeConnected && <div
+            className={`col-span-2 lg:hidden w-full mt-5`}
           >
             <Button
               className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
@@ -250,7 +242,7 @@ export default function ChannelsConnect() {
             >
               {translate("Connect")}
             </Button>
-          </div>
+          </div>}
         </div>
       </form>
     </FormProvider>

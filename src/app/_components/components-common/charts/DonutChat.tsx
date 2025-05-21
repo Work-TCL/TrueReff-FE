@@ -3,9 +3,9 @@ import { useTranslations } from "next-intl";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
-const DonutChart: React.FC = () => {
+const DonutChart = (props:{data?:any[]}) => {
   const translate = useTranslations();
-  const data = [
+  const data = props?.data?? [
     { name: translate("Most_selling_products"), value: 76, color: "#BEDBFC" },
     { name: translate("Low-Performing_products"), value: 24, color: "#FED6AF" },
   ];
@@ -38,7 +38,8 @@ const DonutChart: React.FC = () => {
         </ResponsiveContainer>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <p className="text-sm text-gray-desc">{translate("This_month")}</p>
-          <p className="text-2xl font-medium text-gray-darken">1000</p>
+          <p className="text-2xl font-medium text-gray-darken">{data?.reduce((total:any, item:any) => total + item?.value,
+              0)}</p>
         </div>
       </div>
 

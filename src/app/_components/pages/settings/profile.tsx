@@ -126,14 +126,16 @@ export default function Profile() {
               className="w-[100px] h-[100px] object-cover rounded-full"
             />
           </div>
+          <div className="flex flex-col sm:flex-row md:flex-row gap-3">
           <div className="flex flex-col gap-3">
             {[
               ["Name", profile.business_name || "-"],
               ["Email", profile.company_email || "-"],
               ["Website", profile.website || "-"],
-              ["Business_Type", profile.type_of_business || "-"],
+              ["Business_Type", profile.type_of_business || "-",],
+              ["GST_Number", profile.gst_number || "-"]
             ].map(([label, value], idx) => (
-              <div key={idx} className="flex flex-col md:flex-row items-start gap-2">
+              <div key={idx} className="flex flex-row md:flex-row items-start gap-2">
                 <div className="w-[120px] text-sm text-gray-500 text-nowrap">
                   {translate(label as string)}:
                 </div>
@@ -149,8 +151,9 @@ export default function Profile() {
               ["Pin_Code", profile.pin_code || "-"],
               ["State", profile.state || "-"],
               ["City", profile.city || "-"],
+              ["PAN_Number", profile.pan_number || "-"]
             ].map(([label, value], idx) => (
-              <div key={idx} className="flex flex-col md:flex-row items-start gap-2">
+              <div key={idx} className="flex flex-row items-start gap-2">
                 <div className="w-[120px] text-sm text-gray-500 text-nowrap">
                   {translate(label as string)}:
                 </div>
@@ -160,20 +163,6 @@ export default function Profile() {
               </div>
             ))}
           </div>
-          <div className="flex flex-col gap-3">
-            {[
-              ["GST_Number", profile.gst_number || "-"],
-              ["PAN_Number", profile.pan_number || "-"],
-            ].map(([label, value], idx) => (
-              <div key={idx} className="flex flex-col md:flex-row items-start gap-2">
-                <div className="w-[120px] text-sm text-gray-500 text-nowrap">
-                  {translate(label as string)}:
-                </div>
-                <div className="font-medium text-sm break-words">
-                  {value || "-"}
-                </div>
-              </div>
-            ))}
           </div>
         </div>
         <ContactsProfile

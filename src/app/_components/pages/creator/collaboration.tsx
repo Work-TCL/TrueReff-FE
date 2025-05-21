@@ -168,7 +168,7 @@ export default function CollaborationList() {
         const response = await axios.get(
           `/product/collaboration/creator/list?page=${page}&limit=${pageSize}${
             searchValue ? `&search=${searchValue}` : ""
-          }${status ? `&collaborationStatus=${status}` : ""}`
+          }${status ? `&status=${status}` : ""}`
         );
         if (response.status === 200) {
           const collaborationData = response.data.data;

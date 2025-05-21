@@ -155,23 +155,23 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
     reValidateMode: "onSubmit"
   });
   const [categories, setCategories] = useState<ICategoryData[]>([]);
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScroll = window.scrollY;
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScroll = window.scrollY;
 
-      if (currentScroll > lastScrollTop) {
-        setShowProfile(false); // scrolling down
-      } else {
-        setShowProfile(true); // scrolling up
-      }
+  //     if (currentScroll > lastScrollTop) {
+  //       setShowProfile(false); // scrolling down
+  //     } else {
+  //       setShowProfile(true); // scrolling up
+  //     }
 
-      setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
-    };
+  //     setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
+  //   window.addEventListener("scroll", handleScroll);
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollTop]);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, [lastScrollTop]);
   useEffect(() => {
     if (store) {
       storeMethods.setValue("store_name", store?.store_name);

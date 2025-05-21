@@ -1490,7 +1490,9 @@ export const minRevenueOptions:IOption[] = [
 
 
 export const gender: string[] = ["Male", "Female"];
-
+export const currency:{[key:string]: string} = {
+  INR: "₹"
+}
 export const vendorPlans = [
   {
       name: "Free",
