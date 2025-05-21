@@ -4,35 +4,25 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@sohanemon/utils";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function HeroSection() {
 
-   useEffect(() => {
-    AOS.init({
-        once: false,   // animation baar baar ho scroll karne par
-  mirror: true,
-      duration: 1000, 
-    });
-    AOS.refresh();
-    }, []);
 
   return (
     <div className="w-full bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff]">
       {/* Section One */}
       <section className="max-w-7xl mx-auto px-6 py-16 flex flex-col-reverse lg:flex-row items-center justify-between gap-10">
-        <div className="lg:w-1/2 space-y-6 text-center lg:text-left">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#333333] leading-tight">
+        <div  className="lg:w-1/2 space-y-6 text-center lg:text-left">
+          <h1 data-aos="fade-left" className="text-4xl md:text-5xl font-bold text-[#333333] leading-tight">
             <span className="text-primary">Empowering</span>
             <br />
             creator to grow, collaborate & earn
           </h1>
-          <p className="text-[#333333] text-lg">
+          <p  data-aos="fade-right" className="text-[#333333] text-lg">
             Boost your social media engagement, collaborate with top brands and
             monetize 100% of your content with Wishlink
           </p>
-          <button className="group relative flex items-center justify-between pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white max-w-[215px] w-full">
+          <button data-aos="flip-up"  className="group relative flex items-center justify-between pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white max-w-[215px] w-full">
             <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-300 ease-in-out group-hover:scale-x-100 z-0" />
             <span className="relative z-10 transition-colors duration-300 ease-in-out group-hover:text-primary">
               Get Started
@@ -45,7 +35,7 @@ export default function HeroSection() {
         <div className="lg:w-1/2 flex justify-center items-center gap-4">
           {/* Placeholder image group - customize with actual images */}
           <div className="flex gap-4">
-            <div className="relative w-[164px] h-[400px] rounded-[400px] shadow-xl">
+            <div data-aos="flip-up" className="relative w-[164px] h-[400px] rounded-[400px] shadow-xl">
               <Image
                 src={"/assets/landing/girl-holding-cell.png"}
                 alt={`Creator-1`}
@@ -56,7 +46,7 @@ export default function HeroSection() {
                 <img src="/assets/landing/smile.png" className="w-4 h-4" />
               </div>
             </div>
-            <div className="relative w-[164px] h-[400px] rounded-[400px] shadow-xl mt-[100px]">
+            <div data-aos="flip-down"  className="relative w-[164px] h-[400px] rounded-[400px] shadow-xl mt-[100px]">
               <Image
                 src={
                   "/assets/landing/young-beautiful-woman-wearing-red-leather-jacket.png"
@@ -69,7 +59,7 @@ export default function HeroSection() {
                 <img src="/assets/landing/heart.png" className="w-4 h-4" />
               </div>
             </div>
-            <div className="relative w-[164px] h-[400px] rounded-[400px] shadow-xl">
+            <div data-aos="flip-up" className="relative w-[164px] h-[400px] rounded-[400px] shadow-xl">
               <Image
                 src={
                   "/assets/landing/pretty-teen-girl-wearing-hat-taking-selfies.png"
@@ -89,17 +79,17 @@ export default function HeroSection() {
       {/* Section Two */}
       <section className="bg-white py-16 flex flex-col gap-[50px] ">
         <div className="flex flex-col gap-[35px] items-center justify-center">
-          <p className="text-4xl md:text-7xl font-medium text-gray-900 leading-tight">
+          <p data-aos="slide-left" className="text-4xl md:text-7xl font-medium text-gray-900 leading-tight">
             Loved by
             <span className="text-primary"> Creators</span>, trusted by Brands
           </p>
-          <p className="text-gray-700 text-xl">
+          <p data-aos="slide-right" className="text-gray-700 text-xl">
              Join forces with fellow Creators, partner with leading Brands like
             never before
           </p>
         </div>
         <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center justify-between gap-12">
-          <div className="relative flex flex-col items-center lg:items-start text-center lg:text-left">
+          <div data-aos="zoom-in" className="relative flex flex-col items-center lg:items-start text-center lg:text-left">
             <Image
               src="/assets/landing/creator-1.png"
               alt="Aditi Shah"
@@ -122,7 +112,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 lg:gap-0">
+          <div data-aos="zoom-in"  className="grid grid-cols-3 gap-4 lg:gap-0">
             {[
               "/assets/landing/brand-1.png",
               "/assets/landing/brand-2.png",

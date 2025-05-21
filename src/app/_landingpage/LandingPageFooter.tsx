@@ -15,11 +15,11 @@ export default function LandingPageFooter() {
         <footer className="bg-[#333333] dark:bg-gray-900 mobile:pt-[150px] sm:pt-[160px] lg:pt-[325px] mt-[-596px]">
             <div className="mx-auto w-full max-w-[1720px] px-[100px] ">
                 <div className="flex justify-between mobile:flex-col sm:flex-col md:flex-row lg:gap-[50px] xl:gap-[130px] 2xl:gap-56">
-                    <div className="flex items-center md:w-[200px] lg:w-[351px]">
+                    <div data-aos='fade-down-right' className="flex items-center md:w-[200px] lg:w-[351px]">
                         <img src="/assets/landing/logo_TrueReff.svg" className="h-[50px]" alt="TrueReff Logo" />
                     </div>
 
-                    <div className="flex mobile:flex-col sm:flex-col md:flex-col mobile:pt-10 sm:pt-10 md:pt-0 lg:flex-row lg:gap-[50px] xl:gap-[130px] 2xl:gap-[278px]">
+                    <div data-aos='fade-left' className="flex mobile:flex-col sm:flex-col md:flex-col mobile:pt-10 sm:pt-10 md:pt-0 lg:flex-row lg:gap-[50px] xl:gap-[130px] 2xl:gap-[278px]">
                         <div className='flex flex-col xl:min-w-[448px] mx-w-[448px] w-full'>
                             <h2 className="mb-6 lg:text-xl xl:text-2xl font-light text-gray-500 ">Quick Links</h2>
                             <div className='flex  mobile:gap-8 sm:gap-8 md:flex-row md:gap-8 lg:justify-between'>

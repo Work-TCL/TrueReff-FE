@@ -6,10 +6,10 @@ import HeroSection from "./heroSection";
 import EarningsSection from "./earningsSection";
 import SocialMedia from "./SocialMediaSections";
 import AOS from 'aos';
-import 'aos/dist/aos.css';
 import ContentCategories from "./ContentCategories";
 import Launchpad from "./Launchpad";
 import LandingPageFooter from "./LandingPageFooter";
+import "aos/dist/aos.css";
 
 export default function LandingPage() {
   const [activeLink, setActiveLink] = useState("creator");
@@ -20,7 +20,7 @@ export default function LandingPage() {
 
  useEffect(() => {
   AOS.init({
-    duration: 1000, 
+    duration: 1600, 
     once: false,    
     mirror: true,   
     easing: 'ease-in-out',
@@ -29,7 +29,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       {/* Background Video */}
       <video
         autoPlay

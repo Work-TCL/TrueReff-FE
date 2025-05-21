@@ -34,7 +34,7 @@ export default function EarningsSection() {
 
   return (
     <section className="flex flex-col gap-[70px] w-full bg-primary text-white py-20 px-6">
-      <div className="flex items-center justify-center ">
+      <div data-aos="zoom-in-up" className="flex items-center justify-center ">
         <h2 className="text-4xl font-medium leading-tight">
           Unlock the influence and <br />
           maximize your <span className="font-bold">earnings</span>
@@ -43,7 +43,7 @@ export default function EarningsSection() {
 
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
         {/* Left Illustration */}
-        <div className=" flex flex-col gap-[40px] items-center justify-center">
+        <div data-aos="zoom-in-down" className=" flex flex-col gap-[40px] items-center justify-center">
           <div className="w-full md:w-1/2 flex justify-center">
             <Image
               src="/assets/landing/earning-patner.png"
@@ -60,7 +60,7 @@ export default function EarningsSection() {
         </div>
 
         {/* Right Content */}
-        <div className="w-full md:w-1/2 space-y-6">
+        <div data-aos="zoom-in-left" className="w-full md:w-1/2 space-y-6">
           <ul className="flex flex-col gap-[30px]">
             {features.map((feature, index) => (
               <li key={index} className="flex items-center gap-4">
