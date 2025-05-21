@@ -12,8 +12,11 @@ import Bag from '../../../public/assets/svg/Bag'
 import ImageCategory from '../../../public/assets/svg/ImageCategory'
 import Music from '../../../public/assets/svg/Music'
 import { MoveRight } from 'lucide-react'
+import ButtonLogin from '../_components/components-common/Button-Login';
+import { useRouter } from 'next/navigation';
 
 export default function ContentCategories() {
+    const router = useRouter();
     const categories = [
         { cateGoriesIcon: <Enagel /> },
         { cateGoriesIcon: <CupPlus /> },
@@ -59,15 +62,9 @@ export default function ContentCategories() {
                     <div data-aos='zoom-in-left' className='mobile:px-12'>
                         <h2 className="mobile:text-3xl md:text-5xl xl:text-7xl font-medium text-[#333333] max-w-[438px] mb-4 leading-[90px]">Are you one of <b>them?</b></h2>
                         <p className='text-xl font-medium text-[#333333] max-w-[632px] mb-10 '>We work with Creators big and small, up and comers, trendsetters and market leaders, We look for creators with interesting stories and exceptional content across categories</p>
-                        <button className="group relative flex items-center justify-between pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white w-[215px]">
-                            <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-300 ease-in-out group-hover:scale-x-100 z-0" />
-                            <span className="relative z-10 transition-colors duration-300 ease-in-out group-hover:text-primary">
-                                Get Started
-                            </span>
-                            <div className="relative z-10 flex items-center justify-center h-[44px] w-[44px] rounded-full bg-white transition-colors duration-300 ease-in-out">
-                                <MoveRight className="text-primary transition-colors duration-300 ease-in-out" />
-                            </div>
-                        </button>
+                        
+                                 <ButtonLogin label="Get Started"  onClick={() => {router.push("/login")}}  />
+
                     </div>
                 </div>
             </div>

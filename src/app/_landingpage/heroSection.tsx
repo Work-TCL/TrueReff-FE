@@ -4,9 +4,11 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@sohanemon/utils";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
+import ButtonLogin from "../_components/components-common/Button-Login";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
-
+const router = useRouter();
 
   return (
     <div className="w-full bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff]">
@@ -22,15 +24,9 @@ export default function HeroSection() {
             Boost your social media engagement, collaborate with top brands and
             monetize 100% of your content with Wishlink
           </p>
-          <button data-aos="flip-up"  className="group relative flex items-center justify-between pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white max-w-[215px] w-full">
-            <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-300 ease-in-out group-hover:scale-x-100 z-0" />
-            <span className="relative z-10 transition-colors duration-300 ease-in-out group-hover:text-primary">
-              Get Started
-            </span>
-            <div className="relative z-10 flex items-center justify-center h-[44px] w-[44px] rounded-full bg-white transition-colors duration-300 ease-in-out">
-              <MoveRight className="text-primary transition-colors duration-300 ease-in-out" />
-            </div>
-          </button>
+                   <ButtonLogin label="Get Started" dataAos="flip-up" onClick={() => {router.push("/login")}} />
+
+
         </div>
         <div className="lg:w-1/2 flex justify-center items-center gap-4">
           {/* Placeholder image group - customize with actual images */}
@@ -78,12 +74,12 @@ export default function HeroSection() {
 
       {/* Section Two */}
       <section className="bg-white py-16 flex flex-col gap-[50px] ">
-        <div className="flex flex-col gap-[35px] items-center justify-center">
-          <p data-aos="slide-left" className="text-4xl md:text-7xl font-medium text-gray-900 leading-tight">
+        <div data-aos='fade-down' className="flex flex-col gap-[35px] items-center justify-center">
+          <p  className="text-4xl md:text-7xl font-medium text-gray-900 leading-tight">
             Loved by
             <span className="text-primary"> Creators</span>, trusted by Brands
           </p>
-          <p data-aos="slide-right" className="text-gray-700 text-xl">
+          <p  className="text-gray-700 text-xl">
              Join forces with fellow Creators, partner with leading Brands like
             never before
           </p>

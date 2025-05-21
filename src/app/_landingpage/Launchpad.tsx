@@ -3,8 +3,11 @@
 
 import { MoveRight } from 'lucide-react'
 import React from 'react'
+import ButtonLogin from '../_components/components-common/Button-Login';
+import { useRouter } from 'next/navigation';
 
 export default function Launchpad() {
+    const router = useRouter();
     return (
         <>
             <div className="bg-[url('/assets/landing/launchpad.png')] bg-cover bg-center bg-no-repeat mobile:pt-[60px] mobile:pb-[100px] sm:pt-[80px] sm:pb-[120px] md:pt-[100px] md:pb-[200px] lg:pt-[150px] lg:pb-[300px] w-full">
@@ -22,15 +25,11 @@ export default function Launchpad() {
                     <p className='mobile:text-xs sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl font-medium text-gray-900'>Try <span className="text-primary font-bold "> Truereff</span> for free</p>
                     <img src='/assets/landing/iphoneTwo.png' className='absolute mobile:top-[-25px] sm:top-[-50px] md:top-[-80px] lg:top-[-140px] sm:right-[140px] mobile:right-[120px] md:right-[200px] mobile:w-[100px] sm:w-[160px] md:w-[280px]  lg:h-[620px] lg:w-[460px] xl:w-[550px]' />
 
-                    <button className="group relative flex items-center justify-between mobile:pl-2 sm:pl-3 md:pl-6 sm:pr-[2px] md:pr-[1px] py-[1px] rounded-full bg-primary text-white mobile:text-xs sm:text-sm md:text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white md:w-[170px] lg:w-[215px]">
-                        <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-300 ease-in-out group-hover:scale-x-100 z-0" />
-                        <span className="relative z-10 transition-colors mobile:pr-[3px] sm:pr-[5px] duration-300 ease-in-out group-hover:text-primary">
-                            Get Started
-                        </span>
-                        <div className="relative z-10 flex items-center justify-center mobile:h-[20px] mobile:w-[20px] sm:h-[25px] sm:w-[25px] md:h-[44px] md:w-[44px] rounded-full bg-white transition-colors duration-300 ease-in-out">
-                            <MoveRight className="text-primary transition-colors duration-300 ease-in-out" />
-                        </div>
-                    </button>
+                    <ButtonLogin label="Get Started" spanClassName='mobile:pr-[3px] sm:pr-[5px]' className='md:w-[170px] lg:w-[215px] mobile:pl-2 sm:pl-3 md:pl-6 sm:pr-[2px] md:pr-[1px] mobile:text-xs sm:text-sm md:text-base' iconClassName='mobile:h-[20px] mobile:w-[20px] sm:h-[25px] sm:w-[25px] md:h-[44px] md:w-[44px]'
+                        onClick={() => {
+                            router.push("/login");
+                        }} />
+
                 </div>
             </div>
         </>

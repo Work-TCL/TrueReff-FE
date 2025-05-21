@@ -5,6 +5,7 @@ import React from 'react'
 import Instagram from '../../../public/assets/svg/Instagram';
 import SignUpImage from '../../../public/assets/svg/SignUP';
 import EarningHeans from '../../../public/assets/svg/EarningHeans';
+import ButtonLogin from '../_components/components-common/Button-Login';
 
 export default function SocialMediaSections() {
     return (
@@ -35,15 +36,8 @@ export default function SocialMediaSections() {
                     <div className="h-[533px]  md:min-w-[160px] mobile:pb-24 sm:ml-[20px] flex flex-col justify-end items-start relative left-[-210px] pb-20 sm:gap-[10px] mobile:gap-[10px] lg:gap-[15px]">
                         <h3 className="lg:text-2xl xl:text-3xl font-semibold text-gray-800">Exponential Growth</h3>
                         <p className="text-xs lg:text-sm ">Grow your social media presence <br /> and achieve</p>
-                        <button className="group relative flex items-center justify-between mobile:pl-2 pl-6 pr-[1px] py-[1px] rounded-full bg-primary text-white mobile:text-xs text-base overflow-hidden border-2 border-transparent transition-all duration-300 ease-in-out hover:border-pink-600 hover:bg-white  mobile:w-[100px]sm:w-[180px] lg:w-[215px]">
-                            <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-300 ease-in-out group-hover:scale-x-100 z-0" />
-                            <span className="relative z-10 transition-colors duration-300 ease-in-out group-hover:text-primary">
-                                Read More
-                            </span>
-                            <div className="relative z-10 flex items-center justify-center mobile:h-[20px] mobile:w-[20px] h-[44px] w-[44px] rounded-full bg-white transition-colors duration-300 ease-in-out">
-                                <MoveRight className="text-primary transition-colors duration-300 ease-in-out" />
-                            </div>
-                        </button>
+                                            <ButtonLogin label="Read More"  className='mobile:pl-2 pl-6 pr-[1px] py-[1px] mobile:text-xs text-base mobile:w-[100px]sm:w-[180px] lg:w-[215px]' iconClassName='mobile:h-[20px] mobile:w-[20px] h-[44px] w-[44px]' onClick={() => console.log('')} />
+
                     </div>
                 </div>
             </div>
