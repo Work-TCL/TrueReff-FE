@@ -1,3 +1,6 @@
+"use client";
+
+
 import React from 'react'
 import ShareImage from '../../../public/assets/svg/ShareImage'
 import LocationImage from '../../../public/assets/svg/Location'
@@ -9,7 +12,7 @@ import FaceBookImage from '../../../public/assets/svg/FaceBookImage'
 
 export default function LandingPageFooter() {
     return (
-        <footer className="bg-[#333333] dark:bg-gray-900 pt-[325px] mt-[-596px]">
+        <footer className="bg-[#333333] dark:bg-gray-900 mobile:pt-[150px] sm:pt-[160px] lg:pt-[325px] mt-[-596px]">
             <div className="mx-auto w-full max-w-[1720px] px-[100px] ">
                 <div className="flex justify-between mobile:flex-col sm:flex-col md:flex-row lg:gap-[50px] xl:gap-[130px] 2xl:gap-56">
                     <div className="flex items-center md:w-[200px] lg:w-[351px]">

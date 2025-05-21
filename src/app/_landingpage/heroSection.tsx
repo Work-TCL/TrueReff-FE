@@ -1,11 +1,23 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { cn } from "@sohanemon/utils";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 export default function HeroSection() {
+
+   useEffect(() => {
+    AOS.init({
+        once: false,   // animation baar baar ho scroll karne par
+  mirror: true,
+      duration: 1000, 
+    });
+    AOS.refresh();
+    }, []);
+
   return (
     <div className="w-full bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff]">
       {/* Section One */}
