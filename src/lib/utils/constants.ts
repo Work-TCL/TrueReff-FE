@@ -1493,50 +1493,28 @@ export const gender: string[] = ["Male", "Female"];
 
 export const vendorPlans = [
   {
-      name: "Free",
-      price: 0,
-      features: [
-          { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Creator Collaborations", icon: "/assets/pricing/unsubscribed.svg" },
-          { label: "Analytics & Reports", icon: "/assets/pricing/unsubscribed.svg" },
-          { label: "Store Integrations", icon: "/assets/pricing/unsubscribed.svg" },
-          { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" }
-      ],
-      description: "per user/month, billed annually"
-  },
-  {
-      name: "Gold",
-      price: 39,
-      features: [
-          { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Creator Collaborations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Store Integrations", icon: "/assets/pricing/unsubscribed.svg" },
-          { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" }
-      ],
-      description: "per user/month, billed annually"
-  },
-  {
-      name: "Platinum", price: 59, features: [
-          { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Creator Collaborations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Store Integrations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Priority Support", icon: "/assets/pricing/subscribed.svg" }
-      ],
-      description: "per user/month, billed annually",
-      popular: true,
-  },
-  {
-      name: "Diamond",
-      price: 19,
-      features: [
-          { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Creator Collaborations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Store Integrations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" }
-      ],
-      description: "per user/month, billed annually"
-  },
+    _id: "1",
+    name: "Free",
+    amount: 0,
+    currencyCode: "INR",
+    isActive: false,
+    plan_id: "",
+    period: "monthly",
+    interval: 0,
+    productLimit: 0,
+    createdAt: "",
+    updatedAt: "",
+    allowCollaboration: false,
+    analytics: false,
+    commission: 0,
+    prioritySupport: false,
+    storeIntegration: false,
+    features: [
+      { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Creator Collaborations", icon: "/assets/pricing/unsubscribed.svg" },
+      { label: "Analytics & Reports", icon: "/assets/pricing/unsubscribed.svg" },
+      { label: "Store Integrations", icon: "/assets/pricing/unsubscribed.svg" },
+      { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" }
+  ],
+},
 ];

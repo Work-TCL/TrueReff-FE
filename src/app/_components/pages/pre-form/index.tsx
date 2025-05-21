@@ -5,7 +5,7 @@ import HeaderAuth from "../auth/components/header-auth";
 import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
 import { GrDocumentText } from "react-icons/gr";
 import { FaRegUserCircle } from "react-icons/fa";
-import { IVendorRegisterFirstStepSchema, IVendorRegisterSecondStepSchema,  IVendorRegisterThirdStepSchema,  vendorRegisterFirstStepSchema, vendorRegisterSecondStepSchema, vendorRegisterThirdStepSchema } from "@/lib/utils/validations";
+import { IVendorRegisterFirstStepSchema, IVendorRegisterSecondStepSchema, IVendorRegisterThirdStepSchema, vendorRegisterFirstStepSchema, vendorRegisterSecondStepSchema, vendorRegisterThirdStepSchema } from "@/lib/utils/validations";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/app/_components/ui/button";
@@ -67,9 +67,9 @@ export default function PreFormPage() {
   const [loading, setLoading] = useState(false);
   const [terms, setTerms] = useState(false);
   const { update } = useSession();
-  const { vendor,setVendorData } = useVendorStore();
+  const { vendor, setVendorData } = useVendorStore();
   const searchParams = useSearchParams();
-  const tab = searchParams.get("tab")??"0";
+  const tab = searchParams.get("tab") ?? "0";
   const { account } = useAuthStore();
   const [isVendorLoading, setIsVendorLoading] = useState<boolean>(false);
   const [profileFile, setProfileFile] = useState<File | null>(null);
@@ -113,7 +113,7 @@ export default function PreFormPage() {
   });
   const channelMethods = useForm<IVendorRegisterThirdStepSchema>({
     defaultValues: {
-      shopify_store_id:""
+      shopify_store_id: ""
     },
     resolver: yupResolver(vendorRegisterThirdStepSchema),
     mode: "onSubmit",
@@ -127,61 +127,61 @@ export default function PreFormPage() {
     resolver: yupResolver(vendorRegisterSecondStepSchema),
     mode: "onSubmit",
   });
-  useEffect(()=> {
-    if(account?.email){
-      methods.setValue("company_email",account?.email)
+  useEffect(() => {
+    if (account?.email) {
+      methods.setValue("company_email", account?.email)
     }
-  },[account])
+  }, [account])
   const fetchCategory = async () => {
-      try {
-        const response = await getCategories({ page: 0, limit: 0 });
-        let data = response?.data?.data;
-        setCategories(data);
-      } catch (error) { }
-    };
-  
-    useEffect(() => {
-      fetchCategory();
-    }, []);
-    useEffect(() => {
-      if(vendor?.category?.length > 0){
-        let parentCategory = categories?.filter((ele:ICategoryData) => vendor?.category?.includes(ele?._id))?.map((ele:ICategoryData) => ({value: ele?._id,label:ele?.name}));
-        methods.setValue("category",parentCategory);
-      }
-      if(vendor?.sub_category?.length > 0){
-        let subCategory = categories?.filter((ele:ICategoryData) => vendor?.sub_category?.includes(ele?._id))?.map((ele:ICategoryData) => ({value: ele?._id,label:ele?.name}));
-        methods.setValue("sub_category",subCategory);
-      }
-    },[categories,vendor])
+    try {
+      const response = await getCategories({ page: 0, limit: 0 });
+      let data = response?.data?.data;
+      setCategories(data);
+    } catch (error) { }
+  };
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
+  useEffect(() => {
+    if (vendor?.category?.length > 0) {
+      let parentCategory = categories?.filter((ele: ICategoryData) => vendor?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      methods.setValue("category", parentCategory);
+    }
+    if (vendor?.sub_category?.length > 0) {
+      let subCategory = categories?.filter((ele: ICategoryData) => vendor?.sub_category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      methods.setValue("sub_category", subCategory);
+    }
+  }, [categories, vendor])
   const getVendorData = async () => {
     setIsVendorLoading(true);
     try {
       const vendorData: any = await getVendor();
-            if (vendorData) {
+      if (vendorData) {
         if (vendorData?.completed_step === 1) {
-          router.push('?tab=1');          
+          router.push('?tab=1');
           setIsVendorLoading(false);
         } else if (vendorData?.completed_step === 2) {
-          router.push('?tab=2');
+          router.push('?tab=3');
           setIsVendorLoading(false);
         } else if (vendorData?.completed_step === 3) {
           router.push(`/vendor/dashboard`);
         }
-        methods.setValue("business_name",vendorData?.business_name);
-        methods.setValue("company_email",vendorData?.company_email);
-        methods.setValue("contacts",vendorData?.contacts);
-        methods.setValue("sub_category",vendorData?.sub_category);
-        methods.setValue("address",vendorData?.address);
-        methods.setValue("pin",vendorData?.pin_code);
-        methods.setValue("type_of_business",vendorData?.type_of_business);
-        methods.setValue("state",vendorData?.state);
-        methods.setValue("city",vendorData?.city);
-        methods.setValue("website",vendorData?.website);
-        methods.setValue("profile_image",vendorData?.profile_image);
-        methods.setValue("banner_image",vendorData?.banner_image);
-        documentMethods.setValue("pan_number",vendorData?.pan_number);
-        documentMethods.setValue("gst_number",vendorData?.gst_number);
-        setFormState({state:vendorData?.state,city: vendorData?.city,type_of_business: vendorData?.type_of_business})
+        methods.setValue("business_name", vendorData?.business_name);
+        methods.setValue("company_email", vendorData?.company_email);
+        methods.setValue("contacts", vendorData?.contacts);
+        methods.setValue("sub_category", vendorData?.sub_category);
+        methods.setValue("address", vendorData?.address);
+        methods.setValue("pin", vendorData?.pin_code);
+        methods.setValue("type_of_business", vendorData?.type_of_business);
+        methods.setValue("state", vendorData?.state);
+        methods.setValue("city", vendorData?.city);
+        methods.setValue("website", vendorData?.website);
+        methods.setValue("profile_image", vendorData?.profile_image);
+        methods.setValue("banner_image", vendorData?.banner_image);
+        documentMethods.setValue("pan_number", vendorData?.pan_number);
+        documentMethods.setValue("gst_number", vendorData?.gst_number);
+        setFormState({ state: vendorData?.state, city: vendorData?.city, type_of_business: vendorData?.type_of_business })
         setVendorData("vendor", {
           vendorId: vendorData?._id,
           accountId: vendorData?.accountId,
@@ -208,7 +208,7 @@ export default function PreFormPage() {
           channelId: vendorData?.channelId,
           channelStatus: vendorData?.channelStatus,
           channelType: vendorData?.channelType,
-        })        
+        })
       }
 
     } catch (e) {
@@ -220,7 +220,7 @@ export default function PreFormPage() {
   const getConnectedChannel = async () => {
     setLoading(true);
     try {
-        const res: any[] = await getConnectedChannelsList();
+      const res: any[] = await getConnectedChannelsList();
       if (Array.isArray(res)) {
         setChannels(res);
         setLoading(false)
@@ -228,10 +228,10 @@ export default function PreFormPage() {
         setChannels([]);
         setLoading(false)
       }
-    }catch (error){
-        // const errorMessage = getErrorMessage(error);
-        // toast.error(errorMessage);
-        setLoading(false);
+    } catch (error) {
+      // const errorMessage = getErrorMessage(error);
+      // toast.error(errorMessage);
+      setLoading(false);
     }
   }
 
@@ -243,7 +243,7 @@ export default function PreFormPage() {
   }, []);
   useEffect(() => {
     (async () => {
-      if(vendor?.vendorId){
+      if (vendor?.vendorId) {
         await getConnectedChannel();
       }
     })();
@@ -506,18 +506,21 @@ export default function PreFormPage() {
     setTerms(e.target.checked);
   }
 
-  const handleOnClick = async () => {
+  const handleOnClick = () => {
     router.push(`?tab=${TABS_STATUS.PAYMENT_DETAIL}`)
+  }
+  const handleSkip = () => {
+    router.push(`/creator/dashboard`)
   }
 
   return (
-    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 pb-2 md:pt-5 pt-5 h-screen overflow-hidden flex flex-col">
+    <div className="max-w-[1260px] w-full mx-auto lg:px-0 md:px-4 px-2 pb-2 md:pt-5 pt-5 h-screen overflow-hidden flex flex-col">
       <HeaderAuth />
 
       <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
         <SlidingTabBar
           tabs={allTabs}
-          setActiveTabIndex={(value) => router.push(`?tab=${value}`) }
+          setActiveTabIndex={(value) => router.push(`?tab=${value}`)}
           activeTabIndex={activeTab}
           grid={4}
         />
@@ -555,7 +558,7 @@ export default function PreFormPage() {
                 onSubmit={channelMethods.handleSubmit(handleOnChannelConnect)}
                 className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
               >
-                <ChannelForm loading={loading} channels={channels}/>
+                <ChannelForm loading={loading} channels={channels} />
                 <div className="bg-white">
                   <Button
                     type="button"
@@ -589,19 +592,25 @@ export default function PreFormPage() {
                 </div>
               </form>
             </FormProvider>,
-            [TABS_STATUS.PAYMENT_DETAIL]: 
-            <div className="flex flex-col items-center overflow-auto">
-            <PackageDetails/>
-            <Button
-                    type="submit"
-                    size="small"
-                    loading={loading}
-                    disabled={!terms || loading}
-                    className="w-fit font-medium px-8 md:text-base text-sm"
-                  >
-                    {translate("Save_and_Continue")}
-                  </Button>
-            </div>,
+            [TABS_STATUS.PAYMENT_DETAIL]:
+            <div className="flex flex-col  h-full w-full overflow-auto">
+            {/* Scrollable PackageDetails */}
+            <div className="flex-1 w-full overflow-auto">
+              <PackageDetails isRegister={false} />
+            </div>
+          
+            {/* Fixed Buttons */}
+            <div className="flex justify-start bg-white lg:px-6">
+              <Button
+                type="button"
+                size="small"
+                className="w-fit font-medium px-8 md:text-base text-sm bg-white border text-black"
+                onClick={handleSkip}
+              >
+                {translate("Skip")}
+              </Button>
+            </div>
+          </div>,
           }[activeTab]
         }
       </div>

@@ -189,7 +189,7 @@ export default function BasicInfoForm({
           name="business_name"
           type="text"
           placeholder={translate("Enter_your_Business_Name_or_Company Name")}
-          autoFocus
+          autoFocus={true}
         />
       </div>
       <div className="md:col-span-1 col-span-2 md:mt-10">
@@ -354,7 +354,6 @@ export default function BasicInfoForm({
           name={`contacts[0].name`}
           type="text"
           placeholder={translate("Enter your contact person name")}
-          autoFocus
         />
       </div>
       <div className="md:col-span-1 col-span-2">
