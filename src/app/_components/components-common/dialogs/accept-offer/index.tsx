@@ -16,12 +16,12 @@ export default function CollaborationConfirmed({
     return (
         <DialogLayout
             open={true}
-            size="!max-w-[438px] w-full overflow-auto m-2"
+            size="!max-w-[700px] w-full overflow-auto m-2"
             title=""
             skipClose={true}
         // onClose={() => !loading && onClose()}
         >
-            <div className="max-w-md mx-auto shadow-xl p-6 text-center border">
+            <div className="mx-auto shadow-xl p-6 text-center">
                 <div className="flex justify-center mb-4">
                     <img src="/assets/product/collab-accepted.svg" className="w-25 h-25" />
                 </div>
@@ -33,6 +33,9 @@ export default function CollaborationConfirmed({
                 </p>
 
                 <div className="text-left text-sm text-gray-700 space-y-2 mb-6">
+                    <p className="font-semibold text-lg">
+                    Details Section:
+                    </p>
                     <p>
                         <span className="font-semibold">Product Name:</span>{" "}
                         <span>{collaborationData?.productId?.title}</span>
@@ -54,9 +57,9 @@ export default function CollaborationConfirmed({
                     </p>
                 </div>
 
-                <button className="w-full bg-white border hover:text-white py-2 px-4 rounded-xl hover:bg-gray-900 transition" onClick={() => router.push(`/store/${collaborationData?.creatorId?.store_name}`)}>
+                <div className="my-4"><Link href={`/store/${collaborationData?.creatorId?.store_name}`} target="_blank" className="w-full bg-white border hover:text-white py-2 my-4 px-4 rounded-xl hover:bg-gray-900 transition" >
                     View on Creator Store
-                </button>
+                </Link></div>
             </div>
         </DialogLayout>
     );

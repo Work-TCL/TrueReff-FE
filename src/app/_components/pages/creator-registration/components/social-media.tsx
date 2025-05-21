@@ -216,7 +216,7 @@ export default function SocialMedia({
                   {methods.watch("channels[1].account_name")}
                 </div>
                 <div>
-                  <strong>{translate("Handle")}:</strong> @
+                  <strong>{translate("Handle")}:</strong>
                   {methods.watch("channels[1].handle_name")}
                 </div>
                 <div>

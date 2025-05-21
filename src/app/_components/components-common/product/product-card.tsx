@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/commonUtils";
 import ToolTip from "../tool-tip";
+import { useVendorStore } from "@/lib/store/vendor";
+import { useCreatorStore } from "@/lib/store/creator";
 
 export interface ICategory {
   _id: string;
@@ -47,6 +49,8 @@ const ProductCard = ({
 }) => {
   const translate = useTranslations();
   const router = useRouter();
+  const {vendor} = useVendorStore();
+  const {creator} = useCreatorStore();
   return (
     <Card className="relative cursor-pointer w-full border border-stroke rounded-xl p-2 md:p-3 flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow bg-white overflow-hidden">
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
@@ -85,8 +89,7 @@ const ProductCard = ({
               </span>
             )}
           </div>
-
-          <div className="flex items-center justify-between w-full">
+          {(vendor?.vendorId === "" && creator?.creatorId === "") && <div className="flex items-center justify-between w-full">
             <button
               className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
               onClick={() => {
@@ -94,7 +97,7 @@ const ProductCard = ({
               }}
             >
               <Heart size={15} /> Add </button>
-          </div>
+          </div>}
         </div>
       </CardContent>
     </Card>

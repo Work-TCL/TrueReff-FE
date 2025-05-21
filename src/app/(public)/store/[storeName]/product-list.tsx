@@ -86,7 +86,7 @@ export default function ProductList({ storeName,showTrending }: { storeName: str
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `/auth/creator-store/product-list?limit=${pageLimit}&page=${page}&name=${storeName}`
+        `/auth/creator-store/product-list?limit=${pageLimit}&page=${page}&name=${storeName}${searchValue ? `&search=${searchValue}`: ""}`
       );
 
       if (response.data.data?.list?.length > 0) {
@@ -206,7 +206,7 @@ export default function ProductList({ storeName,showTrending }: { storeName: str
         <Loading />
       ) : (
         <>
-          {productList?.length > 0 && (
+          {/* {productList?.length > 0 && (
             <div className="flex justify-between items-center gap-2 flex-nowrap">
               <SearchInput
                 value={search}
@@ -214,18 +214,18 @@ export default function ProductList({ storeName,showTrending }: { storeName: str
                 placeholder={translate("Search_Product")}
                 className="w-full"
               />
-              {/* <div className="flex md:flex-row flex-col gap-2 ml-auto justify-end items-center">
+              <div className="flex md:flex-row flex-col gap-2 ml-auto justify-end items-center">
                 <CategorySubCategorySelect
                   onChange={handleSelectCategory}
                   xlBreakPoint={true}
                 />
-              </div> */}
+              </div>
             </div>
-          )}
+          )} */}
           {internalLoading && <Loader />}
           {(showTrending && trendingProductList?.length > 0) && <div>
             <h3 className="font-semibold">Trending Products</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6  2xl:grid-cols-8 whitespace-nowrap gap-2 py-2 text-sm font-medium px-2">
+            <div className={`grid grid-cols-2 ${trendingProductList?.length > 10 && "animate-marquee"} md:grid-cols-4 xl:grid-cols-6  2xl:grid-cols-8 whitespace-nowrap gap-2 py-2 text-sm font-medium px-2`}>
               {trendingProductList.map((item: any) => (
                 <div key={item?._id} className="flex h-full w-full">
                   <TrendingProductCard

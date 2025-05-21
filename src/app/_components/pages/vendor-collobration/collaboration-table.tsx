@@ -283,7 +283,22 @@ const CollaborationTable = ({
                   <ToolTip content="Start Bargaining" delayDuration={1000}>
                     <MessagesSquare
                       strokeWidth={1.5}
-                      color="#3b82f680"
+                      color="#3b82f6"
+                      className="cursor-pointer"
+                      size={25}
+                      onClick={() =>
+                        router.push(
+                          `/vendor/creators/collaboration/${collaboration?._id}`
+                        )
+                      }
+                    />
+                  </ToolTip>
+                ),
+                ACTIVE: (
+                  <ToolTip content="Start Bargaining" delayDuration={1000}>
+                    <MessagesSquare
+                      strokeWidth={1.5}
+                      color="#3b82f6"
                       className="cursor-pointer"
                       size={25}
                       onClick={() =>

@@ -3,6 +3,7 @@ import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
+  ChartNoAxesCombined,
   CircleFadingPlus,
   Eye,
   ImageOff,
@@ -95,7 +96,7 @@ export default function ProductList() {
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<"table" | "card">("card");
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -342,19 +343,19 @@ export default function ProductList() {
       },
     },
     {
-      id: "price",
+      id: "action",
       header: () => <>{translate("Action")}</>,
-      accessorKey: "price",
+      accessorKey: "",
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           {/* View button (currently commented) */}
-          <ToolTip content="View Product" delayDuration={1000}>
-            <Eye
+          <ToolTip content="Show Analytics" delayDuration={1000}>
+          <ChartNoAxesCombined 
               strokeWidth={1.5}
               color="#FF4979"
               className="cursor-pointer size-5 "
               onClick={() =>
-                router.push(`/vendor/products/view/${row?.original?._id}`)
+                router.push(`/vendor/view/${row?.original?._id}`)
               }
             />
           </ToolTip>
@@ -365,10 +366,10 @@ export default function ProductList() {
             }
             className="cursor-pointer"
           >
-            <ToolTip content="Add Product to CRM" delayDuration={1000}>
+            <ToolTip content="Edit Product" delayDuration={1000}>
               <UserRoundPen
                 strokeWidth={1.5}
-                color="#3b82f680"
+                color="#3b82f6"
                 className="cursor-pointer size-5"
               />
             </ToolTip>

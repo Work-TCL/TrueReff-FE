@@ -1,6 +1,4 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
-import BargainingDetailView from "./detail";
 import ChatComponent from "./chatComponent";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -18,10 +16,9 @@ import { useTranslations } from "use-intl";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import axios from "@/lib/web-api/axios";
 import Bid from "./bid";
-import { ICategory } from "@/lib/types-api/category";
 import { formatDate } from "@/lib/utils/constants";
 import CollaborationConfirmed from "../../components-common/dialogs/accept-offer";
-import { Copy } from "lucide-react";
+import { Copy, ExternalLink, ExternalLinkIcon } from "lucide-react";
 import { toastMessage } from "@/lib/utils/toast-message";
 import Link from "next/link";
 export interface NegotiationStatus {
@@ -195,13 +192,13 @@ export default function BargainingView() {
     return "-";
   };
   const handleCopyLink = async (textToCopy: string | null) => {
-      try {
-        await navigator.clipboard.writeText(textToCopy ?? "");
-        toastMessage.success("Text copied to clipboard!");
-      } catch (err) {
-        toastMessage.error("Failed to copy!");
-      }
-    };
+    try {
+      await navigator.clipboard.writeText(textToCopy ?? "");
+      toastMessage.success("Link copied to clipboard!");
+    } catch (err) {
+      toastMessage.error("Failed to copy!");
+    }
+  };
   return (
     <div className="flex flex-col w-full p-4 gap-4 md:h-full">
       {loading && <Loader />}
@@ -363,11 +360,13 @@ export default function BargainingView() {
                       <div className="w-[150px] text-sm text-gray-500 text-nowrap">
                         {label}:
                       </div>
-                      <div className="flex gap-2 font-medium text-primary-color text-sm break-words">{label === translate("Affiliate_Link") ? <Link className="hover:underline" href={value} target="_blank">{value}</Link> : value || "-"}{label === translate("Affiliate_Link")&& <Copy size={20} onClick={()=> handleCopyLink(value)} className="cursor-pointer" />}</div>
+                      <div className="flex gap-2 font-medium text-primary-color text-sm break-words">{label === translate("Affiliate_Link") ? <Link className="hover:underline" href={value} target="_blank">{value.length > 20
+                          ? `${value.substring(0, 30)}...` // Truncate the URL if it's too long
+                          : value}</Link> : value || "-"}{label === translate("Affiliate_Link") && <Copy size={20} onClick={() => handleCopyLink(value)} className="cursor-pointer" />}</div>
                     </div>
                   ))}
                 </div>
-              </div>: <Bid
+              </div> : <Bid
                 collaborationData={collaborationData}
                 setCollaborationData={setCollaborationData}
                 offerAccepted={offerAccepted} setOfferAccepted={setOfferAccepted}
@@ -389,31 +388,34 @@ export default function BargainingView() {
                     )}`,
                 ],
                 [
-                  translate("Video_Format"),
-                  collaborationData?.productId?.videoType?.length > 0
-                    ? `• ${collaborationData?.productId?.videoType?.join(" • ")}`
-                    : "-",
+                  translate("Video_Format"), <div className="flex flex-wrap gap-2">
+                    {collaborationData?.productId?.videoType?.length > 0 ? collaborationData?.productId?.videoType.map((option) => (
+                      <span
+                        key={option}
+                        className={cn(
+                          "text-sm px-3 py-1 rounded-full border transition",
+                          "bg-blue-600 text-primary border-primary"
+                          // : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+                          // disabled && "opacity-50 cursor-not-allowed"
+                        )}
+                      >
+                        {option}
+                      </span>
+                    )) : "-"}
+                  </div>
                 ],
                 // [
                 //   translate("Key Elements to highlight"),
                 //   "Show off the ring’s 3 carat clarity, emphasize the hypoallergenic metal, and highlight our 2-year warranty.",
                 // ],
-                // [
-                //   "Creator Material",
-                //   "• 3× Product Photos (JPG) • Brand Logo (PNG) • Reference Unboxing Video (YouTube URL)",
-                // ],
                 [
                   translate("Free_Product_for_Creator"),
                   collaborationData?.productId?.freeProduct ? "Yes" : "No",
                 ],
-                // [
-                //   "Coupon Code",
-                //   "Yes, On • Offer: “Get 15% off sitewide” • Coupon Code: SUMMER15",
-                // ],
               ].map(([label, value], idx) => (
                 <div
-                  key={label + idx}
-                  className="flex flex-col md:flex-row items-start gap-2"
+                  key={idx}
+                  className="flex flex-col md:flex-row items-center gap-2"
                 >
                   <div className="w-[220px] text-sm text-gray-500 text-nowrap">
                     {label}:
@@ -421,6 +423,60 @@ export default function BargainingView() {
                   <div className="font-medium text-sm break-words">{value || "-"}</div>
                 </div>
               ))}
+              {collaborationData?.collaborationStatus === "ACTIVE" && <><div
+                className="flex flex-col md:flex-row items-center gap-2"
+              >
+                <div className="w-[220px] text-sm text-gray-500 text-nowrap">
+                  {"Creator material"}:
+                </div>
+                <div className="font-medium text-sm break-words"><div className="flex flex-wrap gap-2">
+                  {collaborationData?.productId?.creatorMaterial?.length > 0 ? (
+                    collaborationData?.productId?.creatorMaterial.map((option) => (
+                      <Link href={option} target="_blank"
+                        key={option}
+                        className={cn(
+                          "flex items-center cursor-pointer gap-2 hover:underline text-sm transition break-words max-w-[250px] text-primary"
+                        )}
+                      >
+                        {option.length > 20
+                          ? `${option.substring(0, 20)}...` // Truncate the URL if it's too long
+                          : option}
+                        <ExternalLinkIcon size={15} className="cursor-pointer" />
+                      </Link>
+                    ))
+                  ) : (
+                    "-"
+                  )}
+                </div></div>
+              </div>
+              <div
+                className="flex flex-col md:flex-row items-center gap-2"
+              >
+                <div className="w-[220px] text-sm text-gray-500 text-nowrap">
+                  {"Reference Links"}:
+                </div>
+                <div className="font-medium text-sm break-words"><div className="flex flex-wrap gap-3">
+                  {collaborationData?.productId?.referenceLinks?.length > 0 ? (
+                    collaborationData?.productId?.referenceLinks.map((option) => (
+                      <Link href={option} target="_blank"
+                        key={option}
+                        className={cn(
+                          "flex items-center cursor-pointer gap-1 hover:underline text-sm transition break-words max-w-[250px] text-primary"
+                        )}
+                      >
+                        {option.length > 30
+                          ? `${option.substring(0, 30)}...` // Truncate the URL if it's too long
+                          : option}
+                        <ExternalLinkIcon size={15} className="cursor-pointer" />
+                      </Link>
+                    ))
+                  ) : (
+                    "-"
+                  )}
+                </div>
+                </div>
+              </div>
+              </>}
             </div>
           </div>
         </div>
@@ -430,7 +486,7 @@ export default function BargainingView() {
           <ChatComponent collaborationData={collaborationData} />
         </div>
       </div>
-      {offerAccepted && <CollaborationConfirmed collaborationData={collaborationData} getCommissionType={getCommissionType}/>}
+      {offerAccepted && <CollaborationConfirmed collaborationData={collaborationData} getCommissionType={getCommissionType} />}
     </div>
   );
 }

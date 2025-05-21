@@ -20,6 +20,7 @@ import { creatorRegister, getCategories } from "@/lib/web-api/auth";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useSession } from "next-auth/react";
 import { ICategoryData } from "@/lib/types-api/auth";
+import { useAuthStore } from "@/lib/store/auth-user";
 
 interface ICategory {
   _id: string;
@@ -63,6 +64,7 @@ interface IPublicCreatorStoreProps {
 export default function PublicCreatorStore({ isCreator }: IPublicCreatorStoreProps) {
   const router = useRouter();
   const params = useParams();
+  const {account } = useAuthStore();
   const translate = useTranslations();
   let storeName: any = params?.storeName;
   const { creator, setCreatorData } = useCreatorStore();
@@ -117,13 +119,16 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
           store_link: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${storeData?.store_name}`,
         };
         setStore({ ...data });
+        setLoading(false);
       } else {
+        setLoading(false);
         throw "This Store is not Exist";
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toastMessage.error(errorMessage);
       setNotFounded(true);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -180,7 +185,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
     }
   }, [store])
   useEffect(() => {
-    if (isCreator) {
+    if (isCreator && account?.role === "creator") {
       fetchCategory();
     }
   }, [isCreator]);
@@ -194,6 +199,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
     }
   };
   useEffect(() => {
+    if(isCreator && account?.role === "creator"){
     if (store?.category?.length > 0) {
       let parentCategory = categories?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
       storeMethods.setValue("category", parentCategory);
@@ -202,6 +208,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
       let subCategory = categories?.filter((ele: ICategoryData) => creator?.sub_category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
       storeMethods.setValue("sub_category", subCategory);
     }
+  }
   }, [categories, store?.category, store?.sub_category])
   const onStoreSetUpSubmit = async (data: ICreatorStoreSetUpSchema) => {
     setSaveLoader(true);
@@ -261,7 +268,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
           store_description: response?.data?.store_description,
           store_name: response?.data?.store_name,
         });
-        // setIsEdit(false);
+        setIsEdit(false);
         router.push(`/creator/store/${response?.data?.store_name}`);
       }
     } catch (error) {
@@ -331,7 +338,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
                 type="button"
                 className={cn("w-fit bg-white border text-black font-medium px-8", "block")}
                 size="small"
-                loading={saveLoader}
+                // loading={saveLoader}
                 disabled={saveLoader}
                 onClick={() => {
                   setIsEdit(false);
@@ -352,7 +359,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
           </form>
         </FormProvider></div> : (
           <div className="bg-custom-gradient min-h-screen w-full overflow-y-auto">
-            {isCreator && <div className="flex justify-end p-2"><Button
+            {(isCreator && account?.role === "creator") && <div className="flex justify-end p-2"><Button
               type="button"
               // disabled={channels?.length === 0}
               className="w-fit font-medium px-8"

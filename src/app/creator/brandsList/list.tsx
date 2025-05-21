@@ -279,13 +279,11 @@ export default function BrandList() {
           <div className="flex flex-col gap-2">
             {brands?.length > 0 && brands?.map((brand: Brand, index: number) => (
               <div key={index} className="flex items-center cursor-pointer gap-4" onClick={() => handleOnSearch(brand)}>
-                {brand?.profile_image && (
                   <img
-                    src={brand?.profile_image}
+                    src={brand?.profile_image? brand?.profile_image : "/assets/product/image-square.svg"}
                     alt={brand?.business_name}
                     className="w-8 h-8 rounded-full"
                   />
-                )}
                 <span className="text-black">{brand?.business_name}</span>
               </div>
             ))}
@@ -296,7 +294,7 @@ export default function BrandList() {
                   alt={"Product Image"}
                   className="w-8 h-8 rounded-full"
                 />
-                <span className="text-black">{`${search} ${product?.title}`}</span>
+                <span className="text-black">{`${product?.title}`}</span>
               </div>
             ))}
           </div>
@@ -308,8 +306,8 @@ export default function BrandList() {
                   <div key={i} className="flex h-fit w-full">
                     <ProductCard
                       item={item}
-                      handleUpdateProduct={() => {
-                        // setIsOpen({ show: true, creatorId });
+                      handleUpdateProduct={(id:string) => {
+                        getBrandProductList(currentPage, true, search, id);
                       }}
                     />
                   </div>
@@ -330,7 +328,7 @@ export default function BrandList() {
                   <div key={i} className="flex h-fit w-full">
                     <ProductCard
                       item={item}
-                      handleUpdateProduct={() => {getBrandProductList(currentPage, true, search, vendorId); }}
+                      handleUpdateProduct={(id:string) => {getBrandProductList(currentPage, true, search, id); }}
                     />
                   </div>
                 ))}

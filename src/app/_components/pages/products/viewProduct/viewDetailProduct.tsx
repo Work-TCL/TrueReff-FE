@@ -41,6 +41,11 @@ export interface IProduct {
   tags: string[];
   category?: string;
   vendorId?: string;
+  commission?: string;
+  commission_type?: string;
+  discount?: string; 
+  discountType?: string;
+  freeProduct?: string;
 }
 export interface IRequest {
   _id: string;
@@ -145,6 +150,11 @@ export default function ViewProductDetail({
     tags: [],
     category: "",
     vendorId: "",
+    commission: "",
+  commission_type: "",
+  discount: "",
+  discountType: "",
+  freeProduct: ""
   });
   // Update fetProductsList to set both cursors
   const fetchShopifyProductById = async () => {
@@ -169,6 +179,11 @@ export default function ViewProductDetail({
         quantity: product?.quantity || 0,
         totalInventory: product?.totalInventory || 0,
         variants: product?.variants?.nodes || [],
+        commission: product?.commission,
+  commission_type: product?.commission_type,
+  discount: product?.discount,
+  discountType: product?.discountType,
+  freeProduct: product?.freeProduct
       };
 
       setProductData(updatedProduct);
@@ -202,15 +217,20 @@ export default function ViewProductDetail({
           description: product?.description || "", // Add description if available
           price: product?.price || 0,
           sku: product?.sku || "",
-          barcode: product?.variants?.nodes[0]?.barcode || "",
+          barcode: product?.variants?.[0]?.barcode || "",
           quantity: product?.quantity || 0,
           totalInventory: product?.totalInventory || 0,
-          variants: product?.variants?.nodes || [],
+          variants: product?.variants || [],
           category: product?.category
             ?.filter((ele: ICategory) => ele?.parentId === null)
             ?.map((ele: ICategory) => ele?.name)
             ?.join(", "),
           vendorId: product?.vendorId,
+          commission: product?.commission,
+  commission_type: product?.commission_type,
+  discount: product?.discount,
+  discountType: product?.discountType,
+  freeProduct: product?.freeProduct
         };
 
         setProductData(updatedProduct);
@@ -266,21 +286,16 @@ export default function ViewProductDetail({
     setLoading(true);
     try {
       const response: any = await axios.post(
-        `/product/collaboration/creator/request`,
-        {
-          productIds: [productData?.productId],
-          creatorId: creator.creatorId,
-          vendorId: productData?.vendorId,
-        }
+        `/product/collaboration/creator/request-creator`,
+                {
+                    productId: productData?.productId,
+                    vendorId: productData?.vendorId,
+                }
       );
       if (response.status === 201) {
         let data = response?.data?.data?.results;
-        if (data && data?.length > 0 && data[0]?.data) {
-          fetchProductCollaborationStatus();
-        }
-        if (data && data?.length > 0 && data[0]?.message) {
-          toast.success(data[0]?.message);
-        }
+        toast.success(response?.data?.message);
+        fetchProductCollaborationStatus();
         setLoading(false);
       } else {
         setLoading(false);
@@ -301,17 +316,7 @@ export default function ViewProductDetail({
   };
 
   const getRequestStatus = (collaboration: ICollaboration) => {
-    const { requestId } = collaboration;
-    if (requestId) {
-      if (
-        requestId?.collaborationStatus === "REQUESTED" ||
-        requestId?.collaborationStatus === "REJECTED"
-      ) {
-        return requestId?.collaborationStatus;
-      } else {
-        return collaboration?.collaborationStatus;
-      }
-    } else return "SEND_REQUEST";
+     return collaboration?.collaborationStatus;
   };
 // Product id required condition removed as it is not required.
   if (notFounded) {

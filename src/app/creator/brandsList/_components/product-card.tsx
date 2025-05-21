@@ -19,7 +19,7 @@ const ProductCard = ({
     handleUpdateProduct,
 }: {
     item: IBrandProduct;
-    handleUpdateProduct: () => void;
+    handleUpdateProduct: (id:string) => void;
 }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
@@ -40,9 +40,10 @@ const ProductCard = ({
                 }
             );
             if (response.status === 201) {
-                handleUpdateProduct();
+                handleUpdateProduct(product?.vendorId);
+                setIsOpen("")
                 toast.success(
-                    response?.data?.data?.results[0]?.message || "Request sent"
+                    response?.data?.message
                 );
             }
         } catch (err) {

@@ -135,7 +135,7 @@ export default function StoreDetailCard({
           </h2>
         </div>
         <div
-          className="text-xs md:text-base text-font-grey"
+          className=""
           dangerouslySetInnerHTML={{
             __html: store?.store_description,
           }}

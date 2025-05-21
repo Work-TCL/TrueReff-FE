@@ -247,9 +247,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         // formData.append("videoType", );
         if (data?.notes) formData.append("notes", data?.notes);
         if (data.discount_type)
-          formData.append("discount_type", data.discount_type);
+          formData.append("discountType", data.discount_type);
         if (data.discount_value)
-          formData.append("discount_value", data.discount_value.toString());
+          formData.append("discount", data.discount_value.toString());
         formData.append("productId", selectedProduct?.id || "");
         //@ts-ignore
         formData.append("commission", data.commission);
@@ -1043,7 +1043,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     className="rounded-[10px]"
                   >
                     {!productId
-                      ? translate("Create_Campaign")
+                      ? translate("Add_Product")
                       : translate("Edit_Campaign")}
                   </ButtonOutline>
                 </div>

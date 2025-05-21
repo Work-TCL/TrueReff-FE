@@ -29,9 +29,7 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
                   key={index}
                   src={img}
                   alt={`Thumbnail ${index}`}
-                  width={200}
-                  height={185}
-                  className="rounded-md object-contain w-full h-full"
+                  className="rounded-md object-contain w-[200px] h-[185px]"
                 />
               </div>
             ))}

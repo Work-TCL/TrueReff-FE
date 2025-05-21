@@ -332,13 +332,13 @@ const CollaborationTable = ({
                 </div>
               );
             }
-          } else if (status === "PENDING") {
+          } else if (status === "PENDING" || status === "ACTIVE") {
             return (
               <div className="flex gap-3 mx-auto w-fit">
                 <ToolTip content="Start Bargaining" delayDuration={1000}>
                   <MessageSquareText
                     strokeWidth={1}
-                    color="#3b82f680"
+                    color="#3b82f6"
                     className="cursor-pointer"
                     size={25}
                     onClick={() => handleChatView(collaboration._id)}
