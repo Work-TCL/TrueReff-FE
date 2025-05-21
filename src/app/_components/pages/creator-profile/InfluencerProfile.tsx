@@ -160,6 +160,7 @@ export default function InfluencerProfile({
         <div className="flex gap-2 md:gap-4">
           {categories?.map((v) => (
             <Button
+              key={v}
               size={"lg"}
               className="bg-primary-color hover:bg-pink-600 text-white px-4 md:px-5 py-1 md:py-3 rounded-md text-xs md:text-sm"
             >

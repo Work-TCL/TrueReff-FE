@@ -242,7 +242,7 @@ export default function BargainingView() {
                 <div className="flex gap-2 overflow-x-auto">
                   {collaborationData?.productId?.media?.length > 0 ? (
                     collaborationData?.productId?.media?.map((ele: string) => (
-                      <div className="bg-gray-100 rounded-lg p-1">
+                      <div className="bg-gray-100 rounded-lg p-1" key={ele}>
                         <img
                           className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md"
                           src={ele}

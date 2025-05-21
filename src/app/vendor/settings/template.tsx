@@ -17,10 +17,10 @@ const settingMenus: {
     label: "package_details",
     path: "/vendor/settings/package",
   },
-  {
-    label: "store_connects",
-    path: "/vendor/settings/store",
-  },
+  // {
+  //   label: "store_connects",
+  //   path: "/vendor/settings/store",
+  // },
   {
     label: "payment_options",
     path: "/vendor/settings/payment",

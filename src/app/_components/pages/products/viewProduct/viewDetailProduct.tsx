@@ -362,7 +362,7 @@ export default function ViewProductDetail({
                 className={`${buttonColor[collaborationStatus]} text-white ml-auto`}
                 onClick={() => handleButtonClick(collaborationStatus)}
               >
-                {translate(statusText[collaborationStatus]?.replace(/ /g, "_"))}
+                {translate(statusText[collaborationStatus])}
               </Button>
             )}
             {/* {(pathName.includes("/creators/")) && (
