@@ -233,6 +233,10 @@ export default function BrandList() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
+    if(!value){
+      setBrands([]);
+      setSearchProductList([])
+    }
     debouncedSearch(value); // call debounce on value
   };
   const handleOnFilter = (filterState: any) => {
@@ -256,7 +260,7 @@ export default function BrandList() {
             <SearchInput
               value={search}
               onChange={handleSearch}
-              placeholder={t("SearchBrand")}
+              placeholder={"Search Brand or Product..."}
               className="md:max-w-[700px]"
             />
             {/* <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
@@ -301,16 +305,16 @@ export default function BrandList() {
           {productList?.length > 0 ? (
             <div className="flex flex-col gap-3 rounded-[20px]">
               {search && <div className="font-bold">{`Showing results for "${search}"`}</div>}
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 md:gap-4 h-full  overflow-auto">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 md:gap-2 h-full  overflow-auto">
                 {productList.map((item: any, i) => (
-                  <div key={i} className="flex h-fit w-full">
+                  // <div key={i} className="flex h-fit w-full">
                     <ProductCard
                       item={item}
                       handleUpdateProduct={(id:string) => {
                         getBrandProductList(currentPage, true, search, id);
                       }}
                     />
-                  </div>
+                  // </div>
                 ))}
               </div>
             </div>
@@ -325,12 +329,10 @@ export default function BrandList() {
               {search && <div className="font-bold">{`Showing related for "${search}"`}</div>}
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-2 md:gap-4 h-full  overflow-auto">
                 {suggestedProductList.map((item: any, i) => (
-                  <div key={i} className="flex h-fit w-full">
                     <ProductCard
                       item={item}
                       handleUpdateProduct={(id:string) => {getBrandProductList(currentPage, true, search, id); }}
                     />
-                  </div>
                 ))}
               </div>
             </div>

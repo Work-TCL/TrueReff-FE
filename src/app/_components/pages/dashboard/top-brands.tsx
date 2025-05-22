@@ -6,6 +6,7 @@ import React from "react";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { formatFloatValue } from "@/lib/utils/constants";
 interface ITopBrandsProps {
   data: ITopBrands[];
   loading: boolean;
@@ -16,7 +17,7 @@ const TopBrands = ({ data, loading }: ITopBrandsProps) => {
     <div className="flex flex-col flex-1 w-full p-4 bg-white rounded-2xl">
       <div className="flex justify-between items-center mb-3">
         <div>
-          <h3 className="text-xl text-text font-medium">
+          <h3 className="text-xl text-text font-semibold">
             {data?.length > 0 ? translate("Top_Brands"):''}
           </h3>
         </div>
@@ -57,7 +58,7 @@ const TopBrands = ({ data, loading }: ITopBrandsProps) => {
                   </span>
                 </span></div>
                 <div className="flex gap-3">
-                  <span className="text-primary">{item.percentage}%</span>
+                  <span className="text-primary">{formatFloatValue(item.percentage)}%</span>
                 </div>
               </div>
               {/* Progress Bar */}

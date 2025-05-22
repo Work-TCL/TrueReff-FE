@@ -102,26 +102,28 @@ export default function RecentActivities() {
       if (response.status === 200) {
         const collaborationData = response.data.data;
         if (collaborationData && typeof collaborationData === "object") {
-          const collaborationArray = collaborationData.data || [];
+          const collaborationArray = collaborationData.list || [];
+          const collaborationCount = collaborationData.total || 0;
 
           if (Array.isArray(collaborationArray)) {
             let result = collaborationArray.map((ele: ICollaboration) => {
               ele.productId.categories =
                 ele.productId.category?.length > 0
                   ? ele.productId.category
-                      .filter(
-                        (category: ICategory) => category?.parentId === null
-                      )
-                      .map((category: ICategory) => {
-                        return category?.name;
-                      })
-                      .join(", ")
+                    .filter(
+                      (category: ICategory) => category?.parentId === null
+                    )
+                    .map((category: ICategory) => {
+                      return category?.name;
+                    })
+                    .join(", ")
                   : "";
               ele.productId.tag = ele.productId.tags.join(", ");
               return { ...ele };
             });
             setCollaborations([...result]);
           } else {
+            setCollaborations([]);
           }
           setLoading(false);
         } else {

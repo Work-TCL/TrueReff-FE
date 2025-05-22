@@ -215,7 +215,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     {
       label: translate("Product_Management"),
       icon: Box,
-      link: "/creator/brandsList",
+      link: "/creator/product-management",
     },
     // {
     //   label: translate("Bidding_Management"),

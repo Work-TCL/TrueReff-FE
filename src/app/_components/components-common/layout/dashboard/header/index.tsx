@@ -83,7 +83,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor/campaign/product/add": translate("Campaign_Details_Form"),
     "/vendor/campaign": translate("Campaign_List"),
     "/vendor/settings": translate("Settings"),
-    "/creator/dashboard": translate("Overview"),
+    "/creator/dashboard": translate("Dashboard"),
     "/creator/my-store/store-setup": translate("Store_set_up"),
     "/creator/my-store": translate("Product_List"),
     "/creator/product-management": translate("Product_Management"),

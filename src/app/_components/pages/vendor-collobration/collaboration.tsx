@@ -177,7 +177,7 @@ export default function CollaborationList() {
             searchValue ? `&search=${searchValue}` : ""
           }${status ? `&status=${status}` : ""}`
         );
-        console.log("response",response)
+        
         if (response.status === 200) {
           const collaborationData = response.data.data;
           if (collaborationData && typeof collaborationData === "object") {

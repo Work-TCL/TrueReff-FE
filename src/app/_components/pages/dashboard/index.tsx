@@ -29,7 +29,7 @@ import SalesChart from "../../components-common/charts/SalesChart";
 import DonutChart from "../../components-common/charts/DonutChat";
 import MostSellingBrands from "../../components-common/charts/MostSellingBrands";
 import RecentActivities from "../../components-common/tables/RecentActivity";
-import { currency, formatNumber } from "@/lib/utils/constants";
+import { currency, formatFloatValue, formatNumber } from "@/lib/utils/constants";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import Loading from "@/app/vendor/loading";
 
@@ -164,9 +164,9 @@ export default function Dashboard() {
         : "-";
     };
   return (
-    <div className="flex flex-col gap-4 md:p-6 p-4  w-full">
+    <div className="flex flex-col gap-4 md:p-4 p-2 w-full">
           {mainLoading && <Loader />}
-          <div className="grid grid-cols-1 2xl:grid-cols-6 md:grid-cols-3 gap-4 rounded-[20px] w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-6 md:grid-cols-3 gap-2 rounded-[20px] w-full">
             <StatsCard
               title={translate("Followers")}
               value={<div className="flex gap-2 justify-center">
@@ -204,8 +204,8 @@ export default function Dashboard() {
               link="/creator/collaboration?status=PENDING"
             />
             <StatsCard
-              title={translate("Revenue")}
-              value={statesInfo?.totalRevenue}
+              title={translate("Revenues")}
+              value={formatFloatValue(statesInfo?.totalRevenue)}
               growth={5}
               borderColor="border-[#EB815B]"
               bgColor="bg-[#fdf2ef]"
@@ -220,14 +220,14 @@ export default function Dashboard() {
             
             <StatsCard
               title={translate("Commission")}
-              value={`${currency["INR"]} ${statesInfo?.totalCommission?.toFixed(2)}`}
+              value={`${currency["INR"]} ${formatFloatValue(statesInfo?.totalCommission)}`}
               growth={5}
               borderColor="border-[#9773C8]"
               bgColor="bg-[#f5f1fa]"
             />
             <StatsCard
               title={translate("Conversion_Rate")}
-              value={`${statesInfo?.totalCommission?.toFixed(2)} %`}
+              value={`${formatFloatValue(statesInfo?.conversionRate)} %`}
               growth={5}
               borderColor="border-[#EB815B]"
               bgColor="bg-[#fdf2ef]"

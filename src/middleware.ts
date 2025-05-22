@@ -60,7 +60,7 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     if(user?.vendor && !pathname.startsWith("/vendor-register") && !routes.includes(pathname) && user?.vendor?.completed_step !== 3){
       return NextResponse.redirect(new URL('/vendor-register', request.url));
     }
-    if (token && match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request)) {
+    if (token && (pathname === "/" || match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request))) {
       return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard`:`/dashboard`, request.url));
     }
     if(token && user?.type === "vendor" && ((!pathname.startsWith("/creator/profile") && !pathname.includes("/store/")) && pathname.startsWith("/creator") || ["/creator-registration","/dashboard"].includes(pathname))){

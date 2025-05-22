@@ -1,6 +1,8 @@
 export interface IStateInfo{
-    activeCollaborations: number;
-    pendingCollaborations: number;
-    activeCampaigns: number;
-    last7DaysCreator: number;
+    pendingCollaborations:  number;
+    pendingCampaigns:  number;
+    totalRevenue:  number;
+    totalCommission:  number;
+    totalOrders:  number;
+    conversionRate: number;
 }

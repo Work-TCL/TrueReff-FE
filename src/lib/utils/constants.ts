@@ -107,6 +107,10 @@ export const formatDate = (dateString: string | null): string => {
       year: "numeric",
   }).format(date);
 };
+
+export const formatFloatValue = (value: number): any => {
+  return value % 1 === 0 ? value : value.toFixed(2);
+};
 export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
   const maxSizeInBytes = mb * 1024 * 1024; // 20MB
   if (size > maxSizeInBytes) {

@@ -8,3 +8,12 @@ export const getStatesInfo = async () => {
     throw error;
   }
 };
+
+export const getVendorRevenuePerformance = async () => {
+  try {
+    const response = await axios.get(`/auth/vendor-dashboard/revenue-graph`);
+    return response?.data?.data;
+  } catch (error) {
+    throw error;
+  }
+};

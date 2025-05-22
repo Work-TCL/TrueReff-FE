@@ -11,7 +11,7 @@ const DonutChart = (props:{data?:any[]}) => {
   ];
   return (
     <div className="w-full p-4 rounded-20 bg-white h-full flex-1">
-      <h2 className=" text-text text-xl font-medium ">
+      <h2 className=" text-text text-xl font-semibold">
         {translate("Product_Updates")}
       </h2>
       <div className=" relative h-[280px]">

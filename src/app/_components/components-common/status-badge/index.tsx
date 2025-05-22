@@ -17,7 +17,7 @@ export default function StatusBadge({
   }
   return (
     <div
-      className={`${badgeColor[status]} text-sm bg-opacity-10 font-medium me-2 px-2.5 py-0.5 rounded-sm text-center`}
+      className={`${badgeColor[status]} text-sm bg-opacity-10 font-medium me-2 px-2.5 py-0.5 rounded-sm text-center w-full`}
     >
       {messageStatus ? capitalizeFirstLetter(messageStatus) : statusMessage[status]}
     </div>

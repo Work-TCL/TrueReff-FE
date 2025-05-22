@@ -185,7 +185,7 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
     return (
         <>
         {/* Desktop view */}
-        <div className={cn("hidden gap-4 relative z-[999] md:flex")}>
+        {/* <div className={cn("hidden gap-4 relative z-[999] md:flex")}>
                 <SingleSelect
                     value={selectedStatus}
                     onChange={(value) => { 
@@ -195,7 +195,7 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
                     placeholder="Select Status"
                     className="!w-full"
                 />
-            </div>
+            </div> */}
             {/* Mobile Button */}
             <Button
                 variant="outline"

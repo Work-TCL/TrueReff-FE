@@ -6,31 +6,37 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { formatFloatValue } from "@/lib/utils/constants";
 
 interface ITopCreator {
-  activeCollaborationCount: number;
+  creatorId: string;
+  business_name: string;
+  profile_image: string;
+  revenue: number;
   percentage: number;
-  name?: string;
-  _id: string;
 }
 
 const MostSellingBrands = () => {
   const translate = useTranslations();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ITopCreator[]>([]);
   // Get Creator list
   const fetchTopCreators = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `/auth/vendor-dashboard/top-performing-creators?page=${1}&limit=${10}`
       );
-
       if (response?.data?.status === 200) {
-        setData(response?.data?.data);
+        setData(response?.data?.data?.list);
+        setLoading(false);
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
+      setLoading(false);
+    } finally{
       setLoading(false);
     }
   };
@@ -39,27 +45,39 @@ const MostSellingBrands = () => {
   }, []);
   return (
     <div className="p-5 w-full bg-white rounded-xl h-full flex-1 overflow-hidden">
-      {loading ? (
+      {/* {loading ? (
         <div className="absolute top-0 bottom-0 right-0 left-0 z-[999] flex justify-center items-center bg-white/50">
           <Loading height="fit" />
         </div>
-      ) : null}
-      <h3 className="md:text-xl text-base text-text font-medium mb-3">
-        {translate("Top_Creators")}
+      ) : null} */}
+      <h3 className="md:text-xl text-base text-text font-semibold mb-3">
+        {data?.length > 0 && translate("Top_Creators")}
       </h3>
-      {data?.length > 0 ? (
+      {loading ? (
+        // <div className="absolute top-0 bottom-0 right-0 left-0 z-[999] flex justify-center items-center bg-white/50">
+          <Loading height="fit" />
+        // </div>
+      ) : data?.length > 0 ? (
         <ul className="space-y-4">
           {data.map((item, index) => (
-            <li key={index} className="flex flex-col">
-              <div className="flex justify-between items-center gap-2">
-                <span className="text-font-grey md:text-base text-sm ">
-                  {item?.name || "Creator"}{" "}
-                  <span className="text-black">
-                    ({item.activeCollaborationCount})
-                  </span>
-                </span>
+            <li key={index} className="flex flex-col gap-1">
+              <div className="flex  justify-between items-center gap-2">
+                <div className="flex gap-2">
+                                   <Image
+                                                  src={item?.profile_image?item?.profile_image:"/assets/profile/profile-image.png"}
+                                                  alt={"profile"}
+                                                  width={25}
+                                                  height={50}
+                                                  className="rounded-[50%]"
+                                                />
+                                  <span className="text-font-grey">
+                                   {item.business_name}
+                                  <span className="text-secondary">
+                                    ({item.revenue})
+                                  </span>
+                                </span></div>
                 <span className="text-primary md:text-base text-sm">
-                  {item.percentage}%
+                  {formatFloatValue(item.percentage)}%
                 </span>
               </div>
               {/* Progress Bar */}
