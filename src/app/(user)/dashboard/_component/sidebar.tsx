@@ -31,6 +31,7 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { BsChevronDown } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/commonUtils";
+import Image from "next/image";
 
 type MenuItem = {
   label: string;
@@ -162,11 +163,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
             {!isSidebarExpanded ? (
               <PackageOpen />
             ) : (
-              <img
-                src="/assets/TrueReff-logo.svg"
-                alt="Logo Image"
-                className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"
-              />
+              <Image width={40} height={88} src="/assets/landing/logo_TrueReff.svg" alt="TrueReff" className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"/>
             )}
           </div>
         </div>

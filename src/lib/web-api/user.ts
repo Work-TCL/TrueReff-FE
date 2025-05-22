@@ -15,6 +15,7 @@ export const getProfileAPI = async () => {
         id: user?._id,
         name: user?.name,
         role: user?.type,
+        phone: user?.phone
       });
     }
     // creator

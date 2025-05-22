@@ -23,6 +23,7 @@ const ProductCard = ({
     handleUpdateProduct: (id:string) => void;
 }) => {
     const router = useRouter();
+    const translate = useTranslations()
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState("");
 
@@ -83,7 +84,7 @@ const ProductCard = ({
                         text={product.title}
                     />
                     {/* Status */}
-                    <div className="flex justify-center mb-3 !text-sm absolute top-0 left-0 m-3">
+                    {/* <div className="flex justify-center mb-3 !text-sm absolute top-0 left-0 m-3">
                         {product?.collaboration?.collaborationStatus ? (
                             <div className="p-0 pr-0 bg-white rounded"><StatusBadge status={product?.collaboration?.collaborationStatus} messageStatus={product?.collaboration?.collaborationStatus} className="w-full"/></div>
                         ) : (
@@ -91,32 +92,32 @@ const ProductCard = ({
                                 <ToolTip content={"Send Collaboration Request"} delayDuration={500}><Plus className="text-primary" size={20} /></ToolTip>
                             </div>
                         )}
-                    </div>
+                    </div> */}
                     {/* Price and Discount */}
                     <div className="flex flex-col justify-start w-full text-sm">
-                        <span className="text-green-600 px-2 py-1 font-bold">
+                        <span className="text-green-600 py-1 font-bold">
                             {currency["INR"]}{product.price || "0.00"}
                         </span>
-                        {product.discount && (
                             <div className="flex justify-between items-center">
-                            <span className="text-xs">Commission: </span>
-                            <span className="text-red-500 text-xs bg-red-100 px-1 py-1 rounded-full">
-                                {product.commission_type === "FIXED_AMOUNT" ? currency['INR'] :""} {product.discount} {product.commission_type === "PERCENTAGE" ? "%" :""} / sale
+                            <span className={`text-xs ${product.discount ? "text-black" :"text-white"}`}>Commission: </span>
+                            <span className={`text-red-500 text-xs ${product.discount ? "bg-red-100":"bg-white text-white"} px-1 py-1 rounded-full`}>
+                                {product.commission_type === "FIXED_AMOUNT" ? currency['INR'] :""} {product.discount}{product.commission_type === "PERCENTAGE" ? "%" :""}{product?.discount ? "/sale":""}
                             </span></div>
-                        )}
                     </div>
 
                     {/* Button */}
                     
                             
-                                {/* <div
-                                    key={0}
-                                    className={cn(
-                                        "flex items-center justify-center gap-1 px-2 py-1 text-xs rounded-full bg-muted text-muted-foreground border border-muted-foreground"
-                                    )}
-                                >
-                                    {"Collab Now"}
-                                </div> */}
+                    <button
+                        key={0}
+                        disabled={product?.collaboration !== null}
+                        className={cn(
+                            "flex items-center justify-center gap-1 px-2 py-2 text-xs text-semibold hover:cursor-pointer rounded-full bg-white text-black hover:bg-black hover:text-white border border-black disabled:bg-muted disabled:text-muted-foreground disabled:cursor-no-drop disabled:border-muted-foreground"
+                        )}
+                        onClick={() => setIsOpen(product?._id)}
+                    >
+                        {translate("Collab_Now")}
+                    </button>
                 </div>
             </CardContent>
         </Card>
@@ -126,7 +127,7 @@ const ProductCard = ({
                     collaborationId={isOpen}
                     handleCancelRequest={handleSendRequest}
                     loading={loading}
-                    title="Are you sure you want to send the collaboration request?"
+                    title={translate("Are_you_sure_you_want_to_send_the_collaboration_request")}
                 />
             )}
         </>

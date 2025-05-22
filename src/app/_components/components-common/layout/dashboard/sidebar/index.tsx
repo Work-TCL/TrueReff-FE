@@ -33,6 +33,7 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/commonUtils";
 import { useCreatorStore } from "@/lib/store/creator";
 import { toastMessage } from "@/lib/utils/toast-message";
+import Image from "next/image";
 
 type MenuItem = {
   label: string;
@@ -213,7 +214,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       // ],
     },
     {
-      label: translate("Product_Management"),
+      label: translate("Product_List"),
       icon: Box,
       link: "/creator/product-management",
     },
@@ -273,11 +274,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
             {!isSidebarExpanded ? (
               <PackageOpen />
             ) : (
-              <img
-                src="/assets/TrueReff-logo.svg"
-                alt="Logo Image"
-                className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"
-              />
+              <Image width={40} height={40} src="/assets/landing/logo_TrueReff.svg" alt="TrueReff" className={`md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto`}/>
             )}
           </div>
         </div>

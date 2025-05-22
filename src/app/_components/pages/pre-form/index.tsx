@@ -130,6 +130,7 @@ export default function PreFormPage() {
   useEffect(()=> {
     if(account?.email){
       methods.setValue("company_email",account?.email)
+      methods.setValue("business_name",account?.name)
     }
   },[account])
   const fetchCategory = async () => {

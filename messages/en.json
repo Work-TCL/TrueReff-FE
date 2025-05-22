@@ -589,5 +589,17 @@
   "Additional_Offer": "Additional Offer",
   "Brand_Product": "Brand Product",
   "Collaboration_Not_Found": "Collaboration Not Found",
-  "Pending_Campaigns": "Pending Campaigns"
+  "Pending_Campaigns": "Pending Campaigns",
+  "Enter_your_email_or_phone_number":"Enter your email or phone number",
+  "Enter_your_password":"Enter your password",
+  "Enter_your_store_description": "Enter your store description",
+  "Collab_Now": "Collab Now",
+  "Showing_results_for": "Showing results for",
+  "Products": "Products",
+  "Add": "Add",
+  "Are_you_sure_you_want_to_send_the_collaboration_request": "Are you sure you want to send the collaboration request?",
+  "Add_to_Wishlist": "Add to Wishlist",
+  "Shop_Now": "Shop Now",
+  "Model_Name": "Model Name",
+  "Product_Type": "Product Type"
 }

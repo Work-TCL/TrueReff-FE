@@ -62,6 +62,7 @@ export default function LoginForm() {
       id: res?.data?._id,
       role: res?.data?.type,
       name: res?.data?.name,
+      phone: res?.data?.phone
     });
     if (
       !res?.data?.detailsFilled &&
@@ -69,7 +70,7 @@ export default function LoginForm() {
     ) {
       if (res?.data?.type === USER_TYPE.Creator) {
         setCreatorData("creator", {
-          creatorId: res?.data?.creator?.id,
+          creatorId: res?.data?.creator?._id,
           accountId: res?.data?.creator?.accountId,
           full_name: res?.data?.creator?.full_name,
           user_name: res?.data?.creator?.user_name,
@@ -252,15 +253,15 @@ export default function LoginForm() {
         {loadingPage && <Loader />}
         <Input
           name="email"
-          type="email"
-          placeholder={translate("Email")}
+          type="text"
+          placeholder={translate("Enter_your_email_or_phone_number")}
           Icon={MdOutlineEmail}
           autoFocus
         />
         <Input
           name="password"
           type="password"
-          placeholder={translate("Password")}
+          placeholder={translate("Enter_your_password")}
           Icon={PiLockKey}
         />
         <div className="mt-3 text-[16px] flex align-middle justify-between  text-gray-600">

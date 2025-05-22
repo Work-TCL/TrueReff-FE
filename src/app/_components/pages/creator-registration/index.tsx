@@ -57,18 +57,18 @@ let allTabs: {
       name: "Store Setup",
       Icon: Store,
     },
-    {
-      id: "4",
-      name: "Payment Detail",
-      Icon: CreditCard,
-    },
+    // {
+    //   id: "4",
+    //   name: "Payment Detail",
+    //   Icon: CreditCard,
+    // },
   ];
 
 const TABS_STATUS = {
   BASIC_DETAILS: 0,
   SOCIAL_MEDIA: 1,
   STORE_SETUP: 2,
-  PAYMENT_DETAILS: 3,
+  // PAYMENT_DETAILS: 3,
 };
 export default function CreatorRegistrationPage() {
   const searchParams = useSearchParams();
@@ -155,6 +155,8 @@ export default function CreatorRegistrationPage() {
   useEffect(() => {
     if (account?.email) {
       methods.setValue("email", account?.email);
+      methods.setValue("full_name", account?.name);
+      methods.setValue("phone_number", account?.phone);
     }
   }, [account?.email]);
   const onSubmit = async (data: ICreatorOnBoardingSchema) => {
@@ -404,7 +406,7 @@ export default function CreatorRegistrationPage() {
           state: creator?.state,
           city: creator?.city,
           gender: creator?.gender,
-          dob: creator?.dob,
+          dob: new Date(creator?.dob).toISOString().split("T")[0],
           userName: creator?.user_name
         })
         storeMethods.setValue("store_name", creator?.store_name);
@@ -467,7 +469,6 @@ export default function CreatorRegistrationPage() {
     if (creator?.category?.length > 0) {
       let parentCategory = categories?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
       storeMethods.setValue("category", parentCategory);
-      console.log("parentCategory", parentCategory)
     }
     if (creator?.sub_category?.length > 0) {
       let subCategory = categories?.filter((ele: ICategoryData) => creator?.sub_category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
@@ -534,7 +535,7 @@ export default function CreatorRegistrationPage() {
                   [TABS_STATUS.BASIC_DETAILS]: "Creator Registration",
                   [TABS_STATUS.STORE_SETUP]: "Setup your Store",
                   [TABS_STATUS.SOCIAL_MEDIA]: "Connect Your Social Accounts",
-                  [TABS_STATUS.PAYMENT_DETAILS]: "Set Up Your Payment Info",
+                  // [TABS_STATUS.PAYMENT_DETAILS]: "Set Up Your Payment Info",
                 }[activeTab]
               }
             </div>
@@ -542,7 +543,7 @@ export default function CreatorRegistrationPage() {
               tabs={allTabs}
               setActiveTabIndex={(v) => router.push(`?tab=${v}`)}
               activeTabIndex={activeTab}
-              grid={4}
+              grid={3}
             />
             {
               {
@@ -611,6 +612,7 @@ export default function CreatorRegistrationPage() {
                       categories={categories}
                       showTrending={showTrending} 
                       setShowTrending={setShowTrending}
+                      isRegistration={true}
                     />
                     <div className="flex bg-white">
                       <Button
@@ -625,39 +627,39 @@ export default function CreatorRegistrationPage() {
                     </div>
                   </form>
                 </FormProvider>,
-                [TABS_STATUS.PAYMENT_DETAILS]: <FormProvider {...methodsSocial}>
-                  <form
-                    onSubmit={methodsSocial.handleSubmit(onSubmitSocial)}
-                    className="md:pt-6 mt-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
-                  >
-                    <PaymentDetails />
-                    <div className="flex bg-white">
-                      <Button
-                        type="button"
-                        className="w-fit bg-white text-black font-medium px-8"
-                        size="small"
-                        onClick={() => {
-                          activeTab < 2 && router.push(`?tab=${activeTab + 1}`);
-                          if (activeTab === TABS_STATUS.SOCIAL_MEDIA) {
-                            router.push("/creator/dashboard");
-                          }
-                        }}
-                      >
-                        {"Skip"}
-                      </Button>
+                // [TABS_STATUS.PAYMENT_DETAILS]: <FormProvider {...methodsSocial}>
+                //   <form
+                //     onSubmit={methodsSocial.handleSubmit(onSubmitSocial)}
+                //     className="md:pt-6 mt-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
+                //   >
+                //     <PaymentDetails />
+                //     <div className="flex bg-white">
+                //       <Button
+                //         type="button"
+                //         className="w-fit bg-white text-black font-medium px-8"
+                //         size="small"
+                //         onClick={() => {
+                //           activeTab < 2 && router.push(`?tab=${activeTab + 1}`);
+                //           if (activeTab === TABS_STATUS.SOCIAL_MEDIA) {
+                //             router.push("/creator/dashboard");
+                //           }
+                //         }}
+                //       >
+                //         {"Skip"}
+                //       </Button>
 
-                      <Button
-                        className={cn("w-fit font-medium px-8", "block")}
-                        size="small"
-                        onClick={handleTriggerStepper}
-                        loading={loading}
-                        disabled={loading}
-                      >
-                        {translate("Save_and_Continue")}
-                      </Button>
-                    </div>
-                  </form>
-                </FormProvider>,
+                //       <Button
+                //         className={cn("w-fit font-medium px-8", "block")}
+                //         size="small"
+                //         onClick={handleTriggerStepper}
+                //         loading={loading}
+                //         disabled={loading}
+                //       >
+                //         {translate("Save_and_Continue")}
+                //       </Button>
+                //     </div>
+                //   </form>
+                // </FormProvider>,
               }[activeTab]
             }
           </div>

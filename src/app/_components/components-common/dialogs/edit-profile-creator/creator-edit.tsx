@@ -58,6 +58,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     state: creator?.state ?? "",
     city: creator?.city ?? "",
     gender: creator?.gender ?? "",
+    dob: new Date(creator?.dob)?.toISOString()?.split("T")[0]??""
   };
   const [formState, setFormState] = useState(initialState);
   useEffect(() => {
@@ -66,6 +67,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         state: creator?.state,
         city: creator?.city,
         gender: creator?.gender,
+        dob: new Date(creator?.dob)?.toISOString()?.split("T")[0]
       });
     }
   }, [creator]);
@@ -326,13 +328,16 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           </div>
           <div className="col-span-1">
             <div className="flex flex-col">
-              <Input
-                name="dob"
-                type="date"
-                placeholder={translate("Select_date_of_birth")}
-                label={translate("DateofBirth")}
-                maxDate={new Date(new Date().setDate(new Date().getDate()))}
-              />
+                <span className="mb-1 text-sm text-gray-500 font-semibold">
+                  {translate("Date_of_Birth")}
+                  <span className="text-red-500">*</span>
+                </span>
+                <input onChange={(e:any) => handleOnSelect(e.target?.value,"dob")} className="h-[54px] border rounded-xl p-2" type="date" name="dob" value={formState?.dob } max={new Date().toISOString().split("T")[0]} placeholder={translate("Select_date_of_birth")}/>
+                {Boolean(get(methods.formState.errors, "dob")) && methods.formState.errors["dob"]?.message && (
+                  <span className="text-red-600 text-sm p-2 block">
+                    {methods.formState.errors["dob"]?.message}
+                  </span>
+                )}
             </div>
           </div>
           <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">

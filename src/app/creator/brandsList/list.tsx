@@ -79,6 +79,7 @@ export interface Brand {
 }
 export default function BrandList() {
   const { creator } = useCreatorStore();
+  const translate = useTranslations();
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -304,17 +305,15 @@ export default function BrandList() {
           </div>
           {productList?.length > 0 ? (
             <div className="flex flex-col gap-3 rounded-[20px]">
-              {search && <div className="font-bold">{`Showing results for "${search}"`}</div>}
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 md:gap-2 h-full  overflow-auto">
+              {search ? <div className="font-bold">{`${translate("Showing_results_for")} "${search}"`}</div>:<div className="font-bold">{translate(`Products`)}</div>}
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2 md:gap-2 h-full  overflow-auto">
                 {productList.map((item: any, i) => (
-                  // <div key={i} className="flex h-fit w-full">
                     <ProductCard
                       item={item}
                       handleUpdateProduct={(id:string) => {
-                        getBrandProductList(currentPage, true, search, id);
+                        getBrandProductList(currentPage, true, search, vendorId);
                       }}
                     />
-                  // </div>
                 ))}
               </div>
             </div>
@@ -326,12 +325,12 @@ export default function BrandList() {
           )}
           {suggestedProductList?.length > 0 ? (
             <div className="flex flex-col gap-3 h-full bg-white rounded-[20px]">
-              {search && <div className="font-bold">{`Showing related for "${search}"`}</div>}
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-2 md:gap-4 h-full  overflow-auto">
+              {search && <div className="font-bold">{`${translate("Showing_results_for")} "${search}"`}</div>}
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-2 md:gap-4 h-full  overflow-auto">
                 {suggestedProductList.map((item: any, i) => (
                     <ProductCard
                       item={item}
-                      handleUpdateProduct={(id:string) => {getBrandProductList(currentPage, true, search, id); }}
+                      handleUpdateProduct={(id:string) => {getBrandProductList(currentPage, true, search, vendorId); }}
                     />
                 ))}
               </div>

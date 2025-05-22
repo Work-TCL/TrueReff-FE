@@ -301,14 +301,14 @@ export default function ViewProductDetail({
                                                     
                                                   }}
                                                 >
-                                                  <Heart size={15} />  Add to Wishlist </button>
+                                                  <Heart size={15} />  {translate("Add_to_Wishlist")} </button>
                                                   <button
                                                   className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-3 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
                                                   onClick={() => {
                                                     
                                                   }}
                                                 >
-                                                  <ShoppingCart size={15} />  Shop Now </button>
+                                                  <ShoppingCart size={15} />  {translate("Shop_Now")} </button>
                                 </div>
                                 <div className=" border-t text-sm pt-4 text-gray-800">
                                     <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">
@@ -316,15 +316,15 @@ export default function ViewProductDetail({
                                     </h3>
                                     <div className="flex flex-col gap-3">
                                         {[
-                                            ["Brand", productData?.channelProductVendor ?? "-"],
-                                            ["Product Type", productData?.productType ?? "-"],
-                                            ["Model Name", selectedVariant?.title ?? "-"],
-                                            ["Category", <div className="flex space-x-2">{productData.category?.length > 0 ? productData.category.map((category, idx) => (
+                                            [translate("Brand"), productData?.channelProductVendor ?? "-"],
+                                            [translate("Product_Type"), productData?.productType ?? "-"],
+                                            [translate("Model_Name"), selectedVariant?.title ?? "-"],
+                                            [translate("Category"), <div className="flex space-x-2">{productData.category?.length > 0 ? productData.category.map((category, idx) => (
                                                 <span key={idx} className="text-sm  font-medium text-gray-700 flex items-center gap-1 px-3 py-1 rounded-full bg-muted text-muted-foreground border border-muted-foreground">
                                                     {category?.name}
                                                 </span>
                                             )) : "-"}</div>],
-                                            ["Tags", <div className="flex space-x-2">{productData.tags?.length > 0 ? productData.tags.map((tag, idx) => (
+                                            [translate("Tags"), <div className="flex space-x-2">{productData.tags?.length > 0 ? productData.tags.map((tag, idx) => (
                                                 <span key={idx} className="bg-background py-1 px-2 rounded">
                                                     #{tag}
                                                 </span>
@@ -346,7 +346,7 @@ export default function ViewProductDetail({
                                     </h3>
                                     <div className="flex flex-col gap-3">
                                         {[
-                                            ["Description", <p dangerouslySetInnerHTML={{
+                                            [translate("Description"), <p dangerouslySetInnerHTML={{
                                                 __html: productData?.description ? productData?.description : "<p>-</p>",
                                             }} />]
                                         ].map(([label, value], index) => (

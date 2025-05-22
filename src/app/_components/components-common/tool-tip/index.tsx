@@ -2,7 +2,7 @@ import { Tooltip, ToolTipProvider } from "../../ui/tooltip/customTooltip";
 
 interface IToolTipProps {
   children: React.ReactNode;
-  content?: string;
+  content?: any;
   delayDuration?: number;
   position?: "left" | "top" | "right" | "bottom";
 }

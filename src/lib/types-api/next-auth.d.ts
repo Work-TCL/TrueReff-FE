@@ -8,6 +8,7 @@ declare module "next-auth" {
         _id?: string,
         name?: string,
         email?: string,
+        phone?: string;
         type?: string,
         isActive?: boolean,
         isEmailVerified?: boolean,
@@ -22,6 +23,7 @@ declare module "next-auth" {
          _id?: string,
         name?: string,
         email?: string,
+        phone?: string,
         type: string,
         isActive?: boolean,
         isEmailVerified?: boolean,

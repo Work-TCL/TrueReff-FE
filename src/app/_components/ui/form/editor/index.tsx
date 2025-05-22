@@ -56,7 +56,7 @@ export default function Editor({ onChange = () => {}, value = "" }: Props) {
     <div className={cn("&.ql-toolbar:rounded-t-xl")}>
       <div
         ref={quillRef}
-        className="max-h-[400px] min-h-[300px] rounded-b-xl border border-t-transparent pt-3"
+        className="min-h-[200px] rounded-b-xl border border-t-transparent pt-3"
       />
     </div>
   );

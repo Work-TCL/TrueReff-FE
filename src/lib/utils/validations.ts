@@ -2,9 +2,16 @@ import * as Yup from "yup";
 
 export const loginSchema = Yup.object().shape({
   email: Yup.string()
-    .lowercase()
-    .email("Email must be a valid email address")
-    .required("Email is required"),
+    .required("Email or phone number is required")
+    .test(
+      "email-or-phone",
+      "Must be a valid email or 10-digit phone number",
+      function (value) {
+        const emailValid = Yup.string().email().isValidSync(value || "");
+        const phoneValid = /^[0-9]{10}$/.test(value || "");
+        return emailValid || phoneValid;
+      }
+    ),
   password: Yup.string()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters")
@@ -79,6 +86,10 @@ export const resetPasswordSchema = Yup.object().shape({
 export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> {}
 
 export const registerSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  phone: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
   email: Yup.string()
     .email("Email must be a valid email address")
     .lowercase()

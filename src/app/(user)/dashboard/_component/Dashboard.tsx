@@ -64,9 +64,8 @@ export default function UserOverView() {
     <div className="flex flex-col gap-4 md:p-6 p-4 w-full">
       {loading && <Loader/>}
       <div className="flex flex-col lg:flex-row w-full md:gap-6 gap-4">
-        <div className="flex flex-col md:gap-6 gap-4 w-full lg:max-w-[60%]">
-          <ProfileCompletionCard progress={10} className="lg:hidden flex" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4 rounded-[20px] w-full bg-white p-4">
+        <div className="flex flex-col md:gap-6 gap-4 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4 rounded-[20px] w-full">
             <CardComponent
               title={translate("Brands")}
               value={count?.vendorCount}
@@ -146,43 +145,6 @@ export default function UserOverView() {
               "Brands":<Brands title={selectedCard} />
             }[selectedCard]
           }
-        </div>
-        <div className="flex flex-col md:gap-6 gap-4 w-full lg:max-w-[40%]">
-          <div className="flex md:flex-row flex-col gap-4">
-            <BrandCreatorCard
-              question={translate("Do_you_have_an_e_commerce_site_to_sell")}
-              btnText={translate("Become_a_Brand")}
-              redirectUrl="/vendor-register"
-            />
-            <BrandCreatorCard
-              question={translate("Do_you_have_a_2000_followers")}
-              btnText={translate("Become_a_Creator")}
-              isCreator={true}
-              redirectUrl="/creator-registration"
-            />
-          </div>
-          <ProfileCompletionCard progress={10} gradientId={"gradient_lg"} className="lg:flex hidden" />
-          {/* {selectedCard === "products" && (
-            <ProductDetailUser
-              title={translate("Product_Details")}
-              productDetail={productDetail}
-            />
-          )}
-
-          {selectedCard === "creators" && (
-            <>
-              <ProileDetailUser profileDetail={profileDetail} />
-              <VideosTable />
-            </>
-          )}
-
-          {selectedCard === "purchased" && (
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <p className="text-primary font-semibold text-lg">
-                {translate("Purchase Details Coming Soon!")}
-              </p>
-            </div>
-          )} */}
         </div>
       </div>
     </div>

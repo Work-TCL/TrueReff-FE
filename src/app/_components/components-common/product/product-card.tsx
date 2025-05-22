@@ -96,7 +96,7 @@ const ProductCard = ({
                 
               }}
             >
-              <Heart size={15} /> Add </button>
+              <Heart size={15} /> {translate("Add")} </button>
           </div>}
         </div>
       </CardContent>

@@ -89,7 +89,7 @@ export default function Input({
 
   const getError = () => {
     return (
-      Boolean(get(errors, name)) &&
+      Boolean(get(errors, name)) && getErrorMessage(name) &&
       !hideError && (
         <span className="text-red-600 text-sm p-2">
           {getErrorMessage(name)}

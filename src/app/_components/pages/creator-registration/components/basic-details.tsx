@@ -103,6 +103,7 @@ export default function BasicInfoForm({
           label={translate("Email")}
           name="email"
           type="email"
+          required
           placeholder={translate("Enter_your_email")}
           disabled
         />
@@ -112,6 +113,8 @@ export default function BasicInfoForm({
           label={translate("Phone_Number")}
           name="phone_number"
           type="phone"
+          required={false}
+          disabled
           placeholder="xxxxx xxxxx"
         />
       </div>
@@ -200,14 +203,17 @@ export default function BasicInfoForm({
         </div>
       </div>
       <div className="col-span-1">
-        <div className="flex flex-col">
-          <Input
-            name="dob"
-            type="date"
-            placeholder={translate("Select_date_of_birth")}
-            label={translate("Date_of_Birth")}
-            maxDate={new Date(new Date().setDate(new Date().getDate()))}
-          />
+      <div className="flex flex-col">
+          <span className="mb-1 text-sm text-gray-500 font-semibold">
+            {translate("Date_of_Birth")}
+            <span className="text-red-500">*</span>
+          </span>
+          <input onChange={(e:any) => handleOnSelect(e.target?.value,"dob")} className="h-[54px] border rounded-xl p-2" type="date" name="dob" value={formState?.dob } max={new Date().toISOString().split("T")[0]} placeholder={translate("Select_date_of_birth")}/>
+          {Boolean(get(methods.formState.errors, "dob")) && methods.formState.errors["dob"]?.message && (
+            <span className="text-red-600 text-sm p-2 block">
+              {methods.formState.errors["dob"]?.message}
+            </span>
+          )}
         </div>
       </div>
     </div>

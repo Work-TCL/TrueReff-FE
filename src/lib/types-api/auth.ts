@@ -1,5 +1,7 @@
 // POST SignUp
 export interface IPostSignupRequest {
+  name: string;
+  phone: string;
   email: string;
   password: string;
 }
@@ -85,6 +87,7 @@ export interface IGetUserResponse {
     name: string;
     email: string;
     password: string;
+    phone: string;
     type: string;
     isActive: boolean;
     isEmailVerified: boolean;

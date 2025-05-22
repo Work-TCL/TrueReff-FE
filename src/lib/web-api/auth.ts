@@ -55,7 +55,7 @@ export const loginAPI = async (
   params: IPostLoginRequest
 ): Promise<IPostLoginResponse> => {
   try {
-    const response = await axios.post("/auth/login", params);
+    const response = await axios.post("/auth/login", {userName: params?.email,password: params?.password});
     const user = response?.data;
     if (user) {
       useAuthStore.getState().setAccountData({
@@ -63,6 +63,7 @@ export const loginAPI = async (
         id: user?._id,
         name: user?.name,
         role: user?.type,
+        phone: user?.phone
       });
     }
     return response?.data;
@@ -83,6 +84,7 @@ export const SocialLoginAPI = async (
         id: user?._id,
         name: user?.name,
         role: user?.type,
+        phone: user?.phone
       });
       if (user?.token) {
         useAuthStore.getState().setIsAuthStatus("authenticated");
@@ -107,6 +109,7 @@ export const getUserApi = async (): Promise<IGetUserResponse> => {
         email: user?.email,
         id: user?._id,
         name: user?.name,
+        phone: user?.phone,
         role: user?.type,
       });
     }
@@ -218,6 +221,7 @@ export const verifyEmail = async (
         id: user?._id,
         name: user?.name,
         role: user?.type,
+        phone: user?.phone
       });
       useAuthStore.getState().setToken(response.data?.data?.token);
     }

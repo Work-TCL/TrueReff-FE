@@ -86,7 +86,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/creator/dashboard": translate("Dashboard"),
     "/creator/my-store/store-setup": translate("Store_set_up"),
     "/creator/my-store": translate("Product_List"),
-    "/creator/product-management": translate("Product_Management"),
+    "/creator/product-management": translate("Product_List"),
     "/creator/creator_analysis": translate("Creator_Analysis"),
     "/creator/payment-earnings": translate("Payment_Earnings"),
     "/creator/brandsList": translate("Brands_List"),

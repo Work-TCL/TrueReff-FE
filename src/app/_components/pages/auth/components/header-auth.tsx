@@ -1,13 +1,16 @@
+"use client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 
-export default function HeaderAuth() {
+interface IHeaderAuthProps {
+  redirectUrl?: string;
+}
+export default function HeaderAuth({redirectUrl}:IHeaderAuthProps) {
+  const router = useRouter();
   return (
     <div className="flex justify-center">
-      <img
-        src="/assets/TrueReff-logo.svg"
-        alt="Sign in"
-        className="md:w-auto w-40 mx-auto"
-      />
+      <Image onClick={()=> redirectUrl && router.push(redirectUrl)} width={40} height={40} src="/assets/landing/logo_TrueReff.svg" alt="TrueReff" className={`md:w-auto mx-auto ${redirectUrl ? "cursor-pointer":""}`}/>
     </div>
   );
 }
