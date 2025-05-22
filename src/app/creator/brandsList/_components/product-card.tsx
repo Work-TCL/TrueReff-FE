@@ -85,7 +85,7 @@ const ProductCard = ({
                     {/* Status */}
                     <div className="flex justify-center mb-3 !text-sm absolute top-0 left-0 m-3">
                         {product?.collaboration?.collaborationStatus ? (
-                            <div className="p-0 pr-0 bg-white rounded"><StatusBadge status={product?.collaboration?.collaborationStatus} messageStatus={product?.collaboration?.collaborationStatus} /></div>
+                            <div className="p-0 pr-0 bg-white rounded"><StatusBadge status={product?.collaboration?.collaborationStatus} messageStatus={product?.collaboration?.collaborationStatus} className="w-full"/></div>
                         ) : (
                             <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center shadow" onClick={() => setIsOpen(product?._id)}>
                                 <ToolTip content={"Send Collaboration Request"} delayDuration={500}><Plus className="text-primary" size={20} /></ToolTip>
