@@ -5,11 +5,11 @@ import React, { useEffect, useState } from "react";
 import HeroSection from "./heroSection";
 import EarningsSection from "./earningsSection";
 import SocialMedia from "./SocialMediaSections";
-// import AOS from 'aos';
+import AOS from 'aos';
 import ContentCategories from "./ContentCategories";
 import Launchpad from "./Launchpad";
 import LandingPageFooter from "./LandingPageFooter";
-// import "aos/dist/aos.css";
+import "aos/dist/aos.css";
 import ButtonLogin from "../_components/components-common/Button-Login";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -23,15 +23,15 @@ export default function LandingPage() {
     setIsMenuOpen(false);
   };
 
-  //  useEffect(() => {
-  //   AOS.init({
-  //     duration: 1600, 
-  //     once: false,    
-  //     mirror: true,   
-  //     // easing: 'ease-in-out',
-  //   });
+   useEffect(() => {
+    AOS.init({
+      duration: 1600, 
+      once: false,    
+      mirror: true,   
+      // easing: 'ease-in-out',
+    });
 
-  //   }, []);
+    }, []);
 
   return (
     <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
