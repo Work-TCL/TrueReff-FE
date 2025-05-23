@@ -9,8 +9,10 @@ export default {
   theme: {
     extend: {
       screens: {
-        'xs': '320px',         
+        'xs': '320px',   
+        'xsmobile':{'max':'500px'},      
         'mobile': {'max': '640px'}, 
+         'tablet': { 'min': '501px', 'max': '767px' },
       },
       colors: {
         foreground: "hsl(var(--foreground))",
