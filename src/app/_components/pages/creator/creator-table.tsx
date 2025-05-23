@@ -147,7 +147,7 @@ const CreatorTable = ({
         <div className="flex justify-center">
           <Button
             variant="outline"
-            className="whitespace-nowrap border border-[#FFEDF2] bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all py-3 px-[10px] text-sm"
+            className="whitespace-nowrap border border-primary bg-white hover:bg-primary text-[#FF4979] hover:text-white rounded-md transition-all py-3 px-[10px] text-sm"
             onClick={() => handleCollaborateNow(row.original._id)}
           >
             {translate("Collaborate_Now")}

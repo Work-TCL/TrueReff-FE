@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import toast from "react-hot-toast";
+import SocialMedia from "../../creator-registration/components/social-media";
 
 export default function ChannelsConnect() {
   const translate = useTranslations();
@@ -104,147 +105,13 @@ export default function ChannelsConnect() {
   };
 
   return (
-    <FormProvider {...methods}>
-      <form>
-        {isPageLoading && <Loader />}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <div className="flex gap-4 items-center">
-              <img
-                src="/assets/creator/Instagram-icon.svg"
-                width={40}
-                height={40}
-              />
-              <div>{translate("Instagram")}</div>
-            </div>
-          </div>
-          <div className="col-span-2 lg:col-span-1">
-            <Input
-              label={translate("Account_Name")}
-              name="channels[0].account_name"
-              type="text"
-              placeholder="JohnDoe_Style"
-              disabled
-            />
-          </div>
-          <div className="col-span-2 lg:col-span-1">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="w-full">
-                <Input
-                  label={translate("Handle_Name")}
-                  name="channels[0].handle_name"
-                  type="text"
-                  placeholder="@JohnDoe_Style"
-                  disabled
-                />
-              </div>
-              {!instagramConnected && <div
-                className={`lg:flex hidden mt-5`}
-              >
-                {/* main button */}
-                <Button
-                  loading={isLoading}
-                  className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
-                  size="small"
-                  onClick={handleInstaLogin}
-                  disabled={isLoading}
-                >
-                  {translate("Connect")}
-                </Button>
-              </div>}
-            </div>
-          </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("Account_Link")}
-              name="channels[0].account_link"
-              type="text"
-              placeholder="https://instagram.com/JohnDoe_Style"
-              disabled
-            />
-          </div>
-          {!instagramConnected && <div
-            className={`col-span-2 lg:hidden mt-5 w-full `}
-          >
-            <Button
-              loading={isLoading}
-              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
-              size="small"
-              onClick={handleInstaLogin}
-              disabled={isLoading}
-            >
-              {translate("Connect")}
-            </Button>
-          </div>}
-          <div className="col-span-2">
-            <div className="flex gap-4 items-center">
-              <img
-                src="/assets/creator/Youtube-icon.svg"
-                width={40}
-                height={40}
-              />
-              <div>{translate("You_tube")}</div>
-            </div>
-          </div>
-          <div className="col-span-2 lg:col-span-1">
-            <Input
-              label={translate("Account_Name")}
-              name="channels[1].account_name"
-              type="text"
-              placeholder="John Doe Fashion"
-              disabled
-            />
-          </div>
-          <div className="col-span-2 lg:col-span-1">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="w-full">
-                <Input
-                  label={translate("Handle_Name")}
-                  name="channels[1].handle_name"
-                  disabled
-                  type="text"
-                  placeholder="@JohnDoeFashion"
-                />
-              </div>
-              {!youtubeConnected && <div
-                className={`lg:flex hidden mt-5`}
-              >
-                <Button
-                  className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
-                  size="small"
-                  onClick={handleGoogleLogin}
-                  loading={isLoading}
-                  disabled={isLoading}
-                >
-                  {translate("Connect")}
-                </Button>
-              </div>}
-            </div>
-          </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("Account_Link")}
-              name="channels[1].account_link"
-              type="text"
-              disabled
-              placeholder="https://youtube.com/@JohnDoeFashion"
-            />
-          </div>
-          {!youtubeConnected && <div
-            className={`col-span-2 lg:hidden w-full mt-5`}
-          >
-            <Button
-              className={cn("w-full lg:w-fit  font-medium px-8 h-[55px]")}
-              size="small"
-              onClick={handleGoogleLogin}
-              loading={isLoading}
-              disabled={isLoading}
-            >
-              {translate("Connect")}
-            </Button>
-          </div>}
-        </div>
-      </form>
-    </FormProvider>
+    <SocialMedia  
+    setYoutubeConnected={setYoutubeConnected}
+    youtubeConnected={youtubeConnected}
+    instagramConnected={instagramConnected}
+    setInstagramConnected={setInstagramConnected}
+    methods={methods}
+    creator={creator}
+    />
   );
 }

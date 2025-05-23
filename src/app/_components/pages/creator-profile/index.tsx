@@ -37,7 +37,7 @@ export default function CreatorProfile() {
           profile_image={creatorData.profile_image}
           full_name={creatorData.full_name}
           user_name={creatorData.user_name}
-          short_description={creatorData.store_name}
+          // short_description={creatorData.store_name}
           long_description={creatorData.store_description}
           tags={creatorData.tags}
           channels={{

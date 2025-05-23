@@ -31,7 +31,7 @@ export default function InfluencerProfile({
   full_name,
   user_name,
   short_description,
-  long_description,
+  long_description = "",
   tags = [],
   categories = [],
   channels,
@@ -139,7 +139,7 @@ export default function InfluencerProfile({
           <span className="text-lg md:text-xl font-medium text-gray-black">
             {user_name ? `(@${store_name})` : ""}
           </span>
-          <LinkIcon onClick={()=> router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${store_name}}`)} className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
+          <LinkIcon onClick={()=> router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${store_name}`)} className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
         </div>
         <p className="text-sm md:text-base text-font-grey">
           {short_description}
@@ -154,9 +154,9 @@ export default function InfluencerProfile({
             </span>
           ))}
         </div>
-        <p className="text-sm md:text-base text-font-grey">
-          {long_description}
-        </p>
+        <div className="text-sm md:text-base text-font-grey" dangerouslySetInnerHTML={{
+            __html: long_description,
+          }}/>
         <div className="flex gap-2 md:gap-4">
           {categories?.map((v) => (
             <Button

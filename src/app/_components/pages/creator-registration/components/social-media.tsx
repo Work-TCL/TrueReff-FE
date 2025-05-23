@@ -1,13 +1,10 @@
 "use client";
 import Loader from "@/app/_components/components-common/layout/loader";
 import Button from "@/app/_components/ui/button";
-import { ICreator } from "@/lib/types-api/creator";
 import { getConnectedChannel } from "@/lib/web-api/creator";
-import { random } from "lodash";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
 import toast from "react-hot-toast";
 interface IProps {
   setYoutubeConnected: (value: boolean) => void;
@@ -27,12 +24,11 @@ export default function SocialMedia({
   creator
 }: IProps) {
   const translate = useTranslations();
-  // const methods = useFormContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const creatorId = searchParams.get("creatorId") ?? creator?._id??"";
+  const creatorId = searchParams.get("creatorId") ?? creator?._id??creator?.creatorId??"";
   const message = searchParams.get("message") ?? "";
   const error = searchParams.get("error") ?? "";
 

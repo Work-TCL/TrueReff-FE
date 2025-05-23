@@ -17,7 +17,10 @@ const CreatorCard = ({
   const router = useRouter();
   return (
     <Card
-      onClick={() => router?.push(`/creator/profile/${creator?._id}`)}
+    key={creator?.full_name}
+      onClick={(e) =>{
+        e.stopPropagation();
+        router?.push(`/creator/profile/${creator?._id}`)}}
       className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg cursor-pointer"
     >
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
@@ -38,7 +41,7 @@ const CreatorCard = ({
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
             className="text-xs sm:text-sm md:text-lg font-semibold w-full line-clamp-none truncate"
-            text={creator.title}
+            text={creator.full_name}
           />
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
@@ -99,8 +102,11 @@ const CreatorCard = ({
           {translate("Collaborate_Now")}
         </button> */}
         <button
-          onClick={() => handleCollaborateNow(creator._id)}
-          className="flex items-center justify-center w-full gap-2 md:px-3 px-1 py-2 md:text-sm text-[10px] border rounded-xl border-[#FFEDF2] bg-[#FFEDF2] text-[#FF4979] transition-all sm:text-base sm:gap-3"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleCollaborateNow(creator._id)}}
+          className="flex items-center justify-center w-full gap-2 md:px-3 px-1 py-2 md:text-sm text-[10px] border rounded-xl border-primary hover:bg-primary text-[#FF4979] hover:text-white transition-all sm:text-base sm:gap-3"
         >
           {translate("Collaborate_Now")}
         </button>
