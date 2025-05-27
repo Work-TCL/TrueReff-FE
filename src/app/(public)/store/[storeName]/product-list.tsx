@@ -90,26 +90,25 @@ export default function ProductList({ storeName,showTrending }: { storeName: str
       );
 
       if (response.data.data?.list?.length > 0) {
-        setProductList(
-          response.data.data?.list.map((product: any) => {
-            let categories =
-              product.category?.length > 0
-                ? product.category
-                  .filter((cat: ICategory) => cat.parentId === null)
-                  .map((cat: ICategory) => cat?.name)
-                  ?.join(", ")
-                : "";
-            let subCategories =
-              product.category?.length > 0
-                ? product.category
-                  .filter((cat: ICategory) => cat.parentId !== null)
-                  .map((cat: ICategory) => cat?.name)
-                  ?.join(", ")
-                : "";
-            let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
-            return { ...product, categories, tag, subCategories };
-          })
-        );
+        const productData = response.data.data?.list.map((product: any) => {
+          let categories =
+            product.category?.length > 0
+              ? product.category
+                .filter((cat: ICategory) => cat.parentId === null)
+                .map((cat: ICategory) => cat?.name)
+                ?.join(", ")
+              : "";
+          let subCategories =
+            product.category?.length > 0
+              ? product.category
+                .filter((cat: ICategory) => cat.parentId !== null)
+                .map((cat: ICategory) => cat?.name)
+                ?.join(", ")
+              : "";
+          let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
+          return { ...product, categories, tag, subCategories };
+        })
+        setProductList([...productData]);
         setTotalPages(Math.ceil(response.data.data?.count / pageLimit));
         setCurrentPage(page);
       }
@@ -172,9 +171,11 @@ export default function ProductList({ storeName,showTrending }: { storeName: str
 
   // Update useEffect to fetch the initial product list
   useEffect(() => {
-    fetProductsList(currentPage);
-    fetchTrendingProductsList(currentPage);
-  }, []);
+    if(storeName){
+      fetProductsList(currentPage);
+      fetchTrendingProductsList(currentPage);
+    }
+  }, [storeName]);
 
   // Update the onClick handlers for pagination buttons
   const handlePageChange = (page: number) => {

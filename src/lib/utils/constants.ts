@@ -96,7 +96,7 @@ export function formatNumber(num: number = 0) {
   } else if (num >= 1_000) {
     return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
   }
-  return num === 0 ? "-" : num.toString();
+  return num === 0 ? "0" : num.toString();
 }
 export const formatDate = (dateString: string | null): string => {
   if (!dateString) return "-"; // Handle empty or null dates

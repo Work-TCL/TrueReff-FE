@@ -36,6 +36,7 @@ export default {
         "light-blue": "#BBEEED",
         blue: "#808EFF",
         purple: "#978FED",
+        rating: "#FFAD33",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

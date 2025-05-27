@@ -158,7 +158,7 @@ export default function StoreSetup({
 
       {/* Form Fields */}
       <div className="grid grid-cols-2 gap-4">
-        <div className={isRegistration ? "col-span-2" : "col-span-1"}>
+        <div className={"col-span-2"}>
           <Input
             label={translate("Store_Name")}
             name="store_name"
@@ -166,27 +166,6 @@ export default function StoreSetup({
             placeholder={translate("Enter_Store_Name")}
           />
         </div>
-        {!isRegistration && <div className="col-span-1 flex flex-col gap-4">
-          <div className="text-md font-medium flex items-center space-x-2 text-gray-500">
-            <span>{translate("Trending_Products")}</span> <ToolTip position="top" content={
-              <div className="max-w-[200px] text-sm text-wrap p-2 rounded-lg">{"Enable this option to display trending products in your store. Trending products are popular items that attract more customers and increase engagement. Turning this on helps highlight these products to boost visibility and sales."}</div>
-            }><Info /></ToolTip>
-          </div>
-          <label className="inline-flex items-center cursor-pointer relative">
-            <input
-              type="checkbox"
-              checked={showTrending}
-              className="sr-only peer"
-              onChange={() =>
-                setShowTrending(!showTrending)
-              }
-            />
-            <div
-              className={`relative w-11 h-6 ${showTrending ? "bg-primary" : "bg-gray-200"
-                } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
-            ></div>
-          </label>
-        </div>}
         <div className="col-span-2">
           <Input
             label={translate("Tags")}

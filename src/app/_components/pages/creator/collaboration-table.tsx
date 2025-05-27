@@ -24,6 +24,7 @@ import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
 import { toastMessage } from "@/lib/utils/toast-message";
+import { currency } from "@/lib/utils/constants";
 
 export function capitalizeFirstLetter(word: string = "") {
   if (!word) return ""; // Handle empty strings
@@ -145,6 +146,21 @@ const CollaborationTable = ({
       ? userStatus[request]
       : status;
   };
+  const getCommission = (collaboration: ICollaboration) => {
+
+    if(collaboration?.collaborationStatus === "REQUESTED") {
+      let product = collaboration?.productId;
+      return product?.commission ? `${product?.commission_type === "FIXED_AMOUNT" ? currency["INR"]:""} ${product?.commission} ${product?.commission_type === "PERCENTAGE" ? "%":""}` : "-";
+    } else if (collaboration?.bids?.length > 0) {
+      const bid = collaboration?.bids?.[collaboration?.bids?.length - 1];
+      if (bid?.proposal) {
+        return `${bid?.type === "FIXED_AMOUNT" ? currency["INR"]:""} ${bid?.proposal} ${bid?.type === "PERCENTAGE" ? "%":""}`;
+      } else {
+        return "-";
+      }
+    }
+    // return "-"
+  }
 
   const columns: ColumnDef<ICollaboration>[] = [
     {
@@ -174,19 +190,19 @@ const CollaborationTable = ({
         );
       },
     },
+    {
+      accessorKey: "product.category",
+      header: () => translate("Product_Category"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.productId?.categories?.join(", ") ?? ""}
+        />
+      ),
+    },
     ...(!isDashboard
       ? ([
-          {
-            accessorKey: "product.category",
-            header: () => translate("Product_Category"),
-            cell: ({ row }) => (
-              <TruncateWithToolTip
-                checkHorizontalOverflow={false}
-                linesToClamp={2}
-                text={row.original.productId?.categories?.join(", ") ?? ""}
-              />
-            ),
-          },
           {
             accessorKey: "product.tag",
             header: () => translate("Product_Tags"),
@@ -229,6 +245,21 @@ const CollaborationTable = ({
         );
       },
     },
+    ...(isDashboard
+      ? ([
+          {
+            accessorKey: "product.tag",
+            header: () => translate("Commission"),
+            cell: ({ row }) => (
+              <TruncateWithToolTip
+                checkHorizontalOverflow={false}
+                linesToClamp={2}
+                text={getCommission(row?.original)}
+              />
+            ),
+          },
+        ] as ColumnDef<ICollaboration>[])
+      : []),
     {
       id: "status",
       header: () => <div className="text-center">{translate("Status")}</div>,
@@ -253,32 +284,32 @@ const CollaborationTable = ({
         const product = row.original.productId;
         const status = getRequestStatus(collaboration);
 
-        if (isDashboard) {
-          return (
-            <div className="flex justify-between w-fit gap-3 mx-auto">
-              {collaboration?.crmLink && (
-                <ToolTip content="Copy Link" delayDuration={1000}>
-                  <Copy
-                    strokeWidth={1.5}
-                    color="#22c55e"
-                    className="cursor-pointer"
-                    size={25}
-                    onClick={() => handleCopyLink(collaboration?.crmLink)}
-                  />
-                </ToolTip>
-              )}
-              <ToolTip content="View Detail" delayDuration={1000}>
-                <Eye
-                  strokeWidth={1.5}
-                  className="cursor-pointer"
-                  size={25}
-                  color="#ef4444"
-                  onClick={() => handleProductDetail(product?._id)}
-                />
-              </ToolTip>
-            </div>
-          );
-        } else {
+        // if (isDashboard) {
+        //   return (
+        //     <div className="flex justify-between w-fit gap-3 mx-auto">
+        //       {collaboration?.crmLink && (
+        //         <ToolTip content="Copy Link" delayDuration={1000}>
+        //           <Copy
+        //             strokeWidth={1.5}
+        //             color="#22c55e"
+        //             className="cursor-pointer"
+        //             size={25}
+        //             onClick={() => handleCopyLink(collaboration?.crmLink)}
+        //           />
+        //         </ToolTip>
+        //       )}
+        //       <ToolTip content="View Detail" delayDuration={1000}>
+        //         <Eye
+        //           strokeWidth={1.5}
+        //           className="cursor-pointer"
+        //           size={25}
+        //           color="#ef4444"
+        //           onClick={() => handleProductDetail(product?._id)}
+        //         />
+        //       </ToolTip>
+        //     </div>
+        //   );
+        // } else {
           if (status === "REQUESTED") {
             if (collaboration?.requestedBy === "vendor") {
               return (
@@ -347,7 +378,7 @@ const CollaborationTable = ({
               </div>
             );
           }
-        }
+        // }
         return null;
       },
     },

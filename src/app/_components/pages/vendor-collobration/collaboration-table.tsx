@@ -22,6 +22,8 @@ interface ICreatorTableProps {
   user: string;
   refreshCentral: () => void;
   loader: boolean;
+  isDashboard?: boolean;
+
 }
 interface IRequestCancel {
   collaborationId: string;
@@ -33,6 +35,7 @@ const CollaborationTable = ({
   user,
   loader = false,
   refreshCentral = () => {},
+  isDashboard = false,
 }: ICreatorTableProps) => {
   const translate = useTranslations();
   const router = useRouter();
@@ -153,17 +156,21 @@ const CollaborationTable = ({
         />
       ),
     },
-    {
-      id: "product_tags",
-      header: () => translate("Product_Tags"),
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.productId?.tag ?? ""}
-        />
-      ),
-    },
+    ...(!isDashboard
+      ? ([
+        {
+          id: "product_tags",
+          header: () => translate("Product_Tags"),
+          cell: ({ row }) => (
+            <TruncateWithToolTip
+              checkHorizontalOverflow={false}
+              linesToClamp={2}
+              text={row.original.productId?.tag ?? ""}
+            />
+          ),
+        },
+      ] as ColumnDef<ICollaboration>[])
+      : []),
     {
       id: "creator",
       header: () => translate("Creator"),

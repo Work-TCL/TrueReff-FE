@@ -197,7 +197,7 @@ export default function Dashboard() {
             />
             <StatsCard
               title={translate("Pending_Collaboration")}
-              value={statesInfo?.pendingCollaborations}
+              value={formatNumber(statesInfo?.pendingCollaborations)}
               growth={5}
               borderColor="border-[#C861A0]"
               bgColor="bg-[#faeff6]"
@@ -205,14 +205,14 @@ export default function Dashboard() {
             />
             <StatsCard
               title={translate("Revenues")}
-              value={formatFloatValue(statesInfo?.totalRevenue)}
+              value={formatNumber(statesInfo?.totalRevenue)}
               growth={5}
               borderColor="border-[#EB815B]"
               bgColor="bg-[#fdf2ef]"
             />
             <StatsCard
               title={translate("Orders")}
-              value={statesInfo?.totalOrders}
+              value={formatNumber(statesInfo?.totalOrders)}
               growth={5}
               borderColor="border-[#77EE8D]"
               bgColor="bg-[#f1fdf4]"
@@ -220,7 +220,7 @@ export default function Dashboard() {
             
             <StatsCard
               title={translate("Commission")}
-              value={`${currency["INR"]} ${formatFloatValue(statesInfo?.totalCommission)}`}
+              value={`${currency["INR"]} ${formatNumber(statesInfo?.totalCommission)}`}
               growth={5}
               borderColor="border-[#9773C8]"
               bgColor="bg-[#f5f1fa]"

@@ -169,6 +169,7 @@ export default function RecentActivities() {
             user={getUserType()}
             refreshCentral={() => fetchCollaboration()}
             loader={false}
+            isDashboard={true}
           />
         ) : (
           <EmptyPlaceHolder

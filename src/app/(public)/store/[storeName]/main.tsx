@@ -21,6 +21,8 @@ import { useCreatorStore } from "@/lib/store/creator";
 import { useSession } from "next-auth/react";
 import { ICategoryData } from "@/lib/types-api/auth";
 import { useAuthStore } from "@/lib/store/auth-user";
+import { Info } from "lucide-react";
+import ToolTip from "@/app/_components/components-common/tool-tip";
 
 interface ICategory {
   _id: string;
@@ -64,7 +66,7 @@ interface IPublicCreatorStoreProps {
 export default function PublicCreatorStore({ isCreator }: IPublicCreatorStoreProps) {
   const router = useRouter();
   const params = useParams();
-  const {account } = useAuthStore();
+  const { account } = useAuthStore();
   const translate = useTranslations();
   let storeName: any = params?.storeName;
   const { creator, setCreatorData } = useCreatorStore();
@@ -199,17 +201,26 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
     }
   };
   useEffect(() => {
-    if(isCreator && account?.role === "creator"){
-    if (store?.category?.length > 0) {
-      let parentCategory = categories?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
-      storeMethods.setValue("category", parentCategory);
+    if (isCreator && account?.role === "creator") {
+      if (store?.category?.length > 0) {
+        let parentCategory = categories?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+        storeMethods.setValue("category", parentCategory);
+      }
+      if (store?.sub_category?.length > 0) {
+        let subCategory = categories?.filter((ele: ICategoryData) => creator?.sub_category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+        storeMethods.setValue("sub_category", subCategory);
+      }
     }
-    if (store?.sub_category?.length > 0) {
-      let subCategory = categories?.filter((ele: ICategoryData) => creator?.sub_category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
-      storeMethods.setValue("sub_category", subCategory);
-    }
-  }
   }, [categories, store?.category, store?.sub_category])
+  useEffect(() => {
+    if (store?.store_name) {
+      onStoreSetUpSubmit({
+        ...store,
+        category: store?.category?.length > 0 ? categories?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name })) : [],
+        sub_category: store?.sub_category?.length > 0 ? categories?.filter((ele: ICategoryData) => creator?.sub_category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name })) : [],
+      })
+    }
+  }, [showTrending])
   const onStoreSetUpSubmit = async (data: ICreatorStoreSetUpSchema) => {
     setSaveLoader(true);
     try {
@@ -233,7 +244,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
         formData.append("profile_image", profileFile);
       }
       const response: any = await creatorRegister(
-        formData, 3,true
+        formData, 3, true
       );
       if (response?.status === 200) {
         await update({
@@ -311,6 +322,9 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
       });
     }
   };
+  const handleShowTrending = () => {
+    setShowTrending(!showTrending);
+  }
   if (!storeName) {
     return <NotFound />;
   }
@@ -334,7 +348,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
               setShowTrending={setShowTrending}
             />
             <div className="flex justify-end gap-2 bg-white mb-2">
-            <Button
+              <Button
                 type="button"
                 className={cn("w-fit bg-white border text-black font-medium px-8", "block")}
                 size="small"
@@ -359,15 +373,35 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
           </form>
         </FormProvider></div> : (
           <div className="bg-custom-gradient min-h-screen w-full overflow-y-auto">
-            {(isCreator && account?.role === "creator") && <div className="flex justify-end p-2"><Button
+            {(isCreator && account?.role === "creator") && <div className="flex flex-col-reverse md:flex-row justify-end items-end md:items-center gap-2 p-2"><div className="flex gap-4">
+              <div className="text-md font-medium flex items-center space-x-2 text-gray-500">
+                <span>{translate("Trending_Products")}</span> <ToolTip position="top" content={
+                  <div className="max-w-[200px] text-sm text-wrap p-2 rounded-lg">{"Enable this option to display trending products in your store. Trending products are popular items that attract more customers and increase engagement. Turning this on helps highlight these products to boost visibility and sales."}</div>
+                }><Info /></ToolTip>
+              </div>
+              <label className="inline-flex items-center cursor-pointer relative">
+                <input
+                  type="checkbox"
+                  checked={showTrending}
+                  className="sr-only peer"
+                  onChange={() =>
+                    handleShowTrending()
+                  }
+                />
+                <div
+                  className={`relative w-11 h-6 ${showTrending ? "bg-primary" : "bg-gray-200"
+                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                ></div>
+              </label>
+            </div><Button
               type="button"
               // disabled={channels?.length === 0}
               className="w-fit font-medium px-8"
               size="small"
               onClick={handleOnClick}
             >
-              {translate("Edit_Store")}
-            </Button></div>}
+                {translate("Edit_Store")}
+              </Button></div>}
             <div className="flex flex-col gap-3 max-w-[1200px] mx-auto p-4">
               {/* Sticky Profile with hide-on-scroll */}
               <div className="sticky top-0 z-10 transition-transform duration-500" style={{ transform: showProfile ? "translateY(0)" : "translateY(-100%)" }}>
@@ -376,7 +410,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
 
               {/* Scrollable Product List */}
               <div className="h-[calc(100vh-80px)] overflow-y-auto">
-                <ProductList storeName={storeName ?? ""} showTrending={store?.showTrending} />
+                <ProductList storeName={storeName ?? ""} showTrending={showTrending} />
               </div>
             </div>
           </div>

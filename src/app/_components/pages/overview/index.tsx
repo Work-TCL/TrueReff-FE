@@ -14,7 +14,7 @@ import Loading from "@/app/vendor/loading";
 import { IStateInfo } from "@/lib/types-api/vendor-dashboard";
 import { useTranslations } from "next-intl";
 import Loader from "../../components-common/layout/loader";
-import { currency, formatFloatValue } from "@/lib/utils/constants";
+import { currency, formatFloatValue, formatNumber } from "@/lib/utils/constants";
 import { IRevenue, IRevenueData } from "@/lib/types-api/creator-dashboard";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 
@@ -109,7 +109,7 @@ export default function Overview() {
       <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-6 md:grid-cols-3 gap-2 rounded-[20px] w-full">
         <StatsCard
           title={translate("Pending_Campaigns")}
-          value={statesInfo?.pendingCampaigns}
+          value={formatNumber(statesInfo?.pendingCampaigns)}
           growth={5}
           bgColor="bg-white bg-[#f2f1fd]"
           borderColor={"border-[#7877EE]"}
@@ -117,7 +117,7 @@ export default function Overview() {
         />
         <StatsCard
           title={translate("Pending_Collaboration")}
-          value={statesInfo?.pendingCollaborations}
+          value={formatNumber(statesInfo?.pendingCollaborations)}
           growth={5}
           borderColor="border-[#EB815B]"
           bgColor="bg-[#fdf2ef]"
@@ -125,14 +125,14 @@ export default function Overview() {
         />
         <StatsCard
           title={translate("Revenues")}
-          value={formatFloatValue(statesInfo?.totalRevenue)}
+          value={formatNumber(statesInfo?.totalRevenue)}
           growth={5}
           borderColor="border-[#77EE8D]"
           bgColor="bg-[#f1fdf4]"
         />
         <StatsCard
           title={translate("Orders")}
-          value={statesInfo?.totalOrders}
+          value={formatNumber(statesInfo?.totalOrders)}
           growth={5}
           borderColor="border-[#9773C8]"
           bgColor="bg-[#f5f1fa]"
@@ -140,7 +140,7 @@ export default function Overview() {
         />
         <StatsCard
           title={translate("Commission")}
-          value={`${currency['INR']} ${formatFloatValue(statesInfo?.totalCommission)}`}
+          value={`${currency['INR']} ${formatNumber(statesInfo?.totalCommission)}`}
           growth={5}
           borderColor="border-[#C861A0]"
           bgColor="bg-[#faeff6]"

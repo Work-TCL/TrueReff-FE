@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import InfluencerProfile from "./InfluencerProfile";
 import CollabsWithCompanies from "./CollabsWithCompanies";
 import TopVideosCraetor from "../../components-common/tables/topVideos";
 import TopViewAcrossPlatforms from "../../components-common/charts/topViewAcrossPlatforms";
@@ -8,6 +7,8 @@ import { useParams } from "next/navigation";
 import { useCreatorStore } from "@/lib/store/creator";
 import { getCreatorById } from "@/lib/web-api/creator";
 import Loader from "../../components-common/layout/loader";
+import ProductList from "@/app/(public)/store/[storeName]/product-list";
+import ProfileCard from "./profile-card";
 
 export default function CreatorProfile() {
   const { id } = useParams();
@@ -31,8 +32,8 @@ export default function CreatorProfile() {
   return (
     <div className="flex flex-col p-4 gap-5">
       {isLoading && <Loader isTransparent={false} />}
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-5 w-full">
-        <InfluencerProfile
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-5 w-full z-10 transition-transform duration-500">
+        <ProfileCard
           banner_image={creatorData.banner_image}
           profile_image={creatorData.profile_image}
           full_name={creatorData.full_name}
@@ -52,14 +53,9 @@ export default function CreatorProfile() {
           <CollabsWithCompanies />
         </div>
       </div>
-      <div className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-0 w-full">
-        <div className="col-span-2 h-full">
-          <TopVideosCraetor />
+      <div className="h-[calc(100vh-80px)] overflow-y-auto">
+        <ProductList storeName={creatorData?.store_name} showTrending={false}/>
         </div>
-        <div className="h-full">
-          <TopViewAcrossPlatforms />
-        </div>
-      </div>
     </div>
   );
 }
