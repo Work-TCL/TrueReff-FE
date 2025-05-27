@@ -33,46 +33,49 @@ export default function EarningsSection() {
   ];
 
   return (
-    <section className="flex flex-col gap-[70px] w-full bg-primary text-white py-20 px-6">
+    <section className="flex flex-col gap-[70px] w-full bg-primary text-white py-[100px] ">
       <div data-aos="zoom-in-up" className="flex items-center justify-center ">
-        <h2 className="text-4xl font-medium leading-tight">
+        <p className="text-[70px] font-medium leading-[90px] xsmobile:text-[40px] xsmobile:leading-[60px]  text-center">
           Unlock the influence and <br />
           maximize your <span className="font-bold">earnings</span>
-        </h2>
+        </p>
       </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12  ">
         {/* Left Illustration */}
-        <div data-aos="zoom-in-down" className=" flex flex-col gap-[40px] items-center justify-center">
-          <div className="w-full md:w-1/2 flex justify-center">
+        <div data-aos="zoom-in-down" className=" flex flex-col gap-[69px] max-w-[520px] w-full items-center justify-center">
+          <div className="w-full max-w-[520px]  flex justify-center">
             <Image
               src="/assets/landing/earning-patner.png"
               alt="Networking"
-              width={400}
-              height={400}
+              width={520}
+              height={410}
               className="max-w-full h-auto"
             />
           </div>
-          <div className=" text-white text-center w-[66%]">
+          <div className=" text-white text-[20px] leading-[28px] text-center">
             Partner with leading Brands to earn commissions and unlock paid
             collaboration opportunities
           </div>
         </div>
 
         {/* Right Content */}
-        <div data-aos="zoom-in-left" className="w-full md:w-1/2 space-y-6">
+        <div data-aos="zoom-in-left" className="w-fullspace-y-6 xsmobile:justify-center relative">
+          <div className="absolute top-0 bottom-0 left-[35px] xsmobile:left-[20px] w-0.5 bg-gray-300 dark:bg-gray-700"></div>
+
           <ul className="flex flex-col gap-[30px]">
             {features.map((feature, index) => (
-              <li key={index} className="flex items-center gap-4">
+              <li key={index} className="flex items-center gap-4 relative">
+                
                 <div
                   className={cn(
-                    "rounded-full p-2 w-10 h-10 flex items-center justify-center",
-                    index === 1 ? "bg-primary border border-white" : "bg-white"
+                    "rounded-full p-2 w-[70px] h-[70px] xsmobile:w-[40px] xsmobile:h-[40px]  flex items-center justify-center ",
+                    index === 1 ? "bg-primary border border-white" : "bg-white "
                   )}
                 >
-                  <Image src={feature.icon} alt="icon" width={20} height={20} />
+                  <Image src={feature.icon} alt="icon" width={30} height={30} />
                 </div>
-                <p className="text-base">{feature.text}</p>
+                <p className="text-[20px] xsmobile:text-[14px] tablet:text-[18px] font-bold	">{feature.text}</p>
               </li>
             ))}
           </ul>

@@ -1,6 +1,6 @@
 "use client";
 
-import { MoveRight } from "lucide-react";
+import { Menu, X, MoveRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import HeroSection from "./heroSection";
 import EarningsSection from "./earningsSection";
@@ -12,24 +12,26 @@ import LandingPageFooter from "./LandingPageFooter";
 import "aos/dist/aos.css";
 import ButtonLogin from "../_components/components-common/Button-Login";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function LandingPage() {
   const router = useRouter();
   const [activeLink, setActiveLink] = useState("creator");
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleLinkClick = (linkName: string) => {
     setActiveLink(linkName);
+    setIsMenuOpen(false);
   };
 
- useEffect(() => {
-  AOS.init({
-    duration: 1600, 
-    once: false,    
-    mirror: true,   
-    // easing: 'ease-in-out',
-  });
+   useEffect(() => {
+    AOS.init({
+      duration: 1600, 
+      once: false,    
+      mirror: true,   
+      // easing: 'ease-in-out',
+    });
 
-  }, []);
+    }, []);
 
   return (
     <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -39,22 +41,30 @@ export default function LandingPage() {
         loop
         muted
         playsInline
-        className="absolute top-0 left-0 w-full h-[99%] object-cover -z-10"
+        className="absolute top-0 left-0 w-full h-full object-cover -z-10"
       >
         <source src="/assets/landing/landingVideo.mp4" type="video/mp4" />
       </video>
 
       {/* Navbar */}
-      <nav className="flex justify-between items-start p-4 text-white h-full ">
+      <nav className="flex justify-between items-start p-[50px] text-white h-full ">
         <div data-aos="fade-down" className="flex items-center gap-2 text-2xl font-bold fade">
-          <img
+          <Image
+            height={50}
+            width={352}
             src="/assets/landing/logo_TrueReff.svg"
             alt="Truerreff Logo"
-            className="h-8 w-auto"
           />
         </div>
-        <div className="flex items-center gap-6">
-          <ul className="hidden md:flex gap-6 text-lg">
+
+        <div className="lg:hidden">
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="focus:outline-none">
+            {isMenuOpen ? <X size={30} /> : <Menu size={30} />}
+          </button>
+        </div>
+
+        <div className={`${isMenuOpen ? "block" : "hidden"} absolute top-[100px] pb-[20px] right-0 px-[20px] bg-black bg-opacity-80 lg:static lg:w-auto lg:flex lg:items-center lg:gap-6 lg:bg-transparent`}>
+          <ul className="flex flex-col lg:flex-row gap-6 text-[20px] p-6 lg:p-0">
             {["creator", "brand", "about"].map((link) => (
               <li
                 key={link}
@@ -72,14 +82,14 @@ export default function LandingPage() {
             ))}
           </ul>
 
-         <ButtonLogin label="Get Started" dataAos="fade-up" onClick={() => {router.push("/login")}} />
+          <ButtonLogin label="Get Started" onClick={() => router.push("/login")} />
 
         </div>
       </nav>
 
       {/* Marquee Section */}
       <div
-        className="w-full text-white overflow-hidden"
+        className="w-full py-[33px] text-white overflow-hidden"
         style={{
           background:
             "linear-gradient(to right, #9f5de9, #38a2f5, #ff4979, #fbbf12)",
@@ -88,9 +98,9 @@ export default function LandingPage() {
         <div className="flex w-max animate-marquee whitespace-nowrap gap-20 py-3 text-sm font-medium px-4">
           {Array(10).fill(
             <>
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2 text-[20px]">
                 Become a Truerreff Creator today –{" "}
-                <span className="font-bold underline underline-offset-1">
+                <span className="font-bold underline underline-offset-1 ext-[20px]">
                   DOWNLOAD NOW
                 </span>
               </span>
