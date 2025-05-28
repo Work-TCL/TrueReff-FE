@@ -90,13 +90,15 @@ export const statusMessage: { [key: string]: string } = {
   REQUESTED_CREATOR_FROM_VENDOR: "Requested vendor",
   REQUESTED_VENDOR_FROM_CREATOR: "Vendor invited",
 };
-export function formatNumber(num: number = 0) {
-  if (num >= 1_000_000) {
-    return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+export function formatNumber(num: number = 0): string {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B"; // Billion
+  } else if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M"; // Million
   } else if (num >= 1_000) {
-    return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+    return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K"; // Thousand
   }
-  return num === 0 ? "0" : num.toString();
+  return num === 0 ? "0" : formatFloatValue(num).toString(); // Default case
 }
 export const formatDate = (dateString: string | null): string => {
   if (!dateString) return "-"; // Handle empty or null dates

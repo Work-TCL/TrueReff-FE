@@ -82,7 +82,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor/campaign/add": translate("Add_New_Campaign"),
     "/vendor/campaign/product/add": translate("Campaign_Details_Form"),
     "/vendor/campaign": translate("Campaign_List"),
-    "/vendor/settings": translate("Settings"),
+    "/vendor/settings": translate("Profile"),
     "/creator/dashboard": translate("Dashboard"),
     "/creator/my-store/store-setup": translate("Store_set_up"),
     "/creator/my-store": translate("Product_List"),
@@ -91,6 +91,8 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/creator/payment-earnings": translate("Payment_Earnings"),
     "/creator/brandsList": translate("Brands_List"),
     "/creator/profile": translate("Creator_Profile"),
+    "/creator/settings": translate("Profile"),
+    "/creator/settings/store": translate("channels_connect"),
     "/vendor/profile": translate("Brand_Profile"),
     "/vendor/creators/collaboration": translate("Collaboration"),
     "/creator/collaboration": translate("Collaboration"),
@@ -195,9 +197,19 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       pathName.includes("/vendor/products/")
     ) {
       return translate("Product_Details");
-    } else if (pathName.includes("/creator/brandsList/")) {
-      return translate("Brand_Products");
+    } else if (pathName.includes("/creator/product-management/")) {
+      return translate("Product_Detail");
     } else if (pathName.includes("/vendor/profile/")) {
+      return translate("Brand_Profile");
+    } else if(pathName.includes("/creator/store/")) {
+      return translate("My_Store");
+    } else if(pathName.includes("/vendor/campaign/product/")) {
+      return translate("Product_Campaign")
+    } else if(pathName.includes("/vendor/creator-profile/")) {
+      return translate("Creator_Profile");
+    } else if(pathName.includes("/vendor/creator-store/")) {
+      return translate("Creator_Store");
+    } else if(pathName.includes("/creator/vendor-profile/")) {
       return translate("Brand_Profile");
     } else {
       return pageNames[pathName];
@@ -239,8 +251,8 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             <Link
               href={
                 creator.creatorId
-                  ? `/creator/profile/${creator.creatorId}`
-                  : `/vendor/profile/${vendor?.vendorId}`
+                  ? `/creator/settings`
+                  : `/vendor/settings`
               }
               className="flex gap-3 items-center w-fit"
             >

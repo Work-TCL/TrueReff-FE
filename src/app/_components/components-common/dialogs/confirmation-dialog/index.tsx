@@ -3,9 +3,9 @@ import React from "react";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
 import { Button } from "@/components/ui/button";
 interface IConfirmationProps {
-    onClose: () => void;
-    handleConfirm:() =>void;
-    loading: boolean;
+    onClose?: () => void;
+    handleConfirm?:() =>void;
+    loading?: boolean;
     title?: string;
     note?: string;
 }

@@ -27,8 +27,8 @@ const ProductCard = ({
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState("");
 
-    const handleDetailView = (id: string, vendorId: string) => {
-        router.push(`/creator/brandsList/${vendorId}/${id}`);
+    const handleDetailView = (id: string) => {
+        router.push(`/creator/product-management/${id}`);
     };
 
     const handleSendRequest = async () => {
@@ -62,7 +62,7 @@ const ProductCard = ({
                 {/* Image */}
                 <div
                     className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
-                    onClick={() => handleDetailView(product?._id, product?.vendorId)}
+                    onClick={() => handleDetailView(product?._id)}
                 >
                     {product.media?.length > 0 ? (
                         <img

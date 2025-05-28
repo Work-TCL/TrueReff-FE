@@ -140,7 +140,7 @@ export default function ProfileCard({
                     <span className="text-lg md:text-xl font-medium text-gray-black">
                         {user_name ? `(@${store_name})` : ""}
                     </span>
-                    <LinkIcon onClick={() => router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${store_name}`)} className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
+                    <LinkIcon onClick={() => router.push(store_link ? store_link : `${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${store_name}`)} className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
                 </div>
                 <p className="text-sm md:text-base text-font-grey">
                     {short_description}

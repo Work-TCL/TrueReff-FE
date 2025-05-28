@@ -91,7 +91,7 @@ export default function ChannelBar({
 
           const renderedChannel = (
             <div
-              key={el.value}
+              key={channelLabel}
               className={cn(
                 " rounded-full capitalize h-[36px] px-3 gap-1 cursor-pointer",
                 el.channelType === activeChannelTabId
@@ -114,7 +114,7 @@ export default function ChannelBar({
             </div>
           );
           return channelLabel.length > 20 ? (
-            <TooltipProvider>
+            <TooltipProvider key={channelLabel}>
               <Tooltip>
                 <TooltipTrigger>{renderedChannel}</TooltipTrigger>
                 <TooltipContent

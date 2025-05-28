@@ -13,6 +13,7 @@ interface IDialogLayout {
   isCustomDesign?: boolean;
   title?: string;
   titleClassName?: string;
+  className?: string;
 }
 
 export default function DialogLayout({
@@ -23,6 +24,7 @@ export default function DialogLayout({
   onClose = undefined,
   title = "",
   titleClassName,
+  className,
   ...props
 }: IDialogLayout) {
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function DialogLayout({
     open && (
       <Fragment>
         <div className="fixed inset-0 z-[40] sm:w-screen h-screen overflow-hidden">
-          <div className="flex h-full items-center cursor-pointer justify-center text-center sm:items-center sm:py-0 relative">
+          <div className={cn(`flex h-full items-center cursor-pointer justify-center text-center sm:items-center sm:py-0 relative`,className)}>
             {onClose ? (
               <div
                 onClick={() => onClose()}
@@ -77,7 +79,7 @@ export default function DialogLayout({
                     </h3>
                   )}
                   {skipClose ? null : onClose ? (
-                    <div onClick={() => onClose()} className="block ml-auto">
+                    <div onClick={() => onClose()} className="block ml-auto cursor-pointer">
                       <IoClose
                         fontSize={25}
                         color="#000"

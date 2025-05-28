@@ -20,7 +20,7 @@ const CreatorCard = ({
     key={creator?.full_name}
       onClick={(e) =>{
         e.stopPropagation();
-        router?.push(`/creator/profile/${creator?._id}`)}}
+        router?.push(`/vendor/creator-profile/${creator?._id}`)}}
       className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg cursor-pointer"
     >
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">

@@ -15,6 +15,7 @@ import CollaborationConfirmed from '../../components-common/dialogs/accept-offer
 import { ICollaboration } from './view';
 import ViewAllBids from '../../components-common/dialogs/all-bids';
 import { useTranslations } from 'next-intl';
+import Confirmation from '../../components-common/dialogs/confirmation-dialog';
 
 const bidAmount = {
     fixedPercentage: "FIXED_AMOUNT",
@@ -32,6 +33,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
     const { account } = useAuthStore();
     const collaborationId: any = params?.collaborationId;
     const [bid, setBid] = React.useState<any>(bidAmount.fixedPercentage);
+    const [discountType,setDiscountType] = useState<string>("");
     const [yourOffer, setYourOffer] = React.useState<any>(null);
     const [receiveOffer, setReceiveOffer] = React.useState<number>(0);
     const [isEditing, setIsEditing] = useState(false);
@@ -152,6 +154,10 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
             setLoading(false);
         }
     }
+    const handleConfirm = () => {
+        setBid(discountType);
+        setDiscountType("");
+    }
     function getLastBid() {
         const bid = collaborationData?.bids[collaborationData?.bids?.length - 1];
         return `${bid?.proposal} ${bid?.type === "FIXED_AMOUNT" ? "₹" : "%"}`;
@@ -160,8 +166,8 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
         <div className="flex flex-col p-4 gap-3">
             <h3 className="font-semibold mb-2">{translate("Per_product_sell_commission")}</h3>
             <div className="flex gap-2 mb-4">
-                <Input type='radio' checked={bid === bidAmount.fixedPercentage} onChange={() => setBid(bidAmount.fixedPercentage)} id="commission-fixed" className="w-5 h-5 cursor-pointer" /><span className={`text-sm font-medium ${bid === bidAmount.fixedPercentage ? "text-black" : "text-gray-400"}`}>{translate("Fixed_Commission")}</span>
-                <Input type='radio' checked={bid === bidAmount.percentage} onChange={() => setBid(bidAmount.percentage)} id="commission-percentage" className='w-5 h-5 cursor-pointer' /><span className={`text-sm font-medium ${bid === bidAmount.percentage ? "text-black" : "text-gray-400"}`}> {translate("Percentage")}</span>
+                <Input type='radio' checked={bid === bidAmount.fixedPercentage} onChange={() => setDiscountType(bidAmount.fixedPercentage)} id="commission-fixed" className="w-5 h-5 cursor-pointer" /><span className={`text-sm font-medium ${bid === bidAmount.fixedPercentage ? "text-black" : "text-gray-400"}`}>{translate("Fixed_Commission")}</span>
+                <Input type='radio' checked={bid === bidAmount.percentage} onChange={() => setDiscountType(bidAmount.percentage)} id="commission-percentage" className='w-5 h-5 cursor-pointer' /><span className={`text-sm font-medium ${bid === bidAmount.percentage ? "text-black" : "text-gray-400"}`}> {translate("Percentage")}</span>
             </div>
             <div className="flex justify-center gap-3 mb-3">
                 {!isYourOffer && (
@@ -239,6 +245,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
             {collaborationData?.bids?.length > 0 && <div className="flex justify-center text-sm text-gray-400 font-semibold mt-3">{translate("Last Bid")}: {" "}<span className="text-black font-semibold">{getLastBid()}</span></div>}
             {collaborationData?.bids?.length > 0 && <div className='flex justify-center text-primary-color cursor-pointer float-end' onClick={() => setViewAllBids(true)}>{translate("View_History")} <ChevronDown /></div>}
             {viewAllBids && <ViewAllBids bids={collaborationData?.bids} onClose={() => setViewAllBids(false)} />}
+            {discountType && <Confirmation title={translate("Are_you_sure_you_want_to_change_commission_type")} onClose={()=> setDiscountType("")} handleConfirm={handleConfirm}/>}
         </div>
     )
 }

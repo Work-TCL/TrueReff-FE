@@ -224,7 +224,7 @@ const CollaborationTable = ({
         return (
           <div
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() => router.push(`/vendor/profile/${fromUser?._id}`)}
+            // onClick={() => router.push(`/creator/vendor-profile/${fromUser?._id}`)}
           >
             <Avatar className="w-8 h-8">
               <AvatarImage

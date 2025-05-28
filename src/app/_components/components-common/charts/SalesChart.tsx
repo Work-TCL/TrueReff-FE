@@ -58,7 +58,7 @@ export default function SalesChart(props: {data?: IRevenueData}) {
     0
   );
   return (
-    <div className="w-full h-[410px] bg-white p-5 rounded-20 h-full flex-1">
+    <div className="w-full bg-white p-5 rounded-20 h-full flex-1">
       <div className="flex md:flex-row flex-col justify-between md:items-center items-start mb-3">
         <h3 className="md:text-xl text-base font-semibold whitespace-nowrap text-text">
           {translate("Revenue")}
@@ -79,7 +79,7 @@ export default function SalesChart(props: {data?: IRevenueData}) {
         </div> */}
       </div>
       <div className="flex gap-4 items-center">
-        <p className="text-2xl text-text ">{totalCurrentRevenue}</p>
+        {/* <p className="text-2xl text-text ">{(totalCurrentRevenue)}</p> */}
         {/* <p className="text-sm text-success ">↑ 5% {translate("thenLastMonth")}</p> */}
       </div>
 

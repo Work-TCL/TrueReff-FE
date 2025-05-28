@@ -80,11 +80,13 @@ const statusText: { [key: string]: string } = {
   PENDING: "Start Bargaining",
   LIVE: "Live",
   EXPIRED: "Expired",
-  "": "Send Request",
+  ACTIVE: "Active",
+  "": "Send_Request",
 };
 
 const buttonColor: { [key: string]: string } = {
   LIVE: "bg-[#098228] text-[#098228]",
+  ACTIVE: "bg-[#098228] text-[#098228]",
   REQUESTED: "bg-[#FF9500] text-[#FF9500]",
   EXPIRED: "bg-[#FF3B30] text-[#FF3B30]",
   REJECTED: "bg-[#FF3B30] text-[#FF3B30]",
@@ -165,20 +167,20 @@ export default function ViewProductDetail({
       );
 
       const product: any = response?.data?.data;
-      const images = product?.media?.nodes?.map((ele: any) => ele?.image.url);
+      const images = product?.images?.map((ele: any) => ele?.src);
       // ✅ Update product state
       const updatedProduct = {
         productId: product.id,
         images: images,
-        name: product.title,
-        tags: product?.tags || [],
-        description: product?.description || "", // Add description if available
+        name: product.name,
+        tags: product?.tags? product?.tags?.split(", ") :[],
+        description: product?.description_html || "", // Add description if available
         price: product?.price || 0,
         sku: product?.sku || "",
-        barcode: product?.variants?.nodes[0]?.barcode || "",
+        barcode: product?.variants[0]?.barcode || "",
         quantity: product?.quantity || 0,
         totalInventory: product?.totalInventory || 0,
-        variants: product?.variants?.nodes || [],
+        variants: product?.variants || [],
         commission: product?.commission,
   commission_type: product?.commission_type,
   discount: product?.discount,
@@ -351,8 +353,7 @@ export default function ViewProductDetail({
               ]}
             />
 
-            {((!pathName.includes("/creators/") && creator?.creatorId) ||
-              creatorId) && (
+            {((!pathName.includes("/creators/") && creator?.creatorId)) && (
               <Button
                 disabled={
                   collaborationStatus === "REQUESTED" ||

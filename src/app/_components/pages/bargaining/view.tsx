@@ -16,11 +16,14 @@ import { useTranslations } from "use-intl";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import axios from "@/lib/web-api/axios";
 import Bid from "./bid";
-import { formatDate } from "@/lib/utils/constants";
+import { formatDate, formatFloatValue } from "@/lib/utils/constants";
 import CollaborationConfirmed from "../../components-common/dialogs/accept-offer";
-import { Copy, ExternalLink, ExternalLinkIcon } from "lucide-react";
+import { Copy, ExternalLink, ExternalLinkIcon, Star } from "lucide-react";
 import { toastMessage } from "@/lib/utils/toast-message";
 import Link from "next/link";
+import Rating from "../../components-common/dialogs/rating";
+import { useCreatorStore } from "@/lib/store/creator";
+import { useVendorStore } from "@/lib/store/vendor";
 export interface NegotiationStatus {
   agreedByVendor: boolean;
   agreedByCreator: boolean;
@@ -95,6 +98,16 @@ export interface ICollaboration {
   updatedAt: string;
 }
 
+export interface IRating {
+  _id: string;
+  vendorId: string;
+  creatorId: string;
+  from: string;
+  rating: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function BargainingView() {
   const translate = useTranslations();
   const { account } = useAuthStore();
@@ -104,6 +117,7 @@ export default function BargainingView() {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [offerAccepted, setOfferAccepted] = useState(false);
+  const [showRatingPopup, setShowRatingPopup] = useState(false);
   const [collaborationData, setCollaborationData] = useState<ICollaboration>({
     "negotiation": {
       "agreedByVendor": false,
@@ -160,6 +174,16 @@ export default function BargainingView() {
     "createdAt": "",
     "updatedAt": ""
   });
+  const initialRating = {
+    _id: "",
+vendorId: "",
+creatorId: "",
+from: "",
+rating: 0,
+createdAt: "",
+updatedAt: "",
+  }
+  const [rating, setRating] = useState<IRating>(initialRating);
 
   const fetchProductCollaboration = async () => {
     setLoading(true);
@@ -177,11 +201,40 @@ export default function BargainingView() {
       setLoading(false);
     }
   };
+  const fetchRatings = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `/auth/rating/${account?.role === 'vendor' ? "creator" : "vendor"}/${account?.role === 'vendor' ? collaborationData?.creatorId?._id : collaborationData?.vendorId?._id}`
+      );
+      if (response?.data?.data?.length > 0) {
+        setRating(response?.data?.data[0])
+      } else {
+        setTimeout(() => {
+          setShowRatingPopup(true); // Show popup after a delay
+        }, 5000); // 5 seconds delay
+        setRating(initialRating);
+      }
+    } catch (error: any) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+      setLoading(false);
+      setRating(initialRating);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Update useEffect to fetch the initial product list
   useEffect(() => {
     fetchProductCollaboration();
+
   }, []);
+  useEffect(() => {
+    if (collaborationData?.collaborationStatus === "ACTIVE") {
+      fetchRatings();
+    }
+  }, [collaborationData?._id])
   const getCommissionType = () => {
     const bid = collaborationData?.bids[collaborationData?.bids?.length - 1];
     if (bid?.type === "PERCENTAGE") {
@@ -199,6 +252,33 @@ export default function BargainingView() {
       toastMessage.error("Failed to copy!");
     }
   };
+  const handleSubmitRatings = async (rating: number) => {
+    try {
+      const payload = account?.role === 'vendor' ? {
+        creatorId: collaborationData?.creatorId?._id
+      } : {
+        vendorId: collaborationData?.vendorId?._id
+      }
+      const response = await axios.post(
+        `/auth/rating`,
+        {
+          ...payload,
+          rating
+        }
+      );
+      
+      if (response?.status === 200) {
+          fetchRatings();
+      }
+
+    } catch (error: any) {
+      const errorMessage = getErrorMessage(error);
+      toastMessage.error(errorMessage);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <div className="flex flex-col w-full p-4 gap-4 md:h-full">
       {loading && <Loader />}
@@ -361,10 +441,32 @@ export default function BargainingView() {
                         {label}:
                       </div>
                       <div className="flex gap-2 font-medium text-primary-color text-sm break-words">{label === translate("Affiliate_Link") ? <Link className="hover:underline" href={value} target="_blank">{value.length > 20
-                          ? `${value.substring(0, 30)}...` // Truncate the URL if it's too long
-                          : value}</Link> : value || "-"}{label === translate("Affiliate_Link") && <Copy size={20} onClick={() => handleCopyLink(value)} className="cursor-pointer" />}</div>
+                        ? `${value.substring(0, 30)}...` // Truncate the URL if it's too long
+                        : value}</Link> : value || "-"}{label === translate("Affiliate_Link") && <Copy size={20} onClick={() => handleCopyLink(value)} className="cursor-pointer" />}</div>
                     </div>
                   ))}
+                  {rating?.rating !== 0 && <div
+                      key={rating?.from}
+                      className="flex flex-col md:flex-row items-start gap-2"
+                    >
+                      <div className="w-[150px] text-sm text-gray-500 text-nowrap">
+                        {translate("Ratings")}:
+                      </div>
+                      <div className="flex gap-2 font-medium text-primary-color text-sm break-words">
+                        <div className="flex items-center gap-1"><div className="flex justify-center">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span
+              key={star}
+              className={`cursor-pointer text-xl ${
+                star <= (rating?.rating) ? "text-yellow-500" : "text-gray-300"
+              }`}
+            >
+              ★
+            </span>
+          ))}
+        </div><span>{`${formatFloatValue(rating?.rating)}/${5}`}</span></div>
+                      </div>
+                    </div>}
                 </div>
               </div> : <Bid
                 collaborationData={collaborationData}
@@ -449,33 +551,33 @@ export default function BargainingView() {
                   )}
                 </div></div>
               </div>
-              <div
-                className="flex flex-col md:flex-row items-center gap-2"
-              >
-                <div className="w-[220px] text-sm text-gray-500 text-nowrap">
-                  {"Reference Links"}:
+                <div
+                  className="flex flex-col md:flex-row items-center gap-2"
+                >
+                  <div className="w-[220px] text-sm text-gray-500 text-nowrap">
+                    {"Reference Links"}:
+                  </div>
+                  <div className="font-medium text-sm break-words"><div className="flex flex-wrap gap-3">
+                    {collaborationData?.productId?.referenceLinks?.length > 0 ? (
+                      collaborationData?.productId?.referenceLinks.map((option) => (
+                        <Link href={option} target="_blank"
+                          key={option}
+                          className={cn(
+                            "flex items-center cursor-pointer gap-1 hover:underline text-sm transition break-words max-w-[250px] text-primary"
+                          )}
+                        >
+                          {option.length > 30
+                            ? `${option.substring(0, 30)}...` // Truncate the URL if it's too long
+                            : option}
+                          <ExternalLinkIcon size={15} className="cursor-pointer" />
+                        </Link>
+                      ))
+                    ) : (
+                      "-"
+                    )}
+                  </div>
+                  </div>
                 </div>
-                <div className="font-medium text-sm break-words"><div className="flex flex-wrap gap-3">
-                  {collaborationData?.productId?.referenceLinks?.length > 0 ? (
-                    collaborationData?.productId?.referenceLinks.map((option) => (
-                      <Link href={option} target="_blank"
-                        key={option}
-                        className={cn(
-                          "flex items-center cursor-pointer gap-1 hover:underline text-sm transition break-words max-w-[250px] text-primary"
-                        )}
-                      >
-                        {option.length > 30
-                          ? `${option.substring(0, 30)}...` // Truncate the URL if it's too long
-                          : option}
-                        <ExternalLinkIcon size={15} className="cursor-pointer" />
-                      </Link>
-                    ))
-                  ) : (
-                    "-"
-                  )}
-                </div>
-                </div>
-              </div>
               </>}
             </div>
           </div>
@@ -487,6 +589,7 @@ export default function BargainingView() {
         </div>
       </div>
       {offerAccepted && <CollaborationConfirmed collaborationData={collaborationData} getCommissionType={getCommissionType} />}
+      {showRatingPopup && <Rating onClose={() => setShowRatingPopup(false)} collaborationData={collaborationData} handleSubmitRatings={handleSubmitRatings} />}
     </div>
   );
 }

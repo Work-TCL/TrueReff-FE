@@ -32,7 +32,7 @@ export default function StoreDetailCard({
           />
         ) : (
           <img
-            src="/assets/creator/profile/profile-bg.png"
+            src="/assets/banner-image.png"
             alt="Background"
             className="w-full h-full object-cover rounded-b-[20px]"
           />

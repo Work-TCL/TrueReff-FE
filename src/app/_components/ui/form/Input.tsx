@@ -11,6 +11,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Editor from "./editor";
 import { Tag, X } from "lucide-react";
+
+const menuPortal = typeof window !== "undefined" ? document.body : null;
 interface IInput
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
@@ -47,7 +49,7 @@ export default function Input({
   hideError,
   lableClassName,
   inputClassName,
-  menuPortalTarget = typeof document !== "undefined" ? document.body : null,
+  menuPortalTarget = menuPortal,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -383,9 +385,7 @@ export default function Input({
               onChange={(v) => setValue(name, v?.value)}
               value={options?.find((v) => v?.value === field?.value)}
               isDisabled={props?.disabled}
-              menuPortalTarget={
-                typeof document !== "undefined" ? document.body : null
-              } // Renders the dropdown outside of the current scrollable container
+              menuPortalTarget={menuPortal} // Renders the dropdown outside of the current scrollable container
               menuPosition="fixed" // Makes the dropdown position fixed
               autoFocus={false} // Prevents focus behavior causing auto-scroll
             />
@@ -465,9 +465,7 @@ export default function Input({
               classNamePrefix="select"
               {...field}
               isDisabled={props?.disabled}
-              menuPortalTarget={
-                typeof document !== "undefined" ? document.body : null
-              } // Renders the dropdown outside of the current scrollable container
+              menuPortalTarget={menuPortal} // Renders the dropdown outside of the current scrollable container
               menuPosition="fixed" // Makes the dropdown position fixed
               autoFocus={false} // Prevents focus behavior causing auto-scroll
             />
@@ -494,9 +492,7 @@ export default function Input({
               classNamePrefix="select"
               {...field}
               isDisabled={props?.disabled}
-              menuPortalTarget={
-                typeof document !== "undefined" ? document.body : null
-              } // render dropdown outside the parent container
+              menuPortalTarget={menuPortal} // render dropdown outside the parent container
               styles={{
                 menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                 menu: (base) => ({ ...base, zIndex: 9999 }),
@@ -554,9 +550,7 @@ export default function Input({
                 isDisabled={props?.disabled}
                 menuPortalTarget={
                   menuPortalTarget
-                    ? typeof document !== "undefined"
-                      ? document.body
-                      : null
+                    ? menuPortalTarget
                     : null
                 }
                 menuPosition="fixed"

@@ -6,7 +6,7 @@ import React from "react";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { formatFloatValue } from "@/lib/utils/constants";
+import { formatFloatValue, formatNumber } from "@/lib/utils/constants";
 interface ITopBrandsProps {
   data: ITopBrands[];
   loading: boolean;
@@ -54,7 +54,7 @@ const TopBrands = ({ data, loading }: ITopBrandsProps) => {
                   <span className="text-font-grey">
                    {item.business_name}
                   <span className="text-secondary">
-                    ({item.revenue})
+                    ({formatNumber(item.revenue)})
                   </span>
                 </span></div>
                 <div className="flex gap-3">

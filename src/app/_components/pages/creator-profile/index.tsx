@@ -9,8 +9,10 @@ import { getCreatorById } from "@/lib/web-api/creator";
 import Loader from "../../components-common/layout/loader";
 import ProductList from "@/app/(public)/store/[storeName]/product-list";
 import ProfileCard from "./profile-card";
-
-export default function CreatorProfile() {
+interface ICreatorProfileProps {
+  isVendor?: boolean;
+}
+export default function CreatorProfile({isVendor}:ICreatorProfileProps) {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const { creator } = useCreatorStore();
@@ -47,6 +49,7 @@ export default function CreatorProfile() {
             }}
             store_name={creatorData?.store_name}
           categories={[...creatorData.category.map((v: any) => v.name)]}
+          store_link={isVendor ? `/vendor/creator-store/${creatorData?.store_name}` : ""}
         />
         <div className="flex flex-col gap-5">
           {/* {creator?.creatorId === creatorData?.creatorId <ProfileCompletionCard progress={60} />} */}

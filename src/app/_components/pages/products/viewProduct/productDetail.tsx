@@ -31,7 +31,7 @@ export function ProductInfo({ productData }: IProductInfoProps) {
           <span className="sm:text-xl text-sm font-semibold text-green-600">₹{selectedVariant?.price ? selectedVariant?.price : productData?.price}</span>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+      {productData.category && <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
         <div>
           <p className="sm:text-sm text-xs text-gray-500 mb-1">
             {translate("Category")}
@@ -40,12 +40,12 @@ export function ProductInfo({ productData }: IProductInfoProps) {
             {productData.category}
           </p>
         </div>
-      </div>
-      {productData.tags?.length > 0 && (
+      </div>}
+      {productData?.tags?.length > 0 && (
         <div className="border-t border-gray-200 pt-6">
           <p className="text-sm text-gray-500 mb-2">{translate("Tags")}</p>
           <div className="text-gray-500 text-sm flex flex-wrap gap-2 mt-2">
-            {productData.tags.map((tag, idx) => (
+            {productData?.tags?.map((tag, idx) => (
               <span key={idx} className="bg-background py-1 px-2 rounded">
                 #{tag}
               </span>

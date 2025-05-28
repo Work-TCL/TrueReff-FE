@@ -1,4 +1,5 @@
 "use client";
+import { formatNumber } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
@@ -38,8 +39,8 @@ const DonutChart = (props:{data?:any[]}) => {
         </ResponsiveContainer>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <p className="text-sm text-gray-desc">{translate("This_month")}</p>
-          <p className="text-2xl font-medium text-gray-darken">{data?.reduce((total:any, item:any) => total + item?.value,
-              0)}</p>
+          <p className="text-2xl font-medium text-gray-darken">{formatNumber(data?.reduce((total:any, item:any) => total + item?.value,
+              0))}</p>
         </div>
       </div>
 

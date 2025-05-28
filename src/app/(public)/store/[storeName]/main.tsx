@@ -213,7 +213,7 @@ export default function PublicCreatorStore({ isCreator }: IPublicCreatorStorePro
     }
   }, [categories, store?.category, store?.sub_category])
   useEffect(() => {
-    if (store?.store_name) {
+    if (isCreator && account?.role === "creator" && store?.store_name) {
       onStoreSetUpSubmit({
         ...store,
         category: store?.category?.length > 0 ? categories?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name })) : [],

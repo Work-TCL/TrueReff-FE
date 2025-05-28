@@ -603,5 +603,12 @@
   "Model_Name": "Model Name",
   "Product_Type": "Product Type",
   "Ratings": "Ratings",
-  "Creator_Stats": "Creator Stats"
+  "Creator_Stats": "Creator Stats",
+  "Rate_Your_Experience": "Rate Your Experience",
+  "Please_rate_your_experience_with_this_collaboration": "Please rate your experience with this collaboration",
+  "Product_Detail": "Product Detail",
+  "Product_Campaign": "Product Campaign",
+  "Creator_Store": "Creator Store",
+  "Brand_Stats": "Brand Stats",
+  "Are_you_sure_you_want_to_change_commission_type": "Are you sure you want to change commission type?"
 }

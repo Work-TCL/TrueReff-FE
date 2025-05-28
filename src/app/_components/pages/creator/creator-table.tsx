@@ -33,7 +33,7 @@ const CreatorTable = ({
   const translate = useTranslations();
   const router = useRouter();
   const handleViewCreatorDetails = (id: string) => {
-    router.push(`/creator/profile/${id}`);
+    router.push(`/vendor/creator-profile/${id}`);
   };
 
   const creatorColumns: ColumnDef<ICreator>[] = [

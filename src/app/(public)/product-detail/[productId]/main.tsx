@@ -97,7 +97,7 @@ const statusText: { [key: string]: string } = {
     PENDING: "Start Bargaining",
     LIVE: "Live",
     EXPIRED: "Expired",
-    "": "Send Request",
+    "": "Send_Request",
 };
 
 const buttonColor: { [key: string]: string } = {

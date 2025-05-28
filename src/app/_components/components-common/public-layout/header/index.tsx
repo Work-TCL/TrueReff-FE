@@ -35,8 +35,8 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
                         <Link
                             href={
                                 creator.creatorId
-                                    ? `/creator/profile/${creator.creatorId}`
-                                    : `/vendor/profile/${vendor?.vendorId}`
+                                    ? `/creator/settings`
+                                    : `/vendor/settings`
                             }
                             className="flex gap-3 items-center w-fit"
                         >

@@ -586,5 +586,12 @@
   "Model_Name": "मॉडल नाम",
   "Product_Type": "उत्पाद प्रकार",
   "Ratings": "रेटिंग्स",
-  "Creator_Stats": "निर्माता आँकड़े"
+  "Creator_Stats": "निर्माता आँकड़े",
+  "Please_rate_your_experience_with_this_collaboration": "कृपया इस सहयोग के साथ अपने अनुभव को रेट करें।",
+  "Rate_Your_Experience": "अपने अनुभव को रेट करें",
+  "Product_Detail": "उत्पाद विवरण",
+  "Product_Campaign": "उत्पाद अभियान",
+  "Creator_Store": "निर्माता स्टोर",
+  "Brand_Stats": "ब्रांड आँकड़े",
+  "Are_you_sure_you_want_to_change_commission_type": "क्या आप वाकई कमीशन प्रकार बदलना चाहते हैं?"
 }

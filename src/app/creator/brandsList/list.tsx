@@ -309,6 +309,7 @@ export default function BrandList() {
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2 md:gap-2 h-full  overflow-auto">
                 {productList.map((item: any, i) => (
                     <ProductCard
+                    key={i}
                       item={item}
                       handleUpdateProduct={(id:string) => {
                         getBrandProductList(currentPage, true, search, vendorId);
@@ -329,6 +330,7 @@ export default function BrandList() {
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-2 md:gap-4 h-full  overflow-auto">
                 {suggestedProductList.map((item: any, i) => (
                     <ProductCard
+                    key={i}
                       item={item}
                       handleUpdateProduct={(id:string) => {getBrandProductList(currentPage, true, search, vendorId); }}
                     />
