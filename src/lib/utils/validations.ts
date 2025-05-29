@@ -832,7 +832,7 @@ export const campaignProductValidationSchema = Yup.object().shape({
         if (!value) return false;
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        return value > today;
+        return value >= today;
       }
     ),
 
