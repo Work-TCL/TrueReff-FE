@@ -38,6 +38,7 @@ export interface IProduct {
   main_image: string;
   total_variants: number;
   status: string;
+  alreadyAdded: boolean;
 }
 interface IProps {
   channelName: string;
@@ -219,9 +220,10 @@ export default function ChannelProductList({
       cell: ({ row }) => {
         const product = row.original;
         return (
-          <div className="flex justify-center items-center gap-3">
-            {/* View button (currently commented) */}
-            {/* <ToolTip content="View Product" delayDuration={1000}>
+          !product?.alreadyAdded && (
+            <div className="flex justify-center items-center gap-3">
+              {/* View button (currently commented) */}
+              {/* <ToolTip content="View Product" delayDuration={1000}>
             <Eye
               strokeWidth={1.5}
               color="#FF4979"
@@ -230,21 +232,20 @@ export default function ChannelProductList({
             />
           </ToolTip> */}
 
-            <div
-              onClick={() =>
-                handleOnCheckExists(product.id)
-              }
-              className="cursor-pointer"
-            >
-              <ToolTip content="Add Product to CRM" delayDuration={1000}>
-                <CircleFadingPlus
-                  strokeWidth={1.5}
-                  color="#3b82f680"
-                  className="cursor-pointer"
-                />
-              </ToolTip>
+              <div
+                onClick={() => handleOnCheckExists(product.id)}
+                className="cursor-pointer"
+              >
+                <ToolTip content="Add Product to CRM" delayDuration={1000}>
+                  <CircleFadingPlus
+                    strokeWidth={1.5}
+                    color="#3b82f680"
+                    className="cursor-pointer"
+                  />
+                </ToolTip>
+              </div>
             </div>
-          </div>
+          )
         );
       },
     },
