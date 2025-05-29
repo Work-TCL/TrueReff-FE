@@ -17,9 +17,7 @@ interface IProps {
   store: IStore;
 }
 
-export default function StoreDetailCard({
-  store,
-}: IProps) {
+export default function StoreDetailCard({ store }: IProps) {
   return (
     <Card className="bg-white rounded-[20PX] overflow-hidden border-0 shadow-none h-full">
       {/* Banner Image */}
@@ -101,10 +99,11 @@ export default function StoreDetailCard({
 
       {/* Avatar Section */}
       <div className="relative w-full -mt-14">
-        <div className="absolute left-1/2 transform -translate-x-1/2 w-24 h-24 md:w-[120px] md:h-[120px]">
+        <div className="absolute md:left-24 left-1/2 transform -translate-x-1/2 w-24 h-24 md:w-[120px] md:h-[120px]">
           <Avatar className="w-24 h-24 md:w-[120px] md:h-[120px] border-1 border-white bg-white">
             {store?.profile_image ? (
               <AvatarImage
+                key={store?.profile_image}
                 src={store?.profile_image}
                 alt={"Store Profile"}
                 width={120}

@@ -91,7 +91,8 @@ export default function Input({
 
   const getError = () => {
     return (
-      Boolean(get(errors, name)) && getErrorMessage(name) &&
+      Boolean(get(errors, name)) &&
+      getErrorMessage(name) &&
       !hideError && (
         <span className="text-red-600 text-sm p-2">
           {getErrorMessage(name)}
@@ -187,7 +188,7 @@ export default function Input({
               selected={field.value}
               className={cn(inputStyle, "!pl-10")}
               placeholderText={placeholder}
-              dateFormat="MM/dd/yyyy"
+              dateFormat="dd/MM/yyyy"
               wrapperClassName="w-full"
               {...(props?.minDate ? { minDate: props.minDate } : {})}
               {...(props?.maxDate ? { maxDate: props.maxDate } : {})}
@@ -548,11 +549,7 @@ export default function Input({
                 classNamePrefix="select"
                 className="react-select-container"
                 isDisabled={props?.disabled}
-                menuPortalTarget={
-                  menuPortalTarget
-                    ? menuPortalTarget
-                    : null
-                }
+                menuPortalTarget={menuPortalTarget ? menuPortalTarget : null}
                 menuPosition="fixed"
                 autoFocus={false}
                 styles={{
@@ -651,6 +648,59 @@ export default function Input({
                   />
                   {label}
                 </label>
+                {getError()}
+              </div>
+            )}
+          />
+        );
+      case "toggle":
+        return (
+          <Controller
+            control={control}
+            name={name}
+            rules={{ required: required ? `${label} is required` : false }}
+            render={({ field }) => (
+              <div className="flex flex-col">
+                <div className="flex gap-2 items-center">
+                  <label className="inline-flex items-center cursor-pointer relative">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer hidden"
+                      checked={field?.value}
+                      {...field}
+                      {...props}
+                      onChange={(e) => {
+                        if (props?.disabled) return;
+                        //@ts-ignore
+                        props?.onChange(e);
+                      }}
+                    />
+                    <div
+                      className={`relative w-9 h-5 ${
+                        props?.checked ? "bg-primary" : "bg-gray-200"
+                      } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                    ></div>
+                  </label>
+                  <label
+                    className={`flex items-start text-black font-medium sm:text-base text-sm ${
+                      props?.disabled ? "opacity-50 cursor-not-allowed" : ""
+                    } ${props?.className ? props?.className : ""}`}
+                    onClick={() => {
+                      if (props?.disabled) return;
+                      //@ts-ignore
+                      props?.onChange && props?.onChange(!props?.checked);
+                    }}
+                  >
+                    {/* <input
+                    type="checkbox"
+                    className="mr-3 mt-1 w-4 h-4 cursor-pointer"
+                    checked={field?.value}
+                    {...field}
+                    {...props}
+                  /> */}
+                    {label}
+                  </label>
+                </div>
                 {getError()}
               </div>
             )}

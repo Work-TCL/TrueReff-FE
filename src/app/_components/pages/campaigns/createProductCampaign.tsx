@@ -522,7 +522,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const startDate = startDateRaw ? new Date(startDateRaw) : null;
 
   const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setDate(tomorrow.getDate());
 
   const endMinDate = startDate
     ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000) // next day after startDate
@@ -596,9 +596,21 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                         <div className="flex gap-1 cursor-pointer">
                           <Input
                             name="channels"
-                            type="checkbox"
+                            type="toggle"
                             placeholder={translate("Add_link")}
-                            label={translate("Instagram")}
+                            //@ts-ignore
+                            label={
+                              <div className="flex items-center">
+                                <div>
+                                  <img
+                                    src="/assets/creator/Instagram-icon.svg"
+                                    width={30}
+                                    height={30}
+                                  />
+                                </div>
+                                <div>{translate("Instagram")}</div>
+                              </div>
+                            }
                             checked={Boolean(
                               methods.watch("channels")?.includes("instagram")
                             )}
@@ -615,9 +627,21 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                         <div className="flex gap-1 cursor-pointer">
                           <Input
                             name="chanls"
-                            type="checkbox"
+                            type="toggle"
                             placeholder={translate("Add_link")}
-                            label={translate("You_tube")}
+                            //@ts-ignore
+                            label={
+                              <div className="flex items-center">
+                                <div>
+                                  <img
+                                    src="/assets/creator/Youtube-icon.svg"
+                                    width={30}
+                                    height={30}
+                                  />
+                                </div>
+                                <div>{translate("You_tube")}</div>
+                              </div>
+                            }
                             checked={Boolean(
                               methods.watch("channels")?.includes("youtube")
                             )}
@@ -628,7 +652,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                           />
                         </div>
                       ) : null}
-                      {!isDisabled ? (
+                      {/* {!isDisabled ? (
                         <div className="flex gap-1 cursor-pointer">
                           <Input
                             name="cha"
@@ -644,7 +668,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                             disabled
                           />
                         </div>
-                      ) : null}
+                      ) : null} */}
                       {isDisabled
                         ? methods
                           .watch("channels")
@@ -727,19 +751,27 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     {translate("CampaignLifeTime")}
                   </label>
                   <label className="mt-3 text-xs flex align-middle gap-2 text-gray-600">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4"
-                      {...methods.register("campaignLifeTime")}
-                      checked={Boolean(methods.watch("campaignLifeTime"))}
-                      onChange={(v) => {
-                        methods.setValue(
-                          "campaignLifeTime",
-                          !Boolean(methods.watch("campaignLifeTime"))
-                        );
-                        // methods.trigger(["startDate", "endDate"]);
-                      }}
-                    />
+                    <label className="inline-flex items-center cursor-pointer relative">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer hidden"
+                        checked={Boolean(methods.watch("campaignLifeTime"))}
+                        onChange={(v) => {
+                          methods.setValue(
+                            "campaignLifeTime",
+                            !Boolean(methods.watch("campaignLifeTime"))
+                          );
+                          // methods.trigger(["startDate", "endDate"]);
+                        }}
+                      />
+                      <div
+                        className={`relative w-9 h-5 ${
+                          Boolean(methods.watch("campaignLifeTime"))
+                            ? "bg-primary"
+                            : "bg-gray-200"
+                        } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                      ></div>
+                    </label>
                     <span className="text-sm">
                       {translate("Never_Expires")} ({" "}
                       {translate("CampaignLifeTime")} )

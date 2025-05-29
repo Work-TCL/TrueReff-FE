@@ -192,6 +192,8 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       return translate("Bargaining");
     } else if (pathName.includes("/creator/profile/")) {
       return translate("Creator_Profile");
+    } else if (pathName.includes("/vendor/products/channel-products")) {
+      return translate("Stores");
     } else if (
       pathName.includes("/vendor/products/view/") ||
       pathName.includes("/vendor/products/")
