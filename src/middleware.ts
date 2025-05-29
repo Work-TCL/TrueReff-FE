@@ -57,17 +57,17 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
     if(user?.creator && !pathname.startsWith("/creator-registration") && !routes.includes(pathname) && user?.creator?.status !== "APPROVED"){
       return NextResponse.redirect(new URL('/creator-registration', request.url));
     }
-    if(user?.vendor && !pathname.startsWith("/vendor-register") && !routes.includes(pathname) && user?.vendor?.completed_step !== 3){
+    if(user?.vendor && !pathname.startsWith("/vendor-register") && !routes.includes(pathname) && user?.vendor?.status !== "APPROVED"){
       return NextResponse.redirect(new URL('/vendor-register', request.url));
     }
     if (token && (pathname === "/" || match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request))) {
       return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard`:`/dashboard`, request.url));
     }
-    if(token && user?.type === "vendor" && ((!pathname.startsWith("/creator/profile") && !pathname.includes("/store/")) && pathname.startsWith("/creator") || ["/creator-registration","/dashboard"].includes(pathname))){
+    if(token && user?.type === "vendor" && user?.vendor?.status === "APPROVED" && (pathname.includes("/store/") && pathname.startsWith("/creator") || ["/creator-registration","/dashboard"].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
-    if(token && user?.type === "creator" && user?.creator?.status === "APPROVED" && ((!pathname.startsWith("/vendor/profile")) && pathname.startsWith("/vendor") || ['/vendor-register','/dashboard'].includes(pathname))){
+    if(token && user?.type === "creator" && user?.creator?.status === "APPROVED" && (pathname.startsWith("/vendor") || ['/vendor-register','/dashboard'].includes(pathname))){
         return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 

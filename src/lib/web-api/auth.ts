@@ -173,6 +173,7 @@ export const getUserApi = async (): Promise<IGetUserResponse> => {
         channelId: vendor?.channelId,
         channelStatus: vendor?.channelStatus,
         channelType: vendor?.channelType,
+        status: vendor?.status,
       });
     }
     useAuthStore.getState().setIsAuthStatus("authenticated");
@@ -285,6 +286,7 @@ export const verifyEmail = async (
         channelId: vendor?.channelId,
         channelStatus: vendor?.channelStatus,
         channelType: vendor?.channelType,
+        status: vendor?.status,
       });
     }
     if (response.data?.data?.token) {

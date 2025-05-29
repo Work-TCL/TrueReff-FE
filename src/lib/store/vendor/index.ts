@@ -49,7 +49,8 @@ export const useVendorStore = create<
         channelType: "",
         gst_certificate: "",
         gst_number: "",
-        pan_number: ""
+        pan_number: "",
+        status: ""
       },
       vendors: [],
       setVendorData: (key, value) => {

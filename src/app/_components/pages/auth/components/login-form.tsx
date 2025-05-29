@@ -125,13 +125,14 @@ export default function LoginForm() {
           channelId: vendorData?.channelId,
           channelStatus: vendorData?.channelStatus,
           channelType: vendorData?.channelType,
+          status: vendorData?.status,
         })
       }
       setIsAuthStatus("authenticated");
       if (res?.data?.type === USER_TYPE.Vendor) {
-        if((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2)){
+        if(((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2) || res?.data?.vendor?.completed_step === 3)&& res?.data?.vendor?.status !== "APPROVED"){
           router.push("/vendor-register");
-        } else if(res?.data?.vendor?.completed_step === 3){
+        } else if(res?.data?.vendor?.completed_step === 3 && res?.data?.vendor?.status === "APPROVED"){
           router.push("/vendor/dashboard");
         } else router.push("/dashboard");
       } else if (res?.data?.type === USER_TYPE.Creator) {
@@ -146,9 +147,9 @@ export default function LoginForm() {
       }
     } else {
       if (res?.data?.type === USER_TYPE.Vendor) {
-        if((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2)){
+        if(((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2) || res?.data?.vendor?.completed_step === 3)&& res?.data?.vendor?.status !== "APPROVED"){
           router.push("/vendor-register");
-        } else if(res?.data?.vendor?.completed_step === 3){
+        } else if(res?.data?.vendor?.completed_step === 3 && res?.data?.vendor?.status === "APPROVED"){
           router.push("/vendor/dashboard");
         } else router.push("/dashboard");
       } else if (res?.data?.type === USER_TYPE.Creator) {

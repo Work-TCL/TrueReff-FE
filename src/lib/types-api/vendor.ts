@@ -49,6 +49,7 @@ export interface IVendor {
   channelId: string;
   channelStatus: string;
   channelType: string;
+  status: string;
 }
 export interface ICategory {
   _id: string;
@@ -98,6 +99,7 @@ export interface IVendorUpdate {
   channelId: string;
   channelStatus: string;
   channelType: string;
+  status: string;
 }
 
 export interface IVendorByIdRequest {

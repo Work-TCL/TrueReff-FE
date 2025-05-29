@@ -167,6 +167,7 @@ export default function EditVendorForm({
           channelId: response?.data?.channelId,
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
+          status: response?.data?.status,
         })
         toast.success(response?.message);
         methods?.reset();

@@ -100,22 +100,21 @@ export default function BasicInfoForm({
       {/* Banner + Profile Section */}
       <div className="relative col-span-2 w-full h-[200px] rounded-lg bg-gray-100">
         <div
-          className="absolute inset-0 w-full h-full cursor-pointer"
+          className="absolute inset-0 w-full h-full cursor-pointer rounded-lg"
           onClick={() => document.getElementById("banner_image")?.click()}
         >
           {bannerPreview || methods.watch("banner_image") ? (
             <img
               src={bannerPreview || methods.watch("banner_image")}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-xl"
               alt="Banner"
             />
           ) : (
-            <div className="flex flex-col items-center justify-center text-gray-500 pt-6">
-              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow mb-2">
-                <ImageIcon className="w-6 h-6" />
-              </div>
-              <p className="text-sm font-medium">{translate("Click_to_upload_banner")}</p>
-            </div>
+            <img
+              src={"/assets/banner-image.png"}
+              className="w-full h-full object-cover rounded-xl"
+              alt="Banner"
+            />
 
           )}
         </div>

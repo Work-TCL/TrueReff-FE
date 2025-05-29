@@ -26,6 +26,7 @@ import { useSession } from "next-auth/react";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { CreditCard } from "lucide-react";
 import PackageDetails from "../settings/package-details";
+import ProfileAccess from "../../components-common/dialogs/profile-approval";
 
 let allTabs: {
   id: string;
@@ -72,6 +73,7 @@ export default function PreFormPage() {
   const tab = searchParams.get("tab")??"0";
   const { account } = useAuthStore();
   const [isVendorLoading, setIsVendorLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [profileFile, setProfileFile] = useState<File | null>(null);
   const [gstCertificateFile, setGstCertificateFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
@@ -165,7 +167,16 @@ export default function PreFormPage() {
         } else if (vendorData?.completed_step === 2) {
           router.push('?tab=2');
           setIsVendorLoading(false);
-        } else if (vendorData?.completed_step === 3) {
+        } else if (
+          vendorData?.completed_step === 3 && vendorData?.status !== "APPROVED"
+        ) {
+          setOpen(true);
+          setIsVendorLoading(false);
+          router.push(
+            `?tab=2`
+          );
+          // router.push(`/creator/dashboard`);
+        }else if (vendorData?.completed_step === 3 && vendorData?.status === "APPROVED") {
           router.push(`/vendor/dashboard`);
         }
         methods.setValue("business_name",vendorData?.business_name);
@@ -209,6 +220,7 @@ export default function PreFormPage() {
           channelId: vendorData?.channelId,
           channelStatus: vendorData?.channelStatus,
           channelType: vendorData?.channelType,
+          status: vendorData?.status,
         })        
       }
 
@@ -316,6 +328,7 @@ export default function PreFormPage() {
           channelId: response?.data?.channelId,
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
+          status: response?.data?.status,
         })
         router.push(`?tab=${TABS_STATUS.DOCUMENT_INFO}`)
       }
@@ -374,6 +387,7 @@ export default function PreFormPage() {
           channelId: response?.data?.channelId,
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
+          status: response?.data?.status,
         })
         router.push(`?tab=${TABS_STATUS.OMNI_CHANNEL}`)
       }
@@ -403,6 +417,7 @@ export default function PreFormPage() {
           },
         });
         toastMessage.success(response?.message);
+        setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
         await getConnectedChannel();
         setVendorData("vendor", {
           vendorId: response?.data?._id,
@@ -430,6 +445,7 @@ export default function PreFormPage() {
           channelId: response?.data?.channelId,
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
+          status: response?.data?.status,
         })
         router.push(`?tab=${TABS_STATUS.OMNI_CHANNEL}`)
       }
@@ -558,16 +574,16 @@ export default function PreFormPage() {
               >
                 <ChannelForm loading={loading} channels={channels}/>
                 <div className="bg-white">
-                  <Button
+                  {/* <Button
                     type="button"
                     // loading={loading}
-                    // disabled={channels?.length === 0}
+                    disabled={channels?.length === 0}
                     className="w-fit font-medium px-8"
                     size="small"
                     onClick={handleOnClick}
                   >
                     {translate("Back_to_dashboard")}
-                  </Button>
+                  </Button> */}
                 </div>
               </form>
             </FormProvider>,
@@ -606,6 +622,7 @@ export default function PreFormPage() {
           }[activeTab]
         }
       </div>
+      {open && <ProfileAccess />}
     </div>
   );
 }

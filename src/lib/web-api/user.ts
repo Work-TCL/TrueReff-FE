@@ -78,6 +78,7 @@ export const getProfileAPI = async () => {
         channelId: vendor?.channelId,
         channelStatus: vendor?.channelStatus,
         channelType: vendor?.channelType,
+        status: vendor?.status,
       });
     }
     return response?.data?.data;
