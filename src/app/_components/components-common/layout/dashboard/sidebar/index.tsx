@@ -264,7 +264,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     <>
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-40 transition-all duration-300 ease-in-out  ${isSidebarExpanded ? "w-[300px]" : "w-[75px]"
+        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-[9999] transition-all duration-300 ease-in-out  ${isSidebarExpanded ? "w-[300px]" : "w-[75px]"
           }`}
       >
         <div className="flex justify-center gap-10  ">
@@ -272,9 +272,9 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
             className={`p-4 text-primary-color font-bold text-4xl text-center`}
           >
             {!isSidebarExpanded ? (
-              <PackageOpen />
+              <Image width={100} height={30} src="/assets/common/truereff-logo.svg" alt="TrueReff" className={`mx-auto`}/>
             ) : (
-              <Image width={40} height={40} src="/assets/landing/logo_TrueReff.svg" alt="TrueReff" className={`md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto`}/>
+              <Image width={220} height={40} src="/assets/common/truereff-dark.svg" alt="TrueReff" className={`w-[225px] max-h-[88px] h-full mx-auto`}/>
             )}
           </div>
         </div>
@@ -439,7 +439,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
 
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-40 transition-transform ${expanded ? "-translate-x-full" : "shadow-lg"
+        className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-[9999] transition-transform ${expanded ? "-translate-x-full" : "shadow-lg"
           }`}
       >
         <div className="flex justify-end  gap-10">

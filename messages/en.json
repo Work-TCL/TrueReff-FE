@@ -602,7 +602,7 @@
   "Shop_Now": "Shop Now",
   "Model_Name": "Model Name",
   "Product_Type": "Product Type",
-  "Ratings": "Ratings",
+  "Ratings": "Rating",
   "Creator_Stats": "Creator Stats",
   "Rate_Your_Experience": "Rate Your Experience",
   "Please_rate_your_experience_with_this_collaboration": "Please rate your experience with this collaboration",
@@ -611,5 +611,8 @@
   "Creator_Store": "Creator Store",
   "Brand_Stats": "Brand Stats",
   "Are_you_sure_you_want_to_change_commission_type": "Are you sure you want to change commission type?",
-  "Stores": "Stores"
+  "Stores": "Stores",
+  "Base_Commission": "Base Commission",
+  "Product_Price": "Product Price",
+  "Active_Collabs": "Active Collabs"
 }

@@ -176,12 +176,12 @@ export default function BargainingView() {
   });
   const initialRating = {
     _id: "",
-vendorId: "",
-creatorId: "",
-from: "",
-rating: 0,
-createdAt: "",
-updatedAt: "",
+    vendorId: "",
+    creatorId: "",
+    from: "",
+    rating: 0,
+    createdAt: "",
+    updatedAt: "",
   }
   const [rating, setRating] = useState<IRating>(initialRating);
 
@@ -266,9 +266,9 @@ updatedAt: "",
           rating
         }
       );
-      
+
       if (response?.status === 200) {
-          fetchRatings();
+        fetchRatings();
       }
 
     } catch (error: any) {
@@ -280,7 +280,7 @@ updatedAt: "",
     }
   }
   return (
-    <div className="flex flex-col w-full p-4 gap-4 md:h-full">
+    <div className="flex flex-col w-full p-2 md:p-4 gap-4 md:h-full">
       {loading && <Loader />}
       {/* Breadcrumb and Button */}
       <div className="flex flex-col md:flex-row items-start justify-between md:items-center gap-2">
@@ -300,7 +300,7 @@ updatedAt: "",
                 {translate("Collaboration")}
               </BreadcrumbPage>
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="md:size-6 size-4" />
+            <BreadcrumbSeparator arrowClassName="size-4 md:size-full" />
             <BreadcrumbItem>
               <BreadcrumbPage className={`cursor-pointer`}>
                 {translate("Bargaining")}
@@ -314,10 +314,10 @@ updatedAt: "",
       <div className="grid grid-cols-1 flex-col-reverse lg:grid-cols-3 pb-4 gap-4 h-full">
         {/* Left Section (Scrollable on large screens) */}
         <div className="lg:col-span-2 lg:h-[calc(100vh-140px)] lg:overflow-y-auto pr-1 flex flex-col gap-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2 gap-4">
             {/* Product Details */}
-            <div className="bg-white rounded-lg shadow-md p-4">
-              <div className="flex flex-col gap-3">
+            <div className="bg-white rounded-lg shadow-md p-2 md:p-4">
+              <div className="flex flex-col gap-2 md:gap-3">
                 <div className="font-semibold">{translate("Product_Details")}</div>
                 <div className="flex gap-2 overflow-x-auto">
                   {collaborationData?.productId?.media?.length > 0 ? (
@@ -370,12 +370,12 @@ updatedAt: "",
                   ].map(([label, value], idx) => (
                     <div
                       key={label + idx}
-                      className="flex flex-col md:flex-row items-start gap-2"
+                      className="flex flex-row items-start gap-3"
                     >
-                      <div className="w-[120px] text-sm text-gray-500 text-nowrap">
+                      <div className="w-1/2 md:w-1/4 text-sm text-gray-500 text-nowrap">
                         {label}:
                       </div>
-                      <div className="font-medium text-sm break-words">{value || "-"}</div>
+                      <div className="w-1/2 md:w-3/4 font-medium text-sm break-words">{value || "-"}</div>
                     </div>
                   ))}
                 </div>
@@ -400,11 +400,11 @@ updatedAt: "",
 
             {/* Bid Section */}
             <div className="bg-white shadow-md rounded-lg">
-              {collaborationData?.collaborationStatus === "ACTIVE" ? <div className="flex flex-col gap-3 p-4">
-                <h3 className="font-semibold mb-2">{translate("Updated_Fixed_Bid_Section")}</h3>
+              {collaborationData?.collaborationStatus === "ACTIVE" ? <div className="flex flex-col gap-2 md:gap-3 p-2 md:p-4">
+                <h3 className="font-semibold ">{translate("Updated_Fixed_Bid_Section")}</h3>
                 <div
                   className={cn(
-                    "flex flex-col items-start justify-between text-left md:text-left p-5 md:p-6 rounded-2xl w-full bg-custom-gradient gap-4"
+                    "flex flex-col items-start justify-between text-left md:text-left p-3 md:p-6 rounded-2xl w-full bg-custom-gradient gap-4"
                   )}
                 >
 
@@ -425,7 +425,7 @@ updatedAt: "",
                     {translate("View_in_Creator_Store")}
                   </button>
                 </div>
-                <div className="flex flex-col gap-3 border rounded-lg p-4">
+                <div className="flex flex-col gap-2 md:gap-3 border rounded-lg p-2 md:p-4">
                   {[
                     [translate("Commission_Type"), getCommissionType()],
                     [
@@ -435,7 +435,7 @@ updatedAt: "",
                   ].map(([label, value], idx) => (
                     <div
                       key={label + idx}
-                      className="flex flex-col md:flex-row items-start gap-2"
+                      className="flex flex-col md:flex-row items-start gap-0 md:gap-2"
                     >
                       <div className="w-[150px] text-sm text-gray-500 text-nowrap">
                         {label}:
@@ -446,27 +446,26 @@ updatedAt: "",
                     </div>
                   ))}
                   {rating?.rating !== 0 && <div
-                      key={rating?.from}
-                      className="flex flex-col md:flex-row items-start gap-2"
-                    >
-                      <div className="w-[150px] text-sm text-gray-500 text-nowrap">
-                        {translate("Ratings")}:
-                      </div>
-                      <div className="flex gap-2 font-medium text-primary-color text-sm break-words">
-                        <div className="flex items-center gap-1"><div className="flex justify-center">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <span
-              key={star}
-              className={`cursor-pointer text-xl ${
-                star <= (rating?.rating) ? "text-yellow-500" : "text-gray-300"
-              }`}
-            >
-              ★
-            </span>
-          ))}
-        </div><span>{`${formatFloatValue(rating?.rating)}/${5}`}</span></div>
-                      </div>
-                    </div>}
+                    key={rating?.from}
+                    className="flex flex-col md:flex-row items-start gap-1 md:gap-2"
+                  >
+                    <div className="w-[150px] text-sm text-gray-500 text-nowrap">
+                      {translate("Ratings")}:
+                    </div>
+                    <div className="flex gap-2 font-medium text-primary-color text-sm break-words">
+                      <div className="flex items-center gap-1"><div className="flex justify-center">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <span
+                            key={star}
+                            className={`cursor-pointer text-xl ${star <= (rating?.rating) ? "text-yellow-500" : "text-gray-300"
+                              }`}
+                          >
+                            ★
+                          </span>
+                        ))}
+                      </div><span>{`${formatFloatValue(rating?.rating)}/${5}`}</span></div>
+                    </div>
+                  </div>}
                 </div>
               </div> : <Bid
                 collaborationData={collaborationData}
@@ -477,9 +476,9 @@ updatedAt: "",
           </div>
 
           {/* Campaign Details */}
-          <div className="flex flex-col bg-white shadow-md rounded-lg gap-3 p-4 mt-4">
+          <div className="flex flex-col bg-white shadow-md rounded-lg gap-2 md:gap-3 p-2 md:p-4">
             <div className="font-semibold">{translate("Campaign_Details")}</div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2 md:gap-3">
               {[
                 [
                   translate("Date_Range"),
@@ -490,7 +489,7 @@ updatedAt: "",
                     )}`,
                 ],
                 [
-                  translate("Video_Format"), <div className="flex flex-wrap gap-2">
+                  translate("Video_Format"), <div className="flex flex-wrap gap-1 md:gap-2">
                     {collaborationData?.productId?.videoType?.length > 0 ? collaborationData?.productId?.videoType.map((option) => (
                       <span
                         key={option}
@@ -517,7 +516,7 @@ updatedAt: "",
               ].map(([label, value], idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col md:flex-row items-center gap-2"
+                  className="flex flex-col md:flex-row md:items-center md:gap-2"
                 >
                   <div className="w-[220px] text-sm text-gray-500 text-nowrap">
                     {label}:
@@ -526,7 +525,7 @@ updatedAt: "",
                 </div>
               ))}
               {collaborationData?.collaborationStatus === "ACTIVE" && <><div
-                className="flex flex-col md:flex-row items-center gap-2"
+                className="flex flex-col md:flex-row md:items-center gap-2"
               >
                 <div className="w-[220px] text-sm text-gray-500 text-nowrap">
                   {"Creator material"}:
@@ -552,7 +551,7 @@ updatedAt: "",
                 </div></div>
               </div>
                 <div
-                  className="flex flex-col md:flex-row items-center gap-2"
+                  className="flex flex-col md:flex-row md:items-center gap-2"
                 >
                   <div className="w-[220px] text-sm text-gray-500 text-nowrap">
                     {"Reference Links"}:

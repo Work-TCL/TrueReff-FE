@@ -132,7 +132,7 @@ export default function ProfileCard({
                     </Link>}
                 </div>
             </div>
-            <CardContent className="pt-2 md:pt-2 pb-4 md:pb-6 px-4 md:px-6 flex flex-col gap-3 md:gap-4">
+            <CardContent className="pt-2 md:pt-2 pb-4 md:pb-6 px-4 md:px-6 flex flex-col gap-2 md:gap-3">
                 <div className="flex flex-wrap items-center gap-1 md:gap-2">
                     <h2 className="text-lg md:text-xl font-medium text-gray-black">
                         {full_name}
@@ -145,7 +145,7 @@ export default function ProfileCard({
                 <p className="text-sm md:text-base text-font-grey">
                     {short_description}
                 </p>
-                <div className="flex gap-2 md:gap-4 flex-wrap">
+                {/* <div className="flex gap-2 md:gap-4 flex-wrap">
                     {tags.map((tag: string, index: number) => (
                         <span
                             key={index}
@@ -154,7 +154,7 @@ export default function ProfileCard({
                             #{tag}
                         </span>
                     ))}
-                </div>
+                </div> */}
                 <div className="text-sm md:text-base text-font-grey" dangerouslySetInnerHTML={{
                     __html: long_description,
                 }} />

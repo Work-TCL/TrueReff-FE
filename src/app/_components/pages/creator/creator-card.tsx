@@ -1,10 +1,12 @@
 "use client";
 import { ICreator } from "./list";
-import { ImageOff } from "lucide-react";
+import { ImageOff, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
+import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { currency, formatFloatValue, formatNumber } from "@/lib/utils/constants";
 
 const CreatorCard = ({
   item: creator,
@@ -17,10 +19,11 @@ const CreatorCard = ({
   const router = useRouter();
   return (
     <Card
-    key={creator?.full_name}
-      onClick={(e) =>{
+      key={creator?.full_name}
+      onClick={(e) => {
         e.stopPropagation();
-        router?.push(`/vendor/creator-profile/${creator?._id}`)}}
+        router?.push(`/vendor/creator-profile/${creator?._id}`)
+      }}
       className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg cursor-pointer"
     >
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
@@ -37,29 +40,28 @@ const CreatorCard = ({
         </div>
 
         {/* Title + Category */}
-        <div className="flex flex-col gap-2 text-start w-full overflow-hidden">
+        <div className="flex flex-col gap-1 text-start w-full overflow-hidden">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
             className="text-xs sm:text-sm md:text-lg font-semibold w-full line-clamp-none truncate"
             text={creator.full_name}
           />
-          <TruncateWithToolTip
+          {/* <TruncateWithToolTip
             checkHorizontalOverflow={true}
             className="text-gray-700 text-sm mt-1 w-full line-clamp-none truncate"
             text={`${
               creator.short_description ? creator.short_description : "-"
             }`}
-          />
+          /> */}
 
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
-            className="text-gray-500 text-[10px] sm:text-sm  mt-1 w-full line-clamp-none truncate"
-            text={`${translate("Categories")} : ${
-              creator.categories || "Uncategorized"
-            }`}
+            className="text-gray-500 text-sm w-full line-clamp-none truncate"
+            text={`${creator.categories || "-"
+              }`}
           />
 
-          {creator.tags?.length > 0 ? (
+          {/* {creator.tags?.length > 0 ? (
             <div className="flex gap-2 mt-1">
               {creator.tags.slice(0, 2).map((tag, index) => (
                 <TruncateWithToolTip
@@ -71,28 +73,53 @@ const CreatorCard = ({
             </div>
           ) : (
             "-"
-          )}
+          )} */}
         </div>
 
         {/* Stats */}
-        {/* <div className="flex justify-around text-center w-full border-t pt-3 text-sm mb-3">
-        <div>
-          <div className="font-semibold">{creator?.pastSales || "-"}</div>
-          <div className="text-gray-500 flex items-center">Total Sale</div>
-        </div>
-        <div>
-          <div className="font-semibold">{creator?.instagramViews || "-"}</div>
-          <div className="text-gray-500 flex items-center gap-2">
-            <FaInstagram size={20} /> Views
+        <div className="flex justify-around text-center w-full text-sm">
+          <div>
+            <div className="font-semibold">{currency['INR']} {formatNumber(creator?.totalRevenue)}</div>
+            <div className="text-gray-500 flex items-center">{translate("Revenue")}</div>
+          </div>
+          <div>
+            <div className="font-semibold">{formatNumber(creator?.totalOrders)}</div>
+            <div className="text-gray-500 flex items-center gap-2">
+              {translate("Orders")}
+            </div>
+          </div>
+          <div>
+            <div className="font-semibold">
+              <div className="flex items-center gap-1">
+                <div className="flex justify-center">
+                  <Star size={20} className="text-yellow-500 fill-yellow-500"/>
+              </div>
+                <span>{`${formatFloatValue(creator?.averageRating)}/${5}`}</span>
+              </div>
+            </div>
+            <div className="text-gray-500 flex items-center gap-2">
+              {translate("Ratings")}
+            </div>
           </div>
         </div>
-        <div>
-          <div className="font-semibold">{creator?.youtubeViews || "-"}</div>
-          <div className="text-gray-500 flex items-center gap-2">
-            <FaYoutube size={20} /> Views
+
+        <div className="flex justify-around text-center w-full gap-1 text-sm">
+          <div className="text-gray-500 bg-gray-100 w-full px-4 py-1 rounded-3xl justify-center flex items-center gap-2">
+            <img
+              src="/assets/creator/insta-gram.svg"
+              width={15}
+              height={15}
+            /> {creator?.instagramFollowers}
+          </div>
+
+          <div className="text-gray-500 bg-gray-100 w-full px-4 py-1 rounded-3xl justify-center flex items-center gap-2">
+            <img
+              src="/assets/creator/you-tube.svg"
+              width={18}
+              height={18}
+            /> {creator?.youtubeFollowers}
           </div>
         </div>
-      </div> */}
 
         {/* Button */}
         {/* <button
@@ -105,7 +132,8 @@ const CreatorCard = ({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            handleCollaborateNow(creator._id)}}
+            handleCollaborateNow(creator._id)
+          }}
           className="flex items-center justify-center w-full gap-2 md:px-3 px-1 py-2 md:text-sm text-[10px] border rounded-xl border-primary hover:bg-primary text-[#FF4979] hover:text-white transition-all sm:text-base sm:gap-3"
         >
           {translate("Collaborate_Now")}

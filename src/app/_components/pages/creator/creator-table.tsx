@@ -9,13 +9,16 @@ import { useTranslations } from "next-intl";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
+import { currency, formatFloatValue } from "@/lib/utils/constants";
+import { Star } from "lucide-react";
+import Link from "next/link";
 function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
   } else if (num >= 1_000) {
     return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
   }
-  return num === 0 ? "" : num.toString();
+  return num === 0 ? "0" : num.toString();
 }
 
 interface ICreatorTableProps {
@@ -75,13 +78,12 @@ const CreatorTable = ({
     },
     {
       id: "tags",
-      header: () => translate("Tags"),
+      header: () => translate("Ratings"),
       cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.tag ?? ""}
-        />
+        <div className="flex items-center gap-1">
+          <Star size={15} className="text-yellow-500 fill-yellow-500" />
+          <span>{`${formatFloatValue(row.original?.averageRating)}/${5}`}</span>
+        </div>
       ),
     },
     {
@@ -91,7 +93,7 @@ const CreatorTable = ({
       ),
       cell: ({ row }) => (
           <div className="flex gap-2 justify-center">
-          <div className="flex flex-col items-center p-2">
+          <Link href={row?.original?.instagram_link} target={row?.original?.instagram_link ? "_blank":""} className="flex flex-col items-center p-2">
             <div>
               <img
                 src="/assets/creator/Instagram-icon.svg"
@@ -100,8 +102,8 @@ const CreatorTable = ({
               />
             </div>
               <div>{row?.original?.instagramFollowers}</div>
-          </div>
-          <div className="flex flex-col items-center p-2">
+          </Link>
+          <Link href={row?.original?.youtube_link} target={row?.original?.youtube_link ? "_blank":""} className="flex flex-col items-center p-2">
             <div>
               <img
                 src="/assets/creator/Youtube-icon.svg"
@@ -110,7 +112,7 @@ const CreatorTable = ({
               />
             </div>
               <div>{row?.original?.youtubeFollowers}</div>
-          </div>
+          </Link>
         </div>
       ),
     },
@@ -126,20 +128,20 @@ const CreatorTable = ({
     //   ),
     // },
     {
-      id: "orders",
-      header: () => translate("Orders"),
-      cell: ({ row }) => row.original.pastSales ?? "",
+      id: "totalOrders",
+      header: () => <div className="text-center">{translate("Orders")}</div>,
+      cell: ({ row }) => <div className="text-center">{formatNumber(row.original.totalOrders) ?? ""}</div>,
     },
     {
-      id: "revenue",
-      header: () => translate("Revenues"),
-      cell: ({ row }) => row.original.pastSales ?? "",
+      id: "totalRevenue",
+      header: () => <div className="text-center">{translate("Revenue")}</div>,
+      cell: ({ row }) => <div className="text-center">{currency['INR']} {formatNumber(row.original.totalRevenue)}</div>,
     },
-    {
-      id: "conversion_rate",
-      header: () => translate("Conversion_Rate"),
-      cell: ({ row }) => row.original.pastSales ?? "",
-    },
+    // {
+    //   id: "conversion_rate",
+    //   header: () => translate("Conversion_Rate"),
+    //   cell: ({ row }) => row.original.pastSales ?? "",
+    // },
     {
       id: "action",
       header: () => <div className="text-center">{translate("Action")}</div>,

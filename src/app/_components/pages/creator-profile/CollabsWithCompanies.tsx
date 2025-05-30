@@ -138,7 +138,7 @@ export default function CollabsWithCompanies() {
         <StatCard name={translate("Conversion_Rate")} value={formatNumber(collabStats?.conversionRate)} growth="" color="purple" />
         <StatCard name={translate("Orders")} value={formatNumber(collabStats?.totalOrders)} growth="" color="orange" />
         <StatCard
-          name={translate("Revenues")}
+          name={translate("Revenue")}
           value={formatNumber(collabStats?.totalRevenue)}
           growth=""
           color="blue"

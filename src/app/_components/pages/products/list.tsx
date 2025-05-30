@@ -32,6 +32,7 @@ import ProductManageMentFilter from "./viewProduct/productManagementFilter";
 import ToolTip from "../../components-common/tool-tip";
 import StatusBadge from "../../components-common/status-badge";
 import { cn } from "@sohanemon/utils";
+import { currency, formatNumber } from "@/lib/utils/constants";
 
 export interface ICategory {
   _id: string;
@@ -75,6 +76,7 @@ export interface IProduct {
   discount: number;
   discountType: string;
   couponCode: string;
+  activeCollabCount: number;
 }
 
 const customStyles = {
@@ -218,18 +220,6 @@ export default function ProductList() {
       },
     },
     {
-      id: "sku",
-      header: () => translate("SKU"),
-      accessorKey: "sku",
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.sku ?? ""}
-        />
-      ),
-    },
-    {
       id: "categories",
       header: () => translate("Categories"),
       accessorKey: "categories",
@@ -240,6 +230,12 @@ export default function ProductList() {
           text={row.original.categories ?? ""}
         />
       ),
+    },
+    {
+      id: "activeCollabCount",
+      header: () => translate("Active_Collabs"),
+      accessorKey: "sku",
+      cell: ({ row }) => formatNumber(row?.original?.activeCollabCount),
     },
     // {
     //   id: "status",
@@ -268,40 +264,41 @@ export default function ProductList() {
     //   //   />
     //   // ),
     // },
-    {
-      id: "tags",
-      header: () => translate("Tags"),
-      accessorKey: "tags",
-      cell: ({ row }) =>
-        row.original.tags?.length > 0 ? (
-          <div className="flex gap-2 w-full">
-            {row.original.tags.slice(0, 2).map((tag, index) => (
-              <TruncateWithToolTip
-                key={index}
-                checkHorizontalOverflow={true}
-                className={cn(
-                  "flex items-center gap-1 text-[10px] md:px-3 text-center px-1 py-0.5 rounded-full bg-muted text-muted-foreground border border-muted-foreground"
-                )}
-                text={`#${tag}`}
-              />
-            ))}
-          </div>
-        ) : (
-          <span className="text-xs text-gray-400">-</span>
-        ),
-    },
+    // {
+    //   id: "tags",
+    //   header: () => translate("Tags"),
+    //   accessorKey: "tags",
+    //   cell: ({ row }) =>
+    //     row.original.tags?.length > 0 ? (
+    //       <div className="flex gap-2 w-full">
+    //         {row.original.tags.slice(0, 2).map((tag, index) => (
+    //           <TruncateWithToolTip
+    //             key={index}
+    //             checkHorizontalOverflow={true}
+    //             className={cn(
+    //               "flex items-center gap-1 text-[10px] md:px-3 text-center px-1 py-0.5 rounded-full bg-muted text-muted-foreground border border-muted-foreground"
+    //             )}
+    //             text={`#${tag}`}
+    //           />
+    //         ))}
+    //       </div>
+    //     ) : (
+    //       <span className="text-xs text-gray-400">-</span>
+    //     ),
+    // },
     {
       id: "commission",
       header: () => (
         <span className="flex items-center justify-center">
-          {translate("Commission")}
+          {translate("Base_Commission")}
         </span>
       ),
       accessorKey: "commission",
       cell: ({ row }) => (
         <span className="w-full flex items-center justify-center">
-          {row?.original?.commission_type === "FIXED_AMOUNT" ? `₹ ` : `$ `}
+          {row?.original?.commission_type === "FIXED_AMOUNT" ? `₹ ` : ``}
           {row?.original?.commission}
+          {row?.original?.commission_type === "PERCENTAGE" ? ` % ` : ``}
         </span>
       ),
     },
@@ -309,13 +306,13 @@ export default function ProductList() {
       id: "price",
       header: () => (
         <span className="flex items-center justify-center">
-          {translate("Price")}
+          {translate("Product_Price")}
         </span>
       ),
       accessorKey: "price",
       cell: ({ row }) => (
         <span className="w-full flex items-center justify-center">
-          {row?.original?.price ? row?.original?.price : ''}
+          {currency['INR']} {row?.original?.price ? row?.original?.price : ''}
         </span>
       ),
     },

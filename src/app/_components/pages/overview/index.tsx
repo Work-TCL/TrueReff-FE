@@ -124,11 +124,11 @@ export default function Overview() {
           link="/vendor/creators/collaboration?status=PENDING"
         />
         <StatsCard
-          title={translate("Revenues")}
-          value={formatNumber(statesInfo?.totalRevenue)}
+          title={translate("Conversion_Rate")}
+          value={`${formatFloatValue(statesInfo?.conversionRate)} %`}
           growth={5}
-          borderColor="border-[#77EE8D]"
-          bgColor="bg-[#f1fdf4]"
+          borderColor="border-[#C861A0]"
+          bgColor="bg-[#faeff6]"
         />
         <StatsCard
           title={translate("Orders")}
@@ -136,18 +136,17 @@ export default function Overview() {
           growth={5}
           borderColor="border-[#9773C8]"
           bgColor="bg-[#f5f1fa]"
-
+        />
+        <StatsCard
+          title={translate("Revenue")}
+          value={`${currency['INR']} ${formatNumber(statesInfo?.totalRevenue)}`}
+          growth={5}
+          borderColor="border-[#77EE8D]"
+          bgColor="bg-[#f1fdf4]"
         />
         <StatsCard
           title={translate("Commission")}
           value={`${currency['INR']} ${formatNumber(statesInfo?.totalCommission)}`}
-          growth={5}
-          borderColor="border-[#C861A0]"
-          bgColor="bg-[#faeff6]"
-        />
-        <StatsCard
-          title={translate("Conversion_Rate")}
-          value={`${formatFloatValue(statesInfo?.conversionRate)} %`}
           growth={5}
           borderColor="border-[#EB815B]"
           bgColor="bg-[#fdf2ef]"

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { formatFloatValue, formatNumber } from "@/lib/utils/constants";
+import { currency, formatFloatValue, formatNumber } from "@/lib/utils/constants";
 
 interface ITopCreator {
   creatorId: string;
@@ -73,7 +73,7 @@ const MostSellingBrands = () => {
                                   <span className="text-font-grey">
                                    {item.business_name}
                                   <span className="text-secondary">
-                                    ({formatNumber(item.revenue)})
+                                    {" - "}{`${currency['INR']} ${formatNumber(item.revenue)}`}
                                   </span>
                                 </span></div>
                 <span className="text-primary md:text-base text-sm">

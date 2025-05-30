@@ -163,7 +163,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
             {!isSidebarExpanded ? (
               <PackageOpen />
             ) : (
-              <Image width={40} height={88} src="/assets/landing/logo_TrueReff.svg" alt="TrueReff" className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"/>
+              <Image width={40} height={88} src="/assets/common/truereff-dark.svg" alt="TrueReff" className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"/>
             )}
           </div>
         </div>

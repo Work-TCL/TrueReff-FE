@@ -62,6 +62,12 @@ export interface ICreator {
   instagramFollowers?: string;
   youtubeFollowers?: string;
   pastSales?: string;
+  averageRating: number;
+  totalRevenue?: number;
+  totalOrders?: number;
+  ratingCount?: number;
+  youtube_link: string;
+  instagram_link: string;
 }
 const customStyles = {
   placeholder: (base: any) => ({
@@ -110,7 +116,7 @@ export default function CreatorList() {
     );
     return instagram
       ? formatNumber(instagram?.followers)
-      : "-";
+      : "0";
   };
   const getYoutubeView: (channels: IChannel[]) => string = (
     channels: IChannel[]
@@ -120,7 +126,7 @@ export default function CreatorList() {
     );
     return youtube
       ? formatNumber(youtube?.followers)
-      : "-";
+      : "0";
   };
   // Get Creator list
   const getCreatorList = useCallback(

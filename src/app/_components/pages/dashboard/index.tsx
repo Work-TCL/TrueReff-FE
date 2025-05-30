@@ -204,8 +204,8 @@ export default function Dashboard() {
               link="/creator/collaboration?status=PENDING"
             />
             <StatsCard
-              title={translate("Revenues")}
-              value={formatNumber(statesInfo?.totalRevenue)}
+              title={translate("Conversion_Rate")}
+              value={`${formatFloatValue(statesInfo?.conversionRate)} %`}
               growth={5}
               borderColor="border-[#EB815B]"
               bgColor="bg-[#fdf2ef]"
@@ -217,20 +217,19 @@ export default function Dashboard() {
               borderColor="border-[#77EE8D]"
               bgColor="bg-[#f1fdf4]"
             />
-            
+            <StatsCard
+              title={translate("Revenue")}
+              value={`${currency["INR"]} ${formatNumber(statesInfo?.totalRevenue)}`}
+              growth={5}
+              borderColor="border-[#EB815B]"
+              bgColor="bg-[#fdf2ef]"
+            />            
             <StatsCard
               title={translate("Commission")}
               value={`${currency["INR"]} ${formatNumber(statesInfo?.totalCommission)}`}
               growth={5}
               borderColor="border-[#9773C8]"
               bgColor="bg-[#f5f1fa]"
-            />
-            <StatsCard
-              title={translate("Conversion_Rate")}
-              value={`${formatFloatValue(statesInfo?.conversionRate)} %`}
-              growth={5}
-              borderColor="border-[#EB815B]"
-              bgColor="bg-[#fdf2ef]"
             />
           </div>
           <div className="flex flex-col gap-5 w-full">
