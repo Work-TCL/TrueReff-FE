@@ -85,6 +85,7 @@ export default {
         20: "20px",
       },
       backgroundImage: {
+        "pink-blue-gradient": "linear-gradient(1deg, #e9b9cf 0%, #d3f3f1 100%)",
         "custom-gradient": `
           linear-gradient(0deg, #ffffff00, #ffffff00),
           linear-gradient(87.38deg, 
