@@ -11,9 +11,11 @@ import { currency, formatFloatValue, formatNumber } from "@/lib/utils/constants"
 const CreatorCard = ({
   item: creator,
   handleCollaborateNow,
+  size = "reguler",
 }: {
   item: ICreator;
   handleCollaborateNow: (creatorId: string) => void;
+  size?: "reguler" | "small";
 }) => {
   const translate = useTranslations();
   const router = useRouter();
@@ -27,7 +29,11 @@ const CreatorCard = ({
       className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg cursor-pointer"
     >
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
-        <div className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden">
+        <div
+          className={`bg-background rounded-lg max-w-full w-full flex items-center justify-center overflow-hidden ${
+            size === "small" ? "h-[75px]" : "aspect-[4/3]"
+          }`}
+        >
           {creator.profile_image ? (
             <img
               src={creator.profile_image}

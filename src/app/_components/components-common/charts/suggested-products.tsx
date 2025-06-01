@@ -3,20 +3,21 @@ import { formatNumber } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import SuggestedProductUI from "../suggested-product";
 
-const DonutChart = (props:{data?:any[]}) => {
+const SuggestedProducts = (props: { data?: any[] }) => {
   const translate = useTranslations();
-  const data = props?.data?? [
+  const data = props?.data ?? [
     { name: translate("Most_selling_products"), value: 76, color: "#BEDBFC" },
     { name: translate("Low-Performing_products"), value: 24, color: "#FED6AF" },
   ];
   return (
     <div className="w-full p-4 rounded-20 bg-white h-full flex-1">
       <h2 className=" text-text text-xl font-semibold">
-        {translate("Product_Updates")}
+        {translate("Suggested_Products")}
       </h2>
-      <div className=" relative h-[280px]">
-        <ResponsiveContainer width="100%" height={"100%"}>
+      <div className=" relative h-[320px] mt-2">
+        {/* <ResponsiveContainer width="100%" height={"100%"}>
           <PieChart>
             <Pie
               data={data}
@@ -41,7 +42,8 @@ const DonutChart = (props:{data?:any[]}) => {
           <p className="text-sm text-gray-desc">{translate("This_month")}</p>
           <p className="text-2xl font-medium text-gray-darken">{formatNumber(data?.reduce((total:any, item:any) => total + item?.value,
               0))}</p>
-        </div>
+        </div> */}
+        <SuggestedProductUI data={data} />
       </div>
 
       {/* <div className="flex flex-col gap-3 mt-4 text-sm">
@@ -61,4 +63,4 @@ const DonutChart = (props:{data?:any[]}) => {
   );
 };
 
-export default DonutChart;
+export default SuggestedProducts;

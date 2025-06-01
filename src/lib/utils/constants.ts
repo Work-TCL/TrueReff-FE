@@ -104,13 +104,13 @@ export const formatDate = (dateString: string | null): string => {
   if (!dateString) return "-"; // Handle empty or null dates
   const date = new Date(dateString);
   return new Intl.DateTimeFormat("en-GB", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
   }).format(date);
 };
 
-export const formatFloatValue = (value: number): any => {
+export const formatFloatValue = (value: number = 0): any => {
   return value % 1 === 0 ? value : value.toFixed(2);
 };
 export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
@@ -121,8 +121,8 @@ export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
   }
   return true;
 };
-export interface IOption { 
-  label: string; 
+export interface IOption {
+  label: string;
   value: any;
 }
 export const indianStates: string[] = [
@@ -1455,19 +1455,19 @@ export const businessTypes = [
   "Partnership",
 ];
 
-export const daysFilter:IOption[] = [
-  {label:"Past 7 Days",value:"7"},
-  {label:"Past 28 Days",value:"28"},
-  {label:"Past 90 Days",value:"90"},
-  {label:"Past 365 Days",value:"365"},
+export const daysFilter: IOption[] = [
+  { label: "Past 7 Days", value: "7" },
+  { label: "Past 28 Days", value: "28" },
+  { label: "Past 90 Days", value: "90" },
+  { label: "Past 365 Days", value: "365" },
 ];
 
-export const sortOptions:IOption[] = [
+export const sortOptions: IOption[] = [
   { label: "Top to Bottom", value: "desc" },
   { label: "Bottom to Top", value: "asc" },
 ];
 
-export const minFollowersOptions:IOption[] = [
+export const minFollowersOptions: IOption[] = [
   { label: "1K+", value: 1000 },
   { label: "5K+", value: 5000 },
   { label: "10K+", value: 10000 },
@@ -1477,7 +1477,7 @@ export const minFollowersOptions:IOption[] = [
   { label: "1M+", value: 1000000 },
 ];
 
-export const minOrdersOptions:IOption[] = [
+export const minOrdersOptions: IOption[] = [
   { label: "10+", value: 10 },
   { label: "50+", value: 50 },
   { label: "100+", value: 100 },
@@ -1485,7 +1485,7 @@ export const minOrdersOptions:IOption[] = [
   { label: "1000+", value: 1000 },
 ];
 
-export const minRevenueOptions:IOption[] = [
+export const minRevenueOptions: IOption[] = [
   { label: "$100+", value: 100 },
   { label: "$500+", value: 500 },
   { label: "$1,000+", value: 1000 },
@@ -1494,57 +1494,73 @@ export const minRevenueOptions:IOption[] = [
   { label: "$50,000+", value: 50000 },
 ];
 
-
 export const gender: string[] = ["Male", "Female"];
-export const currency:{[key:string]: string} = {
-  INR: "₹"
-}
+export const currency: { [key: string]: string } = {
+  INR: "₹",
+};
 export const vendorPlans = [
   {
-      name: "Free",
-      price: 0,
-      features: [
-          { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Creator Collaborations", icon: "/assets/pricing/unsubscribed.svg" },
-          { label: "Analytics & Reports", icon: "/assets/pricing/unsubscribed.svg" },
-          { label: "Store Integrations", icon: "/assets/pricing/unsubscribed.svg" },
-          { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" }
-      ],
-      description: "per user/month, billed annually"
+    name: "Free",
+    price: 0,
+    features: [
+      { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
+      {
+        label: "Creator Collaborations",
+        icon: "/assets/pricing/unsubscribed.svg",
+      },
+      {
+        label: "Analytics & Reports",
+        icon: "/assets/pricing/unsubscribed.svg",
+      },
+      { label: "Store Integrations", icon: "/assets/pricing/unsubscribed.svg" },
+      { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" },
+    ],
+    description: "per user/month, billed annually",
   },
   {
-      name: "Gold",
-      price: 39,
-      features: [
-          { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Creator Collaborations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Store Integrations", icon: "/assets/pricing/unsubscribed.svg" },
-          { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" }
-      ],
-      description: "per user/month, billed annually"
+    name: "Gold",
+    price: 39,
+    features: [
+      { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
+      {
+        label: "Creator Collaborations",
+        icon: "/assets/pricing/subscribed.svg",
+      },
+      { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Store Integrations", icon: "/assets/pricing/unsubscribed.svg" },
+      { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" },
+    ],
+    description: "per user/month, billed annually",
   },
   {
-      name: "Platinum", price: 59, features: [
-          { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Creator Collaborations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Store Integrations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Priority Support", icon: "/assets/pricing/subscribed.svg" }
-      ],
-      description: "per user/month, billed annually",
-      popular: true,
+    name: "Platinum",
+    price: 59,
+    features: [
+      { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
+      {
+        label: "Creator Collaborations",
+        icon: "/assets/pricing/subscribed.svg",
+      },
+      { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Store Integrations", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Priority Support", icon: "/assets/pricing/subscribed.svg" },
+    ],
+    description: "per user/month, billed annually",
+    popular: true,
   },
   {
-      name: "Diamond",
-      price: 19,
-      features: [
-          { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Creator Collaborations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Store Integrations", icon: "/assets/pricing/subscribed.svg" },
-          { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" }
-      ],
-      description: "per user/month, billed annually"
+    name: "Diamond",
+    price: 19,
+    features: [
+      { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
+      {
+        label: "Creator Collaborations",
+        icon: "/assets/pricing/subscribed.svg",
+      },
+      { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Store Integrations", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" },
+    ],
+    description: "per user/month, billed annually",
   },
 ];

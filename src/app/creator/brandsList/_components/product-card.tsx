@@ -16,11 +16,13 @@ import ToolTip from "@/app/_components/components-common/tool-tip";
 import { currency } from "@/lib/utils/constants";
 
 const ProductCard = ({
-    item: product,
-    handleUpdateProduct,
+  item: product,
+  handleUpdateProduct,
+  size = "reguler",
 }: {
-    item: IBrandProduct;
-    handleUpdateProduct: (id:string) => void;
+  item: IBrandProduct;
+  handleUpdateProduct: (id: string) => void;
+  size?: "reguler" | "small";
 }) => {
     const router = useRouter();
     const translate = useTranslations()
@@ -61,7 +63,9 @@ const ProductCard = ({
                 {loading && <Loader />}
                 {/* Image */}
                 <div
-                    className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
+                    className={`bg-background rounded-lg max-w-full w-full flex items-center justify-center overflow-hidden ${
+              size === "small" ? "h-[165px]" : "aspect-[4/3]"
+            }`}
                     onClick={() => handleDetailView(product?._id)}
                 >
                     {product.media?.length > 0 ? (

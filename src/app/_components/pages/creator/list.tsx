@@ -91,7 +91,7 @@ export default function CreatorList() {
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [viewMode, setViewMode] = useState<"table" | "card">("table");
+  const [viewMode, setViewMode] = useState<"table" | "card">("card");
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
 

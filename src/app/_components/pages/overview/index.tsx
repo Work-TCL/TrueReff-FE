@@ -2,21 +2,29 @@
 
 import React, { useEffect, useState } from "react";
 import SalesChart from "../../components-common/charts/SalesChart";
-import DonutChart from "../../components-common/charts/DonutChat";
+import DonutChart from "../../components-common/charts/suggested-creators";
 import MostSellingBrands from "../../components-common/charts/MostSellingBrands";
 import RecentActivities from "../../components-common/tables/RecentActivity";
 import VendorActivity from "../../components-common/charts/VendorActivityChart";
 import { StatsCard } from "../../components-common/states/StatesCard";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { toastMessage } from "@/lib/utils/toast-message";
-import { getStatesInfo, getVendorRevenuePerformance } from "@/lib/web-api/vendor-dashboard";
+import {
+  getStatesInfo,
+  getVendorRevenuePerformance,
+} from "@/lib/web-api/vendor-dashboard";
 import Loading from "@/app/vendor/loading";
 import { IStateInfo } from "@/lib/types-api/vendor-dashboard";
 import { useTranslations } from "next-intl";
 import Loader from "../../components-common/layout/loader";
-import { currency, formatFloatValue, formatNumber } from "@/lib/utils/constants";
+import {
+  currency,
+  formatFloatValue,
+  formatNumber,
+} from "@/lib/utils/constants";
 import { IRevenue, IRevenueData } from "@/lib/types-api/creator-dashboard";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
+import { getSuggestedCreators } from "@/lib/web-api/auth";
 
 export default function Overview() {
   const translate = useTranslations();
@@ -26,21 +34,31 @@ export default function Overview() {
     totalRevenue: 0,
     totalCommission: 0,
     totalOrders: 0,
-    conversionRate: 0
-  }
+    conversionRate: 0,
+  };
   const [statesInfo, setStatesInfo] = useState<IStateInfo>(initialStateInfo);
   const [mainLoading, setMailLoading] = useState<boolean>(true);
   const [revenueData, setRevenueData] = useState<IRevenueData>({
     current: [],
-    past: []
+    past: [],
   });
-  const [updateData, setUpdateData] = useState<any[]>([])
+  const [updateData, setUpdateData] = useState<any[]>([]);
+  const [suggestedCreators, setSuggestedCreators] = useState<any[]>([]);
   const [revenueLoading, setRevenueLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetchStatesInfo();
     fetchRevenuePerformance();
+    getCreatorSuggested();
   }, []);
+
+  const getCreatorSuggested = async () => {
+    try {
+      const creators = await getSuggestedCreators();
+      setSuggestedCreators(creators);
+    } catch (e) {}
+  };
+
   const fetchStatesInfo = async () => {
     setMailLoading(true);
     try {
@@ -63,32 +81,41 @@ export default function Overview() {
     try {
       const response = await getVendorRevenuePerformance();
       if (response) {
-        const currentData = response?.current?.map((ele: IRevenue) => ({ ...ele, current: ele?.totalRevenue }));
-        const revenueData = response?.past?.map((ele: IRevenue) => ({ ...ele, past: ele?.totalRevenue }));
+        const currentData = response?.current?.map((ele: IRevenue) => ({
+          ...ele,
+          current: ele?.totalRevenue,
+        }));
+        const revenueData = response?.past?.map((ele: IRevenue) => ({
+          ...ele,
+          past: ele?.totalRevenue,
+        }));
         setRevenueData({
           current: currentData,
           past: revenueData,
         });
-        (response?.current?.length > 0 || response?.past?.length > 0) && setUpdateData(
-          [
+        (response?.current?.length > 0 || response?.past?.length > 0) &&
+          setUpdateData([
             {
-              name: "Current Revenue", value: response?.current.reduce(
+              name: "Current Revenue",
+              value: response?.current.reduce(
                 (total: any, item: any) => total + item.totalRevenue,
                 0
-              ), color: "#FF4979"
+              ),
+              color: "#FF4979",
             },
             {
-              name: "Past Revenue", value: response?.past.reduce(
+              name: "Past Revenue",
+              value: response?.past.reduce(
                 (total: any, item: any) => total + item.totalRevenue,
                 0
-              ), color: "#090919"
-            }
-          ]
-        )
+              ),
+              color: "#090919",
+            },
+          ]);
       } else {
         setRevenueData({
           current: [],
-          past: []
+          past: [],
         });
         setUpdateData([]);
       }
@@ -97,7 +124,7 @@ export default function Overview() {
       // toastMessage.error(errorMessage);
       setRevenueData({
         current: [],
-        past: []
+        past: [],
       });
     } finally {
       setRevenueLoading(false);
@@ -113,7 +140,7 @@ export default function Overview() {
           growth={5}
           bgColor="bg-white bg-[#f2f1fd]"
           borderColor={"border-[#7877EE]"}
-        // link="/vendor/campaign?status=PENDING"
+          // link="/vendor/campaign?status=PENDING"
         />
         <StatsCard
           title={translate("Pending_Collaboration")}
@@ -139,14 +166,16 @@ export default function Overview() {
         />
         <StatsCard
           title={translate("Revenue")}
-          value={`${currency['INR']} ${formatNumber(statesInfo?.totalRevenue)}`}
+          value={`${currency["INR"]} ${formatNumber(statesInfo?.totalRevenue)}`}
           growth={5}
           borderColor="border-[#77EE8D]"
           bgColor="bg-[#f1fdf4]"
         />
         <StatsCard
           title={translate("Commission")}
-          value={`${currency['INR']} ${formatNumber(statesInfo?.totalCommission)}`}
+          value={`${currency["INR"]} ${formatNumber(
+            statesInfo?.totalCommission
+          )}`}
           growth={5}
           borderColor="border-[#EB815B]"
           bgColor="bg-[#fdf2ef]"
@@ -159,10 +188,35 @@ export default function Overview() {
           <div className="flex flex-col gap-4 xl:w-[60%] w-full h-full">
             <div className="flex flex-col md:flex-row gap-4 h-full items-stretch">
               <div className="flex xl:w-[65%] w-full">
-                {revenueLoading ? <div className="w-full h-[400px] bg-white rounded-lg"><Loading height="fit" /></div> : (revenueData?.current?.length > 0 || revenueData?.past?.length > 0) ? <SalesChart data={revenueData} /> : <div className="h-[350px]"><EmptyPlaceHolder title={"No Revenue Found"} description="Revenue Performance will be displayed here once activity data is available. Encourage users to participate to see leaderboard ranking." /></div>}
+                {revenueLoading ? (
+                  <div className="w-full h-[400px] bg-white rounded-lg">
+                    <Loading height="fit" />
+                  </div>
+                ) : revenueData?.current?.length > 0 ||
+                  revenueData?.past?.length > 0 ? (
+                  <SalesChart data={revenueData} />
+                ) : (
+                  <div className="h-[350px]">
+                    <EmptyPlaceHolder
+                      title={"No Revenue Found"}
+                      description="Revenue Performance will be displayed here once activity data is available. Encourage users to participate to see leaderboard ranking."
+                    />
+                  </div>
+                )}
               </div>
               <div className="flex xl:w-[35%] w-full">
-                {revenueLoading ? <div className="w-full bg-white rounded-lg"><Loading height="fit" /></div> : updateData?.length > 0 ? <DonutChart data={updateData} /> : <EmptyPlaceHolder title="No Product Update" description="Product Updates will be displayed here once activity data is available. Encourage users to participate to see leaderboard ranking." />}
+                {revenueLoading ? (
+                  <div className="w-full bg-white rounded-lg">
+                    <Loading height="fit" />
+                  </div>
+                ) : suggestedCreators?.length > 0 ? (
+                  <DonutChart data={suggestedCreators} />
+                ) : (
+                  <EmptyPlaceHolder
+                    title="No Creators Update"
+                    description="Creator Updates will be displayed here once activity data is available. Encourage users to participate to see leaderboard ranking."
+                  />
+                )}
               </div>
             </div>
           </div>
