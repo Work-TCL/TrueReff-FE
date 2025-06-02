@@ -33,24 +33,76 @@ export default function ChatComponent({
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
 
+  // useEffect(() => {
+  //   socketService.connect();
+
+  //   if (creator.creatorId || vendor.vendorId) {
+  //     let id: any = creator.creatorId || vendor.vendorId;
+  //     id && socketService.registerUser(String(id));
+  //   }
+
+  //   collaborationId && socketService.joinCollaboration(collaborationId);
+  //   socketService.joinedCollaborationRoom((data) => {});
+  //   socketService.joinedCollaborationMessages((data) => {
+  //     setMessages((prev) => [data.message, ...prev]);
+  //   });
+
+  //   return () => {
+  //     socketService.disconnect();
+  //   };
+  // }, [creator.creatorId, vendor.vendorId, collaborationId]);
+
   useEffect(() => {
+    // 1. Connect to socket
     socketService.connect();
-
-    if (creator.creatorId || vendor.vendorId) {
-      let id: any = creator.creatorId || vendor.vendorId;
-      id && socketService.registerUser(String(id));
+  
+    // 2. Register user by ID
+    const id = creator.creatorId || vendor.vendorId;
+    if (id) {
+      socketService.registerUser(String(id));
     }
-
-    collaborationId && socketService.joinCollaboration(collaborationId);
-    socketService.joinedCollaborationRoom((data) => {});
-    socketService.joinedCollaborationMessages((data) => {
-      setMessages((prev) => [data.message, ...prev]);
-    });
-
+  
+    // 3. Join collaboration room
+    if (collaborationId) {
+      socketService.joinCollaboration(collaborationId);
+  
+      // 4. Trigger callback after joining the room
+      socketService.joinedCollaborationRoom((data) => {
+        console.log(data.message);
+      });
+  
+      // 5. Handle receiving new messages
+      socketService.joinedCollaborationMessages((data: any) => {
+        setMessages((prev) => [data.message, ...prev]);
+  
+        // If the message was not sent by this user, mark it as read
+        const isSender =
+          (data.message.creatorId && data.message.creatorId._id === creator.creatorId) ||
+          (data.message.vendorId && data.message.vendorId._id === vendor.vendorId);
+ 
+        if (!isSender) {
+          socketService.markMessagesAsRead({
+            collaborationId,
+            vendorId: data.message?.vendorId?._id,
+            creatorId: data.message?.creatorId?._id,
+          });
+        }
+      });
+  
+      // 6. On initial load — mark all unread messages as read
+      socketService.markAllMessagesAsRead({
+        collaborationId,
+        type: creator.creatorId ? 'creator': 'vendor'
+      });
+    }
+  
+    // 7. Clean up
     return () => {
       socketService.disconnect();
     };
   }, [creator.creatorId, vendor.vendorId, collaborationId]);
+  
+
   const fetchCollaborationConversions = async (
     page: number,
     isLoadMore: boolean = false
