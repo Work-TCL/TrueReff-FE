@@ -28,7 +28,7 @@ const CreatorCard = ({
       }}
       className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg cursor-pointer"
     >
-      <CardContent className="w-full p-0 flex flex-col items-center gap-3">
+      <CardContent className="w-full p-0 flex flex-col items-center gap-4">
         <div
           className={`bg-background rounded-lg max-w-full w-full flex items-center justify-center overflow-hidden ${
             size === "small" ? "h-[75px]" : "aspect-[4/3]"
@@ -46,7 +46,7 @@ const CreatorCard = ({
         </div>
 
         {/* Title + Category */}
-        <div className="flex flex-col gap-1 text-start w-full overflow-hidden">
+        <div className="flex flex-col gap-4 text-start w-full overflow-hidden">
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
             className="text-xs sm:text-sm md:text-lg font-semibold w-full line-clamp-none truncate"
@@ -62,7 +62,7 @@ const CreatorCard = ({
 
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
-            className="text-gray-500 text-sm w-full line-clamp-none truncate"
+            className=" text-sm w-full line-clamp-none truncate"
             text={`${creator.categories || "-"
               }`}
           />
@@ -83,34 +83,32 @@ const CreatorCard = ({
         </div>
 
         {/* Stats */}
-        <div className="flex justify-around text-center w-full text-sm">
-          <div>
-            <div className="font-semibold">{currency['INR']} {formatNumber(creator?.totalRevenue)}</div>
-            <div className="text-gray-500 flex items-center">{translate("Revenue")}</div>
+        <div className="flex justify-between items-center w-full text-center text-sm">
+          {/* Total Sales */}
+          <div className="flex-1 border-r px-2 flex flex-col gap-1">
+            <div className="text-md">{currency['INR']} {formatNumber(creator?.totalRevenue)}</div>
+            <div className="text-gray-500 text-xs">{translate("Revenue")}</div>
           </div>
-          <div>
-            <div className="font-semibold">{formatNumber(creator?.totalOrders)}</div>
-            <div className="text-gray-500 flex items-center gap-2">
-              {translate("Orders")}
-            </div>
+
+          {/* Total Orders */}
+          <div className="flex-1 border-r px-2 flex flex-col gap-1">
+            <div className=" text-md">{formatNumber(creator?.totalOrders)}</div>
+            <div className="text-gray-500 text-xs">{translate("Orders")}</div>
           </div>
-          <div>
-            <div className="font-semibold">
-              <div className="flex items-center gap-1">
-                <div className="flex justify-center">
-                  <Star size={20} className="text-yellow-500 fill-yellow-500"/>
-              </div>
-                <span>{`${formatFloatValue(creator?.averageRating)}/${5}`}</span>
-              </div>
+
+          {/* Rating */}
+          <div className="flex-1 px-2 flex flex-col gap-1">
+            <div className=" text-md flex items-center justify-center gap-1">
+              <Star size={16} className="text-yellow-500 fill-yellow-500" />
+              <span>{`${formatFloatValue(creator?.averageRating)}/5`}</span>
             </div>
-            <div className="text-gray-500 flex items-center gap-2">
-              {translate("Ratings")}
-            </div>
+            <div className="text-gray-500 text-xs">{translate("Ratings")}</div>
           </div>
         </div>
 
-        <div className="flex justify-around text-center w-full gap-1 text-sm">
-          <div className="text-gray-500 bg-gray-100 w-full px-4 py-1 rounded-3xl justify-center flex items-center gap-2">
+
+        <div className="flex justify-between text-center w-full gap-1 text-sm">
+          <div className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2">
             <img
               src="/assets/creator/insta-gram.svg"
               width={15}

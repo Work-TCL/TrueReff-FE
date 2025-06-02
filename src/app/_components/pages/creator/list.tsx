@@ -153,7 +153,7 @@ export default function CreatorList() {
               let result = creatorsArray.map((ele: ICreator) => {
                 ele.categories = ele.category
                   ?.map((ele: { name: string }) => ele?.name)
-                  .join(",");
+                  .join(", ");
                 ele.tag = ele.tags?.join(",");
                 ele.instagramFollowers = getInstagramView(ele.channels);
                 ele.youtubeFollowers = getYoutubeView(ele.channels);

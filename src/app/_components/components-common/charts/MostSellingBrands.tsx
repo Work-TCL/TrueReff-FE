@@ -8,6 +8,7 @@ import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { currency, formatFloatValue, formatNumber } from "@/lib/utils/constants";
+import { IndianRupee } from "lucide-react";
 
 interface ITopCreator {
   creatorId: string;
@@ -70,12 +71,12 @@ const MostSellingBrands = () => {
                                                   height={50}
                                                   className="rounded-[50%]"
                                                 />
-                                  <span className="text-font-grey">
+                                  <div className="text-font-grey flex items-center space-x-2">
                                    {item.business_name}
-                                  <span className="text-secondary">
-                                    {" - "}{`${currency['INR']} ${formatNumber(item.revenue)}`}
+                                  <span className="text-secondary flex items-center">
+                                    {" - "}<IndianRupee size={15} /> {formatNumber(item.revenue)}
                                   </span>
-                                </span></div>
+                                </div></div>
                 <span className="text-primary md:text-base text-sm">
                   {formatFloatValue(item.percentage)}%
                 </span>

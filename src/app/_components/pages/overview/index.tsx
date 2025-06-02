@@ -25,7 +25,17 @@ import {
 import { IRevenue, IRevenueData } from "@/lib/types-api/creator-dashboard";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { getSuggestedCreators } from "@/lib/web-api/auth";
-
+export interface IChannel {
+  followers: number;
+  _id: string;
+  creatorId: string;
+  channelId: string;
+  channelName: string;
+  handleName: string;
+  channelType: string;
+  createdAt: string;
+  updatedAt: string;
+}
 export default function Overview() {
   const translate = useTranslations();
   const initialStateInfo = {
@@ -51,11 +61,43 @@ export default function Overview() {
     fetchRevenuePerformance();
     getCreatorSuggested();
   }, []);
-
+const getInstagramView: (channels: IChannel[]) => string = (
+    channels: IChannel[]
+  ) => {
+    let instagram = channels.find(
+      (ele: { channelType: string }) => ele.channelType === "instagram"
+    );
+    return instagram
+      ? formatNumber(instagram?.followers)
+      : "0";
+  };
+  const getYoutubeView: (channels: IChannel[]) => string = (
+    channels: IChannel[]
+  ) => {
+    let youtube = channels.find(
+      (ele: { channelType: string }) => ele.channelType === "youtube"
+    );
+    return youtube
+      ? formatNumber(youtube?.followers)
+      : "0";
+  };
   const getCreatorSuggested = async () => {
     try {
       const creators = await getSuggestedCreators();
-      setSuggestedCreators(creators);
+      if (Array.isArray(creators)) {
+                    let result = creators.map((ele: any) => {
+                      ele.categories = ele.category
+                        ?.map((ele: { name: string }) => ele?.name)
+                        .join(", ");
+                      ele.tag = ele.tags?.join(",");
+                      ele.instagramFollowers = getInstagramView(ele.channels);
+                      ele.youtubeFollowers = getYoutubeView(ele.channels);
+                      //@ts-ignore
+                      // ele.pastSales = ele?.pastSales || "";
+                      return { ...ele };
+                    });
+      setSuggestedCreators(result);
+                  }
     } catch (e) {}
   };
 

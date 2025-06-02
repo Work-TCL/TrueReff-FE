@@ -272,7 +272,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
             className={`p-4 text-primary-color font-bold text-4xl text-center`}
           >
             {!isSidebarExpanded ? (
-              <Image width={100} height={30} src="/assets/common/truereff-logo.svg" alt="TrueReff" className={`mx-auto`}/>
+              <Image width={100} height={35} src="/assets/common/truereff-logo.svg" alt="TrueReff" className={`h-[35px] mx-auto`}/>
             ) : (
               <Image width={220} height={40} src="/assets/common/truereff-dark.svg" alt="TrueReff" className={`w-[225px] max-h-[88px] h-full mx-auto`}/>
             )}

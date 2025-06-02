@@ -460,7 +460,7 @@ export const getSuggestedCreators = async (): Promise<[]> => {
       `/auth/vendor-dashboard/suggested-creators`
     );
 
-    return response?.data?.data?.products;
+    return response?.data?.data?.list;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
     // throw errorMessage || new Error("Error While fetching creator progress.");
