@@ -33,7 +33,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
     const { account } = useAuthStore();
     const collaborationId: any = params?.collaborationId;
     const [bid, setBid] = React.useState<any>(bidAmount.fixedPercentage);
-    const [discountType,setDiscountType] = useState<string>("");
+    const [discountType, setDiscountType] = useState<string>("");
     const [yourOffer, setYourOffer] = React.useState<any>(null);
     const [receiveOffer, setReceiveOffer] = React.useState<number>(0);
     const [isEditing, setIsEditing] = useState(false);
@@ -75,13 +75,22 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
     useEffect(() => {
         socketService.connect();
 
+        const type = account.role;
         if (collaborationId) {
             socketService.joinCollaboration(collaborationId)
-            socketService.newBidReceived((data) => newBidReceived(data))
+            socketService.newBidReceived((data) => {
+                newBidReceived(data)
+                if (account.role !== data.data.sender) {
+                    socketService.markBidAsSeen({ bidId: data.data._id, type })
+                }
+            })
             socketService.errorSendBid((error) => errorWhileSendBid(error))
+
+            socketService.markAllBidsAsSeen({ collaborationId, type })
         }
 
     }, [collaborationData]);
+
     useEffect(() => {
         if (collaborationData?.bids?.length > 0) {
             const bidData = collaborationData?.bids;
@@ -102,6 +111,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
             }
         }
     }, [collaborationData?._id])
+
     const newBidReceived = (data: any): void => {
         if (data?.data?.sender !== account?.role) {
             setReceiveOffer(data?.data?.proposal);
@@ -179,7 +189,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
                     </div>
                 )}
                 <div
-                    className={`relative flex flex-col border justify-center items-center ${isYourOffer ? "bg-primary-color text-white" :"bg-white text-black"} gap-3 px-4 py-4 rounded-md transition-all duration-300 ${isYourOffer ? "w-full" : "w-1/2"
+                    className={`relative flex flex-col border justify-center items-center ${isYourOffer ? "bg-primary-color text-white" : "bg-white text-black"} gap-3 px-4 py-4 rounded-md transition-all duration-300 ${isYourOffer ? "w-full" : "w-1/2"
                         }`}
                 >
                     <span className="text-sm">{translate("Your_Offer")}</span>
@@ -203,7 +213,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
 
 
                     {(!isYourOffer && !isEditing) && <><button
-                        onClick={() => handleOfferChange({target:{value: Math.max(0, yourOffer - 1).toString()}})}
+                        onClick={() => handleOfferChange({ target: { value: Math.max(0, yourOffer - 1).toString() } })}
                         className="absolute bottom-2 left-2 bg-gray-200 hover:bg-gray-300 p-1 rounded-full"
                     >
                         <Minus className="w-4 h-4" />
@@ -211,7 +221,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
 
                         {/* Plus Button - Bottom Right */}
                         <button
-                            onClick={() => handleOfferChange({target:{value: (yourOffer + 1).toString()}})}
+                            onClick={() => handleOfferChange({ target: { value: (yourOffer + 1).toString() } })}
                             className="absolute bottom-2 right-2 bg-gray-200 hover:bg-gray-300 p-1 rounded-full"
                         >
                             <Plus className="w-4 h-4" />
@@ -245,7 +255,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
             {collaborationData?.bids?.length > 0 && <div className="flex justify-center text-sm text-gray-400 font-semibold mt-3">{translate("Last Bid")}: {" "}<span className="text-black font-semibold">{getLastBid()}</span></div>}
             {collaborationData?.bids?.length > 0 && <div className='flex justify-center text-primary-color cursor-pointer float-end' onClick={() => setViewAllBids(true)}>{translate("View_History")} <ChevronDown /></div>}
             {viewAllBids && <ViewAllBids bids={collaborationData?.bids} onClose={() => setViewAllBids(false)} />}
-            {discountType && <Confirmation title={translate("Are_you_sure_you_want_to_change_commission_type")} onClose={()=> setDiscountType("")} handleConfirm={handleConfirm}/>}
+            {discountType && <Confirmation title={translate("Are_you_sure_you_want_to_change_commission_type")} onClose={() => setDiscountType("")} handleConfirm={handleConfirm} />}
         </div>
     )
 }

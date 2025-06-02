@@ -14,11 +14,9 @@ class SocketService {
         transports: ["websocket"],
       });
 
-      this.socket.on("connect", () => {
-      });
+      this.socket.on("connect", () => {});
 
-      this.socket.on("disconnect", () => {
-      });
+      this.socket.on("disconnect", () => {});
     }
   }
 
@@ -34,7 +32,7 @@ class SocketService {
   /**
    * Join a collaboration room
    */
-  joinCollaboration(collaborationId: string|string[]): void {
+  joinCollaboration(collaborationId: string | string[]): void {
     if (this.socket) {
       this.socket.emit("joinCollaboration", collaborationId);
     }
@@ -59,15 +57,15 @@ class SocketService {
     }
   }
 
-  markMessagesAsRead(payload: any):void{
-    if(this.socket){
-      this.socket.emit("markMessagesAsRead",payload)
+  markMessagesAsRead(payload: any): void {
+    if (this.socket) {
+      this.socket.emit("markMessagesAsRead", payload);
     }
   }
 
-  markAllMessagesAsRead(payload:any){
-    if(this.socket){
-      this.socket.emit("markAllMessagesAsRead",payload)
+  markAllMessagesAsRead(payload: any) {
+    if (this.socket) {
+      this.socket.emit("markAllMessagesAsRead", payload);
     }
   }
 
@@ -125,8 +123,19 @@ class SocketService {
   //send new bid
   sendNewBid(data: any): void {
     if (this.socket) {
-      console.log("0 bid");
       this.socket.emit("bidRequest", data);
+    }
+  }
+
+  markBidAsSeen(data: any): void {
+    if (this.socket) {
+      this.socket.emit("markBidAsSeen", data);
+    }
+  }
+
+  markAllBidsAsSeen(data: any) {
+    if (this.socket) {
+      this.socket.emit("markAllBidsAsSeen", data);
     }
   }
 
@@ -134,8 +143,8 @@ class SocketService {
   errorSendBid(callback: (data: any) => void): void {
     if (this.socket) {
       this.socket.on("bid-error", callback);
-    }
-  }
+    }
+  }
 
   /**
    * Disconnect the socket connection
