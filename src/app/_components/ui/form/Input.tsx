@@ -50,6 +50,7 @@ export default function Input({
   lableClassName,
   inputClassName,
   menuPortalTarget = menuPortal,
+  max,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -519,7 +520,7 @@ export default function Input({
         rules={{ required: required ? `${label} is required` : false }}
         render={({ field }) => {
           const handleChange = (selected: any) => {
-            const updated = [...(field.value || []), selected];
+            const updated = max === 1 ? [selected]:[...(field.value || []), selected];
             field.onChange(updated);
           };
 

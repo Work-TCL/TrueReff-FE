@@ -194,7 +194,7 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
         value: Yup.string().required("Value is required"),
       })
     )
-    .min(1, "Category is required")
+    .length(1, "Only one category can be selected")
     .required("Category is required"), // Ensure at least one category is selected
   sub_category: Yup.array()
     .of(

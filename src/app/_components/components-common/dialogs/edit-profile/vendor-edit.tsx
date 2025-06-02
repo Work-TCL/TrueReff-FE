@@ -328,6 +328,7 @@ export default function EditVendorForm({
                 label: ele?.name,
               }))}
               menuPortalTarget={null}
+              max={1}
               autoFocus={false}
             />
           </div>

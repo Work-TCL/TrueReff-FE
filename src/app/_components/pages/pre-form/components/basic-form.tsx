@@ -78,7 +78,7 @@ export default function BasicInfoForm({
         )
       );
     })();
-  }, [methods.watch("category")?.length,vendor?.category]);
+  }, [methods.watch("category"),vendor?.category,parentCategory]);
   const getErrorMessage = (name: string) => {
     const error = get(errors, name);
     if (error && error.message) {
@@ -210,6 +210,7 @@ export default function BasicInfoForm({
             value: ele?._id,
             label: ele?.name,
           }))}
+          max={1}
           autoFocus={false}
         />
       </div>

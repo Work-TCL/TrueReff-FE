@@ -140,14 +140,6 @@ export default function ChannelProductList({
 
   const columns: ColumnDef<IProduct>[] = [
     {
-      accessorKey: "id",
-      header: () => translate("Product_ID"),
-      cell: ({ row }) => {
-        const product = row.original;
-        return product.id;
-      },
-    },
-    {
       accessorKey: "title",
       header: () => translate("Product_Name"),
       cell: ({ row }) => {
@@ -178,6 +170,17 @@ export default function ChannelProductList({
       },
     },
     {
+      accessorKey: "handle",
+      header: () => translate("SKU"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.handle ?? ""}
+        />
+      ),
+    },
+    {
       accessorKey: "category",
       header: () => translate("Categories"),
       cell: ({ row }) => (
@@ -188,17 +191,17 @@ export default function ChannelProductList({
         />
       ),
     },
-    {
-      accessorKey: "sub_category",
-      header: () => translate("Sub_Category"),
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.sub_category ?? ""}
-        />
-      ),
-    },
+    // {
+    //   accessorKey: "sub_category",
+    //   header: () => translate("Sub_Category"),
+    //   cell: ({ row }) => (
+    //     <TruncateWithToolTip
+    //       checkHorizontalOverflow={false}
+    //       linesToClamp={2}
+    //       text={row.original.sub_category ?? ""}
+    //     />
+    //   ),
+    // },
     {
       accessorKey: "total_variants",
       header: () => translate("Variants"),
