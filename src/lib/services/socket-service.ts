@@ -59,6 +59,18 @@ class SocketService {
     }
   }
 
+  markMessagesAsRead(payload: any):void{
+    if(this.socket){
+      this.socket.emit("markMessagesAsRead",payload)
+    }
+  }
+
+  markAllMessagesAsRead(payload:any){
+    if(this.socket){
+      this.socket.emit("markAllMessagesAsRead",payload)
+    }
+  }
+
   /**
    * Leave a collaboration room
    */
