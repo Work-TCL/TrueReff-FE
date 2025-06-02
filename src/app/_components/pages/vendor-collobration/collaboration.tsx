@@ -36,7 +36,7 @@ export interface IProduct {
   category: ICategory[];
   subCategory: string[];
   tags: string[];
-  lifeTime: boolean;  
+  lifeTime: boolean;
   startDate: string;
   endDate: string | null;
   status: string;
@@ -98,7 +98,7 @@ export interface IVendor {
 interface INegotiation {
   agreedByVendor: boolean;
   agreedByCreator: boolean;
-};
+}
 export interface ICollaboration {
   negotiation: INegotiation;
   _id: string;
@@ -107,13 +107,14 @@ export interface ICollaboration {
   vendorId: string;
   requestedBy: string;
   collaborationStatus: string;
-  utmLink: string | null,
-  crmLink: string | null,
+  utmLink: string | null;
+  crmLink: string | null;
   commissionValue: number;
   commissionType: string;
-  startAt: string | null,
+  startAt: string | null;
   expiresAt: string;
-  bids: any[],
+  bids: any[];
+  lastMessage: any;
   createdAt: string;
   updatedAt: string;
 }
@@ -140,7 +141,7 @@ export default function CollaborationList() {
   const router = useRouter();
   const { account: user } = useAuthStore();
   const searchParams = useSearchParams();
-  const status = searchParams.get("status")??"";
+  const status = searchParams.get("status") ?? "";
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
@@ -177,7 +178,7 @@ export default function CollaborationList() {
             searchValue ? `&search=${searchValue}` : ""
           }${status ? `&status=${status}` : ""}`
         );
-        
+
         if (response.status === 200) {
           const collaborationData = response.data.data;
           if (collaborationData && typeof collaborationData === "object") {
@@ -227,13 +228,13 @@ export default function CollaborationList() {
   );
 
   useEffect(() => {
-    if(status){
+    if (status) {
       setSelectedStatus(status);
       fetchCollaboration(currentPage, true, search, status);
-    }
-    else {
+    } else {
       setSelectedStatus("");
-      fetchCollaboration(currentPage);}
+      fetchCollaboration(currentPage);
+    }
   }, [status]);
   const handlePageChange = (page: number) => {
     page !== currentPage &&
@@ -252,7 +253,7 @@ export default function CollaborationList() {
     debouncedSearch(value, selectedStatus);
   };
   const handleSelectStatus = (selectedOptions: any) => {
-    router.push(`?status=${selectedOptions}`)
+    router.push(`?status=${selectedOptions}`);
   };
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">

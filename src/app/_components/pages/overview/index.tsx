@@ -25,6 +25,7 @@ import {
 import { IRevenue, IRevenueData } from "@/lib/types-api/creator-dashboard";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { getSuggestedCreators } from "@/lib/web-api/auth";
+import { IndianRupee } from "lucide-react";
 export interface IChannel {
   followers: number;
   _id: string;
@@ -208,16 +209,16 @@ const getInstagramView: (channels: IChannel[]) => string = (
         />
         <StatsCard
           title={translate("Revenue")}
-          value={`${currency["INR"]} ${formatNumber(statesInfo?.totalRevenue)}`}
+          value={`${formatNumber(statesInfo?.totalRevenue)}`}
+          icon={<IndianRupee size={27} />}
           growth={5}
           borderColor="border-[#77EE8D]"
           bgColor="bg-[#f1fdf4]"
         />
         <StatsCard
           title={translate("Commission")}
-          value={`${currency["INR"]} ${formatNumber(
-            statesInfo?.totalCommission
-          )}`}
+          value={`${formatNumber(statesInfo?.totalCommission)}`}
+          icon={<IndianRupee size={27} />}
           growth={5}
           borderColor="border-[#EB815B]"
           bgColor="bg-[#fdf2ef]"
@@ -246,7 +247,7 @@ const getInstagramView: (channels: IChannel[]) => string = (
                   </div>
                 )}
               </div>
-              <div className="flex xl:w-[35%] w-full">
+              <div className="flex xl:w-[35%] md:w-[50%] w-full">
                 {revenueLoading ? (
                   <div className="w-full bg-white rounded-lg">
                     <Loading height="fit" />

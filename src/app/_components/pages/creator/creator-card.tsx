@@ -1,12 +1,16 @@
 "use client";
 import { ICreator } from "./list";
-import { ImageOff, Star } from "lucide-react";
+import { ImageOff, IndianRupee, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
-import { currency, formatFloatValue, formatNumber } from "@/lib/utils/constants";
+import {
+  currency,
+  formatFloatValue,
+  formatNumber,
+} from "@/lib/utils/constants";
 
 const CreatorCard = ({
   item: creator,
@@ -24,7 +28,7 @@ const CreatorCard = ({
       key={creator?.full_name}
       onClick={(e) => {
         e.stopPropagation();
-        router?.push(`/vendor/creator-profile/${creator?._id}`)
+        router?.push(`/vendor/creator-profile/${creator?._id}`);
       }}
       className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg cursor-pointer"
     >
@@ -63,8 +67,7 @@ const CreatorCard = ({
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
             className=" text-sm w-full line-clamp-none truncate"
-            text={`${creator.categories || "-"
-              }`}
+            text={`${creator.categories || "-"}`}
           />
 
           {/* {creator.tags?.length > 0 ? (
@@ -86,7 +89,9 @@ const CreatorCard = ({
         <div className="flex justify-between items-center w-full text-center text-sm">
           {/* Total Sales */}
           <div className="flex-1 border-r px-2 flex flex-col gap-1">
-            <div className="text-md">{currency['INR']} {formatNumber(creator?.totalRevenue)}</div>
+            <div className="text-md flex items-center">
+              <IndianRupee size={15} /> {formatNumber(creator?.totalRevenue)}
+            </div>
             <div className="text-gray-500 text-xs">{translate("Revenue")}</div>
           </div>
 
@@ -106,22 +111,15 @@ const CreatorCard = ({
           </div>
         </div>
 
-
         <div className="flex justify-between text-center w-full gap-1 text-sm">
           <div className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2">
-            <img
-              src="/assets/creator/insta-gram.svg"
-              width={15}
-              height={15}
-            /> {creator?.instagramFollowers}
+            <img src="/assets/creator/insta-gram.svg" width={15} height={15} />{" "}
+            {creator?.instagramFollowers}
           </div>
 
           <div className="text-gray-500 bg-gray-100 w-full px-4 py-1 rounded-3xl justify-center flex items-center gap-2">
-            <img
-              src="/assets/creator/you-tube.svg"
-              width={18}
-              height={18}
-            /> {creator?.youtubeFollowers}
+            <img src="/assets/creator/you-tube.svg" width={18} height={18} />{" "}
+            {creator?.youtubeFollowers}
           </div>
         </div>
 
@@ -136,7 +134,7 @@ const CreatorCard = ({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            handleCollaborateNow(creator._id)
+            handleCollaborateNow(creator._id);
           }}
           className="flex items-center justify-center w-full gap-2 md:px-3 px-1 py-2 md:text-sm text-[10px] border rounded-xl border-primary hover:bg-primary text-[#FF4979] hover:text-white transition-all sm:text-base sm:gap-3"
         >

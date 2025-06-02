@@ -48,29 +48,34 @@ const NavLink = ({
   Icon = undefined,
   label = "",
   hasSubmenu = false,
-  handleToggle = () => { },
+  handleToggle = () => {},
   expended = false,
   isChild = false,
   childIndex,
   childClassName,
 }: any) => {
-  const childLinkClasses = `relative block px-4 py-2 rounded-md ${isActive
+  const childLinkClasses = `relative block px-4 py-2 rounded-md ${
+    isActive
       ? "bg-primary-color text-white"
       : "text-gray-500 hover:text-gray-700"
-    } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${childIndex === 0 ? "before:h-7" : "before:h-16"
-    } text-nowrap text-[14px] ${childClassName}`;
+  } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${
+    childIndex === 0 ? "before:h-7" : "before:h-16"
+  } text-nowrap text-[14px] ${childClassName}`;
 
   const classNames = isChild
     ? childLinkClasses
-    : `relative flex ${hasSubmenu ? "justify-between" : ""
-    } items-center text-[16px] cursor-pointer px-4 py-3 rounded-md text-nowrap  ${isActive
-      ? hasSubmenu
-        ? "bg-pink-100 text-black"
-        : "bg-primary-color text-white"
-      : "text-font-grey hover:bg-pink-100"
-    } `;
-  const iconClassNames = `w-5 h-5 shrink-0 ${isActive ? (hasSubmenu ? "text-black" : "text-white") : "text-font-grey"
-    }`;
+    : `relative flex ${
+        hasSubmenu ? "justify-between" : ""
+      } items-center text-[16px] cursor-pointer px-4 py-3 rounded-md text-nowrap  ${
+        isActive
+          ? hasSubmenu
+            ? "bg-pink-100 text-black"
+            : "bg-primary-color text-white"
+          : "text-font-grey hover:bg-pink-100"
+      } `;
+  const iconClassNames = `w-5 h-5 shrink-0 ${
+    isActive ? (hasSubmenu ? "text-black" : "text-white") : "text-font-grey"
+  }`;
   if (hasSubmenu) {
     return (
       <div className={classNames} onClick={handleToggle}>
@@ -80,21 +85,31 @@ const NavLink = ({
         </div>
         <div>
           <BsChevronDown
-            className={`ml-auto w-5 h-5 transition-transform duration-300 ease-in-out ${expended ? "rotate-180" : ""
-              }`}
+            className={`ml-auto w-5 h-5 transition-transform duration-300 ease-in-out ${
+              expended ? "rotate-180" : ""
+            }`}
           />
         </div>
       </div>
     );
   }
   if (link === "/creator/payment-earnings") {
-    return <span className={`${classNames} gap-3`} onClick={() => toastMessage.info("Coming Soon")}>
-      {Icon && <Icon className={iconClassNames} />}
-      {label && <span>{label}</span>}
-    </span>
+    return (
+      <span
+        className={`${classNames} gap-3`}
+        onClick={() => toastMessage.info("Coming Soon")}
+      >
+        {Icon && <Icon className={iconClassNames} />}
+        {label && <span>{label}</span>}
+      </span>
+    );
   } else {
     return (
-      <Link href={link} className={`${classNames} gap-3`} onClick={handleToggle}>
+      <Link
+        href={link}
+        className={`${classNames} gap-3`}
+        onClick={handleToggle}
+      >
         {Icon && <Icon className={iconClassNames} />}
         {label && <span>{label}</span>}
       </Link>
@@ -157,7 +172,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     {
       label: translate("Creators"),
       icon: UsersRound,
-      link: "/vendor/creators"
+      link: "/vendor/creators",
       // children: [
       //   { label: translate("Creator_List"), link: "/vendor/creators" },
       //   // {
@@ -264,17 +279,30 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     <>
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-[9999] transition-all duration-300 ease-in-out  ${isSidebarExpanded ? "w-[300px]" : "w-[75px]"
-          }`}
+        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-[9999] transition-all duration-300 ease-in-out  ${
+          isSidebarExpanded ? "w-[300px]" : "w-[75px]"
+        }`}
       >
         <div className="flex justify-center gap-10  ">
           <div
             className={`p-4 text-primary-color font-bold text-4xl text-center`}
           >
             {!isSidebarExpanded ? (
-              <Image width={100} height={35} src="/assets/common/truereff-logo.svg" alt="TrueReff" className={`h-[35px] mx-auto`}/>
+              <Image
+                width={100}
+                height={35}
+                src="/assets/common/truereff-logo.svg"
+                alt="TrueReff"
+                className={`h-[35px] mx-auto`}
+              />
             ) : (
-              <Image width={220} height={40} src="/assets/common/truereff-dark.svg" alt="TrueReff" className={`w-[225px] max-h-[88px] h-full mx-auto`}/>
+              <Image
+                width={220}
+                height={40}
+                src="/assets/common/truereff-dark.svg"
+                alt="TrueReff"
+                className={`w-[225px] max-h-[88px] h-full mx-auto`}
+              />
             )}
           </div>
         </div>
@@ -315,8 +343,8 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                                 !lg
                                   ? child.label
                                   : isSidebarExpanded
-                                    ? child.label
-                                    : ""
+                                  ? child.label
+                                  : ""
                               }
                               isChild
                               childIndex={idx}
@@ -398,18 +426,25 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                       side="right"
                     >
                       <div className="flex flex-col gap-1 pl-4 ">
-                        {item.link === "/creator/payment-earnings" ? <span className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`} onClick={() => toastMessage.info("Coming Soon")}>
-                          {item?.label}
-                        </span> : <Link
-                          key={item.link}
-                          href={item.link ?? ""}
-                          className={cn(
-                            "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ",
-                            "text-gray-500 hover:text-gray-700 hover:bg-pink-100"
-                          )}
-                        >
-                          {item.label}
-                        </Link>}
+                        {item.link === "/creator/payment-earnings" ? (
+                          <span
+                            className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
+                            onClick={() => toastMessage.info("Coming Soon")}
+                          >
+                            {item?.label}
+                          </span>
+                        ) : (
+                          <Link
+                            key={item.link}
+                            href={item.link ?? ""}
+                            className={cn(
+                              "text-gray-400 px-2 py-1 cursor-pointer rounded-sm ",
+                              "text-gray-500 hover:text-gray-700 hover:bg-pink-100"
+                            )}
+                          >
+                            {item.label}
+                          </Link>
+                        )}
                       </div>
                     </Tooltip.Content>
                   </Tooltip>
@@ -439,12 +474,19 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
 
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-[9999] transition-transform ${expanded ? "-translate-x-full" : "shadow-lg"
-          }`}
+        className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-[9999] transition-transform ${
+          expanded ? "-translate-x-full" : "shadow-lg"
+        }`}
       >
         <div className="flex justify-end  gap-10">
           <div className="p-4 pb-8 text-primary-color font-bold text-4xl text-center">
-            truereff
+            <Image
+              width={40}
+              height={88}
+              src="/assets/common/truereff-dark.svg"
+              alt="TrueReff"
+              className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"
+            />
           </div>
           <X
             className="size-6 shrink-0 mt-5 mr-2 cursor-pointer"

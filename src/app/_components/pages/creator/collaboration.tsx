@@ -108,6 +108,7 @@ export interface ICollaboration {
   startAt: string | null;
   expiresAt: string | null;
   bids: any[]; // Replace `any` with a specific type if bids have a defined structure
+  lastMessage: any; // Replace `any` with a specific type if bids have a defined structure
   createdAt: string;
   updatedAt: string;
 }
@@ -251,7 +252,7 @@ export default function CollaborationList() {
       fetchCollaboration(page, true, search, selectedStatus);
   };
   const handleSelectStatus = (selectedOption: string) => {
-    router.push(`?status=${selectedOption}`)
+    router.push(`?status=${selectedOption}`);
   };
   console.log("selectedStatus", selectedStatus);
   return (

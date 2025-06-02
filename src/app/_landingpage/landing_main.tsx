@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import HeroSection from "./heroSection";
 import EarningsSection from "./earningsSection";
 import SocialMedia from "./SocialMediaSections";
-import AOS from 'aos';
+import AOS from "aos";
 import ContentCategories from "./ContentCategories";
 import Launchpad from "./Launchpad";
 import LandingPageFooter from "./LandingPageFooter";
@@ -23,15 +23,14 @@ export default function LandingPage() {
     setIsMenuOpen(false);
   };
 
-   useEffect(() => {
+  useEffect(() => {
     AOS.init({
-      duration: 1600, 
-      once: false,    
-      mirror: true,   
+      duration: 1600,
+      once: false,
+      mirror: true,
       // easing: 'ease-in-out',
     });
-
-    }, []);
+  }, []);
 
   return (
     <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -48,22 +47,32 @@ export default function LandingPage() {
 
       {/* Navbar */}
       <nav className="flex justify-between items-start p-[50px] text-white h-full ">
-        <div data-aos="fade-down" className="flex items-center gap-2 text-2xl font-bold fade">
+        <div
+          data-aos="fade-down"
+          className="flex items-center gap-2 text-2xl font-bold fade"
+        >
           <Image
             height={50}
             width={352}
-            src="/assets/landing/logo_TrueReff.svg"
+            src="/assets/common/truereff-white.svg"
             alt="Truerreff Logo"
           />
         </div>
 
         <div className="lg:hidden">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="focus:outline-none">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="focus:outline-none"
+          >
             {isMenuOpen ? <X size={30} /> : <Menu size={30} />}
           </button>
         </div>
 
-        <div className={`${isMenuOpen ? "block" : "hidden"} absolute top-[100px] pb-[20px] right-0 px-[20px] bg-black bg-opacity-80 lg:static lg:w-auto lg:flex lg:items-center lg:gap-6 lg:bg-transparent`}>
+        <div
+          className={`${
+            isMenuOpen ? "block" : "hidden"
+          } absolute top-[100px] pb-[20px] right-0 px-[20px] bg-black bg-opacity-80 lg:static lg:w-auto lg:flex lg:items-center lg:gap-6 lg:bg-transparent`}
+        >
           <ul className="flex flex-col lg:flex-row gap-6 text-[20px] p-6 lg:p-0">
             {["creator", "brand", "about"].map((link) => (
               <li
@@ -82,8 +91,10 @@ export default function LandingPage() {
             ))}
           </ul>
 
-          <ButtonLogin label="Get Started" onClick={() => router.push("/login")} />
-
+          <ButtonLogin
+            label="Get Started"
+            onClick={() => router.push("/login")}
+          />
         </div>
       </nav>
 

@@ -22,6 +22,7 @@ export default function SuggestedCreators({ data = [] }: { data: any[] }) {
   var settings = {
     dots: false,
     infinite: true,
+    arrows: false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -35,8 +36,6 @@ export default function SuggestedCreators({ data = [] }: { data: any[] }) {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          infinite: true,
-          dots: true,
         },
       },
       {
@@ -44,7 +43,6 @@ export default function SuggestedCreators({ data = [] }: { data: any[] }) {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          initialSlide: 1,
         },
       },
       {

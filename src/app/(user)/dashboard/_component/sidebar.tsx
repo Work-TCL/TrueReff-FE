@@ -140,7 +140,6 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     },
   ];
 
-
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
       (key) => expandedMenus[key] === true
@@ -163,7 +162,13 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
             {!isSidebarExpanded ? (
               <PackageOpen />
             ) : (
-              <Image width={40} height={88} src="/assets/common/truereff-dark.svg" alt="TrueReff" className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"/>
+              <Image
+                width={40}
+                height={88}
+                src="/assets/common/truereff-dark.svg"
+                alt="TrueReff"
+                className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"
+              />
             )}
           </div>
         </div>
@@ -332,7 +337,13 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       >
         <div className="flex justify-end  gap-10">
           <div className="p-4 pb-8 text-primary-color font-bold text-4xl text-center">
-            truereff
+            <Image
+              width={40}
+              height={88}
+              src="/assets/common/truereff-dark.svg"
+              alt="TrueReff"
+              className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"
+            />
           </div>
           <X
             className="size-6 shrink-0 mt-5 mr-2 cursor-pointer"

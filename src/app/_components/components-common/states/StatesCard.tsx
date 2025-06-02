@@ -7,6 +7,7 @@ export const StatsCard = ({
   title,
   value,
   growth,
+  icon,
   borderColor,
   bgColor,
   link,
@@ -16,6 +17,7 @@ export const StatsCard = ({
   growth: number;
   borderColor: string;
   bgColor: string;
+  icon?: any;
   link?: string;
 }) => {
   const router = useRouter();
@@ -36,8 +38,9 @@ export const StatsCard = ({
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="md:text-3xl text-lg font-medium text-text">
-            {value}
+          <span className="md:text-3xl text-lg font-medium text-text flex items-center">
+            {icon && icon}
+            <span>{value}</span>
           </span>
           <div className="w-20 hidden h-8">
             <StatesCardGraph />

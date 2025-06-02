@@ -10,7 +10,7 @@ import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
 import { currency, formatFloatValue } from "@/lib/utils/constants";
-import { Star } from "lucide-react";
+import { IndianRupee, Star } from "lucide-react";
 import Link from "next/link";
 function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {
@@ -135,7 +135,12 @@ const CreatorTable = ({
     {
       id: "totalRevenue",
       header: () => <div className="text-center">{translate("Revenue")}</div>,
-      cell: ({ row }) => <div className="text-center">{currency['INR']} {formatNumber(row.original.totalRevenue)}</div>,
+      cell: ({ row }) => (
+        <div className="text-center flex items-center">
+          <IndianRupee size={15} />
+          {formatNumber(row.original.totalRevenue)}
+        </div>
+      ),
     },
     // {
     //   id: "conversion_rate",

@@ -6,7 +6,12 @@ import React from "react";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { currency, formatFloatValue, formatNumber } from "@/lib/utils/constants";
+import {
+  currency,
+  formatFloatValue,
+  formatNumber,
+} from "@/lib/utils/constants";
+import { IndianRupee } from "lucide-react";
 interface ITopBrandsProps {
   data: ITopBrands[];
   loading: boolean;
@@ -44,19 +49,26 @@ const TopBrands = ({ data, loading }: ITopBrandsProps) => {
             <li key={index} className="flex flex-col gap-1">
               <div className="flex justify-between items-center gap-2">
                 <div className="flex gap-2">
-                   <Image
-                                  src={item?.profile_image?item?.profile_image:"/assets/profile/profile-image.png"}
-                                  alt={"profile"}
-                                  width={25}
-                                  height={50}
-                                  className="rounded-[50%]"
-                                />
-                  <span className="text-font-grey">
-                   {item.business_name}
-                  <span className="text-secondary">
-                    {' - '}{`${currency["INR"]} ${formatNumber(item.revenue)}`}
+                  <Image
+                    src={
+                      item?.profile_image
+                        ? item?.profile_image
+                        : "/assets/profile/profile-image.png"
+                    }
+                    alt={"profile"}
+                    width={25}
+                    height={50}
+                    className="rounded-[50%]"
+                  />
+                  <span className="text-font-grey flex items-center gap-1">
+                    <span>{item.business_name}</span>
+                    <span className="text-secondary flex items-center">
+                      {" - "}
+                      <IndianRupee size={15} />
+                      {`${formatNumber(item.revenue)}`}
+                    </span>
                   </span>
-                </span></div>
+                </div>
                 <div className="flex gap-3">
                   <span className="text-primary">{formatFloatValue(item.percentage)}%</span>
                 </div>

@@ -7,6 +7,7 @@ import {
   CircleFadingPlus,
   Eye,
   ImageOff,
+  IndianRupee,
   Pencil,
   PencilLine,
   Search,
@@ -33,6 +34,7 @@ import ToolTip from "../../components-common/tool-tip";
 import StatusBadge from "../../components-common/status-badge";
 import { cn } from "@sohanemon/utils";
 import { currency, formatNumber } from "@/lib/utils/constants";
+import toast from "react-hot-toast";
 
 export interface ICategory {
   _id: string;
@@ -296,7 +298,11 @@ export default function ProductList() {
       accessorKey: "commission",
       cell: ({ row }) => (
         <span className="w-full flex items-center justify-center">
-          {row?.original?.commission_type === "FIXED_AMOUNT" ? `₹ ` : ``}
+          {row?.original?.commission_type === "FIXED_AMOUNT" ? (
+            <IndianRupee size={15} />
+          ) : (
+            ``
+          )}
           {row?.original?.commission}
           {row?.original?.commission_type === "PERCENTAGE" ? ` % ` : ``}
         </span>
@@ -312,7 +318,8 @@ export default function ProductList() {
       accessorKey: "price",
       cell: ({ row }) => (
         <span className="w-full flex items-center justify-center">
-          {currency['INR']} {row?.original?.price ? row?.original?.price : ''}
+          <IndianRupee size={15} />{" "}
+          {row?.original?.price ? row?.original?.price : ""}
         </span>
       ),
     },
@@ -330,11 +337,18 @@ export default function ProductList() {
 
         return (
           <div className="flex items-center justify-center">
-          <div
-            className={`flex justify-center item min-w-[100px] w-fit md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold uppercase ${chipColor}`}
-          >
-            {chipText}
-          </div>
+            <div
+              className={`flex justify-center item min-w-[100px] w-fit md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold uppercase ${chipColor} ${
+                chipText === "Expired" ? "cursor-pointer" : ""
+              }`}
+              onClick={() => {
+                if (chipText === "Expired") {
+                  router.push(`/vendor/campaign/product/${row?.original?._id}`);
+                }
+              }}
+            >
+              {chipText}
+            </div>
           </div>
         );
       },
@@ -347,13 +361,11 @@ export default function ProductList() {
         <div className="flex items-center gap-3">
           {/* View button (currently commented) */}
           <ToolTip content="Show Analytics" delayDuration={1000}>
-          <ChartNoAxesCombined 
+            <ChartNoAxesCombined
               strokeWidth={1.5}
               color="#FF4979"
               className="cursor-pointer size-5 "
-              onClick={() =>
-                router.push(`/vendor/view/${row?.original?._id}`)
-              }
+              onClick={() => toast.success(translate("Comingsoon"))}
             />
           </ToolTip>
 

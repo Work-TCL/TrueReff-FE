@@ -23,7 +23,6 @@ interface ICreatorTableProps {
   refreshCentral: () => void;
   loader: boolean;
   isDashboard?: boolean;
-
 }
 interface IRequestCancel {
   collaborationId: string;
@@ -71,7 +70,7 @@ const CollaborationTable = ({
       setIsOpen(initialValue);
     }
   };
-  
+
   const handleCancelRequest = async () => {
     setLoading(true);
     try {
@@ -158,18 +157,18 @@ const CollaborationTable = ({
     },
     ...(!isDashboard
       ? ([
-        {
-          id: "product_tags",
-          header: () => translate("Product_Tags"),
-          cell: ({ row }) => (
-            <TruncateWithToolTip
-              checkHorizontalOverflow={false}
-              linesToClamp={2}
-              text={row.original.productId?.tag ?? ""}
-            />
-          ),
-        },
-      ] as ColumnDef<ICollaboration>[])
+          {
+            id: "product_tags",
+            header: () => translate("Product_Tags"),
+            cell: ({ row }) => (
+              <TruncateWithToolTip
+                checkHorizontalOverflow={false}
+                linesToClamp={2}
+                text={row.original.productId?.tag ?? ""}
+              />
+            ),
+          },
+        ] as ColumnDef<ICollaboration>[])
       : []),
     {
       id: "creator",
@@ -181,7 +180,9 @@ const CollaborationTable = ({
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() =>
-              router.push(`/vendor/creator-profile/${collaboration?.creatorId?._id}`)
+              router.push(
+                `/vendor/creator-profile/${collaboration?.creatorId?._id}`
+              )
             }
           >
             <Avatar className="w-8 h-8">
@@ -202,6 +203,33 @@ const CollaborationTable = ({
               text={collaboration?.creatorId?.user_name}
             />
           </div>
+        );
+      },
+    },
+    {
+      id: "last-bid",
+      header: () => <div className="text-center">{translate("Last_Bid")}</div>,
+      cell: ({ row }) => {
+        const bids =
+          row.original?.bids?.length > 0 ? row.original?.bids[0] : null;
+        return bids ? (
+          <div className="flex justify-center">
+            {!bids?.isSeen ? (
+              <div
+                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-white bg-primary/90`}
+              >
+                {bids?.proposal}%
+              </div>
+            ) : (
+              <div
+                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-primary`}
+              >
+                {bids?.proposal}%
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex justify-center">-</div>
         );
       },
     },
@@ -287,34 +315,46 @@ const CollaborationTable = ({
                     ),
                   }[collaboration?.requestedBy ?? ""] ?? null,
                 PENDING: (
-                  <ToolTip content="Start Bargaining" delayDuration={1000}>
-                    <MessagesSquare
-                      strokeWidth={1.5}
-                      color="#3b82f6"
-                      className="cursor-pointer"
-                      size={25}
-                      onClick={() =>
-                        router.push(
-                          `/vendor/creators/collaboration/${collaboration?._id}`
-                        )
-                      }
-                    />
-                  </ToolTip>
+                  <div className="relative">
+                    <ToolTip content="Start Bargaining" delayDuration={1000}>
+                      <MessagesSquare
+                        strokeWidth={1.5}
+                        color="#3b82f6"
+                        className="cursor-pointer"
+                        size={25}
+                        onClick={() =>
+                          router.push(
+                            `/vendor/creators/collaboration/${collaboration?._id}`
+                          )
+                        }
+                      />
+                    </ToolTip>
+                    {collaboration?.lastMessage &&
+                      collaboration?.lastMessage?.isRead === false && (
+                        <div className="w-2 h-2 rounded-full bg-primary absolute top-0 right-0 -mb-1" />
+                      )}
+                  </div>
                 ),
                 ACTIVE: (
-                  <ToolTip content="Start Bargaining" delayDuration={1000}>
-                    <MessagesSquare
-                      strokeWidth={1.5}
-                      color="#3b82f6"
-                      className="cursor-pointer"
-                      size={25}
-                      onClick={() =>
-                        router.push(
-                          `/vendor/creators/collaboration/${collaboration?._id}`
-                        )
-                      }
-                    />
-                  </ToolTip>
+                  <div className="relative">
+                    <ToolTip content="Start Bargaining" delayDuration={1000}>
+                      <MessagesSquare
+                        strokeWidth={1.5}
+                        color="#3b82f6"
+                        className="cursor-pointer"
+                        size={25}
+                        onClick={() =>
+                          router.push(
+                            `/vendor/creators/collaboration/${collaboration?._id}`
+                          )
+                        }
+                      />
+                      {collaboration?.lastMessage &&
+                        collaboration?.lastMessage?.isRead === false && (
+                          <div className="w-2 h-2 rounded-full bg-primary absolute top-0 right-0 -mb-1" />
+                        )}
+                    </ToolTip>
+                  </div>
                 ),
               }[collaboration?.collaborationStatus]
             }
