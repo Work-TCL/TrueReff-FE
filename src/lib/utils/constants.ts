@@ -8,6 +8,7 @@ import {
   Settings,
   User,
 } from "lucide-react";
+import { toastMessage } from "./toast-message";
 
 export const MENU = {
   "/dashboard": { label: "Overview", icon: Home, link: "/dashboard" },
@@ -113,10 +114,10 @@ export const formatDate = (dateString: string | null): string => {
 export const formatFloatValue = (value: number = 0): any => {
   return value % 1 === 0 ? value : value.toFixed(2);
 };
-export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
+export const fileUploadLimitValidator = (size: number = 0, mb: number = 5) => {
   const maxSizeInBytes = mb * 1024 * 1024; // 20MB
   if (size > maxSizeInBytes) {
-    alert("File size should be less than 10MB.");
+    toastMessage.info(`File size should be less than ${mb}MB.`);
     return false;
   }
   return true;

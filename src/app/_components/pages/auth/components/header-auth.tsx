@@ -9,7 +9,7 @@ interface IHeaderAuthProps {
 export default function HeaderAuth({ redirectUrl }: IHeaderAuthProps) {
   const router = useRouter();
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mb-3">
       <Image
         onClick={() => redirectUrl && router.push(redirectUrl)}
         width={30}

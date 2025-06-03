@@ -245,3 +245,7 @@ body {
   animation: marquee 20s linear infinite;
 }
 
+.slider-wrapper .slick-track {
+  display: inline-flex;
+}
+

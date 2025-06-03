@@ -23,6 +23,7 @@ import Image from "next/image";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Label } from "recharts";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
+import Link from "next/link";
 
 export interface ICategory {
     _id: string;
@@ -62,6 +63,7 @@ export interface IProduct {
     freeProduct: boolean;
     notes: string;
     productType?: string;
+    utmLink: string;
 }
 
 export interface IRequest {
@@ -154,7 +156,8 @@ export default function ViewProductDetail({
         "channels": [],
         "notes": "",
         "createdAt": "",
-        "updatedAt": ""
+        "updatedAt": "",
+        utmLink: ""
     }
     );
     const [selectedVariant, setSelectedVariant] = useState({
@@ -297,18 +300,14 @@ export default function ViewProductDetail({
                                 <div className="flex gap-4 mt-2">
                                     <button
                                                   className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-3 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
-                                                  onClick={() => {
-                                                    
-                                                  }}
+                                                  
                                                 >
                                                   <Heart size={15} />  {translate("Add_to_Wishlist")} </button>
-                                                  <button
+                                                  <Link href={productData?.utmLink}
                                                   className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-3 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
-                                                  onClick={() => {
-                                                    
-                                                  }}
+                                                  target={"_blank"}
                                                 >
-                                                  <ShoppingCart size={15} />  {translate("Shop_Now")} </button>
+                                                  <ShoppingCart size={15} />  {translate("Shop_Now")} </Link>
                                 </div>
                                 <div className=" border-t text-sm pt-4 text-gray-800">
                                     <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">

@@ -222,6 +222,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/creator-registration",
     "/vendor-register",
     "/wishlist",
+    "/products",
   ];
   const handleOnBack = () => {
     let activeTab = parseInt(tab);

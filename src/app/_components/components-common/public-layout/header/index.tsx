@@ -12,6 +12,7 @@ import { useCreatorStore } from "@/lib/store/creator";
 import axios from "@/lib/web-api/axios";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/commonUtils";
+import Image from "next/image";
 
 interface IHeaderProps {
     handleExpandSidebar?: () => void;
@@ -26,9 +27,13 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         <>
             <header className="bg-white justify-between px-3 py-3 flex items-center gap-1">
                 <div className="flex  items-center">
-                    <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-bold text-primary">
-                        {"truereff"}
-                    </h2>
+                <Image
+                                    width={220}
+                                    height={35}
+                                    src="/assets/common/truereff-dark.svg"
+                                    alt="TrueReff"
+                                    className={`w-[225px] h-[35px] mx-auto`}
+                                  />
                 </div>
                 <div className="flex items-center gap-2">
                     {account?.email && <div className="ml-auto flex items-center md:gap-3 gap-2">

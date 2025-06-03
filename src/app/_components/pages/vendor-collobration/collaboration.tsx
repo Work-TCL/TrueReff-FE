@@ -22,6 +22,19 @@ export interface ICategory {
   updatedAt: string;
 }
 
+export interface IChannel {
+  _id: string;
+  creatorId: string;
+  channelId: string;
+  channelName: string;
+  handleName: string;
+  channelType: string;
+  followers: number;
+  createdAt: string;
+  updatedAt: string;
+  lastFiveVideoViews: number;
+  lastMonthViews: number;
+}
 export interface IProduct {
   freeProduct: boolean;
   _id: string;
@@ -63,10 +76,10 @@ export interface ICreator {
   gender: "Male" | "Female" | "Other" | string;
   state: string;
   city: string;
-  category: string[]; // Array of category IDs
+  category: ICategory[]; // Array of category IDs
   sub_category: string[]; // Array of subcategory IDs
   tags: string[];
-  channels: string[]; // Channel IDs
+  channels: IChannel[]; // Channels
   completed_step: number;
   status: "APPROVED" | "PENDING" | "REJECTED" | string;
   createdAt: string; // or Date
@@ -78,6 +91,7 @@ export interface ICreator {
   profile_image?: string;
   store_description?: string; // HTML string
   store_name: string;
+  categories?: string;
 }
 
 export interface IRequest {
@@ -187,9 +201,9 @@ export default function CollaborationList() {
 
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
-                ele.productId.categories =
-                  ele.productId.category?.length > 0
-                    ? ele.productId.category
+                ele.creatorId.categories =
+                (ele.creatorId && ele.creatorId?.category?.length > 0)
+                    ? ele.creatorId.category
                         .filter(
                           (category: ICategory) => category?.parentId === null
                         )

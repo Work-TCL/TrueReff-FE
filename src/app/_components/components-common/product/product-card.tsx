@@ -13,8 +13,8 @@ export interface ICategory {
   _id: string;
   name: string;
   parentId: string | null;
-  createdAt: string; // or Date if parsed
-  updatedAt: string; // or Date
+  createdAt?: string; // or Date if parsed
+  updatedAt?: string; // or Date
 }
 export interface IProduct {
   _id: string;
@@ -38,14 +38,16 @@ export interface IProduct {
   channels: string[]; // Array of channel names
   createdAt: string; // You can use `Date` if parsed
   updatedAt: string; // You can use `Date` if parsed
-  crmLink: string; // CRM link
+  crmLink?: string; // CRM link
   categories?: string; // Comma-separated string of category names
   tag?: string; // Comma-separated string of tags
 }
 const ProductCard = ({
   item: product,
+  id
 }: {
   item: IProduct;
+  id?: string;
 }) => {
   const translate = useTranslations();
   const router = useRouter();
@@ -57,7 +59,7 @@ const ProductCard = ({
         {/* Image */}
         <div
           className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
-          onClick={() => router.push(`/product-detail/${product?._id}`)}
+          onClick={() => router.push(`/product-detail/${id ? id : product?._id}`)}
         >
           {product.media?.length > 0 ? (
             <img

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { CheckCircle, ImageOff, MessagesSquare, XCircle } from "lucide-react";
-import { ICollaboration, IRequest } from "./collaboration";
+import { IChannel, ICollaboration, IRequest } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import Loader from "../../components-common/layout/loader";
@@ -16,6 +16,8 @@ import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
 import { useTranslations } from "next-intl";
+import { IFollowers } from "@/lib/types-api/creator-dashboard";
+import { formatNumber } from "@/lib/utils/constants";
 
 interface ICreatorTableProps {
   data: ICollaboration[];
@@ -101,15 +103,22 @@ const CollaborationTable = ({
       handleStatusChangeRequest("rejected", isOpen?.collaborationId);
     }
   };
-  const getMessages = (status: string, request: IRequest) => {
-    let userStatus: { [key: string]: string } = {
-      CREATOR: "REQUESTED_CREATOR_TO_VENDOR",
-      VENDOR: "REQUESTED_VENDOR_TO_CREATOR",
+  const getInstagramView: (channels: IChannel[]) => string = (
+      channels: IChannel[]
+    ) => {
+      let instagram = channels.find(
+        (ele: { channelType: string }) => ele.channelType === "instagram"
+      );
+      return instagram ? formatNumber(instagram?.followers) : "-";
     };
-    return status === "REQUESTED" && request?.requestFrom
-      ? userStatus[request?.requestFrom]
-      : status;
-  };
+    const getYoutubeView: (channels: IChannel[]) => string = (
+      channels: IChannel[]
+    ) => {
+      let youtube = channels.find(
+        (ele: { channelType: string }) => ele.channelType === "youtube"
+      );
+      return youtube ? formatNumber(youtube?.followers) : "-";
+    };
 
   const productCollaborationColumns: ColumnDef<ICollaboration>[] = [
     {
@@ -144,32 +153,21 @@ const CollaborationTable = ({
         );
       },
     },
-    {
-      id: "product_category",
-      header: () => translate("Product_Category"),
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.productId?.categories ?? ""}
-        />
-      ),
-    },
-    ...(!isDashboard
-      ? ([
-          {
-            id: "product_tags",
-            header: () => translate("Product_Tags"),
-            cell: ({ row }) => (
-              <TruncateWithToolTip
-                checkHorizontalOverflow={false}
-                linesToClamp={2}
-                text={row.original.productId?.tag ?? ""}
-              />
-            ),
-          },
-        ] as ColumnDef<ICollaboration>[])
-      : []),
+    // ...(!isDashboard
+    //   ? ([
+    //       {
+    //         id: "product_tags",
+    //         header: () => translate("Product_Tags"),
+    //         cell: ({ row }) => (
+    //           <TruncateWithToolTip
+    //             checkHorizontalOverflow={false}
+    //             linesToClamp={2}
+    //             text={row.original.productId?.tag ?? ""}
+    //           />
+    //         ),
+    //       },
+    //     ] as ColumnDef<ICollaboration>[])
+    //   : []),
     {
       id: "creator",
       header: () => translate("Creator"),
@@ -185,7 +183,32 @@ const CollaborationTable = ({
               )
             }
           >
-            <Avatar className="w-8 h-8">
+            <ToolTip content={<div className="flex gap-2 justify-center">
+              <div className="flex flex-col space-y-1 items-center p-1">
+                <div className="bg-gray-200 p-1 rounded-full">
+                  <img
+                    src="/assets/creator/insta-gram.svg"
+                    width={18}
+                    height={18}
+                  />
+                </div>
+                <p className="text-sm">
+                  {getInstagramView(collaboration?.creatorId?.channels)}
+                </p>
+              </div>
+              <div className="flex flex-col space-y-1 items-center p-1">
+              <div className="bg-gray-200 p-1 rounded-full">
+                  <img
+                    src="/assets/creator/you-tube.svg"
+                    width={18}
+                    height={18}
+                  />
+                </div>
+                <p className="text-sm">
+                  {getYoutubeView(collaboration?.creatorId?.channels)}
+                </p>
+              </div>
+            </div>}><Avatar className="w-8 h-8">
               <AvatarImage
                 className={
                   collaboration?.creatorId?.profile_image ? "" : "opacity-50"
@@ -197,6 +220,7 @@ const CollaborationTable = ({
                 }
               />
             </Avatar>
+            </ToolTip>
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
               linesToClamp={2}
@@ -205,6 +229,17 @@ const CollaborationTable = ({
           </div>
         );
       },
+    },
+    {
+      id: "product_category",
+      header: () => translate("Creator_Category"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.creatorId?.categories ?? ""}
+        />
+      ),
     },
     {
       id: "last-bid",

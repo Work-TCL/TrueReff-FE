@@ -279,7 +279,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     <>
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-[9999] transition-all duration-300 ease-in-out  ${
+        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-[9999] transition-all duration-300 ease-in-out shadow-lg  ${
           isSidebarExpanded ? "w-[300px]" : "w-[75px]"
         }`}
       >
@@ -298,10 +298,10 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
             ) : (
               <Image
                 width={220}
-                height={40}
+                height={35}
                 src="/assets/common/truereff-dark.svg"
                 alt="TrueReff"
-                className={`w-[225px] max-h-[88px] h-full mx-auto`}
+                className={`w-[225px] h-[35px] mx-auto`}
               />
             )}
           </div>
@@ -478,15 +478,15 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
           expanded ? "-translate-x-full" : "shadow-lg"
         }`}
       >
-        <div className="flex justify-end  gap-10">
-          <div className="p-4 pb-8 text-primary-color font-bold text-4xl text-center">
-            <Image
-              width={40}
-              height={88}
-              src="/assets/common/truereff-dark.svg"
-              alt="TrueReff"
-              className="md:w-auto max-w-40 w-full max-h-[88px] h-full mx-auto"
-            />
+        <div className="flex justify-end">
+          <div className="p-4 text-primary-color font-bold text-4xl text-center">
+          <Image
+                width={220}
+                height={40}
+                src="/assets/common/truereff-dark.svg"
+                alt="TrueReff"
+                className={`w-[225px] h-[35px] mx-auto`}
+              />
           </div>
           <X
             className="size-6 shrink-0 mt-5 mr-2 cursor-pointer"

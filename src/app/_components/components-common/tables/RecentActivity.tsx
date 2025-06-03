@@ -107,9 +107,9 @@ export default function RecentActivities() {
 
           if (Array.isArray(collaborationArray)) {
             let result = collaborationArray.map((ele: ICollaboration) => {
-              ele.productId.categories =
-                ele.productId.category?.length > 0
-                  ? ele.productId.category
+              ele.creatorId.categories =
+                ele.creatorId.category?.length > 0
+                  ? ele.creatorId.category
                     .filter(
                       (category: ICategory) => category?.parentId === null
                     )

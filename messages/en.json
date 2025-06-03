@@ -617,5 +617,9 @@
   "Stores": "Stores",
   "Base_Commission": "Base Commission",
   "Product_Price": "Product Price",
-  "Active_Collabs": "Active Collabs"
+  "Active_Collabs": "Active Collabs",
+  "Creator_Category": "Creator Category",
+  "View_Collection": "View Collection",
+  "No_Products_Available_Category": "No Products Available for this Category",
+  "No_Products_Available_Description_Category": "It seems there are currently no products to display for this category. Please check back later."
 }
