@@ -160,7 +160,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     //   ],
     // },
     {
-      label: translate("Product_Management"),
+      label: translate("Product_Lists"),
       icon: Box,
       link: "/vendor/products",
     },

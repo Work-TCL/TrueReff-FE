@@ -16,10 +16,12 @@ const CreatorCard = ({
   item: creator,
   handleCollaborateNow,
   size = "reguler",
+  isCategoryShow = true,
 }: {
   item: ICreator;
   handleCollaborateNow: (creatorId: string) => void;
   size?: "reguler" | "small";
+  isCategoryShow?: boolean;
 }) => {
   const translate = useTranslations();
   const router = useRouter();
@@ -63,13 +65,13 @@ const CreatorCard = ({
               creator.short_description ? creator.short_description : "-"
             }`}
           /> */}
-
-          <TruncateWithToolTip
-            checkHorizontalOverflow={true}
-            className=" text-sm w-full line-clamp-none truncate"
-            text={`${creator.categories || "-"}`}
-          />
-
+          {isCategoryShow && (
+            <TruncateWithToolTip
+              checkHorizontalOverflow={true}
+              className=" text-sm w-full line-clamp-none truncate"
+              text={`${creator.categories || "-"}`}
+            />
+          )}
           {/* {creator.tags?.length > 0 ? (
             <div className="flex gap-2 mt-1">
               {creator.tags.slice(0, 2).map((tag, index) => (

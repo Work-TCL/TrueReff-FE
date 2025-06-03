@@ -189,10 +189,10 @@ export default function ProductList() {
 
   const productColumns: ColumnDef<IProduct>[] = [
     {
-      id: "channelName",
-      header: () => translate("Channel"),
-      accessorKey: "channelName",
-      cell: ({ row }) => row.original.channelName,
+      id: "sku",
+      header: () => translate("SKU"),
+      accessorKey: "sku",
+      cell: ({ row }) => row.original.sku,
     },
     {
       id: "title",
@@ -221,23 +221,31 @@ export default function ProductList() {
         );
       },
     },
-    {
-      id: "categories",
-      header: () => translate("Categories"),
-      accessorKey: "categories",
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.categories ?? ""}
-        />
-      ),
-    },
+    // {
+    //   id: "categories",
+    //   header: () => translate("Categories"),
+    //   accessorKey: "categories",
+    //   cell: ({ row }) => (
+    //     <TruncateWithToolTip
+    //       checkHorizontalOverflow={false}
+    //       linesToClamp={2}
+    //       text={row.original.categories ?? ""}
+    //     />
+    //   ),
+    // },
     {
       id: "activeCollabCount",
-      header: () => translate("Active_Collabs"),
+      header: () => (
+        <span className="flex items-center justify-center">
+          {translate("Active_Collabs")}
+        </span>
+      ),
       accessorKey: "sku",
-      cell: ({ row }) => formatNumber(row?.original?.activeCollabCount),
+      cell: ({ row }) => (
+        <span className="flex items-center justify-center">
+          {formatNumber(row?.original?.activeCollabCount)}
+        </span>
+      ),
     },
     // {
     //   id: "status",
@@ -413,7 +421,7 @@ export default function ProductList() {
                 onChange={handleSelectCategory}
                 handleSelectStatus={handleSelectStatus}
               />
-              <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
+              {/* <ViewToggle viewMode={viewMode} setViewMode={setViewMode} /> */}
             </div>
           </div>
           {internalLoading && <Loader />}

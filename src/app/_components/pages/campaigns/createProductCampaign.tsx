@@ -7,6 +7,7 @@ import {
   ICampaignProductValidationSchema,
 } from "@/lib/utils/validations";
 import toast from "react-hot-toast";
+import { Input as InputRadix } from "@/components/ui/input";
 import {
   cn,
   formatForDateInput,
@@ -31,7 +32,13 @@ import { getCategories } from "@/lib/web-api/auth";
 import CreatorMaterial from "./_components/creator-material";
 import CampaignProductView from "./_components/product-view";
 import { VIDEO_TYPE } from "@/lib/utils/constants";
-import { CircleX } from "lucide-react";
+import { CircleX, Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 
 const Input = dynamic(() => import("../../ui/form/Input"), { ssr: false });
 
@@ -73,7 +80,7 @@ export interface IProduct {
 const types = {
   FIXED_AMOUNT: "FIXED_AMOUNT",
   PERCENTAGE: "PERCENTAGE",
-}
+};
 const typOptions = [
   {
     label: "Fixed Amount",
@@ -83,7 +90,7 @@ const typOptions = [
     label: "Percentage",
     value: "PERCENTAGE",
   },
-]
+];
 export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const translate = useTranslations();
   const params = useParams();
@@ -114,11 +121,12 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
   const [showDiscountSection, setShowDiscountSection] = useState(false);
+  const [showCreatorMeterial, setShowCreatorMeterial] = useState(false);
 
   const [formState, setFormState] = useState({
     discount_value: "",
     commission: "",
-  })
+  });
 
   const fetchCategory = async () => {
     try {
@@ -156,14 +164,16 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   });
 
   const onSubmit = async (data: ICampaignProductValidationSchema) => {
-
     if (!selectedProduct) {
       toast.error("select product required.");
       return;
     }
     setLoading(true);
     try {
-      let price = selectedProduct?.variants?.length > 0 ? selectedProduct?.variants[0]?.price : 0;
+      let price =
+        selectedProduct?.variants?.length > 0
+          ? selectedProduct?.variants[0]?.price
+          : 0;
       let discountError = "";
       let commissionError = "";
       // If the first character is "0" and the length is greater than 1, remove the first character
@@ -176,67 +186,71 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
           if (price && maxOffer > parseFloat(price)) {
             methods.setError("commission", {
               type: "manual",
-              message: "Commission cannot exceed the product price."
+              message: "Commission cannot exceed the product price.",
             });
-            commissionError = "Commission cannot exceed the product price."
+            commissionError = "Commission cannot exceed the product price.";
           } else {
             commissionError = "";
             methods.setError("commission", {
-            type: "manual",
-            message: ""
-          });}
-        } if (data.commission_type === types.FIXED_AMOUNT) {
+              type: "manual",
+              message: "",
+            });
+          }
+        }
+        if (data.commission_type === types.FIXED_AMOUNT) {
           // For fixed amount, ensure the offer does not exceed the product price
-          
+
           if (price && commissionValue > parseFloat(price)) {
             methods.setError("commission", {
               type: "manual",
-              message: "Commission cannot exceed the product price."
+              message: "Commission cannot exceed the product price.",
             });
-            commissionError = "Commission cannot exceed the product price."
+            commissionError = "Commission cannot exceed the product price.";
           } else {
-            commissionError = ""
+            commissionError = "";
             methods.setError("commission", {
-            type: "manual",
-            message: ""
-          });}
+              type: "manual",
+              message: "",
+            });
+          }
         }
-      } 
-       if (discountValue && !isNaN(discountValue)) {
+      }
+      if (discountValue && !isNaN(discountValue)) {
         if (data.discount_type === types.PERCENTAGE) {
           // For percentage-based commission, calculate the maximum offer
           const maxOffer = (parseFloat(price) * discountValue) / 100;
           if (price && maxOffer > parseFloat(price)) {
-            discountError = "Discount cannot exceed the product price."
+            discountError = "Discount cannot exceed the product price.";
             methods.setError("discount_value", {
               type: "manual",
-              message: "Discount cannot exceed the product price."
+              message: "Discount cannot exceed the product price.",
             });
           } else {
             discountError = "";
             methods.setError("discount_value", {
-            type: "manual",
-            message: ""
-          });}
+              type: "manual",
+              message: "",
+            });
+          }
         } else if (data.discount_type === types.FIXED_AMOUNT) {
           // For fixed amount, ensure the offer does not exceed the product price
           if (price && discountValue > parseFloat(price)) {
-            discountError = "Discount cannot exceed the product price."
+            discountError = "Discount cannot exceed the product price.";
             methods.setError("discount_value", {
               type: "manual",
-              message: "Discount cannot exceed the product price."
+              message: "Discount cannot exceed the product price.",
             });
           } else {
             discountError = "";
             methods.setError("discount_value", {
-            type: "manual",
-            message: ""
-          });;}
+              type: "manual",
+              message: "",
+            });
+          }
         }
       }
-      
-      const isValid = (discountError === "" && commissionError === "");
 
+      const isValid = discountError === "" && commissionError === "";
 
       if (isValid) {
         const formData: FormData = new FormData();
@@ -325,7 +339,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         }
         throw response;
       }
-
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
@@ -366,9 +379,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
       const product: any = response?.data?.data;
 
-      const images = product?.images?.filter((v: any) => v?.src)?.map(
-        (v: any) => v?.src
-      );
+      const images = product?.images
+        ?.filter((v: any) => v?.src)
+        ?.map((v: any) => v?.src);
 
       // productId({ ...product, media: images });
       handleProductSelect({
@@ -567,10 +580,17 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 }
                 title={selectedProduct?.title}
                 description={selectedProduct?.description}
-                price={selectedProduct?.variants?.length ? selectedProduct?.variants[0]?.price : undefined
+                price={
+                  selectedProduct?.variants?.length
+                    ? selectedProduct?.variants[0]?.price
+                    : undefined
                 }
                 variants={selectedProduct?.variants}
-                totalInventory={selectedProduct?.variants?.length ? selectedProduct?.variants[0]?.inventory_quantity : undefined}
+                totalInventory={
+                  selectedProduct?.variants?.length
+                    ? selectedProduct?.variants[0]?.inventory_quantity
+                    : undefined
+                }
               />
               <div
                 className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2
@@ -671,12 +691,12 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       ) : null} */}
                       {isDisabled
                         ? methods
-                          .watch("channels")
-                          ?.map((v) => (
-                            <div className="flex gap-1 bg-background p-2 rounded-md">
-                              {v}
-                            </div>
-                          ))
+                            .watch("channels")
+                            ?.map((v) => (
+                              <div className="flex gap-1 bg-background p-2 rounded-md">
+                                {v}
+                              </div>
+                            ))
                         : null}
                     </div>
                     {Boolean(get(methods.formState.errors, "channels")) && (
@@ -782,7 +802,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
               <div className="text-lg font-medium text-gray-500">
-                {translate("Creator_material")}
+                {translate("campaignObjective")}
               </div>
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col w-full gap-2">
@@ -816,6 +836,73 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     </span>
                   )}
                 </div>
+                <div className="flex flex-col lg:flex-row gap-3">
+                  <div className="flex flex-col w-full gap-1">
+                    {/* <div className="flex flex-col gap-1"> */}
+                    <Input
+                      type="textarea"
+                      placeholder={translate("Type_campaign_goals_note_here")}
+                      label={translate("Campaign_Goals")}
+                      name="notes"
+                      rows={5}
+                      disabled={isDisabled}
+                      required={false}
+                    />
+                    {/* </div> */}
+                    {/* <ProductSelectDropdown
+                    onSelect={handleProductSelect}
+                    selectedProduct={selectedProduct}
+                    disabled={isDisabled}
+                  /> */}
+                    {Boolean(get(methods.formState.errors, "productId")) && (
+                      <span className="text-red-600 text-sm p-2 block">
+                        {methods.formState.errors["productId"]?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
+              <div className="text-lg font-medium text-gray-500 flex items-center gap-x-2">
+                {translate("Creator_material")}{" "}
+                <TooltipProvider key={`Creator_material`}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info />
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                      side="top"
+                    >
+                      {translate("campaignMaterialTolltip")}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <label className="inline-flex items-center cursor-pointer relative">
+                  <input
+                    type="checkbox"
+                    value=""
+                    checked={showCreatorMeterial}
+                    className="sr-only peer"
+                    onChange={() =>
+                      setShowCreatorMeterial(!showCreatorMeterial)
+                    }
+                  />
+                  <div
+                    className={`relative w-11 h-6 ${
+                      showCreatorMeterial ? "bg-primary" : "bg-gray-200"
+                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                  ></div>
+                </label>
+              </div>
+              <div
+                className={`flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden ${
+                  showCreatorMeterial
+                    ? "max-h-[1000px] opacity-100 pt-3"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
                 <div className="flex flex-col w-full gap-1">
                   <CreatorMaterial
                     onMediaChange={setMediaMixin}
@@ -871,31 +958,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row gap-3">
-                  <div className="flex flex-col w-full gap-1">
-                    {/* <div className="flex flex-col gap-1"> */}
-                    <Input
-                      type="textarea"
-                      placeholder={translate("Type_product_note_here")}
-                      label={translate("Product_Note")}
-                      name="notes"
-                      rows={5}
-                      disabled={isDisabled}
-                      required={false}
-                    />
-                    {/* </div> */}
-                    {/* <ProductSelectDropdown
-                    onSelect={handleProductSelect}
-                    selectedProduct={selectedProduct}
-                    disabled={isDisabled}
-                  /> */}
-                    {Boolean(get(methods.formState.errors, "productId")) && (
-                      <span className="text-red-600 text-sm p-2 block">
-                        {methods.formState.errors["productId"]?.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
               </div>
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
@@ -909,9 +971,29 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       name="commission_type"
                       type="react-select"
                       placeholder={translate("Select_Commission_Type")}
-                      label={translate("Commission_Type")}
+                      // @ts-ignore
+                      label={
+                        <span className="flex items-center gap-1">
+                          {translate("Commission_Type")}
+                          <TooltipProvider key={`Commission_Type`}>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Info className="w-4 h-4 text-gray-500" />
+                              </TooltipTrigger>
+                              <TooltipContent
+                                className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                                side="top"
+                              >
+                                {translate("commisionTooltip")}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </span>
+                      }
+                      lableClassName="flex"
                       options={typOptions}
                       disabled={isDisabled}
+                      required={false}
                     />
                   </div>
 
@@ -933,9 +1015,21 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     </label>
                     <label
                       htmlFor="freeProduct"
-                      className="mt-3 text-xs flex align-middle gap-2 text-gray-600"
+                      className="mt-3 text-xs flex items-center gap-2 text-gray-600"
                     >
-                      <input
+                      <InputRadix
+                        type="radio"
+                        name={`freeProduct`}
+                        className="w-5 h-5 cursor-pointer accent-[#FF4979]"
+                        checked={Boolean(methods.watch("freeProduct"))}
+                        onClick={() =>
+                          methods.setValue(
+                            "freeProduct",
+                            !Boolean(methods.watch("freeProduct"))
+                          )
+                        }
+                      />
+                      {/* <input
                         type="checkbox"
                         className="w-4 h-4 cursor-pointer"
                         {...methods.register("freeProduct")}
@@ -947,9 +1041,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                           );
                           // methods.trigger(["startDate", "endDate"]);
                         }}
-                      />
+                      /> */}
                       <span
-                        className="text-sm cursor-pointer"
+                        className="text-sm cursor-pointer flex items-center gap-1"
                         onClick={(v) => {
                           methods.setValue(
                             "freeProduct",
@@ -958,6 +1052,19 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                         }}
                       >
                         {translate("free_promotional_product")}
+                        <TooltipProvider key={`free_promotional_product`}>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Info className="w-4 h-4 text-gray-500" />
+                            </TooltipTrigger>
+                            <TooltipContent
+                              className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                              side="top"
+                            >
+                              {translate("freeProductTooltip")}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </span>
                     </label>
                   </div>
@@ -966,8 +1073,21 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px]">
               <div className="flex items-center gap-4">
-                <div className="text-lg font-medium text-gray-500">
+                <div className="text-lg font-medium text-gray-500 flex items-center gap-1">
                   {translate("additional_offers")}
+                  <TooltipProvider key={`additional_offers`}>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                        side="top"
+                      >
+                        {translate("additionTooltip")}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <label className="inline-flex items-center cursor-pointer relative">
                   <input
@@ -980,8 +1100,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     }
                   />
                   <div
-                    className={`relative w-11 h-6 ${showDiscountSection ? "bg-primary" : "bg-gray-200"
-                      } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                    className={`relative w-11 h-6 ${
+                      showDiscountSection ? "bg-primary" : "bg-gray-200"
+                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
                   ></div>
                 </label>
               </div>
@@ -989,10 +1110,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               <div
                 className={`
                 flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden
-                ${showDiscountSection
+                ${
+                  showDiscountSection
                     ? "max-h-[1000px] opacity-100 pt-3"
                     : "max-h-0 opacity-0"
-                  }
+                }
               `}
               >
                 <div className="flex flex-col md:flex-row gap-3">
@@ -1013,6 +1135,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       label={translate("Discount_Type")}
                       options={typOptions}
                       disabled={isDisabled}
+                      required={false}
                     />
                   </div>
 
@@ -1023,6 +1146,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       placeholder={"Enter Your Discount"}
                       label={translate("Discount")}
                       disabled={isDisabled}
+                      required={false}
                     />
                   </div>
                 </div>
@@ -1034,31 +1158,44 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               <div className="pt-2">
                 <div className="flex flex-col md:flex-row gap-6">
                   {!isDisabled ? (
-                    <div className="flex gap-1 cursor-pointer">
-                      <Input
-                        name="tearmAndCondition"
-                        type="checkbox"
-                        label={translate("campaignTerms")}
-                        checked={Boolean(methods.watch("tearmAndCondition"))}
-                        onChange={(v) => {
-                          methods.setValue(
-                            "tearmAndCondition",
-                            !Boolean(methods.watch("tearmAndCondition"))
-                          );
-                          methods.trigger(["tearmAndCondition"]);
-                        }}
-                        hideError={true}
-                      />
+                    <div className="flex gap-1 cursor-pointer items-center">
+                      <div className="mb-1">
+                        <Input
+                          name="tearmAndCondition"
+                          type="checkbox"
+                          // label={translate("campaignTerms")}
+                          checked={Boolean(methods.watch("tearmAndCondition"))}
+                          onChange={(v) => {
+                            methods.setValue(
+                              "tearmAndCondition",
+                              !Boolean(methods.watch("tearmAndCondition"))
+                            );
+                            methods.trigger(["tearmAndCondition"]);
+                          }}
+                          hideError={true}
+                        />
+                      </div>
+                      <div>
+                        {translate("campaignTerms_m")}{" "}
+                        <a
+                          href="/terms"
+                          target="_blank"
+                          className="text-blue underline"
+                        >
+                          {translate("TermsCondition")}
+                        </a>
+                        .
+                      </div>
                     </div>
                   ) : null}
                 </div>
                 {Boolean(
                   get(methods.formState.errors, "tearmAndCondition")
                 ) && (
-                    <span className="text-red-600 text-sm p-2 block">
-                      {methods.formState.errors["tearmAndCondition"]?.message}
-                    </span>
-                  )}
+                  <span className="text-red-600 text-sm p-2 block">
+                    {methods.formState.errors["tearmAndCondition"]?.message}
+                  </span>
+                )}
               </div>
               {!isDisabled ? (
                 <div className="flex gap-[10px] ">

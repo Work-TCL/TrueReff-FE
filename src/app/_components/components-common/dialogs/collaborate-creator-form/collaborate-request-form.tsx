@@ -104,15 +104,21 @@ export default function CollaborateRequestForm({
           ) : products?.length > 0 ? (
             products?.map((product: any, index: number) => {
               return (
-                <div className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-lg" key={index}>
-                  <div className="flex items-center gap-4"><Input
-                    type="checkbox"
-                    name="product"
-                    className="w-5 h-5 cursor-pointer"
-                    checked={selectedProducts.includes(product?._id)}
-                    disabled={product?.collaborationStatus !== null || submitting}
-                    onChange={() => handleOnSelectProduct(product?._id)}
-                  />
+                <div
+                  className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-lg"
+                  key={index}
+                >
+                  <div className="flex items-center gap-4">
+                    <Input
+                      type="radio"
+                      name={`product-${index}`}
+                      className="w-5 h-5 cursor-pointer accent-[#FF4979]"
+                      checked={selectedProducts.includes(product?._id)}
+                      disabled={
+                        product?.collaborationStatus !== null || submitting
+                      }
+                      onClick={() => handleOnSelectProduct(product?._id)}
+                    />
                     <div
                       onClick={() =>
                         !submitting && handleOnSelectProduct(product?._id)

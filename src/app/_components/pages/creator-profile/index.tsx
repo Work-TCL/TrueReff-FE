@@ -46,8 +46,16 @@ export default function CreatorProfile({isVendor}:ICreatorProfileProps) {
           channels={{
             youtube_link: creatorData.youtube_link,
             instagram_link: creatorData.instagram_link,
-            }}
-            store_name={creatorData?.store_name}
+            instagramFollowers: creatorData?.channels?.find(
+              (v: any) => v?.channelType === "instagram"
+              // @ts-ignore
+            )?.followers,
+            youtubeFollowers: creatorData?.channels?.find(
+              (v: any) => v?.channelType === "youtube"
+              // @ts-ignore
+            )?.followers,
+          }}
+          store_name={creatorData?.store_name}
           categories={[...creatorData.category.map((v: any) => v.name)]}
           store_link={isVendor ? `/vendor/creator-store/${creatorData?.store_name}` : ""}
         />

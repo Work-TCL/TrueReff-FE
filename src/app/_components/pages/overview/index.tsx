@@ -26,6 +26,7 @@ import { IRevenue, IRevenueData } from "@/lib/types-api/creator-dashboard";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { getSuggestedCreators } from "@/lib/web-api/auth";
 import { IndianRupee } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 export interface IChannel {
   followers: number;
   _id: string;
@@ -39,6 +40,8 @@ export interface IChannel {
 }
 export default function Overview() {
   const translate = useTranslations();
+  const searchParams = useSearchParams();
+  const currentFilter = searchParams.get("filter") || "7";
   const initialStateInfo = {
     pendingCollaborations: 0,
     pendingCampaigns: 0,
@@ -60,17 +63,17 @@ export default function Overview() {
   useEffect(() => {
     fetchStatesInfo();
     fetchRevenuePerformance();
+  }, [currentFilter]);
+  useEffect(() => {
     getCreatorSuggested();
   }, []);
-const getInstagramView: (channels: IChannel[]) => string = (
+  const getInstagramView: (channels: IChannel[]) => string = (
     channels: IChannel[]
   ) => {
     let instagram = channels.find(
       (ele: { channelType: string }) => ele.channelType === "instagram"
     );
-    return instagram
-      ? formatNumber(instagram?.followers)
-      : "0";
+    return instagram ? formatNumber(instagram?.followers) : "0";
   };
   const getYoutubeView: (channels: IChannel[]) => string = (
     channels: IChannel[]
@@ -78,34 +81,32 @@ const getInstagramView: (channels: IChannel[]) => string = (
     let youtube = channels.find(
       (ele: { channelType: string }) => ele.channelType === "youtube"
     );
-    return youtube
-      ? formatNumber(youtube?.followers)
-      : "0";
+    return youtube ? formatNumber(youtube?.followers) : "0";
   };
   const getCreatorSuggested = async () => {
     try {
       const creators = await getSuggestedCreators();
       if (Array.isArray(creators)) {
-                    let result = creators.map((ele: any) => {
-                      ele.categories = ele.category
-                        ?.map((ele: { name: string }) => ele?.name)
-                        .join(", ");
-                      ele.tag = ele.tags?.join(",");
-                      ele.instagramFollowers = getInstagramView(ele.channels);
-                      ele.youtubeFollowers = getYoutubeView(ele.channels);
-                      //@ts-ignore
-                      // ele.pastSales = ele?.pastSales || "";
-                      return { ...ele };
-                    });
-      setSuggestedCreators(result);
-                  }
+        let result = creators.map((ele: any) => {
+          ele.categories = ele.category
+            ?.map((ele: { name: string }) => ele?.name)
+            .join(", ");
+          ele.tag = ele.tags?.join(",");
+          ele.instagramFollowers = getInstagramView(ele.channels);
+          ele.youtubeFollowers = getYoutubeView(ele.channels);
+          //@ts-ignore
+          // ele.pastSales = ele?.pastSales || "";
+          return { ...ele };
+        });
+        setSuggestedCreators(result);
+      }
     } catch (e) {}
   };
 
   const fetchStatesInfo = async () => {
     setMailLoading(true);
     try {
-      const response = await getStatesInfo();
+      const response = await getStatesInfo(currentFilter || "7");
       if (response) {
         setStatesInfo(response);
       } else {
@@ -122,7 +123,7 @@ const getInstagramView: (channels: IChannel[]) => string = (
   const fetchRevenuePerformance = async () => {
     setRevenueLoading(true);
     try {
-      const response = await getVendorRevenuePerformance();
+      const response = await getVendorRevenuePerformance(currentFilter || "7");
       if (response) {
         const currentData = response?.current?.map((ele: IRevenue) => ({
           ...ele,
