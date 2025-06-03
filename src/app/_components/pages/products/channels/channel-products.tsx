@@ -79,13 +79,15 @@ export default function ChannelProductList({
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product/list?limit=${pageSize}&page=${page}${searchValue ? `&search=${searchValue}` : ""}`
+        `channel/shopify/product/list?limit=${pageSize}&page=${page}${
+          searchValue ? `&search=${searchValue}` : ""
+        }`
       );
       if (response?.data?.data?.list?.length > 0) {
         const dataCount = response.data.data.count;
         setProductList(response.data.data.list);
         setCurrentPage(page);
-        setTotalPages(Math.ceil(dataCount / pageSize));  
+        setTotalPages(Math.ceil(dataCount / pageSize));
       }
       setLoading(false);
       setInternalLoader(false);
@@ -114,31 +116,40 @@ export default function ChannelProductList({
     debouncedSearch(value);
   };
   const handlePageChange = (page: number) => {
-    page !== currentPage &&
-    fetProductsList(page, true, search);
+    page !== currentPage && fetProductsList(page, true, search);
   };
 
   const handleOnCheckExists = async (productId: number) => {
     setInternalLoader(true);
     try {
       const response = await axios.post(
-        `/product/vendor-product/check-existing-product`, { productId: productId }
+        `/product/vendor-product/check-existing-product`,
+        { productId: productId }
       );
       if (response?.status === 200) {
-        router?.push(
-          `/vendor/campaign/product/add?productId=${productId}`
-        )
+        router?.push(`/vendor/campaign/product/add?productId=${productId}`);
       }
       // setPlusLoading(false);
     } catch (error: any) {
       if (error?.status === 409) {
-        toastMessage.info("Product already exists in the platform")
+        toastMessage.info("Product already exists in the platform");
       }
       setInternalLoader(false);
     }
-  }
+  };
 
   const columns: ColumnDef<IProduct>[] = [
+    {
+      accessorKey: "handle",
+      header: () => translate("SKU"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.handle ?? ""}
+        />
+      ),
+    },
     {
       accessorKey: "title",
       header: () => translate("Product_Name"),
@@ -168,17 +179,6 @@ export default function ChannelProductList({
           </div>
         );
       },
-    },
-    {
-      accessorKey: "handle",
-      header: () => translate("SKU"),
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.handle ?? ""}
-        />
-      ),
     },
     {
       accessorKey: "category",
@@ -293,17 +293,17 @@ export default function ChannelProductList({
                   onClose={(refresh = false) => {
                     setCurrentData(null);
                     if (refresh) {
-                      fetProductsList(currentPage, true,search);
+                      fetProductsList(currentPage, true, search);
                     }
                   }}
                 />
               )}
               {/* Pagination */}
               <TablePagination
-                  totalPages={totalPages}
-                  activePage={currentPage}
-                  onPageChange={handlePageChange}
-                />
+                totalPages={totalPages}
+                activePage={currentPage}
+                onPageChange={handlePageChange}
+              />
             </>
           ) : (
             <EmptyPlaceHolder

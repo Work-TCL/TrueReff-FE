@@ -94,3 +94,10 @@ export function clearLocalStorage() {
   const removeItems = ["vendor-storage", "user-storage", "creator-storage"];
   removeItems.forEach((key) => localStorage.removeItem(key));
 }
+
+export function formatFollowers(count: number = 0) {
+  if (count >= 1000) {
+    return (count / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+  }
+  return count.toString();
+}

@@ -41,8 +41,13 @@ export default function DialogLayout({
   return (
     open && (
       <Fragment>
-        <div className="fixed inset-0 z-[40] sm:w-screen h-screen overflow-hidden">
-          <div className={cn(`flex h-full items-center cursor-pointer justify-center text-center sm:items-center sm:py-0 relative`,className)}>
+        <div className="fixed inset-0 z-[9999] sm:w-screen h-screen overflow-hidden">
+          <div
+            className={cn(
+              `flex h-full items-center cursor-pointer justify-center text-center sm:items-center sm:py-0 relative`,
+              className
+            )}
+          >
             {onClose ? (
               <div
                 onClick={() => onClose()}

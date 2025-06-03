@@ -185,6 +185,7 @@ export default function StoreSetup({
               label: ele?.name,
             }))}
             autoFocus={false}
+            max={1}
           />
         </div>
         <div className="md:col-span-1 col-span-2">

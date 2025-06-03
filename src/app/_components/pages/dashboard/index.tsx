@@ -37,9 +37,12 @@ import {
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import Loading from "@/app/vendor/loading";
 import { IndianRupee } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export default function Dashboard() {
   const translate = useTranslations();
+  const searchParams = useSearchParams();
+  const currentFilter = searchParams.get("filter") || "7";
   const lg = useMediaQuery("(min-width: 1024px)");
   const [creatorDetails, setCreatorDetails] = useState<any>({ completed: 0 });
   const initialStateInfo = {
@@ -77,16 +80,19 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    getCreator();
     fetchStatesInfo();
-    fetchTopPerformingBrand();
     fetchRevenuePerformance();
+  }, [currentFilter]);
+
+  useEffect(() => {
+    getCreator();
+    fetchTopPerformingBrand();
     getProductSuggested();
   }, []);
   const fetchStatesInfo = async () => {
     setMailLoading(true);
     try {
-      const response = await getCreatorStatesInfo();
+      const response = await getCreatorStatesInfo(currentFilter || "7");
       if (response) {
         setStatesInfo(response);
       } else {
@@ -120,7 +126,7 @@ export default function Dashboard() {
   const fetchRevenuePerformance = async () => {
     setRevenueLoading(true);
     try {
-      const response = await getRevenuePerformance();
+      const response = await getRevenuePerformance(currentFilter || "7");
       if (response) {
         const currentData = response?.current?.map((ele: IRevenue) => ({
           ...ele,

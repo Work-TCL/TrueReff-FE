@@ -65,13 +65,14 @@ export default function SuggestedCreators({ data = [] }: { data: any[] }) {
         {...settings}
       >
         {data.map((item: any, i) => (
-          <div key={i} className="flex h-fit w-full">
+          <div key={i} className="flex h-fit w-full px-2">
             <CreatorCard
               item={item}
               handleCollaborateNow={(creatorId: string) => {
                 setIsOpen({ show: true, creatorId });
               }}
               size="small"
+              isCategoryShow={false}
             />
           </div>
         ))}
@@ -87,13 +88,13 @@ export default function SuggestedCreators({ data = [] }: { data: any[] }) {
       )}
       {/* <div className="absolute top-0"> */}
       <button
-        className="button absolute left-[-14px] top-32 w-8 h-8 bg-white border rounded-full flex justify-center items-center"
+        className="button absolute left-[-12px] top-32 w-8 h-8 bg-white border rounded-full flex justify-center items-center"
         onClick={previous}
       >
         <ChevronLeft />
       </button>
       <button
-        className="button absolute right-[-14px] top-32 w-8 h-8 bg-white border rounded-full flex justify-center items-center"
+        className="button absolute right-[-12px] top-32 w-8 h-8 bg-white border rounded-full flex justify-center items-center"
         onClick={next}
       >
         <ChevronRight />
