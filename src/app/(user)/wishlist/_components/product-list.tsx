@@ -190,7 +190,7 @@ export default function ProductList() {
             {internalLoading && <Loader />}
             {productList?.length > 0 ? (
               <div className="flex flex-col h-full overflow-auto">
-                <h3 className="font-semibold">{translate("Product_List")}{productList?.length}</h3>
+                <h3 className="font-semibold">{translate("Product_List")}</h3>
                 <div className=" md:max-h-screen overflow-auto">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-2 bg-white pt-2 pb-3 px-1 md:px-2">
                     {productList.map((item: any, index: number) => (
