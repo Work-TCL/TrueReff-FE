@@ -5,7 +5,6 @@ import Loading from "@/app/vendor/loading";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
 import Loader from "@/app/_components/components-common/layout/loader";
-import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import ProductCard from "@/app/_components/components-common/product/product-card";
 import { ICategory, IProducts } from "./all-product-list";
@@ -29,7 +28,10 @@ export default function ProductList({ category }: { category:string; }) {
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting && !isLoading) {
-          setCurrentPage((prev) => prev + 1);
+          setCurrentPage((prev) => {
+            handlePageChange(prev + 1)
+            return prev + 1
+          });
         }
       },
       { root: null, rootMargin: "0px", threshold: 1.0 }
@@ -51,7 +53,8 @@ export default function ProductList({ category }: { category:string; }) {
     page: number = currentPage,
     isInternalLoader: boolean = false
   ) => {
-    isInternalLoader ? setInternalLoading(true) : setLoading(true);
+    isInternalLoader ? setInternalLoading(false) : setLoading(true);
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `/product/all?limit=${pageLimit}&page=${page}&category=${category}`
@@ -76,10 +79,13 @@ export default function ProductList({ category }: { category:string; }) {
           let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
           return { ...product, categories, tag, subCategories };
         })
-        setCurrentPage(page);
-        let more = [...productList,...productData]?.length < response.data.data?.count;
-        setHasMore(more);
-        more ? setProductList([...productList, ...productData]) : setProductList([...productData]);     
+        setIsLoading(false);
+        setProductList(prev => {
+          let data = [...prev, ...productData];
+          const more = data?.length < response.data.data?.count;
+          setHasMore(more);
+          return data;
+        })      
       }
       setLoading(false);
       setInternalLoading(false);
@@ -89,6 +95,7 @@ export default function ProductList({ category }: { category:string; }) {
       setCurrentPage(1);
       setInternalLoading(false);
       setHasMore(false);
+      setIsLoading(false);
     }
   };
 
@@ -97,7 +104,7 @@ export default function ProductList({ category }: { category:string; }) {
     if(category){
       fetProductsList(currentPage);
     }
-  }, [category,currentPage]);
+  }, [category]);
 
   // Update the onClick handlers for pagination buttons
   const handlePageChange = (page: number) => {
@@ -116,12 +123,15 @@ export default function ProductList({ category }: { category:string; }) {
           {productList?.length > 0 ? (
             <div className="flex flex-col h-full overflow-auto">
               <h3 className="font-semibold">{translate("Product_List")}</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-2 bg-white md:max-h-screen overflow-auto pt-2 pb-3 px-1 md:px-2">
+              <div className="md:max-h-screen overflow-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-2 bg-white pt-2 pb-3 px-1 md:px-2">
                 {productList.map((item: any) => (
                   <div key={item?._id} className="flex h-full w-full">
                     <ProductCard
                       item={item?.product}
                       id={item?._id}
+                      isWishListed={item?.isWishListed}
+                      refreshData={() => fetProductsList(currentPage,true)}
                     />
                   </div>
                 ))}
@@ -138,7 +148,7 @@ export default function ProductList({ category }: { category:string; }) {
                 size={40}
               />
             </div>
-          )}
+          )}</div>
             </div>
           ) : (
             <EmptyPlaceHolder

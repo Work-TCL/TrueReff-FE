@@ -24,6 +24,9 @@ import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Label } from "recharts";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import Link from "next/link";
+import { RiLoader3Fill } from "react-icons/ri";
+import LoginDialog from "@/app/_components/components-common/dialogs/login";
+import { toastMessage } from "@/lib/utils/toast-message";
 
 export interface ICategory {
     _id: string;
@@ -64,6 +67,7 @@ export interface IProduct {
     notes: string;
     productType?: string;
     utmLink: string;
+    isWishListed: boolean;
 }
 
 export interface IRequest {
@@ -117,18 +121,13 @@ export default function ViewProductDetail({
     isFromPublic,
 }: ViewProductDetailProps) {
     const translate = useTranslations();
-    const pathName = usePathname();
     const { account } = useAuthStore();
-    const { creator } = useCreatorStore();
     const params = useParams();
-    const router = useRouter();
     const productId = params?.productId;
-    const searchParams = useSearchParams();
-    const channelType = searchParams.get("channelName");
-    const shopifyId = searchParams.get("id");
-    const creatorId = searchParams.get("creatorId");
     const [notFounded, setNotFounded] = useState(false);
     const [loading, setLoading] = useState<boolean>(true);
+    const [loader, setLoader] = useState<boolean>(false);
+    const [loginPopUp, setLoginPopUp] = useState<boolean>(false);
     const [productData, setProductData] = useState<IProduct>({
         "variants": [],
         "_id": "",
@@ -157,7 +156,8 @@ export default function ViewProductDetail({
         "notes": "",
         "createdAt": "",
         "updatedAt": "",
-        utmLink: ""
+        utmLink: "",
+        isWishListed: false
     }
     );
     const [selectedVariant, setSelectedVariant] = useState({
@@ -166,8 +166,8 @@ export default function ViewProductDetail({
     });
     const [selectedImage, setSelectedImage] = useState(0);
 
-    const fetchProductById = async () => {
-        setLoading(true);
+    const fetchProductById = async (isLoader: boolean = true) => {
+        isLoader && setLoading(true);
         try {
             const response = await axios.get(
                 `/auth/creator-store/product/${productId}`
@@ -182,8 +182,32 @@ export default function ViewProductDetail({
             setNotFounded(true);
         } finally {
             setLoading(false);
+            setLoader(false);
         }
     };
+    const addToWishlist = async () => {
+        setLoader(true);
+        try {
+            if (account?.id) {
+                const payload = {
+                    collaborationId: productId,
+                    userId: account?.id
+                }
+                const response = await axios.post(
+                    `/product/wishlist/add-remove`, payload
+                );
+                if (response?.status === 200) {
+                    toastMessage.success(response?.data?.message);
+                    fetchProductById(false);
+                }
+            } else {
+                setLoginPopUp(true);
+                setLoader(false);
+            }
+        } catch (error: any) {
+            // toast.error(error?.message || "Product Fetch Failed.");
+        }
+    }
 
     useEffect(() => {
         if (productId) {
@@ -192,7 +216,7 @@ export default function ViewProductDetail({
     }, [productId]);
     // Product id required condition removed as it is not required.
     if (notFounded) {
-        return <div className="grid grid-cols-1 h-screen p-4"><EmptyPlaceHolder title={translate("Collaboration_Not_Found")}  /></div>;
+        return <div className="grid grid-cols-1 h-screen p-4"><EmptyPlaceHolder title={translate("Collaboration_Not_Found")} /></div>;
     }
 
     return (
@@ -298,16 +322,17 @@ export default function ViewProductDetail({
                                 </div>}
 
                                 <div className="flex gap-4 mt-2">
-                                    <button
-                                                  className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-3 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
-                                                  
-                                                >
-                                                  <Heart size={15} />  {translate("Add_to_Wishlist")} </button>
-                                                  <Link href={productData?.utmLink}
-                                                  className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-3 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
-                                                  target={"_blank"}
-                                                >
-                                                  <ShoppingCart size={15} />  {translate("Shop_Now")} </Link>
+                                    <button onClick={addToWishlist}
+                                        className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-3 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition">
+                                        {loader ? (
+                                            <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
+                                        ) : productData?.isWishListed ? <span className={`flex gap-2 items-center  ${loader ? "opacity-0":""}`}><Heart className="fill-black group-hover:fill-white" size={15} /> {translate("Remove_from_Wishlist")}</span> : <><Heart size={15} /> {translate("Add_to_Wishlist")}</>}
+                                    </button>
+                                    <Link href={productData?.utmLink}
+                                        className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-3 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+                                        target={"_blank"}
+                                    >
+                                        <ShoppingCart size={15} />  {translate("Shop_Now")} </Link>
                                 </div>
                                 <div className=" border-t text-sm pt-4 text-gray-800">
                                     <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">
@@ -363,6 +388,7 @@ export default function ViewProductDetail({
                     </div>
                 </div>
             )}
+            {loginPopUp && <LoginDialog title={"Login_Required"} description="Login_Required_Description" onClose={() => setLoginPopUp(false)} />}
         </>
     );
 }

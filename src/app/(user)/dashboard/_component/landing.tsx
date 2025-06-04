@@ -8,6 +8,8 @@ import ProductList from "./product-list";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
+import { useAuthStore } from "@/lib/store/auth-user";
+import { toastMessage } from "@/lib/utils/toast-message";
 
 export default function Landing(){
     const translate = useTranslations();
@@ -20,7 +22,6 @@ export default function Landing(){
     ]);
     const [productCategories,setProductCategories] = useState<ICategory[]>([]);
     const [activeCategory,setActiveCategoryTabId] = useState("All");
-    console.log("productCategories",productCategories)
 
     useEffect(()=> {
         fetchCategory();
@@ -46,7 +47,6 @@ export default function Landing(){
             `/product/category-for-slider`
         );
           let data = response?.data?.data?.data;
-          console.log('data',data)
           if(data?.length > 0){
             setProductCategories(data);
           } else {
@@ -63,6 +63,6 @@ export default function Landing(){
             <AllProductList key={ele?.name} category={ele} setActiveCategoryTabId={setActiveCategoryTabId}/>
         )) : <div className="h-[calc(100vh-145px)]">
             <EmptyPlaceHolder title={translate("No_Products_Available")} description={translate("No_Products_Available_Description")} />
-        </div>: <ProductList category={activeCategory}/> }
+        </div>: <ProductList category={activeCategory} /> }
     </div>
 }

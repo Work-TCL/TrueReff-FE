@@ -8,6 +8,12 @@ import { cn } from "@/lib/utils/commonUtils";
 import ToolTip from "../tool-tip";
 import { useVendorStore } from "@/lib/store/vendor";
 import { useCreatorStore } from "@/lib/store/creator";
+import { useAuthStore } from "@/lib/store/auth-user";
+import { useState } from "react";
+import { toastMessage } from "@/lib/utils/toast-message";
+import axios from "@/lib/web-api/axios";
+import LoginDialog from "../dialogs/login";
+import { RiLoader3Fill } from "react-icons/ri";
 
 export interface ICategory {
   _id: string;
@@ -44,15 +50,47 @@ export interface IProduct {
 }
 const ProductCard = ({
   item: product,
-  id
+  id,
+  isWishListed,
+  refreshData = () => { }
 }: {
   item: IProduct;
   id?: string;
+  isWishListed?: boolean;
+  refreshData?: () => void;
 }) => {
   const translate = useTranslations();
+  const { account } = useAuthStore();
+  const [loader, setLoader] = useState<boolean>(false);
+  const [loginPopUp, setLoginPopUp] = useState<boolean>(false);
   const router = useRouter();
-  const {vendor} = useVendorStore();
-  const {creator} = useCreatorStore();
+  const { vendor } = useVendorStore();
+  const { creator } = useCreatorStore();
+  const addToWishlist = async (productId: string) => {
+    setLoader(true);
+    try {
+      if (account?.id) {
+        const payload = {
+          collaborationId: productId,
+          userId: account?.id
+        }
+        const response = await axios.post(
+          `/product/wishlist/add-remove`, payload
+        );
+        if (response?.status === 200) {
+          toastMessage.success(response?.data?.message);
+          refreshData()
+        }
+      } else {
+        setLoginPopUp(true);
+        setLoader(false);
+      }
+    } catch (error: any) {
+      // toast.error(error?.message || "Product Fetch Failed.");
+    } finally {
+      setLoader(false);
+    }
+  }
   return (
     <Card className="relative cursor-pointer w-full border border-stroke rounded-xl p-2 md:p-3 flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow bg-white overflow-hidden">
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
@@ -93,15 +131,18 @@ const ProductCard = ({
           </div>
           {(vendor?.vendorId === "" && creator?.creatorId === "") && <div className="flex items-center justify-between w-full">
             <button
-              className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+              className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
               onClick={() => {
-                
+                addToWishlist(id ? id : product?._id)
               }}
-            >
-              <Heart size={15} /> {translate("Add")} </button>
+            >{loader && (
+              <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
+            )}{isWishListed ? <span className={`flex gap-2 items-center  ${loader ? "opacity-0":""}`}><Heart className="fill-black group-hover:fill-white" size={15} /> {translate("Remove")}</span> : <><Heart size={15} /> {translate("Add")}</>}
+            </button>
           </div>}
         </div>
       </CardContent>
+      {loginPopUp && <LoginDialog title={"Login_Required"} description="Login_Required_Description" onClose={() => setLoginPopUp(false)} />}
     </Card>
   );
 };

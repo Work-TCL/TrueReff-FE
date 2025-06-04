@@ -1,6 +1,6 @@
-import Wishlist from "./main";
+import ProductList from "./_components/product-list";
 
 
 export default function WishlistPage(){
-    return <Wishlist/>
+    return <ProductList/>
 }

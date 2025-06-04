@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Home,
   Box,
@@ -19,6 +19,7 @@ import {
   StepBack,
   UserRound,
   UsersRound,
+  ArrowDownToLine,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -48,34 +49,30 @@ const NavLink = ({
   Icon = undefined,
   label = "",
   hasSubmenu = false,
-  handleToggle = () => {},
+  handleToggle = () => { },
   expended = false,
   isChild = false,
   childIndex,
   childClassName,
+  handleInstall = () => { }
 }: any) => {
-  const childLinkClasses = `relative block px-4 py-2 rounded-md ${
-    isActive
-      ? "bg-primary-color text-white"
-      : "text-gray-500 hover:text-gray-700"
-  } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${
-    childIndex === 0 ? "before:h-7" : "before:h-16"
-  } text-nowrap text-[14px] ${childClassName}`;
+  const childLinkClasses = `relative block px-4 py-2 rounded-md ${isActive
+    ? "bg-primary-color text-white"
+    : "text-gray-500 hover:text-gray-700"
+    } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${childIndex === 0 ? "before:h-7" : "before:h-16"
+    } text-nowrap text-[14px] ${childClassName}`;
 
   const classNames = isChild
     ? childLinkClasses
-    : `relative flex ${
-        hasSubmenu ? "justify-between" : ""
-      } items-center text-[16px] cursor-pointer px-4 py-3 rounded-md text-nowrap  ${
-        isActive
-          ? hasSubmenu
-            ? "bg-pink-100 text-black"
-            : "bg-primary-color text-white"
-          : "text-font-grey hover:bg-pink-100"
-      } `;
-  const iconClassNames = `w-5 h-5 shrink-0 ${
-    isActive ? (hasSubmenu ? "text-black" : "text-white") : "text-font-grey"
-  }`;
+    : `relative flex ${hasSubmenu ? "justify-between" : ""
+    } items-center text-[16px] cursor-pointer px-4 py-3 rounded-md text-nowrap  ${isActive
+      ? hasSubmenu
+        ? "bg-pink-100 text-black"
+        : "bg-primary-color text-white"
+      : "text-font-grey hover:bg-pink-100"
+    } `;
+  const iconClassNames = `w-5 h-5 shrink-0 ${isActive ? (hasSubmenu ? "text-black" : "text-white") : "text-font-grey"
+    }`;
   if (hasSubmenu) {
     return (
       <div className={classNames} onClick={handleToggle}>
@@ -85,19 +82,28 @@ const NavLink = ({
         </div>
         <div>
           <BsChevronDown
-            className={`ml-auto w-5 h-5 transition-transform duration-300 ease-in-out ${
-              expended ? "rotate-180" : ""
-            }`}
+            className={`ml-auto w-5 h-5 transition-transform duration-300 ease-in-out ${expended ? "rotate-180" : ""
+              }`}
           />
         </div>
       </div>
     );
   }
-  if (link === "/creator/payment-earnings") {
+  if (link === "/creator/payment-earnings" || link === "/vendor/payment-earnings") {
     return (
       <span
         className={`${classNames} gap-3`}
         onClick={() => toastMessage.info("Coming Soon")}
+      >
+        {Icon && <Icon className={iconClassNames} />}
+        {label && <span>{label}</span>}
+      </span>
+    );
+  } else if (link === "install-app") {
+    return (
+      <span
+        className={`${classNames} gap-3`}
+        onClick={handleInstall}
       >
         {Icon && <Icon className={iconClassNames} />}
         {label && <span>{label}</span>}
@@ -127,6 +133,8 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
   const { account: user } = useAuthStore();
   const { creator } = useCreatorStore();
+  const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const lg = useMediaQuery("(min-width: 1024px)");
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -206,7 +214,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     //   icon: DollarSign,
     //   link: "/recharge",
     // },
-    // { label: translate("Payments"), icon: DollarSign, link: "/payments" },
+    {
+      label: translate("Payment_Earnings"),
+      icon: DollarSign,
+      link: "/vendor/payment-earnings",
+    },
     // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
     { label: translate("Settings"), icon: Settings, link: "/vendor/settings" },
   ];
@@ -260,13 +272,39 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     },
     { label: translate("Settings"), icon: Settings, link: "/creator/settings" },
     // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
-    // { label: translate("Settings"), icon: Settings, link: "/settings" },
   ];
 
   const menu = {
     vendor: menuItems,
     creator: creatorMenuItem,
   }[user?.role || "vendor"];
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsVisible(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+
+    const prompt = deferredPrompt as any;
+    prompt.prompt();
+
+    const choiceResult = await prompt.userChoice;
+    if (choiceResult.outcome === 'accepted') {
+      toastMessage.success("App Installed Successfully.")
+    } else {
+
+    }
+
+    setDeferredPrompt(null);
+    setIsVisible(false);
+  };
 
   const handleToggleMenu = () => {
     let keys = Object.keys(expandedMenus).filter(
@@ -279,9 +317,8 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     <>
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-[9999] transition-all duration-300 ease-in-out shadow-lg  ${
-          isSidebarExpanded ? "w-[300px]" : "w-[75px]"
-        }`}
+        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-[9999] transition-all duration-300 ease-in-out shadow-lg  ${isSidebarExpanded ? "w-[300px]" : "w-[75px]"
+          }`}
       >
         <div className="flex justify-center gap-10  ">
           <div
@@ -343,8 +380,8 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                                 !lg
                                   ? child.label
                                   : isSidebarExpanded
-                                  ? child.label
-                                  : ""
+                                    ? child.label
+                                    : ""
                               }
                               isChild
                               childIndex={idx}
@@ -419,6 +456,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                         isActive={pathname === item.link}
                         Icon={item.icon}
                         label={isSidebarExpanded && item.label}
+                        handleInstall={handleInstall}
                       />
                     </Tooltip.Trigger>
                     <Tooltip.Content
@@ -426,14 +464,19 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                       side="right"
                     >
                       <div className="flex flex-col gap-1 pl-4 ">
-                        {item.link === "/creator/payment-earnings" ? (
+                        {(item.link === "/creator/payment-earnings" || item.link === "/vendor/payment-earnings") ? (
                           <span
                             className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
                             onClick={() => toastMessage.info("Coming Soon")}
                           >
                             {item?.label}
                           </span>
-                        ) : (
+                        ) : (item.link === 'install-app') ? <span
+                          className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
+                          onClick={() => handleInstall()}
+                        >
+                          {item?.label}
+                        </span> : (
                           <Link
                             key={item.link}
                             href={item.link ?? ""}
@@ -452,6 +495,46 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               )}
             </div>
           ))}
+          {isVisible && <>{isSidebarExpanded ? <NavLink
+              key={'install-app'}
+              handleToggle={() => {
+                handleToggleMenu();
+              }}
+              link={"install-app"}
+              isActive={false}
+              Icon={ArrowDownToLine}
+              label={translate("Install_App")}
+              handleInstall={handleInstall}
+            /> : <ToolTipProvider delayDuration={0}>
+            <Tooltip>
+              <Tooltip.Trigger>
+                <NavLink
+                  key={'install-app'}
+                  handleToggle={() => {
+                    handleToggleMenu();
+                  }}
+                  link={"install-app"}
+                  isActive={false}
+                  Icon={ArrowDownToLine}
+                  label={isSidebarExpanded && translate("Install_App")}
+                  handleInstall={handleInstall}
+                />
+              </Tooltip.Trigger>
+              <Tooltip.Content
+                className="bg-white rounded-r-md px-2 py-[9px] text-gray-500 hover:text-gray-700"
+                side="right"
+              >
+                <div className="flex flex-col gap-1 pl-4 ">
+                  <span
+                    className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
+                    onClick={() => handleInstall()}
+                  >
+                    {translate("Install_App")}
+                  </span>
+                </div>
+              </Tooltip.Content>
+            </Tooltip>
+          </ToolTipProvider>}</>}
         </nav>
         <div
           className={cn(
@@ -474,19 +557,18 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
 
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-[9999] transition-transform ${
-          expanded ? "-translate-x-full" : "shadow-lg"
-        }`}
+        className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-[9999] transition-transform ${expanded ? "-translate-x-full" : "shadow-lg"
+          }`}
       >
         <div className="flex justify-end">
           <div className="p-4 text-primary-color font-bold text-4xl text-center">
-          <Image
-                width={220}
-                height={40}
-                src="/assets/common/truereff-dark.svg"
-                alt="TrueReff"
-                className={`w-[225px] h-[35px] mx-auto`}
-              />
+            <Image
+              width={220}
+              height={40}
+              src="/assets/common/truereff-dark.svg"
+              alt="TrueReff"
+              className={`w-[225px] h-[35px] mx-auto`}
+            />
           </div>
           <X
             className="size-6 shrink-0 mt-5 mr-2 cursor-pointer"
@@ -540,6 +622,18 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               )}
             </div>
           ))}
+          {isVisible &&
+            <NavLink
+              key={'install-app'}
+              handleToggle={() => {
+                handleToggleMenu();
+              }}
+              link={"install-app"}
+              isActive={false}
+              Icon={ArrowDownToLine}
+              label={translate("Install_App")}
+              handleInstall={handleInstall}
+            />}
         </nav>
       </aside>
     </>

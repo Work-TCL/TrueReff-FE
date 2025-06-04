@@ -629,5 +629,13 @@
   "Creator_Category": "Creator Category",
   "View_Collection": "View Collection",
   "No_Products_Available_Category": "No Products Available for this Category",
-  "No_Products_Available_Description_Category": "It seems there are currently no products to display for this category. Please check back later."
+  "No_Products_Available_Description_Category": "It seems there are currently no products to display for this category. Please check back later.",
+  "Install_App": "Install App",
+  "Information": "Information",
+  "Login_Required": "Login Required",
+  "Login_Required_Description": "You need to be logged in to add items to your wishlist. Please login to continue.",
+  "Remove_from_Wishlist": "Remove from Wishlist",
+  "No_Products_In_Wishlist": "No Products Available in Wishlist",
+  "No_Products_In_Wishlist_Description": "It seems there are currently no products are available in your wishlist. Please check back later."
+
 }

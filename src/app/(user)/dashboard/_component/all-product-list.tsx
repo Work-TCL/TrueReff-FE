@@ -140,7 +140,7 @@ export default function ProductList({ category, setActiveCategoryTabId }: { cate
         page: number = currentPage,
         isInternalLoader: boolean = false
     ) => {
-        isInternalLoader ? setInternalLoading(true) : setLoading(true);
+        isInternalLoader ? setInternalLoading(false) : setLoading(true);
         try {
             const response = await axios.get(
                 `/product/all?limit=${pageLimit}&page=${page}&category=${category?._id}`
@@ -223,6 +223,8 @@ export default function ProductList({ category, setActiveCategoryTabId }: { cate
                                             <ProductCard
                                                 item={item?.product}
                                                 id={item?._id}
+                                                isWishListed={item?.isWishListed}
+                                                refreshData={() => fetProductsList(currentPage,true)}
                                             />
                                         </div>
                                     ))}
