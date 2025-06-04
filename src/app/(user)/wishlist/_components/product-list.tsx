@@ -199,7 +199,11 @@ export default function ProductList() {
                           item={item?.product}
                           id={item?._id}
                           isWishListed={item?.isWishListed}
-                          refreshData={() => fetProductsList(currentPage, true)}
+                          refreshData={() => {
+                            let productData = productList?.findIndex(ele => ele?._id === item?._id);
+                            productList.splice(productData,1);
+                            setProductList([...productList])
+                          }}
                         />
                       </div>
                     ))}
