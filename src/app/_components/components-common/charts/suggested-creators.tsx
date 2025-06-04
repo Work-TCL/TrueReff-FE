@@ -16,7 +16,7 @@ const DonutChart = (props: { data?: any[] }) => {
       <h2 className=" text-text text-xl font-semibold">
         {translate("Suggested_Creators")}
       </h2>
-      <div className=" relative h-[320px] mt-2">
+      <div className=" relative h-[340px] mt-2">
         {/* <ResponsiveContainer width="100%" height={"100%"}>
           <PieChart>
             <Pie

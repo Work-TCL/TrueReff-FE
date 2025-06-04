@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ICreateStoreRequest } from "@/lib/types-api/my-store";
 import { IStore } from "./main";
+import { formatFollowers } from "@/lib/utils/commonUtils";
 
 interface IProps {
   store: IStore;
@@ -37,7 +38,7 @@ export default function StoreDetailCard({ store }: IProps) {
         )}
 
         {/* Social Media Links */}
-        <div className="absolute bottom-[-50px] right-4 flex gap-2 md:gap-4 text-gray-500 text-lg md:text-2xl">
+        <div className="absolute bottom-[-50px] right-4 flex gap-2 md:gap-4 ">
           {store?.facebook_link && (
             <Link
               href={store?.facebook_link}
@@ -69,29 +70,35 @@ export default function StoreDetailCard({ store }: IProps) {
           {store?.instagram_link && (
             <Link
               href={store?.instagram_link}
-              target="_blank"
-              className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
+              className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2"
             >
-              <Image
-                src="/assets/creator/profile/instaIcon.svg"
-                alt={"instaIcon"}
-                width={35}
-                height={35}
-              />
+              <img
+                src="/assets/creator/insta-gram.svg"
+                width={15}
+                height={15}
+              />{" "}
+              {
+                // @ts-ignore
+                formatFollowers(
+                  store?.channels?.find((v) => v.channelType === "instagram")
+                    ?.followers
+                )
+              }
             </Link>
           )}
           {store?.youtube_link && (
             <Link
               href={store?.youtube_link}
-              target="_blank"
-              className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
+              className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2"
             >
-              <Image
-                src="/assets/creator/profile/ytIcon.svg"
-                alt={"youtubeIcon"}
-                width={35}
-                height={35}
-              />
+              <img src="/assets/creator/you-tube.svg" width={18} height={18} />{" "}
+              {
+                // @ts-ignore
+                formatFollowers(
+                  store?.channels?.find((v) => v.channelType === "youtube")
+                    ?.followers
+                )
+              }
             </Link>
           )}
         </div>
@@ -133,12 +140,7 @@ export default function StoreDetailCard({ store }: IProps) {
             {store?.full_name ? ` (${store?.full_name})` : ""}
           </h2>
         </div>
-        <div
-          className=""
-          dangerouslySetInnerHTML={{
-            __html: store?.store_description,
-          }}
-        />
+        <div className="">{store?.store_description}</div>
       </CardContent>
     </Card>
   );

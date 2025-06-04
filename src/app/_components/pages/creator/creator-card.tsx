@@ -15,13 +15,13 @@ import {
 const CreatorCard = ({
   item: creator,
   handleCollaborateNow,
-  size = "reguler",
   isCategoryShow = true,
+  isBoxShadow = true,
 }: {
   item: ICreator;
   handleCollaborateNow: (creatorId: string) => void;
-  size?: "reguler" | "small";
   isCategoryShow?: boolean;
+  isBoxShadow?: boolean;
 }) => {
   const translate = useTranslations();
   const router = useRouter();
@@ -32,13 +32,13 @@ const CreatorCard = ({
         e.stopPropagation();
         router?.push(`/vendor/creator-profile/${creator?._id}`);
       }}
-      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke hover:shadow-lg cursor-pointer"
+      className={`bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke ${
+        isBoxShadow ? "hover:shadow-lg" : ""
+      } cursor-pointer`}
     >
-      <CardContent className="w-full p-0 flex flex-col items-center gap-4">
+      <CardContent className="w-full p-0 flex flex-col items-center gap-3">
         <div
-          className={`bg-background rounded-lg max-w-full w-full flex items-center justify-center overflow-hidden ${
-            size === "small" ? "h-[75px]" : "aspect-[4/3]"
-          }`}
+          className={`bg-background max-w-full flex items-center justify-center overflow-hidden h-[120px] w-[120px] rounded-full`}
         >
           {creator.profile_image ? (
             <img
@@ -52,7 +52,7 @@ const CreatorCard = ({
         </div>
 
         {/* Title + Category */}
-        <div className="flex flex-col gap-4 text-start w-full overflow-hidden">
+        <div className={`flex flex-col w-full overflow-hidden text-center`}>
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
             className="text-xs sm:text-sm md:text-lg font-semibold w-full line-clamp-none truncate"
@@ -68,7 +68,7 @@ const CreatorCard = ({
           {isCategoryShow && (
             <TruncateWithToolTip
               checkHorizontalOverflow={true}
-              className=" text-sm w-full line-clamp-none truncate"
+              className=" text-sm w-full line-clamp-none truncate text-gray-500"
               text={`${creator.categories || "-"}`}
             />
           )}
@@ -91,7 +91,7 @@ const CreatorCard = ({
         <div className="flex justify-between items-center w-full text-center text-sm">
           {/* Total Sales */}
           <div className="flex-1 border-r px-2 flex flex-col gap-1">
-            <div className="text-md flex items-center">
+            <div className="text-md flex items-center justify-center">
               <IndianRupee size={15} /> {formatNumber(creator?.totalRevenue)}
             </div>
             <div className="text-gray-500 text-xs">{translate("Revenue")}</div>

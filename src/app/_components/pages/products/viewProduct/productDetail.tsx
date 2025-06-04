@@ -21,9 +21,7 @@ export function ProductInfo({ productData }: IProductInfoProps) {
         <h1 className="sm:text-3xl text-xl font-bold text-gray-800">
           {productData.name}
         </h1>
-        <p className="text-gray-500 text-xs" dangerouslySetInnerHTML={{
-            __html: productData?.description,
-          }}/>
+        <p className="text-gray-500 text-xs">{productData?.description}</p>
       </div>
 
       <div>

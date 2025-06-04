@@ -48,7 +48,7 @@ export interface IStore {
   category: ICategory[];
   sub_category: string[];
   tags: string[];
-  channels: string[];
+  channels: any[];
   completed_step: number;
   status: string;
   createdAt: string; // You can use `Date` if you parse it into a Date object

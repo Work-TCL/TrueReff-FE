@@ -23,7 +23,7 @@ export const StatsCard = ({
   const router = useRouter();
   return (
     <Card
-      className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} ${
+      className={`w-full box-border border ${borderColor} ${bgColor} ${
         link ? "cursor-pointer" : ""
       } rounded-2xl`}
       onClick={() => link && router.push(link)}

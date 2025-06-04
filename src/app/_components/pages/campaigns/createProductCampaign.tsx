@@ -863,103 +863,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
-              <div className="text-lg font-medium text-gray-500 flex items-center gap-x-2">
-                {translate("Creator_material")}{" "}
-                <TooltipProvider key={`Creator_material`}>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <Info />
-                    </TooltipTrigger>
-                    <TooltipContent
-                      className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
-                      side="top"
-                    >
-                      {translate("campaignMaterialTolltip")}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <label className="inline-flex items-center cursor-pointer relative">
-                  <input
-                    type="checkbox"
-                    value=""
-                    checked={showCreatorMeterial}
-                    className="sr-only peer"
-                    onChange={() =>
-                      setShowCreatorMeterial(!showCreatorMeterial)
-                    }
-                  />
-                  <div
-                    className={`relative w-11 h-6 ${
-                      showCreatorMeterial ? "bg-primary" : "bg-gray-200"
-                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
-                  ></div>
-                </label>
-              </div>
-              <div
-                className={`flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden ${
-                  showCreatorMeterial
-                    ? "max-h-[1000px] opacity-100 pt-3"
-                    : "max-h-0 opacity-0"
-                }`}
-              >
-                <div className="flex flex-col w-full gap-1">
-                  <CreatorMaterial
-                    onMediaChange={setMediaMixin}
-                    mediaPreview={mediaPreviewMixin}
-                    setMediaPriview={setMediaPriviewMixin}
-                    disabled={isDisabled}
-                  />
-                </div>
-                <div className="flex flex-col w-full gap-2">
-                  <label className={cn(labelStyle)}>
-                    {translate("Reference_Links")}
-                  </label>
-                  <div className="flex flex-col w-full gap-1">
-                    {fields.map((field, index) => (
-                      <div
-                        key={field.id}
-                        className="flex items-start gap-3 mb-1 lg:w-[50%]"
-                      >
-                        <label className={cn(labelStyle, "py-[15px] h-fit")}>
-                          {index + 1}.
-                        </label>
-                        <div className="flex-1">
-                          <Input
-                            name={`references.${index}`}
-                            type="text"
-                            placeholder="https://example.com"
-                            label={``}
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => remove(index)}
-                          className="text-red-500 hover:underline h-fit my-[15px] cursor-pointer"
-                        >
-                          <span className="md:inline-block hidden">Remove</span>
-                          <span className="md:hidden">
-                            <CircleX />
-                          </span>
-                        </button>
-                      </div>
-                    ))}
-                    <LightButton
-                      type="button"
-                      onClick={() => append("")}
-                      className="text-blue-600 me-auto mt-2 mb-3 cursor-pointer"
-                    >
-                      + {translate("Add_References_Link")}
-                    </LightButton>
-                    {Boolean(get(methods.formState.errors, "references")) && (
-                      <span className="text-red-600 text-sm p-2 block">
-                        {methods.formState.errors["references"]?.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
               <div className="text-lg font-medium text-gray-500">
                 {translate("CreatorCommission")}
@@ -1067,6 +971,103 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                         </TooltipProvider>
                       </span>
                     </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col bg-white rounded-xl p-[24px]">
+              <div className="text-lg font-medium text-gray-500 flex items-center gap-x-2">
+                {translate("Creator_material")}{" "}
+                <TooltipProvider key={`Creator_material`}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info />
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                      side="top"
+                    >
+                      {translate("campaignMaterialTolltip")}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <label className="inline-flex items-center cursor-pointer relative">
+                  <input
+                    type="checkbox"
+                    value=""
+                    checked={showCreatorMeterial}
+                    className="sr-only peer"
+                    onChange={() =>
+                      setShowCreatorMeterial(!showCreatorMeterial)
+                    }
+                  />
+                  <div
+                    className={`relative w-11 h-6 ${
+                      showCreatorMeterial ? "bg-primary" : "bg-gray-200"
+                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                  ></div>
+                </label>
+              </div>
+              <div
+                className={`flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden ${
+                  showCreatorMeterial
+                    ? "max-h-[1000px] opacity-100 pt-3"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
+                <div className="flex flex-col w-full gap-1">
+                  <CreatorMaterial
+                    onMediaChange={setMediaMixin}
+                    mediaPreview={mediaPreviewMixin}
+                    setMediaPriview={setMediaPriviewMixin}
+                    disabled={isDisabled}
+                  />
+                </div>
+                <div className="flex flex-col w-full gap-2">
+                  <label className={cn(labelStyle)}>
+                    {translate("Reference_Links")}
+                  </label>
+                  <div className="flex flex-col w-full gap-1">
+                    {fields.map((field, index) => (
+                      <div
+                        key={field.id}
+                        className="flex items-start gap-3 mb-1 lg:w-[50%]"
+                      >
+                        <label className={cn(labelStyle, "py-[15px] h-fit")}>
+                          {index + 1}.
+                        </label>
+                        <div className="flex-1">
+                          <Input
+                            name={`references.${index}`}
+                            type="text"
+                            placeholder="https://example.com"
+                            label={``}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className="text-red-500 hover:underline h-fit my-[15px] cursor-pointer"
+                        >
+                          <span className="md:inline-block hidden">Remove</span>
+                          <span className="md:hidden">
+                            <CircleX />
+                          </span>
+                        </button>
+                      </div>
+                    ))}
+                    <LightButton
+                      type="button"
+                      onClick={() => append("")}
+                      className="text-blue-600 me-auto mt-2 mb-3 cursor-pointer"
+                    >
+                      + {translate("Add_References_Link")}
+                    </LightButton>
+                    {Boolean(get(methods.formState.errors, "references")) && (
+                      <span className="text-red-600 text-sm p-2 block">
+                        {methods.formState.errors["references"]?.message}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

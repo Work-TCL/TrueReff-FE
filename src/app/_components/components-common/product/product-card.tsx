@@ -44,22 +44,22 @@ export interface IProduct {
 }
 const ProductCard = ({
   item: product,
-  id
+  id,
 }: {
   item: IProduct;
   id?: string;
 }) => {
   const translate = useTranslations();
   const router = useRouter();
-  const {vendor} = useVendorStore();
-  const {creator} = useCreatorStore();
+  const { vendor } = useVendorStore();
+  const { creator } = useCreatorStore();
   return (
     <Card className="relative cursor-pointer w-full border border-stroke rounded-xl p-2 md:p-3 flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow bg-white overflow-hidden">
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
         {/* Image */}
         <div
           className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
-          onClick={() => router.push(`/product-detail/${id ? id : product?._id}`)}
+          onClick={() => router.push(`${product?.crmLink}`)}
         >
           {product.media?.length > 0 ? (
             <img
@@ -83,23 +83,26 @@ const ProductCard = ({
           {/* Price and Discount */}
           <div className="flex justify-between items-center w-full text-sm">
             <span className="text-green-600 px-2 py-1 font-bold">
-              ₹ {" "}{product.price || "0.00"}
+              ₹ {product.price || "0.00"}
             </span>
             {product.commission && (
               <span className="text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
-                {product.commission} {product.commission_type === "PERCENTAGE" ? "% " : "₹ "}{translate("Off")}
+                {product.commission}{" "}
+                {product.commission_type === "PERCENTAGE" ? "% " : "₹ "}
+                {translate("Off")}
               </span>
             )}
           </div>
-          {(vendor?.vendorId === "" && creator?.creatorId === "") && <div className="flex items-center justify-between w-full">
-            <button
-              className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
-              onClick={() => {
-                
-              }}
-            >
-              <Heart size={15} /> {translate("Add")} </button>
-          </div>}
+          {vendor?.vendorId === "" && creator?.creatorId === "" && (
+            <div className="flex items-center justify-between w-full">
+              <button
+                className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+                onClick={() => {}}
+              >
+                <Heart size={15} /> {translate("Add")}{" "}
+              </button>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

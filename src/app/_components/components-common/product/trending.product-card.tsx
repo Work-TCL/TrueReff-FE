@@ -40,31 +40,27 @@ export interface IProduct {
     categories?: string; // Comma-separated string of category names
     tag?: string; // Comma-separated string of tags
 }
-const TrendingProductCard = ({
-    item: product,
-}: {
-    item: IProduct;
-}) => {
-    const translate = useTranslations();
-    const router = useRouter();
-    return (
-        <Card className="relative cursor-pointer w-full border rounded-xl p-2 md:p-2 flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow bg-white overflow-hidden">
-            <CardContent className="w-full p-0 flex flex-col items-center gap-3">
-                {/* Image */}
-                <div
-                    className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
-                    onClick={() => router.push(`/product-detail/${product?._id}`)}
-                >
-                    {product.media?.length > 0 ? (
-                        <img
-                            src={product.media[0]}
-                            alt={product.title}
-                            className="w-full h-full object-cover"
-                        />
-                    ) : (
-                        <ImageOff className="w-8 h-8 text-gray-400" />
-                    )}
-                </div>
+const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
+  const translate = useTranslations();
+  const router = useRouter();
+  return (
+    <Card className="relative cursor-pointer w-full border rounded-xl p-2 md:p-2 flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow bg-white overflow-hidden">
+      <CardContent className="w-full p-0 flex flex-col items-center gap-3">
+        {/* Image */}
+        <div
+          className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
+          onClick={() => router.push(`${product?.crmLink}`)}
+        >
+          {product.media?.length > 0 ? (
+            <img
+              src={product.media[0]}
+              alt={product.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <ImageOff className="w-8 h-8 text-gray-400" />
+          )}
+        </div>
 
                 {/* Info */}
                 <div className="flex flex-col gap-2 text-start w-full overflow-hidden">

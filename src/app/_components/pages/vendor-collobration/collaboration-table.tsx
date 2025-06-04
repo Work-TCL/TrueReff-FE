@@ -3,7 +3,13 @@
 import React, { useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
-import { CheckCircle, ImageOff, MessagesSquare, XCircle } from "lucide-react";
+import {
+  CheckCircle,
+  ImageOff,
+  IndianRupee,
+  MessagesSquare,
+  XCircle,
+} from "lucide-react";
 import { IChannel, ICollaboration, IRequest } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
@@ -104,21 +110,21 @@ const CollaborationTable = ({
     }
   };
   const getInstagramView: (channels: IChannel[]) => string = (
-      channels: IChannel[]
-    ) => {
-      let instagram = channels.find(
-        (ele: { channelType: string }) => ele.channelType === "instagram"
-      );
-      return instagram ? formatNumber(instagram?.followers) : "-";
-    };
-    const getYoutubeView: (channels: IChannel[]) => string = (
-      channels: IChannel[]
-    ) => {
-      let youtube = channels.find(
-        (ele: { channelType: string }) => ele.channelType === "youtube"
-      );
-      return youtube ? formatNumber(youtube?.followers) : "-";
-    };
+    channels: IChannel[]
+  ) => {
+    let instagram = channels.find(
+      (ele: { channelType: string }) => ele.channelType === "instagram"
+    );
+    return instagram ? formatNumber(instagram?.followers) : "-";
+  };
+  const getYoutubeView: (channels: IChannel[]) => string = (
+    channels: IChannel[]
+  ) => {
+    let youtube = channels.find(
+      (ele: { channelType: string }) => ele.channelType === "youtube"
+    );
+    return youtube ? formatNumber(youtube?.followers) : "-";
+  };
 
   const productCollaborationColumns: ColumnDef<ICollaboration>[] = [
     {
@@ -183,43 +189,48 @@ const CollaborationTable = ({
               )
             }
           >
-            <ToolTip content={<div className="flex gap-2 justify-center">
-              <div className="flex flex-col space-y-1 items-center p-1">
-                <div className="bg-gray-200 p-1 rounded-full">
-                  <img
-                    src="/assets/creator/insta-gram.svg"
-                    width={18}
-                    height={18}
-                  />
+            <ToolTip
+              content={
+                <div className="flex gap-2 justify-center">
+                  <div className="flex flex-col space-y-1 items-center p-1">
+                    <div className="bg-gray-200 p-1 rounded-full">
+                      <img
+                        src="/assets/creator/insta-gram.svg"
+                        width={18}
+                        height={18}
+                      />
+                    </div>
+                    <p className="text-sm">
+                      {getInstagramView(collaboration?.creatorId?.channels)}
+                    </p>
+                  </div>
+                  <div className="flex flex-col space-y-1 items-center p-1">
+                    <div className="bg-gray-200 p-1 rounded-full">
+                      <img
+                        src="/assets/creator/you-tube.svg"
+                        width={18}
+                        height={18}
+                      />
+                    </div>
+                    <p className="text-sm">
+                      {getYoutubeView(collaboration?.creatorId?.channels)}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-sm">
-                  {getInstagramView(collaboration?.creatorId?.channels)}
-                </p>
-              </div>
-              <div className="flex flex-col space-y-1 items-center p-1">
-              <div className="bg-gray-200 p-1 rounded-full">
-                  <img
-                    src="/assets/creator/you-tube.svg"
-                    width={18}
-                    height={18}
-                  />
-                </div>
-                <p className="text-sm">
-                  {getYoutubeView(collaboration?.creatorId?.channels)}
-                </p>
-              </div>
-            </div>}><Avatar className="w-8 h-8">
-              <AvatarImage
-                className={
-                  collaboration?.creatorId?.profile_image ? "" : "opacity-50"
-                }
-                src={
-                  collaboration?.creatorId?.profile_image
-                    ? collaboration?.creatorId?.profile_image
-                    : "/assets/profile/profile-image.png"
-                }
-              />
-            </Avatar>
+              }
+            >
+              <Avatar className="w-8 h-8">
+                <AvatarImage
+                  className={
+                    collaboration?.creatorId?.profile_image ? "" : "opacity-50"
+                  }
+                  src={
+                    collaboration?.creatorId?.profile_image
+                      ? collaboration?.creatorId?.profile_image
+                      : "/assets/profile/profile-image.png"
+                  }
+                />
+              </Avatar>
             </ToolTip>
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
@@ -251,15 +262,19 @@ const CollaborationTable = ({
           <div className="flex justify-center">
             {!bids?.isSeen ? (
               <div
-                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-white bg-primary/90`}
+                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-white bg-primary/90 flex items-center`}
               >
-                {bids?.proposal}%
+                {bids?.type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""}
+                {bids?.proposal}
+                {bids?.type === "FIXED_AMOUNT" ? "" : "%"}
               </div>
             ) : (
               <div
-                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-primary`}
+                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-primary flex items-center`}
               >
-                {bids?.proposal}%
+                {bids?.type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""}
+                {bids?.proposal}
+                {bids?.type === "FIXED_AMOUNT" ? "" : "%"}
               </div>
             )}
           </div>

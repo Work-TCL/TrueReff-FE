@@ -154,9 +154,9 @@ export default function InfluencerProfile({
             </span>
           ))}
         </div>
-        <div className="text-sm md:text-base text-font-grey" dangerouslySetInnerHTML={{
-            __html: long_description,
-          }}/>
+        <div className="text-sm md:text-base text-font-grey">
+          {long_description}
+        </div>
         <div className="flex gap-2 md:gap-4">
           {categories?.map((v) => (
             <Button

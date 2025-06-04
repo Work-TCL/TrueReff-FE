@@ -369,7 +369,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               ) : item.children ? (
                 <ToolTipProvider delayDuration={0}>
                   <Tooltip>
-                    <Tooltip.Trigger>
+                    <Tooltip.Trigger key={idx}>
                       <NavLink
                         key={idx}
                         isActive={item.children.some(
@@ -409,7 +409,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               ) : (
                 <ToolTipProvider delayDuration={0}>
                   <Tooltip>
-                    <Tooltip.Trigger>
+                    <Tooltip.Trigger key={idx}>
                       <NavLink
                         key={idx}
                         handleToggle={() => {
@@ -480,13 +480,13 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       >
         <div className="flex justify-end">
           <div className="p-4 text-primary-color font-bold text-4xl text-center">
-          <Image
-                width={220}
-                height={40}
-                src="/assets/common/truereff-dark.svg"
-                alt="TrueReff"
-                className={`w-[225px] h-[35px] mx-auto`}
-              />
+            <Image
+              width={220}
+              height={40}
+              src="/assets/common/truereff-dark.svg"
+              alt="TrueReff"
+              className={`w-[225px] h-[35px] mx-auto`}
+            />
           </div>
           <X
             className="size-6 shrink-0 mt-5 mr-2 cursor-pointer"

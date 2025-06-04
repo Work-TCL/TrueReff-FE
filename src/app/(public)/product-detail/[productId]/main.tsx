@@ -246,9 +246,7 @@ export default function ViewProductDetail({
                                     <h2 className="text-lg font-semibold">
                                         {productData?.title}
                                     </h2>
-                                    <p className="text-gray-500 text-xs" dangerouslySetInnerHTML={{
-                                        __html: productData?.description,
-                                    }} />
+                                    <p className="text-gray-500 text-xs">{productData?.description}</p>
                                 </div>
                                 <div className="">
                                     <div className="flex items-center gap-2 ">
@@ -345,9 +343,7 @@ export default function ViewProductDetail({
                                     </h3>
                                     <div className="flex flex-col gap-3">
                                         {[
-                                            [translate("Description"), <p dangerouslySetInnerHTML={{
-                                                __html: productData?.description ? productData?.description : "<p>-</p>",
-                                            }} />]
+                                            [translate("Description"), <p >{productData?.description}</p>]
                                         ].map(([label, value], index) => (
                                             <div key={index} className="flex items-center">
                                                 <span className="w-48 text-gray-500 capitalize">{label}:</span>

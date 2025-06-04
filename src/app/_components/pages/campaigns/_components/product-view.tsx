@@ -83,9 +83,9 @@ function CampaignProductView({
             <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800" />
 
             {description && (
-              <p className="mb-6 text-gray-500 dark:text-gray-400" dangerouslySetInnerHTML={{
-                __html: description,
-              }}/>
+              <p className="mb-6 text-gray-500 dark:text-gray-400">
+                {description}
+              </p>
             )}
             {(tags && tags?.length > 0) && (
               <div className="flex gap-2 mt-1">
