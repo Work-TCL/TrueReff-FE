@@ -8,6 +8,8 @@ import {
   Copy,
   Eye,
   ImageOff,
+  IndianRupee,
+  Info,
   MessageSquareText,
   MessagesSquare,
   XCircle,
@@ -137,30 +139,35 @@ const CollaborationTable = ({
       toastMessage.error("Failed to copy!");
     }
   };
-  const getMessages = (status: string, request:string) => {
+  const getMessages = (status: string, request: string) => {
     let userStatus: { [key: string]: string } = {
       creator: "REQUESTED_CREATOR_FROM_VENDOR",
       vendor: "REQUESTED_VENDOR_FROM_CREATOR",
     };
-    return status === "REQUESTED" && request
-      ? userStatus[request]
-      : status;
+    return status === "REQUESTED" && request ? userStatus[request] : status;
   };
   const getCommission = (collaboration: ICollaboration) => {
-
-    if(collaboration?.collaborationStatus === "REQUESTED") {
+    if (collaboration?.collaborationStatus === "REQUESTED") {
       let product = collaboration?.productId;
-      return product?.commission ? `${product?.commission_type === "FIXED_AMOUNT" ? currency["INR"]:""} ${product?.commission} ${product?.commission_type === "PERCENTAGE" ? "%":""}` : "-";
+      return product?.commission
+        ? `${
+            product?.commission_type === "FIXED_AMOUNT" ? currency["INR"] : ""
+          } ${product?.commission} ${
+            product?.commission_type === "PERCENTAGE" ? "%" : ""
+          }`
+        : "-";
     } else if (collaboration?.bids?.length > 0) {
       const bid = collaboration?.bids?.[collaboration?.bids?.length - 1];
       if (bid?.proposal) {
-        return `${bid?.type === "FIXED_AMOUNT" ? currency["INR"]:""} ${bid?.proposal} ${bid?.type === "PERCENTAGE" ? "%":""}`;
+        return `${bid?.type === "FIXED_AMOUNT" ? currency["INR"] : ""} ${
+          bid?.proposal
+        } ${bid?.type === "PERCENTAGE" ? "%" : ""}`;
       } else {
         return "-";
       }
     }
     // return "-"
-  }
+  };
 
   const columns: ColumnDef<ICollaboration>[] = [
     {
@@ -261,6 +268,37 @@ const CollaborationTable = ({
         ] as ColumnDef<ICollaboration>[])
       : []),
     {
+      id: "last-bid",
+      header: () => <div className="text-center">{translate("Last_Bid")}</div>,
+      cell: ({ row }) => {
+        const bids =
+          row.original?.bids?.length > 0 ? row.original?.bids[0] : null;
+        return bids ? (
+          <div className="flex justify-center">
+            {!bids?.isSeen ? (
+              <div
+                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-white bg-primary/90 flex items-center`}
+              >
+                {bids?.type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""}
+                {bids?.proposal}
+                {bids?.type === "FIXED_AMOUNT" ? "" : "%"}
+              </div>
+            ) : (
+              <div
+                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-primary flex items-center`}
+              >
+                {bids?.type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""}
+                {bids?.proposal}
+                {bids?.type === "FIXED_AMOUNT" ? "" : "%"}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex justify-center">-</div>
+        );
+      },
+    },
+    {
       id: "status",
       header: () => <div className="text-center">{translate("Status")}</div>,
       cell: ({ row }) => {
@@ -268,10 +306,7 @@ const CollaborationTable = ({
         const status = getRequestStatus(collaboration);
         return status ? (
           <div className="flex justify-center">
-            <StatusBadge
-              status={status}
-              messageStatus={status}
-            />
+            <StatusBadge status={status} messageStatus={status} />
           </div>
         ) : null;
       },

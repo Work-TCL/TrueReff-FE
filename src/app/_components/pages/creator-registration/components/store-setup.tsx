@@ -205,7 +205,7 @@ export default function StoreSetup({
           <Input
             label={translate("Store_Description")}
             name="store_description"
-            type="editor"
+            type="textarea"
             rows={4}
             placeholder={translate("Enter_your_store_description")}
           />

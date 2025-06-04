@@ -27,22 +27,16 @@ import Loader from "../../components-common/layout/loader";
 import { useTranslations } from "next-intl";
 import SalesChart from "../../components-common/charts/SalesChart";
 import DonutChart from "../../components-common/charts/suggested-products";
-import MostSellingBrands from "../../components-common/charts/MostSellingBrands";
-import RecentActivities from "../../components-common/tables/RecentActivity";
-import {
-  currency,
-  formatFloatValue,
-  formatNumber,
-} from "@/lib/utils/constants";
+import { formatFloatValue, formatNumber } from "@/lib/utils/constants";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import Loading from "@/app/vendor/loading";
 import { IndianRupee } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { Subject } from "rxjs";
+
+export const creatorDashboardFilter = new Subject<string>();
 
 export default function Dashboard() {
   const translate = useTranslations();
-  const searchParams = useSearchParams();
-  const currentFilter = searchParams.get("filter") || "7";
   const lg = useMediaQuery("(min-width: 1024px)");
   const [creatorDetails, setCreatorDetails] = useState<any>({ completed: 0 });
   const initialStateInfo = {
@@ -65,6 +59,7 @@ export default function Dashboard() {
   const [mainLoading, setMailLoading] = useState<boolean>(true);
   const [brandLoading, setBrandLoading] = useState<boolean>(true);
   const [revenueLoading, setRevenueLoading] = useState<boolean>(true);
+  const [productLoading, setProductLoading] = useState<boolean>(true);
   const getCreator = async () => {
     try {
       const creator = await getCreatorProgress();
@@ -72,27 +67,40 @@ export default function Dashboard() {
     } catch (e) {}
   };
   const getProductSuggested = async () => {
+    setProductLoading(true);
     try {
       const products = await getSuggestedProducts();
       // console.log("getProductSuggested", getProductSuggested);
       setProducts(products);
-    } catch (e) {}
+    } catch (e) {
+    } finally {
+      setProductLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchStatesInfo();
     fetchRevenuePerformance();
-  }, [currentFilter]);
+    const subscription = creatorDashboardFilter.subscribe((value) => {
+      console.log("Received value:", value);
+      fetchStatesInfo(value || "7");
+      fetchRevenuePerformance(value || "7");
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     getCreator();
     fetchTopPerformingBrand();
     getProductSuggested();
   }, []);
-  const fetchStatesInfo = async () => {
+  const fetchStatesInfo = async (value: string = "7") => {
     setMailLoading(true);
     try {
-      const response = await getCreatorStatesInfo(currentFilter || "7");
+      const response = await getCreatorStatesInfo(value || "7");
       if (response) {
         setStatesInfo(response);
       } else {
@@ -123,10 +131,10 @@ export default function Dashboard() {
       setBrandLoading(false);
     }
   };
-  const fetchRevenuePerformance = async () => {
+  const fetchRevenuePerformance = async (value: string = "7") => {
     setRevenueLoading(true);
     try {
-      const response = await getRevenuePerformance(currentFilter || "7");
+      const response = await getRevenuePerformance(value || "7");
       if (response) {
         const currentData = response?.current?.map((ele: IRevenue) => ({
           ...ele,
@@ -196,7 +204,7 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col gap-4 md:p-4 p-2 w-full">
       {mainLoading && <Loader />}
-      <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-6 md:grid-cols-3 gap-2 rounded-[20px] w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 md:grid-cols-3 gap-2 rounded-[20px] w-full">
         <StatsCard
           title={translate("Followers")}
           value={
@@ -294,7 +302,7 @@ export default function Dashboard() {
                 )}
               </div>
               <div className="flex xl:w-[35%] md:w-[50%] w-full">
-                {revenueLoading ? (
+                {productLoading ? (
                   <div className="w-full bg-white rounded-lg">
                     <Loading height="fit" />
                   </div>

@@ -26,7 +26,8 @@ import { IRevenue, IRevenueData } from "@/lib/types-api/creator-dashboard";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { getSuggestedCreators } from "@/lib/web-api/auth";
 import { IndianRupee } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { Subject } from "rxjs";
+
 export interface IChannel {
   followers: number;
   _id: string;
@@ -38,10 +39,11 @@ export interface IChannel {
   createdAt: string;
   updatedAt: string;
 }
+
+export const overviewFilter = new Subject<string>();
+
 export default function Overview() {
   const translate = useTranslations();
-  const searchParams = useSearchParams();
-  const currentFilter = searchParams.get("filter") || "7";
   const initialStateInfo = {
     pendingCollaborations: 0,
     pendingCampaigns: 0,
@@ -59,11 +61,20 @@ export default function Overview() {
   const [updateData, setUpdateData] = useState<any[]>([]);
   const [suggestedCreators, setSuggestedCreators] = useState<any[]>([]);
   const [revenueLoading, setRevenueLoading] = useState<boolean>(true);
+  const [creatorLoading, setCreatorLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetchStatesInfo();
     fetchRevenuePerformance();
-  }, [currentFilter]);
+    const subscription = overviewFilter.subscribe((value) => {
+      console.log("Received value:", value);
+      fetchStatesInfo(value);
+      fetchRevenuePerformance(value);
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
   useEffect(() => {
     getCreatorSuggested();
   }, []);
@@ -84,6 +95,7 @@ export default function Overview() {
     return youtube ? formatNumber(youtube?.followers) : "0";
   };
   const getCreatorSuggested = async () => {
+    setCreatorLoading(true);
     try {
       const creators = await getSuggestedCreators();
       if (Array.isArray(creators)) {
@@ -100,13 +112,16 @@ export default function Overview() {
         });
         setSuggestedCreators(result);
       }
-    } catch (e) {}
+    } catch (e) {
+    } finally {
+      setCreatorLoading(false);
+    }
   };
 
-  const fetchStatesInfo = async () => {
+  const fetchStatesInfo = async (value: string = "7") => {
     setMailLoading(true);
     try {
-      const response = await getStatesInfo(currentFilter || "7");
+      const response = await getStatesInfo(value || "7");
       if (response) {
         setStatesInfo(response);
       } else {
@@ -120,10 +135,10 @@ export default function Overview() {
       setMailLoading(false);
     }
   };
-  const fetchRevenuePerformance = async () => {
+  const fetchRevenuePerformance = async (value: string = "7") => {
     setRevenueLoading(true);
     try {
-      const response = await getVendorRevenuePerformance(currentFilter || "7");
+      const response = await getVendorRevenuePerformance(value || "7");
       if (response) {
         const currentData = response?.current?.map((ele: IRevenue) => ({
           ...ele,
@@ -177,7 +192,7 @@ export default function Overview() {
   return (
     <div className="flex flex-col gap-4 md:p-4 p-2 w-full">
       {mainLoading && <Loader />}
-      <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-6 md:grid-cols-3 gap-2 rounded-[20px] w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 md:grid-cols-3 gap-2 rounded-[20px] w-full">
         <StatsCard
           title={translate("Pending_Campaigns")}
           value={formatNumber(statesInfo?.pendingCampaigns)}
@@ -249,7 +264,7 @@ export default function Overview() {
                 )}
               </div>
               <div className="flex xl:w-[35%] md:w-[50%] w-full">
-                {revenueLoading ? (
+                {creatorLoading ? (
                   <div className="w-full bg-white rounded-lg">
                     <Loading height="fit" />
                   </div>

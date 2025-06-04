@@ -13,6 +13,7 @@ import axios from "@/lib/web-api/axios";
 import NotificationPopover from "./notificationPopover";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/commonUtils";
+import HeaderFilter from "../../../header-filter";
 
 interface IPageName {
   [key: string]: string;
@@ -56,6 +57,7 @@ function formatTimeAgo(date: string) {
       .replace(",", ""); // Show full date & time after 2 hours
   }
 }
+
 export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const router = useRouter();
   const translate = useTranslations();
@@ -203,15 +205,15 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       return translate("Product_Detail");
     } else if (pathName.includes("/vendor/profile/")) {
       return translate("Brand_Profile");
-    } else if(pathName.includes("/creator/store/")) {
+    } else if (pathName.includes("/creator/store/")) {
       return translate("My_Store");
-    } else if(pathName.includes("/vendor/campaign/product/")) {
-      return translate("Product_Campaign")
-    } else if(pathName.includes("/vendor/creator-profile/")) {
+    } else if (pathName.includes("/vendor/campaign/product/")) {
+      return translate("Product_Campaign");
+    } else if (pathName.includes("/vendor/creator-profile/")) {
       return translate("Creator_Profile");
-    } else if(pathName.includes("/vendor/creator-store/")) {
+    } else if (pathName.includes("/vendor/creator-store/")) {
       return translate("Creator_Store");
-    } else if(pathName.includes("/creator/vendor-profile/")) {
+    } else if (pathName.includes("/creator/vendor-profile/")) {
       return translate("Brand_Profile");
     } else {
       return pageNames[pathName];
@@ -244,6 +246,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             {getHeaderName()}
           </h2>
           <div className="ml-auto flex items-center md:gap-3 gap-2">
+            {["/vendor/dashboard", "/creator/dashboard"].includes(pathName) && (
+              <HeaderFilter />
+            )}
             <NotificationPopover
               notifications={notifications}
               unreadNotifications={unreadNotifications}
@@ -253,9 +258,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             />
             <Link
               href={
-                creator.creatorId
-                  ? `/creator/settings`
-                  : `/vendor/settings`
+                creator.creatorId ? `/creator/settings` : `/vendor/settings`
               }
               className="flex gap-3 items-center w-fit"
             >

@@ -113,42 +113,42 @@ export default function ProfileCard({
             </Link>
           )}
           {channels?.instagram_link &&
-            channels?.instagramFollowers &&
-            channels?.instagramFollowers > 0 && (
-              <Link
-                href={channels?.instagram_link}
-                target="_blank"
-                className="flex items-center justify-center p-1.5"
-              >
-                <div className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2 text-sm">
-                  <img
-                    src="/assets/creator/insta-gram.svg"
-                    width={15}
-                    height={15}
-                  />{" "}
-                  {formatFollowers(channels?.instagramFollowers || 0)}
-                </div>
-              </Link>
-            )}
+          channels?.instagramFollowers &&
+          channels?.instagramFollowers > 0 ? (
+            <Link
+              href={channels?.instagram_link}
+              target="_blank"
+              className="flex items-center justify-center p-1.5"
+            >
+              <div className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2 text-sm">
+                <img
+                  src="/assets/creator/insta-gram.svg"
+                  width={15}
+                  height={15}
+                />{" "}
+                {formatFollowers(channels?.instagramFollowers || 0)}
+              </div>
+            </Link>
+          ) : null}
           {channels?.youtube_link &&
-            channels?.youtubeFollowers &&
-            channels?.youtubeFollowers > 0 && (
-              <Link
-                href={channels?.youtube_link}
-                target="_blank"
-                className="flex items-center justify-center p-1.5"
-              >
-                <div className="text-gray-500 bg-gray-100 w-full px-4 py-1 rounded-3xl justify-center flex items-center gap-2 text-sm">
-                  <Image
-                    src="/assets/creator/profile/ytIcon.svg"
-                    alt={"youtubeIcon"}
-                    width={35}
-                    height={35}
-                  />
-                  {formatFollowers(channels?.youtubeFollowers || 0)}
-                </div>
-              </Link>
-            )}
+          channels?.youtubeFollowers &&
+          channels?.youtubeFollowers > 0 ? (
+            <Link
+              href={channels?.youtube_link}
+              target="_blank"
+              className="flex items-center justify-center p-1.5"
+            >
+              <div className="text-gray-500 bg-gray-100 w-full px-4 py-1 rounded-3xl justify-center flex items-center gap-2 text-sm">
+                <Image
+                  src="/assets/creator/profile/ytIcon.svg"
+                  alt={"youtubeIcon"}
+                  width={35}
+                  height={35}
+                />
+                {formatFollowers(channels?.youtubeFollowers || 0)}
+              </div>
+            </Link>
+          ) : null}
         </div>
       </div>
       <CardContent className="pt-2 md:pt-2 pb-4 md:pb-6 px-4 md:px-6 flex flex-col gap-2 md:gap-3">
@@ -183,12 +183,9 @@ export default function ProfileCard({
                         </span>
                     ))}
                 </div> */}
-        <div
-          className="text-sm md:text-base text-font-grey"
-          dangerouslySetInnerHTML={{
-            __html: long_description,
-          }}
-        />
+        <div className="text-sm md:text-base text-font-grey">
+          {long_description}
+        </div>
         <div className="flex gap-2 md:gap-4">
           {categories?.map((v) => (
             <div

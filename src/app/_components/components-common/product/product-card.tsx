@@ -1,11 +1,9 @@
 "use client";
-import { Heart, ImageOff, Plus } from "lucide-react";
+import { Heart, ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils/commonUtils";
-import ToolTip from "../tool-tip";
 import { useVendorStore } from "@/lib/store/vendor";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
@@ -52,7 +50,7 @@ const ProductCard = ({
   item: product,
   id,
   isWishListed,
-  refreshData = () => { }
+  refreshData = () => { },
 }: {
   item: IProduct;
   id?: string;
@@ -64,8 +62,8 @@ const ProductCard = ({
   const [loader, setLoader] = useState<boolean>(false);
   const [loginPopUp, setLoginPopUp] = useState<boolean>(false);
   const router = useRouter();
-  const { vendor } = useVendorStore();
-  const { creator } = useCreatorStore();
+  const {  vendor  } = useVendorStore();
+  const {  creator  } = useCreatorStore();
   const addToWishlist = async (productId: string) => {
     setLoader(true);
     try {
@@ -97,7 +95,7 @@ const ProductCard = ({
         {/* Image */}
         <div
           className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
-          onClick={() => router.push(`/product-detail/${id ? id : product?._id}`)}
+          onClick={() => router.push(`${product?.crmLink}`)}
         >
           {product.media?.length > 0 ? (
             <img
@@ -121,25 +119,28 @@ const ProductCard = ({
           {/* Price and Discount */}
           <div className="flex justify-between items-center w-full text-sm">
             <span className="text-green-600 px-2 py-1 font-bold">
-              ₹ {" "}{product.price || "0.00"}
+              ₹ {product.price || "0.00"}
             </span>
             {product.commission && (
               <span className="text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
-                {product.commission} {product.commission_type === "PERCENTAGE" ? "% " : "₹ "}{translate("Off")}
+                {product.commission}{" "}
+                {product.commission_type === "PERCENTAGE" ? "% " : "₹ "}
+                {translate("Off")}
               </span>
             )}
           </div>
-          {(vendor?.vendorId === "" && creator?.creatorId === "") && <div className="flex items-center justify-between w-full">
-            <button
-              className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
-              onClick={() => {
-                addToWishlist(id ? id : product?._id)
-              }}
-            >{loader && (
-              <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
+          {vendor?.vendorId === "" && creator?.creatorId === "" && (
+            <div className="flex items-center justify-between w-full">
+              <button
+                className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+                onClick={() => addToWishlist(id ? id : product?._id)}
+              >{loader && (
+                <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
             )}{isWishListed ? <span className={`flex gap-2 items-center  ${loader ? "opacity-0":""}`}><Heart className="fill-black group-hover:fill-white" size={15} /> {translate("Remove")}</span> : <><Heart size={15} /> {translate("Add")}</>}
-            </button>
-          </div>}
+           {" "}
+              </button>
+            </div>
+          )}
         </div>
       </CardContent>
       {loginPopUp && <LoginDialog title={"Login_Required"} description="Login_Required_Description" onClose={() => setLoginPopUp(false)} />}

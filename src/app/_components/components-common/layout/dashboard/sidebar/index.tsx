@@ -406,7 +406,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               ) : item.children ? (
                 <ToolTipProvider delayDuration={0}>
                   <Tooltip>
-                    <Tooltip.Trigger>
+                    <Tooltip.Trigger key={idx}>
                       <NavLink
                         key={idx}
                         isActive={item.children.some(
@@ -446,7 +446,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               ) : (
                 <ToolTipProvider delayDuration={0}>
                   <Tooltip>
-                    <Tooltip.Trigger>
+                    <Tooltip.Trigger key={idx}>
                       <NavLink
                         key={idx}
                         handleToggle={() => {

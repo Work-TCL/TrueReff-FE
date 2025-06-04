@@ -29,7 +29,7 @@ export default function SuggestedCreators({ data = [] }: { data: any[] }) {
     initialSlide: 1,
     autoplay: true,
     pauseOnHover: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 5000,
     responsive: [
       {
         breakpoint: 1024,
@@ -65,14 +65,14 @@ export default function SuggestedCreators({ data = [] }: { data: any[] }) {
         {...settings}
       >
         {data.map((item: any, i) => (
-          <div key={i} className="flex h-fit w-full px-2">
+          <div key={i} className="flex h-full w-full px-2">
             <CreatorCard
               item={item}
               handleCollaborateNow={(creatorId: string) => {
                 setIsOpen({ show: true, creatorId });
               }}
-              size="small"
               isCategoryShow={false}
+              isBoxShadow={false}
             />
           </div>
         ))}
