@@ -150,18 +150,22 @@ const CollaborationTable = ({
     if (collaboration?.collaborationStatus === "REQUESTED") {
       let product = collaboration?.productId;
       return product?.commission
-        ? `${
-            product?.commission_type === "FIXED_AMOUNT" ? currency["INR"] : ""
-          } ${product?.commission} ${
-            product?.commission_type === "PERCENTAGE" ? "%" : ""
-          }`
-        : "-";
+        ? <div
+        className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center  flex items-center`}
+      >{
+            product?.commission_type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""
+          } {product?.commission} {
+            product?.commission_type === "PERCENTAGE" ? "%" : ""          
+          }
+        </div>: "-";
     } else if (collaboration?.bids?.length > 0) {
       const bid = collaboration?.bids?.[collaboration?.bids?.length - 1];
       if (bid?.proposal) {
-        return `${bid?.type === "FIXED_AMOUNT" ? currency["INR"] : ""} ${
+        return <div
+        className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center  flex items-center`}
+      >{bid?.type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""} {
           bid?.proposal
-        } ${bid?.type === "PERCENTAGE" ? "%" : ""}`;
+        } {bid?.type === "PERCENTAGE" ? "%" : ""}</div>
       } else {
         return "-";
       }
@@ -197,32 +201,21 @@ const CollaborationTable = ({
         );
       },
     },
-    {
-      accessorKey: "product.category",
-      header: () => translate("Product_Category"),
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.productId?.categories?.join(", ") ?? ""}
-        />
-      ),
-    },
-    ...(!isDashboard
-      ? ([
-          {
-            accessorKey: "product.tag",
-            header: () => translate("Product_Tags"),
-            cell: ({ row }) => (
-              <TruncateWithToolTip
-                checkHorizontalOverflow={false}
-                linesToClamp={2}
-                text={row.original.productId?.tag ?? ""}
-              />
-            ),
-          },
-        ] as ColumnDef<ICollaboration>[])
-      : []),
+    // ...(!isDashboard
+    //   ? ([
+    //       {
+    //         accessorKey: "product.tag",
+    //         header: () => translate("Product_Tags"),
+    //         cell: ({ row }) => (
+    //           <TruncateWithToolTip
+    //             checkHorizontalOverflow={false}
+    //             linesToClamp={2}
+    //             text={row.original.productId?.tag ?? ""}
+    //           />
+    //         ),
+    //       },
+    //     ] as ColumnDef<ICollaboration>[])
+    //   : []),
     {
       accessorKey: "fromUser.business_name",
       header: () => translate("Brand"),
@@ -252,11 +245,22 @@ const CollaborationTable = ({
         );
       },
     },
+    {
+      accessorKey: "product.category",
+      header: () => translate("Product_Category"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.productId?.categories?.join(", ") ?? ""}
+        />
+      ),
+    },
     ...(isDashboard
       ? ([
           {
             accessorKey: "product.tag",
-            header: () => translate("Commission"),
+            header: () => translate("Base_Commission"),
             cell: ({ row }) => (
               <TruncateWithToolTip
                 checkHorizontalOverflow={false}
@@ -402,8 +406,8 @@ const CollaborationTable = ({
           return (
             <div className="flex gap-3 mx-auto w-fit relative">
               <ToolTip content="Start Bargaining" delayDuration={1000}>
-                <MessageSquareText
-                  strokeWidth={1}
+                <MessagesSquare
+                  strokeWidth={1.5}
                   color="#3b82f6"
                   className="cursor-pointer"
                   size={25}

@@ -74,7 +74,7 @@ export default function Categories({
   };
 
   return (
-    <div className="flex gap-3 items-center">
+    <div className="flex gap-3 justify-center items-center">
       {channelsScrollable && (
         <div
           className="bg-primary cursor-pointer text-primary-foreground hover:text-primary-foreground rounded-full bg-primary/10 text-primary hover:bg-primary/5  p-2 gap-1 text-[12px] flex items-center justify-center"
@@ -85,7 +85,7 @@ export default function Categories({
       )}
       <div
         ref={channelsRef}
-        className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        className="flex gap-3 overflow-x-auto bg-white p-2 rounded-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       >
         {categories.map((el:ICategory) => {
           const channelLabel = `${el.name}`;
@@ -96,16 +96,16 @@ export default function Categories({
               className={cn(
                 " rounded-full capitalize h-[36px] px-3 gap-1 cursor-pointer",
                 el._id === activeCategory
-                  ? "bg-primary/90 text-white hover:bg-primary/90 "
-                  : "bg-primary/10 text-primary hover:bg-primary/5 "
+                  ? "bg-primary/10 text-primary border border-primary hover:bg-primary/5 "
+                 :  "bg-gray-50 text-secondary hover:bg-primary/10 border border-gray-50 hover:border-primary"
               )}
               onClick={() => {
                 setActiveCategoryTabId(el._id);
               }}
             >
               <span
-                className={`flex justify-center h-full items-center whitespace-nowrap text-sm ${
-                    el._id === activeCategory ? "font-semibold" : ""
+                className={`flex justify-center h-full items-center whitespace-nowrap text-sm font-[500] ${
+                    el._id === activeCategory ? "text-secondary" : ""
                 }`}
               >
                 {channelLabel.length > 20

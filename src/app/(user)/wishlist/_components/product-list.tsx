@@ -6,9 +6,9 @@ import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
-import ProductCard from "@/app/_components/components-common/product/product-card";
 
 import { LoaderCircle } from "lucide-react";
+import ProductCard from "../../dashboard/_component/product-card";
 export interface ICategory {
   _id: string;
   name: string;

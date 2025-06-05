@@ -15,7 +15,7 @@ export default function Landing(){
     const translate = useTranslations();
     const [categories,setCategories] = useState<ICategory[]>([
         {
-            name: "All",
+            name: "ALL",
             _id: "All",
             parentId: "",
         }
@@ -58,11 +58,11 @@ export default function Landing(){
         }
       };
     return <div className="flex flex-col mx-auto w-full lg:w-2/3 p-2 md:p-4 space-y-3 justify-center">
-        <Categories categories={categories} activeCategory={activeCategory} setActiveCategoryTabId={setActiveCategoryTabId}/>
+        {categories?.length > 1 && <Categories categories={categories} activeCategory={activeCategory} setActiveCategoryTabId={setActiveCategoryTabId}/>}
         {activeCategory === "All" ? productCategories?.length > 0 ? productCategories?.map((ele:ICategory,index) => (
             <AllProductList key={ele?.name} category={ele} setActiveCategoryTabId={setActiveCategoryTabId}/>
         )) : <div className="h-[calc(100vh-145px)]">
             <EmptyPlaceHolder title={translate("No_Products_Available")} description={translate("No_Products_Available_Description")} />
-        </div>: <ProductList category={activeCategory} /> }
+        </div>: <ProductList key={activeCategory} category={activeCategory} /> }
     </div>
 }

@@ -1,7 +1,6 @@
 "use client";
 import { Heart, ImageOff, IndianRupee } from "lucide-react";
 import { useRouter } from "next/navigation";
-import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import { useVendorStore } from "@/lib/store/vendor";
@@ -10,8 +9,9 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { useState } from "react";
 import { toastMessage } from "@/lib/utils/toast-message";
 import axios from "@/lib/web-api/axios";
-import LoginDialog from "../dialogs/login";
 import { RiLoader3Fill } from "react-icons/ri";
+import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
+import LoginDialog from "@/app/_components/components-common/dialogs/login";
 
 export interface ICategory {
   _id: string;
@@ -95,9 +95,9 @@ const ProductCard = ({
         {/* Image */}
         <div
           className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
-          onClick={() => router.push(`${product?.crmLink}`)}
+          onClick={() => router.push(`/product-detail/${id ? id : product?._id}`)}
         >
-          {product.media?.length > 0 ? (
+          {product?.media?.length > 0 ? (
             <img
               src={product.media[0]}
               alt={product.title}
@@ -133,11 +133,11 @@ const ProductCard = ({
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">
               <button
-                className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+                className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition"
                 onClick={() => addToWishlist(id ? id : product?._id)}
               >{loader && (
                 <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
-            )}{isWishListed ? <span className={`flex gap-2 items-center  ${loader ? "opacity-0":""}`}><Heart className="fill-black group-hover:fill-white" size={15} /> {translate("Remove")}</span> : <><Heart size={15} /> {translate("Add")}</>}
+            )}{isWishListed ? <span className={`flex gap-2 items-center  ${loader ? "opacity-0":""}`}><Heart className="fill-primary group-hover:fill-white" size={15} /> {translate("Remove")}</span> : <><Heart size={15} /> {translate("Add")}</>}
            {" "}
               </button>
             </div>

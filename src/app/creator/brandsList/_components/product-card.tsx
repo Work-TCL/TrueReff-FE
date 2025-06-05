@@ -105,13 +105,13 @@ const ProductCard = ({
                 <IndianRupee size={15} />
                 {product.price || "0.00"}
               </span>
-              <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
                 <span
                   className={`text-xs ${
                     product.discount ? "text-black" : "text-white"
                   }`}
                 >
-                  Commission:{" "}
+                  {translate("Commission")}:{" "}
                 </span>
                 <span
                   className={`text-red-500 text-xs ${
@@ -136,7 +136,7 @@ const ProductCard = ({
               key={0}
               disabled={product?.collaboration !== null}
               className={cn(
-                "flex items-center justify-center gap-1 px-2 py-2 text-xs text-semibold hover:cursor-pointer rounded-full bg-white text-black hover:bg-black hover:text-white border border-black disabled:bg-muted disabled:text-muted-foreground disabled:cursor-no-drop disabled:border-muted-foreground"
+                "flex items-center justify-center gap-1 px-2 py-2 text-[10px] md:text-sm text-semibold hover:cursor-pointer rounded-xl bg-white text-primary hover:bg-primary hover:text-white border border-primary disabled:bg-muted disabled:text-primary disabled:cursor-no-drop  disabled:border-primary"
               )}
               onClick={() => setIsOpen(product?._id)}
             >

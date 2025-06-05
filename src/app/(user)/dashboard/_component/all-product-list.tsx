@@ -6,11 +6,11 @@ import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
-import ProductCard from "@/app/_components/components-common/product/product-card";
 import Slider from "react-slick";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ProductCard from "./product-card";
 
 export interface ICategory {
     _id: string;
@@ -104,6 +104,13 @@ export default function ProductList({ category, setActiveCategoryTabId }: { cate
         centerMode: false,
         variableWidth: false,
         responsive: [
+            {
+                breakpoint: 1682,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                },
+            },
             {
                 breakpoint: 1442,
                 settings: {
@@ -199,55 +206,53 @@ export default function ProductList({ category, setActiveCategoryTabId }: { cate
             ) : (
                 <>
                     {internalLoading && <Loader />}
-                    {productList?.length > 0 ? (
-                        <div className="flex flex-col h-full overflow-auto gap-2">
-                            <div className="flex justify-between items-center">
-                                <h3 className="font-semibold">{category?.name} {translate("Products")}</h3>
-                                <button
-                                    onClick={() => setActiveCategoryTabId(category?._id)}
-                                    className="whitespace-nowrap  border border-secondary bg-white text-secondary hover:bg-secondary hover:text-white rounded-md transition-all sm:py-2 py-1 sm:px-[10px] px-1 text-xs sm:text-sm"
-                                >
-                                    {translate("View_Collection")}
-                                </button>
-                            </div>
-                            <div className={`slider-wrapper relative ${productList?.length > 6 ? "mx-4" : ""}`}>
-                                <Slider
-                                    ref={(slider) => {
-                                        // @ts-ignore
-                                        sliderRef = slider;
-                                    }}
-                                    {...settings}
-                                >
-                                    {productList.map((item: any) => (
-                                        <div key={item?._id} className="flex px-2 h-full w-full">
-                                            <ProductCard
-                                                item={item?.product}
-                                                id={item?._id}
-                                                isWishListed={item?.isWishListed}
-                                                refreshData={() => fetProductsList(currentPage,true)}
-                                            />
-                                        </div>
-                                    ))}
-                                </Slider>
-                               {productList?.length > 6 && <> <button
-                                    className="button absolute left-[-14px] top-32 w-8 h-8 bg-white border rounded-full flex justify-center items-center"
-                                    onClick={previous}
-                                >
-                                    <ChevronLeft />
-                                </button>
+                    <div className="flex flex-col h-full overflow-auto gap-2">
+                        <div className="flex justify-between items-center">
+                            <h3 className="font-semibold">{category?.name} {translate("Products")}</h3>
+                            {productList?.length > 0 && <button
+                                onClick={() => setActiveCategoryTabId(category?._id)}
+                                className="whitespace-nowrap  border border-secondary bg-white text-secondary hover:bg-secondary hover:text-white rounded-md transition-all sm:py-2 py-1 sm:px-[10px] px-1 text-xs sm:text-sm"
+                            >
+                                {translate("View_Collection")}
+                            </button>}
+                        </div>
+                        {productList?.length > 0 ? (<div className={`slider-wrapper relative ${productList?.length > 6 ? "mx-4" : ""}`}>
+                            <Slider
+                                ref={(slider) => {
+                                    // @ts-ignore
+                                    sliderRef = slider;
+                                }}
+                                {...settings}
+                            >
+                                {productList.map((item: any) => (
+                                    <div key={item?._id} className="flex px-1 md:px-2 h-full w-full">
+                                        <ProductCard
+                                            item={item?.product}
+                                            id={item?._id}
+                                            isWishListed={item?.isWishListed}
+                                            refreshData={() => fetProductsList(currentPage, true)}
+                                        />
+                                    </div>
+                                ))}
+                            </Slider>
+                            {productList?.length > 6 && <> <button
+                                className="button absolute left-[-14px] top-32 w-8 h-8 bg-white border rounded-full flex justify-center items-center"
+                                onClick={previous}
+                            >
+                                <ChevronLeft />
+                            </button>
                                 <button
                                     className="button absolute right-[-14px] top-32 w-8 h-8 bg-white border rounded-full flex justify-center items-center"
                                     onClick={next}
                                 >
                                     <ChevronRight />
-                                </button></>}</div>
-                        </div>
-                    ) : (
-                        <EmptyPlaceHolder
-                            title={translate("No_Products_Available")}
-                            description={translate("No_Products_Available_Description")}
-                        />
-                    )}
+                                </button></>}</div>) : (
+                            <EmptyPlaceHolder
+                                title={translate("No_Products_Available_Category")}
+                                description={translate("No_Products_Available_Description_Category")}
+                            />
+                        )}
+                    </div>
                 </>
             )}
         </div>

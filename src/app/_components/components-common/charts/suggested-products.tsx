@@ -17,48 +17,8 @@ const SuggestedProducts = (props: { data?: any[] }) => {
         {translate("Suggested_Products")}
       </h2>
       <div className=" relative h-[320px] mt-2">
-        {/* <ResponsiveContainer width="100%" height={"100%"}>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              style={{ width: "100%", height: "100%" }}
-              innerRadius={75}
-              outerRadius={100}
-              startAngle={90}
-              endAngle={-270}
-              dataKey="value"
-              paddingAngle={7}
-              cornerRadius={7}
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="text-sm text-gray-desc">{translate("This_month")}</p>
-          <p className="text-2xl font-medium text-gray-darken">{formatNumber(data?.reduce((total:any, item:any) => total + item?.value,
-              0))}</p>
-        </div> */}
         <SuggestedProductUI data={data} />
       </div>
-
-      {/* <div className="flex flex-col gap-3 mt-4 text-sm">
-        {data.map((item, index) => (
-          <div key={index} className="flex items-center space-x-2">
-            <div
-              className="w-3 h-3 rounded-sm"
-              style={{ backgroundColor: item.color }}
-            ></div>
-            <span>
-              {item.name} <b className='font-medium'>{item.value}%</b>
-            </span>
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 };

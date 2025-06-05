@@ -116,6 +116,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
         if (data?.data?.sender !== account?.role) {
             setReceiveOffer(data?.data?.proposal);
             setIsOfferBid(data?.data?.type)
+            setBid(data?.data?.type);
             setIsYourOffer(false);
         }
         setCollaborationData({ ...collaborationData, bids: [...collaborationData?.bids, data?.data] });
