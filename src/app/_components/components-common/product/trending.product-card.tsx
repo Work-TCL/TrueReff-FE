@@ -6,6 +6,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/commonUtils";
 import ToolTip from "../tool-tip";
+import { useAuthStore } from "@/lib/store/auth-user";
+import { useState } from "react";
+import { useVendorStore } from "@/lib/store/vendor";
+import { useCreatorStore } from "@/lib/store/creator";
+import axios from "@/lib/web-api/axios";
+import { toastMessage } from "@/lib/utils/toast-message";
+import { RiLoader3Fill } from "react-icons/ri";
+import LoginDialog from "../dialogs/login";
 
 export interface ICategory {
     _id: string;
@@ -27,6 +35,7 @@ export interface IProduct {
     subCategory: string[]; // Array of sub-category IDs
     tags: string[]; // Array of tags
     lifeTime: boolean;
+  isWishListed: boolean;
     startDate: string | null; // You can use `Date` if parsed
     endDate: string | null; // You can use `Date` if parsed
     status: string; // e.g., "ACTIVE"
@@ -43,6 +52,37 @@ export interface IProduct {
 const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
   const translate = useTranslations();
   const router = useRouter();
+  const { account } = useAuthStore();
+  const [loader, setLoader] = useState<boolean>(false);
+  const [loginPopUp, setLoginPopUp] = useState<boolean>(false);
+  const { vendor } = useVendorStore();
+  const { creator } = useCreatorStore();
+  const addToWishlist = async (productId: string) => {
+    setLoader(true);
+    try {
+      if (account?.id) {
+        const payload = {
+          collaborationId: productId,
+          userId: account?.id,
+        };
+        const response = await axios.post(
+          `/product/wishlist/add-remove`,
+          payload
+        );
+        if (response?.status === 200) {
+          toastMessage.success(response?.data?.message);
+          // refreshData();
+        }
+      } else {
+        setLoginPopUp(true);
+        setLoader(false);
+      }
+    } catch (error: any) {
+      // toast.error(error?.message || "Product Fetch Failed.");
+    } finally {
+      setLoader(false);
+    }
+  };
   return (
     <Card className="relative cursor-pointer w-full border rounded-xl p-2 md:p-2 flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow bg-white overflow-hidden">
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
@@ -87,7 +127,44 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
                             </span>
                         )}
                     </div>
+          {vendor?.vendorId === "" && creator?.creatorId === "" && (
+            <div className="flex items-center justify-between w-fit absolute top-0 right-0">
+              <button
+                className="flex items-center w-full justify-center group gap-1 m-2 px-2 py-2 text-center text-sm font-medium text-primary rounded-lg hover:bg-primary hover:text-white transition"
+                onClick={() => addToWishlist(product?._id)}
+              >
+                {loader && (
+                  <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
+                )}
+                {product?.isWishListed ? (
+                  <span
+                    className={`flex gap-2 items-center  ${
+                      loader ? "opacity-0" : ""
+                    }`}
+                  >
+                    <Heart
+                      className="fill-primary group-hover:fill-white"
+                      size={15}
+                    />{" "}
+                    {/* {translate("Remove")} */}
+                  </span>
+                ) : (
+                  <>
+                    <Heart size={15} />
+                    {/* {translate("Add")} */}
+                  </>
+                )}{" "}
+              </button>
+            </div>
+          )}
 
+          {vendor?.vendorId === "" && creator?.creatorId === "" && (
+            <div className="flex items-center justify-between w-full">
+              <button className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition">
+                {translate("buyNow")}
+              </button>
+            </div>
+          )}
                     {/* <div className="flex items-center justify-between w-full">
             <button
               className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
@@ -99,6 +176,13 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
           </div> */}
                 </div>
             </CardContent>
+      {loginPopUp && (
+        <LoginDialog
+          title={"Login_Required"}
+          description="Login_Required_Description"
+          onClose={() => setLoginPopUp(false)}
+        />
+      )}
         </Card>
     );
 };

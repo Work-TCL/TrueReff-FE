@@ -406,6 +406,27 @@ const CollaborationTable = ({
                     </ToolTip>
                   </div>
                 ),
+                EXPIRED: (
+                  <div className="relative">
+                    <ToolTip content="Start Bargaining" delayDuration={1000}>
+                      <MessagesSquare
+                        strokeWidth={1.5}
+                        color="#3b82f6"
+                        className="cursor-pointer"
+                        size={25}
+                        onClick={() =>
+                          router.push(
+                            `/vendor/creators/collaboration/${collaboration?._id}`
+                          )
+                        }
+                      />
+                      {collaboration?.lastMessage &&
+                        collaboration?.lastMessage?.isRead === false && (
+                          <div className="w-2 h-2 rounded-full bg-primary absolute top-0 right-0 -mb-1" />
+                        )}
+                    </ToolTip>
+                  </div>
+                ),
               }[collaboration?.collaborationStatus]
             }
           </div>

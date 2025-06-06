@@ -131,14 +131,37 @@ const ProductCard = ({
             )}
           </div>
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
-            <div className="flex items-center justify-between w-full">
+            <div className="flex items-center justify-between w-fit absolute top-0 right-0">
               <button
-                className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+                className="flex items-center w-full justify-center group gap-1 m-2 px-2 py-2 text-center text-sm font-medium rounded-full bg-primary/10 text-primary transition"
                 onClick={() => addToWishlist(id ? id : product?._id)}
-              >{loader && (
+              >
+                {loader && (
                 <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
-            )}{isWishListed ? <span className={`flex gap-2 items-center  ${loader ? "opacity-0":""}`}><Heart className="fill-black group-hover:fill-white" size={15} /> {translate("Remove")}</span> : <><Heart size={15} /> {translate("Add")}</>}
-           {" "}
+                )}
+                {isWishListed ? (
+                  <span
+                    className={`flex gap-2 items-center  ${
+                      loader ? "opacity-0" : ""
+                    }`}
+                  >
+                    <Heart
+                      className="fill-primary group-hover:fill-primary"
+                      size={15}
+                    />{" "}
+                  </span>
+                ) : (
+                  <>
+                    <Heart size={15} />
+                  </>
+                )}{" "}
+              </button>
+            </div>
+          )}
+          {vendor?.vendorId === "" && creator?.creatorId === "" && (
+            <div className="flex items-center justify-between w-full">
+              <button className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition">
+                {translate("buyNow")}
               </button>
             </div>
           )}

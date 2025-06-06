@@ -402,7 +402,11 @@ const CollaborationTable = ({
               </div>
             );
           }
-        } else if (status === "PENDING" || status === "ACTIVE") {
+        } else if (
+          status === "PENDING" ||
+          status === "ACTIVE" ||
+          status === "EXPIRED"
+        ) {
           return (
             <div className="flex gap-3 mx-auto w-fit relative">
               <ToolTip content="Start Bargaining" delayDuration={1000}>

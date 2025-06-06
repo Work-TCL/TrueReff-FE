@@ -481,7 +481,7 @@ export default function PublicCreatorStore({
             </div>
 
             {/* Scrollable Product List */}
-            <div className="h-[calc(100vh-80px)] overflow-y-auto">
+            <div className="min-h-[calc(100vh-80px)] overflow-y-auto">
               <ProductList
                 storeName={storeName ?? ""}
                 showTrending={showTrending}
