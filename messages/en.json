@@ -649,5 +649,14 @@
   "No_Products_In_Wishlist_Description": "It seems there are currently no products are available in your wishlist. Please check back later.",
   "Collaboration_List": "Collaboration List",
   "Brand_Registration": "Brand Registration",
-  "Creator_Registration": "Creator Registration"
+  "Creator_Registration": "Creator Registration",
+  "Type_to_search_or_create_a_tag": "Choose a tag or type and press Enter to create a tag...",
+  "Date_Time": "Date & Time",
+  "Recharge_Amount": "Recharge Amount",
+  "Payment_Method": "Payment Method",
+  "Transaction_Id": "Transaction ID",
+  "Total_Item_Sold": "Total Items Sold",
+  "Total_Revenue_Generated": "Total Revenue Generated",
+  "No_Recharge_History_Available": "Recharge History Not Available",
+  "No_Recharge_History_Available_Description": "It seems there are currently no recharge history are available. Please check back later."
 }

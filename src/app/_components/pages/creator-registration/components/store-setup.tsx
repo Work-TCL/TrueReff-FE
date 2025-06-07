@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { get } from "lodash";
 import { useCreatorStore } from "@/lib/store/creator";
 import ToolTip from "@/app/_components/components-common/tool-tip";
+import TagInput from "@/components/ui/tag-input";
 
 export interface ICategoryData {
   _id: string;
@@ -40,7 +41,6 @@ export default function StoreSetup({
   const { creator } = useCreatorStore();
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
-
   useEffect(() => {
     setParentCategory(categories?.filter((ele: ICategoryData) => ele?.parentId === null));
   }, [categories]);
@@ -64,8 +64,10 @@ export default function StoreSetup({
         )
       );
     })();
-  }, [methods.watch("category")?.length, creator?.category]);
-
+  }, [methods.watch("category"), creator?.category]);
+  const handleTagChange = (value:string[]) => {
+    methods.setValue("tags",value);
+  }
   return (
     <div className="flex flex-col gap-4">
       {/* Banner + Profile Section */}
@@ -168,13 +170,7 @@ export default function StoreSetup({
           />
         </div>
         <div className="col-span-2">
-          <Input
-            label={translate("Tags")}
-            name="tags"
-            type="renderTagInputUpdated"
-            placeholder={translate("Enter_your_tags")}
-            lableClassName="text-md font-[400]"
-          />
+          <TagInput value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
         </div>
         <div className="md:col-span-1 col-span-2">
           <Input

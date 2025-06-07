@@ -264,6 +264,7 @@ export default function PublicCreatorStore({
             creator: response?.data,
           },
         });
+        setStore(response?.data);
         setCreatorData("creator", {
           creatorId: response?.data?._id,
           accountId: response?.data?.accountId,
