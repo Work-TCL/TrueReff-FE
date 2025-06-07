@@ -215,6 +215,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     //   link: "/recharge",
     // },
     {
+      label: translate("Vendor_Analysis"),
+      icon: BarChart,
+      link: "/vendor/vendor-analysis",
+    },
+    {
       label: translate("Payment_Earnings"),
       icon: DollarSign,
       link: "/vendor/payment-earnings",
@@ -264,6 +269,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       label: translate("Collaboration"),
       icon: UserRound,
       link: "/creator/collaboration",
+    },
+    {
+      label: translate("Creator_Analysis"),
+      icon: BarChart,
+      link: "/creator/creator-analysis",
     },
     {
       label: translate("Payment_Earnings"),

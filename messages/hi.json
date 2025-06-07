@@ -624,5 +624,13 @@
   "No_Products_In_Wishlist_Description": "ऐसा लगता है कि वर्तमान में आपकी विशलिस्ट में कोई उत्पाद उपलब्ध नहीं है। कृपया बाद में दोबारा जांचें।",
   "Collaboration_List": "सहयोग सूची",
   "Brand_Registration": "ब्रांड पंजीकरण",
+  "Visitors": "आगंतुक",
+  "Total_Commission": "कुल कमीशन",
+  "Total_Revenue": "कुल राजस्व",
+  "Total_Visitors": "कुल आगंतुक",
+  "Total_Collaborations": "कुल सहयोग",
+  "Collaborations": "सहयोग",
+  "Vendor_Analysis": "विक्रेता विश्लेषण",
+  "Commissions": "कमीशन",
   "Creator_Registration": "निर्माता पंजीकरण"
 }

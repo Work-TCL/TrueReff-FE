@@ -147,6 +147,40 @@ export default function Input({
       )}
     />
   );
+  const renderPhoneInput = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative">
+            <input
+              type={type}
+              className={cn(inputStyle, Icon ? "!pl-12" : "")}
+              placeholder={placeholder}
+              {...field}
+              onChange={(e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                field.onChange(e);
+              }}
+              autoComplete="off"
+              maxLength={10}
+              {...props}
+            />
+            {Icon ? (
+              <Icon
+                fontSize={25}
+                className="absolute top-[50%] left-4 text-gray-black z-10 translate-y-[-50%]"
+              />
+            ) : null}
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
   const renderEditorInput = () => (
     <Controller
       control={control}
@@ -733,6 +767,10 @@ export default function Input({
         return multiSelectWithTags();
       case "renderTagInputUpdated":
         return renderTagInputUpdated();
+      case "tel":
+        return renderPhoneInput();
+      case "phone":
+        return renderPhoneInput();
       default:
         return renderTextInput();
     }

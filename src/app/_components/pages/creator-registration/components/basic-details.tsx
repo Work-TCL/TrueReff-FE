@@ -1,15 +1,11 @@
 "use client";
-import Input from "@/app/_components/ui/form/Input";
-import {
-  cities,
-  gender,
-  indianStates,
-} from "@/lib/utils/constants";
+import Input, { inputStyle } from "@/app/_components/ui/form/Input";
+import { cities, gender, indianStates } from "@/lib/utils/constants";
 import { debounce, get } from "lodash";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import Select from "react-select";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { fetchUserNameExists } from "@/lib/web-api/auth";
 const customStyles = {
   placeholder: (base: any) => ({
@@ -48,7 +44,8 @@ export default function BasicInfoForm({
   formState
 }: IBasicInfoFormProps) {
   const translate = useTranslations();
-  const getUserNameExists = async (value:string) => {
+  const dateInputRef = useRef<HTMLInputElement>(null);
+  const getUserNameExists = async (value: string) => {
     try {
       const response = await fetchUserNameExists({user_name: value});
       if(!response?.exists){
@@ -212,8 +209,19 @@ export default function BasicInfoForm({
             {translate("Date_of_Birth")}
             <span className="text-red-500">*</span>
           </span>
-          <input onChange={(e:any) => handleOnSelect(e.target?.value,"dob")} className="h-[54px] border rounded-xl p-2" type="date" name="dob" value={formState?.dob } max={new Date().toISOString().split("T")[0]} placeholder={translate("Select_date_of_birth")}/>
-          {Boolean(get(methods.formState.errors, "dob")) && methods.formState.errors["dob"]?.message && (
+          <input
+            ref={dateInputRef}
+            onFocus={() => dateInputRef.current?.showPicker()}
+            onChange={(e: any) => handleOnSelect(e.target?.value, "dob")}
+            className={cn(inputStyle)}
+            type="date"
+            name="dob"
+            value={formState?.dob}
+            max={new Date().toISOString().split("T")[0]}
+            placeholder={translate("Select_date_of_birth")}
+          />
+          {Boolean(get(methods.formState.errors, "dob")) &&
+            methods.formState.errors["dob"]?.message && (
             <span className="text-red-600 text-sm p-2 block">
               {methods.formState.errors["dob"]?.message}
             </span>
