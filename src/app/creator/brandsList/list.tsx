@@ -20,7 +20,7 @@ import { SearchInput } from "@/app/_components/components-common/search-field";
 import BrandFilter from "./_components/filter";
 import { useCreatorStore } from "@/lib/store/creator";
 import ProductCard from "./_components/product-card";
-
+import CategorySingleSelect from "@/app/_components/components-common/category-only-dropdown";
 export interface ICollaboration {
   _id: string;
   productId: string;
@@ -87,7 +87,9 @@ export default function BrandList() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [searchProductList, setSearchProductList] = useState<IProduct[]>([]);
   const [productList, setProductList] = useState<IBrandProduct[]>([]);
-  const [suggestedProductList, setSuggestedProductList] = useState<IBrandProduct[]>([]);
+  const [suggestedProductList, setSuggestedProductList] = useState<
+    IBrandProduct[]
+  >([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSuggestedPage, setCurrentSuggestedPage] = useState(1);
   const t = useTranslations();
@@ -95,6 +97,9 @@ export default function BrandList() {
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [hasSuggestedMore, setHasSuggestedMore] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedCategories, setSelectedCategories] = useState<string | null>(
+    null
+  );
   const loadingRef = useRef<HTMLDivElement | null>(null);
 
   const itemsPerPage = 20;
@@ -131,12 +136,13 @@ export default function BrandList() {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response: any = await axios.get(
-        `/product/creator-product/product/search?page=${page}&limit=${itemsPerPage}${searchValue ? `&search=${searchValue}` : ""
+        `/product/creator-product/product/search?page=${page}&limit=${itemsPerPage}${
+          searchValue ? `&search=${searchValue}` : ""
         }`
       );
       if (response.status === 200) {
-        const brandData = response.data.data?.vendorList;;
-        const productData = response.data.data?.productList;;
+        const brandData = response.data.data?.vendorList;
+        const productData = response.data.data?.productList;
         if (brandData?.length > 0) {
           setBrands(brandData);
         } else {
@@ -164,44 +170,55 @@ export default function BrandList() {
     page: number,
     isInternalLoader: boolean = false,
     searchValue: string = "",
-    vendorId: string = ""
+    vendorId: string = "",
+    category: string | null = selectedCategories
   ) => {
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response: any = await axios.get(
-        `/product/creator-product/product/list-search?page=${page}&limit=${itemsPerPage}${(searchValue && !vendorId) ? `&search=${searchValue}` : ""
-        }${vendorId ? `&vendorId=${vendorId}` : ""}`
+        `/product/creator-product/product/list-search?page=${page}&limit=${itemsPerPage}${
+          searchValue && !vendorId ? `&search=${searchValue}` : ""
+        }${vendorId ? `&vendorId=${vendorId}` : ""}${
+          category ? `&category=${category}` : ""
+        }`
       );
       if (response.status === 200) {
         if (response?.data?.data?.productList?.list?.length > 0) {
           const productData = response?.data?.data?.productList?.list;
           const productCount = response?.data?.data?.productList?.total;
           const data = productData?.map((ele: IBrandProduct) => {
-            ele.categories = ele.category
-              ?.map((ele: { name: string }) => ele?.name);
+            ele.categories = ele.category?.map(
+              (ele: { name: string }) => ele?.name
+            );
             ele.tag = ele.tags?.join(",");
             return { ...ele };
-          })
-          let more = [...productList,...data]?.length < productCount;
+          });
+          let more = [...productList, ...data]?.length < productCount;
           setHasMore(more);
-          more ? setProductList([...productList, ...data]) : setProductList([...data]);          
+          more
+            ? setProductList([...productList, ...data])
+            : setProductList([...data]);
         } else {
           setProductList([]);
           setCurrentPage(1);
           setHasMore(false);
         }
         if (response?.data?.data?.suggestedList?.list?.length > 0) {
-          const productData = response?.data?.data?.suggestedList?.suggestedProductList;
+          const productData =
+            response?.data?.data?.suggestedList?.suggestedProductList;
           const productCount = response?.data?.data?.suggestedList?.total;
           const data = productData?.map((ele: IBrandProduct) => {
-            ele.categories = ele.category
-              ?.map((ele: { name: string }) => ele?.name);
+            ele.categories = ele.category?.map(
+              (ele: { name: string }) => ele?.name
+            );
             ele.tag = ele.tags?.join(",");
             return { ...ele };
-          })
-          let more = [...suggestedProductList,...data]?.length < productCount;
+          });
+          let more = [...suggestedProductList, ...data]?.length < productCount;
           setHasSuggestedMore(more);
-          more ? setSuggestedProductList([...suggestedProductList,...data]) : setSuggestedProductList(data);
+          more
+            ? setSuggestedProductList([...suggestedProductList, ...data])
+            : setSuggestedProductList(data);
         } else {
           setSuggestedProductList([]);
         }
@@ -220,7 +237,13 @@ export default function BrandList() {
   };
 
   useEffect(() => {
-    getBrandProductList(currentPage,true,search,vendorId);
+    getBrandProductList(
+      currentPage,
+      true,
+      search,
+      vendorId,
+      selectedCategories
+    );
   }, [currentPage]);
   const debouncedSearch = useCallback(
     debounce((value: string) => {
@@ -234,9 +257,9 @@ export default function BrandList() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
-    if(!value){
+    if (!value) {
       setBrands([]);
-      setSearchProductList([])
+      setSearchProductList([]);
     }
     debouncedSearch(value); // call debounce on value
   };
@@ -246,11 +269,16 @@ export default function BrandList() {
   const handleOnSearch = (vendor: Brand, isVendor: boolean = false) => {
     setSearch(vendor?.business_name);
     setBrands([]);
-    setSearchProductList([])
-    getBrandProductList(1, true, search, vendor?._id);
+    setSearchProductList([]);
+    getBrandProductList(1, true, search, vendor?._id, selectedCategories);
     setVendorId(vendor?._id);
     setCurrentPage(1);
-  }
+  };
+
+  const handleSelectCategory = (selectedOptions: any) => {
+    setSelectedCategories(selectedOptions);
+    getBrandProductList(currentPage, true, search, vendorId, selectedOptions);
+  };
   return (
     <div className={`flex flex-col p-4 gap-4 h-full`}>
       {loading ? (
@@ -264,6 +292,9 @@ export default function BrandList() {
               placeholder={"Search Brand or Product..."}
               className="md:max-w-[700px]"
             />
+            <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
+              <CategorySingleSelect onChange={handleSelectCategory} />
+            </div>
             {/* <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
               <BrandFilter onChange={handleOnFilter} />
               <PiListChecksLight
@@ -280,41 +311,64 @@ export default function BrandList() {
               />
             </div> */}
           </div>
-          {(internalLoader && !hasMore) && <Loader />}
+          {internalLoader && !hasMore && <Loader />}
           <div className="flex flex-col gap-2">
-            {brands?.length > 0 && brands?.map((brand: Brand, index: number) => (
-              <div key={index} className="flex items-center cursor-pointer gap-4" onClick={() => handleOnSearch(brand)}>
+            {brands?.length > 0 &&
+              brands?.map((brand: Brand, index: number) => (
+                <div
+                  key={index}
+                  className="flex items-center cursor-pointer gap-4"
+                  onClick={() => handleOnSearch(brand)}
+                >
                   <img
-                    src={brand?.profile_image? brand?.profile_image : "/assets/product/image-square.svg"}
+                    src={
+                      brand?.profile_image
+                        ? brand?.profile_image
+                        : "/assets/product/image-square.svg"
+                    }
                     alt={brand?.business_name}
                     className="w-8 h-8 rounded-full"
                   />
-                <span className="text-black">{brand?.business_name}</span>
-              </div>
-            ))}
-            {searchProductList?.length > 0 && searchProductList?.map((product: IProduct, index: number) => (
-              <div key={index} className="flex items-center cursor-pointer gap-4">
-                <img
-                  src={product?.media?.length > 0 ? product?.media[0] : "/assets/product/image-square.svg"}
-                  alt={"Product Image"}
-                  className="w-8 h-8 rounded-full"
-                />
-                <span className="text-black">{`${product?.title}`}</span>
-              </div>
-            ))}
+                  <span className="text-black">{brand?.business_name}</span>
+                </div>
+              ))}
+            {searchProductList?.length > 0 &&
+              searchProductList?.map((product: IProduct, index: number) => (
+                <div
+                  key={index}
+                  className="flex items-center cursor-pointer gap-4"
+                >
+                  <img
+                    src={
+                      product?.media?.length > 0
+                        ? product?.media[0]
+                        : "/assets/product/image-square.svg"
+                    }
+                    alt={"Product Image"}
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <span className="text-black">{`${product?.title}`}</span>
+                </div>
+              ))}
           </div>
           {productList?.length > 0 ? (
             <div className="flex flex-col gap-3 rounded-[20px]">
-              {search ? <div className="font-bold">{`${translate("Showing_results_for")} "${search}"`}</div>:<div className="font-bold">{translate(`Products`)}</div>}
+              {search ? (
+                <div className="font-bold">{`${translate(
+                  "Showing_results_for"
+                )} "${search}"`}</div>
+              ) : (
+                <div className="font-bold">{translate(`Products`)}</div>
+              )}
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2 md:gap-2 h-full  overflow-auto">
                 {productList.map((item: any, i) => (
-                    <ProductCard
+                  <ProductCard
                     key={i}
-                      item={item}
-                      handleUpdateProduct={(id:string) => {
-                        getBrandProductList(currentPage, true, search, vendorId);
-                      }}
-                    />
+                    item={item}
+                    handleUpdateProduct={(id: string) => {
+                      getBrandProductList(currentPage, true, search, vendorId);
+                    }}
+                  />
                 ))}
               </div>
             </div>
@@ -326,14 +380,20 @@ export default function BrandList() {
           )}
           {suggestedProductList?.length > 0 ? (
             <div className="flex flex-col gap-3 h-full bg-white rounded-[20px]">
-              {search && <div className="font-bold">{`${translate("Showing_results_for")} "${search}"`}</div>}
+              {search && (
+                <div className="font-bold">{`${translate(
+                  "Showing_results_for"
+                )} "${search}"`}</div>
+              )}
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-2 md:gap-4 h-full  overflow-auto">
                 {suggestedProductList.map((item: any, i) => (
-                    <ProductCard
+                  <ProductCard
                     key={i}
-                      item={item}
-                      handleUpdateProduct={(id:string) => {getBrandProductList(currentPage, true, search, vendorId); }}
-                    />
+                    item={item}
+                    handleUpdateProduct={(id: string) => {
+                      getBrandProductList(currentPage, true, search, vendorId);
+                    }}
+                  />
                 ))}
               </div>
             </div>
