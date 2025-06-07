@@ -624,5 +624,14 @@
   "No_Products_In_Wishlist_Description": "ऐसा लगता है कि वर्तमान में आपकी विशलिस्ट में कोई उत्पाद उपलब्ध नहीं है। कृपया बाद में दोबारा जांचें।",
   "Collaboration_List": "सहयोग सूची",
   "Brand_Registration": "ब्रांड पंजीकरण",
-  "Creator_Registration": "निर्माता पंजीकरण"
+  "Creator_Registration": "निर्माता पंजीकरण",
+  "Type_to_search_or_create_a_tag": "टैग खोजें या टाइप करें और टैग बनाने के लिए एंटर दबाएं...",
+  "Date_Time": "तारीख और समय",
+  "Recharge_Amount": "रिचार्ज राशि",
+  "Payment_Method": "भुगतान विधि",
+  "Transaction_Id": "लेन-देन आईडी",
+  "Total_Item_Sold": "कुल बेची गई वस्तुएं",
+  "Total_Revenue_Generated": "कुल उत्पन्न राजस्व",
+  "No_Recharge_History_Available": "रिचार्ज इतिहास उपलब्ध नहीं है",
+  "No_Recharge_History_Available_Description": "ऐसा लगता है कि वर्तमान में कोई रिचार्ज इतिहास उपलब्ध नहीं है। कृपया बाद में पुनः जांचें।"
 }

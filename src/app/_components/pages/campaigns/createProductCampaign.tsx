@@ -39,6 +39,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@radix-ui/react-tooltip";
+import TagInput from "@/components/ui/tag-input";
 
 const Input = dynamic(() => import("../../ui/form/Input"), { ssr: false });
 
@@ -552,6 +553,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       methods.setValue("videoType", [...(existingVal || []), value]);
     }
   };
+  const handleTagChange = (value:string[]) => {
+    methods.setValue("tags",value);
+  }
 
   return (
     <FormProvider {...methods}>
@@ -597,13 +601,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 "
               >
                 <div className="md:col-span-1 col-span-2">
-                  <Input
-                    label={translate("Tags")}
-                    name="tags"
-                    type="renderTagInputUpdated"
-                    placeholder={translate("Enter_your_tags")}
-                    inputClassName="h-[50]"
-                  />
+                  <TagInput labelClassName={labelStyle} value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
                 </div>
 
                 <div className="md:col-span-1 col-span-2">
