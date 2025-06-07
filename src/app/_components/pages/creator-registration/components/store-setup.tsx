@@ -164,6 +164,7 @@ export default function StoreSetup({
             name="store_name"
             type="text"
             placeholder={translate("Enter_Store_Name")}
+            lableClassName="text-md font-[400]"
           />
         </div>
         <div className="col-span-2">
@@ -172,6 +173,7 @@ export default function StoreSetup({
             name="tags"
             type="renderTagInputUpdated"
             placeholder={translate("Enter_your_tags")}
+            lableClassName="text-md font-[400]"
           />
         </div>
         <div className="md:col-span-1 col-span-2">
@@ -186,6 +188,7 @@ export default function StoreSetup({
             }))}
             autoFocus={false}
             max={1}
+            lableClassName="text-md font-[400]"
           />
         </div>
         <div className="md:col-span-1 col-span-2">
@@ -199,6 +202,7 @@ export default function StoreSetup({
               label: ele?.name,
             }))}
             autoFocus={false}
+            lableClassName="text-md font-[400]"
           />
         </div>
         <div className="col-span-2 ">
@@ -208,6 +212,7 @@ export default function StoreSetup({
             type="textarea"
             rows={4}
             placeholder={translate("Enter_your_store_description")}
+            lableClassName="text-md font-[400]"
           />
         </div>
       </div>

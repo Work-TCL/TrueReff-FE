@@ -188,6 +188,7 @@ export default function BasicInfoForm({
           name="business_name"
           type="text"
           placeholder={translate("Enter_your_Business_Name_or_Company Name")}
+          lableClassName="text-md font-[400]"
           autoFocus
         />
       </div>
@@ -198,6 +199,7 @@ export default function BasicInfoForm({
           type="email"
           disabled
           placeholder={translate("Enter_your_email")}
+          lableClassName="text-md font-[400]"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -211,6 +213,7 @@ export default function BasicInfoForm({
             label: ele?.name,
           }))}
           max={1}
+          lableClassName="text-md font-[400]"
           autoFocus={false}
         />
       </div>
@@ -225,6 +228,7 @@ export default function BasicInfoForm({
             label: ele?.name,
           }))}
           autoFocus={false}
+          lableClassName="text-md font-[400]"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -232,12 +236,13 @@ export default function BasicInfoForm({
           label={translate("Website")}
           placeholder={translate("Enter your website link")}
           name="website"
+          lableClassName="text-md font-[400]"
           type="url"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("Type_of_business")}
             <span className="text-red-500">*</span>
           </span>
@@ -273,6 +278,7 @@ export default function BasicInfoForm({
           label={translate("Address")}
           name="address"
           type="text"
+          lableClassName="text-md font-[400]"
           placeholder={translate("Enter_your_address")}
         />
       </div>
@@ -282,11 +288,12 @@ export default function BasicInfoForm({
           name="pin"
           type="number"
           placeholder="XXXXXX"
+          lableClassName="text-md font-[400]"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("State")}
             <span className="text-red-500">*</span>
           </span>
@@ -314,7 +321,7 @@ export default function BasicInfoForm({
       </div>
       <div className="md:col-span-1 col-span-2">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("City")}
             <span className="text-red-500">*</span>
           </span>
@@ -352,6 +359,7 @@ export default function BasicInfoForm({
           label={translate("Contact_Person_Name")}
           name={`contacts[0].name`}
           type="text"
+          lableClassName="text-md font-[400]"
           placeholder={translate("Enter your contact person name")}
         />
       </div>
@@ -361,6 +369,7 @@ export default function BasicInfoForm({
           placeholder={translate("Enter_your_contact_person_email")}
           name={`contacts[0].email`}
           type="email"
+          lableClassName="text-md font-[400]"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -369,6 +378,7 @@ export default function BasicInfoForm({
           name={`contacts[0].phone`}
           type="tel"
           placeholder="XXXXX XXXXX"
+          lableClassName="text-md font-[400]"
         />
       </div>
     </div>

@@ -123,7 +123,7 @@ export default function ProductList({ category }: { category: string; }) {
             <div className="flex flex-col h-full overflow-auto">
               <h3 className="font-semibold">{translate("Product_List")}</h3>
               <div className="md:max-h-screen overflow-auto">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-2 bg-white pt-2 pb-3 px-1 md:px-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 bg-white pt-2 pb-3 px-1 md:px-2">
                   {productList.map((item: any) => (
                     <div key={item?._id} className="flex h-full w-full">
                       <ProductCard

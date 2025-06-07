@@ -528,9 +528,8 @@ export default function PreFormPage() {
   }
 
   return (
-    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 pb-2 md:pt-5 pt-5 h-screen overflow-hidden flex flex-col">
+    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 pb-2 md:pt-5 pt-5 h-screen overflow-hidden flex flex-col gap-8">
       <HeaderAuth />
-
       <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
         <SlidingTabBar
           tabs={allTabs}

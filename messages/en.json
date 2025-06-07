@@ -638,5 +638,8 @@
   "Remove_from_Wishlist": "Remove from Wishlist",
   "No_Products_In_Wishlist": "No Products Available in Wishlist",
   "buyNow": "Buy Now",
-  "No_Products_In_Wishlist_Description": "It seems there are currently no products are available in your wishlist. Please check back later."
+  "No_Products_In_Wishlist_Description": "It seems there are currently no products are available in your wishlist. Please check back later.",
+  "Collaboration_List": "Collaboration List",
+  "Brand_Registration": "Brand Registration",
+  "Creator_Registration": "Creator Registration"
 }

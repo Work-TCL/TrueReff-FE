@@ -113,11 +113,11 @@ const ProductCard = ({
           {/* Title */}
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
-            className="text-md font-semibold w-full truncate"
+            className="text-sm md:text-md font-semibold w-full truncate"
             text={product.title}
           />
           {/* Price and Discount */}
-          <div className="flex items-center w-full text-sm space-x-2">
+          <div className={`flex ${product.price > 1_000_000 ? "flex-col":"flex-row"} items-center w-full text-xs md:text-sm space-x-2`}>
             <span className="flex items-center text-green-600 py-1 font-bold">
             <IndianRupee size={12} strokeWidth={2.5} /> {product.price || "0.00"}
             </span>
@@ -133,7 +133,7 @@ const ProductCard = ({
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">
               <button
-                className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition"
+                className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-xs md:text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition"
                 onClick={() => addToWishlist(id ? id : product?._id)}
               >{loader && (
                 <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />

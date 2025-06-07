@@ -17,7 +17,6 @@ export default function RecentCollaborations() {
   const translate = useTranslations();
   const router = useRouter();
   const [collaborations, setCollaborations] = useState<any[]>([]);
-  console.log("collaborations", collaborations);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchCollaboration = async () => {

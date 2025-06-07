@@ -1,5 +1,6 @@
 "use client";
 import { IRevenueData } from "@/lib/types-api/creator-dashboard";
+import { formatNumber } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import React from "react";
 import {
@@ -38,8 +39,8 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
   if (active && payload && payload.length) {
     return (
       <div className="bg-black text-white p-2 rounded-lg">
-        <p className="text-sm m-0">Current: {payload[0]?.value || 0}</p>
-        <p className="text-sm m-0">Past: {payload[1]?.value || 0}</p>
+        <p className="text-sm m-0">Current: {formatNumber(Number(payload[0]?.value || 0))}</p>
+        <p className="text-sm m-0">Past: {formatNumber(Number(payload[1]?.value || 0))}</p>
         <p className="text-xs m-0">{label}</p>
       </div>
     );
@@ -58,8 +59,8 @@ export default function SalesChart(props: {data?: IRevenueData}) {
     0
   );
   return (
-    <div className="w-full bg-white p-5 rounded-20 h-full flex-1">
-      <div className="flex md:flex-row flex-col justify-between md:items-center items-start mb-3">
+    <div className="w-full bg-white p-2 md:p-4 rounded-20 h-full flex-1">
+      <div className="flex md:flex-row flex-col justify-between md:items-center items-start">
         <h3 className="md:text-xl text-base font-semibold whitespace-nowrap text-text">
           {translate("Revenue")}
         </h3>
@@ -78,10 +79,6 @@ export default function SalesChart(props: {data?: IRevenueData}) {
           </div>
         </div> */}
       </div>
-      <div className="flex gap-4 items-center">
-        {/* <p className="text-2xl text-text ">{(totalCurrentRevenue)}</p> */}
-        {/* <p className="text-sm text-success ">↑ 5% {translate("thenLastMonth")}</p> */}
-      </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={[...data?.current,...data?.past]} margin={{ top: 26 }}>
@@ -95,8 +92,9 @@ export default function SalesChart(props: {data?: IRevenueData}) {
             tick={{ fill: "#7E7E80", fontSize: 12 }}
             stroke="#F2F4F5"
             strokeWidth={0}
+            tickFormatter={formatNumber}
           />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip />} formatter={(value) => formatNumber(Number(value))} />
           <Line
             type="monotone"
             dataKey="current"

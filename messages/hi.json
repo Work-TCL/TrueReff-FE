@@ -621,5 +621,8 @@
   "Remove_from_Wishlist": "विशलिस्ट से हटाएं",
   "No_Products_In_Wishlist": "विशलिस्ट में कोई उत्पाद उपलब्ध नहीं है",
   "buyNow": "अभी खरीदें",
-  "No_Products_In_Wishlist_Description": "ऐसा लगता है कि वर्तमान में आपकी विशलिस्ट में कोई उत्पाद उपलब्ध नहीं है। कृपया बाद में दोबारा जांचें।"
+  "No_Products_In_Wishlist_Description": "ऐसा लगता है कि वर्तमान में आपकी विशलिस्ट में कोई उत्पाद उपलब्ध नहीं है। कृपया बाद में दोबारा जांचें।",
+  "Collaboration_List": "सहयोग सूची",
+  "Brand_Registration": "ब्रांड पंजीकरण",
+  "Creator_Registration": "निर्माता पंजीकरण"
 }

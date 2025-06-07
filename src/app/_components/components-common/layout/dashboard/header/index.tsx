@@ -99,8 +99,10 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor/creators/collaboration": translate("Collaboration"),
     "/creator/collaboration": translate("Collaboration"),
     "/vendor/creators/available-creators": translate("Available_Creators"),
-    "/dashboard": translate("Dashboard"),
+    "/dashboard": translate("Overview"),
     "/wishlist": translate("Wishlist"),
+    "/vendor-register": translate("Brand_Registration"),
+    "/creator-registration": translate("Creator_Registration")
   };
   const fetchNotifications = async () => {
     setLoading(true);
@@ -190,7 +192,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   };
 
   const getHeaderName = () => {
-    if (pathName.includes("/vendor/creators/collaboration/")) {
+    if (pathName.includes("/vendor/creators/collaboration/") || pathName.includes("/creator/collaboration/")) {
       return translate("Bargaining");
     } else if (pathName.includes("/creator/profile/")) {
       return translate("Creator_Profile");
@@ -290,31 +292,21 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
           </div>
         </header>
       ) : (
-        <header className="bg-white px-3 py-3 flex items-center gap-1">
-          <Menu
-            className="size-5 shrink-0 cursor-pointer hidden"
-            onClick={handleExpandSidebar}
-          />
-          <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-medium text-primary">
-            {getHeaderName()}
-          </h2>
-          <div
-            className={`flex ${
-              pathName === "/creator-registration" ||
-              pathName === "/vendor-register"
-                ? "justify-between"
-                : "justify-end"
-            } items-center gap-4 w-full`}
-          >
-            {(pathName === "/creator-registration" ||
+        <header className="bg-white px-3 py-3 flex items-center justify-between gap-1">
+          <div className="flex space-x-2 items-center">
+          {(pathName === "/creator-registration" ||
               pathName === "/vendor-register") && (
               <ArrowLeft
                 className="text-2xl text-primary cursor-pointer"
                 onClick={handleOnBack}
               />
             )}
-            {/* <ButtonPopover/> */}
-            {pathName !== "/creator-registration" &&
+            <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-medium text-primary">
+            {getHeaderName()}
+          </h2>
+          </div>
+          <div className="flex items-center space-x-2">
+          {pathName !== "/creator-registration" &&
               pathName !== "/vendor-register" && (
                 <>
                   <div

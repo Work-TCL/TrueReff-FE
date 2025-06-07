@@ -565,6 +565,7 @@ export const creatorStoreSetUpSchema = Yup.object().shape({
     .required("Sub-Category is required"), // Ensure at least one sub-category is selected
   profile_image: Yup.string().required("Profile Image is required"),
   banner_image: Yup.string().required("Banner Image is required"),
+  showTrending: Yup.boolean()
 });
 export interface ICreatorStoreSetUpSchema
   extends Yup.Asserts<typeof creatorStoreSetUpSchema> {}

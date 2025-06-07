@@ -22,6 +22,7 @@ export default function DocumentDetailsForm({methods,handleDocumentUpload,handle
           type="text"
           placeholder={translate("Enter_your_GST_number")}
           autoFocus
+          lableClassName="text-md font-[400]"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -29,11 +30,12 @@ export default function DocumentDetailsForm({methods,handleDocumentUpload,handle
           label={translate("PAN_Number")}
           name="pan_number"
           type="text"
+          lableClassName="text-md font-[400]"
           placeholder={translate("Enter_your_PAN_number")}
         />
       </div>
       <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
-        <span className="mb-1 text-sm text-gray-500 font-semibold">
+        <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("GST_Certificate")}
             <span className="text-red-500">*</span>
         </span>

@@ -57,7 +57,7 @@ export default function Landing(){
           setProductCategories([])
         }
       };
-    return <div className="flex flex-col mx-auto w-full lg:w-2/3 p-2 md:p-4 space-y-3 justify-center">
+    return <div className="flex flex-col max-w-[1200px] mx-auto p-2 md:p-4 space-y-3 justify-center">
         {categories?.length > 1 && <Categories categories={categories} activeCategory={activeCategory} setActiveCategoryTabId={setActiveCategoryTabId}/>}
         {activeCategory === "All" ? productCategories?.length > 0 ? productCategories?.map((ele:ICategory,index) => (
             <AllProductList key={ele?.name} category={ele} setActiveCategoryTabId={setActiveCategoryTabId}/>

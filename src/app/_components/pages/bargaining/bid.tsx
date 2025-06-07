@@ -99,6 +99,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
             if (final?.sender !== account?.role) {
                 setReceiveOffer(final?.proposal);
                 setIsOfferBid(final?.type)
+                setBid(final?.type);
             } else {
                 setIsYourOffer(true);
                 setYourOffer(final?.proposal);
@@ -107,7 +108,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
             const findUserData = bidData?.findLast((item: any) => item?.sender === account?.role);
             if (findUserData) {
                 setYourOffer(findUserData?.proposal);
-                setBid(findUserData?.type);
+                // setBid(findUserData?.type);
             }
         }
     }, [collaborationData?._id])
@@ -177,8 +178,8 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
         <div className="flex flex-col p-4 gap-3">
             <h3 className="font-semibold mb-2">{translate("Per_product_sell_commission")}</h3>
             <div className="flex gap-2 mb-4">
-                <Input type='radio' checked={bid === bidAmount.fixedPercentage} onChange={() => setDiscountType(bidAmount.fixedPercentage)} id="commission-fixed" className="w-5 h-5 cursor-pointer" /><span className={`text-sm font-medium ${bid === bidAmount.fixedPercentage ? "text-black" : "text-gray-400"}`}>{translate("Fixed_Commission")}</span>
-                <Input type='radio' checked={bid === bidAmount.percentage} onChange={() => setDiscountType(bidAmount.percentage)} id="commission-percentage" className='w-5 h-5 cursor-pointer' /><span className={`text-sm font-medium ${bid === bidAmount.percentage ? "text-black" : "text-gray-400"}`}> {translate("Percentage")}</span>
+                <Input type='radio' checked={bid === bidAmount.fixedPercentage} onChange={() => setDiscountType(bidAmount.fixedPercentage)} id="commission-fixed" className="w-5 h-5 cursor-pointer accent-primary" /><span className={`text-sm font-medium ${bid === bidAmount.fixedPercentage ? "text-black" : "text-gray-400"}`}>{translate("Fixed_Commission")}</span>
+                <Input type='radio' checked={bid === bidAmount.percentage} onChange={() => setDiscountType(bidAmount.percentage)} id="commission-percentage" className='w-5 h-5 cursor-pointer accent-primary' /><span className={`text-sm font-medium ${bid === bidAmount.percentage ? "text-black" : "text-gray-400"}`}> {translate("Percentage")}</span>
             </div>
             <div className="flex justify-center gap-3 mb-3">
                 {!isYourOffer && (

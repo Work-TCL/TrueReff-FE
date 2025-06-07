@@ -186,6 +186,7 @@ export default function PublicCreatorStore({
       storeMethods.setValue("tags", store?.tags);
       storeMethods.setValue("banner_image", store?.banner_image);
       storeMethods.setValue("profile_image", store?.profile_image);
+      storeMethods.setValue("showTrending",store?.showTrending)
       setShowTrending(store?.showTrending);
       setProfilePreview(store?.profile_image);
       setBannerPreview(store?.banner_image);
@@ -231,42 +232,13 @@ export default function PublicCreatorStore({
       }
     }
   }, [categories, store?.category, store?.sub_category]);
-  useEffect(() => {
-    if (isCreator && account?.role === "creator" && store?.store_name) {
-      onStoreSetUpSubmit({
-        ...store,
-        category:
-          store?.category?.length > 0
-            ? categories
-                ?.filter((ele: ICategoryData) =>
-                  creator?.category?.includes(ele?._id)
-                )
-                ?.map((ele: ICategoryData) => ({
-                  value: ele?._id,
-                  label: ele?.name,
-                }))
-            : [],
-        sub_category:
-          store?.sub_category?.length > 0
-            ? categories
-                ?.filter((ele: ICategoryData) =>
-                  creator?.sub_category?.includes(ele?._id)
-                )
-                ?.map((ele: ICategoryData) => ({
-                  value: ele?._id,
-                  label: ele?.name,
-                }))
-            : [],
-      });
-    }
-  }, [showTrending]);
   const onStoreSetUpSubmit = async (data: ICreatorStoreSetUpSchema) => {
     setSaveLoader(true);
     try {
       const formData = new FormData();
       formData.append("store_name", data?.store_name);
       formData.append("store_description", data?.store_description);
-      formData.append("showTrending", showTrending ? "true" : "false");
+      formData.append("showTrending", data?.showTrending ? "true" : "false");
       data.category.length > 0 &&
         data.category.forEach((ele, index) => {
           formData.append(`category[${index}]`, ele?.value);
@@ -364,6 +336,35 @@ export default function PublicCreatorStore({
   };
   const handleShowTrending = () => {
     setShowTrending(!showTrending);
+    storeMethods.setValue("showTrending",!showTrending)
+    if (isCreator && account?.role === "creator" && store?.store_name) {
+      onStoreSetUpSubmit({
+        ...store,
+        category:
+          store?.category?.length > 0
+            ? categories
+                ?.filter((ele: ICategoryData) =>
+                  creator?.category?.includes(ele?._id)
+                )
+                ?.map((ele: ICategoryData) => ({
+                  value: ele?._id,
+                  label: ele?.name,
+                }))
+            : [],
+        sub_category:
+          store?.sub_category?.length > 0
+            ? categories
+                ?.filter((ele: ICategoryData) =>
+                  creator?.sub_category?.includes(ele?._id)
+                )
+                ?.map((ele: ICategoryData) => ({
+                  value: ele?._id,
+                  label: ele?.name,
+                }))
+            : [],
+            showTrending: !showTrending
+      });
+    }
   };
   if (!storeName) {
     return <NotFound />;

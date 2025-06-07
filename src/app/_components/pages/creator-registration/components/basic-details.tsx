@@ -85,6 +85,7 @@ export default function BasicInfoForm({
           name="full_name"
           type="text"
           placeholder={translate("Enter_your_full_name")}
+          lableClassName="text-md font-[400]"
           autoFocus
         />
       </div>
@@ -95,6 +96,7 @@ export default function BasicInfoForm({
           label={translate("Username")}
           name="user_name"
           type="text"
+          lableClassName="text-md font-[400]"
           placeholder={translate("Enter_your_unique_username")}
         />
       </div>
@@ -104,6 +106,7 @@ export default function BasicInfoForm({
           name="email"
           type="email"
           required
+          lableClassName="text-md font-[400]"
           placeholder={translate("Enter_your_email")}
           disabled
         />
@@ -115,12 +118,13 @@ export default function BasicInfoForm({
           type="phone"
           required={false}
           disabled
+          lableClassName="text-md font-[400]"
           placeholder="xxxxx xxxxx"
         />
       </div>
       <div className="col-span-1">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("State")}
             <span className="text-red-500">*</span>
           </span>
@@ -148,7 +152,7 @@ export default function BasicInfoForm({
       </div>
       <div className="col-span-1">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("City")}
             <span className="text-red-500">*</span>
           </span>
@@ -176,7 +180,7 @@ export default function BasicInfoForm({
       </div>
       <div className="col-span-1">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("Gender")}
             <span className="text-red-500">*</span>
           </span>
@@ -204,7 +208,7 @@ export default function BasicInfoForm({
       </div>
       <div className="col-span-1">
       <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("Date_of_Birth")}
             <span className="text-red-500">*</span>
           </span>
