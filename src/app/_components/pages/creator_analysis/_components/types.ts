@@ -1,13 +1,3 @@
-export interface IAnalyticsData {
-  creator?: { name: string; image: string; _id: string };
-  brand?: { name: string; logo: string; _id: string };
-  product: { _id: string; title: string; image: string };
-  orders: number;
-  revenue: number;
-  visitors: number;
-  salesGraphData: number[];
-}
-
 export const MODES_ANALYTICS = {
   VENDOR: "vendor",
   CREATOR: "creator",
@@ -21,7 +11,6 @@ export interface IStatesOptions {
 }
 
 export const FILTER_KEYS = {
-  PRODUCT: "product",
   VENDOR: "vendor",
   CREATOR: "creator",
 } as const;
@@ -30,13 +19,35 @@ export type IFilterKey = (typeof FILTER_KEYS)[keyof typeof FILTER_KEYS];
 
 export interface IFilterAnalytics {
   key: IFilterKey;
-  value: string;
+  value: IAnalyticsData;
+}
+export interface IAnalyticsProduct {
+  productImage: string;
+  productName: string;
+  productId: string;
 }
 
 export interface IStatesAnalytics {
-  sales: number;
-  revenue: number;
-  visitors: number;
-  collobrations: number;
-  commissions: number;
+  totalRevenue: number;
+  totalOrders: number;
+  totalViews: number;
+  totalCollaborations: number;
+  conversionRate: number;
+}
+
+export interface IAnalyticsData {
+  _id: string;
+  totalRevenue: number;
+  totalOrders: number;
+  totalCommissionPaid: number;
+  totalViews: number;
+  vendorName: string;
+  vendorImage: string;
+  vendorId: string;
+  creatorName: string;
+  creatorImage: string;
+  creatorId: string;
+  productName: string;
+  productImage: string;
+  productId: string;
 }

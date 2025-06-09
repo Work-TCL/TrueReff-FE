@@ -1,14 +1,19 @@
 "use client";
 import { StatsCard } from "@/app/_components/components-common/states/StatesCard";
 import { useTranslations } from "next-intl";
-import React from "react";
-import AnalyticsTable from "./analytics-table";
+import React, { useEffect, useState } from "react";
 import {
+  FILTER_KEYS,
   IAnalyticsData,
+  IAnalyticsProduct,
   IFilterAnalytics,
   IModes,
   IStatesOptions,
 } from "./types";
+import { formatFloatValue, formatNumber } from "@/lib/utils/constants";
+import { getAnalyticsColumns } from "./getAnalyticsColumns";
+import DataTable from "@/app/_components/components-common/data-table";
+import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 
 // Colors assigned by index
 const colorMap = [
@@ -21,10 +26,15 @@ const colorMap = [
 
 interface IProps {
   states: IStatesOptions[];
-  onRowClick: (value: IFilterAnalytics) => void;
-  clearFilter: () => void;
+  onRowClick: (value?: IFilterAnalytics, product?: IAnalyticsProduct) => void;
+  clearFilter: (type: "filter" | "product") => void;
+  handlePageChange: (page: number) => void;
   filter: IFilterAnalytics | null;
+  page: number;
+  totalPages: number;
   mode: IModes;
+  data: IAnalyticsData[];
+  product: IAnalyticsProduct | null;
 }
 
 function AnyalyticsCombineUI({
@@ -33,8 +43,28 @@ function AnyalyticsCombineUI({
   clearFilter,
   filter,
   mode,
+  data,
+  page,
+  totalPages,
+  product,
+  handlePageChange,
 }: IProps) {
   const t = useTranslations();
+  const [columns, setColumns] = useState(() =>
+    getAnalyticsColumns(
+      t,
+      mode,
+      handleRowClick,
+      filter?.key,
+      Boolean(product !== null)
+    )
+  );
+
+  function handleRowClick(value?: IFilterAnalytics, p?: IAnalyticsProduct) {
+    // Remove product column and call API
+    console.log("Fetch data for productId", value);
+    onRowClick(value, p);
+  }
 
   const getStateAnalytics = (card: IStatesOptions, index: number) => {
     const colors = colorMap[index] || {
@@ -46,7 +76,7 @@ function AnyalyticsCombineUI({
       <StatsCard
         key={index}
         title={t(card.key)}
-        value={card.value}
+        value={formatNumber(card.value)}
         bgColor={colors.bgColor}
         borderColor={colors.borderColor}
         growth={5}
@@ -54,70 +84,130 @@ function AnyalyticsCombineUI({
     );
   };
 
-  const sampleAnalyticsData: IAnalyticsData[] = [
-    {
-      brand: {
-        name: "GlowBee",
-        logo: "/images/brands/glowbee.png",
-        _id: "4987984514561561",
-      },
-      product: {
-        _id: "p3",
-        title: "Vitamin C Serum",
-        image: "/images/products/serum.jpg",
-      },
-      orders: 210,
-      revenue: 130000,
-      visitors: 1500,
-      salesGraphData: [30, 35, 40, 38, 45, 42, 50],
-    },
-    {
-      brand: {
-        name: "NutriPro",
-        logo: "/images/brands/nutripro.png",
-        _id: "9894589484798475616",
-      },
-      product: {
-        _id: "p4",
-        title: "Energy Bites",
-        image: "/images/products/energy.jpg",
-      },
-      orders: 150,
-      revenue: 95000,
-      visitors: 1200,
-      salesGraphData: [20, 28, 25, 30, 33, 31, 40],
-    },
-  ];
+  useEffect(() => {
+    setColumns(
+      getAnalyticsColumns(
+        t,
+        mode,
+        handleRowClick,
+        filter ? filter?.key : undefined,
+        Boolean(product !== null)
+      )
+    ); // Without `onProductClick`, product column gets hidden
+  }, [product, filter]);
 
   return (
-    <div>
+    <div className="flex flex-col w-full gap-5 flex-1 overflow-auto">
       {/* states of all creators | one creator | product */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-4 col-span-3">
         {states.map(getStateAnalytics)}
       </div>
 
-      {filter && (
-        <div className="p-5 border rounded-lg">
-          Active {filter.key}{" "}
-          <span
-            className="cursor-pointer border rounded-md bg-white text-sm p-2"
-            onClick={clearFilter}
-          >
-            Clear Filter
-          </span>
+      {(filter || product) && (
+        <div className="p-5 border rounded-xl bg-white shadow-sm space-y-4">
+          <div className="text-sm font-semibold text-gray-700">
+            Active Filters
+          </div>
+
+          <div className="flex flex-wrap gap-4">
+            {/* Filter Card */}
+            {filter && (
+              <div className="relative flex items-center gap-4 px-4 py-3 bg-sky-50 rounded-xl border border-sky-200 shadow-sm w-fit sm:w-auto sm:flex-[none] flex-1 min-w-[260px]">
+                <img
+                  src={
+                    filter.key === FILTER_KEYS.CREATOR
+                      ? filter.value.creatorImage
+                      : filter.value.vendorImage
+                  }
+                  alt={
+                    filter.key === FILTER_KEYS.CREATOR
+                      ? filter.value.creatorName
+                      : filter.value.vendorName
+                  }
+                  className="w-12 h-12 rounded-full object-cover border"
+                />
+
+                <div className="flex-1">
+                  <div className="font-semibold text-gray-800">
+                    {filter.key === FILTER_KEYS.CREATOR
+                      ? filter.value.creatorName
+                      : filter.value.vendorName}
+                  </div>
+                  <div className="text-xs font-medium text-sky-600 capitalize">
+                    {filter.key.toLowerCase()}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    clearFilter("filter");
+                    setColumns(
+                      getAnalyticsColumns(
+                        t,
+                        mode,
+                        handleRowClick,
+                        undefined,
+                        Boolean(product !== null)
+                      )
+                    );
+                  }}
+                  className="absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center rounded-full bg-white border border-gray-300 text-gray-500 hover:bg-red-100 hover:text-red-600 transition text-xs"
+                  title="Remove Filter"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {/* Product Card */}
+            {product && (
+              <div className="relative flex items-center gap-4 px-4 py-3 bg-green-50 rounded-xl border border-green-200 shadow-sm w-fit sm:w-auto sm:flex-[none] flex-1 min-w-[260px]">
+                <img
+                  src={product.productImage}
+                  alt={product.productName}
+                  className="w-12 h-12 rounded-md object-cover border"
+                />
+
+                <div className="flex-1">
+                  <div className="font-semibold text-gray-800">
+                    {product.productName}
+                  </div>
+                  <div className="text-xs font-medium text-green-600">
+                    Product
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    clearFilter("product");
+                    setColumns(
+                      getAnalyticsColumns(
+                        t,
+                        mode,
+                        handleRowClick,
+                        filter?.key,
+                        false
+                      )
+                    );
+                  }}
+                  className="absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center rounded-full bg-white border border-gray-300 text-gray-500 hover:bg-red-100 hover:text-red-600 transition text-xs"
+                  title="Remove Filter"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
       {/* data-table */}
-      <div>
-        <AnalyticsTable
-          key={filter?.key || "ALL"}
-          mode={mode}
-          filter={filter}
-          data={sampleAnalyticsData}
-          onRowClick={onRowClick}
-        />
-      </div>
+      <DataTable columns={columns} data={data} />
+      <TablePagination
+        totalPages={totalPages}
+        activePage={page}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

@@ -6,11 +6,16 @@ interface IProps {
   isTransparent?: boolean;
 }
 
-export default function Loading({ height = "full",isTransparent = false }: IProps) {
+export default function Loading({
+  height = "full",
+  isTransparent = false,
+}: IProps) {
   return (
     <div
       role="status"
-      className={`${isTransparent ? "absolute w-full z-[999] bg-white/50" : "bg-white"} ${
+      className={`${
+        isTransparent ? "absolute w-full z-[999] bg-white/50" : "bg-white"
+      } ${
         height === "full" ? "h-screen" : "h-full"
       } flex justify-center items-center`}
     >

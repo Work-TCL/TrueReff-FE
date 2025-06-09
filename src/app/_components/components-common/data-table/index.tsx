@@ -101,7 +101,7 @@ const DataTable: React.FC<DataTableProps> = ({
   );
 
   return (
-    <div className=" border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
+    <div className="flex-1 border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
       <div className="max-w-full h-full overflow-auto">
         {data.length > 0 && type === "table" ? (
           tableContent()
