@@ -4,6 +4,7 @@ import CreateProductCampaign from "@/app/_components/pages/campaigns/createProdu
 
 export default async function DetailsPage(props: any) {
   const isDetailsView = await props?.searchParams;
+  console.log("isDetailsView",isDetailsView)
 
   return (
     <Suspense fallback={<Loader />}>

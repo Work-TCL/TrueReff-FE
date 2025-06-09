@@ -658,5 +658,17 @@
   "Total_Item_Sold": "Total Items Sold",
   "Total_Revenue_Generated": "Total Revenue Generated",
   "No_Recharge_History_Available": "Recharge History Not Available",
-  "No_Recharge_History_Available_Description": "It seems there are currently no recharge history are available. Please check back later."
+  "No_Recharge_History_Available_Description": "It seems there are currently no recharge history are available. Please check back later.",
+  "Add_Balance": "Add Balance",
+  "Amount": "Amount",
+  "Enter_amount": "Enter your amount",
+  "Amount_is_required": "Amount is required",
+  "Minimum_balance_amount": "Minimum amount is",
+  "Maximum_balance_amount": "Maximum amount is",
+  "Wallet_Balance": "Wallet Balance",
+  "Main_Balance":"Main Balance",
+  "Blocked_Amount": "Blocked Amount",
+  "Add_Balance_into_your_Wallet": "Add Balance into your Wallet",
+  "Recharge_History": "Recharge History",
+  "Payout_Minimum": "Payout Minimum"
 }

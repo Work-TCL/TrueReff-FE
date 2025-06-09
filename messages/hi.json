@@ -641,5 +641,17 @@
   "Total_Item_Sold": "कुल बेची गई वस्तुएं",
   "Total_Revenue_Generated": "कुल उत्पन्न राजस्व",
   "No_Recharge_History_Available": "रिचार्ज इतिहास उपलब्ध नहीं है",
-  "No_Recharge_History_Available_Description": "ऐसा लगता है कि वर्तमान में कोई रिचार्ज इतिहास उपलब्ध नहीं है। कृपया बाद में पुनः जांचें।"
+  "No_Recharge_History_Available_Description": "ऐसा लगता है कि वर्तमान में कोई रिचार्ज इतिहास उपलब्ध नहीं है। कृपया बाद में पुनः जांचें।",
+  "Add_Balance": "शेष राशि जोड़ें",
+  "Amount": "राशि",
+  "Enter_amount": "अपनी राशि दर्ज करें",
+  "Amount_is_required": "राशि आवश्यक है",
+  "Minimum_balance_amount": "न्यूनतम राशि है",
+  "Maximum_balance_amount": "अधिकतम राशि है",
+  "Wallet_Balance": "वॉलेट शेष राशि",
+  "Main_Balance": "मुख्य शेष राशि",
+  "Blocked_Amount": "अवरुद्ध राशि",
+  "Add_Balance_into_your_Wallet": "अपने वॉलेट में शेष राशि जोड़ें",
+  "Recharge_History": "रिचार्ज इतिहास",
+  "Payout_Minimum": "न्यूनतम भुगतान"
 }

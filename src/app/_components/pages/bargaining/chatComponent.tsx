@@ -291,6 +291,7 @@ export default function ChatComponent({
         <Input
           placeholder="Message"
           value={message}
+          className="bg-white focus:outline-none"
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -300,7 +301,7 @@ export default function ChatComponent({
           }}
         />
         <SendHorizontal
-          className="cursor-pointer text-text font-normal"
+          className="cursor-pointer text-text font-normal stroke-primary"
           onClick={() => sendMessage()}
         />
       </div>

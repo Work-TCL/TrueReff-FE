@@ -39,6 +39,9 @@ export default {
         blue: "#808EFF",
         purple: "#978FED",
         rating: "#FFAD33",
+        active: "#098228",
+        pending: "#FF9500",
+        failed: "#FF3B30",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

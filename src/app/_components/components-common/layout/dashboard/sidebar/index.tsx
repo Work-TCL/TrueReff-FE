@@ -20,6 +20,7 @@ import {
   UserRound,
   UsersRound,
   ArrowDownToLine,
+  SquareUserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -209,11 +210,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     //   icon: BarChart,
     //   link: "/brand-analysis",
     // },
-    // {
-    //   label: translate("Account_Recharge"),
-    //   icon: DollarSign,
-    //   link: "/recharge",
-    // },
+    {
+      label: translate("Account_Recharge"),
+      icon: SquareUserRound,
+      link: "/vendor/account-recharge",
+    },
     {
       label: translate("Vendor_Analysis"),
       icon: BarChart,
@@ -274,6 +275,11 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       label: translate("Creator_Analysis"),
       icon: BarChart,
       link: "/creator/creator-analysis",
+    },
+    {
+      label: translate("Account_Recharge"),
+      icon: SquareUserRound,
+      link: "/creator/account-recharge",
     },
     {
       label: translate("Payment_Earnings"),

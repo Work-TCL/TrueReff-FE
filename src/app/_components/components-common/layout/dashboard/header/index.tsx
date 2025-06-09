@@ -102,7 +102,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/dashboard": translate("Overview"),
     "/wishlist": translate("Wishlist"),
     "/vendor-register": translate("Brand_Registration"),
-    "/creator-registration": translate("Creator_Registration")
+    "/creator-registration": translate("Creator_Registration"),
+    "/vendor/account-recharge": translate("Account_Recharge"),
+    "/creator/account-recharge": translate("Account_Recharge")
   };
   const fetchNotifications = async () => {
     setLoading(true);

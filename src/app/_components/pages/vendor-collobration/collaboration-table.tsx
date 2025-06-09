@@ -145,10 +145,9 @@ const CollaborationTable = ({
             {collaboration?.productId?.media?.[0] ? (
               <Avatar className="w-8 h-8">
                 <AvatarImage src={collaboration.productId.media[0]} />
-                <AvatarImage src="/assets/collaboration/collaboration-image.svg" />
               </Avatar>
             ) : (
-              <ImageOff className="w-6 h-6 text-gray-400" />
+              <Avatar className={`w-8 h-8 flex justify-center items-center`}><ImageOff className="w-6 h-6 text-gray-400" /></Avatar>
             )}
             <TruncateWithToolTip
               checkHorizontalOverflow={false}

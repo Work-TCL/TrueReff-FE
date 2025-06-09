@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
-import { Info } from "lucide-react";
+import { ImageOff, Info } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Loading from "@/app/creator/loading";
 import { badgeColor, statusMessage } from "@/lib/utils/constants";
@@ -108,7 +108,9 @@ export default function CollaborateRequestForm({
                   className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-lg"
                   key={index}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4" onClick={() =>
+                        !submitting && handleOnSelectProduct(product?._id)
+                      }>
                     <Input
                       type="radio"
                       name={`product-${index}`}
@@ -117,19 +119,17 @@ export default function CollaborateRequestForm({
                       disabled={
                         product?.collaborationStatus !== null || submitting
                       }
-                      onClick={() => handleOnSelectProduct(product?._id)}
+                      onChange={() => {}}
                     />
-                    <div
-                      onClick={() =>
-                        !submitting && handleOnSelectProduct(product?._id)
-                      }
-                    >
+                    <div>
                       <div className="flex items-center gap-2">
-                        {product?.media?.length > 0 && (
+                        {product?.media?.length > 0 ? (
                           <Avatar className={`w-8 h-8 ${product?.collaborationStatus !== null ? "opacity-50" : ""}`}>
                             <AvatarImage src={product?.media[0]} />
                           </Avatar>
-                        )}
+                        ): <Avatar className={`w-8 h-8 flex justify-center items-center`}>
+                        <ImageOff className="w-6 h-6 text-gray-400" />
+                      </Avatar>}
                         <span className={`${product?.collaborationStatus !== null ? "text-gray-500" : "text-black"}`}>{product?.title}</span>
                       </div>
                     </div>

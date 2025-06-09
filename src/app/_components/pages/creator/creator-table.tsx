@@ -136,7 +136,7 @@ const CreatorTable = ({
       id: "totalRevenue",
       header: () => <div className="text-center">{translate("Revenue")}</div>,
       cell: ({ row }) => (
-        <div className="text-center flex items-center">
+        <div className="text-center flex items-center justify-center">
           <IndianRupee size={15} />
           {formatNumber(row.original.totalRevenue)}
         </div>

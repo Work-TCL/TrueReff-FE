@@ -37,7 +37,7 @@ const MostSellingBrands = () => {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       setLoading(false);
-    } finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -56,7 +56,7 @@ const MostSellingBrands = () => {
       </h3>
       {loading ? (
         // <div className="absolute top-0 bottom-0 right-0 left-0 z-[999] flex justify-center items-center bg-white/50">
-          <Loading height="fit" />
+        <Loading height="fit" />
         // </div>
       ) : data?.length > 0 ? (
         <ul className="space-y-4">
@@ -64,19 +64,19 @@ const MostSellingBrands = () => {
             <li key={index} className="flex flex-col gap-1">
               <div className="flex  justify-between items-center gap-2">
                 <div className="flex gap-2">
-                                   <Image
-                                                  src={item?.profile_image?item?.profile_image:"/assets/profile/profile-image.png"}
-                                                  alt={"profile"}
-                                                  width={25}
-                                                  height={50}
-                                                  className="rounded-[50%]"
-                                                />
-                                  <div className="text-font-grey flex items-center space-x-2">
-                                   {item.business_name}
-                                  <span className="text-secondary flex items-center">
-                                    {" - "}<IndianRupee size={15} /> {formatNumber(item.revenue)}
-                                  </span>
-                                </div></div>
+                  <Image
+                    src={item?.profile_image ? item?.profile_image : "/assets/profile/profile-image.png"}
+                    alt={"profile"}
+                    width={25}
+                    height={25}
+                    className="rounded-[50%] h-[25px]"
+                  />
+                  <div className="text-font-grey flex items-center space-x-2">
+                    {item.business_name}
+                    <span className="text-secondary flex items-center">
+                      {" - "}<IndianRupee size={15} /> {formatNumber(item.revenue)}
+                    </span>
+                  </div></div>
                 <span className="text-primary md:text-base text-sm">
                   {formatFloatValue(item.percentage)}%
                 </span>

@@ -75,6 +75,7 @@ export default async function RootLayout({
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
           <meta name="theme-color" content="#000000" />
           <link rel="apple-touch-icon" href="/web-app-manifest-192x192.png" />
+          <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         </head>
         <body>
           <Suspense fallback={<Loader />}>

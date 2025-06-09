@@ -247,7 +247,7 @@ export default function CollaborationList() {
       fetchCollaboration(currentPage, true, search, status);
     } else {
       setSelectedStatus("");
-      fetchCollaboration(currentPage);
+      fetchCollaboration(currentPage,true, search, status);
     }
   }, [status]);
   const handlePageChange = (page: number) => {

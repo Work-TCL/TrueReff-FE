@@ -111,6 +111,24 @@ export const formatDate = (dateString: string | null): string => {
   }).format(date);
 };
 
+export function formatDateWithTime(dateString: string): string {
+  const date = new Date(dateString);
+
+  // Extract date components
+  const day = String(date.getDate()).padStart(2, "0"); // Ensure 2-digit day
+  const month = date.toLocaleString("en-US", { month: "short" }); // Short month name
+  const year = date.getFullYear();
+
+  // Extract time components
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0"); // Ensure 2-digit minutes
+  const ampm = hours >= 12 ? "PM" : "AM"; // Determine AM/PM
+  hours = hours % 12 || 12; // Convert to 12-hour format
+
+  // Combine date and time
+  return `${day}-${month}-${year}, ${hours}:${minutes} ${ampm}`;
+}
+
 export const formatFloatValue = (value: number = 0): any => {
   return value % 1 === 0 ? value : value.toFixed(2);
 };
