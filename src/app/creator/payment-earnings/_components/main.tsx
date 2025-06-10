@@ -110,52 +110,47 @@ export default function AccountRecharge() {
         {/* Top Cards */}
         {loading ? <Loader /> : <><div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
             {/* Wallet Balance Card */}
-            <div className="bg-custom-gradient h-[144px] max-h-[144px] text-white rounded-2xl p-3 md:p-6 overflow-hidden shadow-lg flex justify-between items-center">
-                {/* Wallet Text & Button */}
-                <div className="relative w-full space-y-1">
-                    <button onClick={()=> setOpen(true)} className="absolute top-[-25] md:top-[-20] right-[-5] md:right-[-15] flex items-center p-1 rounded-lg gap-2 text-md font-semibold cursor-pointer group bg-white text-black hover:bg-primary">
-                        <Landmark size={15} className="stroke-primary group-hover:stroke-secondary"/>
-                    </button>
-                    <div className="flex  justify-between items-center gap-2">
-                        <div className="flex flex-col">
-                            <div className="flex items-center text-sm md:text-md text-secondary gap-1">{translate("Main_Balance")} <TooltipProvider key={`main_balance`}>
+            <div className="bg-gradient-to-r from-[#A48DFF] to-[#F9A8D4] text-white rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between space-y-3 h-[144px]">
+                <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-base font-semibold text-white">
+                            {translate("Main_Balance")}
+                            <TooltipProvider>
                                 <Tooltip>
                                     <TooltipTrigger>
-                                        <Info className="w-4 h-4 text-gray-500" />
+                                        <Info className="w-4 h-4 text-white/70 hover:text-white transition" />
                                     </TooltipTrigger>
-                                    <TooltipContent
-                                        className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
-                                        side="top"
-                                    >
-                                        {""}
+                                    <TooltipContent className="bg-white text-black px-3 py-2 rounded-md shadow-md">
+                                        Withdrawable balance you can request payout for.
                                     </TooltipContent>
                                 </Tooltip>
-                            </TooltipProvider></div>
-                            <div className="text-font-grey flex items-center space-x-2">
-                                <span className="flex items-center text-primary md:text-xl text-sm">
-                                    <IndianRupee size={15} /> {formatNumber(balance)}
-                                </span>
-                            </div>
+                            </TooltipProvider>
                         </div>
-                        <div className="flex flex-col">
-                            <div className="flex items-center text-sm md:text-md text-secondary gap-1">{translate("Blocked_Amount")}</div>
-                            <div className="text-font-grey flex justify-end items-center space-x-2">
-                                <span className="flex items-center text-gray-600 md:text-xl text-sm">
-                                    <IndianRupee size={15} /> {formatNumber(blockedBalance)}
-                                </span>
-                            </div>
+                        <div className="text-2xl font-bold text-white flex items-center gap-1">
+                            <IndianRupee size={18} /> {formatNumber(balance)}
                         </div>
                     </div>
-                    {/* Progress Bar */}
-                    <div className="relative flex-grow h-[6px] bg-stroke rounded-full overflow-hidden">
-                        <div
-                            className="absolute top-0 left-0 h-full bg-primary rounded-full"
-                            style={{ width: `${getPercentage()}%` }}
-                        ></div>
-                    </div>
-                    <div className="flex items-center text-sm md:text-md text-secondary">
-                        <span className="flex items-center">{translate("Payout_Minimum")}: <span className="flex items-center"><IndianRupee size={15} /> {minPayOut}</span></span>
-                    </div>
+
+                    <button
+                        onClick={() => setOpen(true)}
+                        className="p-2 rounded-full bg-white text-primary hover:bg-primary hover:text-white transition"
+                    >
+                        <Landmark size={18} />
+                    </button>
+                </div>
+
+                <div className="relative w-full h-2 rounded-full bg-white/20 overflow-hidden">
+                    <div
+                        className="absolute top-0 left-0 h-full bg-white rounded-lg"
+                        style={{ width: `${getPercentage()}%` }}
+                    ></div>
+                </div>
+
+                <div className="text-sm text-white/90 flex justify-between items-center">
+                    <span className="flex items-center">{translate("Payout_Minimum")}: <IndianRupee size={12} /> {minPayOut}</span>
+                    <span className="flex items-center gap-1">
+                        {translate("Blocked_Amount")}: <IndianRupee size={14} /> {formatNumber(blockedBalance)}
+                    </span>
                 </div>
             </div>
 
@@ -178,6 +173,6 @@ export default function AccountRecharge() {
         </div>
             {/* Recharge History */}
             <RechargeHistory loading={loading} rechargeHistory={rechargeHistory} fetchRechargeHistory={fetchRechargeHistory} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} /></>}
-        {open && <AddBankDetails handleRefresh={()=> {}} open={open} onClose={()=> setOpen(false)}/>}    
+        {open && <AddBankDetails handleRefresh={() => { }} open={open} onClose={() => setOpen(false)} />}
     </div>
 }

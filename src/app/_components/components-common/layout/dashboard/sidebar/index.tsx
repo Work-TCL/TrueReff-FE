@@ -90,17 +90,7 @@ const NavLink = ({
       </div>
     );
   }
-  if (link === "/creator/payment-earnings" || link === "/vendor/payment-earnings") {
-    return (
-      <span
-        className={`${classNames} gap-3`}
-        onClick={() => toastMessage.info("Coming Soon")}
-      >
-        {Icon && <Icon className={iconClassNames} />}
-        {label && <span>{label}</span>}
-      </span>
-    );
-  } else if (link === "install-app") {
+  if (link === "install-app") {
     return (
       <span
         className={`${classNames} gap-3`}
@@ -216,11 +206,6 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       link: "/vendor/vendor-analysis",
     },
     {
-      label: translate("Account_Recharge"),
-      icon: SquareUserRound,
-      link: "/vendor/account-recharge",
-    },
-    {
       label: translate("Payment_Earnings"),
       icon: DollarSign,
       link: "/vendor/payment-earnings",
@@ -275,11 +260,6 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       label: translate("Creator_Analysis"),
       icon: BarChart,
       link: "/creator/creator-analysis",
-    },
-    {
-      label: translate("Account_Recharge"),
-      icon: SquareUserRound,
-      link: "/creator/account-recharge",
     },
     {
       label: translate("Payment_Earnings"),
@@ -480,14 +460,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                       side="right"
                     >
                       <div className="flex flex-col gap-1 pl-4 ">
-                        {(item.link === "/creator/payment-earnings" || item.link === "/vendor/payment-earnings") ? (
-                          <span
-                            className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
-                            onClick={() => toastMessage.info("Coming Soon")}
-                          >
-                            {item?.label}
-                          </span>
-                        ) : (item.link === 'install-app') ? <span
+                        {(item.link === 'install-app') ? <span
                           className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
                           onClick={() => handleInstall()}
                         >

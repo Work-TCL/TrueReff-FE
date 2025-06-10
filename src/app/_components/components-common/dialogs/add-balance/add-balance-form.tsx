@@ -18,6 +18,7 @@ interface IAddBalanceFormProps {
 declare global {
   interface Window {
     Razorpay: any;
+    Cashfree: any;
   }
 }
 interface IDeposit {
@@ -36,43 +37,70 @@ export default function AddBalanceForm({
   const minAmount = 100;
   const maxAmount = 500000;
 
-  const handlePayment = async ({amount,razorpayOrderId}:IDeposit) => {  
-    const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
-    try {  
-      // Step 1: Configure Razorpay options
-      const options = {
-        key: key, // Replace with your Razorpay Key ID
-        amount: amount, // Amount in paise
-        currency: 'INR',
-        name: 'truereff',
-        description: 'Wallet Recharge',
-        order_id: razorpayOrderId, // Use the order ID from the backend
-        prefill: {
-          name: vendor?.business_name, // Replace with dynamic user data
-          email: vendor?.company_email, // Replace with dynamic user data
-        },
-        theme: {
-          color: '#3399cc',
-        },
-        handler: async function (response: any) {
-          // Step 2: Handle payment success
-          console.log('Payment successful', response);
-          handleRefresh()
-        },
-        modal: {
-          ondismiss: function () {
-            console.log('Payment popup closed');
-          },
-        },
-      };
+  // const handlePayment = async ({amount,razorpayOrderId}:IDeposit) => {  
+  //   const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+  //   try {  
+  //     // Step 1: Configure Razorpay options
+  //     const options = {
+  //       key: key, // Replace with your Razorpay Key ID
+  //       amount: amount, // Amount in paise
+  //       currency: 'INR',
+  //       name: 'truereff',
+  //       description: 'Wallet Recharge',
+  //       order_id: razorpayOrderId, // Use the order ID from the backend
+  //       prefill: {
+  //         name: vendor?.business_name, // Replace with dynamic user data
+  //         email: vendor?.company_email, // Replace with dynamic user data
+  //       },
+  //       theme: {
+  //         color: '#3399cc',
+  //       },
+  //       handler: async function (response: any) {
+  //         // Step 2: Handle payment success
+  //         console.log('Payment successful', response);
+  //         handleRefresh()
+  //       },
+  //       modal: {
+  //         ondismiss: function () {
+  //           console.log('Payment popup closed');
+  //         },
+  //       },
+  //     };
   
-      // Step 4: Open Razorpay payment popup
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.error('Error creating Razorpay order:', error);
-      // alert('Failed to initiate payment. Please try again.');
-    }
+  //     // Step 4: Open Razorpay payment popup
+  //     const rzp = new window.Razorpay(options);
+  //     rzp.open();
+  //   } catch (error) {
+  //     console.error('Error creating Razorpay order:', error);
+  //     // alert('Failed to initiate payment. Please try again.');
+  //   }
+  // };
+  const handleCheckout = (payment_session_id:string) => {
+    console.log("payment_session_id",payment_session_id)
+    const cashfree = window.Cashfree({
+      mode: 'sandbox', // or 'production'
+    });
+
+    const checkoutOptions = {
+      paymentSessionId:payment_session_id,
+      redirectTarget: '_blank',
+      appearance: {
+        width: '425px',
+        height: '700px',
+      },
+    };
+
+    cashfree.checkout(checkoutOptions).then((result:any) => {
+      if (result.error) {
+        console.error('Payment error:', result.error);
+      }
+      if (result.redirect) {
+        console.log('Redirection triggered.');
+      }
+      if (result.paymentDetails) {
+        console.log('Payment completed:', result.paymentDetails.paymentMessage);
+      }
+    });
   };
   const handleAddBalance = async () => {
     setSubmitting(true);
@@ -86,7 +114,7 @@ export default function AddBalanceForm({
       if (response.status === 200) {
         onClose();
         setSubmitting(false);
-        handlePayment(response?.data?.data)
+        handleCheckout(response?.data?.data?.payment_session_id)
       } else {
         setSubmitting(false);
       }

@@ -107,21 +107,37 @@ export default function AccountRecharge() {
         {/* Top Cards */}
         {loading ? <Loader /> : <><div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
             {/* Wallet Balance Card */}
-            <div className="bg-custom-gradient text-white rounded-2xl p-4 overflow-hidden shadow-lg flex justify-between items-center h-full">
-                {/* Wallet Text & Button */}
-                <div className="w-2/4 md:w-1/3">
-                    <h2 className="text-lg font-semibold whitespace-nowrap mb-4 text-secondary">{translate("Wallet_Balance")}</h2>
-                    <button onClick={handleAddBalance} className="flex items-center py-2 px-3 rounded-lg whitespace-nowrap gap-2 text-sm md:text-md font-semibold cursor-pointer bg-white text-black hover:bg-gray-200">
-                        {translate("Add_Balance")} <MoveRight />
+            <div className="relative rounded-2xl p-3 md:p-4 backdrop-blur-md bg-gradient-to-br from-[#D8B4FE]/60 via-[#FBCFE8]/60 to-[#C7D2FE]/60 shadow-lg border border-white/10 flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-base font-bold text-gray-900 tracking-wide">
+                        💰 {translate("Wallet_Balance")}
+                    </h2>
+                    <button
+                        onClick={handleAddBalance}
+                        className="flex items-center gap-1 px-4 py-1.5 rounded-md text-sm font-semibold bg-white text-gray-800 shadow hover:bg-gray-100 transition-transform duration-200 hover:scale-[1.02]"
+                    >
+                        {translate("Add_Balance")} <MoveRight size={16} />
                     </button>
                 </div>
 
-                {/* Right Side Content (Values instead of coin image) */}
-                <div className=" text-right">
-                    <div className="text-sm text-gray-600">{translate("Main_Balance")}</div>
-                    <div className="flex items-center justify-end text-2xl font-bold text-primary"><IndianRupee />{balance}</div>
-                    <div className="text-sm mt-3 text-gray-600">{translate("Blocked_Amount")}</div>
-                    <div className="flex items-center justify-end text-xl text-secondary"><IndianRupee size={18}/>{blockedBalance}</div>
+                <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex items-center justify-between text-gray-700 text-sm font-medium">
+                        <span>{translate("Main_Balance")}</span>
+                        <span className="flex items-center gap-1 text-pink-500 font-extrabold text-2xl">
+                            <IndianRupee size={18} /> {balance}
+                        </span>
+                    </div>
+                    <div className="flex items-center justify-between text-gray-600 text-xs">
+                        <span>{translate("Blocked_Amount")}</span>
+                        <span className="flex items-center gap-1 text-gray-400">
+                            <IndianRupee size={14} /> {blockedBalance}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Subtle watermark */}
+                <div className="absolute top-1.5 right-3 opacity-10 rotate-12 pointer-events-none">
+                    <IndianRupee size={64} />
                 </div>
             </div>
             {/* Total Items Sold */}
