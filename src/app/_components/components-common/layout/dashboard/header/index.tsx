@@ -14,6 +14,7 @@ import NotificationPopover from "./notificationPopover";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/commonUtils";
 import HeaderFilter from "../../../header-filter";
+import { SearchSuggestionDropdown } from "../../../analytics-search-dropdown";
 
 interface IPageName {
   [key: string]: string;
@@ -197,7 +198,10 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   };
 
   const getHeaderName = () => {
-    if (pathName.includes("/vendor/creators/collaboration/") || pathName.includes("/creator/collaboration/")) {
+    if (
+      pathName.includes("/vendor/creators/collaboration/") ||
+      pathName.includes("/creator/collaboration/")
+    ) {
       return translate("Bargaining");
     } else if (pathName.includes("/creator/profile/")) {
       return translate("Creator_Profile");
@@ -244,14 +248,25 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   return (
     <>
       {!routes.includes(pathName) ? (
-        <header className="bg-white px-3 py-3 flex items-center gap-1">
+        <header className="bg-white px-3 py-3 flex items-center gap-2">
           <Menu
             className="size-5 shrink-0 text-primary cursor-pointer lg:hidden"
             onClick={handleExpandSidebar}
           />
-          <h2 className="md:text-2xl text-lg font-medium text-primary">
+          <h2
+            className={`md:text-2xl text-lg font-medium text-primary ${
+              ["/creator/creator-analysis", "/vendor/vendor-analysis"].includes(
+                pathName
+              )
+                ? "sm:block hidden mr-2"
+                : ""
+            }`}
+          >
             {getHeaderName()}
           </h2>
+          {["/creator/creator-analysis", "/vendor/vendor-analysis"].includes(
+            pathName
+          ) && <SearchSuggestionDropdown />}
           <div className="ml-auto flex items-center md:gap-3 gap-2">
             {["/vendor/dashboard", "/creator/dashboard"].includes(pathName) && (
               <HeaderFilter />
@@ -299,7 +314,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       ) : (
         <header className="bg-white px-3 py-3 flex items-center justify-between gap-1">
           <div className="flex space-x-2 items-center">
-          {(pathName === "/creator-registration" ||
+            {(pathName === "/creator-registration" ||
               pathName === "/vendor-register") && (
               <ArrowLeft
                 className="text-2xl text-primary cursor-pointer"
@@ -307,11 +322,11 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               />
             )}
             <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-medium text-primary">
-            {getHeaderName()}
-          </h2>
+              {getHeaderName()}
+            </h2>
           </div>
           <div className="flex items-center space-x-2">
-          {pathName !== "/creator-registration" &&
+            {pathName !== "/creator-registration" &&
               pathName !== "/vendor-register" && (
                 <>
                   <div

@@ -31,6 +31,7 @@ interface IProps {
   handlePageChange: (page: number) => void;
   filter: IFilterAnalytics | null;
   page: number;
+  className: string;
   totalPages: number;
   mode: IModes;
   data: IAnalyticsData[];
@@ -48,6 +49,7 @@ function AnyalyticsCombineUI({
   totalPages,
   product,
   handlePageChange,
+  className,
 }: IProps) {
   const t = useTranslations();
   const [columns, setColumns] = useState(() =>
@@ -97,7 +99,7 @@ function AnyalyticsCombineUI({
   }, [product, filter]);
 
   return (
-    <div className="flex flex-col w-full gap-5 flex-1 overflow-auto">
+    <div className={`flex flex-col w-full gap-5 flex-1 ${className}`}>
       {/* states of all creators | one creator | product */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-4 col-span-3">
         {states.map(getStateAnalytics)}
@@ -115,9 +117,10 @@ function AnyalyticsCombineUI({
               <div className="relative flex items-center gap-4 px-4 py-3 bg-sky-50 rounded-xl border border-sky-200 shadow-sm w-fit sm:w-auto sm:flex-[none] flex-1 min-w-[260px]">
                 <img
                   src={
-                    filter.key === FILTER_KEYS.CREATOR
+                    (filter.key === FILTER_KEYS.CREATOR
                       ? filter.value.creatorImage
-                      : filter.value.vendorImage
+                      : filter.value.vendorImage) ||
+                    "/assets/profile/profile-image.png"
                   }
                   alt={
                     filter.key === FILTER_KEYS.CREATOR
@@ -163,7 +166,9 @@ function AnyalyticsCombineUI({
             {product && (
               <div className="relative flex items-center gap-4 px-4 py-3 bg-green-50 rounded-xl border border-green-200 shadow-sm w-fit sm:w-auto sm:flex-[none] flex-1 min-w-[260px]">
                 <img
-                  src={product.productImage}
+                  src={
+                    product.productImage || "/assets/product/image-square.svg"
+                  }
                   alt={product.productName}
                   className="w-12 h-12 rounded-md object-cover border"
                 />
@@ -202,7 +207,22 @@ function AnyalyticsCombineUI({
       )}
 
       {/* data-table */}
-      <DataTable columns={columns} data={data} />
+      {(filter?.key || product) && !Boolean(data.length > 0) ? (
+        <div className="flex-1 border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
+          <div className="flex flex-col items-center justify-center text-center rounded-lg w-full h-full border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6">
+            <div className="flex flex-col items-center">
+              <h1 className="mt-4 text-2xl font-semibold text-gray-800 dark:text-white">
+                {t("filter_not_found")}
+              </h1>
+              <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-md">
+                {t("filter_not_found_desc")}
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <DataTable columns={columns} data={data} />
+      )}
       <TablePagination
         totalPages={totalPages}
         activePage={page}

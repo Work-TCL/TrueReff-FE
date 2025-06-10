@@ -1,18 +1,23 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AnyalyticsCombineUI from "./_components/analytics-main";
 import {
   FILTER_KEYS,
+  IAnalyticsBrandData,
+  IAnalyticsCreatorData,
   IAnalyticsData,
   IAnalyticsProduct,
+  IAnalyticsProductData,
   IFilterAnalytics,
   IModes,
   IStatesAnalytics,
 } from "./_components/types";
 import {
   getAnalyticsCreatorsList,
+  getAnalyticsCreatorsSearch,
   getAnalyticsCreatorsState,
   getAnalyticsVendorsList,
+  getAnalyticsVendorsSearch,
   getAnalyticsVendorsState,
   IGETCreatorsRequest,
   IGETCreatorsStateRequest,
@@ -20,6 +25,10 @@ import {
   IGETVendorsStateRequest,
 } from "@/lib/web-api/analytics";
 import Loading from "@/app/creator/loading";
+import { SearchInput } from "../../components-common/search-field";
+import { debounce } from "lodash";
+import { useTranslations } from "next-intl";
+import { Subject } from "rxjs";
 
 const getStatesAsNeed = (
   states: IStatesAnalytics = {
@@ -56,12 +65,17 @@ interface IProps {
 }
 
 const limit = 10;
+export const HandleSearchProduct = new Subject<IAnalyticsProductData>();
+export const HandleSearchBrand = new Subject<IAnalyticsBrandData>();
+export const HandleSearchCreator = new Subject<IAnalyticsCreatorData>();
 
 export default function CombineAnalytics({ mode }: IProps) {
+  const t = useTranslations();
   const [filter, setFilter] = useState<IFilterAnalytics | null>(null);
   const [product, setProduct] = useState<IAnalyticsProduct | null>(null);
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
   const [list, setList] = useState<IAnalyticsData[]>([]);
   const [isStatesLoading, setIsStatesLoading] = useState<boolean>(false);
   const [isListLoading, setIsListLoading] = useState<boolean>(false);
@@ -201,6 +215,27 @@ export default function CombineAnalytics({ mode }: IProps) {
       await fetchCreatorsStates();
       await fetchVendorStates();
     })();
+    const subscriptionProduct = HandleSearchProduct.subscribe(
+      (value: IAnalyticsProductData) => {
+        handleOnSearchProduct(value);
+      }
+    );
+    const subscriptionBrand = HandleSearchBrand.subscribe(
+      (value: IAnalyticsBrandData) => {
+        handleOnSearchVendor(value);
+      }
+    );
+    const subscriptionCreator = HandleSearchCreator.subscribe(
+      (value: IAnalyticsCreatorData) => {
+        handleOnSearchCreator(value);
+      }
+    );
+
+    return () => {
+      subscriptionProduct.unsubscribe();
+      subscriptionBrand.unsubscribe();
+      subscriptionCreator.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -212,13 +247,51 @@ export default function CombineAnalytics({ mode }: IProps) {
     })();
   }, [filter, product]);
 
+  const handleOnSearchVendor = (vendor: IAnalyticsBrandData) => {
+    setPage(1);
+    setFilter({
+      key: FILTER_KEYS.VENDOR,
+      //@ts-ignore
+      value: {
+        _id: "",
+        vendorId: vendor._id,
+        vendorName: vendor.business_name,
+        vendorImage: vendor.profile_image,
+      },
+    });
+    fetchCreatorList(1);
+  };
+  const handleOnSearchCreator = (creator: IAnalyticsCreatorData) => {
+    setPage(1);
+    setFilter({
+      key: FILTER_KEYS.CREATOR,
+      //@ts-ignore
+      value: {
+        _id: "",
+        creatorId: creator._id,
+        creatorName: creator.name,
+        creatorImage: creator.profile_image,
+      },
+    });
+    fetchVendorList(1);
+  };
+  const handleOnSearchProduct = (product: IAnalyticsProductData) => {
+    setPage(1);
+    setProduct({
+      productId: product._id,
+      productImage: product.media.length > 0 ? product.media[0] : "",
+      productName: product.title,
+    });
+    fetchCreatorList(1);
+  };
+
   return (
-    <div className="h-full relative md:p-6 p-4 flex flex-col">
+    <div className="h-full relative md:p-6 p-4 flex flex-col overflow-auto">
       {(isStatesLoading || isListLoading) && (
         <Loading isTransparent={true} height="fit" />
       )}
-      {/* <div className="flex flex-col gap-4 md:p-6 p-4 w-full relative h-screen overflow-auto"> */}
       <AnyalyticsCombineUI
+        className={"md:overflow-auto"}
         states={getStatesAsNeed(
           states,
           //@ts-ignore
