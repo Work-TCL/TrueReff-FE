@@ -51,3 +51,19 @@ export interface IAnalyticsData {
   productImage: string;
   productId: string;
 }
+
+export interface IAnalyticsBrandData {
+  _id: string;
+  business_name: string;
+  profile_image: string;
+}
+export interface IAnalyticsProductData {
+  _id: string;
+  title: string;
+  media: string[];
+}
+export interface IAnalyticsCreatorData {
+  _id: string;
+  name: string;
+  profile_image: string;
+}

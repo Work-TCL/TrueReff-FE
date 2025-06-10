@@ -41,6 +41,19 @@ export const getAnalyticsCreatorsState = async (
     return [];
   }
 };
+export const getAnalyticsCreatorsSearch = async (text: string = "") => {
+  try {
+    const response = await axios.get(
+      `/product/analytics/creator/product-and-vendor-search-results`,
+      {
+        params: { search: text },
+      }
+    );
+    return response?.data?.data;
+  } catch (error) {
+    return [];
+  }
+};
 
 // *****************VENDOR-SIDE**************************
 
@@ -77,6 +90,20 @@ export const getAnalyticsVendorsState = async (
     const response = await axios.get(`/product/analytics/vendor/page-state`, {
       params: params,
     });
+    return response?.data?.data;
+  } catch (error) {
+    return [];
+  }
+};
+
+export const getAnalyticsVendorsSearch = async (text: string = "") => {
+  try {
+    const response = await axios.get(
+      `/product/analytics/vendor/product-and-creator-search-results`,
+      {
+        params: { search: text },
+      }
+    );
     return response?.data?.data;
   } catch (error) {
     return [];

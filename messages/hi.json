@@ -651,7 +651,11 @@
   "Wallet_Balance": "वॉलेट शेष राशि",
   "Main_Balance": "मुख्य शेष राशि",
   "Blocked_Amount": "अवरुद्ध राशि",
-  "Add_Balance_into_your_Wallet": "अपने वॉलेट में शेष राशि जोड़ें", 
+  "Add_Balance_into_your_Wallet": "अपने वॉलेट में शेष राशि जोड़ें",
   "Recharge_History": "रिचार्ज इतिहास",
+  "Search_Brand_Product": "ब्रांड या उत्पाद खोजें",
+  "Search_Creator_Product": "क्रिएटर या उत्पाद खोजें",
+  "filter_not_found": "फ़िल्टर डेटा नहीं मिला।",
+  "filter_not_found_desc": "आपके द्वारा चुने गए फ़िल्टर से कोई परिणाम नहीं मिला। कृपया फ़िल्टर को समायोजित करें या साफ़ करें ताकि और डेटा दिख सके।",
   "Payout_Minimum": "न्यूनतम भुगतान"
 }

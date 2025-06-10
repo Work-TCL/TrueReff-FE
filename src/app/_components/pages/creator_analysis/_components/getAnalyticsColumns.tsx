@@ -41,7 +41,12 @@ export function getAnalyticsColumns(
               }}
             >
               <Avatar className="w-8 h-8">
-                <AvatarImage src={creator?.creatorImage || ""} />
+                <AvatarImage
+                  src={
+                    creator?.creatorImage || "/assets/profile/profile-image.png"
+                  }
+                  className="object-cover"
+                />
               </Avatar>
               <TruncateWithToolTip text={creator.creatorName} />
             </div>
@@ -71,7 +76,12 @@ export function getAnalyticsColumns(
               }}
             >
               <Avatar className="w-8 h-8">
-                <AvatarImage src={brand?.vendorImage || ""} />
+                <AvatarImage
+                  src={
+                    brand?.vendorImage || "/assets/profile/profile-image.png"
+                  }
+                  className="object-cover"
+                />
               </Avatar>
               <TruncateWithToolTip text={brand.vendorName} />
             </div>
@@ -100,7 +110,10 @@ export function getAnalyticsColumns(
             }}
           >
             <Avatar className="w-8 h-8">
-              <AvatarImage src={product.productImage || ""} />
+              <AvatarImage
+                src={product.productImage || "/assets/product/image-square.svg"}
+                className="object-cover"
+              />
             </Avatar>
             <TruncateWithToolTip text={product.productName} />
           </div>
