@@ -312,7 +312,7 @@ export default function BrandList() {
             </div> */}
           </div>
           {internalLoader && !hasMore && <Loader />}
-          <div className="flex flex-col gap-2">
+          {(brands?.length > 0 || searchProductList?.length > 0) && <div className="flex flex-col gap-2">
             {brands?.length > 0 &&
               brands?.map((brand: Brand, index: number) => (
                 <div
@@ -350,7 +350,7 @@ export default function BrandList() {
                   <span className="text-black">{`${product?.title}`}</span>
                 </div>
               ))}
-          </div>
+          </div>}
           {productList?.length > 0 ? (
             <div className="flex flex-col gap-3 rounded-[20px]">
               {search ? (

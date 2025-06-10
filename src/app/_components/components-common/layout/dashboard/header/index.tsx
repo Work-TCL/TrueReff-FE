@@ -104,7 +104,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/vendor-register": translate("Brand_Registration"),
     "/creator-registration": translate("Creator_Registration"),
     "/vendor/account-recharge": translate("Account_Recharge"),
-    "/creator/account-recharge": translate("Account_Recharge")
+    "/creator/account-recharge": translate("Account_Recharge"),
+    "/vendor/vendor-analysis": translate("Vendor_Analysis"),
+    "/creator/creator-analysis": translate("Creator_Analysis"),
   };
   const fetchNotifications = async () => {
     setLoading(true);
@@ -288,7 +290,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
             </Link>
           </div>
           <div className={!account?.role ? "flex justify-end w-full" : ""}>
-            <Link href="?auth=logout" className="mx-4 block">
+            <Link href="?auth=logout" className="mx-1 md:mx-4 block">
               <IoLogOutOutline className="text-2xl text-primary" />
             </Link>
           </div>

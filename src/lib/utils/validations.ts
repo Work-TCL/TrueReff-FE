@@ -965,3 +965,19 @@ export const createStoreSchema = Yup.object().shape({
 
 export interface ICreateStoreSchema
   extends Yup.Asserts<typeof createStoreSchema> {}
+
+  export const banDetailsSchema = Yup.object().shape({
+    account_number: Yup.string()
+      .matches(/^\d+$/, 'Account number must contain digits only')
+      .required('Please enter your account number'),
+  
+    confirm_account_number: Yup.string()
+      .oneOf([Yup.ref('account_number')], 'Confirm account number must be the same as account number')
+      .matches(/^\d+$/, 'Confirm account number must contain digits only')
+      .required('Please re-enter your account number'),
+  
+    IFSC_code: Yup.string()
+      .required('Please enter your IFSC code'),
+  });
+
+export interface IBankDetailSchema extends Yup.Asserts<typeof banDetailsSchema> { }

@@ -44,6 +44,8 @@ const customStyles = {
       backgroundColor: "rgba(255, 73, 121, 0.2)",
     },
   }),
+  menuPortal: (base: any) => ({ ...base, zIndex: 99999 }),
+  menu: (base: any) => ({ ...base, zIndex: 99999 }),
 };
 
 const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
@@ -143,6 +145,8 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
                   value: ele._id,
                   label: ele.name,
                 }))}
+                menuPortalTarget={typeof document !== "undefined" ? document.body:null} // Renders the dropdown outside of the current scrollable container
+            menuPosition="fixed"
                 classNamePrefix="select"
                 placeholder="Parent Category"
                 isClearable

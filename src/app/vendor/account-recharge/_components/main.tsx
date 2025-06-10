@@ -110,8 +110,8 @@ export default function AccountRecharge() {
             <div className="bg-custom-gradient text-white rounded-2xl p-4 overflow-hidden shadow-lg flex justify-between items-center h-full">
                 {/* Wallet Text & Button */}
                 <div className="w-2/4 md:w-1/3">
-                    <h2 className="text-lg font-semibold mb-4 text-secondary">{translate("Wallet_Balance")}</h2>
-                    <button onClick={handleAddBalance} className="flex items-center py-2 px-3 rounded-lg gap-2 text-sm md:text-md font-semibold cursor-pointer bg-white text-black hover:bg-gray-200">
+                    <h2 className="text-lg font-semibold whitespace-nowrap mb-4 text-secondary">{translate("Wallet_Balance")}</h2>
+                    <button onClick={handleAddBalance} className="flex items-center py-2 px-3 rounded-lg whitespace-nowrap gap-2 text-sm md:text-md font-semibold cursor-pointer bg-white text-black hover:bg-gray-200">
                         {translate("Add_Balance")} <MoveRight />
                     </button>
                 </div>
@@ -129,7 +129,7 @@ export default function AccountRecharge() {
                 title={translate("Total_Item_Sold")}
                 value={formatNumber(vendorStats?.totalOrders)}
                 growth={5}
-                bgColor="bg-[#F9EFF5]"
+                bgColor="bg-[#F9EFF5] h-[144px] max-h-[144px]"
                 borderColor={"border-[#C861A0]"}
             />
             <StatsCard
@@ -137,7 +137,7 @@ export default function AccountRecharge() {
                 value={formatNumber(vendorStats?.totalRevenue)}
                 growth={5}
                 borderColor="border-[#9773C8]"
-                bgColor="bg-[#F5F1F9]"
+                bgColor="bg-[#F5F1F9] h-[144px] max-h-[144px]"
             />
         </div>
         {/* Recharge History */}

@@ -28,7 +28,7 @@ export const StatsCard = ({
       } rounded-2xl`}
       onClick={() => link && router.push(link)}
     >
-      <CardContent className="p-5 gap-2 flex flex-col justify-between h-full">
+      <CardContent className="p-3 md:p-5 gap-2 flex flex-col justify-between h-full">
         <div className="flex justify-between items-start">
           <h3 className=" text-secondary  md:text-[14px] lg:text-[14px]">
             {title}

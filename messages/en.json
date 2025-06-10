@@ -670,5 +670,12 @@
   "Blocked_Amount": "Blocked Amount",
   "Add_Balance_into_your_Wallet": "Add Balance into your Wallet",
   "Recharge_History": "Recharge History",
-  "Payout_Minimum": "Payout Minimum"
+  "Payout_Minimum": "Payout Minimum",
+  "Account_Number": "Account Number",
+  "Confirm_Account_Number": "Confirm Account Number",
+  "IFSC_Code": "IFSC Code",
+  "Enter_your_bank_account_number": "Enter your bank account number",
+  "Confirm_bank_account_number": "Confirm bank account number",
+  "Enter_your_bank_ifsc_code": "Enter your bank ifsc code",
+  "Add_Your_Bank_details": "Add Your Bank Details"
 }

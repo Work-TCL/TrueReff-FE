@@ -50,7 +50,7 @@ export default function NotificationPopover({
         <div className="relative">
           <BellRing className="cursor-pointer md:w-6 md:h-6 h-5 w-5 font-normal text-primary" />
           {unreadNotifications > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white md:text-[10px] text-[12px] font-bold px-1 py-0 rounded-full">
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white md:text-[10px] text-[8px] font-bold px-1 py-0 rounded-full">
               {unreadNotifications}
             </span>
           )}

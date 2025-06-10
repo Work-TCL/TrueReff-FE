@@ -5,6 +5,7 @@ import Header from "./header";
 import { getUserApi } from "@/lib/web-api/auth";
 import { useAuthStore } from "@/lib/store/auth-user";
 import LoadingPage from "@/lib/components/loading-page";
+import { usePathname } from "next/navigation";
 // import { useAuthStore } from "@/lib/store/auth-user";
 // import { useRouter } from "next/navigation";
 
@@ -14,7 +15,7 @@ interface IDashboardLayout {
 
 export default function DashboardLayout({ children }: IDashboardLayout) {
   const { status } = useAuthStore();
-  // const navigate = useRouter();
+  const pathName = usePathname();
   const [expanded, setExpanded] = useState(true);
   const handleExpandSidebar = () => {
     setExpanded((prev) => !prev);
@@ -22,6 +23,9 @@ export default function DashboardLayout({ children }: IDashboardLayout) {
   useEffect(() => {
     getUserApi();
   }, []);
+  useEffect(()=> {
+    handleExpandSidebar();
+  },[pathName]);
   // if (status === "unauthenticated") {
   //   return navigate?.push("/login");
   // }

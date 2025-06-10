@@ -211,14 +211,14 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     //   link: "/brand-analysis",
     // },
     {
-      label: translate("Account_Recharge"),
-      icon: SquareUserRound,
-      link: "/vendor/account-recharge",
-    },
-    {
       label: translate("Vendor_Analysis"),
       icon: BarChart,
       link: "/vendor/vendor-analysis",
+    },
+    {
+      label: translate("Account_Recharge"),
+      icon: SquareUserRound,
+      link: "/vendor/account-recharge",
     },
     {
       label: translate("Payment_Earnings"),

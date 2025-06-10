@@ -4,11 +4,12 @@ import { StatsCard } from "@/app/_components/components-common/states/StatesCard
 import { formatNumber } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
-import { IndianRupee, Info } from "lucide-react";
+import { IndianRupee, Info, Landmark } from "lucide-react";
 import axios from "@/lib/web-api/axios";
 import RechargeHistory, { IRechargeHistory } from "@/app/_components/pages/account-recharge/recharge-history";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
+import AddBankDetails from "@/app/_components/components-common/dialogs/add-bank-details";
 
 interface ICreatorStats {
     _id: string | null;
@@ -21,7 +22,7 @@ interface ICreatorStats {
 
 export default function AccountRecharge() {
     const translate = useTranslations();
-    // const [open, setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [internalLoading, setInternalLoading] = useState<boolean>(false);
     const [balance, setBalance] = useState<number>(0);
@@ -109,15 +110,15 @@ export default function AccountRecharge() {
         {/* Top Cards */}
         {loading ? <Loader /> : <><div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
             {/* Wallet Balance Card */}
-            <div className="bg-custom-gradient text-white rounded-2xl p-6 overflow-hidden shadow-lg flex justify-between items-center h-full">
+            <div className="bg-custom-gradient h-[144px] max-h-[144px] text-white rounded-2xl p-3 md:p-6 overflow-hidden shadow-lg flex justify-between items-center">
                 {/* Wallet Text & Button */}
-                <div className="w-full space-y-1">
-                    {/* <button className="flex items-center p-2 rounded-lg gap-2 text-md font-semibold cursor-pointer bg-white text-black hover:bg-gray-200">
-                        Add Balance <MoveRight />
-                    </button> */}
+                <div className="relative w-full space-y-1">
+                    <button onClick={()=> setOpen(true)} className="absolute top-[-25] md:top-[-20] right-[-5] md:right-[-15] flex items-center p-1 rounded-lg gap-2 text-md font-semibold cursor-pointer group bg-white text-black hover:bg-primary">
+                        <Landmark size={15} className="stroke-primary group-hover:stroke-secondary"/>
+                    </button>
                     <div className="flex  justify-between items-center gap-2">
                         <div className="flex flex-col">
-                            <div className="flex items-center text-secondary gap-1">{translate("Main_Balance")} <TooltipProvider key={`main_balance`}>
+                            <div className="flex items-center text-sm md:text-md text-secondary gap-1">{translate("Main_Balance")} <TooltipProvider key={`main_balance`}>
                                 <Tooltip>
                                     <TooltipTrigger>
                                         <Info className="w-4 h-4 text-gray-500" />
@@ -137,7 +138,7 @@ export default function AccountRecharge() {
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <div className="flex items-center text-secondary gap-1">{translate("Blocked_Amount")}</div>
+                            <div className="flex items-center text-sm md:text-md text-secondary gap-1">{translate("Blocked_Amount")}</div>
                             <div className="text-font-grey flex justify-end items-center space-x-2">
                                 <span className="flex items-center text-gray-600 md:text-xl text-sm">
                                     <IndianRupee size={15} /> {formatNumber(blockedBalance)}
@@ -152,7 +153,7 @@ export default function AccountRecharge() {
                             style={{ width: `${getPercentage()}%` }}
                         ></div>
                     </div>
-                    <div className="flex items-center text-secondary">
+                    <div className="flex items-center text-sm md:text-md text-secondary">
                         <span className="flex items-center">{translate("Payout_Minimum")}: <span className="flex items-center"><IndianRupee size={15} /> {minPayOut}</span></span>
                     </div>
                 </div>
@@ -164,18 +165,19 @@ export default function AccountRecharge() {
                 title={translate("Total_Item_Sold")}
                 value={formatNumber(creatorStats?.totalOrders)}
                 growth={5}
-                bgColor="bg-[#F9EFF5]"
+                bgColor="bg-[#F9EFF5] h-[144px] max-h-[144px]"
                 borderColor={"border-[#C861A0]"}
             />
             <StatsCard
                 title={translate("Total_Revenue_Generated")}
                 value={formatNumber(creatorStats?.totalRevenue)}
                 growth={5}
-                borderColor="border-[#9773C8]"
+                borderColor="border-[#9773C8] h-[144px] max-h-[144px]"
                 bgColor="bg-[#F5F1F9]"
             />
         </div>
             {/* Recharge History */}
             <RechargeHistory loading={loading} rechargeHistory={rechargeHistory} fetchRechargeHistory={fetchRechargeHistory} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} /></>}
+        {open && <AddBankDetails handleRefresh={()=> {}} open={open} onClose={()=> setOpen(false)}/>}    
     </div>
 }

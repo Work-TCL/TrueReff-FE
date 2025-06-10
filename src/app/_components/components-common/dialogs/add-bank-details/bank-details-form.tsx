@@ -1,0 +1,151 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
+import {
+  banDetailsSchema,
+  IBankDetailSchema,
+  IVendorProfileUpdateSchema,
+  vendorProfileUpdateSchema,
+} from "@/lib/utils/validations";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Input from "@/app/_components/ui/form/Input";
+import Button from "@/app/_components/ui/button";
+import { useVendorStore } from "@/lib/store/vendor";
+import axios from "@/lib/web-api/axios";
+import {
+  businessTypes,
+  cities,
+  fileUploadLimitValidator,
+  indianStates,
+} from "@/lib/utils/constants";
+import Select from "react-select";
+import { get } from "lodash";
+import { useTranslations } from "next-intl";
+import { getCategories } from "@/lib/web-api/auth";
+import { Camera,User } from "lucide-react";
+import { useSession } from "next-auth/react";
+
+export interface ICategoryData {
+  _id: string;
+  name: string;
+  parentId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const customStyles = {
+  placeholder: (base: any) => ({
+    ...base,
+    fontSize: "0.875rem ", // Tailwind text-sm
+    color: "#a1a1aa", // Tailwind slate-400
+  }),
+  control: (base: any) => ({
+    ...base,
+    height: "54px",
+    borderRadius: "8px",
+  }),
+  options: (base: any) => ({
+    ...base,
+    zIndex: 999,
+  }),
+};
+export default function BankDetailsForm({
+  submitting,
+  setSubmitting = () => {},
+  handleRefresh = () => {},
+  onClose,
+}: {
+  submitting: boolean;
+  setSubmitting: (value:boolean) => void;
+  handleRefresh: () => void;
+  onClose: any;
+}) {
+  const translate = useTranslations();
+  const schema = banDetailsSchema;
+  const methods = useForm<IBankDetailSchema>({
+    defaultValues: {
+      account_number: "",
+      confirm_account_number: "",
+      IFSC_code: ""
+    },
+    resolver: yupResolver(schema),
+    mode: "onSubmit",
+  });
+  const onSubmit = async (data: IBankDetailSchema) => {
+    setSubmitting(true);
+    try {
+      ("use server");
+      const payload: any = {
+        account_number: data?.account_number,
+        IFSC_code: data?.IFSC_code
+      };
+      let response: any = await axios.patch("/auth/vendor", payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response?.data) {
+        response = response?.data;
+      }
+      if (response?.status === 200) {
+        
+        toast.success(response?.message);
+        methods?.reset();
+        onClose && onClose(true);
+        return true;
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <>
+      <FormProvider {...methods}>
+        <form
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className="grid grid-cols-2 text-left gap-3 w-full relative"
+        >
+          <div className="md:col-span-2 col-span-1 mt-2">
+            <Input
+              label={translate("Account_Number")}
+              name="account_number"
+              type="text"
+              placeholder={translate("Enter_your_bank_account_number")}
+              autoFocus
+              lableClassName="text-md font-[400]"
+            />
+          </div>
+          <div className="md:col-span-2 col-span-1 mt-2">
+            <Input
+              label={translate("Confirm_Account_Number")}
+              name="confirm_account_number"
+              type="text"
+              placeholder={translate("Confirm_bank_account_number")}
+              lableClassName="text-md font-[400]"
+            />
+          </div>
+          <div className="md:col-span-2 col-span-1 mt-2">
+            <Input
+              label={translate("IFSC_Code")}
+              name="IFSC_code"
+              type="text"
+              placeholder={translate("Enter_your_bank_ifsc_code")}
+              lableClassName="text-md font-[400]"
+            />
+          </div>
+          <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
+            <Button type="submit" loading={submitting}>
+              {translate("Save")}
+            </Button>
+          </div>
+        </form>
+      </FormProvider>
+    </>
+  );
+}
