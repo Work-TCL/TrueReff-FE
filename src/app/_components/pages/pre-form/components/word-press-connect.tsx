@@ -33,13 +33,13 @@ interface IChannelTypes {
 }
 const channelsTypes: IChannelTypes[] = [
   {
-    icon: "/assets/vendor/shopify-image.png",
-    name: "shopify",
-    inputName: "shopify_store_id",
-    bgColor: "bg-gradient-to-r from-[#C8E6A3] via-[#4B7035] to-[#7FB743]"
-  },
+    icon: "/assets/vendor/word-press.webp",
+    name: "wordpress",
+    inputName: "wordpress_store_id",
+    bgColor: "bg-gradient-to-r from-[#6EC1E4] via-[#003B5C] to-[#21759B]"
+  }
 ]
-export default function ChannelForm({ loading, channels }: IChannelFormProps) {
+export default function WordPressChannelForm({ loading, channels }: IChannelFormProps) {
   const translate = useTranslations();
   const getChannel = (channelName: string) => {
     return channels?.find(ele => ele?.channelType === channelName) ?? null;
@@ -58,24 +58,24 @@ export default function ChannelForm({ loading, channels }: IChannelFormProps) {
               />
             </div>
             <div className={cn("bg-gray-dark flex flex-col gap-2 p-6 rounded-20 shadow-md",ele?.bgColor)}>
-              {!channel && <h3 className="font-semibold">{translate("Shopify_Store_Connect")}</h3>}
+              {!channel && <h3 className="font-semibold">{translate("WordPress_Store_Connect")}</h3>}
               {!channel && <div className="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 gap-4 items-end">
                 <div className="sm:col-span-6 md:col-span-4 w-full">
                   <Input
-                    label={translate("Shopify_Store_Domain")}
-                    placeholder="Enter your Shopify store domain"
-                    name={`shopify_store_domain`}
+                    label={translate("WordPress_Store_Domain")}
+                    placeholder="Enter your WordPress store domain"
+                    name={`wordpress_store_domain`}
                     type="text"
                     disabled={loading}
                     lableClassName="text-md font-[400] text-dark-100"
-                    autoFocus={true}
+                    autoFocus={false}
                   />
                 </div>
                 <div className="sm:col-span-6 md:col-span-4 w-full">
                   <Input
-                    label={translate("Shopify_Store_Id")}
-                    placeholder="Enter your Shopify store ID"
-                    name={`shopify_store_id`}
+                    label={translate("WordPress_Store_Id")}
+                    placeholder="Enter your WordPress store ID"
+                    name={`wordpress_store_id`}
                     type="text"
                     disabled={loading}
                     lableClassName="text-md font-[400] text-dark-100"
@@ -93,7 +93,7 @@ export default function ChannelForm({ loading, channels }: IChannelFormProps) {
                 </div>
               </div>}
               {channel && <p className="text-gray-100 mb-4 md:text-base text-sm">
-                {translate("Shopify_Store_connected")}
+                {translate("WordPress_Store_connected")}
               </p>}
               {channel && (
                 <div className="text-sm text-gray-100">

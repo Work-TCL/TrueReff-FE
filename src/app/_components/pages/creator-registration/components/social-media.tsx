@@ -115,16 +115,16 @@ export default function SocialMedia({
       <div className="relative border-l-2 border-gray-dark ">
         {/* Instagram Step */}
         <div className="mb-4 ml-6 relative">
-          <div className="absolute -left-6 top-0 w-12 h-12 bg-primary-color rounded-full flex items-center justify-center shadow-lg">
+          <div className="absolute -left-6 top-0 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-lg">
             <img
               src="/assets/creator/Instagram-icon.svg"
               alt="Instagram"
               className="w-7 h-7"
             />
           </div>
-          <div className="bg-gray-light p-6 rounded-20 shadow-md">
+          <div className="bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCAF45] p-6 rounded-20 shadow-md">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-text flex-1 md:text-xl text:sm font-semibold">
+              <h3 className="text-gray-100 flex-1 md:text-xl text:sm font-semibold">
                 {translate("Connect_Instagram")}
               </h3>
               {!instagramConnected && (
@@ -138,16 +138,16 @@ export default function SocialMedia({
                 </Button>
               )}
             </div>
-            <p className="text-gray-color mb-4 md:text-base text-sm">
+            <p className="text-gray-100 mb-4 md:text-base text-sm">
               {instagramConnected
                 ? translate("Instagram_Connected_text")
                 : translate("Connect_Instagram_text")}
             </p>
-            <p className="text-xs text-gray-color mb-4">
+            <p className="text-xs text-gray-100 mb-4">
               {translate("Minium_Followers_Text")}
             </p>
             {instagramConnected && (
-              <div className="text-sm text-gray-color space-y-1 mt-4">
+              <div className="text-sm text-gray-100 space-y-1 mt-4">
                 <div>
                   <strong>{translate("Name")}:</strong>{" "}
                   {methods.watch("channels[0].account_name")}
@@ -174,16 +174,16 @@ export default function SocialMedia({
 
         {/* YouTube Step */}
         <div className="mb-1 ml-6 relative">
-          <div className="absolute -left-6 top-0 w-12 h-12 bg-dark-orange rounded-full flex items-center justify-center shadow-lg">
+          <div className="absolute -left-6 top-0 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-lg">
             <img
               src="/assets/creator/Youtube-icon.svg"
               alt="YouTube"
               className="w-7 h-7"
             />
           </div>
-          <div className="bg-gray-light p-6 rounded-20 shadow-md">
+          <div className="bg-gradient-to-r from-[#FF6B6B] via-[#FF0000] to-[#282828] p-6 rounded-20 shadow-md">
             <div className="flex items-center justify-between mb-2 flex-1">
-              <h3 className="text-text md:text-xl text:sm font-semibold">
+              <h3 className="text-gray-100 md:text-xl text:sm font-semibold">
                 {translate("Connect_YouTube")}
               </h3>
               {!youtubeConnected && (
@@ -197,16 +197,16 @@ export default function SocialMedia({
                 </Button>
               )}
             </div>
-            <p className="text-gray-color mb-4 md:text-base text-sm">
+            <p className="text-gray-100 mb-4 md:text-base text-sm">
               {youtubeConnected
                 ? translate("YouTube_Connected_text")
                 : translate("Connect_YouTube_text")}
             </p>
-            <p className="text-xs text-gray-color mb-4">
+            <p className="text-xs text-gray-100 mb-4">
               {translate("Minium_subscribers_Text")}
             </p>
             {youtubeConnected && (
-              <div className="text-sm text-gray-color space-y-1 mt-4">
+              <div className="text-sm text-gray-100 space-y-1 mt-4">
                 <div>
                   <strong>{translate("Name")}:</strong>{" "}
                   {methods.watch("channels[1].account_name")}

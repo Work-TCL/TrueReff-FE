@@ -31,23 +31,37 @@ const RechargeHistoryTable = ({
         },
         {
             accessorKey: "amount",
-            header: () => <div className="flex justify-center">{translate("Recharge_Amount")}</div>,
+            header: () => <div className="flex justify-center">{translate("Amount")}</div>,
             cell: ({ row }) => (
               <div className="flex justify-center">{row?.original?.amount}</div>
             )
         },
         {
-            accessorKey: "type",
-            header: () => <div className="flex justify-center">{translate("Payment_Method")}</div>,
+            accessorKey: "fees",
+            header: () => <div className="flex justify-center">{translate("Fees")}</div>,
             cell: ({ row }) => (
-              <div className="flex justify-center">{row?.original?.type}</div>
+              <div className="flex justify-center">{row?.original?.fees}</div>
             )
         },
         {
-            accessorKey: "razorpayPaymentId",
+            accessorKey: "tax",
+            header: () => <div className="flex justify-center">{translate("Tax")}</div>,
+            cell: ({ row }) => (
+              <div className="flex justify-center">{row?.original?.tax}</div>
+            )
+        },
+        {
+            accessorKey: "paymentMethod",
+            header: () => <div className="flex justify-center">{translate("Payment_Method")}</div>,
+            cell: ({ row }) => (
+              <div className="flex justify-center">{row?.original?.paymentMethod}</div>
+            )
+        },
+        {
+            accessorKey: "paymentId",
             header: () => <div className="flex justify-center">{translate("Transaction_Id")}</div>,
             cell: ({ row }) => (
-              <div className="flex justify-center">{row?.original?.razorpayPaymentId}</div>
+              <div className="flex justify-center">{row?.original?.paymentId}</div>
             )
         },
         {

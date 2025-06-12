@@ -2,7 +2,7 @@
 
 import { startTransition, useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { CircleFadingPlus, ImageOff } from "lucide-react";
+import { CircleFadingPlus, ImageOff, IndianRupee } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -27,6 +27,7 @@ import ChannelBar from "./chaneelBar";
 import { getConnectedChannelsList } from "@/lib/web-api/channel";
 import { toastMessage } from "@/lib/utils/toast-message";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
+import { formatNumber } from "@/lib/utils/constants";
 
 export interface IProduct {
   id: number;
@@ -40,12 +41,7 @@ export interface IProduct {
   status: string;
   alreadyAdded: boolean;
 }
-interface IProps {
-  channelName: string;
-}
-export default function ChannelProductList({
-  channelName = "shopify",
-}: IProps) {
+export default function ChannelProductList() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
@@ -71,7 +67,7 @@ export default function ChannelProductList({
   }, []);
 
   // Update fetProductsList to set both cursors
-  const fetProductsList = async (
+  const fetchProductsList = async (
     page: number = 1,
     isInternalLoader = false,
     searchValue: string = ""
@@ -79,15 +75,22 @@ export default function ChannelProductList({
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product/list?limit=${pageSize}&page=${page}${
+        `channel/${activeChannelTabId}/product/list?limit=${pageSize}&page=${page}${
           searchValue ? `&search=${searchValue}` : ""
         }`
       );
       if (response?.data?.data?.list?.length > 0) {
-        const dataCount = response.data.data.count;
-        setProductList(response.data.data.list);
-        setCurrentPage(page);
-        setTotalPages(Math.ceil(dataCount / pageSize));
+        if(activeChannelTabId === "shopify"){
+          const dataCount = response.data.data.count;
+          setProductList(response.data.data.list);
+          setCurrentPage(page);
+          setTotalPages(Math.ceil(dataCount / pageSize));
+        } else if(activeChannelTabId === "wordpress") {
+            const dataCount = response.data.data.count;
+            setProductList(response.data.data.list);
+            setCurrentPage(page);
+            setTotalPages(Math.ceil(dataCount / pageSize));
+        } 
       }
       setLoading(false);
       setInternalLoader(false);
@@ -101,12 +104,14 @@ export default function ChannelProductList({
 
   // Update useEffect to fetch the initial product list
   useEffect(() => {
-    fetProductsList(1);
-  }, []);
+    if(activeChannelTabId){
+      fetchProductsList(1);
+    }
+  }, [activeChannelTabId]);
 
   const debouncedSearch = useCallback(
     debounce((value: string) => {
-      fetProductsList(1, true, value);
+      fetchProductsList(1, true, value);
     }, 500),
     []
   );
@@ -116,7 +121,7 @@ export default function ChannelProductList({
     debouncedSearch(value);
   };
   const handlePageChange = (page: number) => {
-    page !== currentPage && fetProductsList(page, true, search);
+    page !== currentPage && fetchProductsList(page, true, search);
   };
 
   const handleOnCheckExists = async (productId: number) => {
@@ -210,11 +215,7 @@ export default function ChannelProductList({
       accessorKey: "price",
       header: () => <>Selling {translate("Price")}</>,
       cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={`₹ ${row.original.price ?? ""}`}
-        />
+        <span className="flex items-center"><IndianRupee size={14}/> {formatNumber(Number(row.original.price ?? 0))}</span>
       ),
     },
     {
@@ -236,14 +237,14 @@ export default function ChannelProductList({
           </ToolTip> */}
 
               <div
-                onClick={() => handleOnCheckExists(product.id)}
-                className="cursor-pointer"
+                onClick={() => activeChannelTabId !== "wordpress" && handleOnCheckExists(product.id)}
+                className={activeChannelTabId !== "wordpress" ? "cursor-pointer":"cursor-no-drop"}
               >
                 <ToolTip content="Add Product to CRM" delayDuration={1000}>
                   <CircleFadingPlus
                     strokeWidth={1.5}
                     color="#3b82f680"
-                    className="cursor-pointer"
+                    className={activeChannelTabId !== "wordpress" ? "cursor-pointer":"cursor-no-drop"}
                   />
                 </ToolTip>
               </div>
@@ -255,10 +256,6 @@ export default function ChannelProductList({
   ];
   return (
     <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
           <ChannelBar
             channels={channels}
             activeChannelTabId={activeChannelTabId}
@@ -273,14 +270,16 @@ export default function ChannelProductList({
             />
           </div> */}
           {internalLoader && <Loader />}
-          {productList?.length > 0 ? (
+          {loading ? (
+        <Loading />
+      ) : productList?.length > 0 ? (
             <>
               <DataTable columns={columns} data={productList} />
               {currentData !== null && (
                 <ChannleToProduct
                   product={{
                     productId: currentData.id,
-                    channelName: channelName,
+                    channelName: activeChannelTabId,
                     handle: currentData.handle,
                     id: currentData.id,
                     image: currentData.main_image,
@@ -293,7 +292,7 @@ export default function ChannelProductList({
                   onClose={(refresh = false) => {
                     setCurrentData(null);
                     if (refresh) {
-                      fetProductsList(currentPage, true, search);
+                      fetchProductsList(currentPage, true, search);
                     }
                   }}
                 />
@@ -311,8 +310,6 @@ export default function ChannelProductList({
               description={translate("No_Products_Available_Description")}
             />
           )}
-        </>
-      )}
     </div>
   );
 }

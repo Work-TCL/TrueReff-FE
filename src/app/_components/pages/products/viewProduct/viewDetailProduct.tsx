@@ -163,32 +163,58 @@ export default function ViewProductDetail({
     setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product?productId=${shopifyId}`
+        `channel/${channelType}/product?productId=${shopifyId}`
       );
 
       const product: any = response?.data?.data;
-      const images = product?.images?.map((ele: any) => ele?.src);
-      // ✅ Update product state
-      const updatedProduct = {
-        productId: product.id,
-        images: images,
-        name: product.name,
-        tags: product?.tags? product?.tags?.split(", ") :[],
-        description: product?.description_html || "", // Add description if available
-        price: product?.price || 0,
-        sku: product?.sku || "",
-        barcode: product?.variants[0]?.barcode || "",
-        quantity: product?.quantity || 0,
-        totalInventory: product?.totalInventory || 0,
-        variants: product?.variants || [],
-        commission: product?.commission,
-  commission_type: product?.commission_type,
-  discount: product?.discount,
-  discountType: product?.discountType,
-  freeProduct: product?.freeProduct
-      };
-
-      setProductData(updatedProduct);
+      if(channelType === "shopify"){
+        const images = product?.images?.map((ele: any) => ele?.src);
+        // ✅ Update product state
+        const updatedProduct = {
+          productId: product.id,
+          images: images,
+          name: product.name,
+          tags: product?.tags? product?.tags?.split(", ") :[],
+          description: product?.description_html || "", // Add description if available
+          price: product?.price || 0,
+          sku: product?.sku || "",
+          barcode: product?.variants[0]?.barcode || "",
+          quantity: product?.quantity || 0,
+          totalInventory: product?.totalInventory || 0,
+          variants: product?.variants || [],
+          commission: product?.commission,
+          commission_type: product?.commission_type,
+          discount: product?.discount,
+          discountType: product?.discountType,
+          freeProduct: product?.freeProduct
+        };
+        setProductData(updatedProduct);
+      } else if(channelType === "wordpress"){
+        const updatedProduct = {
+          productId: product.id,
+          images: product?.images,
+          name: product.name,
+          tags: product?.tags? product?.tags?.split(", ") :[],
+          description: product?.description || "",
+          price: product?.price || 0,
+          sku: product?.sku || "",
+          barcode: "",
+          quantity: product?.quantity || 0,
+          totalInventory: product?.totalInventory || 0,
+          variants: [],
+          // product?.variations?.map((ele:any) => {
+          //   return {...ele,title: ele?.attributes?.pa_size || ele?.attributes?.pa_color}
+          // }),
+          commission: product?.commission??"",
+          commission_type: product?.commission_type??"",
+          discount: product?.discount??"",
+          discountType: product?.discountType??"",
+          freeProduct: product?.freeProduct??false,
+          category: product?.categories?.join(', '),
+        };
+        setProductData(updatedProduct);
+      }
+      
     } catch (error: any) {
       toast.error(error?.message || "Product Fetch Failed.");
     } finally {

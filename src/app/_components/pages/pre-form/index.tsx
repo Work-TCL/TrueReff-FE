@@ -5,7 +5,7 @@ import HeaderAuth from "../auth/components/header-auth";
 import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
 import { GrDocumentText } from "react-icons/gr";
 import { FaRegUserCircle } from "react-icons/fa";
-import { IVendorRegisterFirstStepSchema, IVendorRegisterSecondStepSchema,  IVendorRegisterThirdStepSchema,  vendorRegisterFirstStepSchema, vendorRegisterSecondStepSchema, vendorRegisterThirdStepSchema } from "@/lib/utils/validations";
+import { IVendorRegisterFirstStepSchema, IVendorRegisterSecondStepSchema,  IVendorRegisterThirdStepSchema,  IVendorWordPressConnectSchema,  vendorRegisterFirstStepSchema, vendorRegisterSecondStepSchema, vendorRegisterThirdStepSchema, vendorWordPressConnectSchema } from "@/lib/utils/validations";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/app/_components/ui/button";
@@ -27,6 +27,7 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { CreditCard } from "lucide-react";
 import PackageDetails from "../settings/package-details";
 import ProfileAccess from "../../components-common/dialogs/profile-approval";
+import WordPressChannelForm from "./components/word-press-connect";
 
 let allTabs: {
   id: string;
@@ -81,6 +82,7 @@ export default function PreFormPage() {
   const [bannerPreview, setBannerPreview] = useState<string>("");
   const activeTab = parseInt(tab);
   const [channels, setChannels] = useState<any[]>([]);
+  const [wordPressLoading, setWordPressLoading] = useState<boolean>(false);
   const initialState = {
     state: "",
     city: "",
@@ -120,6 +122,14 @@ export default function PreFormPage() {
     resolver: yupResolver(vendorRegisterThirdStepSchema),
     mode: "onSubmit",
   });
+  const wordPressMethods = useForm<IVendorWordPressConnectSchema>({
+      defaultValues: {
+        wordpress_store_domain: "",
+        wordpress_store_id: ""
+      },
+      resolver: yupResolver(vendorWordPressConnectSchema),
+      mode: "onSubmit",
+    });
   const documentMethods = useForm<IVendorRegisterSecondStepSchema>({
     defaultValues: {
       gst_number: "",
@@ -456,6 +466,64 @@ export default function PreFormPage() {
       setLoading(false);
     }
   }
+  const handleOnWordPressConnect = async (data: IVendorWordPressConnectSchema) => {
+      setWordPressLoading(true);
+      try {
+        const payload: any = {
+          uniqueId: data.wordpress_store_id,
+          shopUrl: data.wordpress_store_domain,
+        };
+        let { data: response }: any = await axios.post(
+          "/channel/wordpress/connect",
+          payload
+        );
+  
+        if (response?.status === 200) {
+           await update({
+          user: {
+            vendor: response?.data,
+          },
+        });
+        toastMessage.success(response?.message);
+        setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
+        await getConnectedChannel();
+          setVendorData("vendor", {
+            vendorId: response?.data?._id,
+            accountId: response?.data?.accountId,
+            category: response?.data?.category,
+            sub_category: response?.data?.sub_category,
+            completed_step: response?.data?.completed_step,
+            contacts: response?.data?.contacts,
+            business_name: response?.data?.business_name,
+            company_email: response?.data?.company_email,
+            pin_code: response?.data?.pin_code,
+            type_of_business: response?.data?.type_of_business,
+            website: response?.data?.website,
+            state: response?.data?.state,
+            city: response?.data?.city,
+            address: response?.data?.address,
+            profile_image: response?.data?.profile_image,
+            banner_image: response?.data?.banner_image,
+            createdAt: response?.data?.createdAt,
+            updatedAt: response?.data?.updatedAt,
+            gst_certificate: response?.data?.gst_certificate,
+            gst_number: response?.data?.gst_number,
+            pan_number: response?.data?.pan_number,
+            channelConfig: response?.data?.channelConfig,
+            channelId: response?.data?.channelId,
+            channelStatus: response?.data?.channelStatus,
+            channelType: response?.data?.channelType,
+            status: response?.data?.status,
+          })
+          router.push(`?tab=${TABS_STATUS.OMNI_CHANNEL}`)
+        }
+      } catch (error) {
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+      } finally {
+        setWordPressLoading(false);
+      }
+    }
 
   const handleImageSelect = async (
     e: React.ChangeEvent<HTMLInputElement> | any,
@@ -566,26 +634,23 @@ export default function PreFormPage() {
                 </div>
               </form>
             </FormProvider>,
-            [TABS_STATUS.OMNI_CHANNEL]: <FormProvider {...channelMethods}>
+            [TABS_STATUS.OMNI_CHANNEL]: <div className="flex flex-col overflow-auto gap-3 md:pt-6 mt-3 md:px-5 px-3"><FormProvider {...channelMethods}>
               <form
                 onSubmit={channelMethods.handleSubmit(handleOnChannelConnect)}
-                className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
+                className="w-full flex flex-col justify-between gap-3 relative"
               >
                 <ChannelForm loading={loading} channels={channels}/>
-                <div className="bg-white">
-                  {/* <Button
-                    type="button"
-                    // loading={loading}
-                    disabled={channels?.length === 0}
-                    className="w-fit font-medium px-8"
-                    size="small"
-                    onClick={handleOnClick}
-                  >
-                    {translate("Back_to_dashboard")}
-                  </Button> */}
-                </div>
               </form>
-            </FormProvider>,
+            </FormProvider>
+            <FormProvider {...wordPressMethods}>
+              <form
+                onSubmit={wordPressMethods.handleSubmit(handleOnWordPressConnect)}
+                className="w-full flex flex-col justify-between gap-3 relative"
+              >
+                <WordPressChannelForm loading={wordPressLoading} channels={channels}/>
+              </form>
+            </FormProvider>
+            </div>,
             [TABS_STATUS.DOCUMENT_INFO]: <FormProvider {...documentMethods}>
               <form
                 onSubmit={documentMethods.handleSubmit(handleOnDocumentSubmit)}

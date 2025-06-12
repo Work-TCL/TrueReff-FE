@@ -681,5 +681,11 @@
   "Search_Creator_Product": "Search Creator or Product",
   "filter_not_found": "Filter Data Not Found.",
   "filter_not_found_desc": "We couldn't find any results matching your filters. Try adjusting or clearing them to see more data.",
-  "Add_Your_Bank_details": "Add Your Bank Details"
+  "Add_Your_Bank_details": "Add Your Bank Details",
+  "Fees": "Fees",
+  "Tax": "Tax",
+  "WordPress_Store_Connect": "WordPress Store Connect",
+  "WordPress_Store_Domain": "WordPress Store Domain",
+  "WordPress_Store_Id": "WordPress Store Id",
+  "WordPress_Store_connected": "WordPress Store connected"
 }

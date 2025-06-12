@@ -8,16 +8,21 @@ import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 
 export interface IRechargeHistory {
-    _id: string;
-    accountId: string;
-    walletId: string;
-    amount: number;
-    type: string;
-    status: string;
-    razorpayOrderId: string;
-    createdAt: string;
-    updatedAt: string;
-    razorpayPaymentId: string;
+  _id: string;
+  accountId: string;
+  walletId: string;
+  amount: number;
+  type: string;
+  status: string;
+  orderId: string;
+  paymentSessionId: string;
+  error: string;
+  fees: number;
+  tax: number;
+  createdAt: string;
+  updatedAt: string;
+  paymentMethod: string;
+  paymentId: string;
 }
 interface IRechargeHistoryProps {
     currentPage: number;

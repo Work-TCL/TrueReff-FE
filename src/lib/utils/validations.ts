@@ -382,6 +382,14 @@ export const vendorRegisterThirdStepSchema = Yup.object().shape({
 
 export interface IVendorRegisterThirdStepSchema
   extends Yup.Asserts<typeof vendorRegisterThirdStepSchema> {}
+
+  export const vendorWordPressConnectSchema = Yup.object().shape({
+  wordpress_store_id: Yup.string().required("WordPress store id is required"),
+  wordpress_store_domain: Yup.string().required("WordPress store domain is required"),
+});
+
+export interface IVendorWordPressConnectSchema
+  extends Yup.Asserts<typeof vendorWordPressConnectSchema> {}
 export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
 
 export const creatorFormSchema = Yup.object().shape({

@@ -11,7 +11,8 @@ export function ProductInfo({ productData }: IProductInfoProps) {
   const translate = useTranslations();
   const [selectedVariant, setSelectedVariant] = useState(productData?.variants?.length > 0 ? productData?.variants[0] : {
     title: "",
-    price: ""
+    price: "",
+    image: ""
   });
   return (
     <div className="flex flex-1 flex-col gap-6 p-6 overflow-auto pr-2">
@@ -21,7 +22,9 @@ export function ProductInfo({ productData }: IProductInfoProps) {
         <h1 className="sm:text-3xl text-xl font-bold text-gray-800">
           {productData.name}
         </h1>
-        <p className="text-gray-500 text-xs">{productData?.description}</p>
+        <p dangerouslySetInnerHTML={{
+          __html: productData?.description
+        }} className="text-gray-500 text-xs"/>
       </div>
 
       <div>
@@ -56,12 +59,12 @@ export function ProductInfo({ productData }: IProductInfoProps) {
           <p className="sm:text-sm text-xs text-gray-500 mb-1">
             {translate("Description")}
           </p>
-          <p className="sm:text-base text-sm  text-gray-800 leading-relaxed">
-            {productData.description}
-          </p>
+          <p dangerouslySetInnerHTML={{
+          __html: productData?.description
+        }} className="sm:text-base text-sm  text-gray-800 leading-relaxed"/>
         </div>
       )}
-      <div className="border-t border-gray-200 pt-6">
+      {productData?.variants?.length > 0 && <div className="border-t border-gray-200 pt-6">
         <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">
           {translate("Variants")}
         </h3>
@@ -70,13 +73,13 @@ export function ProductInfo({ productData }: IProductInfoProps) {
             <span
               key={index}
               className={`${selectedVariant?.title === variant?.title ? "bg-gray-darken text-white" : "border bg-white text-black"} py-1 px-3 rounded-full flex items-center gap-2 cursor-pointer hover:bg-gray-darken/80 transition-colors`}
-              onClick={() => setSelectedVariant({ title: variant?.title, price: variant?.price })}
+              onClick={() => setSelectedVariant({ title: variant?.title, price: variant?.price,image: variant?.image  })}
             >
               {variant?.title}
             </span>
           ))}
         </div>
-      </div>
+      </div>}
       <div className="border-t border-gray-200 pt-6">
         <h3 className="sm:text-lg text-base font-semibold text-gray-800 mb-3">
           {translate("Creator_Commission")}
@@ -84,7 +87,7 @@ export function ProductInfo({ productData }: IProductInfoProps) {
         <div className="space-y-2 sm:text-sm text-xs text-gray-700">
           <div className="flex justify-between">
             <span>{translate("Commission")}</span>
-            <span>{productData?.commission}{productData?.commission_type === "FIXED_AMOUNT" ? "₹" : "%" }</span>
+            <span>{productData?.commission}{productData?.commission ? productData?.commission_type === "FIXED_AMOUNT" ? "₹" : "%": "NA" }</span>
           </div>
           <div className="flex justify-between">
             <span>{translate("free_promotional_product")}</span>
