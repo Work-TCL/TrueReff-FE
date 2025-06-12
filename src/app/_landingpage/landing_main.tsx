@@ -46,7 +46,7 @@ export default function LandingPage() {
       </video>
 
       {/* Navbar */}
-      <nav className="flex justify-between items-start p-[50px] text-white h-full ">
+      <nav className="flex justify-between items-start px-[50px] pb-[50px] pt-[20px] text-white h-full ">
         <div
           data-aos="fade-down"
           className="flex items-center gap-2 text-2xl font-bold fade"
@@ -71,7 +71,7 @@ export default function LandingPage() {
         <div
           className={`${
             isMenuOpen ? "block" : "hidden"
-          } absolute top-[100px] pb-[20px] right-0 px-[20px] bg-black bg-opacity-80 lg:static lg:w-auto lg:flex lg:items-center lg:gap-6 lg:bg-transparent`}
+          } absolute top-[100px] pb-[20px] pt-[40px] right-0 px-[20px] bg-black bg-opacity-80 lg:static lg:w-auto lg:flex lg:items-center lg:gap-6 lg:bg-transparent`}
         >
           <ul className="flex flex-col lg:flex-row gap-6 text-[20px] p-6 lg:p-0">
             {["creator", "brand", "about"].map((link) => (

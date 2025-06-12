@@ -11,9 +11,18 @@ import TwitterImage from '../../../public/assets/svg/TwitterImage'
 import FaceBookImage from '../../../public/assets/svg/FaceBookImage'
 import Image from 'next/image';
 
-export default function LandingPageFooter() {
+export default function LandingPageFooter({
+  className = "",
+  isLanginPage = true,
+}) {
     return (
-        <footer className="bg-[#333333] dark:bg-gray-900 xsmobile:pt-[100px] tablet:pt-[120px] sm:pt-[160px] lg:pt-[325px] mt-[-596px]">
+    <footer
+      className={`bg-[#333333] dark:bg-gray-900 ${className} ${
+        isLanginPage
+          ? "xsmobile:pt-[100px] tablet:pt-[120px] sm:pt-[160px] lg:pt-[325px] mt-[-596px]"
+          : ""
+      } px-5`}
+    >
             <div className="mx-auto w-full max-w-[1720px] ">
                 <div className="flex  mobile:flex-col tablet:pt-0  sm:flex-col md:flex-row md:gap-[100px] sm:pt-10 xl:gap-[278px]">
                     <div data-aos='fade-down-right' className='tablet:flex tablet:justify-center '>
@@ -46,13 +55,13 @@ export default function LandingPageFooter() {
                                         <a href="" className="hover:underline ">Careers</a>
                                     </li>
                                     <li className="mb-[30px]">
-                                        <a href="" className="hover:underline">Privacy Policy</a>
+                                        <a href="/privacy-policy" className="hover:underline">Privacy Policy</a>
                                     </li>
                                     <li className="mb-[30px]">
                                         <a href="" className="hover:underline">Cookie Policy</a>
                                     </li>
                                     <li className="mb-[30px]">
-                                        <a href="" className="hover:underline">Terms Of Service</a>
+                                        <a href="/terms-condition" className="hover:underline">Terms Of Service</a>
                                     </li>
                                 </ul>
                             </div>

@@ -22,7 +22,20 @@ const match = (matcher: string[], request: NextRequest) =>
   matcher.some((path) => request.nextUrl.pathname.startsWith(path));
 
 // Define public (non-authenticated) routes
-const PUBLIC_ROUTES = ["/","/aboutus", "/contact", "/help","/login","/register","/email-verify","/reset-password","/forgot-password","/send-otp"];
+const PUBLIC_ROUTES = [
+  "/",
+  "/aboutus",
+  "/contact",
+  "/help",
+  "/login",
+  "/register",
+  "/email-verify",
+  "/reset-password",
+  "/forgot-password",
+  "/send-otp",
+  "/terms-condition",
+  "/privacy-policy",
+];
 const USER_PUBLIC_ROUTES = ["/store",'/product-detail'];
 const routes = ["/dashboard","/wishlist"];
 

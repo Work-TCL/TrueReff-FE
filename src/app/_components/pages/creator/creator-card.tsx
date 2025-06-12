@@ -32,11 +32,11 @@ const CreatorCard = ({
         e.stopPropagation();
         router?.push(`/vendor/creator-profile/${creator?._id}`);
       }}
-      className={`bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 flex-1 border border-stroke ${
+      className={`bg-white rounded-xl overflow-hidden flex flex-col justify-between h-full p-4 xsmobile:p-2 flex-1 border border-stroke ${
         isBoxShadow ? "hover:shadow-lg" : ""
       } cursor-pointer`}
     >
-      <CardContent className="w-full p-0 flex flex-col items-center gap-3">
+      <CardContent className="w-full p-0 flex flex-col items-center gap-3 xsmobile:gap-2">
         <div
           className={`bg-background max-w-full flex items-center justify-center overflow-hidden h-[120px] w-[120px] rounded-full`}
         >
@@ -55,7 +55,7 @@ const CreatorCard = ({
         <div className={`flex flex-col w-full overflow-hidden text-center`}>
           <TruncateWithToolTip
             checkHorizontalOverflow={true}
-            className="text-xs sm:text-sm md:text-lg font-semibold w-full line-clamp-none truncate"
+            className="xsmobile:text-[9px] text-xs sm:text-sm md:text-lg font-semibold w-full line-clamp-none truncate"
             text={creator.full_name}
           />
           {/* <TruncateWithToolTip
@@ -68,7 +68,7 @@ const CreatorCard = ({
           {isCategoryShow && (
             <TruncateWithToolTip
               checkHorizontalOverflow={true}
-              className=" text-sm w-full line-clamp-none truncate text-gray-500"
+              className="xsmobile:text-[9px] text-sm w-full line-clamp-none truncate text-gray-500"
               text={`${creator.categories || "-"}`}
             />
           )}
@@ -90,37 +90,59 @@ const CreatorCard = ({
         {/* Stats */}
         <div className="flex justify-between items-center w-full text-center text-sm">
           {/* Total Sales */}
-          <div className="flex-1 border-r px-2 flex flex-col gap-1">
-            <div className="text-md flex items-center justify-center">
-              <IndianRupee size={15} /> {formatNumber(creator?.totalRevenue)}
+          <div className="flex-1 border-r px-2 xsmobile:px-1 flex flex-col gap-1 xsmobile:gap-0">
+            <div className="xsmobile:text-[9px] text-md flex items-center justify-center">
+              <IndianRupee size={15} className="xsmobile:w-2" />{" "}
+              {formatNumber(creator?.totalRevenue)}
             </div>
-            <div className="text-gray-500 text-xs">{translate("Revenue")}</div>
+            <div className="xsmobile:text-[9px] text-gray-500 text-xs">
+              {translate("Revenue")}
+            </div>
           </div>
 
           {/* Total Orders */}
-          <div className="flex-1 border-r px-2 flex flex-col gap-1">
-            <div className=" text-md">{formatNumber(creator?.totalOrders)}</div>
-            <div className="text-gray-500 text-xs">{translate("Orders")}</div>
+          <div className="flex-1 border-r px-2 xsmobile:px-1 flex flex-col gap-1 xsmobile:gap-0">
+            <div className="xsmobile:text-[9px] text-md">
+              {formatNumber(creator?.totalOrders)}
+            </div>
+            <div className="xsmobile:text-[9px] text-gray-500 text-xs">
+              {translate("Orders")}
+            </div>
           </div>
 
           {/* Rating */}
-          <div className="flex-1 px-2 flex flex-col gap-1">
-            <div className=" text-md flex items-center justify-center gap-1">
-              <Star size={16} className="text-yellow-500 fill-yellow-500" />
+          <div className="flex-1 px-2 xsmobile:px-1 flex flex-col gap-1">
+            <div className="xsmobile:text-[9px] text-md flex items-center justify-center gap-1 xsmobile:gap-0">
+              <Star
+                size={16}
+                className="text-yellow-500 fill-yellow-500 xsmobile:w-2"
+              />
               <span>{`${formatFloatValue(creator?.averageRating)}/5`}</span>
             </div>
-            <div className="text-gray-500 text-xs">{translate("Ratings")}</div>
+            <div className="xsmobile:text-[9px] text-gray-500 text-xs">
+              {translate("Ratings")}
+            </div>
           </div>
         </div>
 
         <div className="flex justify-between text-center w-full gap-1 text-sm">
-          <div className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2">
-            <img src="/assets/creator/insta-gram.svg" width={15} height={15} />{" "}
+          <div className="xsmobile:text-[9px] text-gray-500 bg-gray-100 w-full px-4 py-1 xsmobile:px-2 rounded-3xl justify-center flex items-center gap-2 xsmobile:h-fit">
+            <img
+              src="/assets/creator/insta-gram.svg"
+              width={15}
+              height={15}
+              className="xsmobile:w-3"
+            />{" "}
             {creator?.instagramFollowers}
           </div>
 
-          <div className="text-gray-500 bg-gray-100 w-full px-4 py-1 rounded-3xl justify-center flex items-center gap-2">
-            <img src="/assets/creator/you-tube.svg" width={18} height={18} />{" "}
+          <div className="xsmobile:text-[9px] text-gray-500 bg-gray-100 w-full px-4 py-1 xsmobile:px-2 rounded-3xl justify-center flex items-center gap-2 xsmobile:h-fit">
+            <img
+              src="/assets/creator/you-tube.svg"
+              width={18}
+              height={18}
+              className="xsmobile:w-3"
+            />{" "}
             {creator?.youtubeFollowers}
           </div>
         </div>

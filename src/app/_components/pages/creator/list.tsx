@@ -114,9 +114,7 @@ export default function CreatorList() {
     let instagram = channels.find(
       (ele: { channelType: string }) => ele.channelType === "instagram"
     );
-    return instagram
-      ? formatNumber(instagram?.followers)
-      : "0";
+    return instagram ? formatNumber(instagram?.followers) : "0";
   };
   const getYoutubeView: (channels: IChannel[]) => string = (
     channels: IChannel[]
@@ -124,9 +122,7 @@ export default function CreatorList() {
     let youtube = channels.find(
       (ele: { channelType: string }) => ele.channelType === "youtube"
     );
-    return youtube
-      ? formatNumber(youtube?.followers)
-      : "0";
+    return youtube ? formatNumber(youtube?.followers) : "0";
   };
   // Get Creator list
   const getCreatorList = useCallback(
@@ -139,8 +135,16 @@ export default function CreatorList() {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/auth/creator/list?page=${page}&limit=${pageSize}${searchValue ? `&search=${searchValue}` : ""
-          }${filterState?.category?.length > 0 ? `&category=${filterState?.category?.join(",")}` : ""}${filterState?.sub_category?.length > 0 ? `&subcategory=${filterState?.sub_category?.join(",")}` : ""
+          `/auth/creator/list?page=${page}&limit=${pageSize}${
+            searchValue ? `&search=${searchValue}` : ""
+          }${
+            filterState?.category?.length > 0
+              ? `&category=${filterState?.category?.join(",")}`
+              : ""
+          }${
+            filterState?.sub_category?.length > 0
+              ? `&subcategory=${filterState?.sub_category?.join(",")}`
+              : ""
           }`
         );
         if (response.status === 200) {
@@ -219,8 +223,12 @@ export default function CreatorList() {
               onChange={handleSearch}
               placeholder={translate("Search_creator")}
             />
-            <div className="flex items-center gap-[10px] md:w-fit w-full">
-              <CreatorFilter categories={categories} parentCategory={parentCategory} onChange={handleOnFilter} />
+            <div className="flex items-center xsmobile:justify-between gap-[10px] md:w-fit w-full">
+              <CreatorFilter
+                categories={categories}
+                parentCategory={parentCategory}
+                onChange={handleOnFilter}
+              />
               <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>

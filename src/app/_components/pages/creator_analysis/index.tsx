@@ -291,7 +291,7 @@ export default function CombineAnalytics({ mode }: IProps) {
         <Loading isTransparent={true} height="fit" />
       )}
       <AnyalyticsCombineUI
-        className={"md:overflow-auto"}
+        className={""}
         states={getStatesAsNeed(
           states,
           //@ts-ignore

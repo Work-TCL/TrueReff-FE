@@ -221,7 +221,9 @@ function AnyalyticsCombineUI({
           </div>
         </div>
       ) : (
-        <DataTable columns={columns} data={data} />
+        <div className="max-h-[500px] min-h-[500px]">
+          <DataTable columns={columns} data={data} />
+        </div>
       )}
       <TablePagination
         totalPages={totalPages}
