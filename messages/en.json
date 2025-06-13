@@ -687,5 +687,7 @@
   "WordPress_Store_Connect": "WordPress Store Connect",
   "WordPress_Store_Domain": "WordPress Store Domain",
   "WordPress_Store_Id": "WordPress Store Id",
-  "WordPress_Store_connected": "WordPress Store connected"
+  "WordPress_Store_connected": "WordPress Store connected",
+  "Install": "Install",
+  "Shopify_store_connect_info": "To connect your store, first install the app using your store's domain (e.g., yourstore.myshopify.com). After successful installation, you'll receive a unique Store ID — copy and paste it here to link your store."
 }

@@ -639,7 +639,7 @@ export default function PreFormPage() {
                 onSubmit={channelMethods.handleSubmit(handleOnChannelConnect)}
                 className="w-full flex flex-col justify-between gap-3 relative"
               >
-                <ChannelForm loading={loading} channels={channels}/>
+                <ChannelForm loading={loading} channels={channels} methods={channelMethods}/>
               </form>
             </FormProvider>
             <FormProvider {...wordPressMethods}>

@@ -1,7 +1,6 @@
 "use client";
 import ChannelForm from "@/app/_components/pages/pre-form/components/channel-form";
 import WordPressChannelForm from "@/app/_components/pages/pre-form/components/word-press-connect";
-import LoadingPage from "@/lib/components/loading-page";
 import { useVendorStore } from "@/lib/store/vendor";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { toastMessage } from "@/lib/utils/toast-message";
@@ -16,6 +15,7 @@ import toast from "react-hot-toast";
 export default function StoreConnect() {
   const { setVendorData } = useVendorStore();
   const [channels, setChannels] = useState<any[]>([]);
+  console.log("channels",channels)
   const [loading, setLoading] = useState<boolean>(false);
   const [wordPressLoading, setWordPressLoading] = useState<boolean>(false);
 
@@ -159,14 +159,13 @@ export default function StoreConnect() {
 
   return (
     <>
-      {loading && <LoadingPage />}
       <div className="flex flex-col p-4 gap-2 bg-white rounded-lg">
         <FormProvider {...channelMethods}>
           <form
             onSubmit={channelMethods.handleSubmit(handleOnChannelConnect)}
             className=" w-full h-full overflow-auto flex-1 flex flex-col justify-between gap-3 relative"
           >
-            <ChannelForm loading={loading} channels={channels} />
+            <ChannelForm loading={loading} channels={channels} methods={channelMethods}/>
           </form>
         </FormProvider>
         <FormProvider {...wordPressMethods}>
