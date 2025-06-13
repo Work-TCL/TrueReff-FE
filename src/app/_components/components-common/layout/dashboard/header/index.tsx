@@ -97,6 +97,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/creator/profile": translate("Creator_Profile"),
     "/creator/settings": translate("Profile"),
     "/creator/settings/store": translate("channels_connect"),
+    "/vendor/settings/store": translate("store_connects"),
     "/vendor/profile": translate("Brand_Profile"),
     "/vendor/creators/collaboration": translate("Collaboration"),
     "/creator/collaboration": translate("Collaboration"),

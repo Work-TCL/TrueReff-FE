@@ -270,12 +270,12 @@ export default function CollaborationList() {
     router.push(`?status=${selectedOptions}`);
   };
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-3 md:gap-4 h-full">
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center gap-2">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
             <SearchInput
               value={search}
               onChange={handleSearch}

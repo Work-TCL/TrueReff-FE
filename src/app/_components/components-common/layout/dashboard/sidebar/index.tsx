@@ -574,7 +574,10 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                     isActive={item.children.some(
                       (child) => pathname === child.link
                     )}
-                    handleToggle={() => toggleMenu(item.label, false)}
+                    handleToggle={() => {
+                      handleExpandSidebar();
+                      toggleMenu(item.label, false)}
+                    }
                     label={item.label}
                     Icon={item.icon}
                     hasSubmenu
@@ -587,7 +590,10 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                           <NavLink
                             key={idx}
                             link={child.link}
-                            handleToggle={() => toggleMenu(item.label, true)}
+                            handleToggle={() => {
+                              handleExpandSidebar();
+                              toggleMenu(item.label, true)
+                            }}
                             isActive={pathname === child.link}
                             label={child.label}
                             isChild
@@ -601,6 +607,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               ) : (
                 <NavLink
                   handleToggle={() => {
+                    handleExpandSidebar();
                     handleToggleMenu();
                   }}
                   link={item.link}

@@ -53,7 +53,7 @@ export default function RechargeHistory({loading,rechargeHistory,fetchRechargeHi
             </div>
 
             {/* ⚠️ Replace this with your table */}
-            <div className="flex flex-col space-y-2 overflow-y-auto h-[calc(100vh-160px)] md:h-[calc(100vh-320px)]">
+            <div className="flex flex-col space-y-2 overflow-y-auto min-h-[200px] h-[calc(100vh-160px)] md:h-[calc(100vh-320px)]">
                 {loading ? <Loading /> : rechargeHistory?.length > 0 ? <>
                     <RechargeHistoryTable data={rechargeHistory} />
                     <TablePagination activePage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />

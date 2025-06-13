@@ -174,7 +174,7 @@ export default function ChannelProductList() {
                 <AvatarImage src={product.main_image} />
               </Avatar>
             ) : (
-              <ImageOff className="w-6 h-6 text-gray-400" />
+              <Avatar className="w-8 h-8 flex justify-center items-center"><ImageOff className="w-6 h-6 text-gray-400" /></Avatar>
             )}
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
@@ -209,13 +209,16 @@ export default function ChannelProductList() {
     // },
     {
       accessorKey: "total_variants",
-      header: () => translate("Variants"),
+      header: () => <div className="text-center">{translate("Variants")}</div>,
+      cell: ({row}) => (
+        <div className="text-center">{row?.original?.total_variants}</div>
+      )
     },
     {
       accessorKey: "price",
-      header: () => <>Selling {translate("Price")}</>,
+      header: () => <div className="text-center">Selling {translate("Price")}</div>,
       cell: ({ row }) => (
-        <span className="flex items-center"><IndianRupee size={14}/> {formatNumber(Number(row.original.price ?? 0))}</span>
+        <span className="flex justify-center items-center"><IndianRupee size={14}/> {formatNumber(Number(row.original.price ?? 0))}</span>
       ),
     },
     {
@@ -255,7 +258,7 @@ export default function ChannelProductList() {
     },
   ];
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4 h-full">
           <ChannelBar
             channels={channels}
             activeChannelTabId={activeChannelTabId}

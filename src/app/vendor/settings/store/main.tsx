@@ -11,32 +11,33 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import LoadingPage from "@/lib/components/loading-page";
 
 export default function StoreConnect() {
   const { setVendorData } = useVendorStore();
   const [channels, setChannels] = useState<any[]>([]);
-  console.log("channels",channels)
   const [loading, setLoading] = useState<boolean>(false);
+  const [channelLoading,setChannelLoading] = useState<boolean>(true)
   const [wordPressLoading, setWordPressLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    getConnectedChannel();
+    getConnectedChannel(true);
   }, []);
-  const getConnectedChannel = async () => {
-    setLoading(true);
+  const getConnectedChannel = async (isLoading:boolean) => {
+    setChannelLoading(isLoading);
     try {
       const res: any[] = await getConnectedChannelsList();
       if (Array.isArray(res)) {
         setChannels(res);
-        setLoading(false)
+        setChannelLoading(false)
       } else {
         setChannels([]);
-        setLoading(false)
+        setChannelLoading(false)
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
-      setLoading(false);
+      setChannelLoading(false);
     }
   }
   const channelMethods = useForm<IVendorRegisterThirdStepSchema>({
@@ -67,7 +68,7 @@ export default function StoreConnect() {
       );
 
       if (response?.status === 200) {
-        await getConnectedChannel();
+        await getConnectedChannel(false);
         setVendorData("vendor", {
           vendorId: response?.data?._id,
           accountId: response?.data?.accountId,
@@ -118,7 +119,7 @@ export default function StoreConnect() {
       );
 
       if (response?.status === 200) {
-        await getConnectedChannel();
+        await getConnectedChannel(false);
         setVendorData("vendor", {
           vendorId: response?.data?._id,
           accountId: response?.data?.accountId,
@@ -159,6 +160,7 @@ export default function StoreConnect() {
 
   return (
     <>
+    {channelLoading ? <LoadingPage/> : 
       <div className="flex flex-col p-4 gap-2 bg-white rounded-lg">
         <FormProvider {...channelMethods}>
           <form
@@ -176,7 +178,8 @@ export default function StoreConnect() {
             <WordPressChannelForm loading={wordPressLoading} channels={channels} />
           </form>
         </FormProvider>
-      </div>
+      </div>}
+      
     </>
   );
 }

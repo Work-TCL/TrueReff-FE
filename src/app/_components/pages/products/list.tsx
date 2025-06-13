@@ -210,7 +210,7 @@ export default function ProductList() {
                 <AvatarImage src={product.media[0]} />
               </Avatar>
             ) : (
-              <ImageOff className="w-6 h-6 text-gray-400" />
+              <Avatar className="w-8 h-8 flex justify-center items-center"><ImageOff className="w-6 h-6 text-gray-400" /></Avatar>
             )}
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
@@ -405,7 +405,7 @@ export default function ProductList() {
     setSelectedStatus(selectedOptions);
   };
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4 h-full">
       {loading ? (
         <Loading />
       ) : (
