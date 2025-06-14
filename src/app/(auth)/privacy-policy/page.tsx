@@ -1,24 +1,25 @@
+"use client"
 import HeaderAuth from "@/app/_components/pages/auth/components/header-auth";
 import LandingPageFooter from "@/app/_landingpage/LandingPageFooter";
 import Launchpad from "@/app/_landingpage/Launchpad";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 function page() {
-  return (
-    <div className="bg-gray-50 text-gray-800">
-      {/* <!-- Header --> */}
-      <header className="bg-white shadow">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center gap-3">
-          <img
-            alt="TrueReff"
-            className="md:w-fit sm:max-w-[203px] w-fit max-w-[160px] mr-auto"
-            src="/assets/common/truereff-dark.svg"
-          />
-          <span className="sm:text-sm text-xs text-gray-500">
-            Effective Date: 28 May 2025
-          </span>
-        </div>
-      </header>
+    const router = useRouter()
+    return (
+      <div className="bg-gray-50 text-gray-800">
+        {/* <!-- Header --> */}
+        <header className="bg-white shadow">
+          <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center gap-3">
+            <img
+              alt="TrueReff"
+              className="md:w-fit sm:max-w-[203px] w-fit max-w-[160px] mr-auto"
+              src="/assets/common/truereff-dark.svg"
+              onClick={() => router?.push('/')}
+            />
+          </div>
+        </header>
       {/* <!-- Terms Content --> */}
       <main className="max-w-4xl mx-auto px-4 py-10 space-y-10">
         <section className="space-y-4">

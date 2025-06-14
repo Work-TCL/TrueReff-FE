@@ -34,6 +34,7 @@ const PUBLIC_ROUTES = [
   "/forgot-password",
   "/send-otp",
   "/terms-condition",
+  "/transaction-policy",
   "/privacy-policy",
 ];
 const USER_PUBLIC_ROUTES = ["/store",'/product-detail'];

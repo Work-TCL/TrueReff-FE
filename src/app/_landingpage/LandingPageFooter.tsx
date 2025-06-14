@@ -25,9 +25,9 @@ export default function LandingPageFooter({
     >
             <div className="mx-auto w-full max-w-[1720px] ">
                 <div className="flex  mobile:flex-col tablet:pt-0  sm:flex-col md:flex-row md:gap-[100px] sm:pt-10 xl:gap-[278px]">
-                    <div data-aos='fade-down-right' className='tablet:flex tablet:justify-center '>
-                        <Image src="/assets/landing/logo_TrueReff.svg"  height={50} width={352} alt="TrueReff Logo" />
-                    </div>
+                    <a href='/' data-aos='fade-down-right' className='tablet:flex tablet:justify-center '>
+                        <Image src="/assets/common/truereff-white.svg"  height={50} width={352} alt="TrueReff Logo" />
+                    </a>
 
                     <div data-aos='fade-left' className="tablet:w-full  flex justify-between xsmobile:flex-col xsmobile:pl-[20px] tablet:flex-col md:flex-col lg:flex-row flex-row xsmobile:w-full w-[878px]">
                         <div className='flex flex-col w-[448px] xsmobile:pt-10 tablet:flex-col tablet:w-full tablet:justify-center tablet:items-center tablet:pt-6'>
@@ -41,13 +41,16 @@ export default function LandingPageFooter({
                                         <a href="" className="hover:underline">For Brands</a>
                                     </li>
                                     <li className="mb-[30px]">
-                                        <a href="" className="hover:underline">About Us</a>
+                                        <a href="/aboutus" className="hover:underline">About Us</a>
                                     </li>
                                     <li className="mb-[30px]">
                                         <a href="" className="hover:underline">Blogs</a>
                                     </li>
                                     <li className="mb-[30px]">
                                         <a href="" className="hover:underline">Case Studies</a>
+                                    </li>  
+                                    <li className="mb-[30px]">
+                                        <a href="/contact" className="hover:underline">Contact Us</a>
                                     </li>
                                 </ul>
                                 <ul className="text-white text-[20px] leading-[16px] font-medium">
@@ -63,6 +66,9 @@ export default function LandingPageFooter({
                                     <li className="mb-[30px]">
                                         <a href="/terms-condition" className="hover:underline">Terms Of Service</a>
                                     </li>
+                                    <li className="mb-[30px]">
+                                        <a href="/transaction-policy" className="hover:underline">Transaction Cancelled</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -72,13 +78,13 @@ export default function LandingPageFooter({
                             <ul className="text-white text-[20px] leading-[28px] font-medium">
                                 <li className="mb-[30px]">
                                     <a href="#" className="hover:underline flex">
-                                        <span className="pt-1 pr-3"><LocationImage /></span> Street name, City name State, 000 0000</a>
+                                        <span className="pt-1 pr-3"><LocationImage /></span> Shop no 2 ozon shopping centre kamrej bardoli road surat Gujarat PIN code : 394180</a>
                                 </li>
                                 <li className="mb-[30px]">
-                                    <a href="#" className="hover:underline  flex"><span className="pt-1 pr-3"><ShareImage /></span> hello@truereff.com</a>
+                                    <a href="#" className="hover:underline  flex"><span className="pt-1 pr-3"><ShareImage /></span> Support@truereff.com</a>
                                 </li>
                                 <li className="mb-[30px]">
-                                    <a href="#" className="hover:underline flex"><span className="pt-1 pr-3"><PhoneImage /></span> 0-000-000-0000</a>
+                                    <a href="#" className="hover:underline flex"><span className="pt-1 pr-3"><PhoneImage /></span> +91 79908 17357</a>
                                 </li>
                             </ul>
                         </div>
