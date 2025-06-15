@@ -5,15 +5,22 @@ import { useTranslations } from "next-intl";
 
 interface IProductInfoProps {
   productData: IProduct;
+  channelType: string | null;
 }
 
-export function ProductInfo({ productData }: IProductInfoProps) {
+export function ProductInfo({ productData,channelType }: IProductInfoProps) {
   const translate = useTranslations();
   const [selectedVariant, setSelectedVariant] = useState(productData?.variants?.length > 0 ? productData?.variants[0] : {
     title: "",
     price: "",
     image: ""
   });
+  const getVariantTypes = (attributes:any[]) => {
+    let attr = attributes?.length > 0 ? attributes?.map((ele:any) => {
+      return ele?.name?.includes("pa_") ? ele?.name?.split("_")[1] : ele?.name;
+    }) :[];
+    return attr.join("/");
+  }
   return (
     <div className="flex flex-1 flex-col gap-6 p-6 overflow-auto pr-2">
 
@@ -66,7 +73,7 @@ export function ProductInfo({ productData }: IProductInfoProps) {
       )}
       {productData?.variants?.length > 0 && <div className="border-t border-gray-200 pt-6">
         <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">
-          {translate("Variants")}
+          {translate("Variants")}{channelType === "wordpress" ? <span className="text-xs">{` (${getVariantTypes(productData?.attributes??[])})`}</span> : ""}
         </h3>
         <div className="flex gap-3 sm:text-sm text-xs text-gray-700">
           {productData?.variants?.length > 0 && productData?.variants?.map((variant: any, index) => (

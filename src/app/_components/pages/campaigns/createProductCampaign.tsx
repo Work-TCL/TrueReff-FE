@@ -99,6 +99,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const router = useRouter();
   const productId: any = params?.productId !== "add" ? params?.productId : null;
   const shopifyId: any = searchParams?.get("productId");
+  const channelType: any = searchParams?.get("channelType");
   const isDisabled: any = props?.isDetailView;
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [campaignData, setCampaignData] = useState<any | null>(null);
@@ -123,11 +124,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
   const [showDiscountSection, setShowDiscountSection] = useState(false);
   const [showCreatorMeterial, setShowCreatorMeterial] = useState(false);
-
-  const [formState, setFormState] = useState({
-    discount_value: "",
-    commission: "",
-  });
 
   const fetchCategory = async () => {
     try {
@@ -258,7 +254,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
         formData.append("name", data.name);
         formData.append("description", data.description);
-        formData.append("channelName", "shopify");
+        formData.append("channelName", channelType);
         // formData.append("videoType", );
         if (data?.notes) formData.append("notes", data?.notes);
         if (data.discount_type)
@@ -375,22 +371,44 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product?productId=${shopifyId}`
+        `channel/${channelType}/product?productId=${shopifyId}`
       );
 
       const product: any = response?.data?.data;
 
-      const images = product?.images
-        ?.filter((v: any) => v?.src)
-        ?.map((v: any) => v?.src);
+      
 
       // productId({ ...product, media: images });
-      handleProductSelect({
-        ...product,
-        title: product?.name,
-        description: product?.description_html,
-        media: [...images],
-      });
+      if(channelType === "shopify"){
+        const images = product?.images
+        ?.filter((v: any) => v?.src)
+        ?.map((v: any) => v?.src);
+        handleProductSelect({
+          ...product,
+          title: product?.name,
+          description: product?.description_html,
+          media: [...images],
+        });
+      } else if(channelType === "wordpress"){
+        handleProductSelect({
+          ...product,
+          title: product?.name,
+          description: product?.description,
+          media: product?.images,
+          variants: product?.variations?.length > 0 ? product?.variations?.map((ele: any) => {
+            const attrs = ele.attributes ?? {};
+            // Grab all keys that have a value
+            const values = Object.keys(attrs)
+              .filter(key => attrs[key] != null)
+              .map(key => attrs[key]);
+            return {
+              ...ele,
+              title: `${values.join('/')}`
+            };
+          }) : [],
+        });
+      }
+      
       setLoading(false);
     } catch (error: any) {
       toast.error(error?.message || "Product Fetch Failed.");
@@ -587,7 +605,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 price={
                   selectedProduct?.variants?.length
                     ? selectedProduct?.variants[0]?.price
-                    : undefined
+                    : selectedProduct?.price
                 }
                 variants={selectedProduct?.variants}
                 totalInventory={
@@ -930,6 +948,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                             !Boolean(methods.watch("freeProduct"))
                           )
                         }
+                        onChange={()=>{}}
                       />
                       {/* <input
                         type="checkbox"

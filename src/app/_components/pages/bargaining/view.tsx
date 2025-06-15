@@ -18,12 +18,10 @@ import axios from "@/lib/web-api/axios";
 import Bid from "./bid";
 import { formatDate, formatFloatValue } from "@/lib/utils/constants";
 import CollaborationConfirmed from "../../components-common/dialogs/accept-offer";
-import { Copy, ExternalLink, ExternalLinkIcon, Star } from "lucide-react";
+import { Copy, ExternalLinkIcon, IndianRupee } from "lucide-react";
 import { toastMessage } from "@/lib/utils/toast-message";
 import Link from "next/link";
 import Rating from "../../components-common/dialogs/rating";
-import { useCreatorStore } from "@/lib/store/creator";
-import { useVendorStore } from "@/lib/store/vendor";
 export interface NegotiationStatus {
   agreedByVendor: boolean;
   agreedByCreator: boolean;
@@ -240,7 +238,7 @@ export default function BargainingView() {
     if (bid?.type === "PERCENTAGE") {
       return `Percentage - ${bid?.proposal} %`;
     } else if (bid?.type === "FIXED_AMOUNT") {
-      return `Fixed - ₹ ${bid?.proposal}`;
+      return <span className="flex items-center">Fixed - <IndianRupee size={14}/> {bid?.proposal}</span>;
     }
     return "-";
   };
@@ -357,19 +355,19 @@ export default function BargainingView() {
                           .join(", ")
                         : "-",
                     ],
-                    [translate("Base_Price"), `${collaborationData?.productId?.price} ₹` || "-"],
+                    [translate("Base_Price"), <span className="flex items-center"><IndianRupee size={14}/>{collaborationData?.productId?.price}</span>],
                     [
                       collaborationData?.productId?.commission_type === "PERCENTAGE"
                         ? translate("Discount")
                         : translate("Discount_Price"),
-                      `${collaborationData?.productId?.commission} ${collaborationData?.productId?.commission_type === "PERCENTAGE"
+                      <span className="flex items-center">{collaborationData?.productId?.commission} {collaborationData?.productId?.commission_type === "PERCENTAGE"
                         ? "%"
-                        : "₹"
-                      }` || "-",
+                        : <IndianRupee size={14}/>
+                      }</span>,
                     ],
                   ].map(([label, value], idx) => (
                     <div
-                      key={label + idx}
+                      key={idx}
                       className="flex flex-row items-start gap-3"
                     >
                       <div className="w-1/2 md:w-1/4 text-sm text-gray-500 text-nowrap">
@@ -432,9 +430,9 @@ export default function BargainingView() {
                       translate("Affiliate_Link"),
                       collaborationData?.crmLink ?? "-",
                     ],
-                  ].map(([label, value], idx) => (
+                  ].map(([label, value]:any[], idx) => (
                     <div
-                      key={label + idx}
+                      key={idx}
                       className="flex flex-col md:flex-row items-start gap-0 md:gap-2"
                     >
                       <div className="w-[150px] text-sm text-gray-500 text-nowrap">

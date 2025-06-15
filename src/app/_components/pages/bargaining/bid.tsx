@@ -7,7 +7,7 @@ import { cn, getErrorMessage } from '@/lib/utils/commonUtils';
 import { toastMessage } from '@/lib/utils/toast-message';
 import axios from '@/lib/web-api/axios';
 import { get, set } from 'lodash';
-import { ChevronDown, Minus, Plus } from 'lucide-react';
+import { ChevronDown, IndianRupee, Minus, Plus } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import Button from '../../ui/button';
@@ -172,7 +172,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
     }
     function getLastBid() {
         const bid = collaborationData?.bids[collaborationData?.bids?.length - 1];
-        return `${bid?.proposal} ${bid?.type === "FIXED_AMOUNT" ? "₹" : "%"}`;
+        return <span className="flex items-center text-black font-semibold">{bid?.proposal} {bid?.type === "FIXED_AMOUNT" ? <IndianRupee size={14}/> : "%"}</span>;
     }
     return (
         <div className="flex flex-col p-4 gap-3">
@@ -185,8 +185,8 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
                 {!isYourOffer && (
                     <div className={`flex flex-col justify-center items-center bg-primary-color text-white gap-3 px-4 py-2 rounded-md transition-all duration-300 ${isYourOffer ? "w-0 opacity-0" : "w-1/2 opacity-100"}`}>
                         <span className="text-sm">{account?.role !== "vendor" ? translate("Brands_Offer") : translate("Creators_Offer")}</span>
-                        <span className="text-lg">
-                            {receiveOffer} {offerBid === bidAmount.percentage ? "%" : "₹"}
+                        <span className="text-lg flex items-center">
+                            {receiveOffer} {offerBid === bidAmount.percentage ? "%" : <IndianRupee size={14}/>}
                         </span>
                     </div>
                 )}
@@ -196,7 +196,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
                 >
                     <span className="text-sm">{translate("Your_Offer")}</span>
 
-                    {isYourOffer ? <span className="text-lg">{yourOffer} {bid === bidAmount.percentage ? "%" : "₹"}</span> :
+                    {isYourOffer ? <span className="flex items-center text-lg">{yourOffer} {bid === bidAmount.percentage ? "%" : <IndianRupee size={14}/>}</span> :
                         <div className='flex justify-center items-center gap-2'><input
                             type="number"
                             value={yourOffer ?? ""}
@@ -206,10 +206,10 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
                             autoFocus
                         />
                             <span
-                                className="text-lg cursor-pointer"
+                                className="flex items-center text-lg cursor-pointer"
                                 onClick={() => setIsEditing(true)}
                             >
-                                {bid === bidAmount.percentage ? "%" : "₹"}
+                                {bid === bidAmount.percentage ? "%" : <IndianRupee size={14}/>}
                             </span></div>}
 
 
@@ -254,7 +254,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
                     {translate("Make_Offer")}
                 </Button>
             </div>
-            {collaborationData?.bids?.length > 0 && <div className="flex justify-center text-sm text-gray-400 font-semibold mt-3">{translate("Last Bid")}: {" "}<span className="text-black font-semibold">{getLastBid()}</span></div>}
+            {collaborationData?.bids?.length > 0 && <div className="flex justify-center text-sm text-gray-400 font-semibold mt-3">{translate("Last Bid")}: {" "}{getLastBid()}</div>}
             {collaborationData?.bids?.length > 0 && <div className='flex justify-center text-primary-color cursor-pointer float-end' onClick={() => setViewAllBids(true)}>{translate("View_History")} <ChevronDown /></div>}
             {viewAllBids && <ViewAllBids bids={collaborationData?.bids} onClose={() => setViewAllBids(false)} />}
             {discountType && <Confirmation title={translate("Are_you_sure_you_want_to_change_commission_type")} onClose={() => setDiscountType("")} handleConfirm={handleConfirm} />}

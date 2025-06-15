@@ -132,7 +132,7 @@ export default function ChannelProductList() {
         { productId: productId }
       );
       if (response?.status === 200) {
-        router?.push(`/vendor/campaign/product/add?productId=${productId}`);
+        router?.push(`/vendor/campaign/product/add?productId=${productId}?channelType=${activeChannelTabId}`);
       }
       // setPlusLoading(false);
     } catch (error: any) {
@@ -240,14 +240,14 @@ export default function ChannelProductList() {
           </ToolTip> */}
 
               <div
-                onClick={() => activeChannelTabId !== "wordpress" && handleOnCheckExists(product.id)}
-                className={activeChannelTabId !== "wordpress" ? "cursor-pointer":"cursor-no-drop"}
+                onClick={() => handleOnCheckExists(product.id)}
+                className={"cursor-pointer"}
               >
                 <ToolTip content="Add Product to CRM" delayDuration={1000}>
                   <CircleFadingPlus
                     strokeWidth={1.5}
                     color="#3b82f680"
-                    className={activeChannelTabId !== "wordpress" ? "cursor-pointer":"cursor-no-drop"}
+                    className={"cursor-pointer"}
                   />
                 </ToolTip>
               </div>

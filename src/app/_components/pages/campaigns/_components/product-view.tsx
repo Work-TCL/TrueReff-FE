@@ -1,6 +1,6 @@
 "use client";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
-import { ImageOff } from "lucide-react";
+import { ImageOff, IndianRupee } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
@@ -67,7 +67,7 @@ function CampaignProductView({
             </h1>
             <div className="mt-4 sm:items-center sm:gap-4 sm:flex">
               <p className="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">
-                {price ? `₹${price}` : "-"}
+                {price ? <span className="flex items-center"><IndianRupee/>{price}</span> : "-"}
               </p>
 
               <div className="flex items-center gap-2 mt-2 sm:mt-0">
@@ -109,7 +109,7 @@ function CampaignProductView({
                 {variant?.title}:
               </div>
               <div className="font-medium text-sm ">
-                {variant?.price ?  `₹${variant?.price}`  : "-"}
+                {variant?.price ?  <span className="flex items-center"><IndianRupee size={10}/>{variant?.price}</span>  : "-"}
               </div>
             </div>
             ))}

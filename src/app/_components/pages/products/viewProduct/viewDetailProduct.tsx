@@ -46,6 +46,7 @@ export interface IProduct {
   discount?: string; 
   discountType?: string;
   freeProduct?: string;
+  attributes?: any[];
 }
 export interface IRequest {
   _id: string;
@@ -201,10 +202,18 @@ export default function ViewProductDetail({
           barcode: "",
           quantity: product?.quantity || 0,
           totalInventory: product?.totalInventory || 0,
-          variants: [],
-          // product?.variations?.map((ele:any) => {
-          //   return {...ele,title: ele?.attributes?.pa_size || ele?.attributes?.pa_color}
-          // }),
+          variants: product?.variations?.length > 0 ? product?.variations?.map((ele: any) => {
+            const attrs = ele.attributes ?? {};
+            // Grab all keys that have a value
+            const values = Object.keys(attrs)
+              .filter(key => attrs[key] != null)
+              .map(key => attrs[key]);
+            return {
+              ...ele,
+              title: `${values.join('/')}`
+            };
+          }) : [],
+          attributes: product?.attributes,
           commission: product?.commission??"",
           commission_type: product?.commission_type??"",
           discount: product?.discount??"",
@@ -255,10 +264,10 @@ export default function ViewProductDetail({
             ?.join(", "),
           vendorId: product?.vendorId,
           commission: product?.commission,
-  commission_type: product?.commission_type,
-  discount: product?.discount,
-  discountType: product?.discountType,
-  freeProduct: product?.freeProduct
+          commission_type: product?.commission_type,
+          discount: product?.discount,
+          discountType: product?.discountType,
+          freeProduct: product?.freeProduct
         };
 
         setProductData(updatedProduct);
@@ -413,7 +422,7 @@ export default function ViewProductDetail({
               <div className="flex flex-col md:grid grid-cols-1 md:grid-cols-3 gap-4">
                 <ProductImageGallery images={productData?.images} />
                 <div className="col-span-2">
-                  <ProductInfo productData={productData} />
+                  <ProductInfo productData={productData} channelType={channelType}/>
                 </div>
               </div>
             </CardContent>
