@@ -1,16 +1,16 @@
 "use client";
 
-import { MoveRight } from 'lucide-react';
-import React from 'react'
-import Instagram from '../../../public/assets/svg/Instagram';
-import SignUpImage from '../../../public/assets/svg/SignUP';
-import EarningHeans from '../../../public/assets/svg/EarningHeans';
-import ButtonLogin from '../_components/components-common/Button-Login';
+import { MoveRight } from "lucide-react";
+import React from "react";
+import Instagram from "../../../public/assets/svg/Instagram";
+import SignUpImage from "../../../public/assets/svg/SignUP";
+import EarningHeans from "../../../public/assets/svg/EarningHeans";
+import ButtonLogin from "../_components/components-common/Button-Login";
 
 export default function SocialMediaSections() {
-    return (
-        <section className="  pt-[100px] bg-gradient-to-r #f6f1fd #fef8e5 #faf7fd  flex flex-col gap-[100px]">
-            <div className='flex flex-col justify-center'>
+  return (
+    <section className="  pt-[100px] bg-gradient-to-r #f6f1fd #fef8e5 #faf7fd  flex flex-col gap-[100px]">
+      {/* <div className='flex flex-col justify-center'>
                 <div data-aos="zoom-in-left" className="flex justify-center text-center">
                     <p className="font-medium text-[70px] text-gray-900 leading-[90px] tablet:text-[40px] tablet:leading-[60px] xsmobile:text-[40px] xsmobile:leading-[60px]">
                         Discover and explore endless <br /> possibilities with
@@ -56,39 +56,65 @@ export default function SocialMediaSections() {
                     </div>
                 </div>
 
+            </div> */}
+
+      <div className="flex flex-col justify-center items-center">
+        <p
+          data-aos="zoom-out-up"
+          className=" text-[70px] tablet:text-[40px] tablet:leading-[60px] xsmobile:text-[40px] xsmobile:leading-[60px] text-center font-medium text-gray-900 leading-[90px] pb-[50px] pt-[40px["
+        >
+          Join <span className="text-primary font-bold">Truereff</span> and
+          start earning
+        </p>
+
+        <div className="flex xsmobile:flex-col xsmobile:justify-center xsmobile:items-center  md:gap-[20px]">
+          <div
+            data-aos="zoom-in-right"
+            className="rounded-tl-xl rounded-tr-xl   h-auto max-w-[300px] xsmobile:w-[250px]  xsmobile:h-[400px]  flex flex-col text-center items-center justify-end  p-[40px] bg-[#38a2f5]"
+          >
+            <p className="font-black text-[60px] tablet:text-[40px]  leading-[46px] text-white opacity-25">
+              1
+            </p>
+            <p className="sm:text-lg mobile:text-base md:text-xl lg:text-2xl font-medium text-white pt-[30px]">
+              Sign up on Truereff
+            </p>
+            <div className="flex sm:pb-0 md:pb-12 align-center justify-center">
+              <SignUpImage />
             </div>
-
-            <div className='flex flex-col justify-center items-center'>
-                <p data-aos='zoom-out-up' className=" text-[70px] tablet:text-[40px] tablet:leading-[60px] xsmobile:text-[40px] xsmobile:leading-[60px] text-center font-medium text-gray-900 leading-[90px] pb-[50px] pt-[40px[">
-                    Join <span className="text-primary font-bold">Truereff</span> and start earning
-                </p>
-
-                <div className='flex xsmobile:flex-col xsmobile:justify-center xsmobile:items-center  md:gap-[20px]'>
-                    <div data-aos='zoom-in-right' className='rounded-tl-xl rounded-tr-xl   h-auto max-w-[300px] xsmobile:w-[250px]  xsmobile:h-[400px]  flex flex-col text-center items-center justify-end  p-[40px] bg-[#38a2f5]'>
-                        <p className='font-black text-[60px] tablet:text-[40px]  leading-[46px] text-white opacity-25'>1</p>
-                        <p className='sm:text-lg mobile:text-base md:text-xl lg:text-2xl font-medium text-white pt-[30px]'>Sign up on Truereff</p>
-                        <div className='flex sm:pb-0 md:pb-12 align-center justify-center'>
-                            <SignUpImage />
-                        </div>
-                    </div>
-                    <div data-aos="flip-left" className='rounded-tl-xl rounded-tr-xl h-auto max-w-[600px]  xsmobile:w-[300px]  tablet:min-h-auto xsmobile:h-[536px]  bg-primary flex flex-col items-center text-center'>
-                        <p className='font-black text-white tablet:text-[40px]  text-[60px] pt-[40px] leading-[46px]'>2</p>
-                        <p className='ont-medium text-white pt-[30px] text-[30px] leading-[46px] tablet:text-[25px] tablet:leading-[35px]'>Link your social media</p>
-                        <p className='text-white pt-[15px] pb-[32px] text-[16px] leading-[24px]'>Connect either your Instagram <br /> or YouTube account</p>
-                        <div className='w-full flex justify-center mt-[-21px] h-auto'>
-                            <img src="/assets/landing/iPhone.png" alt="iphone" />
-                        </div>
-                    </div>
-                    <div data-aos='zoom-in-left' className='rounded-tl-xl rounded-tr-xl h-auto max-w-[300px] xsmobile:w-[250px]  xsmobile:h-[400px]  flex flex-col  text-center items-center justify-end  p-[40px] bg-[#38a2f5]'>
-                        <p className='font-black text-[60px] tablet:text-[40px]  leading-[46px] text-white opacity-25'>3</p>
-                        <p className=' sm:text-lg mobile:text-base md:text-xl lg:text-2xl font-medium text-white mobile:pb-4 pt-4 pb-8'>Kickstart your earninas</p>
-                        <div className='flex sm:pb-0  md:pb-12 align-center justify-center'>
-                            <EarningHeans />
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div
+            data-aos="flip-left"
+            className="rounded-tl-xl rounded-tr-xl h-auto max-w-[600px]  xsmobile:w-[300px]  tablet:min-h-auto xsmobile:h-[536px]  bg-primary flex flex-col items-center text-center"
+          >
+            <p className="font-black text-white tablet:text-[40px]  text-[60px] pt-[40px] leading-[46px]">
+              2
+            </p>
+            <p className="ont-medium text-white pt-[30px] text-[30px] leading-[46px] tablet:text-[25px] tablet:leading-[35px]">
+              Link your social media
+            </p>
+            <p className="text-white pt-[15px] pb-[32px] text-[16px] leading-[24px]">
+              Connect either your Instagram <br /> or YouTube account
+            </p>
+            <div className="w-full flex justify-center mt-[-21px] h-auto">
+              <img src="/assets/landing/iPhone.png" alt="iphone" />
             </div>
-
-        </section>
-    );
+          </div>
+          <div
+            data-aos="zoom-in-left"
+            className="rounded-tl-xl rounded-tr-xl h-auto max-w-[300px] xsmobile:w-[250px]  xsmobile:h-[400px]  flex flex-col  text-center items-center justify-end  p-[40px] bg-[#38a2f5]"
+          >
+            <p className="font-black text-[60px] tablet:text-[40px]  leading-[46px] text-white opacity-25">
+              3
+            </p>
+            <p className=" sm:text-lg mobile:text-base md:text-xl lg:text-2xl font-medium text-white mobile:pb-4 pt-4 pb-8">
+              Kickstart your earninas
+            </p>
+            <div className="flex sm:pb-0  md:pb-12 align-center justify-center">
+              <EarningHeans />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

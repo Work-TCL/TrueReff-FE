@@ -33,9 +33,32 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ">
       {/* Background Video */}
-      <video
+      <div className="absolute -left-[100px] -right-[100px] -top-[100px] -bottom-[78px] overflow-hidden">
+        <div
+          className="w-full h-full scale-150 animate-bannerFloat"
+          style={{
+            backgroundImage: "url('/assets/common/banner-bg.svg')",
+            backgroundSize: "cover",
+            backgroundRepeat: "repeat", // or no-repeat, depending on look
+            backgroundPosition: "center",
+          }}
+        ></div>
+      </div>
+
+      {/* <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+        <div
+          className="w-full h-full animate-bannerMove scale-150"
+          style={{
+            backgroundImage: "url('/assets/common/banner-bg.svg')",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          }}
+        ></div>
+      </div> */}
+      {/* <video
         autoPlay
         loop
         muted
@@ -43,7 +66,13 @@ export default function LandingPage() {
         className="absolute top-0 left-0 w-full h-full object-cover -z-10"
       >
         <source src="/assets/landing/landingVideo.mp4" type="video/mp4" />
-      </video>
+      </video> */}
+      {/* <Image
+        height={1080}
+        width={1920}
+        src="/assets/common/truereff-white.svg"
+        alt="Truerreff Logo"
+      /> */}
 
       {/* Navbar */}
       <nav className="flex justify-between items-start px-[50px] pb-[50px] pt-[20px] text-white h-full ">
@@ -100,7 +129,7 @@ export default function LandingPage() {
 
       {/* Marquee Section */}
       <div
-        className="w-full py-[33px] text-white overflow-hidden"
+        className="w-full py-[20px] text-white overflow-hidden relative z-auto"
         style={{
           background:
             "linear-gradient(to right, #9f5de9, #38a2f5, #ff4979, #fbbf12)",
