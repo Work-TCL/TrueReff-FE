@@ -9,11 +9,11 @@ export default function Launchpad() {
   const router = useRouter();
   return (
     <>
-      <div className="bg-[url('/assets/landing/launchpad.png')] bg-cover bg-center bg-no-repeat tablet:pb-[220px] xsmobile:px-[20px] xsmobile:pb-[200px]  xsmobile:pt-[140px] tablet:px-[20px] tablet:pt-[140px] sm:pb-[250px] sm:pt-[140px] lg:pb-[301px] lg:pt-[240px] w-full sm:px-[20px] xl:px-0">
+      <div className="w-[100vw] overflow-hidden bg-[url('/assets/landing/launchpad.png')] bg-cover bg-center bg-no-repeat tablet:pb-[220px] xsmobile:px-[20px] xsmobile:pb-[200px]  xsmobile:pt-[140px] tablet:px-[20px] tablet:pt-[140px] sm:pb-[250px] sm:pt-[140px] lg:pb-[301px] lg:pt-[240px] w-full sm:px-[20px] xl:px-0">
         <div className="max-w-[1920px] mx-auto flex mobile:flex-col sm:flex-col lg:flex-row xsmobile:gap-[50px] tablet:gap-[50px] sm:gap-[50px] lg:gap-[100px] justify-center items-center">
           <div
             data-aos="fade-down"
-            className=" text-[60px] font-medium text-gray-900 max-w-[565px] leading-[70px]"
+            className="md:text-[60px] text-4xl font-medium text-gray-900 max-w-[565px] md:leading-[70px]"
           >
             Turn your recommendations into
             <span className="text-primary font-bold"> revenue.</span>

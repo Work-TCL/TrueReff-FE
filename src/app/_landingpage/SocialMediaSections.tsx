@@ -9,7 +9,7 @@ import ButtonLogin from "../_components/components-common/Button-Login";
 
 export default function SocialMediaSections() {
   return (
-    <section className="  pt-[100px] bg-gradient-to-r #f6f1fd #fef8e5 #faf7fd  flex flex-col gap-[100px]">
+    <section className="w-[100vw] overflow-hidden pt-20 md:pt-[100px] bg-gradient-to-r #f6f1fd #fef8e5 #faf7fd  flex flex-col gap-[100px]">
       {/* <div className='flex flex-col justify-center'>
                 <div data-aos="zoom-in-left" className="flex justify-center text-center">
                     <p className="font-medium text-[70px] text-gray-900 leading-[90px] tablet:text-[40px] tablet:leading-[60px] xsmobile:text-[40px] xsmobile:leading-[60px]">
@@ -61,7 +61,7 @@ export default function SocialMediaSections() {
       <div className="flex flex-col justify-center items-center">
         <p
           data-aos="zoom-out-up"
-          className=" text-[70px] tablet:text-[40px] tablet:leading-[60px] xsmobile:text-[40px] xsmobile:leading-[60px] text-center font-medium text-gray-900 leading-[90px] pb-[50px] pt-[40px["
+          className=" xl:text-[70px] font-medium xl:leading-[90px] md:text-5xl md:leading-[1.3] text-3xl text-center font-medium text-gray-900 pb-[50px] pt-[40px["
         >
           Join <span className="text-primary font-bold">Truereff</span> and
           start earning

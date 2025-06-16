@@ -31,8 +31,8 @@ export default function ContentCategories() {
   ];
   return (
     <>
-      <div className="bg-[#f3ad1e] py-[85px] ">
-        <div className="grid md:grid-cols-1  sm:place-items-center lg:place-item-start xl:grid-cols-2  gap-[85px] items-center max-w-[1322px] mx-auto">
+      <div className="bg-[#f3ad1e] py-20 md:py-[85px] w-[100vw] overflow-hidden  w-[100vw]">
+        <div className="grid md:grid-cols-1  sm:place-items-center lg:place-item-start xl:grid-cols-2 gap-10 md:gap-[85px] items-center max-w-[1322px] mx-auto">
           <div
             data-aos="zoom-in-right"
             className="flex flex-col justify-center items-center gap-[10px]"
@@ -41,7 +41,7 @@ export default function ContentCategories() {
               {categories.slice(0, 3).map((category, index) => (
                 <div
                   key={index}
-                  className="xsmobile:h-[90px] xsmobile:w-[90px] tablet:h-[100px] tablet:w-[100px] h-[150px] w-[150px] xl:h-[120px] xl:w-[120px] 2xl:h-[150px] 2xl:w-[150px] flex items-center justify-center bg-[#FBBF12] rounded-[10px]"
+                  className="xsmobile:h-[70px] xsmobile:p-4 xsmobile:w-[70px] tablet:h-[100px] tablet:w-[100px] h-[150px] w-[150px] xl:h-[120px] xl:w-[120px] 2xl:h-[150px] 2xl:w-[150px] flex items-center justify-center bg-[#FBBF12] rounded-[10px]"
                 >
                   {category.cateGoriesIcon}
                 </div>
@@ -52,7 +52,7 @@ export default function ContentCategories() {
               {categories.slice(3, 7).map((category, index) => (
                 <div
                   key={index + 3}
-                  className="xsmobile:h-[90px] xsmobile:w-[90px] tablet:h-[100px] tablet:w-[100px] h-[120px] w-[120px] xl:h-[120px] xl:w-[120px] 2xl:h-[150px] 2xl:w-[150px] flex items-center justify-center bg-[#FBBF12] rounded-[10px]"
+                  className="xsmobile:h-[70px] xsmobile:p-4 xsmobile:w-[70px] tablet:h-[100px] tablet:w-[100px] h-[120px] w-[120px] xl:h-[120px] xl:w-[120px] 2xl:h-[150px] 2xl:w-[150px] flex items-center justify-center bg-[#FBBF12] rounded-[10px]"
                 >
                   {category.cateGoriesIcon}
                 </div>
@@ -63,7 +63,7 @@ export default function ContentCategories() {
               {categories.slice(7, 10).map((category, index) => (
                 <div
                   key={index + 7}
-                  className="xsmobile:h-[90px] xsmobile:w-[90px] tablet:h-[100px] tablet:w-[100px] h-[120px] w-[120px] xl:h-[120px] xl:w-[120px] 2xl:h-[150px] 2xl:w-[150px] flex items-center justify-center bg-[#FBBF12] rounded-[10px]"
+                  className="xsmobile:h-[70px] xsmobile:p-4 xsmobile:w-[70px] tablet:h-[100px] tablet:w-[100px] h-[120px] w-[120px] xl:h-[120px] xl:w-[120px] 2xl:h-[150px] 2xl:w-[150px] flex items-center justify-center bg-[#FBBF12] rounded-[10px]"
                 >
                   {category.cateGoriesIcon}
                 </div>
@@ -71,8 +71,8 @@ export default function ContentCategories() {
             </div>
           </div>
 
-          <div data-aos="zoom-in-left" className="mobile:px-12">
-            <h2 className="text-[46px] tablet:text-[40px] tablet:leading-[59px] xsmobile:text-[30px] xsmobile:leading-[59px] font-medium text-[#333333] max-w-[594px] mb-[40px] leading-[59px]">
+          <div data-aos="zoom-in-left" className="mobile:px-6 xsmobile:px-4">
+            <h2 className="text-[46px] tablet:text-[40px] tablet:leading-[59px] xsmobile:text-[30px] xsmobile:leading-[1.5] font-medium text-[#333333] max-w-[594px] mb-[20px] md:mb-[40px] leading-[59px]">
               Whatever You Create, We Have a Brand for <b>You.</b>
             </h2>
             <p className="text-xl font-medium text-[#333333] max-w-[632px] mb-10 ">

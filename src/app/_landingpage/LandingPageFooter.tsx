@@ -17,7 +17,7 @@ export default function LandingPageFooter({
 }) {
   return (
     <footer
-      className={`bg-[#333333] dark:bg-gray-900 ${className} ${
+      className={`w-full overflow-hidden bg-[#333333] dark:bg-gray-900 ${className} ${
         isLanginPage
           ? "xsmobile:pt-[100px] tablet:pt-[120px] sm:pt-[160px] lg:pt-[325px] mt-[-596px]"
           : ""

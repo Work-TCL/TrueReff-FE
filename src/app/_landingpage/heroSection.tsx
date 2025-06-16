@@ -11,9 +11,9 @@ export default function HeroSection() {
   const router = useRouter();
 
   return (
-    <div className="w-full items-center bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff]">
+    <div className="w-[100vw] overflow-hidden items-center bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff]">
       {/* Section One */}
-      <section className="max-w-7xl xsmobile:items-center mx-auto  py-[150px] flex flex-col-reverse lg:flex-row items-start tablet:items-center sm:items-center justify-between gap-[48px]">
+      <section className="max-w-7xl xsmobile:items-center mx-auto py-20  md:py-[150px] flex flex-col-reverse lg:flex-row items-start tablet:items-center sm:items-center justify-between gap-[48px]">
         <div className=" text-center lg:text-left">
           <h1
             data-aos="fade-left"
@@ -46,10 +46,10 @@ export default function HeroSection() {
         </div>
         <div className="lg:w-1/2 flex justify-center items-center gap-4">
           {/* Placeholder image group - customize with actual images */}
-          <div className="flex  gap-4">
+          <div className="flex  sm:gap-4 gap-2">
             <div
               data-aos="flip-up"
-              className="relative xsmobile:w-[130px] w-[164px] h-[400px] rounded-[400px] shadow-xl"
+              className="relative xsmobile:w-[95px] w-[164px] h-[400px] rounded-[400px] shadow-xl"
             >
               <Image
                 src={"/assets/landing/girl-holding-cell.png"}
@@ -63,7 +63,7 @@ export default function HeroSection() {
             </div>
             <div
               data-aos="flip-down"
-              className="relative xsmobile:w-[130px] w-[164px] h-[400px] rounded-[400px] shadow-xl mt-[100px]"
+              className="relative xsmobile:w-[95px] w-[164px] h-[400px] rounded-[400px] shadow-xl mt-[100px]"
             >
               <Image
                 src={
@@ -79,7 +79,7 @@ export default function HeroSection() {
             </div>
             <div
               data-aos="flip-up"
-              className="relative  xsmobile:w-[130px] w-[130px] h-[400px] rounded-[400px] shadow-xl"
+              className="relative  xsmobile:w-[95px] w-[130px] h-[400px] rounded-[400px] shadow-xl"
             >
               <Image
                 src={
@@ -103,12 +103,12 @@ export default function HeroSection() {
           data-aos="fade-down"
           className="flex flex-col text-center xsmobile:gap-[10px] gap-[40px] items-center justify-center"
         >
-          <p className="text-[70px] xsmobile:text-[40px]  xsmobile:leading-[60px]  font-medium text-gray-900 leading-[90px] capitalize">
+          <p className="xl:text-[70px] font-medium xl:leading-[90px] md:text-5xl md:leading-[1.3] text-3xl text-center font-medium text-gray-900 capitalize">
             Powering
             <span className="text-primary font-bold	"> Creators</span>, trusted
             by Brands
           </p>
-          <p className="text-gray-700 text-[20px] ">
+          <p className="text-gray-700 sm:text-[20px] ">
             Turn every post into profit💰, connect with brands that value your
             influence.
           </p>

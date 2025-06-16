@@ -8,7 +8,7 @@ export default function EarningsSection() {
   const features = [
     {
       text: "Create Your Creator Store",
-      icon: "/assets/landing/earningStep-1.png",
+      icon: "/assets/landing/earningStep-6.png",
     },
     {
       text: "Collaborate with Brands on Commission Basis",
@@ -28,21 +28,21 @@ export default function EarningsSection() {
     },
     {
       text: "Get Paid for Every Sale",
-      icon: "/assets/landing/earningStep-6.png",
+      icon: "/assets/landing/earningStep-1.png",
     },
   ];
 
   return (
-    <section className="flex flex-col gap-[70px] w-full bg-primary text-white py-[100px] ">
+    <section className="flex flex-col gap-[70px] w-full bg-primary text-white py-20 md:py-[100px] w-[100vw] overflow-hidden">
       <div data-aos="zoom-in-up" className="flex items-center justify-center ">
-        <p className="text-[70px] font-medium leading-[90px] xsmobile:text-[40px] xsmobile:leading-[60px]  text-center">
+        <p className="xl:text-[70px] font-medium xl:leading-[90px] md:text-5xl md:leading-[1.3] text-3xl text-center">
           Turn your influence <br />
           into steady
           <span className="font-bold"> income</span>
         </p>
       </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12  ">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 px-4">
         {/* Left Illustration */}
         <div
           data-aos="zoom-in-down"
@@ -75,7 +75,7 @@ export default function EarningsSection() {
               <li key={index} className="flex items-center gap-4 relative">
                 <div
                   className={cn(
-                    "rounded-full p-2 w-[70px] h-[70px] xsmobile:w-[40px] xsmobile:h-[40px]  flex items-center justify-center ",
+                    "rounded-full p-2 w-[70px] min-w-[70px] h-[70px] xsmobile:w-[40px] xsmobile:min-w-[40px] xsmobile:h-[40px]  flex items-center justify-center ",
                     index === 1 ? "bg-primary border border-white" : "bg-white "
                   )}
                 >

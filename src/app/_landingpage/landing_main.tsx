@@ -33,19 +33,66 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ">
-      {/* Background Video */}
-      <div className="absolute -left-[100px] -right-[100px] -top-[100px] -bottom-[78px] overflow-hidden">
+    <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] landing-wrapper">
+      <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] landing-wrapper">
+        {/* Navbar */}
+      <nav className="relative flex justify-between items-center md:px-[50px] px-5 pb-[50px] pt-[20px] text-white z-[9] ">
         <div
-          className="w-full h-full scale-150 animate-bannerFloat"
-          style={{
-            backgroundImage: "url('/assets/common/banner-bg.svg')",
-            backgroundSize: "cover",
-            backgroundRepeat: "repeat", // or no-repeat, depending on look
-            backgroundPosition: "center",
-          }}
-        ></div>
+          data-aos="fade-down"
+          className="flex items-center gap-2 text-2xl font-bold fade lg:max-w-[352px] max-w-[160px]"
+        >
+          <Image
+            height={50}
+            width={352}
+            src="/assets/common/truereff-white.svg"
+            alt="Truerreff Logo"
+          />
+        </div>
+
+        <div className="lg:hidden flex mt-1">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="focus:outline-none"
+          >
+            {isMenuOpen ? <X size={30} /> : <Menu size={30} />}
+          </button>
+        </div>
+
+        <div
+          className={`${isMenuOpen ? "block" : "hidden"
+            } absolute top-[100px] pb-[20px] pt-[40px] right-0 px-[20px] bg-black bg-opacity-80 lg:static lg:w-auto lg:flex lg:items-center lg:gap-6 lg:bg-transparent`}
+        >
+          <ul className="flex flex-col lg:flex-row gap-6 text-[20px] p-6 lg:p-0">
+            {["creator", "brand", "about"].map((link) => (
+              <li
+                key={link}
+                data-aos="fade-right"
+                className="relative cursor-pointer"
+                onClick={() => handleLinkClick(link)}
+              >
+                <span className="relative">
+                  {link.charAt(0).toUpperCase() + link.slice(1)}
+                </span>
+                {activeLink === link && (
+                  <div className="w-full h-1 bg-primary rounded-sm" />
+                )}
+              </li>
+            ))}
+          </ul>
+
+          <ButtonLogin
+            label="Get Started"
+            onClick={() => router.push("/login")}
+          />
+        </div>
+      </nav>
+        <div className="absolute -left-[0px] -right-[0px] -top-[0px] -bottom-[0px] overflow-hidden">
+          <div
+            className="w-full h-full scale-150 animate-bannerFloat bg-banner-bg bg-cover bg-repeat bg-center"
+          ></div>
+        </div>
       </div>
+      {/* Background Video */}
 
       {/* <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
         <div
@@ -74,58 +121,7 @@ export default function LandingPage() {
         alt="Truerreff Logo"
       /> */}
 
-      {/* Navbar */}
-      <nav className="flex justify-between items-start px-[50px] pb-[50px] pt-[20px] text-white h-full ">
-        <div
-          data-aos="fade-down"
-          className="flex items-center gap-2 text-2xl font-bold fade"
-        >
-          <Image
-            height={50}
-            width={352}
-            src="/assets/common/truereff-white.svg"
-            alt="Truerreff Logo"
-          />
-        </div>
-
-        <div className="lg:hidden">
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="focus:outline-none"
-          >
-            {isMenuOpen ? <X size={30} /> : <Menu size={30} />}
-          </button>
-        </div>
-
-        <div
-          className={`${
-            isMenuOpen ? "block" : "hidden"
-          } absolute top-[100px] pb-[20px] pt-[40px] right-0 px-[20px] bg-black bg-opacity-80 lg:static lg:w-auto lg:flex lg:items-center lg:gap-6 lg:bg-transparent`}
-        >
-          <ul className="flex flex-col lg:flex-row gap-6 text-[20px] p-6 lg:p-0">
-            {["creator", "brand", "about"].map((link) => (
-              <li
-                key={link}
-                data-aos="fade-right"
-                className="relative cursor-pointer"
-                onClick={() => handleLinkClick(link)}
-              >
-                <span className="relative">
-                  {link.charAt(0).toUpperCase() + link.slice(1)}
-                </span>
-                {activeLink === link && (
-                  <div className="w-full h-1 bg-primary rounded-sm" />
-                )}
-              </li>
-            ))}
-          </ul>
-
-          <ButtonLogin
-            label="Get Started"
-            onClick={() => router.push("/login")}
-          />
-        </div>
-      </nav>
+      
 
       {/* Marquee Section */}
       <div
