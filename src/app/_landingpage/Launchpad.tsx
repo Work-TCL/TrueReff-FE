@@ -43,7 +43,7 @@ export default function Launchpad() {
           </p>
           <img
             src="/assets/landing/iphoneTwo.png"
-            className="absolute tablet:top-[-60px]  md:top-[-80px] lg:top-[-140px] xsmobile:top-[-28px] xsmobile:right-[80px]  tablet:right-[140px] md:right-[200px] xsmobile:w-[100px] tablet:w-[180px] sm:w-[160px] md:w-[280px]  lg:h-[620px] lg:w-[460px] xl:w-[550px]"
+            className="absolute tablet:top-[-60px]  md:top-[-80px] lg:top-[-140px] xsmobile:top-[-28px] xsmobile:right-[80px]  tablet:right-[140px] md:right-[200px] xsmobile:w-[100px] tablet:w-[180px] sm:w-[160px] md:w-[280px]  lg:h-[620px] lg:w-[460px] xl:w-[550px] object-contain"
           />
           <ButtonLogin
             label="Get Started"
