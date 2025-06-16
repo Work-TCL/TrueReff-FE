@@ -42,7 +42,7 @@ export default function LandingPageFooter({
             data-aos="fade-left"
             className="tablet:max-w-full w-full flex justify-between xsmobile:flex-col xsmobile:pl-[20px] tablet:flex-col md:flex-col lg:flex-row flex-row xsmobile:w-full max-w-[1100px] gap-[40px] ml-auto"
           >
-            <div className="flex flex-col w-[448px] xsmobile:pt-10 tablet:flex-col tablet:w-full tablet:justify-center tablet:items-center tablet:pt-6">
+            <div className="flex flex-col md:w-[448px] xsmobile:pt-10 tablet:flex-col tablet:w-full tablet:justify-center tablet:items-center tablet:pt-6">
               <h2 className="mb-[30px] text-[24px] leading-[16px] font-light text-gray-500 ">
                 Quick Links
               </h2>
@@ -109,7 +109,7 @@ export default function LandingPageFooter({
               </div>
             </div>
 
-            <div className="xsmobile:flex-col xsmobile:max-w-full w-full tablet:max-w-full tablet:flex tablet:flex-col tablet:justify-center tablet:items-center tablet:pt-6 md:max-w-full lg:max-w-[343px]">
+            <div className="xsmobile:flex-col xsmobile:max-w-full w-full tablet:max-w-full tablet:flex tablet:flex-col tablet:justify-center tablet:items-center tablet:pt-6 md:max-w-full lg:max-w-[343px] max-w-[398px] tablet:mx-auto">
               <h2 className="mb-[30px] text-[24px] leading-[16px] font-light text-gray-500">
                 Support
               </h2>
@@ -144,7 +144,7 @@ export default function LandingPageFooter({
           </div>
         </div>
 
-        <div className="sm:flex sm:items-center sm:justify-between pb-20 pt-24 xsmobile:pl-[20px] px-[30px] ">
+        <div className="sm:flex sm:items-center sm:justify-between sm:pb-20 pb-10 pt-10 md:pt-24 xsmobile:pl-[20px] px-[30px] ">
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             Copyright © 2024
             <a href="" className="hover:underline">

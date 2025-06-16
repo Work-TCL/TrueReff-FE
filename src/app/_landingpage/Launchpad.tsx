@@ -13,14 +13,14 @@ export default function Launchpad() {
         <div className="max-w-[1920px] mx-auto flex mobile:flex-col sm:flex-col lg:flex-row xsmobile:gap-[50px] tablet:gap-[50px] sm:gap-[50px] lg:gap-[100px] justify-center items-center">
           <div
             data-aos="fade-down"
-            className="md:text-[60px] text-4xl font-medium text-gray-900 max-w-[565px] md:leading-[70px]"
+            className="md:text-[60px] sm:text-4xl text-3xl font-medium text-gray-900 max-w-[565px] md:leading-[70px]"
           >
             Turn your recommendations into
             <span className="text-primary font-bold"> revenue.</span>
           </div>
           <div
             data-aos="fade-left"
-            className="max-w-[575px] text-[20px] text-right leading-[28px]"
+            className="max-w-[575px] sm:text-[20px] text-right leading-[28px]"
           >
             <p>
               Help your followers discover the best products and earn every time

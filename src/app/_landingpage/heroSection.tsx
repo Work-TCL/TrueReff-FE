@@ -6,6 +6,7 @@ import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import ButtonLogin from "../_components/components-common/Button-Login";
 import { useRouter } from "next/navigation";
+import { SwitchingText } from "./TruereffHeroSlider";
 
 export default function HeroSection() {
   const router = useRouter();
@@ -17,14 +18,11 @@ export default function HeroSection() {
         <div className=" text-center lg:text-left">
           <h1
             data-aos="fade-left"
-            className="text-[70px] leading-[90px] xsmobile:text-[40px] xsmobile:leading-[60px]  font-bold text-[#333333]"
+            className="capitalize text-[70px] leading-[90px] xsmobile:text-[40px] xsmobile:leading-[60px]  font-bold text-[#333333]"
           >
-            <span className="text-primary">Your content</span>
-            <br />
-            <span className="font-medium xsmobile:text-[40px] xsmobile:leading-[60px]	leading-[90px] text-[70px]">
-              Your Audience
-              <br />
-              Your earnings
+            Your
+            <span className="text-primary capitalize ml-2">
+              <SwitchingText texts={["content", "audience", "earnings"]} />
             </span>
           </h1>
           <div className=" xsmobile:flex xsmobile:items-center xsmobile:flex-col tablet:flex tablet:items-center tablet:flex-col md:flex md:flex-col md:items-center lg:flex lg:items-start	">
