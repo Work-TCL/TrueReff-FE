@@ -24,8 +24,9 @@ import Select from "react-select";
 import { get } from "lodash";
 import { useTranslations } from "next-intl";
 import { getCategories } from "@/lib/web-api/auth";
-import { Camera,User } from "lucide-react";
+import { Camera, Landmark, User } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { toastMessage } from "@/lib/utils/toast-message";
 
 export interface ICategoryData {
   _id: string;
@@ -53,12 +54,12 @@ const customStyles = {
 };
 export default function BankDetailsForm({
   submitting,
-  setSubmitting = () => {},
-  handleRefresh = () => {},
+  setSubmitting = () => { },
+  handleRefresh = () => { },
   onClose,
 }: {
   submitting: boolean;
-  setSubmitting: (value:boolean) => void;
+  setSubmitting: (value: boolean) => void;
   handleRefresh: () => void;
   onClose: any;
 }) {
@@ -68,7 +69,9 @@ export default function BankDetailsForm({
     defaultValues: {
       account_number: "",
       confirm_account_number: "",
-      IFSC_code: ""
+      IFSC_code: "",
+      phone_number: "",
+      account_holder_name: ""
     },
     resolver: yupResolver(schema),
     mode: "onSubmit",
@@ -78,27 +81,27 @@ export default function BankDetailsForm({
     try {
       ("use server");
       const payload: any = {
-        account_number: data?.account_number,
-        IFSC_code: data?.IFSC_code
+        accountNumber: data?.account_number,
+        ifsc: data?.IFSC_code,
+        accountHolderName: data?.account_holder_name,
+        phoneNumber: data?.phone_number,
+        type: "BANK",
       };
-      let response: any = await axios.patch("/auth/vendor", payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      if (response?.data) {
-        response = response?.data;
-      }
-      if (response?.status === 200) {
-        
-        toast.success(response?.message);
-        methods?.reset();
-        onClose && onClose(true);
-        return true;
-      }
+      let response: any = await axios.post("/payment/wallet/bank-account", payload);
+      console.log("response", response)
+      // if (response?.data) {
+      //   response = response?.data;
+      // }
+      // if (response?.status === 200) {
+
+      //   toast.success(response?.message);
+      //   methods?.reset();
+      //   onClose && onClose(true);
+      //   return true;
+      // }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
-      toast.error(errorMessage);
+      toastMessage.error(errorMessage);
     } finally {
       setSubmitting(false);
     }
@@ -109,9 +112,18 @@ export default function BankDetailsForm({
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="grid grid-cols-2 text-left gap-3 w-full relative"
+          className="grid grid-cols-2 text-left gap-2 w-full relative"
         >
           <div className="md:col-span-2 col-span-1 mt-2">
+            <Input
+              label={translate("Account_Holder_Name")}
+              name="account_holder_name"
+              type="text"
+              placeholder={translate("Enter_Account_Holder_Number")}
+              lableClassName="text-md font-[400]"
+            />
+          </div>
+          <div className="md:col-span-1 col-span-2 mt-2">
             <Input
               label={translate("Account_Number")}
               name="account_number"
@@ -121,7 +133,7 @@ export default function BankDetailsForm({
               lableClassName="text-md font-[400]"
             />
           </div>
-          <div className="md:col-span-2 col-span-1 mt-2">
+          <div className="md:col-span-1 col-span-2 mt-2">
             <Input
               label={translate("Confirm_Account_Number")}
               name="confirm_account_number"
@@ -130,7 +142,7 @@ export default function BankDetailsForm({
               lableClassName="text-md font-[400]"
             />
           </div>
-          <div className="md:col-span-2 col-span-1 mt-2">
+          <div className="md:col-span-1 col-span-2 mt-2">
             <Input
               label={translate("IFSC_Code")}
               name="IFSC_code"
@@ -139,10 +151,24 @@ export default function BankDetailsForm({
               lableClassName="text-md font-[400]"
             />
           </div>
-          <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
-            <Button type="submit" loading={submitting}>
-              {translate("Save")}
-            </Button>
+          <div className="md:col-span-1 col-span-2 mt-2">
+            <Input
+              label={translate("Phone_Number")}
+              name="phone_number"
+              type="number"
+              placeholder={translate("Enter_your_phone_number")}
+              lableClassName="text-md font-[400]"
+            />
+          </div>
+          <div className="pt-6 col-span-2 flex justify-end sticky bottom-0 bg-white">
+            <div className="flex justify-end gap-2 w-1/2">
+              <Button type="button" size="small" className="bg-white border text-secondary" onClick={onClose}>
+                {translate("Cancel")}
+              </Button>
+              <Button type="submit" size="small" className="" loading={submitting}>
+                {translate("Save")}
+              </Button>
+            </div>
           </div>
         </form>
       </FormProvider>

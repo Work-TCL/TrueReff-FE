@@ -689,5 +689,8 @@
   "WordPress_Store_Id": "WordPress Store Id",
   "WordPress_Store_connected": "WordPress Store connected",
   "Install": "Install",
-  "Shopify_store_connect_info": "To connect your store, first install the app using your store's domain (e.g., yourstore.myshopify.com). After successful installation, you'll receive a unique Store ID — copy and paste it here to link your store."
+  "Shopify_store_connect_info": "To connect your store, first install the app using your store's domain (e.g., yourstore.myshopify.com). After successful installation, you'll receive a unique Store ID — copy and paste it here to link your store.",
+  "Account_Holder_Name": "Account Holder Name",
+  "Enter_your_phone_number": "Enter your phone number",
+  "Enter_Account_Holder_Number": "Enter Account Holder Name"
 }

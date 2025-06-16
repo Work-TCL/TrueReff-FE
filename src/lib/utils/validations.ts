@@ -986,6 +986,11 @@ export interface ICreateStoreSchema
   
     IFSC_code: Yup.string()
       .required('Please enter your IFSC code'),
+    phone_number: Yup.string()
+      .required("Phone number is required")
+      .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+    account_holder_name: Yup.string()
+      .required("Account holder name is required.")
   });
 
 export interface IBankDetailSchema extends Yup.Asserts<typeof banDetailsSchema> { }
