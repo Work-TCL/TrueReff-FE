@@ -132,7 +132,7 @@ export default function ChannelProductList() {
         { productId: productId }
       );
       if (response?.status === 200) {
-        router?.push(`/vendor/campaign/product/add?productId=${productId}?channelType=${activeChannelTabId}`);
+        router?.push(`/vendor/campaign/product/add?productId=${productId}&channelType=${activeChannelTabId}`);
       }
       // setPlusLoading(false);
     } catch (error: any) {
