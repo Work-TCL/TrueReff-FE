@@ -88,17 +88,11 @@ export default function BankDetailsForm({
         type: "BANK",
       };
       let response: any = await axios.post("/payment/wallet/bank-account", payload);
-      console.log("response", response)
-      // if (response?.data) {
-      //   response = response?.data;
-      // }
-      // if (response?.status === 200) {
-
-      //   toast.success(response?.message);
-      //   methods?.reset();
-      //   onClose && onClose(true);
-      //   return true;
-      // }
+      if (response?.status === 200) {
+        toast.success(response?.message);
+        methods?.reset();
+        onClose && onClose(true);
+      }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toastMessage.error(errorMessage);
@@ -114,13 +108,14 @@ export default function BankDetailsForm({
           onSubmit={methods.handleSubmit(onSubmit)}
           className="grid grid-cols-2 text-left gap-2 w-full relative"
         >
-          <div className="md:col-span-2 col-span-1 mt-2">
+          <div className="col-span-2 mt-2">
             <Input
               label={translate("Account_Holder_Name")}
               name="account_holder_name"
               type="text"
               placeholder={translate("Enter_Account_Holder_Number")}
               lableClassName="text-md font-[400]"
+              autoFocus={true}
             />
           </div>
           <div className="md:col-span-1 col-span-2 mt-2">
@@ -160,12 +155,12 @@ export default function BankDetailsForm({
               lableClassName="text-md font-[400]"
             />
           </div>
-          <div className="pt-6 col-span-2 flex justify-end sticky bottom-0 bg-white">
+          <div className="pt-6 pb-2 col-span-2 flex justify-end sticky bottom-0 bg-white">
             <div className="flex justify-end gap-2 w-1/2">
-              <Button type="button" size="small" className="bg-white border text-secondary" onClick={onClose}>
+              <Button type="button" size="small" className="bg-white border text-secondary" disabled={submitting} onClick={onClose}>
                 {translate("Cancel")}
               </Button>
-              <Button type="submit" size="small" className="" loading={submitting}>
+              <Button type="submit" size="small" className="" disabled={submitting} loading={submitting}>
                 {translate("Save")}
               </Button>
             </div>
