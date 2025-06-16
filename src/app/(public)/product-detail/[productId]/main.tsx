@@ -366,7 +366,7 @@ export default function ViewProductDetail({
                       <div
                         key={index}
                         onClick={() => setSelectedImage(index)}
-                        className={`cursor-pointer border hover:border-gray-400 rounded-md p-1 ${
+                        className={`cursor-pointer border hover:border-gray-400 rounded-md p-1 w-[100px] h-[100px] overflow-hidden ${
                           selectedImage === index
                             ? "border-black"
                             : "border-transparent"
@@ -378,7 +378,7 @@ export default function ViewProductDetail({
                           alt={`Thumbnail ${index + 1}`}
                           width={60}
                           height={60}
-                          className="rounded"
+                          className="rounded w-[100px] h-[100px] object-contain"
                         />
                       </div>
                     ))}
@@ -396,7 +396,7 @@ export default function ViewProductDetail({
                     alt="Main Preview"
                     width={400}
                     height={400}
-                    className="rounded-xl"
+                    className="rounded-xl md:max-h-[500px] max-h-[400px] object-contain"
                   />
                 </div>
               </div>

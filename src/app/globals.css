@@ -249,3 +249,7 @@ body {
   display: inline-flex;
 }
 
+.landing-wrapper section{
+  width: 100vw;
+  overflow: hidden;
+}

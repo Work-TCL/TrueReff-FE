@@ -8,11 +8,23 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        bannerFloat: {
+          "0%": { transform: "translate(0px, 0px)" },
+          "25%": { transform: "translate(100px, 100px)" },
+          "50%": { transform: "translate(0px, 100px)" },
+          "75%": { transform: "translate(-100px, 0px)" },
+          "100%": { transform: "translate(0px, 0px)" },
+        },
+      },
+      animation: {
+        bannerFloat: "bannerMove 2s linear infinite",
+      },
       screens: {
-        'xs': '320px',   
-        'xsmobile':{'max':'500px'},      
-        'mobile': {'max': '640px'}, 
-         'tablet': { 'min': '501px', 'max': '767px' },
+        xs: "320px",
+        xsmobile: { max: "500px" },
+        mobile: { max: "640px" },
+        tablet: { min: "501px", max: "767px" },
       },
       colors: {
         foreground: "hsl(var(--foreground))",
@@ -88,6 +100,7 @@ export default {
         20: "20px",
       },
       backgroundImage: {
+        'banner-bg': "url('/assets/common/banner-bg.svg')",
         "pink-blue-gradient": "linear-gradient(1deg, #e9b9cf 0%, #d3f3f1 100%)",
         "custom-gradient": `
           linear-gradient(0deg, #ffffff00, #ffffff00),

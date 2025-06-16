@@ -255,7 +255,7 @@ export default function Overview() {
                   revenueData?.past?.length > 0 ? (
                   <SalesChart data={revenueData} />
                 ) : (
-                  <div className="h-[350px]">
+                  <div className="min-h-[350px]">
                     <EmptyPlaceHolder
                       title={"No Revenue Found"}
                       description="Revenue Performance will be displayed here once activity data is available. Encourage users to participate to see leaderboard ranking."
