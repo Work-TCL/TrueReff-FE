@@ -99,7 +99,7 @@ function AnyalyticsCombineUI({
   }, [product, filter]);
 
   return (
-    <div className={`flex flex-col w-full gap-5 flex-1 ${className}`}>
+    <div className={`flex flex-col w-full gap-4 flex-1 ${className}`}>
       {/* states of all creators | one creator | product */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-4 col-span-3">
         {states.map(getStateAnalytics)}
@@ -221,7 +221,7 @@ function AnyalyticsCombineUI({
           </div>
         </div>
       ) : (
-        <div className="max-h-[500px] min-h-[500px]">
+        <div className="min-h-[500px]">
           <DataTable columns={columns} data={data} />
         </div>
       )}

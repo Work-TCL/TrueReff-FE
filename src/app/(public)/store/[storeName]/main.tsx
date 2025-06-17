@@ -382,7 +382,7 @@ export default function PublicCreatorStore({
           />
         </div>
       ) : isEdit ? (
-        <div className="bg-pink-blue-gradient min-h-screen w-full overflow-y-auto">
+        <div className="bg-pink-blue-gradient min-h-screen w-full overflow-y-auto px-3 pb-3">
           <FormProvider {...storeMethods}>
             <form
               onSubmit={storeMethods.handleSubmit(onStoreSetUpSubmit)}
@@ -401,8 +401,8 @@ export default function PublicCreatorStore({
                 <Button
                   type="button"
                   className={cn(
-                    "w-fit bg-white border text-black font-medium px-8",
-                    "block"
+                    "w-fit bg-white border text-black font-medium md:px-8 px-4",
+                    "block sm:text-base text-sm"
                   )}
                   size="small"
                   // loading={saveLoader}
@@ -415,7 +415,10 @@ export default function PublicCreatorStore({
                 </Button>
                 <Button
                   type="submit"
-                  className={cn("w-fit font-medium px-8", "block")}
+                  className={cn(
+                    "w-fit font-medium md:px-8 px-4",
+                    "block sm:text-base text-sm"
+                  )}
                   size="small"
                   loading={saveLoader}
                   disabled={saveLoader}

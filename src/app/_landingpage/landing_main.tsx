@@ -91,7 +91,7 @@ export default function LandingPage() {
         <div className="absolute -left-[0px] -right-[0px] -top-[0px] -bottom-[0px] overflow-hidden z-[6] ">
           <div className="w-full h-full scale-150 animate-bannerFloat bg-banner-bg bg-cover bg-repeat bg-center"></div>
         </div>
-        <div className="absolute -left-[0px] -right-[0px] -top-[0px] -bottom-[0px] overflow-hidden bg-white/0 backdrop:blur-lg z-[7]">
+        <div className="absolute -left-[0px] -right-[0px] -top-[0px] -bottom-[0px] overflow-hidden bg-black/15 backdrop:blur-lg z-[7]">
           <TruereffHeroSlider />
         </div>
       </div>

@@ -140,7 +140,7 @@ export default function StoreDetailCard({ store }: IProps) {
             {store?.full_name ? ` (${store?.full_name})` : ""}
           </h2>
         </div>
-        <div className="">{store?.store_description}</div>
+        <div className="md:text-base text-sm">{store?.store_description}</div>
       </CardContent>
     </Card>
   );
