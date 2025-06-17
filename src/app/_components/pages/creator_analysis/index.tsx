@@ -286,7 +286,7 @@ export default function CombineAnalytics({ mode }: IProps) {
   };
 
   return (
-    <div className="h-full relative md:p-6 p-4 flex flex-col overflow-auto">
+    <div className="h-full relative md:p-4 p-4 flex flex-col overflow-auto">
       {(isStatesLoading || isListLoading) && (
         <Loading isTransparent={true} height="fit" />
       )}

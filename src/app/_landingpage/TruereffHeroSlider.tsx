@@ -1,21 +1,23 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const TruereffHeroSlider = () => {
+  const sliderRef = useRef<Slider>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const mainSettings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 600,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 5000,
+    autoplay: false, // disable built-in autoplay
     arrows: false,
     fade: true,
-    pauseOnHover: false,
+    beforeChange: (_: number, next: number) => setCurrentSlide(next),
   };
 
   const switchingText = ["promotions", "ghosted payments", "unfair deals"];
@@ -30,16 +32,35 @@ const TruereffHeroSlider = () => {
     "text-xl sm:text-3xl md:text-5xl font-bold !leading-[1.3]";
   const highlightClass = "text-yellow-400";
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (currentSlide === 0 || currentSlide === 3) {
+      // First and fourth slides rely on SwitchingText to trigger next
+      // Do nothing here — SwitchingText will handle it
+    } else if (currentSlide === 1 || currentSlide === 2) {
+      timer = setTimeout(() => {
+        sliderRef.current?.slickNext();
+        clearTimeout(timer);
+      }, 5000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [currentSlide]);
+
   return (
     <div className={wrapperClass}>
-      <Slider {...mainSettings}>
+      <Slider ref={sliderRef} {...mainSettings}>
         {/* Slide 1 */}
         <div>
           <div className={slideContainerClass}>
             <div className={headlineClass}>
               Say no more to{" "}
               <span className={highlightClass}>
-                <SwitchingText texts={switchingText} />
+                <SwitchingText
+                  texts={switchingText}
+                  onComplete={() => sliderRef.current?.slickNext()}
+                />
               </span>
             </div>
             <div className="sm:text-xl md:text-3xl">
@@ -78,7 +99,10 @@ const TruereffHeroSlider = () => {
             <div className={headlineClass}>
               Your{" "}
               <span className={highlightClass}>
-                <SwitchingText texts={yourText} />
+                <SwitchingText
+                  texts={yourText}
+                  onComplete={() => sliderRef.current?.slickNext()}
+                />
               </span>
             </div>
           </div>
@@ -92,26 +116,37 @@ export default TruereffHeroSlider;
 
 type SwitchingTextProps = {
   texts: string[];
+  onComplete: () => void;
 };
 
-export const SwitchingText: React.FC<SwitchingTextProps> = ({ texts }) => {
+export const SwitchingText: React.FC<SwitchingTextProps> = ({
+  texts,
+  onComplete,
+}) => {
   const [index, setIndex] = React.useState(0);
   const [show, setShow] = React.useState(true);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setShow(false); // start exit animation
+      setShow(false);
       setTimeout(() => {
-        setIndex((prev) => (prev + 1) % texts.length);
-        setShow(true); // start enter animation
-      }, 300); // match exit duration
-    }, 1500);
+        const nextIndex = (index + 1) % texts.length;
+        setIndex(nextIndex);
+        setShow(true);
+
+        if (nextIndex === 0) {
+          // Finished full cycle, trigger onComplete
+          onComplete();
+        }
+      }, 400);
+    }, 2000);
+
     return () => clearInterval(interval);
-  }, [texts.length]);
+  }, [index, texts.length, onComplete]);
 
   return (
     <span
-      className={`inline-block transition-all duration-500 ease-in-out ${
+      className={`inline-block transition-all duration-700 ease-in-out ${
         show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
       }`}
     >
