@@ -546,7 +546,7 @@ export const creatorStoreSetUpSchema = Yup.object().shape({
   store_name: Yup.string()
   .required("Store name is required")
   .matches(/^\S*$/, "Spaces are not allowed")
-  .matches(/^[a-z0-9]+$/, "Only alphabet letters and numbers are allowed")
+  .matches(/^[a-z0-9]+$/, "only small letters (a–z) and numbers (0–9) are allowed")
   .matches(/^[^!@#\$%\^\&*\)\(+=._-]+$/, "Special characters are not allowed"),
   store_description: Yup.string().required("Store description is required"),
   tags: Yup.array()

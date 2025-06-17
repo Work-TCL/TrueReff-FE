@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ImageOff, IndianRupee, Plus } from "lucide-react";
+import { ImageOff, IndianRupee } from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
@@ -10,10 +10,7 @@ import { useTranslations } from "next-intl";
 import { IBrandProduct } from "../list";
 import Loader from "@/app/_components/components-common/layout/loader";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
-import StatusBadge from "@/app/_components/components-common/status-badge";
 import CancelRequest from "@/app/_components/components-common/dialogs/cancel-request";
-import ToolTip from "@/app/_components/components-common/tool-tip";
-import { currency } from "@/lib/utils/constants";
 
 const ProductCard = ({
   item: product,
@@ -21,7 +18,7 @@ const ProductCard = ({
   size = "reguler",
 }: {
   item: IBrandProduct;
-  handleUpdateProduct: (id: string) => void;
+  handleUpdateProduct: (id: string,collaboration:any) => void;
   size?: "reguler" | "small";
 }) => {
   const router = useRouter();
@@ -44,7 +41,7 @@ const ProductCard = ({
         }
       );
       if (response.status === 201) {
-        handleUpdateProduct(product?.vendorId);
+        handleUpdateProduct(product?._id,response?.data?.data?.collaboration);
         setIsOpen("");
         toast.success(response?.data?.message);
       }
@@ -59,9 +56,9 @@ const ProductCard = ({
     <>
       <Card
         key={product?.title}
-        className="relative cursor-pointer w-full border border-stroke rounded-xl p-2 md:p-2 flex flex-col items-center text-center gap-3 hover:shadow-md transition-shadow bg-white overflow-hidden"
+        className="relative cursor-pointer h-full w-full border border-stroke rounded-xl p-2 md:p-2 flex flex-col items-center text-center gap-3 hover:shadow-md transition-shadow bg-white overflow-hidden"
       >
-        <CardContent className="w-full p-0 flex flex-col items-center gap-3">
+        <CardContent className="w-full p-0 flex flex-col justify-between flex-grow gap-2">
           {loading && <Loader />}
           {/* Image */}
           <div
@@ -102,7 +99,7 @@ const ProductCard = ({
             {/* Price and Discount */}
             <div className="flex flex-col justify-start w-full text-sm">
               <span className="text-green-600 py-1 font-bold flex items-center">
-                <IndianRupee size={15} />
+                <IndianRupee size={14} />
                 {product.price || "0.00"}
               </span>
               <div className="flex items-center space-x-2">

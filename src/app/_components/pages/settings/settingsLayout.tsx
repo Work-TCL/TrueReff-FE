@@ -19,7 +19,7 @@ export default function SettingsLayout({
   const translate = useTranslations();
   const pathname = usePathname();
   return (
-    <div className="flex flex-col xl:flex-row p-4 xl:p-6 gap-4">
+    <div className="flex flex-col xl:flex-row p-2 md:p-4 xl:p-6 gap-2 md:gap-4">
       <div className="flex xl:flex-col flex-wrap overflow-auto gap-2 xl:gap-3 xl:max-w-[240px] w-full">
         {menus.map((menu, index) => (
           <Link

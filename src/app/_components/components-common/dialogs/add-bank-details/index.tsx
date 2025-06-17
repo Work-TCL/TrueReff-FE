@@ -107,7 +107,7 @@ export default function AddBankDetails({
           onClose={onClose}
           submitting={submitting}
           setSubmitting={setSubmitting}
-          handleRefresh={handleRefresh}
+          handleRefresh={fetchBankDetails}
         />
       </div>}
     </DialogLayout>

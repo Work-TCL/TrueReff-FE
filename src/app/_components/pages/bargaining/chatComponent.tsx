@@ -208,7 +208,7 @@ export default function ChatComponent({
         </div>
       </div>
       {/* <div className="h-px w-full bg-stroke mx-2"></div>{" "} */}
-      <CardContent className="flex flex-col-reverse overflow-y-auto gap-3 h-full max-h-[calc(100vh-285px)]">
+      <CardContent className="flex flex-col-reverse p-2 overflow-y-auto gap-3 h-full max-h-[calc(100vh-285px)]">
         {/* {isLoading && <Loading />} */}
         {!isLoading && message?.length < 0 && (
           <p className="opacity-50 text-center">
@@ -233,7 +233,7 @@ export default function ChatComponent({
               >
                 <div className="flex items-end overflow-hidden">
                   {!owner && (
-                    <Avatar key={idx}>
+                    <Avatar key={idx} className="md:size-9 size-7">
                       <AvatarImage
                         src={
                           user?.role === "creator"
@@ -250,7 +250,7 @@ export default function ChatComponent({
                     } `}
                   >
                     <div
-                      className={`p-3 rounded-lg w-full ${
+                      className={`p-3 rounded-lg max-w-[250px] ${
                         owner ? "bg-pink-100" : "bg-gray-100"
                       }`}
                     >
@@ -264,7 +264,7 @@ export default function ChatComponent({
                   </div>
                 </div>
                 {owner && (
-                  <Avatar key={idx}>
+                  <Avatar key={idx} className="md:size-9 size-7">
                     <AvatarImage
                       src={
                         user?.role === "creator"

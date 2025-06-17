@@ -28,6 +28,7 @@ const customStyles = {
   }),
   control: (base: any, state: any) => ({
     ...base,
+    width: "150px",
     borderRadius: "8px",
     borderColor: state.isFocused ? "#FF4979" : base.borderColor,
     boxShadow: "none",
@@ -104,7 +105,7 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
       <Button
         variant="outline"
         className={cn(
-          "text-black w-[100px] rounded-[4px] md:h-10 h-8",
+          "flex justify-end text-black w-[100px] rounded-[4px] h-10",
           xlBreakPoint ? " 2xl:hidden" : " lg:hidden"
         )}
         onClick={() => setOpenDialog(true)}
@@ -190,7 +191,7 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
             label: ele.name,
           }))}
           classNamePrefix="select"
-          placeholder="Parent Category"
+          placeholder="Category"
           isClearable
         />
       </div>

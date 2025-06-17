@@ -88,10 +88,11 @@ export default function BankDetailsForm({
         type: "BANK",
       };
       let response: any = await axios.post("/payment/wallet/bank-account", payload);
-      if (response?.status === 200) {
-        toast.success(response?.message);
+      if (response?.status === 201) {
+        toast.success(response?.data?.message);
         methods?.reset();
-        onClose && onClose(true);
+        onClose();
+        handleRefresh();
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -124,7 +125,6 @@ export default function BankDetailsForm({
               name="account_number"
               type="text"
               placeholder={translate("Enter_your_bank_account_number")}
-              autoFocus
               lableClassName="text-md font-[400]"
             />
           </div>

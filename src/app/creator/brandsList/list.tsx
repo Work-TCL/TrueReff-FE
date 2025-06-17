@@ -195,9 +195,7 @@ export default function BrandList() {
           });
           let more = [...productList, ...data]?.length < productCount;
           setHasMore(more);
-          more
-            ? setProductList([...productList, ...data])
-            : setProductList([...data]);
+          setProductList([...productList, ...data])
         } else {
           setProductList([]);
           setCurrentPage(1);
@@ -253,7 +251,22 @@ export default function BrandList() {
     }, 500),
     []
   );
-
+  const handleUpdateProduct = (id: string,collaboration:any) => {
+    const  updatedProductList = productList.map((product) => {
+      if (product._id === id) {
+        return {...product,collaboration: collaboration};
+      }
+      return product;
+    });
+    setProductList(updatedProductList);
+    const updatedSuggestedProductList = suggestedProductList.map((product) => {
+      if (product._id === id) {
+        return {...product,collaboration: collaboration};
+      }
+      return product;
+    });
+    setSuggestedProductList(updatedSuggestedProductList);
+  }
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
@@ -280,19 +293,19 @@ export default function BrandList() {
     getBrandProductList(currentPage, true, search, vendorId, selectedOptions);
   };
   return (
-    <div className={`flex flex-col p-4 gap-4 h-full`}>
+    <div className={`flex flex-col p-2 md:p-4 gap-2 md:gap-4 h-full`}>
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center flex-wrap gap-2">
+          <div className="flex justify-between items-center flex-col md:flex-row gap-2">
             <SearchInput
               value={search}
               onChange={handleSearch}
               placeholder={"Search Brand or Product..."}
               className="md:max-w-[700px]"
             />
-            <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
+            <div className="flex md:flex-row flex-col gap-2 w-full md:w-auto justify-end md:items-center items-end">
               <CategorySingleSelect onChange={handleSelectCategory} />
             </div>
             {/* <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
@@ -360,14 +373,12 @@ export default function BrandList() {
               ) : (
                 <div className="font-bold">{translate(`Products`)}</div>
               )}
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2 md:gap-2 h-full  overflow-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2 md:gap-2 h-full pb-2 mb-2 overflow-auto">
                 {productList.map((item: any, i) => (
                   <ProductCard
                     key={i}
                     item={item}
-                    handleUpdateProduct={(id: string) => {
-                      getBrandProductList(currentPage, true, search, vendorId);
-                    }}
+                    handleUpdateProduct={handleUpdateProduct}
                   />
                 ))}
               </div>
@@ -390,9 +401,7 @@ export default function BrandList() {
                   <ProductCard
                     key={i}
                     item={item}
-                    handleUpdateProduct={(id: string) => {
-                      getBrandProductList(currentPage, true, search, vendorId);
-                    }}
+                    handleUpdateProduct={handleUpdateProduct}
                   />
                 ))}
               </div>

@@ -431,19 +431,19 @@ export default function PublicCreatorStore({
           {isCreator && account?.role === "creator" && (
             <div className="flex flex-col-reverse md:flex-row justify-end items-end md:items-center gap-2 p-2">
               <div className="flex gap-4">
-                <div className="text-md font-medium flex items-center space-x-2 text-gray-500">
+                <div className="text-xs md:text-lg font-medium flex items-center space-x-2 text-gray-500">
                   <span>{translate("Trending_Products")}</span>{" "}
                   <ToolTip
                     position="top"
                     content={
-                      <div className="max-w-[200px] text-sm text-wrap p-2 rounded-lg">
+                      <div className="max-w-[200px] text-wrap p-2 rounded-lg">
                         {
                           "Enable this option to display trending products in your store. Trending products are popular items that attract more customers and increase engagement. Turning this on helps highlight these products to boost visibility and sales."
                         }
                       </div>
                     }
                   >
-                    <Info />
+                    <Info className="size-4 md:size-5"/>
                   </ToolTip>
                 </div>
                 <label className="inline-flex items-center cursor-pointer relative">
@@ -463,7 +463,7 @@ export default function PublicCreatorStore({
               <Button
                 type="button"
                 // disabled={channels?.length === 0}
-                className="w-fit font-medium px-8"
+                className="w-fit text-xs md:text-lg font-medium px-4 py-2 md:py-3 md:px-6"
                 size="small"
                 onClick={handleOnClick}
               >
@@ -471,7 +471,7 @@ export default function PublicCreatorStore({
               </Button>
             </div>
           )}
-          <div className="flex flex-col gap-3 max-w-[1200px] mx-auto p-4">
+          <div className="flex flex-col gap-2 md:gap-3 max-w-[1200px] mx-auto p-2 md:p-4">
             {/* Sticky Profile with hide-on-scroll */}
             <div
               className="sticky top-0 z-10 transition-transform duration-500"
