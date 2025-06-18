@@ -212,7 +212,7 @@ export default function CreatorList() {
     getCreatorList(1, true, search, filterState);
   };
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4 h-full">
       {loading ? (
         <Loading />
       ) : (
@@ -245,7 +245,7 @@ export default function CreatorList() {
                 />
               )}
               {viewMode === "card" && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 h-full bg-white p-4 rounded-[20px] overflow-auto">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 h-full bg-white p-2 md:p-4 rounded-[20px] overflow-auto">
                   {creators.map((item: any, i) => (
                     <div key={i} className="flex h-fit w-full">
                       <CreatorCard

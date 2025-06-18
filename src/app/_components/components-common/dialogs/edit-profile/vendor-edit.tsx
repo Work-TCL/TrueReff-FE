@@ -308,7 +308,7 @@ export default function EditVendorForm({
               </span>
             )}
           </div>
-          <div className="md:col-span-2 col-span-1 mt-2">
+          <div className="col-span-2 mt-2">
             <Input
               label={translate("Business_Name")}
               name="business_name"
@@ -464,7 +464,7 @@ export default function EditVendorForm({
               )}
             </div>
           </div>
-          <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
+          <div className="pt-6 col-span-2 sticky bottom-0 ">
             <Button type="submit" loading={loading}>
               {translate("Save")}
             </Button>

@@ -12,6 +12,7 @@ import { toastMessage } from "@/lib/utils/toast-message";
 import axios from "@/lib/web-api/axios";
 import LoginDialog from "../dialogs/login";
 import { RiLoader3Fill } from "react-icons/ri";
+import Link from "next/link";
 
 export interface ICategory {
   _id: string;
@@ -45,6 +46,7 @@ export interface IProduct {
   crmLink?: string; // CRM link
   categories?: string; // Comma-separated string of category names
   tag?: string; // Comma-separated string of tags
+  utmLink: string;
 }
 const ProductCard = ({
   item: product,
@@ -160,9 +162,9 @@ const ProductCard = ({
           )}
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">
-              <button className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition">
+              <Link href={product?.utmLink} target="_blank" className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition">
                 {translate("buyNow")}
-              </button>
+              </Link>
             </div>
           )}
         </div>

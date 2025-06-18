@@ -1,27 +1,14 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-// import { ProductImageGallery } from "./imagePreview";
-// import { ProductInfo } from "./productDetail";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import {
   useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
 } from "next/navigation";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
 import axios from "@/lib/web-api/axios";
 import Loading from "@/app/vendor/loading";
-import CommonBreadcrumb from "@/app/_components/components-common/breadcrumb-links";
-import NotFound from "@/app/_components/components-common/404";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Heart, ShoppingCart, Star } from "lucide-react";
-import { Label } from "recharts";
+import { Heart, ShoppingCart } from "lucide-react";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import Link from "next/link";
 import { RiLoader3Fill } from "react-icons/ri";
@@ -136,63 +123,10 @@ export default function ViewProductDetail({
   const [loginPopUp, setLoginPopUp] = useState<boolean>(false);
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
-  const [trendingProductList, setTrendingProductList] = useState<IProduct[]>([
-    {
-      _id: "68302ff987a80816639187af",
-      title: "The 3p Fulfilled Snowboard",
-      channelProductId: "8517182980418",
-      channelProductVendor: "Quickstart (add36e33)",
-      sku: "the-3p-fulfilled-snowboard",
-      description: "",
-      media: [
-        "https://cdn.shopify.com/s/files/1/0807/5191/9426/products/Main_b9e0da7f-db89-4d41-83f0-7f417b02831d.jpg?v=1691238779",
-      ],
-      price: 2629.95,
-      channelName: "shopify",
-      variants: [
-        {
-          sku: "sku-hosted-1",
-          price: "2629.95",
-          title: "Default Title",
-        },
-      ],
-      category: [
-        {
-          _id: "67db0a2c2d3f810c5588189d",
-          name: "category 2",
-          parentId: null,
-          createdAt: "2025-03-19T18:17:16.624Z",
-          updatedAt: "2025-03-19T18:17:16.624Z",
-        },
-      ],
-      subCategory: ["67db0a5c2d3f810c558818ae"],
-      tags: ["bikes", "automobile"],
-      lifeTime: true,
-      startDate: "2025-05-23T18:30:00.000Z",
-      endDate: null,
-      freeProduct: false,
-      status: "ACTIVE",
-      commission: 100,
-      commission_type: "FIXED_AMOUNT",
-      videoType: ["UGC"],
-      channels: ["instagram", "youtube"],
-      createdAt: "2025-05-23T08:21:13.590Z",
-      updatedAt: "2025-05-23T18:31:00.147Z",
-      crmLink: "http://localhost:3000/product-detail/6835e4d9a0b10a9200b1007e",
-      categories: "category 2",
-      tag: "bikes, automobile",
-      subCategories: "",
-      referenceLinks: [],
-      creatorMaterial: [],
-      vendorId: "",
-      notes: "",
-      utmLink: "",
-      isWishListed: false,
-    },
-  ]);
+  const [trendingProductList, setTrendingProductList] = useState<IProduct[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState(0);
-  const pageLimit = 20;
+  const pageLimit = 6;
   const [productData, setProductData] = useState<IProduct>({
     variants: [],
     _id: "",
@@ -287,7 +221,7 @@ export default function ViewProductDetail({
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `/auth/creator-store/trending-product-list?limit=${pageLimit}&page=${page}`
+        `/auth/creator-store/trending-suggested-product-list?limit=${pageLimit}&page=${page}&collaborationId=${productId}`
       );
 
       if (response.data.data?.list?.length > 0) {
@@ -325,15 +259,10 @@ export default function ViewProductDetail({
     }
   };
 
-  console.log("tranding products--->>>>", trendingProductList);
-
-  useEffect(() => {
-    fetchTrendingProductsList();
-  }, []);
-
   useEffect(() => {
     if (productId) {
       fetchProductById();
+      fetchTrendingProductsList();
     }
   }, [productId]);
   // Product id required condition removed as it is not required.

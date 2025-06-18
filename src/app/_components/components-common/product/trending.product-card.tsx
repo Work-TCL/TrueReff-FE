@@ -1,11 +1,9 @@
 "use client";
-import { Heart, ImageOff, Plus } from "lucide-react";
+import { Heart, ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils/commonUtils";
-import ToolTip from "../tool-tip";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { useState } from "react";
 import { useVendorStore } from "@/lib/store/vendor";
@@ -14,6 +12,7 @@ import axios from "@/lib/web-api/axios";
 import { toastMessage } from "@/lib/utils/toast-message";
 import { RiLoader3Fill } from "react-icons/ri";
 import LoginDialog from "../dialogs/login";
+import Link from "next/link";
 
 export interface ICategory {
     _id: string;
@@ -48,6 +47,7 @@ export interface IProduct {
     crmLink: string; // CRM link
     categories?: string; // Comma-separated string of category names
     tag?: string; // Comma-separated string of tags
+    utmLink: string;
 }
 const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
   const translate = useTranslations();
@@ -157,12 +157,11 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
               </button>
             </div>
           )}
-
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">
-              <button className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition">
+              <Link href={product?.utmLink} target="_blank" className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition">
                 {translate("buyNow")}
-              </button>
+              </Link>
             </div>
           )}
                     {/* <div className="flex items-center justify-between w-full">

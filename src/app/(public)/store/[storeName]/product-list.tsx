@@ -49,6 +49,7 @@ export interface IProduct {
   crmLink: string; // CRM link
   categories?: string; // Comma-separated string of category names
   tag?: string; // Comma-separated string of tags
+  utmLink: string;
 }
 
 const customStyles = {
