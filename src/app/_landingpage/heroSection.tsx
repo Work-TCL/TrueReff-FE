@@ -22,7 +22,7 @@ export default function HeroSection() {
           >
             Your
             <span className="text-primary capitalize ml-2">
-              <SwitchingText texts={["content", "audience", "earnings"]} />
+              <SwitchingText texts={["content", "audience", "earnings"]} onComplete={()=>{}} />
             </span>
           </h1>
           <div className=" xsmobile:flex xsmobile:items-center xsmobile:flex-col tablet:flex tablet:items-center tablet:flex-col md:flex md:flex-col md:items-center lg:flex lg:items-start	">
