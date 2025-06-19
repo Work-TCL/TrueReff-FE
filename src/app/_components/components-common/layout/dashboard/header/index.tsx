@@ -110,6 +110,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     "/creator/account-recharge": translate("Account_Recharge"),
     "/vendor/vendor-analysis": translate("Vendor_Analysis"),
     "/creator/creator-analysis": translate("Creator_Analysis"),
+    "/notification": translate("Notifications"),
   };
   const fetchNotifications = async () => {
     setLoading(true);
@@ -249,67 +250,69 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   return (
     <>
       {!routes.includes(pathName) ? (
-        <header className="bg-white px-3 py-3 flex items-center gap-2">
-          <Menu
-            className="size-5 shrink-0 text-primary cursor-pointer lg:hidden"
-            onClick={handleExpandSidebar}
-          />
-          <h2
-            className={`md:text-2xl text-lg font-medium text-primary ${
-              ["/creator/creator-analysis", "/vendor/vendor-analysis"].includes(
+        <header className="bg-white px-3 py-3 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Menu
+              className="size-5 shrink-0 text-primary cursor-pointer lg:hidden"
+              onClick={handleExpandSidebar}
+            />
+            <h2
+              className={`md:text-2xl text-lg font-medium text-primary ${["/creator/creator-analysis", "/vendor/vendor-analysis"].includes(
                 pathName
               )
-                ? "sm:block hidden mr-2"
-                : ""
-            }`}
-          >
-            {getHeaderName()}
-          </h2>
-          {["/creator/creator-analysis", "/vendor/vendor-analysis"].includes(
-            pathName
-          ) && <SearchSuggestionDropdown />}
-          <div className="ml-auto flex items-center md:gap-3 gap-2">
-            {["/vendor/dashboard", "/creator/dashboard"].includes(pathName) && (
-              <HeaderFilter />
-            )}
-            <NotificationPopover
-              notifications={notifications}
-              unreadNotifications={unreadNotifications}
-              fetchNotifications={fetchNotifications}
-              readNotifications={readNotifications}
-              formatTimeAgo={formatTimeAgo}
-            />
-            <Link
-              href={
-                creator.creatorId ? `/creator/settings` : `/vendor/settings`
-              }
-              className="flex gap-3 items-center w-fit"
+                  ? "sm:block hidden mr-2"
+                  : ""
+                }`}
             >
-              <div
-                className="w-8 h-8 bg-background rounded-full bg-cover bg-center flex items-center justify-center"
-                style={{
-                  ...(creator.profile_image || vendor.profile_image
-                    ? {
-                        backgroundImage: `url(${
-                          creator.profile_image || vendor.profile_image
-                        })`,
-                      }
-                    : {}),
-                }}
-              >
-                {!(creator.profile_image || vendor.profile_image) && (
-                  <UserRound className="" color="#656466" />
-                )}
-              </div>
-              <p className="text-gray-black md:text-base text-sm md:block hidden">
-                {creator.full_name || vendor.business_name}
-              </p>
-            </Link>
+              {getHeaderName()}
+            </h2>
+            {["/creator/creator-analysis", "/vendor/vendor-analysis"].includes(
+              pathName
+            ) && <SearchSuggestionDropdown />}
           </div>
-          <div className={!account?.role ? "flex justify-end w-full" : ""}>
-            <Link href="?auth=logout" className="mx-1 md:mx-4 block">
-              <IoLogOutOutline className="text-2xl text-primary" />
-            </Link>
+          <div className="flex items-center gap-2">
+            <div className="ml-auto flex items-center md:gap-3 gap-2">
+              {["/vendor/dashboard", "/creator/dashboard"].includes(pathName) && (
+                <HeaderFilter />
+              )}
+              <NotificationPopover
+                notifications={notifications}
+                unreadNotifications={unreadNotifications}
+                fetchNotifications={fetchNotifications}
+                readNotifications={readNotifications}
+                formatTimeAgo={formatTimeAgo}
+              />
+              <Link
+                href={
+                  creator.creatorId ? `/creator/settings` : `/vendor/settings`
+                }
+                className="flex gap-3 items-center w-fit"
+              >
+                <div
+                  className="w-8 h-8 bg-background rounded-full bg-cover bg-center flex items-center justify-center"
+                  style={{
+                    ...(creator.profile_image || vendor.profile_image
+                      ? {
+                        backgroundImage: `url(${creator.profile_image || vendor.profile_image
+                          })`,
+                      }
+                      : {}),
+                  }}
+                >
+                  {!(creator.profile_image || vendor.profile_image) && (
+                    <UserRound className="" color="#656466" />
+                  )}
+                </div>
+                <p className="text-gray-black md:text-base text-sm md:block hidden">
+                  {creator.full_name || vendor.business_name}
+                </p>
+              </Link>
+            </div>
+            <div className={!account?.role ? "flex justify-end w-full" : ""}>
+              <Link href="?auth=logout" className="mx-1 md:mx-4 block">
+                <IoLogOutOutline className="text-2xl text-primary" />
+              </Link>
+            </div>
           </div>
         </header>
       ) : (
@@ -317,11 +320,11 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
           <div className="flex space-x-2 items-center">
             {(pathName === "/creator-registration" ||
               pathName === "/vendor-register") && (
-              <ArrowLeft
-                className="text-2xl text-primary cursor-pointer"
-                onClick={handleOnBack}
-              />
-            )}
+                <ArrowLeft
+                  className="text-2xl text-primary cursor-pointer"
+                  onClick={handleOnBack}
+                />
+              )}
             <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-medium text-primary">
               {getHeaderName()}
             </h2>

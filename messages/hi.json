@@ -679,5 +679,7 @@
   "Enter_Account_Holder_Number": "खाता धारक का नाम दर्ज करें",
   "Bank_Details": "बैंक विवरण",
   "Verified_Account": "सत्यापित खाता",
-  "Account_not_Verified": "खाता सत्यापित नहीं है"
+  "Account_not_Verified": "खाता सत्यापित नहीं है",
+  "No_Notifications": "कोई सूचना नहीं",
+  "No_Notifications_Description": "आप पूरी तरह अपडेट हैं! जब कोई नई सूचना होगी, तो वह यहां दिखाई देगी।"
 }

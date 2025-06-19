@@ -231,11 +231,9 @@ export function EmptyPlaceHolder() {
   return (
     <div className="flex items-center justify-center flex-col flex-1 col-span-full text-center h-full text-gray-500 p-4 bg-white ">
       <Info className="mx-auto mb-2 text-gray-400" />
-      <h2 className="text-lg font-semibold">{translate("No Notifications")}</h2>
+      <h2 className="text-lg font-semibold">{translate("No_Notifications")}</h2>
       <p className="text-sm">
-        {translate(
-          "  You're all caught up! You’ll see notifications here when there’s something new"
-        )}
+        {translate("No_Notifications_Description")}
       </p>
     </div>
   );

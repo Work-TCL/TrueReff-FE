@@ -699,5 +699,7 @@
   "Enter_Account_Holder_Number": "Enter Account Holder Name",
   "Bank_Details": "Bank Details",
   "Verified_Account": "Verified Account",
-  "Account_not_Verified": "Account not Verified"
+  "Account_not_Verified": "Account not Verified",
+  "No_Notifications": "No Notifications",
+  "No_Notifications_Description": "You're all caught up! You’ll see notifications here when there’s something new."
 }
