@@ -135,11 +135,11 @@ export default function Profile() {
               ["Business_Type", profile.type_of_business || "-",],
               ["GST_Number", profile.gst_number || "-"]
             ].map(([label, value], idx) => (
-              <div key={idx} className="flex flex-row md:flex-row items-start gap-2">
+              <div key={idx} className="flex flex-col md:flex-row items-start gap-2">
                 <div className="w-[120px] text-sm text-gray-500 text-nowrap">
                   {translate(label as string)}:
                 </div>
-                <div className="font-medium text-sm break-words">
+                <div className=" font-medium text-sm break-words">
                   {value || "-"}
                 </div>
               </div>

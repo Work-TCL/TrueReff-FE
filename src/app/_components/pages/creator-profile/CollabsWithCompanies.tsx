@@ -97,7 +97,7 @@ export default function CollabsWithCompanies() {
     fetchCollabWithCompanies(value.value);
   };
   return (
-    <Card className="rounded-[20px] p-6 bg-white border-0 shadow-none flex-1">
+    <Card className="rounded-[20px] p-2 md:p-4 bg-white border-0 shadow-none flex-1">
       {/* Header Section */}
       {loading ? (
         <Loading height="fit" />
@@ -143,7 +143,7 @@ export default function CollabsWithCompanies() {
       </div> */}
 
           {/* Company Stats */}
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="mt-3 md:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-3">
             <StatCard
               name={translate("Collaboration")}
               value={formatNumber(collabStats?.totalCollaborations)}
@@ -212,10 +212,10 @@ function StatCard({
   isNegative?: boolean;
 }) {
   return (
-    <div className="p-4 rounded-lg border bg-white shadow-sm flex flex-col gap-1">
+    <div className="p-2 md:p-4 rounded-lg border bg-white shadow-sm flex flex-col gap-1">
       <div className="flex items-center gap-2">
         <span className={`h-2 w-2 rounded-full bg-${color}`}></span>
-        <span className="text-font-grey font-medium md:text-base text-sm">
+        <span className="text-font-grey font-medium sm:text-sm lg:text-base ">
           {name}
         </span>
       </div>

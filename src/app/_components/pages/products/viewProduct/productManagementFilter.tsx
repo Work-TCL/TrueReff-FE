@@ -199,7 +199,7 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
             {/* Mobile Button */}
             <Button
                 variant="outline"
-                className={cn("text-black w-[100px] rounded-[4px] md:h-10 h-8 bg-white")}
+                className={cn("text-black w-[100px] rounded-[4px] h-10 bg-white")}
                 onClick={() => setOpenDialog(true)}
             >
                 <FaSlidersH className="mr-1" /> {translate("Filters")}

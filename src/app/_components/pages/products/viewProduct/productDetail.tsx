@@ -22,7 +22,7 @@ export function ProductInfo({ productData,channelType }: IProductInfoProps) {
     return attr.join("/");
   }
   return (
-    <div className="flex flex-1 flex-col gap-6 p-6 overflow-auto pr-2">
+    <div className="flex flex-1 flex-col gap-3 md:gap-6 p-1 md:p-6 overflow-auto pr-2">
 
       <div>
         {/* <p className="text-gray-500 text-xs">Puma</p> */}
@@ -39,7 +39,7 @@ export function ProductInfo({ productData,channelType }: IProductInfoProps) {
           <span className="sm:text-xl text-sm font-semibold text-green-600">₹{selectedVariant?.price ? selectedVariant?.price : productData?.price}</span>
         </div>
       </div>
-      {productData.category && <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+      {productData.category && <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-2 md:pt-4">
         <div>
           <p className="sm:text-sm text-xs text-gray-500 mb-1">
             {translate("Category")}
@@ -50,7 +50,7 @@ export function ProductInfo({ productData,channelType }: IProductInfoProps) {
         </div>
       </div>}
       {productData?.tags?.length > 0 && (
-        <div className="border-t border-gray-200 pt-6">
+        <div className="border-t border-gray-200 pt-2 md:pt-4">
           <p className="text-sm text-gray-500 mb-2">{translate("Tags")}</p>
           <div className="text-gray-500 text-sm flex flex-wrap gap-2 mt-2">
             {productData?.tags?.map((tag, idx) => (
@@ -62,7 +62,7 @@ export function ProductInfo({ productData,channelType }: IProductInfoProps) {
         </div>
       )}
       {productData.description && (
-        <div className="border-t border-gray-200 pt-6">
+        <div className="border-t border-gray-200 pt-2 md:pt-4">
           <p className="sm:text-sm text-xs text-gray-500 mb-1">
             {translate("Description")}
           </p>
@@ -71,7 +71,7 @@ export function ProductInfo({ productData,channelType }: IProductInfoProps) {
         }} className="sm:text-base text-sm  text-gray-800 leading-relaxed"/>
         </div>
       )}
-      {productData?.variants?.length > 0 && <div className="border-t border-gray-200 pt-6">
+      {productData?.variants?.length > 0 && <div className="border-t border-gray-200 pt-2 md:pt-4">
         <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">
           {translate("Variants")}{channelType === "wordpress" ? <span className="text-xs">{` (${getVariantTypes(productData?.attributes??[])})`}</span> : ""}
         </h3>
@@ -87,7 +87,7 @@ export function ProductInfo({ productData,channelType }: IProductInfoProps) {
           ))}
         </div>
       </div>}
-      <div className="border-t border-gray-200 pt-6">
+      <div className="border-t border-gray-200 pt-2 md:pt-4">
         <h3 className="sm:text-lg text-base font-semibold text-gray-800 mb-3">
           {translate("Creator_Commission")}
         </h3>
@@ -102,7 +102,7 @@ export function ProductInfo({ productData,channelType }: IProductInfoProps) {
           </div>
         </div>
       </div>
-      {productData?.discount && <div className="border-t border-gray-200 pt-6">
+      {productData?.discount && <div className="border-t border-gray-200 pt-2 md:pt-4">
         <h3 className="sm:text-lg text-base font-semibold text-gray-800 mb-3">
           {translate("Additional_Offer")}
         </h3>

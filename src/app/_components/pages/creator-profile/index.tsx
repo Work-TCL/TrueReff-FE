@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import CollabsWithCompanies from "./CollabsWithCompanies";
-import TopVideosCraetor from "../../components-common/tables/topVideos";
-import TopViewAcrossPlatforms from "../../components-common/charts/topViewAcrossPlatforms";
 import { useParams } from "next/navigation";
 import { useCreatorStore } from "@/lib/store/creator";
 import { getCreatorById } from "@/lib/web-api/creator";
@@ -32,9 +30,9 @@ export default function CreatorProfile({isVendor}:ICreatorProfileProps) {
   }, []);
 
   return (
-    <div className="flex flex-col p-4 gap-5">
+    <div className="flex flex-col p-2 md:p-4 gap-2 md:gap-5">
       {isLoading && <Loader isTransparent={false} />}
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-5 w-full z-10 transition-transform duration-500">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-2 md:gap-5 w-full z-10 transition-transform duration-500">
         <ProfileCard
           banner_image={creatorData.banner_image}
           profile_image={creatorData.profile_image}
@@ -59,8 +57,7 @@ export default function CreatorProfile({isVendor}:ICreatorProfileProps) {
           categories={[...creatorData.category.map((v: any) => v.name)]}
           store_link={isVendor ? `/vendor/creator-store/${creatorData?.store_name}` : ""}
         />
-        <div className="flex flex-col gap-5">
-          {/* {creator?.creatorId === creatorData?.creatorId <ProfileCompletionCard progress={60} />} */}
+        <div className="flex flex-col gap-2 md:gap-5">
           <CollabsWithCompanies />
         </div>
       </div>

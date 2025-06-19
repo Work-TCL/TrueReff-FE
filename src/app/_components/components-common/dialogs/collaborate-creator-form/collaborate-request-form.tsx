@@ -11,6 +11,7 @@ import { ImageOff, Info } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Loading from "@/app/creator/loading";
 import { badgeColor, statusMessage } from "@/lib/utils/constants";
+import ToolTip from "../../tool-tip";
 interface ICollaborateRequestFormProps {
   onClose: () => void;
   creatorId: string;
@@ -108,13 +109,13 @@ export default function CollaborateRequestForm({
                   className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-lg"
                   key={index}
                 >
-                  <div className="flex items-center gap-4" onClick={() =>
+                  <div className="flex items-center gap-2 md:gap-4" onClick={() =>
                         !submitting && handleOnSelectProduct(product?._id)
                       }>
                     <Input
                       type="radio"
                       name={`product-${index}`}
-                      className="w-5 h-5 cursor-pointer accent-[#FF4979]"
+                      className="w-4 h-4 md:w-5 md:h-5 cursor-pointer accent-[#FF4979]"
                       checked={selectedProducts.includes(product?._id)}
                       disabled={
                         product?.collaborationStatus !== null || submitting
@@ -124,18 +125,19 @@ export default function CollaborateRequestForm({
                     <div>
                       <div className="flex items-center gap-2">
                         {product?.media?.length > 0 ? (
-                          <Avatar className={`w-8 h-8 ${product?.collaborationStatus !== null ? "opacity-50" : ""}`}>
+                          <Avatar className={`w-6 h-6 md:w-8 md:h-8 ${product?.collaborationStatus !== null ? "opacity-50" : ""}`}>
                             <AvatarImage src={product?.media[0]} />
                           </Avatar>
-                        ): <Avatar className={`w-8 h-8 flex justify-center items-center`}>
-                        <ImageOff className="w-6 h-6 text-gray-400" />
+                        ): <Avatar className={`w-6 h-6 md:w-8 md:h-8 flex justify-center items-center`}>
+                        <ImageOff className="w-4 h-4 md:w-6 md:h-6 text-gray-400" />
                       </Avatar>}
-                        <span className={`${product?.collaborationStatus !== null ? "text-gray-500" : "text-black"}`}>{product?.title}</span>
+                        <span className={`hidden sm:block ${product?.collaborationStatus !== null ? "text-gray-500" : "text-black"}`}>{product?.title}</span>
+                        <ToolTip content={product?.title}><span className={`sm:hidden text-sm md:text-base ${product?.collaborationStatus !== null ? "text-gray-500" : "text-black"}`}>{(product?.title?.length > 18 && product?.collaborationStatus !== null) ? `${product?.title?.slice(0,16)}...` : product?.title}</span></ToolTip>
                       </div>
                     </div>
                   </div>
                   {product?.collaborationStatus && <div
-                    className={`md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold bg-opacity-10 ${badgeColor[product?.collaborationStatus]}`}
+                    className={`text-[8px] md:text-[10px] px-2 py-1 rounded-full font-semibold bg-opacity-10 ${badgeColor[product?.collaborationStatus]}`}
                   >
                     {statusMessage[product?.collaborationStatus]}
                   </div>}

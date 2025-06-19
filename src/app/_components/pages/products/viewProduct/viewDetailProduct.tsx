@@ -417,8 +417,8 @@ export default function ViewProductDetail({
           </div>
 
           {/* Card Section */}
-          <Card className="bg-white rounded-lg overflow-auto max-h-[calc(100vh-160px)]">
-            <CardContent className=" p-3 md:p-6">
+          <Card className="bg-white rounded-lg overflow-auto max-h-[calc(100vh-150px)]">
+            <CardContent className="p-3 md:p-6">
               <div className="flex flex-col md:grid grid-cols-1 md:grid-cols-3 gap-4">
                 <ProductImageGallery images={productData?.images} />
                 <div className="col-span-2">
