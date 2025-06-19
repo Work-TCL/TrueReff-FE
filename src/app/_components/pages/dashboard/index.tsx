@@ -293,7 +293,7 @@ export default function Dashboard() {
                   revenueData?.past?.length > 0 ? (
                   <SalesChart data={revenueData} />
                 ) : (
-                  <div className="h-[350px]">
+                  <div className="">
                     <EmptyPlaceHolder
                       title={"No Revenue Found"}
                       description="Revenue Performance will be displayed here once activity data is available. Encourage users to participate to see leaderboard ranking."

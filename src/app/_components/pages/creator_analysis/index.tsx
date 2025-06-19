@@ -311,6 +311,7 @@ export default function CombineAnalytics({ mode }: IProps) {
         mode={mode}
         data={list}
         page={page}
+        isLoading={isListLoading}
         totalPages={Math.ceil(count / limit)}
       />
       {/* </div> */}

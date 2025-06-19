@@ -30,6 +30,7 @@ interface IProps {
   clearFilter: (type: "filter" | "product") => void;
   handlePageChange: (page: number) => void;
   filter: IFilterAnalytics | null;
+  isLoading: boolean;
   page: number;
   className: string;
   totalPages: number;
@@ -48,6 +49,7 @@ function AnyalyticsCombineUI({
   page,
   totalPages,
   product,
+  isLoading,
   handlePageChange,
   className,
 }: IProps) {
@@ -216,6 +218,23 @@ function AnyalyticsCombineUI({
               </h1>
               <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-md">
                 {t("filter_not_found_desc")}
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : !Boolean(data.length > 0) ? (
+        <div className="flex-1 border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
+          <div className="flex flex-col items-center justify-center text-center rounded-lg w-full h-full border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6">
+            <div className="flex flex-col items-center">
+              <h1 className="mt-4 text-2xl font-semibold text-gray-800 dark:text-white">
+                {mode === "creator"
+                  ? t("creator_analysis_not_found")
+                  : t("vendor_analysis_not_found")}
+              </h1>
+              <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-md">
+                {mode === "creator"
+                  ? t("creator_analysis_not_found_desc")
+                  : t("vendor_analysis_not_found_desc")}
               </p>
             </div>
           </div>
