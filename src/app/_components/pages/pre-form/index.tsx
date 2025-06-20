@@ -46,7 +46,7 @@ let allTabs: {
     },
     {
       id: "3",
-      name: "Omni-channel",
+      name: "Connect Stores",
       Icon: FaRegUserCircle,
     },
     // {

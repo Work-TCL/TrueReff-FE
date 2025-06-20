@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, X, MoveRight } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import HeroSection from "./heroSection";
 import EarningsSection from "./earningsSection";
@@ -15,10 +15,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import TruereffHeroSlider from "./TruereffHeroSlider";
 import FaqSection from "./FAQSection";
+import TrustedBrands from "./TrustedBrands";
 
-export default function LandingPage() {
+export default function VendorLandingPage() {
   const router = useRouter();
-  const [activeLink, setActiveLink] = useState("creator");
+  const [activeLink, setActiveLink] = useState("brand");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleLinkClick = (linkName: string) => {
     setActiveLink(linkName);
@@ -138,7 +139,7 @@ export default function LandingPage() {
           {Array(10).fill(
             <>
               <span className="flex items-center gap-2 text-[20px]">
-                Become a Truerreff Creator today –{" "}
+                Become a Truereff Partner today –{" "}
                 <span className="font-bold underline underline-offset-1 ext-[20px]">
                   DOWNLOAD NOW
                 </span>
@@ -147,11 +148,11 @@ export default function LandingPage() {
           )}
         </div>
       </div>
-      <HeroSection />
+      <TrustedBrands />
       <EarningsSection />
       <SocialMedia />
       <ContentCategories />
-      <FaqSection type="creator"/>
+      <FaqSection type="vendor"/>
       <Launchpad />
       <LandingPageFooter />
     </div>

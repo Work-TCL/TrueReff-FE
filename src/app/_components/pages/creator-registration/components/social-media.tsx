@@ -181,7 +181,7 @@ export default function SocialMedia({
               className="w-7 h-7"
             />
           </div>
-          <div className="bg-gradient-to-r from-[#FF6B6B] via-[#FF0000] to-[#282828] p-6 rounded-20 shadow-md">
+          <div className="bg-gradient-to-r from-[#FF6B6B] via-[#FF0000] to-[#c43c3c] p-6 rounded-20 shadow-md">
             <div className="flex items-center justify-between mb-2 flex-1">
               <h3 className="text-gray-100 md:text-xl text:sm font-semibold">
                 {translate("Connect_YouTube")}

@@ -24,6 +24,7 @@ const match = (matcher: string[], request: NextRequest) =>
 // Define public (non-authenticated) routes
 const PUBLIC_ROUTES = [
   "/",
+  "/vendor",
   "/aboutus",
   "/contact",
   "/help",
