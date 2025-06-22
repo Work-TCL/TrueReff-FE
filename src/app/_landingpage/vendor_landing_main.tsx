@@ -10,22 +10,15 @@ import ContentCategories from "./ContentCategories";
 import Launchpad from "./Launchpad";
 import LandingPageFooter from "./LandingPageFooter";
 import "aos/dist/aos.css";
-import ButtonLogin from "../_components/components-common/Button-Login";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import TruereffHeroSlider from "./TruereffHeroSlider";
 import FaqSection from "./FAQSection";
 import TrustedBrands from "./TrustedBrands";
+import NavbarCommon from "./NavbarCommon";
+import WhyTruereff from "./WhyTruereff";
+import ZeroRiskSlider from "./ZeroRiskSlider";
+import SignupFlow from "./SignupFlow";
 
 export default function VendorLandingPage() {
-  const router = useRouter();
-  const [activeLink, setActiveLink] = useState("brand");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const handleLinkClick = (linkName: string) => {
-    setActiveLink(linkName);
-    setIsMenuOpen(false);
-  };
-
   useEffect(() => {
     AOS.init({
       duration: 1600,
@@ -39,57 +32,7 @@ export default function VendorLandingPage() {
     <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] landing-wrapper">
       <div className="relative w-full h-screen  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] landing-wrapper">
         {/* Navbar */}
-        <nav className="relative flex justify-between items-center md:px-[50px] px-5 pb-[50px] pt-[20px] text-white z-[9] ">
-          <div
-            data-aos="fade-down"
-            className="flex items-center gap-2 text-2xl font-bold fade lg:max-w-[352px] max-w-[160px]"
-          >
-            <Image
-              height={50}
-              width={352}
-              src="/assets/common/truereff-white.svg"
-              alt="Truerreff Logo"
-            />
-          </div>
-
-          <div className="lg:hidden flex mt-1">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="focus:outline-none"
-            >
-              {isMenuOpen ? <X size={30} /> : <Menu size={30} />}
-            </button>
-          </div>
-
-          <div
-            className={`${
-              isMenuOpen ? "block" : "hidden"
-            } absolute top-[100px] pb-[20px] pt-[40px] right-0 px-[20px] bg-black bg-opacity-80 lg:static lg:w-auto lg:flex lg:items-center lg:gap-6 lg:bg-transparent`}
-          >
-            <ul className="flex flex-col lg:flex-row gap-6 text-[20px] p-6 lg:p-0">
-              {["creator", "brand", "about"].map((link) => (
-                <li
-                  key={link}
-                  data-aos="fade-right"
-                  className="relative cursor-pointer"
-                  onClick={() => handleLinkClick(link)}
-                >
-                  <span className="relative">
-                    {link.charAt(0).toUpperCase() + link.slice(1)}
-                  </span>
-                  {activeLink === link && (
-                    <div className="w-full h-1 bg-primary rounded-sm" />
-                  )}
-                </li>
-              ))}
-            </ul>
-
-            <ButtonLogin
-              label="Get Started"
-              onClick={() => router.push("/login")}
-            />
-          </div>
-        </nav>
+        <NavbarCommon />
         <div className="absolute -left-[0px] -right-[0px] -top-[0px] -bottom-[0px] overflow-hidden z-[6] ">
           <div className="w-full h-full scale-150 animate-bannerFloat bg-banner-bg bg-cover bg-repeat bg-center"></div>
         </div>
@@ -129,7 +72,7 @@ export default function VendorLandingPage() {
 
       {/* Marquee Section */}
       <div
-        className="w-full py-[20px] text-white overflow-hidden relative z-auto"
+        className="w-full py-[10px] text-white overflow-hidden relative z-auto"
         style={{
           background:
             "linear-gradient(to right, #9f5de9, #38a2f5, #ff4979, #fbbf12)",
@@ -148,11 +91,40 @@ export default function VendorLandingPage() {
           )}
         </div>
       </div>
-      <TrustedBrands />
+      <WhyTruereff />
+      <ZeroRiskSlider
+        images={[
+          "/assets/landing/zero-risk/01.png",
+          "/assets/landing/zero-risk/02.png",
+        ]}
+      />
+      <ZeroRiskSlider
+        bgColor="#9F5DE9"
+        heading="Visibility + Organic Growth"
+        subtext1="Not only increase your product’s visibility but also drive organic traffic directly to your website — no third-party brand dilution. "
+        subtext2="Build brand recall and boost your SEO through direct creator traffic"
+        images={["/assets/landing/zero-risk/01.png"]}
+      />
+      <ZeroRiskSlider
+        bgColor="#38A2F5"
+        heading="No More Agencies"
+        subtext1="Manage campaigns and track performance effortlessly on a single platform."
+        subtext2="No middlemen. No delays. Just full control at your fingertips"
+        images={["/assets/landing/zero-risk/01.png"]}
+      />
+      <ZeroRiskSlider
+        bgColor="#FF4979"
+        heading="Focus on What You Do Best"
+        subtext1="Concentrate on your core business while creators focus on promotion."
+        subtext2="Let creators drive growth, while you scale operations."
+        images={["/assets/landing/zero-risk/01.png"]}
+      />
+      <SignupFlow />
+      {/* <TrustedBrands />
       <EarningsSection />
       <SocialMedia />
-      <ContentCategories />
-      <FaqSection type="vendor"/>
+      <ContentCategories /> */}
+      <FaqSection type="vendor" />
       <Launchpad />
       <LandingPageFooter />
     </div>

@@ -25,6 +25,17 @@ export default {
         xsmobile: { max: "500px" },
         mobile: { max: "640px" },
         tablet: { min: "501px", max: "767px" },
+        sm: "640px",
+        // => @media (min-width: 640px) { ... }
+
+        md: "768px",
+        // => @media (min-width: 768px) { ... }
+
+        lg: "1024px",
+        // => @media (min-width: 1024px) { ... }
+
+        xl: "1280px",
+        // => @media (min-width: 1280px) { ... }
       },
       colors: {
         foreground: "hsl(var(--foreground))",
@@ -32,6 +43,7 @@ export default {
         "light-primary": "#ff497917",
         "secondary-color": "#090919",
         // 'secondary': '#090919',
+        "gray-color-200": "#333333",
         "gray-color": "#89858C",
         "gray-darken": "#2B2A2B",
         "gray-black": "#262626",

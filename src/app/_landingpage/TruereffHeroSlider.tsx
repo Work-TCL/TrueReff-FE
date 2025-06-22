@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import RoleToggleTabs from "./RolesToggles";
 
 const TruereffHeroSlider = () => {
   const sliderRef = useRef<Slider>(null);
@@ -11,12 +12,12 @@ const TruereffHeroSlider = () => {
   const mainSettings = {
     dots: false,
     infinite: true,
-    speed: 600,
+    speed: 1500,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: false, // disable built-in autoplay
     arrows: false,
-    fade: true,
+    fade: false,
     beforeChange: (_: number, next: number) => setCurrentSlide(next),
   };
 
@@ -25,28 +26,12 @@ const TruereffHeroSlider = () => {
 
   // COMMON CLASSES
   const wrapperClass =
-    "h-screen w-full text-white bg-white/10 backdrop:blur-sm capitalize";
+    "h-screen w-full text-white bg-white/10 backdrop:blur-sm capitalize relative";
   const slideContainerClass =
     "h-screen flex items-center justify-center text-center flex-col md:space-y-6 space-y-3";
   const headlineClass =
     "text-xl sm:text-3xl md:text-5xl font-bold !leading-[1.3]";
   const highlightClass = "text-yellow-400";
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    if (currentSlide === 0 || currentSlide === 3) {
-      // First and fourth slides rely on SwitchingText to trigger next
-      // Do nothing here — SwitchingText will handle it
-    } else if (currentSlide === 1 || currentSlide === 2) {
-      timer = setTimeout(() => {
-        sliderRef.current?.slickNext();
-        clearTimeout(timer);
-      }, 5000);
-    }
-
-    return () => clearTimeout(timer);
-  }, [currentSlide]);
 
   return (
     <div className={wrapperClass}>
@@ -108,6 +93,9 @@ const TruereffHeroSlider = () => {
           </div>
         </div>
       </Slider>
+      <div className="absolute bottom-0 left-[50%] translate-x-[-50%] z-10">
+        <RoleToggleTabs />
+      </div>
     </div>
   );
 };
@@ -135,11 +123,10 @@ export const SwitchingText: React.FC<SwitchingTextProps> = ({
         setShow(true);
 
         if (nextIndex === 0) {
-          // Finished full cycle, trigger onComplete
           onComplete();
         }
       }, 400);
-    }, 2000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [index, texts.length, onComplete]);

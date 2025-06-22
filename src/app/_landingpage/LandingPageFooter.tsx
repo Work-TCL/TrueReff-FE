@@ -4,12 +4,9 @@ import React from "react";
 import ShareImage from "../../../public/assets/svg/ShareImage";
 import LocationImage from "../../../public/assets/svg/Location";
 import PhoneImage from "../../../public/assets/svg/PhoneImage";
-import YouTubeImage from "../../../public/assets/svg/Youtube";
-import LinkedinImage from "../../../public/assets/svg/LinkedinImage";
-import TwitterImage from "../../../public/assets/svg/TwitterImage";
-import FaceBookImage from "../../../public/assets/svg/FaceBookImage";
 import Image from "next/image";
 import Link from "next/link";
+import { AiFillInstagram, AiFillYoutube } from "react-icons/ai";
 
 export default function LandingPageFooter({
   className = "",
@@ -24,7 +21,7 @@ export default function LandingPageFooter({
       } px-5`}
     >
       <div className="mx-auto w-full max-w-[1720px] ">
-        <div className="flex  mobile:flex-col tablet:pt-0  sm:flex-col md:flex-row md:gap-[20px] sm:pt-10 xl:gap-[20px]">
+        <div className="flex  mobile:flex-col tablet:pt-0  sm:flex-col md:flex-row md:gap-[20px] sm:pt-10 xl:gap-[40px]">
           <a
             href="/"
             data-aos="fade-down-right"
@@ -49,12 +46,12 @@ export default function LandingPageFooter({
               <div className="flex xsmobile:gap-0 xsmobile:flex-col tablet:flex-row tablet:gap-[40px] md:gap-[40px] lg:gap-[40px] xl:justify-between ">
                 <ul className="text-white text-[20px] leading-[16px] font-medium	">
                   <li className="mb-[30px]">
-                    <a href="" className="hover:underline">
+                    <a href="/" className="hover:underline">
                       For Creators
                     </a>
                   </li>
                   <li className="mb-[30px]">
-                    <a href="" className="hover:underline">
+                    <a href="/vendor" className="hover:underline">
                       For Brands
                     </a>
                   </li>
@@ -63,16 +60,16 @@ export default function LandingPageFooter({
                       About Us
                     </a>
                   </li>
-                  <li className="mb-[30px]">
+                  {/* <li className="mb-[30px]">
                     <a href="" className="hover:underline">
                       Blogs
                     </a>
-                  </li>
-                  <li className="mb-[30px]">
+                  </li> */}
+                  {/* <li className="mb-[30px]">
                     <a href="" className="hover:underline">
                       Case Studies
                     </a>
-                  </li>
+                  </li> */}
                   <li className="mb-[30px]">
                     <a href="/contact" className="hover:underline">
                       Contact Us
@@ -80,21 +77,21 @@ export default function LandingPageFooter({
                   </li>
                 </ul>
                 <ul className="text-white text-[20px] leading-[16px] font-medium">
-                  <li className="mb-[30px]">
+                  {/* <li className="mb-[30px]">
                     <a href="" className="hover:underline ">
                       Careers
                     </a>
-                  </li>
+                  </li> */}
                   <li className="mb-[30px]">
                     <a href="/privacy-policy" className="hover:underline">
                       Privacy Policy
                     </a>
                   </li>
-                  <li className="mb-[30px]">
+                  {/* <li className="mb-[30px]">
                     <a href="" className="hover:underline">
                       Cookie Policy
                     </a>
-                  </li>
+                  </li> */}
                   <li className="mb-[30px]">
                     <a href="/terms-condition" className="hover:underline">
                       Terms Of Service
@@ -115,29 +112,29 @@ export default function LandingPageFooter({
               </h2>
               <ul className="text-white text-[20px] leading-[28px] font-medium">
                 <li className="mb-[30px]">
-                  <a href="#" className="hover:underline flex">
+                  <div className="flex">
                     <span className="pt-1 pr-3">
                       <LocationImage />
                     </span>{" "}
                     Shop no 2 ozon shopping centre kamrej bardoli road surat
                     Gujarat PIN code : 394180
-                  </a>
+                  </div>
                 </li>
                 <li className="mb-[30px]">
-                  <a href="#" className="hover:underline  flex">
+                  <div className="flex">
                     <span className="pt-1 pr-3">
                       <ShareImage />
                     </span>{" "}
                     Support@truereff.com
-                  </a>
+                  </div>
                 </li>
                 <li className="mb-[30px]">
-                  <a href="#" className="hover:underline flex">
+                  <div className="flex">
                     <span className="pt-1 pr-3">
                       <PhoneImage />
                     </span>{" "}
                     +91 79908 17357
-                  </a>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -146,36 +143,45 @@ export default function LandingPageFooter({
 
         <div className="sm:flex sm:items-center sm:justify-between sm:pb-20 pb-10 pt-10 md:pt-24 xsmobile:pl-[20px] px-[30px] ">
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-            Copyright © 2024
-            <a href="" className="hover:underline">
-              Truereff
-            </a>
-            . All Rights Reserved.
+            Copyright © 2024 Truereff. All Rights Reserved.
+            {/* <a href="" className="hover:underline"> */}
+            {/* </a> */}
           </span>
           <div className="flex gap-3 items-baseline mt-4 sm:justify-center sm:mt-0">
-            <Link href="https://www.youtube.com/@truereff" target="_blank">
-              <YouTubeImage />
+            <Link
+              href="https://www.youtube.com/@truereff"
+              target="_blank"
+              className="text-[#FF4979] text-xl"
+            >
+              <AiFillYoutube />
             </Link>
             <Link
+              href="https://www.instagram.com/truereffofficial/"
+              target="_blank"
+              className="text-[#FF4979] text-xl"
+            >
+              <AiFillInstagram />
+            </Link>
+            {/* <Link
               href="https://www.instagram.com/truereffofficial/"
               target="_blank"
             >
               <LinkedinImage />
-            </Link>
+            </Link> */}
 
-            <Link
+            {/* <Link
               href="https://www.instagram.com/truereffofficial/"
               target="_blank"
             >
               <TwitterImage />
-            </Link>
+            </Link> */}
 
-            <Link
+            {/* <Link
               href="https://www.instagram.com/truereffofficial/"
               target="_blank"
             >
               <FaceBookImage />
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
