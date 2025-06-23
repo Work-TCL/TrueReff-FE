@@ -22,7 +22,7 @@ export default function LandingPageFooter({
     >
       <div className="mx-auto w-full max-w-[1720px] ">
         <div className="flex  mobile:flex-col tablet:pt-0  sm:flex-col md:flex-row md:gap-[20px] sm:pt-10 xl:gap-[40px]">
-          <a
+          <Link
             href="/"
             data-aos="fade-down-right"
             className="tablet:flex tablet:justify-center "
@@ -33,7 +33,7 @@ export default function LandingPageFooter({
               width={352}
               alt="TrueReff Logo"
             />
-          </a>
+          </Link>
 
           <div
             data-aos="fade-left"
@@ -46,61 +46,61 @@ export default function LandingPageFooter({
               <div className="flex xsmobile:gap-0 xsmobile:flex-col tablet:flex-row tablet:gap-[40px] md:gap-[40px] lg:gap-[40px] xl:justify-between ">
                 <ul className="text-white text-[20px] leading-[16px] font-medium	">
                   <li className="mb-[30px]">
-                    <a href="/" className="hover:underline">
+                    <Link href="/" className="hover:underline">
                       For Creators
-                    </a>
+                    </Link>
                   </li>
                   <li className="mb-[30px]">
-                    <a href="/vendor" className="hover:underline">
+                    <Link href="/vendor" className="hover:underline">
                       For Brands
-                    </a>
+                    </Link>
                   </li>
                   <li className="mb-[30px]">
-                    <a href="/aboutus" className="hover:underline">
+                    <Link href="/aboutus" className="hover:underline">
                       About Us
-                    </a>
+                    </Link>
                   </li>
                   {/* <li className="mb-[30px]">
-                    <a href="" className="hover:underline">
+                    <Link href="" className="hover:underline">
                       Blogs
-                    </a>
+                    </Link>
                   </li> */}
                   {/* <li className="mb-[30px]">
-                    <a href="" className="hover:underline">
+                    <Link href="" className="hover:underline">
                       Case Studies
-                    </a>
+                    </Link>
                   </li> */}
                   <li className="mb-[30px]">
-                    <a href="/contact" className="hover:underline">
+                    <Link href="/contact" className="hover:underline">
                       Contact Us
-                    </a>
+                    </Link>
                   </li>
                 </ul>
                 <ul className="text-white text-[20px] leading-[16px] font-medium">
                   {/* <li className="mb-[30px]">
-                    <a href="" className="hover:underline ">
+                    <Link href="" className="hover:underline ">
                       Careers
-                    </a>
+                    </Link>
                   </li> */}
                   <li className="mb-[30px]">
-                    <a href="/privacy-policy" className="hover:underline">
+                    <Link href="/privacy-policy" className="hover:underline">
                       Privacy Policy
-                    </a>
+                    </Link>
                   </li>
                   {/* <li className="mb-[30px]">
-                    <a href="" className="hover:underline">
+                    <Link href="" className="hover:underline">
                       Cookie Policy
-                    </a>
+                    </Link>
                   </li> */}
                   <li className="mb-[30px]">
-                    <a href="/terms-condition" className="hover:underline">
+                    <Link href="/terms-condition" className="hover:underline">
                       Terms Of Service
-                    </a>
+                    </Link>
                   </li>
                   <li className="mb-[30px]">
-                    <a href="/transaction-policy" className="hover:underline">
+                    <Link href="/transaction-policy" className="hover:underline">
                       Transaction Policy
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -144,8 +144,8 @@ export default function LandingPageFooter({
         <div className="sm:flex sm:items-center sm:justify-between sm:pb-20 pb-10 pt-10 md:pt-24 xsmobile:pl-[20px] px-[30px] ">
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             Copyright © 2024 Truereff. All Rights Reserved.
-            {/* <a href="" className="hover:underline"> */}
-            {/* </a> */}
+            {/* <Link href="" className="hover:underline"> */}
+            {/* </Link> */}
           </span>
           <div className="flex gap-3 items-baseline mt-4 sm:justify-center sm:mt-0">
             <Link

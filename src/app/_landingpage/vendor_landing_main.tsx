@@ -1,18 +1,12 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import HeroSection from "./heroSection";
-import EarningsSection from "./earningsSection";
-import SocialMedia from "./SocialMediaSections";
+import React, { useEffect } from "react";
 import AOS from "aos";
-import ContentCategories from "./ContentCategories";
 import Launchpad from "./Launchpad";
 import LandingPageFooter from "./LandingPageFooter";
 import "aos/dist/aos.css";
 import TruereffHeroSlider from "./TruereffHeroSlider";
 import FaqSection from "./FAQSection";
-import TrustedBrands from "./TrustedBrands";
 import NavbarCommon from "./NavbarCommon";
 import WhyTruereff from "./WhyTruereff";
 import ZeroRiskSlider from "./ZeroRiskSlider";
@@ -37,7 +31,7 @@ export default function VendorLandingPage() {
           <div className="w-full h-full scale-150 animate-bannerFloat bg-banner-bg bg-cover bg-repeat bg-center"></div>
         </div>
         <div className="absolute -left-[0px] -right-[0px] -top-[0px] -bottom-[0px] overflow-hidden bg-black/15 backdrop:blur-lg z-[7]">
-          <TruereffHeroSlider />
+          <TruereffHeroSlider isVendor={true} />
         </div>
       </div>
 
@@ -79,16 +73,14 @@ export default function VendorLandingPage() {
         }}
       >
         <div className="flex w-max animate-marquee whitespace-nowrap gap-20 py-3 text-sm font-medium px-4">
-          {Array(10).fill(
-            <>
-              <span className="flex items-center gap-2 text-[20px]">
-                Become a Truereff Partner today –{" "}
-                <span className="font-bold underline underline-offset-1 ext-[20px]">
-                  DOWNLOAD NOW
-                </span>
+          {Array.from({ length: 10 }).map((_, idx) => (
+            <span key={idx} className="flex items-center gap-2 text-[20px]">
+              Become a Truereff Partner today –{" "}
+              <span className="font-bold underline underline-offset-1 text-[20px]">
+                DOWNLOAD NOW
               </span>
-            </>
-          )}
+            </span>
+          ))}
         </div>
       </div>
       <WhyTruereff />

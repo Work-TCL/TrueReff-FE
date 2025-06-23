@@ -11,6 +11,7 @@ function NavbarCommon() {
   const handleLinkClick = (linkName: string) => {
     setActiveLink(linkName);
     setIsMenuOpen(false);
+    router.push(`/aboutus`);
   };
   return (
     <nav className="relative flex justify-between items-center md:px-[50px] px-5 pb-[50px] pt-[20px] text-white z-[9] ">
@@ -20,7 +21,7 @@ function NavbarCommon() {
       >
         <Image
           height={50}
-          width={352}
+          width={265}
           src="/assets/common/truereff-white.svg"
           alt="Truerreff Logo"
         />

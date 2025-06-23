@@ -701,5 +701,6 @@
   "Verified_Account": "Verified Account",
   "Account_not_Verified": "Account not Verified",
   "No_Notifications": "No Notifications",
-  "No_Notifications_Description": "You're all caught up! You’ll see notifications here when there’s something new."
+  "No_Notifications_Description": "You're all caught up! You’ll see notifications here when there’s something new.",
+  "Notifications": "Notifications"
 }

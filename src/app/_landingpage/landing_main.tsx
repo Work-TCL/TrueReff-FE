@@ -1,6 +1,6 @@
 "use client";
-import { Menu, X, MoveRight } from "lucide-react";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect } from "react";
 import HeroSection from "./heroSection";
 import EarningsSection from "./earningsSection";
 import SocialMedia from "./SocialMediaSections";
@@ -9,9 +9,6 @@ import ContentCategories from "./ContentCategories";
 import Launchpad from "./Launchpad";
 import LandingPageFooter from "./LandingPageFooter";
 import "aos/dist/aos.css";
-import ButtonLogin from "../_components/components-common/Button-Login";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import TruereffHeroSlider from "./TruereffHeroSlider";
 import FaqSection from "./FAQSection";
 import NavbarCommon from "./NavbarCommon";
@@ -77,16 +74,14 @@ export default function LandingPage() {
         }}
       >
         <div className="flex w-max animate-marquee whitespace-nowrap gap-20 py-2 text-sm font-medium px-4">
-          {Array(10).fill(
-            <>
-              <span className="flex items-center gap-2 text-[20px]">
+          {Array.from({ length: 10 }).map((_, idx) => (
+              <span key={idx} className="flex items-center gap-2 text-[20px]">
                 Become a Truerreff Creator today –{" "}
                 <span className="font-bold underline underline-offset-1 ext-[20px]">
                   DOWNLOAD NOW
                 </span>
               </span>
-            </>
-          )}
+          ))}
         </div>
       </div>
       <HeroSection />

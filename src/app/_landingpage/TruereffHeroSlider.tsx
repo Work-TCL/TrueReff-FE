@@ -1,13 +1,15 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import RoleToggleTabs from "./RolesToggles";
 
-const TruereffHeroSlider = () => {
+interface ITrueReffSliderProps {
+  isVendor?: boolean;
+}
+const TruereffHeroSlider = ({isVendor}: ITrueReffSliderProps) => {
   const sliderRef = useRef<Slider>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   const mainSettings = {
     dots: false,
@@ -15,10 +17,9 @@ const TruereffHeroSlider = () => {
     speed: 1500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: false, // disable built-in autoplay
+    autoplay: true, // disable built-in autoplay
     arrows: false,
-    fade: false,
-    beforeChange: (_: number, next: number) => setCurrentSlide(next),
+    fade: false
   };
 
   const switchingText = ["promotions", "ghosted payments", "unfair deals"];
@@ -35,7 +36,59 @@ const TruereffHeroSlider = () => {
 
   return (
     <div className={wrapperClass}>
-      <Slider ref={sliderRef} {...mainSettings}>
+      {isVendor ? <Slider ref={sliderRef} {...mainSettings}>
+        {/* Slide 1 */}
+        <div>
+          <div className={slideContainerClass}>
+            <div className={headlineClass}>
+              Stop Paying for Hype{", "}
+              <span className={highlightClass}>
+                Start Paying for Sales.
+              </span>
+            </div>
+            <div className="sm:text-xl md:text-3xl">
+              With{" "}
+              <span className={`${highlightClass} font-semibold`}>
+                Truereff
+              </span>
+              , every rupee works harder.
+            </div>
+          </div>
+        </div>
+
+        {/* Slide 2 */}
+        <div>
+          <div className={slideContainerClass}>
+            <div className={headlineClass}>
+              Forget Fake Influencers — <br />
+              <span className={highlightClass}>Back Real Results with Truereff.</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Slide 3 */}
+        <div>
+          <div className={slideContainerClass}>
+            <div className={`${headlineClass} max-w-[1000px]`}>
+              No Sales? <span className={highlightClass}> No Payment.</span><br />
+              It’s That Simple with Truereff.
+            </div>
+          </div>
+        </div>
+
+        {/* Slide 4 */}
+        <div>
+          <div className={slideContainerClass}>
+            <div className={headlineClass}>
+              Zero Upfront Cost{", "}
+              <span className={highlightClass}>
+                Unlimited Sales Potential.
+              </span><br />
+              Only on Truereff.
+            </div>
+          </div>
+        </div>
+      </Slider>: <Slider ref={sliderRef} {...mainSettings}>
         {/* Slide 1 */}
         <div>
           <div className={slideContainerClass}>
@@ -92,7 +145,7 @@ const TruereffHeroSlider = () => {
             </div>
           </div>
         </div>
-      </Slider>
+      </Slider>}
       <div className="absolute bottom-0 left-[50%] translate-x-[-50%] z-10">
         <RoleToggleTabs />
       </div>
