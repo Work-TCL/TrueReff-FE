@@ -246,7 +246,7 @@ export default function Overview() {
           {/* Left block: SalesChart + DonutChart (in column) */}
           <div className="flex flex-col gap-4 xl:w-[60%] w-full h-full">
             <div className="flex flex-col md:flex-row gap-4 h-full items-stretch">
-              <div className="flex xl:w-[65%] w-full">
+              <div className="flex xl:w-[65%] md:w-[65%] w-full">
                 {revenueLoading ? (
                   <div className="w-full h-[400px] bg-white rounded-lg">
                     <Loading height="fit" />
@@ -263,7 +263,7 @@ export default function Overview() {
                   </div>
                 )}
               </div>
-              <div className="flex xl:w-[35%] md:w-[50%] w-full">
+              <div className="flex xl:w-[35%] md:w-[35%] w-full">
                 {creatorLoading ? (
                   <div className="w-full bg-white rounded-lg">
                     <Loading height="fit" />

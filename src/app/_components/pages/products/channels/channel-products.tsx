@@ -99,6 +99,7 @@ export default function ChannelProductList() {
       setInternalLoader(false);
       setCurrentPage(1);
       setTotalPages(0);
+      setProductList([]);      
     }
   };
 
