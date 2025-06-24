@@ -30,8 +30,9 @@ const TruereffHeroSlider = ({isVendor}: ITrueReffSliderProps) => {
     "h-screen w-full text-white bg-white/10 backdrop:blur-sm capitalize relative";
   const slideContainerClass =
     "h-screen flex items-center justify-center text-center flex-col md:space-y-6 space-y-3";
-  const headlineClass =
-    "text-xl sm:text-3xl md:text-5xl font-bold !leading-[1.3]";
+    const headlineClass =
+      "text-xl sm:text-3xl md:text-5xl font-bold !leading-[1.3] transition-all duration-700 ease-in-out transform";
+  
   const highlightClass = "text-yellow-400";
 
   return (

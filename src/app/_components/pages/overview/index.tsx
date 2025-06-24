@@ -110,7 +110,11 @@ export default function Overview() {
           // ele.pastSales = ele?.pastSales || "";
           return { ...ele };
         });
-        setSuggestedCreators(result);
+        if (result?.length === 1) {
+          setSuggestedCreators([...result, ...result]);
+        } else {
+          setSuggestedCreators(result);
+        }
       }
     } catch (e) {
     } finally {
