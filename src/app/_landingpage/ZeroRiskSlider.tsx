@@ -34,10 +34,19 @@ const ZeroRiskSlider = ({
     <section
       className="py-10 sm:py-14 md:py-24 text-white overflow-hidden"
       style={{ backgroundColor: bgColor }}
+      data-aos="fade-up"
     >
-      <div className="max-w-7xl mx-auto px-4 flex flex-col md:grid md:grid-cols-2 gap-8 items-center">
+      <div
+        className="max-w-7xl mx-auto px-4 flex flex-col md:grid md:grid-cols-2 gap-8 items-center"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
         {/* Text Content */}
-        <div className="text-left mb-8 md:mb-0">
+        <div
+          className="text-left mb-8 md:mb-0"
+          data-aos="fade-right"
+          data-aos-delay="200"
+        >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl xl:leading-[90px] font-bold mb-4 md:mb-[40px]">
             {heading}
           </h2>
@@ -46,7 +55,7 @@ const ZeroRiskSlider = ({
         </div>
 
         {/* Image or Slider */}
-        <div className="w-full">
+        <div className="w-full" data-aos="fade-left" data-aos-delay="300">
           {images.length > 1 ? (
             <Slider {...sliderSettings}>
               {images.map((img, idx) => (

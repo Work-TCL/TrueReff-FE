@@ -25,7 +25,7 @@ export default function LandingPageFooter({
           <Link
             href="/"
             data-aos="fade-down-right"
-            className="tablet:flex tablet:justify-center "
+            className="tablet:flex tablet:justify-center h-fit"
           >
             <Image
               src="/assets/common/truereff-white.svg"
@@ -98,7 +98,10 @@ export default function LandingPageFooter({
                     </Link>
                   </li>
                   <li className="mb-[30px]">
-                    <Link href="/transaction-policy" className="hover:underline">
+                    <Link
+                      href="/transaction-policy"
+                      className="hover:underline"
+                    >
                       Transaction Policy
                     </Link>
                   </li>

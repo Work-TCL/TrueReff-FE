@@ -113,6 +113,7 @@ export default {
       },
       backgroundImage: {
         "banner-bg": "url('/assets/common/banner-bg.svg')",
+        "banner-bg-4": "url('/assets/common/banner-bg4.svg')",
         "pink-blue-gradient": "linear-gradient(1deg, #e9b9cf 0%, #d3f3f1 100%)",
         "custom-gradient": `
           linear-gradient(0deg, #ffffff00, #ffffff00),

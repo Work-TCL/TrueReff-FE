@@ -70,10 +70,19 @@ export default function SignupFlow() {
         backgroundImage:
           "url('/assets/landing/why-truereff/bg-why-truereff.png')",
       }}
+      data-aos="fade-up"
     >
-      <div className="max-w-7xl mx-auto">
+      <div
+        className="max-w-7xl mx-auto"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
         {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-4 mb-10">
+        <div
+          className="flex items-center justify-between flex-wrap gap-4 mb-10"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
           <div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight font-bold mb-4 sm:mb-6">
               <span className="text-primary">Mobile</span> Signup Flow?
@@ -103,8 +112,13 @@ export default function SignupFlow() {
 
         {/* Slider */}
         <Slider ref={sliderRef} {...settings}>
-          {steps.map((step) => (
-            <div key={step.id} className="px-3 sm:px-4 w-full">
+          {steps.map((step, idx) => (
+            <div
+              key={step.id}
+              className="px-3 sm:px-4 w-full"
+              data-aos="zoom-in-up"
+              data-aos-delay={`${idx * 100 + 100}`}
+            >
               <div className="bg-white rounded-tl-lg rounded-tr-lg p-4 sm:p-6 text-left h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <img

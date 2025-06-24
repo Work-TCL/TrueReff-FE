@@ -67,10 +67,15 @@ export default function WhyTruereff() {
         backgroundImage:
           "url('/assets/landing/why-truereff/bg-why-truereff.png')",
       }}
+      data-aos="fade-up"
     >
       <div className="max-w-6xl mx-auto w-full">
         {/* Header */}
-        <div className="flex flex-col items-center justify-center mb-10">
+        <div
+          className="flex flex-col items-center justify-center mb-10"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight">
             <span className="text-primary font-bold">Why</span> truereff?
           </h2>
@@ -84,7 +89,7 @@ export default function WhyTruereff() {
         {/* Grid Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-6 gap-6">
           {stats.map((item, index) => {
-            let colSpan = "col-span-6"; // mobile default
+            let colSpan = "col-span-6";
 
             if (index < 3) {
               colSpan = "md:col-span-3 lg:col-span-2";
@@ -96,6 +101,8 @@ export default function WhyTruereff() {
               <div
                 key={item.id}
                 className={`${colSpan} flex flex-col justify-between p-6 bg-white rounded-xl shadow-md`}
+                data-aos="zoom-in"
+                data-aos-delay={`${index * 100}`}
               >
                 <div className="flex items-start justify-between w-full">
                   <div className="w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] flex items-center justify-center rounded-full">
@@ -130,7 +137,11 @@ export default function WhyTruereff() {
         </div>
 
         {/* Button */}
-        <div className="mt-10 flex justify-center items-center w-full">
+        <div
+          className="mt-10 flex justify-center items-center w-full"
+          data-aos="fade-up"
+          data-aos-delay="400"
+        >
           <ButtonLogin
             label="Get Started"
             onClick={() => router.push("/login")}
