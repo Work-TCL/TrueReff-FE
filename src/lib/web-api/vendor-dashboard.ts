@@ -23,3 +23,11 @@ export const getVendorRevenuePerformance = async (days: string = "7") => {
     throw error;
   }
 };
+export const getWalletBalance = async () => {
+  try {
+    const response = await axios.get(`/payment/wallet`);
+    return response?.data?.data;
+  } catch (error) {
+    throw error;
+  }
+};

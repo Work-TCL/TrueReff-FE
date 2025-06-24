@@ -21,7 +21,7 @@ export default function LandingPageFooter({
       } px-5`}
     >
       <div className="mx-auto w-full max-w-[1720px] ">
-        <div className="flex  mobile:flex-col tablet:pt-0  sm:flex-col md:flex-row md:gap-[20px] sm:pt-10 xl:gap-[40px]">
+        <div className="flex  mobile:flex-col tablet:pt-0  sm:flex-col lg:flex-row md:gap-[20px] sm:pt-20 xl:gap-[40px]">
           <Link
             href="/"
             data-aos="fade-down-right"
@@ -37,16 +37,16 @@ export default function LandingPageFooter({
 
           <div
             data-aos="fade-left"
-            className="tablet:max-w-full w-full flex justify-between xsmobile:flex-col xsmobile:pl-[20px] tablet:flex-col md:flex-col lg:flex-row flex-row xsmobile:w-full max-w-[1100px] gap-[40px] ml-auto"
+            className="tablet:max-w-full w-full flex justify-between xsmobile:flex-col xsmobile:pl-[20px] tablet:flex-col sm:flex-col md:flex-row flex-row xsmobile:w-full max-w-[1100px] gap-[40px] ml-auto"
           >
-            <div className="flex flex-col md:w-[448px] xsmobile:pt-10 tablet:flex-col tablet:w-full tablet:justify-center tablet:items-center tablet:pt-6">
+            <div className="text-nowrap flex flex-col md:w-[448px] xsmobile:pt-10 tablet:flex-col tablet:w-full tablet:justify-center tablet:items-center tablet:pt-6">
               <h2 className="mb-[30px] text-[24px] leading-[16px] font-light text-gray-500 ">
                 Quick Links
               </h2>
               <div className="flex xsmobile:gap-0 xsmobile:flex-col tablet:flex-row tablet:gap-[40px] md:gap-[40px] lg:gap-[40px] xl:justify-between ">
                 <ul className="text-white text-[20px] leading-[16px] font-medium	">
                   <li className="mb-[30px]">
-                    <Link href="/" className="hover:underline">
+                    <Link href="/" className="hover:underline text-nowrap">
                       For Creators
                     </Link>
                   </li>
