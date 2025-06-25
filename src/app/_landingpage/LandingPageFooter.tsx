@@ -25,25 +25,26 @@ export default function LandingPageFooter({
           <Link
             href="/"
             data-aos="fade-down-right"
-            className="tablet:flex tablet:justify-center h-fit"
+            className="tablet:flex h-fit w-fit lg:pt-0 pt-10"
           >
             <Image
               src="/assets/common/truereff-white.svg"
               height={50}
               width={352}
               alt="TrueReff Logo"
+              className="2xl:max-w-[352px] sm:max-w-[317px] max-w-[260px]"
             />
           </Link>
 
           <div
             data-aos="fade-left"
-            className="tablet:max-w-full w-full flex justify-between xsmobile:flex-col xsmobile:pl-[20px] tablet:flex-col sm:flex-col md:flex-row flex-row xsmobile:w-full max-w-[1100px] gap-[40px] ml-auto"
+            className="tablet:max-w-full w-full flex justify-between xsmobile:flex-col xsmobile:pl-[20px] tablet:flex-col sm:flex-col md:flex-row flex-row xsmobile:w-full 2xl:max-w-[1100px] max-w-[950px] gap-[40px] ml-auto"
           >
-            <div className="text-nowrap flex flex-col md:w-[448px] xsmobile:pt-10 tablet:flex-col tablet:w-full tablet:justify-center tablet:items-center tablet:pt-6">
+            <div className="text-nowrap flex flex-col md:w-[448px] xsmobile:pt-10 tablet:flex-col tablet:w-full tablet:pt-6">
               <h2 className="mb-[30px] text-[24px] leading-[16px] font-light text-gray-500 ">
                 Quick Links
               </h2>
-              <div className="flex xsmobile:gap-0 xsmobile:flex-col tablet:flex-row tablet:gap-[40px] md:gap-[40px] lg:gap-[40px] xl:justify-between ">
+              <div className="flex xsmobile:gap-0 xsmobile:flex-col tablet:flex-row tablet:gap-[40px] md:gap-[30px] lg:gap-[30px] 2xl:gap-[40px] xl:justify-between ">
                 <ul className="text-white text-[20px] leading-[16px] font-medium	">
                   <li className="mb-[30px]">
                     <Link href="/" className="hover:underline text-nowrap">
@@ -109,7 +110,7 @@ export default function LandingPageFooter({
               </div>
             </div>
 
-            <div className="xsmobile:flex-col xsmobile:max-w-full w-full tablet:max-w-full tablet:flex tablet:flex-col tablet:justify-center tablet:items-center tablet:pt-6 md:max-w-full lg:max-w-[343px] max-w-[398px] tablet:mx-auto">
+            <div className="xsmobile:flex-col xsmobile:max-w-full w-full tablet:max-w-[398px] tablet:flex tablet:flex-col  tablet:pt-6 md:max-w-full lg:max-w-[343px] max-w-[398px]">
               <h2 className="mb-[30px] text-[24px] leading-[16px] font-light text-gray-500">
                 Support
               </h2>

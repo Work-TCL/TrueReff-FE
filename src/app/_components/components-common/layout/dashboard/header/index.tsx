@@ -257,12 +257,14 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               onClick={handleExpandSidebar}
             />
             <h2
-              className={`md:text-2xl text-lg font-medium text-primary ${["/creator/creator-analysis", "/vendor/vendor-analysis"].includes(
-                pathName
-              )
+              className={`md:text-2xl text-lg font-medium text-primary ${
+                [
+                  "/creator/creator-analysis",
+                  "/vendor/vendor-analysis",
+                ].includes(pathName)
                   ? "sm:block hidden mr-2"
                   : ""
-                }`}
+              }`}
             >
               {getHeaderName()}
             </h2>
@@ -270,11 +272,11 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               pathName
             ) && <SearchSuggestionDropdown />}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center xs:gap-2">
             <div className="ml-auto flex items-center md:gap-3 gap-2">
-              {["/vendor/dashboard", "/creator/dashboard"].includes(pathName) && (
-                <HeaderFilter />
-              )}
+              {["/vendor/dashboard", "/creator/dashboard"].includes(
+                pathName
+              ) && <HeaderFilter />}
               <NotificationPopover
                 notifications={notifications}
                 unreadNotifications={unreadNotifications}
@@ -293,9 +295,10 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
                   style={{
                     ...(creator.profile_image || vendor.profile_image
                       ? {
-                        backgroundImage: `url(${creator.profile_image || vendor.profile_image
+                          backgroundImage: `url(${
+                            creator.profile_image || vendor.profile_image
                           })`,
-                      }
+                        }
                       : {}),
                   }}
                 >
@@ -320,11 +323,11 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
           <div className="flex space-x-2 items-center">
             {(pathName === "/creator-registration" ||
               pathName === "/vendor-register") && (
-                <ArrowLeft
-                  className="text-2xl text-primary cursor-pointer"
-                  onClick={handleOnBack}
-                />
-              )}
+              <ArrowLeft
+                className="text-2xl text-primary cursor-pointer"
+                onClick={handleOnBack}
+              />
+            )}
             <h2 className="hidden md:block md:text-2xl ml-2 text-lg font-medium text-primary">
               {getHeaderName()}
             </h2>

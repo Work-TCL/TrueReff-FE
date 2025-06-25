@@ -87,7 +87,7 @@ export default function VendorLandingPage() {
       <ZeroRiskSlider
         images={[
           "/assets/landing/zero-risk/02.png",
-          "/assets/landing/zero-risk/01.png",          
+          "/assets/landing/zero-risk/01.png",
         ]}
       />
       <ZeroRiskSlider
@@ -95,21 +95,21 @@ export default function VendorLandingPage() {
         heading="Visibility + Organic Growth"
         subtext1="Not only increase your product’s visibility but also drive organic traffic directly to your website — no third-party brand dilution. "
         subtext2="Build brand recall and boost your SEO through direct creator traffic"
-        images={["/assets/landing/zero-risk/visibility.svg"]}
+        images={["/assets/landing/zero-risk/Img.svg"]}
       />
       <ZeroRiskSlider
         bgColor="#38A2F5"
         heading="No More Agencies"
         subtext1="Manage campaigns and track performance effortlessly on a single platform."
         subtext2="No middlemen. No delays. Just full control at your fingertips"
-        images={["/assets/landing/zero-risk/agencies.svg"]}
+        images={["/assets/landing/zero-risk/Img-1.svg"]}
       />
       <ZeroRiskSlider
         bgColor="#FF4979"
         heading="Focus on What You Do Best"
         subtext1="Concentrate on your core business while creators focus on promotion."
         subtext2="Let creators drive growth, while you scale operations."
-        images={["/assets/landing/zero-risk/focus.svg"]}
+        images={["/assets/landing/zero-risk/Img-2.svg"]}
       />
       <SignupFlow />
       {/* <TrustedBrands />
