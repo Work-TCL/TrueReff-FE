@@ -34,7 +34,7 @@ export default function AddBalanceForm({
   const [amount, setAmount] = useState<any>(100);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const minAmount = 100;
+  const minAmount = 1;
   const maxAmount = 500000;
 
   // const handlePayment = async ({amount,razorpayOrderId}:IDeposit) => {  
@@ -78,7 +78,7 @@ export default function AddBalanceForm({
   const handleCheckout = (payment_session_id:string) => {
     console.log("payment_session_id",payment_session_id)
     const cashfree = window.Cashfree({
-      mode: 'sandbox', // or 'production'
+      mode: 'production', // or 'production'
     });
 
     const checkoutOptions = {
