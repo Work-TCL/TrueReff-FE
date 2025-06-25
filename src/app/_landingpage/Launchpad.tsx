@@ -23,10 +23,8 @@ export default function Launchpad() {
             className="max-w-[575px] sm:text-[20px] text-right leading-[28px]"
           >
             <p>
-              Help your followers discover the best products and earn every time
-              they shop through your content. With Truereff, grow your
-              influence, reach more people, and handle it all easily in one
-              simple app.
+              Drive more sales through creator-powered recommendations.
+Tap into the trust creators have built with their followers. Truereff helps your brand connect with authentic influencers, run high-converting campaigns, and track every click and sale — all from one simple dashboard.
             </p>
           </div>
         </div>

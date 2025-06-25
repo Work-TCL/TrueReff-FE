@@ -80,9 +80,8 @@ export default function WhyTruereff() {
             <span className="text-primary font-bold">Why</span> truereff?
           </h2>
           <p className="text-gray-color-200 text-base tablet:text-lg md:text-xl py-4 max-w-3xl">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s,
+            Truereff is India’s trusted platform connecting top creators with brands to deliver authentic content and guaranteed sales.
+Join thousands of brands who grow faster with performance-driven influencer campaigns and transparent results.
           </p>
         </div>
 
