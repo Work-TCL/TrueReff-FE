@@ -13,18 +13,20 @@ export default function Launchpad() {
         <div className="max-w-[1920px] mx-auto flex mobile:flex-col sm:flex-col lg:flex-row xsmobile:gap-[50px] tablet:gap-[50px] sm:gap-[50px] lg:gap-[100px] justify-center items-center">
           <div
             data-aos="fade-down"
-            className="md:text-[60px] sm:text-4xl text-3xl font-medium text-gray-900 max-w-[565px] md:leading-[70px]"
+            className="md:text-[60px] sm:text-4xl text-3xl font-medium text-gray-900 2xl:max-w-[762px] max-w-[565px] md:leading-[70px]"
           >
-            Turn your recommendations into
-            <span className="text-primary font-bold"> revenue.</span>
+            Drive more sales through creator-powered
+            <span className="text-primary font-bold"> recommendations.</span>
           </div>
           <div
             data-aos="fade-left"
             className="max-w-[575px] sm:text-[20px] text-right leading-[28px]"
           >
             <p>
-              Drive more sales through creator-powered recommendations.
-Tap into the trust creators have built with their followers. Truereff helps your brand connect with authentic influencers, run high-converting campaigns, and track every click and sale — all from one simple dashboard.
+              Tap into the trust creators have built with their followers.
+              Truereff helps your brand connect with authentic influencers, run
+              high-converting campaigns, and track every click and sale — all
+              from one simple dashboard.
             </p>
           </div>
         </div>
@@ -34,7 +36,7 @@ Tap into the trust creators have built with their followers. Truereff helps your
         data-aos="zoom-in"
         className="flex justify-center items-center relative  bottom-[150px] h-[300px] mb-[300px]"
       >
-        <div className="relative xsmobile:py-[20px] tablet:py-[30px] md:py-[60px] tablet:w-[480px] xsmobile:w-[300px]  sm:w-[450px] md:w-[700px] lg:py-[125px] lg:w-[1000px] xl:w-full flex justify-between items-center bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff] max-w-[1200px] mobile:rounded-[10px] sm:rounded-[10px] md:rounded-[15px] w-full mobile:px-[20px] sm:px-[20px] md:px-[30px] lg:px-[60px]">
+        <div className="relative xsmobile:py-[20px] tablet:py-[30px] md:py-[60px] tablet:w-[480px] xsmobile:w-[300px]  sm:w-[450px] md:w-[700px] lg:py-[125px] lg:w-[1000px] xl:w-full flex justify-between items-center bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff] 2xl:max-w-[1450px] max-w-[1300px] mobile:rounded-[10px] sm:rounded-[10px] md:rounded-[15px] w-full mobile:px-[20px] sm:px-[20px] md:px-[30px] lg:px-[60px]">
           <p className="xsmobile:text-xs	 sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl font-medium text-gray-900">
             Try <span className="text-primary font-bold "> Truereff</span> for
             free

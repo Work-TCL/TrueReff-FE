@@ -7,6 +7,8 @@ import Image from "next/image";
 import ButtonLogin from "../_components/components-common/Button-Login";
 import { useRouter } from "next/navigation";
 import { SwitchingText } from "./TruereffHeroSlider";
+import ZeroRiskSlider from "./ZeroRiskSlider";
+import ShowCaseCreatorStore from "./showcase";
 
 export default function HeroSection() {
   const router = useRouter();
@@ -22,7 +24,11 @@ export default function HeroSection() {
           >
             Your
             <span className="text-primary capitalize ml-2">
-              <SwitchingText texts={["content", "audience", "earnings"]} onComplete={()=>{}} />
+              <SwitchingText
+                texts={["content", "audience", "earnings"]}
+                onComplete={() => {}}
+                className=""
+              />
             </span>
           </h1>
           <div className=" xsmobile:flex xsmobile:items-center xsmobile:flex-col tablet:flex tablet:items-center tablet:flex-col md:flex md:flex-col md:items-center lg:flex lg:items-start	">
@@ -95,13 +101,15 @@ export default function HeroSection() {
         </div>
       </section>
 
+      <ShowCaseCreatorStore />
+
       {/* Section Two */}
       <section className="bg-white flex flex-col  ">
         <div
           data-aos="fade-down"
           className="flex flex-col text-center xsmobile:gap-[10px] gap-[40px] items-center justify-center"
         >
-          <p className="xl:text-[70px] font-medium xl:leading-[90px] md:text-5xl md:leading-[1.3] text-3xl text-center font-medium text-gray-900 capitalize">
+          <p className="xl:text-[70px] font-medium xl:leading-[90px] md:text-5xl md:leading-[1.3] text-3xl text-center text-gray-900 capitalize">
             Powering
             <span className="text-primary font-bold	"> Creators</span>, trusted
             by Brands

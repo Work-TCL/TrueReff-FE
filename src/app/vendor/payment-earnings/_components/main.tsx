@@ -121,18 +121,19 @@ export default function AccountRecharge() {
                 </div>
 
                 <div className="flex flex-col gap-2 mt-2">
-                    <div className="flex items-center justify-between text-gray-700 text-sm font-medium">
-                        <span>{translate("Main_Balance")}</span>
-                        <span className="flex items-center gap-1 text-pink-500 font-extrabold text-2xl">
-                            <IndianRupee size={18} /> {balance}
-                        </span>
-                    </div>
-                    <div className="flex items-center justify-between text-gray-600 text-xs">
-                        <span>{translate("Blocked_Amount")}</span>
-                        <span className="flex items-center gap-1 text-gray-400">
-                            <IndianRupee size={14} /> {blockedBalance}
-                        </span>
-                    </div>
+                  <div className="flex items-center justify-between text-gray-700 text-sm font-medium">
+                    <span>{translate("Main_Balance")}</span>
+                    <span className="flex items-center gap-1 text-pink-500 font-extrabold text-2xl">
+                      <IndianRupee size={18} /> {formatFloatValue(balance)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-gray-600 text-xs">
+                    <span>{translate("Blocked_Amount")}</span>
+                    <span className="flex items-center gap-1 text-gray-400">
+                      <IndianRupee size={14} />{" "}
+                      {formatFloatValue(blockedBalance)}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Subtle watermark */}

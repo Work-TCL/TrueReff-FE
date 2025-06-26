@@ -117,7 +117,7 @@ const TruereffHeroSlider = ({ isVendor }: ITrueReffSliderProps) => {
                   <SwitchingText
                     texts={switchingText}
                     onComplete={() => sliderRef.current?.slickNext()}
-                    className="w-[400px] text-left text-nowrap overflow-visible"
+                    className="sm:w-[400px] w-[150px] text-left text-nowrap overflow-visible"
                   />
                 </span>
               </div>
@@ -162,7 +162,7 @@ const TruereffHeroSlider = ({ isVendor }: ITrueReffSliderProps) => {
                   <SwitchingText
                     texts={yourText}
                     onComplete={() => sliderRef.current?.slickNext()}
-                    className="w-[220px] text-left text-nowrap overflow-visible"
+                    className="sm:w-[220px] w-[100px] text-left text-nowrap overflow-visible"
                   />
                 </span>
               </div>

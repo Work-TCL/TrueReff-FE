@@ -277,13 +277,13 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               {["/vendor/dashboard", "/creator/dashboard"].includes(
                 pathName
               ) && <HeaderFilter />}
-              <NotificationPopover
+              {/* <NotificationPopover
                 notifications={notifications}
                 unreadNotifications={unreadNotifications}
                 fetchNotifications={fetchNotifications}
                 readNotifications={readNotifications}
                 formatTimeAgo={formatTimeAgo}
-              />
+              /> */}
               <Link
                 href={
                   creator.creatorId ? `/creator/settings` : `/vendor/settings`
