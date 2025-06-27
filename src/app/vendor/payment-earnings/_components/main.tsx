@@ -1,7 +1,7 @@
 "use client";
 
 import { StatsCard } from "@/app/_components/components-common/states/StatesCard";
-import { formatNumber } from "@/lib/utils/constants";
+import { formatFloatValue, formatNumber } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 import { IndianRupee, MoveRight } from "lucide-react";

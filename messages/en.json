@@ -702,5 +702,6 @@
   "Account_not_Verified": "Account not Verified",
   "No_Notifications": "No Notifications",
   "No_Notifications_Description": "You're all caught up! You’ll see notifications here when there’s something new.",
-  "Notifications": "Notifications"
+  "Notifications": "Notifications",
+  "Main_Balance_Tooltip": "Withdrawable balance you can request payout for."
 }

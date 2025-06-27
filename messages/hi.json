@@ -682,5 +682,6 @@
   "Account_not_Verified": "खाता सत्यापित नहीं है",
   "No_Notifications": "कोई सूचना नहीं",
   "No_Notifications_Description": "आप पूरी तरह अपडेट हैं! जब कोई नई सूचना होगी, तो वह यहां दिखाई देगी।",
-  "Notifications": "सूचनाएं"
+  "Notifications": "सूचनाएं",
+  "Main_Balance_Tooltip": "आप शेष राशि की निकासी के लिए अनुरोध कर सकते हैं।"
 }
