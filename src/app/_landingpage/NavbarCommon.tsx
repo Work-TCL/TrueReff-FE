@@ -40,7 +40,7 @@ function NavbarCommon() {
         className={`${
           isMenuOpen
             ? "translate-y-20 opacity-100 pointer-events-auto"
-            : "lg:translate-y-0 -translate-y-[200px] lg:opacity-100 opacity-0 pointer-events-none"
+            : "lg:translate-y-0 -translate-y-[200px] lg:opacity-100 opacity-0 lg:pointer-events-auto pointer-events-none"
         } fixed left-0 right-0 px-[20px] pb-[30px] pt-[30px] bg-secondary-color rounded-b-3xl 
   lg:static lg:w-auto lg:flex lg:items-center lg:gap-6 lg:bg-transparent 
   transition-all duration-700 ease-in-out transform`}
