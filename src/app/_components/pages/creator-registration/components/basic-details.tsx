@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import Select from "react-select";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { fetchUserNameExists } from "@/lib/web-api/auth";
+import { useAuthStore } from "@/lib/store/auth-user";
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,
@@ -44,6 +45,7 @@ export default function BasicInfoForm({
   formState
 }: IBasicInfoFormProps) {
   const translate = useTranslations();
+  const { account } = useAuthStore();
   const dateInputRef = useRef<HTMLInputElement>(null);
   const getUserNameExists = async (value: string) => {
     try {
@@ -114,7 +116,7 @@ export default function BasicInfoForm({
           name="phone_number"
           type="phone"
           required={false}
-          disabled
+          disabled={account?.phone ? true : false}
           lableClassName="text-md font-[400]"
           placeholder="xxxxx xxxxx"
         />

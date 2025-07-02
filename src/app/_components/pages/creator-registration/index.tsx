@@ -156,7 +156,7 @@ export default function CreatorRegistrationPage() {
     if (account?.email) {
       methods.setValue("email", account?.email);
       methods.setValue("full_name", account?.name);
-      methods.setValue("phone_number", account?.phone);
+      account?.phone && methods.setValue("phone_number", account?.phone);
     }
   }, [account?.email]);
   const onSubmit = async (data: ICreatorOnBoardingSchema) => {
