@@ -21,11 +21,11 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         <><header className="bg-white px-3 py-3 flex items-center justify-between gap-1">
             <div className="flex space-x-2 items-center cursor-pointer" onClick={() => router.push("/")}>
                 <Image
-                    width={220}
+                    width={120}
                     height={35}
                     src="/assets/common/truereff-dark.svg"
                     alt="TrueReff"
-                    className={`w-[225px] h-[35px] mx-auto`}
+                    className={`min-w-[125px] md:w-[225px] h-[35px] mx-auto`}
                 />
             </div>
             <div className="flex items-center space-x-2">
