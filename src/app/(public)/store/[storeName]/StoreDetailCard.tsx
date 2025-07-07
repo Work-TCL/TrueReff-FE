@@ -38,7 +38,7 @@ export default function StoreDetailCard({ store }: IProps) {
         )}
 
         {/* Social Media Links */}
-        <div className="absolute bottom-[-50px] right-4 flex gap-2 md:gap-4 ">
+        <div className="absolute bottom-[-80px] md:bottom-[-50px] right-4 flex flex-wrap gap-2 md:gap-4 ">
           {store?.facebook_link && (
             <Link
               href={store?.facebook_link}
@@ -89,7 +89,7 @@ export default function StoreDetailCard({ store }: IProps) {
           {store?.youtube_link && (
             <Link
               href={store?.youtube_link}
-              className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2"
+              className="text-gray-500 bg-gray-100 w-full px-3 md:px-4 py-1 md:py-2 rounded-3xl justify-center flex items-center gap-2"
             >
               <img src="/assets/creator/you-tube.svg" width={18} height={18} />{" "}
               {
@@ -133,7 +133,7 @@ export default function StoreDetailCard({ store }: IProps) {
       </div>
 
       {/* Store Details */}
-      <CardContent className="mt-32 pt-2 md:pt-2 pb-4 md:pb-6 px-4 md:px-6 flex flex-col gap-3 md:gap-4">
+      <CardContent className="mt-36 md:mt-32 pt-2 md:pt-2 pb-4 md:pb-6 px-3 md:px-4 flex flex-col gap-3 md:gap-4">
         <div className="flex flex-wrap items-center gap-1 md:gap-2">
           <h2 className="text-base md:text-xl font-medium text-gray-black">
             {store?.store_name}

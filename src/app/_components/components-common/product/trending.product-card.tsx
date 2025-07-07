@@ -1,5 +1,5 @@
 "use client";
-import { Heart, ImageOff } from "lucide-react";
+import { Heart, ImageOff, IndianRupee } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
@@ -117,16 +117,19 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
                         </div>
                     </div> */}
                     {/* Price and Discount */}
-                    <div className="flex flex-col justify-between items-center w-full text-sm">
-                        <span className="text-green-600 px-2 py-1 font-bold">
-                            ₹ {" "}{product.price || "0.00"}
-                        </span>
-                        {product.commission && (
-                            <span className="text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
-                                {product.commission} {product.commission_type === "PERCENTAGE" ? "% " : "₹ "}{translate("Off")}
-                            </span>
-                        )}
-                    </div>
+          <div className="flex items-center w-full text-sm space-x-2">
+            <span className="flex items-center text-green-600 py-1 font-bold">
+            <IndianRupee size={12} strokeWidth={2.5} /> {product.price || "0.00"}
+            </span>
+            {product.commission && (
+              <span className="flex items-center text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
+                {product.commission_type === "FIXED_AMOUNT" ? <IndianRupee size={12} /> : ""}
+                {product.commission}{" "}
+                {product.commission_type === "PERCENTAGE" ? "% " : ""}
+                {translate("Off")}
+              </span>
+            )}
+          </div>
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-fit absolute top-0 right-0">
               <button

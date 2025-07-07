@@ -591,7 +591,7 @@ export default function Input({
                   control: (base: any) => ({
                     ...base,
                     height: "54px",
-                    borderRadius: "8px",
+                    borderRadius: "12px",
                   }),
                   placeholder: (base: any) => ({
                     ...base,

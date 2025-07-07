@@ -142,7 +142,6 @@ export default function PublicCreatorStore({
   }
   const [showProfile, setShowProfile] = useState(true);
   const [showTrending, setShowTrending] = useState(false);
-  const [lastScrollTop, setLastScrollTop] = useState(0);
   const [profileFile, setProfileFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string>("");
@@ -162,23 +161,6 @@ export default function PublicCreatorStore({
     reValidateMode: "onSubmit",
   });
   const [categories, setCategories] = useState<ICategoryData[]>([]);
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const currentScroll = window.scrollY;
-
-  //     if (currentScroll > lastScrollTop) {
-  //       setShowProfile(false); // scrolling down
-  //     } else {
-  //       setShowProfile(true); // scrolling up
-  //     }
-
-  //     setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, [lastScrollTop]);
   useEffect(() => {
     if (store) {
       storeMethods.setValue("store_name", store?.store_name);
@@ -474,7 +456,7 @@ export default function PublicCreatorStore({
               </Button>
             </div>
           )}
-          <div className="flex flex-col gap-2 md:gap-3 max-w-[1200px] mx-auto p-2 md:p-4">
+          <div className="flex flex-col gap-2 md:gap-3 max-w-[1200px] mx-auto p-3 md:p-4">
             {/* Sticky Profile with hide-on-scroll */}
             <div
               className="sticky top-0 z-10 transition-transform duration-500"
@@ -486,7 +468,7 @@ export default function PublicCreatorStore({
             </div>
 
             {/* Scrollable Product List */}
-            <div className="min-h-[calc(100vh-80px)] overflow-y-auto">
+            <div className="min-h-[calc(100vh-80px)] bg-white rounded-2xl overflow-y-auto">
               <ProductList
                 storeName={storeName ?? ""}
                 showTrending={showTrending}

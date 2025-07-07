@@ -203,7 +203,7 @@ export default function ProductList({ storeName,showTrending }: { storeName: str
 
 
   return (
-    <div className="bg-white p-2 md:p-4 rounded-[20PX] flex flex-col gap-3 h-full w-full">
+    <div className="bg-white p-3 md:p-4 rounded-[20px] flex flex-col gap-3 h-full w-full">
       {loading ? (
         <Loading />
       ) : (
@@ -233,7 +233,7 @@ export default function ProductList({ storeName,showTrending }: { storeName: str
               <div
                 className={`grid grid-cols-2 sm:grid-cols-4 ${
                   trendingProductList?.length > 10 && "animate-marquee"
-                } md:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-6 whitespace-nowrap gap-2 py-2 text-sm font-medium px-1 md:px-2`}
+                } md:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-6 whitespace-nowrap gap-2 py-2 text-sm font-medium`}
               >
                 {trendingProductList.map((item: any) => (
                   <div key={item?._id} className="flex h-full w-full">
@@ -246,7 +246,7 @@ export default function ProductList({ storeName,showTrending }: { storeName: str
           {productList?.length > 0 ? (
             <div className="flex flex-col h-full">
               <h3 className="font-semibold">{translate("Product_List")}</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-2 bg-white md:max-h-screen overflow-auto pt-2 pb-3 px-1 md:px-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-2 bg-white md:max-h-screen overflow-auto pt-2 pb-3">
                 {productList.map((item: IProduct) => (
                   <div key={item?._id} className="flex h-full w-full">
                     <ProductCard item={item} />
