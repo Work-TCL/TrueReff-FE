@@ -5,12 +5,8 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import {
   CheckCircle,
-  Copy,
-  Eye,
   ImageOff,
   IndianRupee,
-  Info,
-  MessageSquareText,
   MessagesSquare,
   XCircle,
 } from "lucide-react";
@@ -26,7 +22,6 @@ import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
 import { toastMessage } from "@/lib/utils/toast-message";
-import { currency } from "@/lib/utils/constants";
 
 export function capitalizeFirstLetter(word: string = "") {
   if (!word) return ""; // Handle empty strings

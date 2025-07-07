@@ -24,7 +24,7 @@ export const SearchInput = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="p-3 rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
+        className="p-3 placeholder:text-sm md:placeholder:text-base rounded-lg bg-white pl-10  w-full gray-color" // Add padding to the left for the icon
       />
       <Search className="absolute shrink-0 size-5 left-3 top-1/2 transform -translate-y-1/2 text-gray-color" />
     </div>

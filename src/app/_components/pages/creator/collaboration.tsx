@@ -140,7 +140,7 @@ export default function CollaborationList() {
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const statusOptions: IStatus[] = [
-    { value: "", label: "Select Status" },
+    { value: "ALL", label: "ALL" },
     { value: "REQUESTED", label: "Requested" },
     { value: "REJECTED", label: "Rejected" },
     { value: "PENDING", label: "Pending" },
@@ -228,9 +228,9 @@ export default function CollaborationList() {
   useEffect(() => {
     if (dashboardStatus) {
       setSelectedStatus(dashboardStatus);
-      fetchCollaboration(1, true, search, dashboardStatus);
+      fetchCollaboration(1, true, search, dashboardStatus !== "ALL" ? dashboardStatus : "");
     } else {
-      setSelectedStatus("");
+      setSelectedStatus("ALL");
       fetchCollaboration(currentPage);
     }
   }, [dashboardStatus]);
@@ -254,9 +254,8 @@ export default function CollaborationList() {
   const handleSelectStatus = (selectedOption: string) => {
     router.push(`?status=${selectedOption}`);
   };
-  console.log("selectedStatus", selectedStatus);
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-3 h-full">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-3 h-full">
       {loading ? (
         <Loading />
       ) : (
