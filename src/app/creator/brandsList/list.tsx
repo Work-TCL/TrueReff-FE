@@ -1,24 +1,16 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import BrandCard from "./_components/brandCard";
-import { LoaderCircle, Search } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
 import Loading from "../loading";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import axios from "@/lib/web-api/axios";
 import { debounce } from "lodash";
-import { IoGridOutline } from "react-icons/io5";
-import { PiListChecksLight } from "react-icons/pi";
-import BrandListView from "./_components/brandList";
 import { SearchInput } from "@/app/_components/components-common/search-field";
-import BrandFilter from "./_components/filter";
-import { useCreatorStore } from "@/lib/store/creator";
 import ProductCard from "./_components/product-card";
 import CategorySingleSelect from "@/app/_components/components-common/category-only-dropdown";
 export interface ICollaboration {
@@ -78,7 +70,6 @@ export interface Brand {
   profile_image: string;
 }
 export default function BrandList() {
-  const { creator } = useCreatorStore();
   const translate = useTranslations();
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
@@ -91,9 +82,8 @@ export default function BrandList() {
     IBrandProduct[]
   >([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentSuggestedPage, setCurrentSuggestedPage] = useState(1);
   const t = useTranslations();
-  const [viewMode, setViewMode] = useState<"table" | "card">("card");
+  // const [viewMode, setViewMode] = useState<"table" | "card">("card");
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [hasSuggestedMore, setHasSuggestedMore] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -193,9 +183,9 @@ export default function BrandList() {
             ele.tag = ele.tags?.join(",");
             return { ...ele };
           });
-          let more = [...productList, ...data]?.length < productCount;
+          let more = (page === 1 ? [...data] : [...productList, ...data])?.length < productCount;
           setHasMore(more);
-          setProductList([...productList, ...data])
+          setProductList(page === 1 ? [...data] : [...productList, ...data])
         } else {
           setProductList([]);
           setCurrentPage(1);
@@ -298,14 +288,14 @@ export default function BrandList() {
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center flex-col md:flex-row gap-2">
+          <div className="flex justify-between items-center flex-row gap-2">
             <SearchInput
               value={search}
               onChange={handleSearch}
               placeholder={"Search Brand or Product..."}
               className="md:max-w-[700px]"
             />
-            <div className="flex md:flex-row flex-col gap-2 w-full md:w-auto justify-end md:items-center items-end">
+            <div className="flex md:flex-row flex-col gap-2 md:w-auto justify-end md:items-center items-end">
               <CategorySingleSelect onChange={handleSelectCategory} />
             </div>
             {/* <div className="flex md:flex-row flex-col gap-2 justify-end items-center">

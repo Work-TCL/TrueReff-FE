@@ -26,17 +26,19 @@ const customStyles = {
     fontSize: "0.875rem",
     color: "#a1a1aa",
   }),
-  control: (base: any, state: any) => ({
-    ...base,
-    width: "150px",
-    borderRadius: "8px",
-    borderColor: state.isFocused ? "#FF4979" : base.borderColor,
-    boxShadow: "none",
-    "&:hover": {
-      borderColor: "#FF4979",
+  control: (base: any, state: any) => {
+    const isMobile = () => typeof window !== "undefined" && window.innerWidth < 540;
+    return {
+      ...base,
+      width: isMobile() ? "100%" : "150px",
+      borderRadius: "8px",
+      borderColor: state.isFocused ? "#FF4979" : base.borderColor,
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "#FF4979",
     },
     transition: "all 0.2s ease",
-  }),
+  }},
   option: (base: any, state: any) => ({
     ...base,
     backgroundColor: state.isFocused ? "rgba(255, 73, 121, 0.1)" : "white",
@@ -116,13 +118,13 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
       {/* Mobile Dialog */}
       <DialogLayout
         open={openDialog}
-        size="!max-w-[638px] w-full overflow-auto m-2 lg:hidden"
+        size="!max-w-[438px] w-full overflow-auto m-2 lg:hidden"
         title="Product Filter"
         onClose={() => setOpenDialog(false)}
       >
-        <div className="bg-white rounded-2xl p-4 m-4 lg:hidden">
-          <div className="space-y-6">
-            <div>
+        <div className="bg-white rounded-2xl p-4 lg:hidden">
+          <div className="grid grid-cols-2 space-y-6">
+            <div className="col-span-2">
               <label className={cn(labelStyle)}>
                 {translate("Parent_Categories")}
               </label>
@@ -153,13 +155,14 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
                 isClearable
               />
             </div>
-
+            <div className="col-span-2">
             <Button
               onClick={handleApplyFilters}
-              className="w-full bg-primary text-white rounded-md"
+              className="w-[100px] float-end bg-primary text-white rounded-md"
             >
               {translate("Ok")}
             </Button>
+            </div>
           </div>
         </div>
       </DialogLayout>
