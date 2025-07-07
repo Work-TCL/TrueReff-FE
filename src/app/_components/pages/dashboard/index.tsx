@@ -1,14 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { StatsCard } from "../../components-common/states/StatesCard";
-import VendorActivity from "../../components-common/charts/VendorActivityChart";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
-import ProfileCompletionCard from "../../components-common/charts/profileComplete";
-import PerformanceSummaryChartDashBoard from "../../components-common/charts/performanceSummary";
-import TrendingInsightsDiscoverability from "../../components-common/charts/trendingInsightsDiscoverability";
-import { getCreatorProgress, getSuggestedProducts } from "@/lib/web-api/auth";
-import { toastMessage } from "@/lib/utils/toast-message";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { getSuggestedProducts } from "@/lib/web-api/auth";
 import {
   ICreatorStateInfo,
   IFollowers,
@@ -37,8 +30,6 @@ export const creatorDashboardFilter = new Subject<string>();
 
 export default function Dashboard() {
   const translate = useTranslations();
-  const lg = useMediaQuery("(min-width: 1024px)");
-  const [creatorDetails, setCreatorDetails] = useState<any>({ completed: 0 });
   const initialStateInfo = {
     pendingCollaborations: 0,
     followers: [],
@@ -55,22 +46,14 @@ export default function Dashboard() {
     current: [],
     past: [],
   });
-  const [updateData, setUpdateData] = useState<any[]>([]);
   const [mainLoading, setMailLoading] = useState<boolean>(true);
   const [brandLoading, setBrandLoading] = useState<boolean>(true);
   const [revenueLoading, setRevenueLoading] = useState<boolean>(true);
   const [productLoading, setProductLoading] = useState<boolean>(true);
-  const getCreator = async () => {
-    try {
-      const creator = await getCreatorProgress();
-      setCreatorDetails(creator);
-    } catch (e) {}
-  };
   const getProductSuggested = async () => {
     setProductLoading(true);
     try {
       const products = await getSuggestedProducts();
-      // console.log("getProductSuggested", getProductSuggested);
       setProducts(products);
     } catch (e) {
     } finally {
@@ -93,7 +76,6 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    getCreator();
     fetchTopPerformingBrand();
     getProductSuggested();
   }, []);
@@ -107,8 +89,6 @@ export default function Dashboard() {
         setStatesInfo(initialStateInfo);
       }
     } catch (error) {
-      let errorMessage = await getErrorMessage(error);
-      // toastMessage.error(errorMessage);
       setStatesInfo(initialStateInfo);
     } finally {
       setMailLoading(false);
@@ -124,8 +104,6 @@ export default function Dashboard() {
         setBrans([]);
       }
     } catch (error) {
-      let errorMessage = await getErrorMessage(error);
-      // toastMessage.error(errorMessage);
       setBrans([]);
     } finally {
       setBrandLoading(false);
@@ -148,35 +126,13 @@ export default function Dashboard() {
           current: currentData,
           past: revenueData,
         });
-        (response?.current?.length > 0 || response?.past?.length > 0) &&
-          setUpdateData([
-            {
-              name: "Current Revenue",
-              value: response?.current.reduce(
-                (total: any, item: any) => total + item.totalRevenue,
-                0
-              ),
-              color: "#FF4979",
-            },
-            {
-              name: "Past Revenue",
-              value: response?.past.reduce(
-                (total: any, item: any) => total + item.totalRevenue,
-                0
-              ),
-              color: "#090919",
-            },
-          ]);
       } else {
         setRevenueData({
           current: [],
           past: [],
         });
-        setUpdateData([]);
       }
     } catch (error) {
-      let errorMessage = await getErrorMessage(error);
-      // toastMessage.error(errorMessage);
       setRevenueData({
         current: [],
         past: [],
@@ -209,7 +165,7 @@ export default function Dashboard() {
           title={translate("Followers")}
           value={
             <div className="flex gap-2 justify-center">
-              <div className="flex space-x-2 items-center p-2">
+              <div className="flex space-x-2 items-center">
                 <div>
                   <img
                     src="/assets/creator/Instagram-icon.svg"
@@ -221,7 +177,7 @@ export default function Dashboard() {
                   {getInstagramView(statesInfo?.followers)}
                 </p>
               </div>
-              <div className="flex space-x-2 items-center p-2">
+              <div className="flex space-x-2 items-center ">
                 <div>
                   <img
                     src="/assets/creator/Youtube-icon.svg"
@@ -264,7 +220,7 @@ export default function Dashboard() {
         <StatsCard
           title={translate("Revenue")}
           value={`${formatNumber(statesInfo?.totalRevenue)}`}
-          icon={<IndianRupee size={27} />}
+          icon={<IndianRupee className="size-[14] md:size-[27] xl:size-[27]" />}
           growth={5}
           borderColor="border-[#EB815B]"
           bgColor="bg-[#fdf2ef]"
@@ -272,13 +228,13 @@ export default function Dashboard() {
         <StatsCard
           title={translate("Commission")}
           value={`${formatNumber(statesInfo?.totalCommission)}`}
-          icon={<IndianRupee size={27} />}
+          icon={<IndianRupee className="size-[14] md:size-[27] xl:size-[27]" />}
           growth={5}
           borderColor="border-[#9773C8]"
           bgColor="bg-[#f5f1fa]"
         />
       </div>
-      <div className="flex flex-col gap-5 w-full">
+      <div className="flex flex-col gap-4 w-full">
         {/* Row 1: SalesChart + DonutChart and MostSellingBrands */}
         <div className="flex flex-col xl:flex-row gap-4 items-stretch w-full">
           {/* Left block: SalesChart + DonutChart (in column) */}
@@ -293,7 +249,7 @@ export default function Dashboard() {
                   revenueData?.past?.length > 0 ? (
                   <SalesChart data={revenueData} />
                 ) : (
-                  <div className="">
+                  <div className="min-h-[350px]">
                     <EmptyPlaceHolder
                       title={"No Revenue Found"}
                       description="Revenue Performance will be displayed here once activity data is available. Encourage users to participate to see leaderboard ranking."
@@ -319,7 +275,7 @@ export default function Dashboard() {
           </div>
 
           {/* Right block: MostSellingBrands */}
-          <div className="flex-1 w-full flex">
+          <div className="flex-1 w-full flex min-h-[350px]">
             <TopBrands data={brands} loading={brandLoading} />
           </div>
         </div>

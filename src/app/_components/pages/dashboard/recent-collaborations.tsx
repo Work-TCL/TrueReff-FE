@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "@/lib/web-api/axios";
 import { ICategory, ICollaboration } from "../creator/collaboration";
@@ -42,24 +42,12 @@ export default function RecentCollaborations() {
                         return category?.name;
                       })
                   : "";
-              // let subCategory =
-              //   ele.productId.category?.length > 0
-              //     ? ele.productId.category
-              //         .filter(
-              //           (category: ICategory) => category?.parentId !== null
-              //         )
-              //         .map((category: ICategory) => {
-              //           return category?.name;
-              //         })
-              //         .join(", ")
-              //     : "";
               let tag = ele.productId.tags.join(", ");
               return {
                 ...ele,
                 productId: {
                   ...ele?.productId,
                   categories: category,
-                  // subCategories: subCategory,
                   tag,
                 },
               };
@@ -85,8 +73,8 @@ export default function RecentCollaborations() {
     fetchCollaboration();
   }, []);
   return (
-    <div className="w-full p-4 bg-white rounded-[20px]">
-      <div className="flex justify-between items-center mb-4">
+    <div className="w-full p-3 md:p-4 flex flex-col gap-0 md:gap-2 bg-white rounded-[20px]">
+      <div className="flex justify-between items-center">
         <h2 className="md:text-xl text-base text-text font-semibold">
           {" "}
           {translate("Recent_Collaboration")}
@@ -94,7 +82,7 @@ export default function RecentCollaborations() {
         {collaborations?.length > 0 && (
           <Button
             variant="link"
-            className="text-primary md:h-10 h-7"
+            className="text-xs md:text-base xl:text-base text-primary p-0"
             onClick={() => router.push("/creator/collaboration")}
           >
             {translate("View_all")}

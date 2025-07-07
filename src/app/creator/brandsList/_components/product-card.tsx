@@ -133,7 +133,7 @@ const ProductCard = ({
               key={0}
               disabled={product?.collaboration !== null}
               className={cn(
-                "flex items-center justify-center gap-1 px-2 py-2 text-[10px] md:text-sm text-semibold hover:cursor-pointer rounded-xl bg-white text-primary hover:bg-primary hover:text-white border border-primary disabled:bg-muted disabled:text-muted-foreground disabled:cursor-no-drop  disabled:border-muted-foreground"
+                "flex items-center justify-center gap-1 px-2 py-2 text-xs md:text-md text-semibold hover:cursor-pointer rounded-xl bg-white text-primary hover:bg-primary hover:text-white border border-primary disabled:bg-muted disabled:text-muted-foreground disabled:cursor-no-drop  disabled:border-muted-foreground"
               )}
               onClick={() => setIsOpen(product?._id)}
             >

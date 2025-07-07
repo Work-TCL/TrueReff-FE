@@ -312,7 +312,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               </Link>
             </div>
             <div className={!account?.role ? "flex justify-end w-full" : ""}>
-              <Link href="?auth=logout" className="mx-1 md:mx-4 block">
+              <Link href="?auth=logout" className="ml-1 md:ml-2 block">
                 <IoLogOutOutline className="text-2xl text-primary" />
               </Link>
             </div>

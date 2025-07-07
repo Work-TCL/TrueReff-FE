@@ -7,7 +7,6 @@ import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import {
-  currency,
   formatFloatValue,
   formatNumber,
 } from "@/lib/utils/constants";
@@ -19,10 +18,10 @@ interface ITopBrandsProps {
 const TopBrands = ({ data, loading }: ITopBrandsProps) => {
   const translate = useTranslations();
   return (
-    <div className="flex flex-col flex-1 w-full p-4 bg-white rounded-2xl">
+    <div className="flex flex-col flex-1 w-full p-3 md:p-4 bg-white rounded-2xl">
       <div className="flex justify-between items-center mb-3">
         <div>
-          <h3 className="text-xl text-text font-semibold">
+          <h3 className="md:text-xl text-base text-text font-semibold">
             {data?.length > 0 ? translate("Top_Brands"):''}
           </h3>
         </div>

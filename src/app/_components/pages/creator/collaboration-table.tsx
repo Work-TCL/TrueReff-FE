@@ -200,21 +200,6 @@ const CollaborationTable = ({
         );
       },
     },
-    // ...(!isDashboard
-    //   ? ([
-    //       {
-    //         accessorKey: "product.tag",
-    //         header: () => translate("Product_Tags"),
-    //         cell: ({ row }) => (
-    //           <TruncateWithToolTip
-    //             checkHorizontalOverflow={false}
-    //             linesToClamp={2}
-    //             text={row.original.productId?.tag ?? ""}
-    //           />
-    //         ),
-    //       },
-    //     ] as ColumnDef<ICollaboration>[])
-    //   : []),
     {
       accessorKey: "fromUser.business_name",
       header: () => translate("Brand"),
@@ -227,7 +212,7 @@ const CollaborationTable = ({
           >
             <Avatar className="w-8 h-8">
               <AvatarImage
-                className={fromUser?.profile_image ? "" : "opacity-50"}
+                className={fromUser?.profile_image ? "object-cover" : "opacity-50"}
                 src={
                   fromUser?.profile_image
                     ? fromUser.profile_image
