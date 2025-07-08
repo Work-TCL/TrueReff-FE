@@ -105,12 +105,12 @@ export default function AccountRecharge() {
         }
         return Math.min((balance / minPayOut) * 100, 100); // Calculate percentage, ensure it doesn't exceed 100
     };
-    return <div className="w-full p-2 md:p-4 space-y-4 md:space-y-5 overflow-hidden">
+    return <div className="w-full p-2 md:p-4 space-y-3 md:space-y-5 overflow-hidden">
         {internalLoading && <Loader />}
         {/* Top Cards */}
-        {loading ? <Loader /> : <><div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+        {loading ? <Loader /> : <><div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 md:gap-4 items-stretch">
             {/* Wallet Balance Card */}
-            <div className="bg-gradient-to-r from-[#A48DFF] to-[#F9A8D4] text-white rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between space-y-3 h-[144px]">
+            <div className="bg-gradient-to-r from-[#A48DFF] to-[#F9A8D4] text-white rounded-2xl p-2 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between space-y-3 h-[144px]">
                 <div className="flex justify-between items-start">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2 text-base font-semibold text-white">
@@ -139,7 +139,7 @@ export default function AccountRecharge() {
                     ></div>
                 </div>
 
-                <div className="text-sm text-white/90 flex justify-between items-center">
+                <div className="text-xs md:text-sm text-white/90 flex justify-between items-center">
                     <span className="flex items-center">{translate("Payout_Minimum")}: <IndianRupee size={12} /> {minPayOut}</span>
                     <span className="flex items-center gap-1">
                         {translate("Blocked_Amount")}: <IndianRupee size={14} /> {formatNumber(blockedBalance)}
@@ -153,14 +153,14 @@ export default function AccountRecharge() {
                 title={translate("Total_Item_Sold")}
                 value={formatNumber(creatorStats?.totalOrders)}
                 growth={5}
-                bgColor="bg-[#F9EFF5] h-[144px] max-h-[144px]"
+                bgColor="bg-[#F9EFF5] h-[80px] md:h-[144px] max-h-[144px]"
                 borderColor={"border-[#C861A0]"}
             />
             <StatsCard
                 title={translate("Total_Revenue_Generated")}
                 value={formatNumber(creatorStats?.totalRevenue)}
                 growth={5}
-                borderColor="border-[#9773C8] h-[144px] max-h-[144px]"
+                borderColor="border-[#9773C8] h-[80px] md:h-[144px] max-h-[144px]"
                 bgColor="bg-[#F5F1F9]"
             />
         </div>

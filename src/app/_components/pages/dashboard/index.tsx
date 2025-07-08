@@ -158,9 +158,9 @@ export default function Dashboard() {
     return youtube ? formatNumber(youtube?.followers) : "-";
   };
   return (
-    <div className="flex flex-col gap-4 md:p-4 p-2 w-full">
+    <div className="flex flex-col gap-3 md:gap-4 md:p-4 p-2 w-full">
       {mainLoading && <Loader />}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 md:grid-cols-3 gap-2 rounded-[20px] w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 md:grid-cols-3 gap-1.5 md:gap-2 rounded-[20px] w-full">
         <StatsCard
           title={translate("Followers")}
           value={
@@ -169,8 +169,7 @@ export default function Dashboard() {
                 <div>
                   <img
                     src="/assets/creator/Instagram-icon.svg"
-                    width={30}
-                    height={30}
+                    className="md:h-[30px] h-[20px] md:w-[30px] w-[20px]"
                   />
                 </div>
                 <p className="text-sm">
@@ -181,8 +180,7 @@ export default function Dashboard() {
                 <div>
                   <img
                     src="/assets/creator/Youtube-icon.svg"
-                    width={30}
-                    height={30}
+                    className="md:h-[30px] h-[20px] md:w-[30px] w-[20px]"
                   />
                 </div>
                 <p className="text-sm">
@@ -192,15 +190,15 @@ export default function Dashboard() {
             </div>
           }
           growth={5}
-          bgColor="bg-white bg-[#f2f1fd]"
-          borderColor={"border-[#7877EE]"}
+          bgColor="bg-[#f5e8ec]"
+          borderColor={"border-primary"}
         />
         <StatsCard
           title={translate("Pending_Collaboration")}
           value={formatNumber(statesInfo?.pendingCollaborations)}
           growth={5}
-          borderColor="border-[#C861A0]"
-          bgColor="bg-[#faeff6]"
+          bgColor="bg-[#f2f1fd]"
+          borderColor={"border-[#7877EE]"}
           link="/creator/collaboration?status=PENDING"
         />
         <StatsCard
@@ -222,8 +220,8 @@ export default function Dashboard() {
           value={`${formatNumber(statesInfo?.totalRevenue)}`}
           icon={<IndianRupee className="size-[14] md:size-[27] xl:size-[27]" />}
           growth={5}
-          borderColor="border-[#EB815B]"
-          bgColor="bg-[#fdf2ef]"
+          borderColor="border-[#C861A0]"
+          bgColor="bg-[#faeff6]"
         />
         <StatsCard
           title={translate("Commission")}
@@ -234,12 +232,12 @@ export default function Dashboard() {
           bgColor="bg-[#f5f1fa]"
         />
       </div>
-      <div className="flex flex-col gap-4 w-full">
+      <div className="flex flex-col gap-3 md:gap-4 w-full">
         {/* Row 1: SalesChart + DonutChart and MostSellingBrands */}
-        <div className="flex flex-col xl:flex-row gap-4 items-stretch w-full">
+        <div className="flex flex-col xl:flex-row gap-3 md:gap-4 items-stretch w-full">
           {/* Left block: SalesChart + DonutChart (in column) */}
-          <div className="flex flex-col gap-4 xl:w-[60%] w-full h-full">
-            <div className="flex flex-col md:flex-row gap-4 h-full items-stretch">
+          <div className="flex flex-col gap-3 md:gap-4 xl:w-[60%] w-full h-full">
+            <div className="flex flex-col md:flex-row gap-3 md:gap-4 h-full items-stretch">
               <div className="flex xl:w-[65%] w-full">
                 {revenueLoading ? (
                   <div className="w-full h-[400px] bg-white rounded-lg">

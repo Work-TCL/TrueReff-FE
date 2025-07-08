@@ -31,7 +31,7 @@ const customStyles = {
   control: (base: any) => ({
     ...base,
     height: "54px",
-    borderRadius: "8px",
+    borderRadius: "12px",
   }),
   options: (base: any) => ({
     ...base,
@@ -205,9 +205,10 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="grid grid-cols-2 text-left gap-3 w-full relative"
+          className="flex flex-col text-left gap-3 w-full"
         >
-          <div className="col-span-1">
+          <div className="grid grid-cols-2 text-left gap-3 w-full overflow-y-auto max-h-[60vh]">
+          <div className="col-span-2 sm:col-span-1 md:col-span-1">
             <Input
               label={translate("FullName")}
               name="full_name"
@@ -215,7 +216,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               placeholder="John Doe"
             />
           </div>
-          <div className="col-span-1">
+          <div className="col-span-2 sm:col-span-1 md:col-span-1">
             <Input
               label={translate("Username")}
               name="user_name"
@@ -232,7 +233,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               disabled
             />
           </div>
-          <div className="col-span-1">
+          <div className="col-span-2 sm:col-span-1 md:col-span-1">
             <div className="flex flex-col">
               <span className="mb-1 text-sm text-gray-500 font-semibold">
                 {translate("State")}
@@ -263,7 +264,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               )}
             </div>
           </div>
-          <div className="col-span-1">
+          <div className="col-span-2 sm:col-span-1 md:col-span-1">
             <div className="flex flex-col">
               <span className="mb-1 text-sm text-gray-500 font-semibold">
                 {translate("City")}
@@ -379,8 +380,12 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
               </div>
             </div>
           </div>
-          <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
-            <Button type="submit" loading={loading}>
+          </div>
+          <div className="flex gap-2 justify-end">
+            <Button size="small" className="w-1/3 sm:w-1/4 md:w-1/4 bg-white border text-secondary" type="button" onClick={() => onClose(true)}>
+              {translate("Cancel")}
+            </Button>
+            <Button size="small" className="w-1/3 sm:w-1/4 md:w-1/4" type="submit" loading={loading}>
               {translate("Save")}
             </Button>
           </div>

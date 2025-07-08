@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AnyalyticsCombineUI from "./_components/analytics-main";
 import {
   FILTER_KEYS,
@@ -9,15 +9,12 @@ import {
   IAnalyticsProduct,
   IAnalyticsProductData,
   IFilterAnalytics,
-  IModes,
   IStatesAnalytics,
 } from "./_components/types";
 import {
   getAnalyticsCreatorsList,
-  getAnalyticsCreatorsSearch,
   getAnalyticsCreatorsState,
   getAnalyticsVendorsList,
-  getAnalyticsVendorsSearch,
   getAnalyticsVendorsState,
   IGETCreatorsRequest,
   IGETCreatorsStateRequest,
@@ -25,8 +22,6 @@ import {
   IGETVendorsStateRequest,
 } from "@/lib/web-api/analytics";
 import Loading from "@/app/creator/loading";
-import { SearchInput } from "../../components-common/search-field";
-import { debounce } from "lodash";
 import { useTranslations } from "next-intl";
 import { Subject } from "rxjs";
 
@@ -75,7 +70,6 @@ export default function CombineAnalytics({ mode }: IProps) {
   const [product, setProduct] = useState<IAnalyticsProduct | null>(null);
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(1);
-  const [search, setSearch] = useState<string>("");
   const [list, setList] = useState<IAnalyticsData[]>([]);
   const [isStatesLoading, setIsStatesLoading] = useState<boolean>(false);
   const [isListLoading, setIsListLoading] = useState<boolean>(false);
@@ -120,11 +114,10 @@ export default function CombineAnalytics({ mode }: IProps) {
       }
 
       const response = await getAnalyticsCreatorsList({ ...payload });
-      // console.log("response --------->>", response);
       setCount(response.count);
       setList(response.list);
     } catch (error) {
-      console.log("while getting vendor list");
+      
     } finally {
       setIsListLoading(false);
     }
@@ -142,11 +135,9 @@ export default function CombineAnalytics({ mode }: IProps) {
         payload.productId = product.productId;
       }
       const response = await getAnalyticsCreatorsState(payload);
-      console.log("response ------212312--->>", response);
       setStates(response);
-      // setList(response.list);
     } catch (error) {
-      console.log("while getting vendor list");
+      
     } finally {
       setIsStatesLoading(false);
     }
@@ -170,11 +161,10 @@ export default function CombineAnalytics({ mode }: IProps) {
       }
 
       const response = await getAnalyticsVendorsList({ ...payload });
-      // console.log("response --------->>", response);
       setCount(response.count);
       setList(response.list);
     } catch (error) {
-      console.log("while getting vendor list");
+      
     } finally {
       setIsListLoading(false);
     }
@@ -193,11 +183,9 @@ export default function CombineAnalytics({ mode }: IProps) {
         payload.productId = product.productId;
       }
       const response = await getAnalyticsVendorsState({ ...product });
-      console.log("response ------212312--->>", response);
       setStates(response);
-      // setList(response.list);
     } catch (error) {
-      console.log("while getting vendor list");
+      
     } finally {
       setIsStatesLoading(false);
     }
@@ -286,7 +274,7 @@ export default function CombineAnalytics({ mode }: IProps) {
   };
 
   return (
-    <div className="h-full relative md:p-4 p-4 flex flex-col overflow-auto">
+    <div className="h-full relative md:p-4 p-2 flex flex-col overflow-auto">
       {(isStatesLoading || isListLoading) && (
         <Loading isTransparent={true} height="fit" />
       )}
@@ -314,7 +302,6 @@ export default function CombineAnalytics({ mode }: IProps) {
         isLoading={isListLoading}
         totalPages={Math.ceil(count / limit)}
       />
-      {/* </div> */}
     </div>
   );
 }

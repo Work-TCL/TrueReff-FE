@@ -331,13 +331,12 @@ const CollaborationTable = ({
         if (status === "REQUESTED") {
           if (collaboration?.requestedBy === "vendor") {
             return (
-              <div className="flex justify-between w-fit gap-3 mx-auto">
+              <div className="flex justify-between w-fit gap-1 md:gap-3 mx-auto">
                 <ToolTip content="Accept Request" delayDuration={1000}>
                   <CheckCircle
                     strokeWidth={1.5}
                     color="#22c55e"
-                    className="cursor-pointer"
-                    size={25}
+                    className="cursor-pointer md:size-[25] size-[20]"
                     onClick={() =>
                       handleStatusChangeRequest("accepted", collaboration._id)
                     }
@@ -346,8 +345,7 @@ const CollaborationTable = ({
                 <ToolTip content="Reject Request" delayDuration={1000}>
                   <XCircle
                     strokeWidth={1.5}
-                    className="cursor-pointer"
-                    size={25}
+                    className="cursor-pointer md:size-[25] size-[20]"
                     color="#ef4444"
                     onClick={() =>
                       setIsOpen({
@@ -366,8 +364,7 @@ const CollaborationTable = ({
                 <ToolTip content="Cancel Request" delayDuration={1000}>
                   <XCircle
                     strokeWidth={1.5}
-                    className="cursor-pointer"
-                    size={25}
+                    className="cursor-pointer md:size-[25] size-[20]"
                     color="#ef4444"
                     onClick={() =>
                       setIsOpen({
@@ -387,13 +384,12 @@ const CollaborationTable = ({
           status === "EXPIRED"
         ) {
           return (
-            <div className="flex gap-3 mx-auto w-fit relative">
+            <div className="flex gap-2 md:gap-3 mx-auto w-fit relative">
               <ToolTip content="Start Bargaining" delayDuration={1000}>
                 <MessagesSquare
                   strokeWidth={1.5}
                   color="#3b82f6"
-                  className="cursor-pointer"
-                  size={25}
+                  className="cursor-pointer md:size-[25] size-[20]"
                   onClick={() => handleChatView(collaboration._id)}
                 />
               </ToolTip>
@@ -412,7 +408,7 @@ const CollaborationTable = ({
   return (
     <>
       {/* <div className="min-w-full border-2 border-gray-200 overflow-hidden rounded-2xl"> */}
-      <DataTable columns={columns} data={[...data]} type={"table"} />
+      <DataTable columns={columns} data={[...data]} type={"table"}/>
       {/* </div> */}
       {isOpen?.show && (
         <CancelRequest

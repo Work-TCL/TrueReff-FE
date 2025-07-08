@@ -104,7 +104,7 @@ export default function SocialMedia({
     const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID;
     const callBackUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/channel/creator/instagram/auth/callback`;
     const scope =
-      "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish";
+      "instagram_business_basic";
     const authUrl = `https://www.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${callBackUri}&response_type=code&scope=${scope}&state=${creatorId}`;
     window.location.href = authUrl;
   };

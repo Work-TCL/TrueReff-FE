@@ -251,7 +251,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
     <>
       {!routes.includes(pathName) ? (
         <header className="bg-white px-3 py-3 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center w-full gap-2">
             <Menu
               className="size-5 shrink-0 text-primary cursor-pointer lg:hidden"
               onClick={handleExpandSidebar}
@@ -272,7 +272,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               pathName
             ) && <SearchSuggestionDropdown />}
           </div>
-          <div className="flex items-center xs:gap-2">
+          <div className="flex items-center w-full xs:gap-2">
             <div className="ml-auto flex items-center md:gap-3 gap-2">
               {["/vendor/dashboard", "/creator/dashboard"].includes(
                 pathName

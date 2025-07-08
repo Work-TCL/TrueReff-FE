@@ -546,7 +546,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
 
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`max-w-[300px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-[9999] transition-transform ${expanded ? "-translate-x-full" : "shadow-lg"
+        className={`max-w-[250px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-[9999] transition-transform ${expanded ? "-translate-x-full" : "shadow-lg"
           }`}
       >
         <div className="flex justify-end">

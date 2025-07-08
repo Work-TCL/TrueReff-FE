@@ -39,7 +39,7 @@ export default function ProfileCreator() {
             {translate("edit_profile")}
           </div>
         </div>
-        <div className="flex flex-col md:flex-row gap-5 xl:gap-4">
+        <div className="flex flex-col md:flex-row gap-3 md:gap-5 xl:gap-4">
           <div className="flex justify-center min-w-fit">
             <img
               src={creator.profile_image || "/assets/product/image-square.svg"}

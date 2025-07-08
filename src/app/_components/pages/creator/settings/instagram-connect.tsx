@@ -1,23 +1,15 @@
 "use client";
-import Loader from "@/app/_components/components-common/layout/loader";
-import Button from "@/app/_components/ui/button";
-import Input from "@/app/_components/ui/form/Input";
 import { useCreatorStore } from "@/lib/store/creator";
 import { IGetYTConnectChannelResponse } from "@/lib/types-api/creator";
-import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { getConnectedChannel } from "@/lib/web-api/creator";
-import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import SocialMedia from "../../creator-registration/components/social-media";
 
 export default function ChannelsConnect() {
-  const translate = useTranslations();
   const methods = useForm();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const [youtubeConnected, setYoutubeConnected] = useState<boolean>(false);
   const [instagramConnected, setInstagramConnected] = useState<boolean>(false);
   const { creator } = useCreatorStore();
@@ -46,7 +38,6 @@ export default function ChannelsConnect() {
   };
 
   const fetchConnectedChannel = async () => {
-    setIsPageLoading(true);
     try {
       const response: IGetYTConnectChannelResponse =
         await getConnectedChannel();
@@ -80,28 +71,7 @@ export default function ChannelsConnect() {
       }
     } catch (error) {
     } finally {
-      setIsPageLoading(false);
     }
-  };
-
-  const handleGoogleLogin = () => {
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const redirectUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/channel/creator/youtube/auth/callback`; // Backend endpoint
-    const scope = encodeURIComponent(
-      "https://www.googleapis.com/auth/youtube.readonly"
-    );
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${creator.creatorId}`;
-
-    window.location.href = authUrl; // Redirect user to Google login
-  };
-
-  const handleInstaLogin = () => {
-    const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID;
-    const callBackUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/channel/creator/instagram/auth/callback`; // Backend endpoint
-    const scope =
-      "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish";
-    const authUrl = `https://www.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${callBackUri}&response_type=code&scope=${scope}&state=${creator.creatorId}`;
-    window.location.href = authUrl; // Redirect user to Google login
   };
 
   return (

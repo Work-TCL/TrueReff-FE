@@ -10,7 +10,7 @@ import {
   IModes,
   IStatesOptions,
 } from "./types";
-import { formatFloatValue, formatNumber } from "@/lib/utils/constants";
+import { formatNumber } from "@/lib/utils/constants";
 import { getAnalyticsColumns } from "./getAnalyticsColumns";
 import DataTable from "@/app/_components/components-common/data-table";
 import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
@@ -66,7 +66,6 @@ function AnyalyticsCombineUI({
 
   function handleRowClick(value?: IFilterAnalytics, p?: IAnalyticsProduct) {
     // Remove product column and call API
-    console.log("Fetch data for productId", value);
     onRowClick(value, p);
   }
 
@@ -101,22 +100,22 @@ function AnyalyticsCombineUI({
   }, [product, filter]);
 
   return (
-    <div className={`flex flex-col w-full gap-4 flex-1 ${className}`}>
+    <div className={`flex flex-col w-full gap-3 md:gap-4 flex-1 ${className}`}>
       {/* states of all creators | one creator | product */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-4 col-span-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 md:grid-cols-3 gap-1.5 md:gap-2 rounded-[20px] w-full">
         {states.map(getStateAnalytics)}
       </div>
 
       {(filter || product) && (
-        <div className="p-5 border rounded-xl bg-white shadow-sm space-y-4">
+        <div className="p-3 md:p-5 border rounded-xl bg-white shadow-sm space-y-2 md:space-y-4">
           <div className="text-sm font-semibold text-gray-700">
             Active Filters
           </div>
 
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-3 md:gap-4">
             {/* Filter Card */}
             {filter && (
-              <div className="relative flex items-center gap-4 px-4 py-3 bg-sky-50 rounded-xl border border-sky-200 shadow-sm w-fit sm:w-auto sm:flex-[none] flex-1 min-w-[260px]">
+              <div className="relative flex items-center gap-3 md:gap-4 px-2 md:px-4 py-2 md:py-3 bg-sky-50 rounded-xl border border-sky-200 shadow-sm w-fit sm:w-auto sm:flex-[none] flex-1 min-w-[260px]">
                 <img
                   src={
                     (filter.key === FILTER_KEYS.CREATOR
@@ -166,7 +165,7 @@ function AnyalyticsCombineUI({
 
             {/* Product Card */}
             {product && (
-              <div className="relative flex items-center gap-4 px-4 py-3 bg-green-50 rounded-xl border border-green-200 shadow-sm w-fit sm:w-auto sm:flex-[none] flex-1 min-w-[260px]">
+              <div className="relative flex items-center gap-3 md:gap-4 px-2 md:px-4 py-2 md:py-3 bg-green-50 rounded-xl border border-green-200 shadow-sm w-fit sm:w-auto sm:flex-[none] flex-1 min-w-[260px]">
                 <img
                   src={
                     product.productImage || "/assets/product/image-square.svg"
