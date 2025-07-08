@@ -44,7 +44,7 @@ const TruereffHeroSlider = ({ isVendor }: ITrueReffSliderProps) => {
   const slideContainerClass =
     "h-screen flex items-center justify-center text-center flex-col md:space-y-6 space-y-3";
   const headlineClass =
-    "text-xl sm:text-3xl md:text-5xl font-bold !leading-[1.3] transition-all duration-700 ease-in-out transform";
+    "text-xl sm:text-3xl xl:text-5xl lg:text-4xl font-bold !leading-[1.3] transition-all duration-700 ease-in-out transform";
 
   const highlightClass = "text-yellow-400";
 
@@ -55,11 +55,13 @@ const TruereffHeroSlider = ({ isVendor }: ITrueReffSliderProps) => {
           {/* Slide 1 */}
           <div>
             <div className={slideContainerClass}>
-              <div className={headlineClass}>
+              <div className={`${headlineClass}`}>
                 Stop Paying for Hype{", "}
-                <span className={highlightClass}>Start Paying for Sales.</span>
+                <span className={`${highlightClass}`}>
+                  Start Paying for Sales.
+                </span>
               </div>
-              <div className="sm:text-xl md:text-3xl">
+              <div className="sm:text-xl md:text-3xl xl:!mt-5 !mt-1">
                 With{" "}
                 <span className={`${highlightClass} font-semibold`}>
                   Truereff
@@ -117,11 +119,11 @@ const TruereffHeroSlider = ({ isVendor }: ITrueReffSliderProps) => {
                   <SwitchingText
                     texts={switchingText}
                     onComplete={() => sliderRef.current?.slickNext()}
-                    className="sm:w-[400px] w-[150px] text-left text-nowrap overflow-visible"
+                    className="sm:w-[400px] w-[180px] text-left text-nowrap overflow-visible"
                   />
                 </span>
               </div>
-              <div className="sm:text-xl md:text-3xl">
+              <div className="sm:text-xl md:text-3xl xl:!mt-5 !mt-1">
                 with{" "}
                 <span className={`${highlightClass} font-semibold`}>
                   Truereff

@@ -9,18 +9,18 @@ export default function Launchpad() {
   const router = useRouter();
   return (
     <>
-      <div className="w-[100vw] overflow-hidden bg-[url('/assets/landing/launchpad.png')] bg-cover bg-center bg-no-repeat tablet:pb-[220px] xsmobile:px-[20px] xsmobile:pb-[200px]  xsmobile:pt-[140px] tablet:px-[20px] tablet:pt-[140px] sm:pb-[250px] sm:pt-[140px] lg:pb-[301px] lg:pt-[240px] w-full sm:px-[20px] xl:px-0">
-        <div className="max-w-[1920px] mx-auto flex mobile:flex-col sm:flex-col lg:flex-row xsmobile:gap-[50px] tablet:gap-[50px] sm:gap-[50px] lg:gap-[100px] justify-center items-center">
+      <div className="w-[100vw] overflow-hidden bg-[url('/assets/landing/launchpad.png')] bg-cover bg-center bg-no-repeat tablet:pb-[220px] xsmobile:px-[20px] xsmobile:pb-[130px]  xsmobile:pt-[80px] tablet:px-[20px] tablet:pt-[140px] sm:pb-[250px] sm:pt-[140px] lg:pb-[301px] lg:pt-[240px] w-full sm:px-[20px] xl:px-0">
+        <div className="max-w-[1920px] mx-auto flex mobile:flex-col sm:flex-col lg:flex-row xsmobile:gap-[50px] tablet:gap-[50px] sm:gap-[50px] lg:gap-[100px] justify-center items-center xl:px-8 md:px-4">
           <div
             data-aos="fade-down"
-            className="md:text-[60px] sm:text-4xl text-3xl font-medium text-gray-900 2xl:max-w-[762px] max-w-[565px] md:leading-[70px]"
+            className="md:text-[60px] sm:text-4xl text-3xl font-medium text-gray-900 2xl:max-w-[762px] xl:max-w-[565px] md:leading-[70px]"
           >
             Drive more sales through creator-powered
             <span className="text-primary font-bold"> recommendations.</span>
           </div>
           <div
             data-aos="fade-left"
-            className="max-w-[575px] sm:text-[20px] text-right leading-[28px]"
+            className="xl:max-w-[575px] sm:text-[20px] text-right leading-[28px]"
           >
             <p>
               Tap into the trust creators have built with their followers.
@@ -34,7 +34,7 @@ export default function Launchpad() {
 
       <div
         data-aos="zoom-in"
-        className="flex justify-center items-center relative  bottom-[150px] h-[300px] mb-[300px]"
+        className="flex justify-center items-center relative  bottom-[150px] h-[300px] mb-[300px] xl:px-0 lg:px-8 px-4"
       >
         <div className="relative xsmobile:py-[20px] tablet:py-[30px] md:py-[60px] tablet:w-[480px] xsmobile:w-[300px]  sm:w-[450px] md:w-[700px] lg:py-[125px] lg:w-[1000px] xl:w-full flex justify-between items-center bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff] 2xl:max-w-[1450px] max-w-[1300px] mobile:rounded-[10px] sm:rounded-[10px] md:rounded-[15px] w-full mobile:px-[20px] sm:px-[20px] md:px-[30px] lg:px-[60px]">
           <p className="xsmobile:text-xs	 sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl font-medium text-gray-900">

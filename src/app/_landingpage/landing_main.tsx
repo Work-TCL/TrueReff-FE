@@ -75,12 +75,15 @@ export default function LandingPage() {
       >
         <div className="flex w-max animate-marquee whitespace-nowrap gap-20 py-2 text-sm font-medium px-4">
           {Array.from({ length: 10 }).map((_, idx) => (
-              <span key={idx} className="flex items-center gap-2 text-[20px]">
-                Become a Truerreff Creator today –{" "}
-                <span className="font-bold underline underline-offset-1 ext-[20px]">
-                  DOWNLOAD NOW
-                </span>
+            <span
+              key={idx}
+              className="flex items-center gap-2 xl:text-[20px] md:text-lg text-base"
+            >
+              Become a Truerreff Creator today –{" "}
+              <span className="font-bold underline underline-offset-1 xl:text-[20px] md:text-lg text-base">
+                DOWNLOAD NOW
               </span>
+            </span>
           ))}
         </div>
       </div>

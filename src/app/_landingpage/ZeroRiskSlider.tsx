@@ -37,7 +37,7 @@ const ZeroRiskSlider = ({
       data-aos="fade-up"
     >
       <div
-        className="max-w-7xl mx-auto px-4 flex flex-col md:grid md:grid-cols-2 gap-8 items-center"
+        className="max-w-7xl mx-auto xl:px-6 md:px-8 px-4 flex flex-col md:grid md:grid-cols-2 gap-8 items-center"
         data-aos="fade-up"
         data-aos-delay="100"
       >
@@ -47,7 +47,7 @@ const ZeroRiskSlider = ({
           data-aos="fade-right"
           data-aos-delay="200"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl xl:leading-[90px] font-bold mb-4 md:mb-[40px]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-7xl xl:leading-[90px] font-bold mb-4 md:mb-[40px]">
             {heading}
           </h2>
           <p className="text-base sm:text-lg mb-3 sm:mb-4">{subtext1}</p>

@@ -80,8 +80,10 @@ export default function WhyTruereff() {
             <span className="text-primary font-bold">Why</span> truereff?
           </h2>
           <p className="text-gray-color-200 text-base tablet:text-lg md:text-xl py-4 max-w-3xl">
-            Truereff is India’s trusted platform connecting top creators with brands to deliver authentic content and guaranteed sales.
-Join thousands of brands who grow faster with performance-driven influencer campaigns and transparent results.
+            Truereff is India’s trusted platform connecting top creators with
+            brands to deliver authentic content and guaranteed sales. Join
+            thousands of brands who grow faster with performance-driven
+            influencer campaigns and transparent results.
           </p>
         </div>
 
@@ -116,7 +118,7 @@ Join thousands of brands who grow faster with performance-driven influencer camp
                   </span>
                 </div>
                 <div className="text-left mt-6">
-                  <h3 className="text-2xl sm:text-3xl tablet:text-4xl md:text-5xl lg:text-6xl font-bold text-primary">
+                  <h3 className="text-2xl sm:text-3xl tablet:text-4xl md:text-5xl xl:text-6xl font-bold text-primary">
                     {item.prefix}
                     <CountUp
                       key={`${item.id}-${animationKey}`}

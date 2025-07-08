@@ -74,9 +74,12 @@ export default function VendorLandingPage() {
       >
         <div className="flex w-max animate-marquee whitespace-nowrap gap-20 py-3 text-sm font-medium px-4">
           {Array.from({ length: 10 }).map((_, idx) => (
-            <span key={idx} className="flex items-center gap-2 text-[20px]">
+            <span
+              key={idx}
+              className="flex items-center gap-2 xl:text-[20px] md:text-lg text-base"
+            >
               Become a Truereff Partner today –{" "}
-              <span className="font-bold underline underline-offset-1 text-[20px]">
+              <span className="font-bold underline underline-offset-1 xl:text-[20px] md:text-lg text-base">
                 DOWNLOAD NOW
               </span>
             </span>
@@ -112,6 +115,7 @@ export default function VendorLandingPage() {
         images={["/assets/landing/zero-risk/Img-2.svg"]}
       />
       <SignupFlow />
+
       {/* <TrustedBrands />
       <EarningsSection />
       <SocialMedia />
