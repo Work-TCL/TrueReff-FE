@@ -31,7 +31,7 @@ export default function ContentCategories() {
   ];
   return (
     <>
-      <div className="bg-[#f3ad1e] py-20 md:py-[85px] w-[100vw] overflow-hidden  w-[100vw]">
+      <div className="bg-[#f3ad1e] py-20 md:py-[85px] w-[100vw] overflow-hidden">
         <div className="grid md:grid-cols-1  sm:place-items-center lg:place-item-start xl:grid-cols-2 gap-10 md:gap-[85px] items-center max-w-[1322px] mx-auto">
           <div
             data-aos="zoom-in-right"

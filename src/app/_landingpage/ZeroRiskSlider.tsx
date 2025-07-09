@@ -37,7 +37,7 @@ const ZeroRiskSlider = ({
       data-aos="fade-up"
     >
       <div
-        className="max-w-7xl mx-auto xl:px-6 md:px-8 px-4 flex flex-col md:grid md:grid-cols-2 gap-8 items-center"
+        className="max-w-7xl mx-auto xl:px-6 px-8 flex flex-col md:grid md:grid-cols-2 gap-8 items-center"
         data-aos="fade-up"
         data-aos-delay="100"
       >
