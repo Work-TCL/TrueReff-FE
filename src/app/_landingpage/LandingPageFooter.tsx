@@ -12,16 +12,18 @@ export default function LandingPageFooter({
   className = "",
   isLanginPage = true,
 }) {
+  const ulWrapperClass = `text-white xl:text-[20px] md:text-lg font-medium`;
+  const liWrapperClass = `xl:mb-[20px] md:mb-5 mb-4`;
   return (
     <footer
       className={`w-full overflow-hidden bg-[#333333] dark:bg-gray-900 ${className} ${
         isLanginPage
           ? "xsmobile:pt-[100px] tablet:pt-[120px] sm:pt-[160px] lg:pt-[325px] mt-[-596px]"
           : ""
-      } px-5`}
+      } lg:px-5 px-8`}
     >
       <div className="mx-auto w-full max-w-[1720px] ">
-        <div className="flex  mobile:flex-col tablet:pt-0  sm:flex-col lg:flex-row md:gap-[20px] sm:pt-20 xl:gap-[40px]">
+        <div className="flex mobile:flex-col tablet:pt-0  sm:flex-col lg:flex-row gap-[40px] sm:pt-20 xl:gap-[40px]">
           <Link
             href="/"
             data-aos="fade-down-right"
@@ -32,73 +34,73 @@ export default function LandingPageFooter({
               height={50}
               width={352}
               alt="TrueReff Logo"
-              className="2xl:max-w-[352px] sm:max-w-[317px] max-w-[260px]"
+              className="2xl:max-w-[352px] xl:max-w-[317px] sm:max-w-[210px] max-w-[250px]"
             />
           </Link>
 
           <div
             data-aos="fade-left"
-            className="tablet:max-w-full w-full flex justify-between xsmobile:flex-col xsmobile:pl-[0px] tablet:flex-col sm:flex-col md:flex-row flex-row xsmobile:w-full 2xl:max-w-[1100px] max-w-[950px] gap-[40px] ml-auto"
+            className="tablet:max-w-full w-full lg:flex grid grid-cols-2 xsmobile:grid-cols-1 justify-between xsmobile:flex-col xsmobile:pl-[0px] tablet:flex-col sm:flex-col md:flex-row flex-row xsmobile:w-full 2xl:max-w-[1100px] max-w-[950px] xl:gap-[40px] gap-[30px] ml-auto"
           >
-            <div className="text-nowrap flex flex-col md:w-[448px] xsmobile:pt-10 tablet:flex-col tablet:w-full tablet:pt-6">
+            <div className="text-nowrap flex flex-col md:w-[448px] xsmobile:pt-0 tablet:flex-col tablet:w-full tablet:pt-6">
               <h2 className="lg:mb-[30px] md:mb-6 mb-6 text-[24px] leading-[16px] font-light text-gray-500 ">
                 Quick Links
               </h2>
-              <div className="flex xsmobile:gap-0 xsmobile:flex-col tablet:flex-row tablet:gap-[40px] md:gap-[30px] lg:gap-[30px] 2xl:gap-[40px] xl:justify-between flex-wrap">
-                <ul className="text-white md:text-[20px] leading-[16px] font-medium	">
-                  <li className="lg:mb-[30px] md:mb-5 mb-5">
+              <div className="flex xsmobile:gap-0 xsmobile:flex-col lg:flex-row flex-col tablet:gap-[0] md:gap-[0px] lg:gap-[30px] 2xl:gap-[40px] xl:justify-between flex-wrap">
+                <ul className={ulWrapperClass}>
+                  <li className={liWrapperClass}>
                     <Link href="/" className="hover:underline text-nowrap">
                       For Creators
                     </Link>
                   </li>
-                  <li className="lg:mb-[30px] md:mb-5 mb-5">
+                  <li className={liWrapperClass}>
                     <Link href="/vendor" className="hover:underline">
                       For Brands
                     </Link>
                   </li>
-                  <li className="lg:mb-[30px] md:mb-5 mb-5">
+                  <li className={liWrapperClass}>
                     <Link href="/aboutus" className="hover:underline">
                       About Us
                     </Link>
                   </li>
-                  {/* <li className="lg:mb-[30px] md:mb-5 mb-5">
+                  {/* <li className={liWrapperClass}>
                     <Link href="" className="hover:underline">
                       Blogs
                     </Link>
                   </li> */}
-                  {/* <li className="lg:mb-[30px] md:mb-5 mb-5">
+                  {/* <li className={liWrapperClass}>
                     <Link href="" className="hover:underline">
                       Case Studies
                     </Link>
                   </li> */}
-                  <li className="lg:mb-[30px] md:mb-5 mb-5">
+                  <li className={liWrapperClass}>
                     <Link href="/contact" className="hover:underline">
                       Contact Us
                     </Link>
                   </li>
                 </ul>
-                <ul className="text-white md:text-[20px] leading-[16px] font-medium">
-                  {/* <li className="lg:mb-[30px] md:mb-5 mb-5">
+                <ul className={ulWrapperClass}>
+                  {/* <li className={liWrapperClass}>
                     <Link href="" className="hover:underline ">
                       Careers
                     </Link>
                   </li> */}
-                  <li className="lg:mb-[30px] md:mb-5 mb-5">
+                  <li className={liWrapperClass}>
                     <Link href="/privacy-policy" className="hover:underline">
                       Privacy Policy
                     </Link>
                   </li>
-                  {/* <li className="lg:mb-[30px] md:mb-5 mb-5">
+                  {/* <li className={liWrapperClass}>
                     <Link href="" className="hover:underline">
                       Cookie Policy
                     </Link>
                   </li> */}
-                  <li className="lg:mb-[30px] md:mb-5 mb-5">
+                  <li className={liWrapperClass}>
                     <Link href="/terms-condition" className="hover:underline">
                       Terms Of Service
                     </Link>
                   </li>
-                  <li className="lg:mb-[30px] md:mb-5 mb-5">
+                  <li className={liWrapperClass}>
                     <Link
                       href="/transaction-policy"
                       className="hover:underline"
@@ -114,8 +116,8 @@ export default function LandingPageFooter({
               <h2 className="lg:mb-[30px] md:mb-6 mb-6 text-[24px] leading-[16px] font-light text-gray-500">
                 Support
               </h2>
-              <ul className="text-white md:text-[20px] leading-[28px] font-medium">
-                <li className="lg:mb-[30px] md:mb-5 mb-5">
+              <ul className={ulWrapperClass}>
+                {/* <li className={liWrapperClass}>
                   <div className="flex">
                     <span className="pt-1 pr-3">
                       <LocationImage />
@@ -123,8 +125,8 @@ export default function LandingPageFooter({
                     Shop no 2 ozon shopping centre kamrej bardoli road surat
                     Gujarat PIN code : 394180
                   </div>
-                </li>
-                <li className="lg:mb-[30px] md:mb-5 mb-5">
+                </li> */}
+                <li className={liWrapperClass}>
                   <div className="flex">
                     <span className="pt-1 pr-3">
                       <ShareImage />
@@ -132,7 +134,7 @@ export default function LandingPageFooter({
                     Support@truereff.com
                   </div>
                 </li>
-                <li className="lg:mb-[30px] md:mb-5 mb-5">
+                <li className={liWrapperClass}>
                   <div className="flex">
                     <span className="pt-1 pr-3">
                       <PhoneImage />
@@ -145,7 +147,7 @@ export default function LandingPageFooter({
           </div>
         </div>
 
-        <div className="sm:flex sm:items-center sm:justify-between sm:pb-20 pb-10 pt-10 md:pt-24 px-[30px] xsmobile:pl-[0px] ">
+        <div className="sm:flex sm:items-center sm:justify-between sm:pb-20 pb-10 pt-10 md:pt-24 px-[30px] tablet:pl-0 xsmobile:pl-[0px] ">
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             Copyright © 2024 Truereff. All Rights Reserved.
             {/* <Link href="" className="hover:underline"> */}

@@ -9,11 +9,11 @@ export default function Launchpad() {
   const router = useRouter();
   return (
     <>
-      <div className="w-[100vw] overflow-hidden bg-[url('/assets/landing/launchpad.png')] bg-cover bg-center bg-no-repeat tablet:pb-[220px] xsmobile:px-[20px] xsmobile:pb-[130px]  xsmobile:pt-[80px] tablet:px-[20px] tablet:pt-[140px] sm:pb-[250px] sm:pt-[140px] lg:pb-[301px] lg:pt-[240px] w-full sm:px-[20px] xl:px-0">
+      <div className="w-[100vw] overflow-hidden bg-[url('/assets/landing/launchpad.png')] bg-cover bg-center bg-no-repeat tablet:pb-[220px] xsmobile:px-[20px] xsmobile:pb-[130px]  xsmobile:pt-[80px] tablet:px-[20px] tablet:pt-[140px] sm:pb-[250px] sm:pt-[140px] lg:pb-[301px] xl:pt-[240px] lg:pt-[150px] w-full sm:px-[20px] xl:px-0">
         <div className="max-w-[1920px] mx-auto flex mobile:flex-col sm:flex-col lg:flex-row xsmobile:gap-[50px] tablet:gap-[50px] sm:gap-[50px] lg:gap-[100px] justify-center items-center xl:px-8 md:px-4">
           <div
             data-aos="fade-down"
-            className="md:text-[60px] sm:text-4xl text-3xl font-medium text-gray-900 2xl:max-w-[762px] xl:max-w-[565px] md:leading-[70px]"
+            className="xl:text-[60px] md:text-5xl sm:text-4xl text-3xl font-medium text-gray-900 2xl:max-w-[762px] xl:max-w-[565px] xl:leading-[70px] md:leading-[60px]"
           >
             Drive more sales through creator-powered
             <span className="text-primary font-bold"> recommendations.</span>
@@ -43,7 +43,7 @@ export default function Launchpad() {
           </p>
           <img
             src="/assets/landing/iphoneTwo.png"
-            className="absolute tablet:top-[-60px]  md:top-[-80px] lg:top-[-140px] xsmobile:top-[-28px] xsmobile:right-[80px]  tablet:right-[140px] md:right-[200px] xsmobile:w-[100px] tablet:w-[180px] sm:w-[160px] md:w-[280px]  lg:h-[620px] lg:w-[460px] xl:w-[550px] object-contain"
+            className="absolute tablet:top-auto  md:top-auto lg:top-[-140px] xsmobile:top-auto xsmobile:right-[80px]  tablet:right-[140px] md:right-[200px] xsmobile:w-[100px] tablet:w-[180px] sm:w-[160px] md:w-[280px]  lg:h-[620px] lg:w-[460px] xl:w-[550px] object-contain"
           />
           <ButtonLogin
             label="Get Started"

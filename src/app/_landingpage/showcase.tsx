@@ -35,7 +35,7 @@ const ShowCaseCreatorStore = ({
       data-aos="fade-up"
     >
       <div
-        className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row md:justify-between lg:gap-20 gap-8 items-center"
+        className="max-w-7xl mx-auto xl:px-4 px-8 flex flex-col md:flex-row md:justify-between xl:gap-20 gap-8 items-center"
         data-aos="fade-up"
         data-aos-delay="100"
       >
@@ -53,7 +53,7 @@ const ShowCaseCreatorStore = ({
 
         {/* Image or Slider */}
         <div
-          className="w-full max-w-[330px]"
+          className="w-full max-w-[330px] xsmobile:max-w-[260px]"
           data-aos="fade-left"
           data-aos-delay="300"
         >

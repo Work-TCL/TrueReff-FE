@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
 interface IFaqItem {
-    question: string;
-    answer: string;
+  question: string;
+  answer: string;
 }
-export const creatorFaqData: IFaqItem[]= [
+export const creatorFaqData: IFaqItem[] = [
   {
     question: "Who can join Truereff as a creator?",
     answer:
@@ -60,11 +60,10 @@ export const brandFaqData = [
   },
 ];
 
-
 interface IFAQSectionProps {
   type: "creator" | "vendor";
 }
-const FaqSection = ({type}: IFAQSectionProps) => {
+const FaqSection = ({ type }: IFAQSectionProps) => {
   const [openIndex, setOpenIndex] = useState<number | null>(0); // open first by default
 
   const toggle = (index: number) => {
@@ -74,46 +73,46 @@ const FaqSection = ({type}: IFAQSectionProps) => {
   const faqQuestions: IFaqItem[] = {
     creator: creatorFaqData,
     vendor: brandFaqData,
-  }[type]
+  }[type];
 
   return (
-    <section className="bg-yellow-400 py-12 px-4">
+    <section className="bg-yellow-400 py-12 xl:px-4 px-8">
       <div className="max-w-3xl mx-auto">
         <div data-aos="zoom-in-left">
-        <h2 className="text-4xl font-bold text-center text-black">FAQs</h2>
+          <h2 className="text-4xl font-bold text-center text-black">FAQs</h2>
         </div>
         <div data-aos="zoom-in-right">
-        <p className="text-center text-sm text-black mt-2 mb-8">
-          Got questions? We've got answers!
-        </p>
+          <p className="text-center text-sm text-black mt-2 mb-8">
+            Got questions? We've got answers!
+          </p>
         </div>
-        <div data-aos="zoom-in-up"> 
-        <div className="bg-white rounded-xl shadow-md divide-y">
-          {faqQuestions.map((faq:IFaqItem, index:number) => (
-            <div key={index} className="px-6 py-4">
-              <button
-                onClick={() => toggle(index)}
-                className="w-full text-left flex justify-between gap-2 items-center focus:outline-none"
-              >
-                <span className="font-medium text-sm md:text-lg text-black">
-                  {faq.question}
-                </span>
-                <span className="text-xl text-gray-600">
-                  {openIndex === index ? "−" : "+"}
-                </span>
-              </button>
-              <div
-                className={`overflow-hidden transition-all duration-700 ease-in-out ${
-                  openIndex === index ? "max-h-40 mt-3" : "max-h-0"
-                }`}
-              >
-                <p className="text-xs md:text-sm text-gray-600">
-                  {faq.answer}
-                </p>
+        <div data-aos="zoom-in-up">
+          <div className="bg-white rounded-xl shadow-md divide-y">
+            {faqQuestions.map((faq: IFaqItem, index: number) => (
+              <div key={index} className="px-6 py-4">
+                <button
+                  onClick={() => toggle(index)}
+                  className="w-full text-left flex justify-between gap-2 items-center focus:outline-none"
+                >
+                  <span className="font-medium text-sm md:text-lg text-black">
+                    {faq.question}
+                  </span>
+                  <span className="text-xl text-gray-600">
+                    {openIndex === index ? "−" : "+"}
+                  </span>
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-700 ease-in-out ${
+                    openIndex === index ? "max-h-40 mt-3" : "max-h-0"
+                  }`}
+                >
+                  <p className="text-xs md:text-sm text-gray-600">
+                    {faq.answer}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

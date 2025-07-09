@@ -62,7 +62,7 @@ export default function WhyTruereff() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden py-10 px-4 text-center bg-gradient-to-br from-[#fdf4f8] via-[#fef6f1] to-white bg-no-repeat bg-center bg-cover tablet:py-14 md:py-[120px]"
+      className="relative overflow-hidden py-10 xl:px-6 px-8 text-center bg-gradient-to-br from-[#fdf4f8] via-[#fef6f1] to-white bg-no-repeat bg-center bg-cover tablet:py-14 md:py-[120px]"
       style={{
         backgroundImage:
           "url('/assets/landing/why-truereff/bg-why-truereff.png')",
@@ -88,7 +88,7 @@ export default function WhyTruereff() {
         </div>
 
         {/* Grid Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-6 gap-6">
+        <div className="grid xsmobile:grid-cols-1 grid-cols-2 sm:grid-cols-2 md:grid-cols-6 gap-6">
           {stats.map((item, index) => {
             let colSpan = "col-span-6";
 
@@ -101,11 +101,11 @@ export default function WhyTruereff() {
             return (
               <div
                 key={item.id}
-                className={`${colSpan} flex flex-col justify-between p-6 bg-white rounded-xl shadow-md`}
+                className={`${colSpan} flex flex-col justify-between xsmobile:justify-center xsmobile:items-center p-6 bg-white rounded-xl shadow-md`}
                 data-aos="zoom-in"
                 data-aos-delay={`${index * 100}`}
               >
-                <div className="flex items-start justify-between w-full">
+                <div className="flex items-start justify-between xsmobile:justify-center w-full xsmobile:gap-3">
                   <div className="w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] flex items-center justify-center rounded-full">
                     <img
                       src={item.icon}
@@ -117,7 +117,7 @@ export default function WhyTruereff() {
                     {item.id}
                   </span>
                 </div>
-                <div className="text-left mt-6">
+                <div className="text-left xsmobile:text-center mt-6">
                   <h3 className="text-2xl sm:text-3xl tablet:text-4xl md:text-5xl xl:text-6xl font-bold text-primary">
                     {item.prefix}
                     <CountUp

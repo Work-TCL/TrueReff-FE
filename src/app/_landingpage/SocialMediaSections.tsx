@@ -58,10 +58,10 @@ export default function SocialMediaSections() {
 
             </div> */}
 
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center xl:px-4 px-8">
         <p
           data-aos="zoom-out-up"
-          className=" xl:text-[70px] font-medium xl:leading-[90px] md:text-5xl md:leading-[1.3] text-3xl text-center font-medium text-gray-900 pb-[50px] pt-[40px["
+          className=" xl:text-[70px] xl:leading-[90px] md:text-5xl md:leading-[1.3] text-3xl text-center font-medium text-gray-900 pb-[50px] pt-[40px["
         >
           Join <span className="text-primary font-bold">Truereff</span> and
           start earning
