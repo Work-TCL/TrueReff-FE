@@ -257,7 +257,7 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               onClick={handleExpandSidebar}
             />
             <h2
-              className={`md:text-2xl text-lg font-medium text-primary ${
+              className={`md:text-2xl text-md font-medium text-primary ${
                 [
                   "/creator/creator-analysis",
                   "/vendor/vendor-analysis",

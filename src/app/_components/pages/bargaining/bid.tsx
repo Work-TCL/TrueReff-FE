@@ -203,7 +203,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
                             onChange={handleOfferChange}
                             onBlur={() => setIsEditing(false)}
                             className="w-1/2 text-center text-sm border border-gray-300 rounded-md px-2 py-1"
-                            autoFocus
+                            autoFocus={isYourOffer}
                         />
                             <span
                                 className="flex items-center text-lg cursor-pointer"

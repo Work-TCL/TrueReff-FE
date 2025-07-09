@@ -194,7 +194,7 @@ export default function ChatComponent({
           collaborationData.vendorId?.profile_image ? (
             <AvatarImage
               src={getProfile()}
-              className="rounded-full border border-border"
+              className="rounded-full object-cover border border-border"
             />
           ) : (
             <CircleUserRound className="w-8 h-8" color="#EB815B" />

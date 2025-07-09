@@ -18,7 +18,7 @@ import axios from "@/lib/web-api/axios";
 import Bid from "./bid";
 import { formatDate, formatFloatValue } from "@/lib/utils/constants";
 import CollaborationConfirmed from "../../components-common/dialogs/accept-offer";
-import { Copy, ExternalLinkIcon, IndianRupee } from "lucide-react";
+import { Copy, ExternalLinkIcon, IndianRupee, MessageSquareText, MessagesSquare } from "lucide-react";
 import { toastMessage } from "@/lib/utils/toast-message";
 import Link from "next/link";
 import Rating from "../../components-common/dialogs/rating";
@@ -114,6 +114,7 @@ export default function BargainingView() {
   const collaborationId = params?.collaborationId;
 
   const [loading, setLoading] = useState<boolean>(true);
+  const [showChant, setShowChat] = useState<boolean>(false);
   const [offerAccepted, setOfferAccepted] = useState(false);
   const [showRatingPopup, setShowRatingPopup] = useState(false);
   const [collaborationData, setCollaborationData] = useState<ICollaboration>({
@@ -278,10 +279,10 @@ export default function BargainingView() {
     }
   }
   return (
-    <div className="flex flex-col w-full p-2 md:p-4 gap-4 md:h-full">
+    <div className="flex flex-col w-full p-2 md:p-4 gap-2 md:gap-4 md:h-full">
       {loading && <Loader />}
       {/* Breadcrumb and Button */}
-      <div className="flex flex-col md:flex-row items-start justify-between md:items-center gap-2">
+      <div className="flex items-center justify-between md:items-center gap-2">
         <Breadcrumb>
           <BreadcrumbList className="md:text-sm text-xs">
             <BreadcrumbItem>
@@ -306,13 +307,25 @@ export default function BargainingView() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+        <div className="flex items-center gap-2 p-2 md:hidden lg:hidden">
+            {showChant ? <MessageSquareText strokeWidth={1.5}
+                  color="#3b82f6"
+                  onClick={() => setShowChat(!showChant)}
+                  className="cursor-pointer md:size-[25] size-[20]"
+                /> : <MessagesSquare
+                  strokeWidth={1.5}
+                  color="#3b82f6"
+                  onClick={() => setShowChat(!showChant)}
+                  className="cursor-pointer md:size-[25] size-[20]"
+                />}
+          </div>
       </div>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 flex-col-reverse lg:grid-cols-3 pb-4 gap-4 h-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pb-4 gap-2 md:gap-4 h-full">
         {/* Left Section (Scrollable on large screens) */}
-        <div className="lg:col-span-2 lg:h-[calc(100vh-140px)] lg:overflow-y-auto pr-1 flex flex-col gap-4">
-          <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2 gap-4">
+        <div className={cn("col-span-1 md:col-span-1 lg:col-span-2 lg:h-[calc(100vh-140px)] lg:overflow-y-auto flex flex-col gap-2 md:gap-4",showChant ? "order-1":"")}>
+          <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2 gap-2 md:gap-4">
             {/* Product Details */}
             <div className="bg-white rounded-lg shadow-md p-2 md:p-4">
               <div className="flex flex-col gap-2 md:gap-3">

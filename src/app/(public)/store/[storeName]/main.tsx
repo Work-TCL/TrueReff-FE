@@ -464,7 +464,7 @@ export default function PublicCreatorStore({
                 transform: showProfile ? "translateY(0)" : "translateY(-100%)",
               }}
             >
-              <StoreDetailCard store={store} />
+              <StoreDetailCard store={store} isCreator={isCreator}/>
             </div>
 
             {/* Scrollable Product List */}

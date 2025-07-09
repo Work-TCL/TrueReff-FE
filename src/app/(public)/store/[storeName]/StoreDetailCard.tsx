@@ -2,23 +2,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
-  Facebook,
-  Instagram,
-  Youtube,
   Link as LinkIcon,
-  X,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ICreateStoreRequest } from "@/lib/types-api/my-store";
 import { IStore } from "./main";
 import { formatFollowers } from "@/lib/utils/commonUtils";
+import { toastMessage } from "@/lib/utils/toast-message";
+import ToolTip from "@/app/_components/components-common/tool-tip";
 
 interface IProps {
   store: IStore;
+  isCreator?: boolean;
 }
 
-export default function StoreDetailCard({ store }: IProps) {
+export default function StoreDetailCard({ store, isCreator }: IProps) {
+  const handleCopyLink = async () => {
+      try {
+        const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${store?.store_name}`;
+        await navigator.clipboard.writeText(url);
+        toastMessage.success("Link copied to clipboard!");
+      } catch (err) {
+        toastMessage.error("Failed to copy!");
+      }
+    };
   return (
     <Card className="bg-white rounded-[20PX] overflow-hidden border-0 shadow-none h-full">
       {/* Banner Image */}
@@ -135,9 +142,9 @@ export default function StoreDetailCard({ store }: IProps) {
       {/* Store Details */}
       <CardContent className="mt-36 md:mt-32 pt-2 md:pt-2 pb-4 md:pb-6 px-3 md:px-4 flex flex-col gap-3 md:gap-4">
         <div className="flex flex-wrap items-center gap-1 md:gap-2">
-          <h2 className="text-base md:text-xl font-medium text-gray-black">
+          <h2 className="flex items-center text-base md:text-xl font-medium text-gray-black">
             {store?.store_name}
-            {store?.full_name ? ` (${store?.full_name})` : ""}
+            {store?.full_name ? ` (${store?.full_name})` : ""} {isCreator && <ToolTip content={"Copy Store Link"} delayDuration={1000}><LinkIcon className="ml-1 text-primary-color cursor-pointer" onClick={() => handleCopyLink()} /></ToolTip>}
           </h2>
         </div>
         <div className="text-xs md:text-sm">{store?.store_description}</div>

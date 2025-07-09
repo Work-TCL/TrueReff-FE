@@ -19,6 +19,7 @@ import Loading from "@/app/vendor/loading";
 import CommonBreadcrumb from "@/app/_components/components-common/breadcrumb-links";
 import NotFound from "@/app/_components/components-common/404";
 import { useTranslations } from "next-intl";
+import { toastMessage } from "@/lib/utils/toast-message";
 
 interface ICategory {
   _id: string;
@@ -355,6 +356,15 @@ export default function ViewProductDetail({
   const getRequestStatus = (collaboration: ICollaboration) => {
      return collaboration?.collaborationStatus;
   };
+  const handleCopyLink = async () => {
+    try {
+      const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/product-detail/${collaborationData?._id}`;
+      await navigator.clipboard.writeText(url);
+      toastMessage.success("Link copied to clipboard!");
+    } catch (err) {
+      toastMessage.error("Failed to copy!");
+    }
+  };
 // Product id required condition removed as it is not required.
   if (notFounded) {
     return <NotFound />;
@@ -365,7 +375,7 @@ export default function ViewProductDetail({
       {loading ? (
         <Loading className="h-screen" />
       ) : (
-        <div className="flex flex-col w-full p-3 md:p-6 gap-4">
+        <div className="flex flex-col w-full p-2 md:p-6 gap-4">
           {/* Breadcrumb and Button */}
           <div className="flex md:flex-row items-center justify-between md:items-center gap-2">
             <CommonBreadcrumb
@@ -422,7 +432,7 @@ export default function ViewProductDetail({
               <div className="flex flex-col md:grid grid-cols-1 md:grid-cols-3 gap-4">
                 <ProductImageGallery images={productData?.images} />
                 <div className="col-span-2">
-                  <ProductInfo productData={productData} channelType={channelType}/>
+                  <ProductInfo productData={productData} channelType={channelType} handleCopyLink={handleCopyLink}/>
                 </div>
               </div>
             </CardContent>

@@ -1,5 +1,5 @@
 "use client";
-import { Heart, ImageOff, IndianRupee } from "lucide-react";
+import { Heart, ImageOff, IndianRupee, Link as LinkIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +13,7 @@ import axios from "@/lib/web-api/axios";
 import LoginDialog from "../dialogs/login";
 import { RiLoader3Fill } from "react-icons/ri";
 import Link from "next/link";
+import ToolTip from "../tool-tip";
 
 export interface ICategory {
   _id: string;
@@ -91,6 +92,14 @@ const ProductCard = ({
       setLoader(false);
     }
   }
+  const handleCopyLink = async () => {
+      try {
+        await navigator.clipboard.writeText(product?.crmLink??"");
+        toastMessage.success("Link copied to clipboard!");
+      } catch (err) {
+        toastMessage.error("Failed to copy!");
+      }
+    };
   return (
     <Card className="relative cursor-pointer w-full border border-stroke rounded-xl p-2 md:p-3 flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow bg-white overflow-hidden">
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
@@ -118,6 +127,12 @@ const ProductCard = ({
             className="text-md font-semibold w-full truncate"
             text={product.title}
           />
+
+          <div className="flex justify-center mb-3 !text-sm absolute top-0 right-0 m-2 ">
+                        <div className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center shadow" onClick={() => { }}>
+                            <ToolTip content={"Copy Product Link"} delayDuration={500}><LinkIcon className="text-primary cursor-pointer" size={20} onClick={handleCopyLink}/></ToolTip>
+                        </div>
+                    </div>
           {/* Price and Discount */}
           <div className="flex items-center w-full text-sm space-x-2">
             <span className="flex items-center text-green-600 py-1 font-bold">

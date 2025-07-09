@@ -14,12 +14,12 @@ export default function ViewAllBids({
     return (
         <DialogLayout
             open={true}
-            size="max-w-lg mx-auto overflow-auto"
+            size="overflow-auto"
             title=""
             skipClose={true}
         // onClose={() => !loading && onClose()}
         >
-            <div className="max-w-lg mx-auto shadow-xl p-6 text-center border rounded-lg">
+            <div className=" shadow-xl p-2 md:p-6 text-center border rounded-lg">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold text-gray-800">Bid History</h2>
                     <button
@@ -33,7 +33,7 @@ export default function ViewAllBids({
                 {/* Scrollable Content */}
                 <div className="text-left text-sm text-gray-700 space-y-2 max-h-48 overflow-y-auto pr-2">
                     {bids.map((item:any, index) => (
-                        <div key={index} className="flex flex-col md:flex-row items-start gap-2">
+                        <div key={index} className="flex items-start gap-2">
                         <div className="w-[120px] text-sm text-gray-500 text-nowrap">
                           {item?.sender === 'vendor'? "Brand Offered":"Creator Offered"}:
                         </div>
