@@ -214,7 +214,7 @@ export default function PublicCreatorStore({
       }
     }
   }, [categories, store?.category, store?.sub_category]);
-  const onStoreSetUpSubmit = async (data: ICreatorStoreSetUpSchema) => {
+  const onStoreSetUpSubmit = async (data: ICreatorStoreSetUpSchema,isTrending: boolean) => {
     setSaveLoader(true);
     try {
       const formData = new FormData();
@@ -246,7 +246,8 @@ export default function PublicCreatorStore({
             creator: response?.data,
           },
         });
-        setStore(response?.data);
+        let channels = isTrending ? store?.channels : response?.data?.channels;
+        setStore({...response?.data, channels});
         setCreatorData("creator", {
           creatorId: response?.data?._id,
           accountId: response?.data?.accountId,
@@ -346,7 +347,7 @@ export default function PublicCreatorStore({
                 }))
             : [],
             showTrending: !showTrending
-      });
+      },true);
     }
   };
   if (!storeName) {
@@ -367,7 +368,7 @@ export default function PublicCreatorStore({
         <div className="bg-pink-blue-gradient min-h-screen w-full overflow-y-auto px-3 pb-3">
           <FormProvider {...storeMethods}>
             <form
-              onSubmit={storeMethods.handleSubmit(onStoreSetUpSubmit)}
+              onSubmit={storeMethods.handleSubmit((data:ICreatorStoreSetUpSchema) => onStoreSetUpSubmit(data,false))}
               className="md:pt-6 mt-3 max-w-[1200px] bg-white rounded-lg mx-auto w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
             >
               <StoreSetup

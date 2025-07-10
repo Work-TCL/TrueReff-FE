@@ -525,7 +525,10 @@ export interface IAddContactVendorSchema
 // Add to wishlist
 export const creatorOnBoardingSchema = Yup.object().shape({
   full_name: Yup.string().required("Full name is required"),
-  user_name: Yup.string().required("User name is required"),
+  user_name: Yup.string().required("User name is required")
+    .matches(/^[a-z._0-9]+$/, "Only lowercase letters, digits,underscores (_) and dots (.) are allowed")
+    .min(5, "Username must be at least 5 characters")
+    .max(20, "Username can't exceed 20 characters"),
   email: Yup.string()
     .email("Invalid email format")
     .lowercase()

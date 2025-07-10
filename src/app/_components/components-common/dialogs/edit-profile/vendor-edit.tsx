@@ -13,9 +13,11 @@ import Button from "@/app/_components/ui/button";
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
 import {
+  allowedImageTypes,
   businessTypes,
   cities,
   fileUploadLimitValidator,
+  imageAccept,
   indianStates,
 } from "@/lib/utils/constants";
 import Select from "react-select";
@@ -221,6 +223,13 @@ export default function EditVendorForm({
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!allowedImageTypes.includes(file.type)) {
+      methods.setError(type === "banner" ? "banner_image" : "profile_image", {
+        type: "manual",
+        message: "Only JPG and PNG images are allowed.",
+      });
+      return;
+    }
 
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;
@@ -296,7 +305,7 @@ export default function EditVendorForm({
                   type="file"
                   id="profile-image"
                   className="hidden"
-                  accept="image/*"
+                  accept={imageAccept}
                   onChange={(e) => handleImageSelect(e, "profile")}
                 />
               </div>

@@ -71,7 +71,7 @@ export default function BasicInfoForm({
       []
     );
     const handleUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
-      let value = e.target.value;
+      let value = e.target.value.toLowerCase();
       debouncedSearch(value);
       handleOnSelect(value,'userName');
       methods.setValue("user_name",value)

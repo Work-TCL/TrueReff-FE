@@ -115,6 +115,7 @@ export default function RegisterForm() {
             {translate("By_Signing_up,_you_agree_to_our")}{" "}
             <Link
               href="/privacy-policy"
+              target="_blank"
               className="text-primary-color font-medium"
             >
               {translate("Privacy_Policy")}
@@ -122,6 +123,7 @@ export default function RegisterForm() {
             &{" "}
             <Link
               href="/terms-condition"
+              target="_blank"
               className="text-primary-color font-medium"
             >
               {translate("Terms_of_Use")}.

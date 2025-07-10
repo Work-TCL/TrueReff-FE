@@ -7,6 +7,7 @@ import { get } from "lodash";
 import { useCreatorStore } from "@/lib/store/creator";
 import ToolTip from "@/app/_components/components-common/tool-tip";
 import TagInput from "@/components/ui/tag-input";
+import { imageAccept } from "@/lib/utils/constants";
 
 export interface ICategoryData {
   _id: string;
@@ -100,7 +101,7 @@ export default function StoreSetup({
           <input
             type="file"
             id="banner_image"
-            accept="image/*"
+            accept={imageAccept}
             className="hidden"
             onChange={(e) => handleImageSelect(e, "banner")}
           />
@@ -136,7 +137,7 @@ export default function StoreSetup({
               type="file"
               id="profile-image"
               className="hidden"
-              accept="image/*"
+              accept={imageAccept}
               onChange={(e) => handleImageSelect(e, "profile")}
             />
           </div>

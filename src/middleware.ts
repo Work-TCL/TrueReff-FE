@@ -39,7 +39,7 @@ const PUBLIC_ROUTES = [
   "/privacy-policy",
 ];
 const USER_PUBLIC_ROUTES = ["/store",'/product-detail'];
-const routes = ["/dashboard","/wishlist"];
+const routes = ["/dashboard","/wishlist","/terms-condition","/privacy-policy"];
 
 const withAuthMiddleware: MiddlewareFactory = (next) => {
   return async (request: NextRequest) => {

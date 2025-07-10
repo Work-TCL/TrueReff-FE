@@ -16,7 +16,7 @@ import { getErrorMessage } from "@/lib/utils/commonUtils";
 import { getCategories, getVendor, venderRegister } from "@/lib/web-api/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useVendorStore } from "@/lib/store/vendor";
-import { fileUploadLimitValidator } from "@/lib/utils/constants";
+import { allowedImageTypes, fileUploadLimitValidator } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import { toastMessage } from "@/lib/utils/toast-message";
 import DocumentDetailsForm from "./components/document-form";
@@ -531,7 +531,13 @@ export default function PreFormPage() {
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+    if (!allowedImageTypes.includes(file.type)) {
+      methods.setError(type === "banner" ? "banner_image" : "profile_image", {
+        type: "manual",
+        message: "Only JPG and PNG images are allowed.",
+      });
+      return;
+    }
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;
 

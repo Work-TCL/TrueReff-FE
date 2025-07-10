@@ -29,7 +29,7 @@ import {
 import Loader from "../../components-common/layout/loader";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useAuthStore } from "@/lib/store/auth-user";
-import { fileUploadLimitValidator } from "@/lib/utils/constants";
+import { allowedImageTypes, fileUploadLimitValidator } from "@/lib/utils/constants";
 import { toastMessage } from "@/lib/utils/toast-message";
 import StoreSetup, { ICategoryData } from "./components/store-setup";
 import { CreditCard, FileText, Globe, Store } from "lucide-react";
@@ -482,6 +482,13 @@ export default function CreatorRegistrationPage() {
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!allowedImageTypes.includes(file.type)) {
+      storeMethods.setError(type === "banner" ? "banner_image" : "profile_image", {
+        type: "manual",
+        message: "Only JPG and PNG images are allowed.",
+      });
+      return;
+    }
 
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;

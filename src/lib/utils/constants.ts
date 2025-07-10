@@ -1583,3 +1583,6 @@ export const vendorPlans = [
     description: "per user/month, billed annually",
   },
 ];
+
+export const allowedImageTypes = [".jpg", ".jpeg", ".png","image/jpeg", "image/png","image/jpg"];
+export const imageAccept = allowedImageTypes.join(", ");

@@ -1,5 +1,4 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   Link as LinkIcon,
@@ -7,9 +6,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { IStore } from "./main";
-import { formatFollowers } from "@/lib/utils/commonUtils";
 import { toastMessage } from "@/lib/utils/toast-message";
 import ToolTip from "@/app/_components/components-common/tool-tip";
+import { formatNumber } from "@/lib/utils/constants";
 
 interface IProps {
   store: IStore;
@@ -45,7 +44,7 @@ export default function StoreDetailCard({ store, isCreator }: IProps) {
         )}
 
         {/* Social Media Links */}
-        <div className="absolute bottom-[-80px] md:bottom-[-50px] right-4 flex flex-wrap gap-2 md:gap-4 ">
+        <div className="absolute bottom-[-90px] md:bottom-[-50px] right-4 flex  gap-2 md:gap-4 ">
           {store?.facebook_link && (
             <Link
               href={store?.facebook_link}
@@ -74,10 +73,10 @@ export default function StoreDetailCard({ store, isCreator }: IProps) {
               />
             </Link>
           )}
-          {store?.instagram_link && (
+          {store?.youtube_link && (
             <Link
               href={store?.instagram_link}
-              className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2"
+              className="text-gray-500 bg-gray-100 w-full px-2 md:px-4 py-1 md:py-2 rounded-3xl justify-center flex items-center gap-2"
             >
               <img
                 src="/assets/creator/insta-gram.svg"
@@ -85,8 +84,7 @@ export default function StoreDetailCard({ store, isCreator }: IProps) {
                 height={15}
               />{" "}
               {
-                // @ts-ignore
-                formatFollowers(
+                formatNumber(
                   store?.channels?.find((v) => v.channelType === "instagram")
                     ?.followers
                 )
@@ -100,8 +98,7 @@ export default function StoreDetailCard({ store, isCreator }: IProps) {
             >
               <img src="/assets/creator/you-tube.svg" width={18} height={18} />{" "}
               {
-                // @ts-ignore
-                formatFollowers(
+                formatNumber(
                   store?.channels?.find((v) => v.channelType === "youtube")
                     ?.followers
                 )

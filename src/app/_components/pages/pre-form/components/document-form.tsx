@@ -3,6 +3,7 @@ import React from "react";
 import Input from "@/app/_components/ui/form/Input";
 import FileUploadBox from "@/app/_components/components-common/DocumentUpload";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 interface IDocumentDetailsFormProps {
     handleDocumentUpload: (e:any,name:string) => void;
@@ -56,13 +57,13 @@ export default function DocumentDetailsForm({methods,handleDocumentUpload,handle
           />
           <span className="text-sm">
             {translate("By_Signing_up,_you_agree_to_our")}{" "}
-            <span className="text-primary-color font-medium">
+            <Link href="/privacy-policy" target="_blank" className="text-primary-color font-medium">
               {translate("Privacy_Policy")}
-            </span>{" "}
+            </Link>{" "}
             &{" "}
-            <span className="text-primary-color font-medium">
+            <Link href="/terms-condition" target="_blank" className="text-primary-color font-medium">
               {translate("Terms_of_Use")}.
-            </span>
+            </Link>
           </span>
         </label>
         </div>

@@ -14,9 +14,11 @@ import { useCreatorStore } from "@/lib/store/creator";
 import { getCategories, updateCreator } from "@/lib/web-api/auth";
 import { ICategoryData, IPutUpdateCreatorRequest } from "@/lib/types-api/auth";
 import {
+  allowedImageTypes,
   cities,
   fileUploadLimitValidator,
   gender,
+  imageAccept,
   indianStates,
 } from "@/lib/utils/constants";
 import Select from "react-select";
@@ -152,6 +154,13 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
 
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;
+    if (!allowedImageTypes.includes(file.type)) {
+      methods.setError("profile_image", {
+        type: "manual",
+        message: "Only JPG and PNG images are allowed.",
+      });
+      return;
+    }
 
     const previewURL = URL.createObjectURL(file);
 
@@ -171,6 +180,13 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
     if (!file) return;
+    if (!allowedImageTypes.includes(file.type)) {
+      methods.setError("profile_image", {
+        type: "manual",
+        message: "Only JPG and PNG images are allowed.",
+      });
+      return;
+    }
 
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;
@@ -366,7 +382,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
                   type="file"
                   id="profile-image"
                   className="hidden"
-                  accept="image/*"
+                  accept={imageAccept}
                   onChange={(e) => handleImageSelect(e, "profile")}
                 />
                 {/* <Button

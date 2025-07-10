@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { IndianRupee, LinkIcon } from "lucide-react";
 import ToolTip from "@/app/_components/components-common/tool-tip";
 import { usePathname } from "next/navigation";
-import { toastMessage } from "@/lib/utils/toast-message";
 import { useCreatorStore } from "@/lib/store/creator";
 
 interface IProductInfoProps {

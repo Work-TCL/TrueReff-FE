@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { get } from "lodash";
 import { useFormContext } from "react-hook-form";
 import Select from "react-select";
-import { cities, indianStates, businessTypes } from "@/lib/utils/constants";
+import { cities, indianStates, businessTypes, imageAccept } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import { Camera, ImageIcon, Pencil, User } from "lucide-react";
 import { useVendorStore } from "@/lib/store/vendor";
@@ -128,7 +128,7 @@ export default function BasicInfoForm({
           <input
             type="file"
             id="banner_image"
-            accept="image/*"
+            accept={imageAccept}
             className="hidden"
             onChange={(e) => handleImageSelect(e, "banner")}
           />
@@ -164,7 +164,7 @@ export default function BasicInfoForm({
               type="file"
               id="profile-image"
               className="hidden"
-              accept="image/*"
+              accept={imageAccept}
               onChange={(e) => handleImageSelect(e, "profile")}
             />
           </div>
