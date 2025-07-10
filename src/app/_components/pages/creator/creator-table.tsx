@@ -88,12 +88,14 @@ const CreatorTable = ({
     },
     {
       id: "instagram_view",
-      header: () => (
-        <div className="text-center">{translate("Followers")}</div>
-      ),
+      header: () => <div className="text-center">{translate("Followers")}</div>,
       cell: ({ row }) => (
-          <div className="flex gap-2 justify-center">
-          <Link href={row?.original?.instagram_link} target={row?.original?.instagram_link ? "_blank":""} className="flex flex-col items-center p-2">
+        <div className="flex gap-2 justify-center">
+          <Link
+            href={row?.original?.instagram_link}
+            target={row?.original?.instagram_link ? "_blank" : ""}
+            className="flex flex-col items-center p-2"
+          >
             <div>
               <img
                 src="/assets/creator/Instagram-icon.svg"
@@ -101,9 +103,13 @@ const CreatorTable = ({
                 height={30}
               />
             </div>
-              <div>{row?.original?.instagramFollowers}</div>
+            <div>{row?.original?.instagramFollowers}</div>
           </Link>
-          <Link href={row?.original?.youtube_link} target={row?.original?.youtube_link ? "_blank":""} className="flex flex-col items-center p-2">
+          <Link
+            href={row?.original?.youtube_link}
+            target={row?.original?.youtube_link ? "_blank" : ""}
+            className="flex flex-col items-center p-2"
+          >
             <div>
               <img
                 src="/assets/creator/Youtube-icon.svg"
@@ -111,7 +117,7 @@ const CreatorTable = ({
                 height={30}
               />
             </div>
-              <div>{row?.original?.youtubeFollowers}</div>
+            <div>{row?.original?.youtubeFollowers}</div>
           </Link>
         </div>
       ),
@@ -130,7 +136,11 @@ const CreatorTable = ({
     {
       id: "totalOrders",
       header: () => <div className="text-center">{translate("Orders")}</div>,
-      cell: ({ row }) => <div className="text-center">{formatNumber(row.original.totalOrders) ?? ""}</div>,
+      cell: ({ row }) => (
+        <div className="text-center">
+          {formatNumber(row.original.totalOrders) ?? ""}
+        </div>
+      ),
     },
     {
       id: "totalRevenue",
@@ -150,6 +160,10 @@ const CreatorTable = ({
     {
       id: "action",
       header: () => <div className="text-center">{translate("Action")}</div>,
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => (
         <div className="flex justify-center">
           <Button

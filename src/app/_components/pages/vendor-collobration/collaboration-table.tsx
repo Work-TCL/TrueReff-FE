@@ -147,7 +147,9 @@ const CollaborationTable = ({
                 <AvatarImage src={collaboration.productId.media[0]} />
               </Avatar>
             ) : (
-              <Avatar className={`w-8 h-8 flex justify-center items-center`}><ImageOff className="w-6 h-6 text-gray-400" /></Avatar>
+              <Avatar className={`w-8 h-8 flex justify-center items-center`}>
+                <ImageOff className="w-6 h-6 text-gray-400" />
+              </Avatar>
             )}
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
@@ -302,6 +304,10 @@ const CollaborationTable = ({
     {
       id: "action",
       header: () => <div className="text-center">{translate("Action")}</div>,
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => {
         const collaboration = row.original;
         const router = useRouter();

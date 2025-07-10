@@ -192,7 +192,13 @@ export default function ProductList() {
       id: "sku",
       header: () => translate("SKU"),
       accessorKey: "sku",
-      cell: ({ row }) => row.original.sku,
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.sku ?? ""}
+        />
+      ),
     },
     {
       id: "title",
@@ -210,7 +216,9 @@ export default function ProductList() {
                 <AvatarImage src={product.media[0]} />
               </Avatar>
             ) : (
-              <Avatar className="w-8 h-8 flex justify-center items-center"><ImageOff className="w-6 h-6 text-gray-400" /></Avatar>
+              <Avatar className="w-8 h-8 flex justify-center items-center">
+                <ImageOff className="w-6 h-6 text-gray-400" />
+              </Avatar>
             )}
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
@@ -363,10 +371,14 @@ export default function ProductList() {
     },
     {
       id: "action",
-      header: () => <>{translate("Action")}</>,
+      header: () => <div className="text-center">{translate("Action")}</div>,
       accessorKey: "",
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 justify-center">
           {/* View button (currently commented) */}
           <ToolTip content="Show Analytics" delayDuration={1000}>
             <ChartNoAxesCombined

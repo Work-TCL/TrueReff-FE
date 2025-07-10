@@ -14,7 +14,7 @@ interface SingleSelectProps {
   options: Option[];
   placeholder?: string;
   disabled?: boolean;
-  className?:string;
+  className?: string;
 }
 
 const customStyles = {
@@ -49,12 +49,12 @@ const SingleSelect: React.FC<SingleSelectProps> = ({
   options,
   placeholder = "Select...",
   disabled = false,
-  className
+  className,
 }) => {
   const selectedOption = options.find((opt) => opt.value === value) || null;
 
   return (
-    <div className={cn('md:w-[200px] w-full relative z-[11]',className)}>
+    <div className={cn("md:w-[200px] w-full relative z-[12]", className)}>
       <Select
         styles={customStyles}
         value={selectedOption}
