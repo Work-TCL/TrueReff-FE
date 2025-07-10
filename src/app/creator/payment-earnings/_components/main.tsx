@@ -66,7 +66,7 @@ export default function AccountRecharge() {
         internalLoading ? setInternalLoading(true) : setLoading(true);
         try {
             const response = await axios.get(`/payment/wallet`)
-            if (response?.status === 200 && response?.data?.data?.balance) {
+            if (response?.status === 200) {
                 setBalance(response?.data?.data?.balance);
                 setBlockedBalance(response?.data?.data?.blockedBalance);
             } else {
