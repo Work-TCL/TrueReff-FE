@@ -10,7 +10,7 @@ import ProfileCard from "./profile-card";
 interface ICreatorProfileProps {
   isVendor?: boolean;
 }
-export default function CreatorProfile({isVendor}:ICreatorProfileProps) {
+export default function CreatorProfile({ isVendor }: ICreatorProfileProps) {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const { creator } = useCreatorStore();
@@ -32,7 +32,7 @@ export default function CreatorProfile({isVendor}:ICreatorProfileProps) {
   return (
     <div className="flex flex-col p-2 md:p-4 gap-2 md:gap-5">
       {isLoading && <Loader isTransparent={false} />}
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-2 md:gap-5 w-full z-10 transition-transform duration-500">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-4 md:gap-5 w-full z-10 transition-transform duration-500">
         <ProfileCard
           banner_image={creatorData.banner_image}
           profile_image={creatorData.profile_image}
@@ -55,15 +55,17 @@ export default function CreatorProfile({isVendor}:ICreatorProfileProps) {
           }}
           store_name={creatorData?.store_name}
           categories={[...creatorData.category.map((v: any) => v.name)]}
-          store_link={isVendor ? `/vendor/creator-store/${creatorData?.store_name}` : ""}
+          store_link={
+            isVendor ? `/vendor/creator-store/${creatorData?.store_name}` : ""
+          }
         />
         <div className="flex flex-col gap-2 md:gap-5">
           <CollabsWithCompanies />
         </div>
       </div>
-      <div className="h-[calc(100vh-80px)] overflow-y-auto">
-        <ProductList storeName={creatorData?.store_name} showTrending={false}/>
-        </div>
+      <div className="overflow-y-auto">
+        <ProductList storeName={creatorData?.store_name} showTrending={false} />
+      </div>
     </div>
   );
 }

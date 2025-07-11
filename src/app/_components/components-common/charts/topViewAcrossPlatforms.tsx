@@ -13,12 +13,12 @@ const TopViewAcrossPlatforms: React.FC = () => {
   ];
 
   return (
-    <div className="w-full p-5 bg-white rounded-xl h-full">
+    <div className="lg:w-full sm:w-[500px] w-full p-5 bg-white rounded-xl h-full">
       <h2 className="sm:text-xl text-base font-semibold text-gray-900 whitespace-nowrap">
         {translate("Top_Views_across_Platforms")}
       </h2>
       <div className="flex sm:flex-row flex-col items-center gap-3 h-full lg:pt-0 pt-2">
-        <div className="relative h-[200px] flex justify-center items-center flex-1">
+        <div className="relative max-h-[200px] h-full max-w-full flex justify-center items-center flex-1">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -43,7 +43,10 @@ const TopViewAcrossPlatforms: React.FC = () => {
         </div>
         <div className="mt-4 space-y-5 flex-1 w-full">
           {data.map((item, index) => (
-            <div key={index} className="flex items-center justify-between">
+            <div
+              key={index}
+              className="flex items-center xl:justify-between gap-5"
+            >
               <div className="flex items-center space-x-2">
                 <div
                   className="w-3 h-3 rounded-full"

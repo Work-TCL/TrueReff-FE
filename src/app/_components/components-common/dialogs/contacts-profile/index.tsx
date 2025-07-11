@@ -19,7 +19,7 @@ export default function EditContactProfile({
       onClose={onClose}
       titleClassName="m-0 !p-0 mb-3"
     >
-      <div className="px-0 md:px-4 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
+      <div className="pt-2 px-0 md:px-4 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto relative">
         <EditContactVendorForm profile={contact} id={id} onClose={onClose} />
       </div>
     </DialogLayout>

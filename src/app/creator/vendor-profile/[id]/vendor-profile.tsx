@@ -15,7 +15,9 @@ export default function VendorProfile() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const { vendor } = useVendorStore();
-  const [vendorData, setCreatorData] = useState<IVendor|IVendorUpdate>(vendor);
+  const [vendorData, setCreatorData] = useState<IVendor | IVendorUpdate>(
+    vendor
+  );
 
   useEffect(() => {
     (async () => {
@@ -48,7 +50,7 @@ export default function VendorProfile() {
           <VendorStats />
         </div>
       </div>
-      <div className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-0 w-full">
+      <div className="grid lg:grid-cols-3 grid-cols-1 lg:gap-x-5 gap-y-5  w-full">
         <div className="col-span-2 h-full">
           <TopVideosCraetor />
         </div>
