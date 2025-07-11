@@ -129,7 +129,6 @@ export default function LoginForm() {
         })
       }
       setIsAuthStatus("authenticated");
-      console.log("res?.data",res?.data)
       if (res?.data?.type === USER_TYPE.Vendor) {
         if(((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2) || res?.data?.vendor?.completed_step === 3)&& res?.data?.vendor?.status !== "APPROVED"){
           router.push("/vendor-register");
@@ -228,7 +227,6 @@ export default function LoginForm() {
               token: token,
               redirect: false,
             });
-            console.log("res?.token", res);
             if (response?.ok) {
               toast.success("Login Successfully.");
               await commonLogin(res);
