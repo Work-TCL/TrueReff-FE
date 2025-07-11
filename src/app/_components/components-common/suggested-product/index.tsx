@@ -61,7 +61,7 @@ export default function SuggestedProducts({ data = [] }: { data: any[] }) {
         }}
         {...settings}
       >
-        {data.map((item: any, i) => (
+        {(data.length === 1 ? [data[0], data[0]] : data).map((item: any, i) => (
           <div key={i} className="flex h-fit w-full">
             <ProductCard
               key={i}

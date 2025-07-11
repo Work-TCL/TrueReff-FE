@@ -103,7 +103,7 @@ export default function StoreDetailView({ store, handleOnEdit }: any) {
               {translate("Store_Description")}
             </label>
             <div className="text-base font-medium mt-1">
-              {store?.description}
+              {store?.description || "-"}
             </div>
           </div>
         </div>

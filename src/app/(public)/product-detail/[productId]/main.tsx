@@ -339,9 +339,11 @@ export default function ViewProductDetail({
                   <h2 className="text-lg font-semibold">
                     {productData?.title}
                   </h2>
-                  <p className="text-gray-500 text-xs">
-                    {productData?.description}
-                  </p>
+                  {productData?.description && (
+                    <p className="text-gray-500 text-xs">
+                      {productData?.description}
+                    </p>
+                  )}
                 </div>
                 <div className="">
                   <div className="flex items-center gap-2 ">
@@ -406,7 +408,7 @@ export default function ViewProductDetail({
                               selectedVariant?.title === variant?.title
                                 ? "bg-gray-darken text-white"
                                 : "border bg-white text-black"
-                            } py-1 px-3 rounded-full flex items-center gap-2 cursor-pointer hover:bg-gray-darken/80 transition-colors`}
+                            } py-1 px-3 rounded-full flex items-center gap-2 cursor-pointer hover:bg-gray-darken/80 hover:text-white transition-colors`}
                             onClick={() =>
                               setSelectedVariant({
                                 title: variant?.title,
@@ -509,26 +511,28 @@ export default function ViewProductDetail({
                     ))}
                   </div>
                 </div>
-                <div className=" border-t text-sm pt-4 text-gray-800">
-                  <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">
-                    {translate("Information")}
-                  </h3>
-                  <div className="flex flex-col gap-3">
-                    {[
-                      [
-                        translate("Description"),
-                        <p>{productData?.description}</p>,
-                      ],
-                    ].map(([label, value], index) => (
-                      <div key={index} className="flex items-center">
-                        <span className="w-48 text-gray-500 capitalize">
-                          {label}:
-                        </span>
-                        <span className="text-black">{value}</span>
-                      </div>
-                    ))}
+                {productData?.description && (
+                  <div className=" border-t text-sm pt-4 text-gray-800">
+                    <h3 className="sm:text-lg text-base  font-semibold text-gray-800 mb-3">
+                      {translate("Information")}
+                    </h3>
+                    <div className="flex flex-col gap-3">
+                      {[
+                        [
+                          translate("Description"),
+                          <p>{productData?.description}</p>,
+                        ],
+                      ].map(([label, value], index) => (
+                        <div key={index} className="flex items-center">
+                          <span className="w-48 text-gray-500 capitalize">
+                            {label}:
+                          </span>
+                          <span className="text-black">{value}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
             {internalLoading && <Loader />}

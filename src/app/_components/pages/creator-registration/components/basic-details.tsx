@@ -76,6 +76,20 @@ export default function BasicInfoForm({
       handleOnSelect(value,'userName');
       methods.setValue("user_name",value)
     };
+
+  const today = new Date();
+  const maxDate = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate()
+  );
+  const minDate = new Date(
+    today.getFullYear() - 100,
+    today.getMonth(),
+    today.getDate()
+  );
+
+  const formatDate = (date: Date) => date.toISOString().split("T")[0];
   return (
     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
       <div className="col-span-1">
@@ -219,7 +233,8 @@ export default function BasicInfoForm({
             type="date"
             name="dob"
             value={formState?.dob}
-            max={new Date().toISOString().split("T")[0]}
+            min={formatDate(minDate)} // ✅ 100 years ago
+            max={formatDate(maxDate)} // ✅ 18 years ago
             placeholder={translate("Select_date_of_birth")}
           />
           {Boolean(get(methods.formState.errors, "dob")) &&
