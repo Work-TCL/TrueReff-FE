@@ -2,7 +2,6 @@
 import LightButton from "@/app/_components/ui/button/variant/light-button";
 import { useTranslations } from "next-intl";
 import React from "react";
-import { FaApple } from "react-icons/fa";
 
 export default function SocialAuth() {
   const translate = useTranslations();

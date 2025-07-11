@@ -92,7 +92,7 @@ export default function ChannelForm({ loading, channels,methods }: IChannelFormP
                     {translate("Install")}
                   </Button>
                 </div>
-              </div> : <div className="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 gap-4 items-end">
+              </div> : <div className="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 gap-4">
                 <div className="sm:col-span-6 md:col-span-4 w-full">
                   <Input
                     label={translate("Shopify_Store_Domain")}

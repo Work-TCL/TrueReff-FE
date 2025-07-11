@@ -435,7 +435,7 @@ export default function ViewProductDetail({
                         }`}
                       >
                         <Heart
-                          className="fill-black group-hover:fill-white"
+                          className="fill-primary group-hover:fill-white"
                           size={15}
                         />{" "}
                         {translate("Remove_from_Wishlist")}

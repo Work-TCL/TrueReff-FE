@@ -86,7 +86,9 @@ export const resetPasswordSchema = Yup.object().shape({
 export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> {}
 
 export const registerSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().required("Name is required")
+    .min(5, "Name must be at least 5 characters")
+    .max(50, "Name can't exceed 50 characters"),
   phone: Yup.string()
     .required("Phone number is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
@@ -172,7 +174,8 @@ export interface IChangePasswordSchema
 export const vendorRegisterFirstStepSchema = Yup.object().shape({
   business_name: Yup.string()
     .required("Business Name is required")
-    .min(2, "Business Name must be at least 2 characters"),
+    .min(5, "Business Name must be at least 5 characters")
+    .max(50, "Business Name can't exceed 50 characters"),
   company_email: Yup.string()
     .email("Company Email must be a valid email")
     .lowercase("Company Email must be a valid email")
@@ -377,7 +380,12 @@ export const preFormSchema = Yup.object().shape({
 });
 export const vendorRegisterThirdStepSchema = Yup.object().shape({
   shopify_store_id: Yup.string().required("Shopify store id is required"),
-  shopify_store_domain: Yup.string().required("Shopify store domain is required"),
+  shopify_store_domain: Yup.string()
+  .required("Shopify store domain is required")
+  .matches(
+    /^[a-z0-9][a-z0-9\-]*\.myshopify\.com$/,
+    "Enter a valid Shopify store domain ending with .myshopify.com"
+  ),
 });
 
 export interface IVendorRegisterThirdStepSchema
@@ -395,10 +403,13 @@ export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
 export const creatorFormSchema = Yup.object().shape({
   full_name: Yup.string()
     .required("Full Name is required")
-    .min(2, "Full Name must be at least 2 characters"),
+    .min(5, "Full Name must be at least 5 characters")
+    .max(50, "Full Name can't exceed 50 characters"),
   user_name: Yup.string()
     .required("User Name is required")
-    .min(2, "User Name must be at least 2 characters"),
+    .matches(/^[a-z._0-9]+$/, "Only lowercase letters, digits,underscores (_) and dots (.) are allowed")
+    .min(5, "Username must be at least 5 characters")
+    .max(20, "Username can't exceed 20 characters"),
   email: Yup.string().email().lowercase().required("Email is required"),
   state: Yup.string().required("State is required"),
   city: Yup.string().required("City is required"),
@@ -427,7 +438,9 @@ export interface ICreatorFormSchema
   extends Yup.Asserts<typeof creatorFormSchema> {}
 
 export const contactSchema = Yup.object().shape({
-  firstName: Yup.string().required("First Name is required"),
+  firstName: Yup.string().required("First Name is required")
+    .min(5, "First name must be at least 5 characters")
+    .max(50, "First name can't exceed 50 characters"),
   email: Yup.string()
     .email("Email must be a valid email address")
     .lowercase()
@@ -439,7 +452,9 @@ export const contactSchema = Yup.object().shape({
 export interface IContactSchema extends Yup.Asserts<typeof contactSchema> {}
 
 export const profileUpdateSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().required("Name is required")
+    .min(5, "Full name must be at least 5 characters")
+    .max(50, "Full name can't exceed 50 characters"),
   email: Yup.string()
     .email("Email must be a valid email address")
     .lowercase()
@@ -455,7 +470,8 @@ export interface IProfileUpdateSchema
 export const vendorProfileUpdateSchema = Yup.object().shape({
   business_name: Yup.string()
     .required("Business Name is required")
-    .min(2, "Business Name must be at least 2 characters"),
+    .min(5, "Business Name must be at least 5 characters")
+    .max(50, "Business Name can't exceed 50 characters"),
   zip_code: Yup.string()
     .required("Pin code is required")
     .matches(/^[0-9]{6}$/, "Pin code must be a valid 6-digit number"),
@@ -490,7 +506,9 @@ export interface IVendorProfileUpdateSchema
   extends Yup.Asserts<typeof vendorProfileUpdateSchema> {}
 
 export const addAddressVendorSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().required("Name is required")
+    .min(5, "Name must be at least 5 characters")
+    .max(50, "Name can't exceed 50 characters"),
   phone: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
@@ -508,7 +526,9 @@ export interface IAddAddressVendorSchema
   extends Yup.Asserts<typeof addAddressVendorSchema> {}
 
 export const addContactVendorSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().required("Name is required")
+    .min(5, "Name must be at least 5 characters")
+    .max(50, "Name can't exceed 50 characters"),
   phone: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
@@ -524,7 +544,9 @@ export interface IAddContactVendorSchema
 
 // Add to wishlist
 export const creatorOnBoardingSchema = Yup.object().shape({
-  full_name: Yup.string().required("Full name is required"),
+  full_name: Yup.string().required("Full name is required")
+    .min(5, "Full name must be at least 5 characters")
+    .max(50, "Full name can't exceed 50 characters"),
   user_name: Yup.string().required("User name is required")
     .matches(/^[a-z._0-9]+$/, "Only lowercase letters, digits,underscores (_) and dots (.) are allowed")
     .min(5, "Username must be at least 5 characters")
@@ -548,9 +570,16 @@ export interface ICreatorOnBoardingSchema
 export const creatorStoreSetUpSchema = Yup.object().shape({
   store_name: Yup.string()
   .required("Store name is required")
-  .matches(/^\S*$/, "Spaces are not allowed")
-  .matches(/^[a-z0-9]+$/, "only small letters (a–z) and numbers (0–9) are allowed")
-  .matches(/^[^!@#\$%\^\&*\)\(+=._-]+$/, "Special characters are not allowed"),
+  .min(5, "Store name must be at least 5 characters")
+  .max(20, "Store name must be at most 20 characters")
+  .matches(
+    /^[a-z0-9._]+$/,
+    "Only lowercase letters, numbers, underscores (_) and dots (.) are allowed"
+  )
+  .matches(
+    /^(?!.*[.]{2})(?![.])(?!.*\s)[a-z0-9.]+(?<![.])$/,
+    "No spaces, no leading/trailing/consecutive _ or ."
+  ),
   store_description: Yup.string().required("Store description is required"),
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
@@ -618,7 +647,9 @@ export interface ICreatorSocialConnectSchema
 // Add to wishlist
 export const productSchema = Yup.object().shape({
   images: Yup.array().of(Yup.string().url("Invalid image URL")).required(),
-  name: Yup.string().required("Product name is required"),
+  name: Yup.string().required("Product name is required")
+    .min(5, "Product name must be at least 5 characters")
+    .max(50, "Product name can't exceed 50 characters"),
   description: Yup.string().required("Description is required"),
   price: Yup.number()
     .min(0, "Price must be a positive number")
@@ -700,8 +731,13 @@ export const utmSchema = Yup.object().shape({
 export interface IUTMSchema extends Yup.Asserts<typeof utmSchema> {}
 
 export const creatorProfileUpdateSchema = Yup.object().shape({
-  full_name: Yup.string().required("Full name is required"),
-  user_name: Yup.string().required("User name is required"),
+  full_name: Yup.string().required("Full name is required")
+    .min(5, "Full name must be at least 5 characters")
+    .max(50, "Full name can't exceed 50 characters"),
+  user_name: Yup.string().required("User name is required")
+    .matches(/^[a-z._0-9]+$/, "Only lowercase letters, digits,underscores (_) and dots (.) are allowed")
+    .min(5, "Username must be at least 5 characters")
+    .max(20, "Username can't exceed 20 characters"),
   phone: Yup.string(),
   // .required("Phone is required")
   // .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
@@ -716,7 +752,9 @@ export interface ICreatorProfileUpdateSchema
   extends Yup.Asserts<typeof creatorProfileUpdateSchema> {}
 
 export const campaignValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Campaign name is required"),
+  name: Yup.string().required("Campaign name is required")
+    .min(5, "Campaign name must be at least 5 characters")
+    .max(50, "Campaign name can't exceed 50 characters"),
   description: Yup.string().required("Description is required"),
   startDate: Yup.date()
     .required("Start date is required")
@@ -766,7 +804,9 @@ export const campaignValidationSchema = Yup.object().shape({
     .moreThan(0, "Discount value must be greater than 0"),
 });
 export const campaignValidationUpdateSchema = Yup.object().shape({
-  name: Yup.string().required("Campaign name is required"),
+  name: Yup.string().required("Campaign name is required")
+    .min(5, "Campaign name must be at least 5 characters")
+    .max(50, "Campaign name can't exceed 50 characters"),
   description: Yup.string().required("Description is required"),
   startDate: Yup.date().required("Start date is required"),
 
@@ -809,7 +849,9 @@ export interface ICampaignValidationSchema
   extends Yup.Asserts<typeof campaignValidationSchema> {}
 
 export const campaignProductValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Campaign name is required"),
+  name: Yup.string().required("Campaign name is required")
+    .min(5, "Campaign name must be at least 5 characters")
+    .max(50, "Campaign name can't exceed 50 characters"),
   description: Yup.string().required("Description is required"),
   campaignLifeTime: Yup.boolean().default(false).required(),
   freeProduct: Yup.boolean().default(false).required(),
@@ -945,7 +987,9 @@ export interface ICampaignProductValidationSchema
   extends Yup.Asserts<typeof campaignProductValidationSchema> {}
 
 export const createStoreSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required."),
+  name: Yup.string().required("Name is required.")
+    .min(5, "Full name must be at least 5 characters")
+    .max(50, "Full name can't exceed 50 characters"),
   description: Yup.string().required("Description is required"),
   // link: Yup.string().url().required("Store Link is required."),
   tags: Yup.array()
