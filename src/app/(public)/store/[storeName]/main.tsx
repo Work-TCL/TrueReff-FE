@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import StoreDetailCard from "./StoreDetailCard";
 import { useParams, useRouter } from "next/navigation";
 import { getCreatorStore } from "@/lib/web-api/my-store";
@@ -26,6 +26,7 @@ import { ICategoryData } from "@/lib/types-api/auth";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { Info } from "lucide-react";
 import ToolTip from "@/app/_components/components-common/tool-tip";
+import { debounce } from "lodash";
 
 interface ICategory {
   _id: string;
@@ -350,6 +351,16 @@ export default function PublicCreatorStore({
       },true);
     }
   };
+
+  const debouncedHandleShowTrending = useMemo(
+    () => {
+      // setShowTrending(!showTrending);
+      // storeMethods.setValue("showTrending", !showTrending);
+      return debounce(() => handleShowTrending(), 500);
+    }, // 300ms delay
+    [handleShowTrending]
+  );
+
   if (!storeName) {
     return <NotFound />;
   }
@@ -437,7 +448,7 @@ export default function PublicCreatorStore({
                     type="checkbox"
                     checked={showTrending}
                     className="sr-only peer"
-                    onChange={() => handleShowTrending()}
+                    onChange={debouncedHandleShowTrending}
                   />
                   <div
                     className={`relative w-11 h-6 ${

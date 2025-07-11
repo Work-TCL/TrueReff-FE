@@ -64,7 +64,7 @@ export default function SuggestedCreators({ data = [] }: { data: any[] }) {
         }}
         {...settings}
       >
-        {data.map((item: any, i) => (
+        {(data.length === 1 ? [data[0], data[0]] : data).map((item: any, i) => (
           <div key={i} className="flex h-full w-full px-2">
             <CreatorCard
               item={item}

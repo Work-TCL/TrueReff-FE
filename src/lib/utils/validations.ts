@@ -2,32 +2,35 @@ import * as Yup from "yup";
 
 export const loginSchema = Yup.object().shape({
   email: Yup.string()
+    .trim()
     .required("Email or phone number is required")
     .test(
       "email-or-phone",
       "Must be a valid email or 10-digit phone number",
       function (value) {
-        const emailValid = Yup.string().email().isValidSync(value || "");
+        const emailValid = Yup.string()
+          .trim()
+          .email()
+          .isValidSync(value || "");
         const phoneValid = /^[0-9]{10}$/.test(value || "");
         return emailValid || phoneValid;
       }
     ),
-  password: Yup.string()
-    .required("Password is required")
-    // .min(8, "Password must be at least 8 characters")
-    // .matches(/(?=.*[0-9])/, "Password must contain at least one number")
-    // .matches(
-    //   /(?=.*[a-z])/,
-    //   "Password must contain at least one lowercase letter"
-    // )
-    // .matches(
-    //   /(?=.*[A-Z])/,
-    //   "Password must contain at least one uppercase letter"
-    // )
-    // .matches(
-    //   /(?=.*[!@#\$%\^&\*])/,
-    //   "Password must contain at least one special character"
-    // ),
+  password: Yup.string().trim().required("Password is required"),
+  // .min(8, "Password must be at least 8 characters")
+  // .matches(/(?=.*[0-9])/, "Password must contain at least one number")
+  // .matches(
+  //   /(?=.*[a-z])/,
+  //   "Password must contain at least one lowercase letter"
+  // )
+  // .matches(
+  //   /(?=.*[A-Z])/,
+  //   "Password must contain at least one uppercase letter"
+  // )
+  // .matches(
+  //   /(?=.*[!@#\$%\^&\*])/,
+  //   "Password must contain at least one special character"
+  // ),
 });
 
 export interface ILoginSchema extends Yup.Asserts<typeof loginSchema> {}
@@ -63,6 +66,7 @@ export interface IOtpSchema extends Yup.Asserts<typeof otpSchema> {}
 
 export const resetPasswordSchema = Yup.object().shape({
   password: Yup.string()
+    .trim()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters")
     .matches(/(?=.*[0-9])/, "Password must contain at least one number")
@@ -86,15 +90,18 @@ export const resetPasswordSchema = Yup.object().shape({
 export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> {}
 
 export const registerSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().trim().required("Name is required"),
   phone: Yup.string()
+    .trim()
     .required("Phone number is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
   email: Yup.string()
+    .trim()
     .email("Email must be a valid email address")
     .lowercase()
     .required("Email is required"),
   password: Yup.string()
+    .trim()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters")
     .matches(/(?=.*[0-9])/, "Password must contain at least one number")
@@ -129,6 +136,7 @@ export const _validatePhone = (number: string, format: string) => {
 
 export const changePasswordSchema = Yup.object().shape({
   currentPassword: Yup.string()
+    .trim()
     .required("Current Password is required")
     .min(8, "Current Password must be at least 8 characters")
     .matches(/(?=.*[0-9])/, "Current Password must contain at least one number")
@@ -145,6 +153,7 @@ export const changePasswordSchema = Yup.object().shape({
       "Current Password must contain at least one special character"
     ),
   password: Yup.string()
+    .trim()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters")
     .matches(/(?=.*[0-9])/, "Password must contain at least one number")
@@ -161,6 +170,7 @@ export const changePasswordSchema = Yup.object().shape({
       "Password must contain at least one special character"
     ),
   confirmPassword: Yup.string()
+    .trim()
     .required("Confirm Password is required")
     .oneOf([Yup.ref("password")], "Passwords must match"),
 });
@@ -171,27 +181,31 @@ export interface IChangePasswordSchema
 // Vendor register
 export const vendorRegisterFirstStepSchema = Yup.object().shape({
   business_name: Yup.string()
+    .trim()
     .required("Business Name is required")
     .min(2, "Business Name must be at least 2 characters"),
   company_email: Yup.string()
+    .trim()
     .email("Company Email must be a valid email")
     .lowercase("Company Email must be a valid email")
     .required("Company Email is required"),
   pin: Yup.string()
     .required("Pin code is required")
     .matches(/^[0-9]{6}$/, "Pin code must be a valid 6-digit number"),
-  address: Yup.string().required("Address is required"),
-  state: Yup.string().required("State is required"),
-  city: Yup.string().required("City is required"),
-  website: Yup.string().url().required("Website is required"),
-  type_of_business: Yup.string().required("Type of business is required"),
-  profile_image: Yup.string().required("Profile Image is required"),
-  banner_image: Yup.string().nullable(),
+  address: Yup.string().trim().required("Address is required"),
+  state: Yup.string().trim().required("State is required"),
+  city: Yup.string().trim().required("City is required"),
+  website: Yup.string().trim().url().required("Website is required"),
+  type_of_business: Yup.string()
+    .trim()
+    .required("Type of business is required"),
+  profile_image: Yup.string().trim().required("Profile Image is required"),
+  banner_image: Yup.string().trim().nullable(),
   category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .length(1, "Only one category can be selected")
@@ -199,8 +213,8 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
   sub_category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "Sub-category is required")
@@ -208,22 +222,19 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
   contacts: Yup.array()
     .of(
       Yup.object().shape({
-        name: Yup.string().test(
-          "test-name",
-          "Name is required",
-          function (value) {
+        name: Yup.string()
+          .trim()
+          .test("test-name", "Name is required", function (value) {
             const { path, createError } = this;
             // Check if this is the first contact
             if (path === "contacts[0].name" && !value) {
               return createError({ path, message: "Name is required" });
             }
             return true; // No error
-          }
-        ),
-        phone: Yup.string().test(
-          "test-phone",
-          "Phone number is required",
-          function (value) {
+          }),
+        phone: Yup.string()
+          .trim()
+          .test("test-phone", "Phone number is required", function (value) {
             const { path, createError } = this;
             // Check if this is the first contact
             if (path === "contacts[0].phone" && !value) {
@@ -236,8 +247,7 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
               });
             }
             return true; // No error
-          }
-        ),
+          }),
         email: Yup.string()
           .email("Invalid email format")
           .lowercase()
@@ -275,7 +285,7 @@ export const vendorRegisterSecondStepSchema = Yup.object().shape({
       /[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
       "Last three characters should follow GSTIN format"
     ),
-  gst_certificate: Yup.string().required("GST Certificate is required"),
+  gst_certificate: Yup.string().trim().required("GST Certificate is required"),
   pan_number: Yup.string()
     .matches(
       /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
@@ -297,8 +307,8 @@ export const preFormSchema = Yup.object().shape({
   company_phone: Yup.string()
     .required("Company Phone is required")
     .matches(/^[0-9]{10}$/, "Company Phone must be a valid 10-digit number"),
-  state: Yup.string().required("State is required"),
-  city: Yup.string().required("City is required"),
+  state: Yup.string().trim().required("State is required"),
+  city: Yup.string().trim().required("City is required"),
   gst_number: Yup.string()
     .required("GST Number is required")
     .min(15, "GST Number should be exactly 15 characters")
@@ -317,7 +327,9 @@ export const preFormSchema = Yup.object().shape({
       "Last three characters should follow GSTIN format"
     ),
   website: Yup.string().url().required("Website is required"),
-  type_of_business: Yup.string().required("Type of business is required"),
+  type_of_business: Yup.string()
+    .trim()
+    .required("Type of business is required"),
   contacts: Yup.array()
     .of(
       Yup.object().shape({
@@ -369,23 +381,31 @@ export const preFormSchema = Yup.object().shape({
   omni_channels: Yup.array()
     .of(
       Yup.object().shape({
-        value: Yup.string().required("Channel value is required"),
-        label: Yup.string().required("Channel label is required"),
+        value: Yup.string().trim().required("Channel value is required"),
+        label: Yup.string().trim().required("Channel label is required"),
       })
     )
     .min(1, "At least one channel is required"),
 });
 export const vendorRegisterThirdStepSchema = Yup.object().shape({
-  shopify_store_id: Yup.string().required("Shopify store id is required"),
-  shopify_store_domain: Yup.string().required("Shopify store domain is required"),
+  shopify_store_id: Yup.string()
+    .trim()
+    .required("Shopify store id is required"),
+  shopify_store_domain: Yup.string()
+    .trim()
+    .required("Shopify store domain is required"),
 });
 
 export interface IVendorRegisterThirdStepSchema
   extends Yup.Asserts<typeof vendorRegisterThirdStepSchema> {}
 
-  export const vendorWordPressConnectSchema = Yup.object().shape({
-  wordpress_store_id: Yup.string().required("WordPress store id is required"),
-  wordpress_store_domain: Yup.string().required("WordPress store domain is required"),
+export const vendorWordPressConnectSchema = Yup.object().shape({
+  wordpress_store_id: Yup.string()
+    .trim()
+    .required("WordPress store id is required"),
+  wordpress_store_domain: Yup.string()
+    .trim()
+    .required("WordPress store domain is required"),
 });
 
 export interface IVendorWordPressConnectSchema
@@ -400,8 +420,8 @@ export const creatorFormSchema = Yup.object().shape({
     .required("User Name is required")
     .min(2, "User Name must be at least 2 characters"),
   email: Yup.string().email().lowercase().required("Email is required"),
-  state: Yup.string().required("State is required"),
-  city: Yup.string().required("City is required"),
+  state: Yup.string().trim().required("State is required"),
+  city: Yup.string().trim().required("City is required"),
   phone_number: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
@@ -414,32 +434,34 @@ export const creatorFormSchema = Yup.object().shape({
   short_description: Yup.string()
     .required("Short Description is required")
     .min(10, "Short Description must be at least 10characters"),
-  tags: Yup.array().of(Yup.string().required("Tags is required")),
-  category: Yup.array().of(Yup.string().required("Category is required")),
-  sub_category: Yup.array().of(
-    Yup.string().required("sub Category is required")
+  tags: Yup.array().of(Yup.string().trim().required("Tags is required")),
+  category: Yup.array().of(
+    Yup.string().trim().required("Category is required")
   ),
-  profile_image: Yup.string().required("Profile Image is required"),
-  banner_image: Yup.string().required("Banner Image is required"),
+  sub_category: Yup.array().of(
+    Yup.string().trim().required("sub Category is required")
+  ),
+  profile_image: Yup.string().trim().required("Profile Image is required"),
+  banner_image: Yup.string().trim().required("Banner Image is required"),
 });
 
 export interface ICreatorFormSchema
   extends Yup.Asserts<typeof creatorFormSchema> {}
 
 export const contactSchema = Yup.object().shape({
-  firstName: Yup.string().required("First Name is required"),
+  firstName: Yup.string().trim().required("First Name is required"),
   email: Yup.string()
     .email("Email must be a valid email address")
     .lowercase()
     .required("Email is required"),
-  type: Yup.string().required("Type is required"),
-  message: Yup.string().required("Message is required"),
+  type: Yup.string().trim().required("Type is required"),
+  message: Yup.string().trim().required("Message is required"),
 });
 
 export interface IContactSchema extends Yup.Asserts<typeof contactSchema> {}
 
 export const profileUpdateSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().trim().required("Name is required"),
   email: Yup.string()
     .email("Email must be a valid email address")
     .lowercase()
@@ -459,18 +481,20 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
   zip_code: Yup.string()
     .required("Pin code is required")
     .matches(/^[0-9]{6}$/, "Pin code must be a valid 6-digit number"),
-  address: Yup.string().required("Address is required"),
-  state: Yup.string().required("State is required"),
-  city: Yup.string().required("City is required"),
+  address: Yup.string().trim().required("Address is required"),
+  state: Yup.string().trim().required("State is required"),
+  city: Yup.string().trim().required("City is required"),
   website: Yup.string().url().required("Website is required"),
-  type_of_business: Yup.string().required("Type of business is required"),
-  profile_image: Yup.string().required("Profile Image is required"),
-  banner_image: Yup.string().required("Banner Image is required"),
+  type_of_business: Yup.string()
+    .trim()
+    .required("Type of business is required"),
+  profile_image: Yup.string().trim().required("Profile Image is required"),
+  banner_image: Yup.string().trim().required("Banner Image is required"),
   category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "Category is required")
@@ -478,8 +502,8 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
   sub_category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "Sub-category is required")
@@ -490,17 +514,17 @@ export interface IVendorProfileUpdateSchema
   extends Yup.Asserts<typeof vendorProfileUpdateSchema> {}
 
 export const addAddressVendorSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().trim().required("Name is required"),
   phone: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
   zip_code: Yup.string()
     .required("Zip is required")
     .matches(/^\d{6}$/, "ZIP code must be exactly 6 digits (e.g., 110001)"),
-  city: Yup.string().required("City is required"),
-  state: Yup.string().required("State is required"),
-  house_no: Yup.string().required("House No is required"),
-  address: Yup.string().required("Address is required"),
+  city: Yup.string().trim().required("City is required"),
+  state: Yup.string().trim().required("State is required"),
+  house_no: Yup.string().trim().required("House No is required"),
+  address: Yup.string().trim().required("Address is required"),
   isDefault: Yup.boolean().optional().default(false),
 });
 
@@ -508,7 +532,7 @@ export interface IAddAddressVendorSchema
   extends Yup.Asserts<typeof addAddressVendorSchema> {}
 
 export const addContactVendorSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().trim().required("Name is required"),
   phone: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
@@ -524,9 +548,13 @@ export interface IAddContactVendorSchema
 
 // Add to wishlist
 export const creatorOnBoardingSchema = Yup.object().shape({
-  full_name: Yup.string().required("Full name is required"),
-  user_name: Yup.string().required("User name is required")
-    .matches(/^[a-z._0-9]+$/, "Only lowercase letters, digits,underscores (_) and dots (.) are allowed")
+  full_name: Yup.string().trim().required("Full name is required"),
+  user_name: Yup.string()
+    .required("User name is required")
+    .matches(
+      /^[a-z._0-9]+$/,
+      "Only lowercase letters, digits,underscores (_) and dots (.) are allowed"
+    )
     .min(5, "Username must be at least 5 characters")
     .max(20, "Username can't exceed 20 characters"),
   email: Yup.string()
@@ -536,10 +564,10 @@ export const creatorOnBoardingSchema = Yup.object().shape({
   phone_number: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
-  state: Yup.string().required("State is required"),
-  city: Yup.string().required("City is required"),
-  gender: Yup.string().required("Gender is required"),
-  dob: Yup.string().required("Date of Birth is required"),
+  state: Yup.string().trim().required("State is required"),
+  city: Yup.string().trim().required("City is required"),
+  gender: Yup.string().trim().required("Gender is required"),
+  dob: Yup.string().trim().required("Date of Birth is required"),
 });
 
 export interface ICreatorOnBoardingSchema
@@ -547,11 +575,19 @@ export interface ICreatorOnBoardingSchema
 
 export const creatorStoreSetUpSchema = Yup.object().shape({
   store_name: Yup.string()
-  .required("Store name is required")
-  .matches(/^\S*$/, "Spaces are not allowed")
-  .matches(/^[a-z0-9]+$/, "only small letters (a–z) and numbers (0–9) are allowed")
-  .matches(/^[^!@#\$%\^\&*\)\(+=._-]+$/, "Special characters are not allowed"),
-  store_description: Yup.string().required("Store description is required"),
+    .required("Store name is required")
+    .matches(/^\S*$/, "Spaces are not allowed")
+    .matches(
+      /^[a-z0-9]+$/,
+      "only small letters (a–z) and numbers (0–9) are allowed"
+    )
+    .matches(
+      /^[^!@#\$%\^\&*\)\(+=._-]+$/,
+      "Special characters are not allowed"
+    ),
+  store_description: Yup.string()
+    .trim()
+    .required("Store description is required"),
   tags: Yup.array()
     .of(Yup.string().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
@@ -574,15 +610,15 @@ export const creatorStoreSetUpSchema = Yup.object().shape({
     )
     .min(1, "Sub-category is required")
     .required("Sub-Category is required"), // Ensure at least one sub-category is selected
-  profile_image: Yup.string().required("Profile Image is required"),
-  banner_image: Yup.string().required("Banner Image is required"),
-  showTrending: Yup.boolean()
+  profile_image: Yup.string().trim().required("Profile Image is required"),
+  banner_image: Yup.string().trim().required("Banner Image is required"),
+  showTrending: Yup.boolean(),
 });
 export interface ICreatorStoreSetUpSchema
   extends Yup.Asserts<typeof creatorStoreSetUpSchema> {}
 
 export const shopifyConnectSchema = Yup.object().shape({
-  id_string: Yup.string().required("Shopify ID is required"),
+  id_string: Yup.string().trim().required("Shopify ID is required"),
 });
 export interface IShopifyConnectSchema
   extends Yup.Asserts<typeof shopifyConnectSchema> {}
@@ -618,13 +654,13 @@ export interface ICreatorSocialConnectSchema
 // Add to wishlist
 export const productSchema = Yup.object().shape({
   images: Yup.array().of(Yup.string().url("Invalid image URL")).required(),
-  name: Yup.string().required("Product name is required"),
-  description: Yup.string().required("Description is required"),
+  name: Yup.string().trim().required("Product name is required"),
+  description: Yup.string().trim().required("Description is required"),
   price: Yup.number()
     .min(0, "Price must be a positive number")
     .required("Price is required"),
-  sku: Yup.string().required("SKU is required"),
-  barcode: Yup.string().required("Barcode is required"),
+  sku: Yup.string().trim().required("SKU is required"),
+  barcode: Yup.string().trim().required("Barcode is required"),
   quantity: Yup.number()
     .min(0, "Quantity must be a positive number")
     .required("Quantity is required"),
@@ -645,7 +681,9 @@ export const productSchema = Yup.object().shape({
   category: Yup.array()
     .of(Yup.string())
     .required("At least one category is required"),
-  tags: Yup.array().of(Yup.string()).required("At least one tag is required"),
+  tags: Yup.array()
+    .of(Yup.string().trim())
+    .required("At least one tag is required"),
 });
 
 export interface IProductSchema extends Yup.Asserts<typeof productSchema> {}
@@ -676,6 +714,7 @@ export interface IChannelsToProduct
 
 export const utmSchema = Yup.object().shape({
   discountType: Yup.string()
+    .trim()
     .oneOf(
       ["PERCENTAGE", "FIXED_AMOUNT"],
       "Discount type must be PERCENTAGE or FIXED_AMOUNT"
@@ -700,24 +739,24 @@ export const utmSchema = Yup.object().shape({
 export interface IUTMSchema extends Yup.Asserts<typeof utmSchema> {}
 
 export const creatorProfileUpdateSchema = Yup.object().shape({
-  full_name: Yup.string().required("Full name is required"),
-  user_name: Yup.string().required("User name is required"),
-  phone: Yup.string(),
+  full_name: Yup.string().trim().required("Full name is required"),
+  user_name: Yup.string().trim().required("User name is required"),
+  phone: Yup.string().trim(),
   // .required("Phone is required")
   // .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
-  state: Yup.string().required("State is required"),
-  city: Yup.string().required("City is required"),
-  gender: Yup.string().required("Gender is required"),
-  dob: Yup.string().required("Date of Birth is required"),
-  profile_image: Yup.string().nullable(),
+  state: Yup.string().trim().required("State is required"),
+  city: Yup.string().trim().required("City is required"),
+  gender: Yup.string().trim().required("Gender is required"),
+  dob: Yup.string().trim().required("Date of Birth is required"),
+  profile_image: Yup.string().trim().nullable(),
 });
 
 export interface ICreatorProfileUpdateSchema
   extends Yup.Asserts<typeof creatorProfileUpdateSchema> {}
 
 export const campaignValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Campaign name is required"),
-  description: Yup.string().required("Description is required"),
+  name: Yup.string().trim().required("Campaign name is required"),
+  description: Yup.string().trim().required("Description is required"),
   startDate: Yup.date()
     .required("Start date is required")
     .test(
@@ -743,13 +782,14 @@ export const campaignValidationSchema = Yup.object().shape({
         }
       );
     }),
-  productId: Yup.string().required("Product is required"),
+  productId: Yup.string().trim().required("Product is required"),
 
   channels: Yup.array()
     .min(1, "At least one channel is required")
     .required("Channels are required"),
 
   discount_type: Yup.string()
+    .trim()
     .oneOf(
       ["FIXED_AMOUNT", "PERCENTAGE"],
       "Discount type must be either FIXED_AMOUNT or PERCENTAGE"
@@ -766,8 +806,8 @@ export const campaignValidationSchema = Yup.object().shape({
     .moreThan(0, "Discount value must be greater than 0"),
 });
 export const campaignValidationUpdateSchema = Yup.object().shape({
-  name: Yup.string().required("Campaign name is required"),
-  description: Yup.string().required("Description is required"),
+  name: Yup.string().trim().required("Campaign name is required"),
+  description: Yup.string().trim().required("Description is required"),
   startDate: Yup.date().required("Start date is required"),
 
   endDate: Yup.date()
@@ -782,13 +822,14 @@ export const campaignValidationUpdateSchema = Yup.object().shape({
         }
       );
     }),
-  productId: Yup.string().required("Product is required"),
+  productId: Yup.string().trim().required("Product is required"),
 
   channels: Yup.array()
     .min(1, "At least one channel is required")
     .required("Channels are required"),
 
   discount_type: Yup.string()
+    .trim()
     .oneOf(
       ["FIXED_AMOUNT", "PERCENTAGE"],
       "Discount type must be either FIXED_AMOUNT or PERCENTAGE"
@@ -809,12 +850,12 @@ export interface ICampaignValidationSchema
   extends Yup.Asserts<typeof campaignValidationSchema> {}
 
 export const campaignProductValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Campaign name is required"),
-  description: Yup.string().required("Description is required"),
+  name: Yup.string().trim().required("Campaign name is required"),
+  description: Yup.string().trim().required("Description is required"),
   campaignLifeTime: Yup.boolean().default(false).required(),
   freeProduct: Yup.boolean().default(false).required(),
   tags: Yup.array()
-    .of(Yup.string().required("Each tag must be a string"))
+    .of(Yup.string().trim().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
     .required("Tags are required"),
   category: Yup.array()
@@ -868,16 +909,16 @@ export const campaignProductValidationSchema = Yup.object().shape({
       otherwise: (schema) => schema.nullable(),
     }),
 
-  productId: Yup.string().required("Product is required"),
+  productId: Yup.string().trim().required("Product is required"),
   tearmAndCondition: Yup.boolean()
     .oneOf([true], "Tearm & Condition required")
     .required("Tearm & Condition required"),
-  couponCode: Yup.string().optional(),
+  couponCode: Yup.string().trim().optional(),
   videoType: Yup.array()
     .of(Yup.string().required("Each video type is required"))
     .min(1, "Select at least one video type")
     .required("Video type is required"),
-  notes: Yup.string().notRequired(),
+  notes: Yup.string().trim().notRequired(),
   references: Yup.array()
     .of(Yup.string().url("Invalid URL").required("Reference link is required"))
     .notRequired(),
@@ -945,11 +986,11 @@ export interface ICampaignProductValidationSchema
   extends Yup.Asserts<typeof campaignProductValidationSchema> {}
 
 export const createStoreSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required."),
-  description: Yup.string().required("Description is required"),
+  name: Yup.string().trim().required("Name is required."),
+  description: Yup.string().trim().required("Description is required"),
   // link: Yup.string().url().required("Store Link is required."),
   tags: Yup.array()
-    .of(Yup.string().required("Each tag must be a string"))
+    .of(Yup.string().trim().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
     .required("Tags are required"),
   category: Yup.array()
@@ -977,23 +1018,27 @@ export const createStoreSchema = Yup.object().shape({
 export interface ICreateStoreSchema
   extends Yup.Asserts<typeof createStoreSchema> {}
 
-  export const banDetailsSchema = Yup.object().shape({
-    account_number: Yup.string()
-      .matches(/^\d+$/, 'Account number must contain digits only')
-      .required('Please enter your account number'),
-  
-    confirm_account_number: Yup.string()
-      .oneOf([Yup.ref('account_number')], 'Confirm account number must be the same as account number')
-      .matches(/^\d+$/, 'Confirm account number must contain digits only')
-      .required('Please re-enter your account number'),
-  
-    IFSC_code: Yup.string()
-      .required('Please enter your IFSC code'),
-    phone_number: Yup.string()
-      .required("Phone number is required")
-      .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
-    account_holder_name: Yup.string()
-      .required("Account holder name is required.")
-  });
+export const banDetailsSchema = Yup.object().shape({
+  account_number: Yup.string()
+    .matches(/^\d+$/, "Account number must contain digits only")
+    .required("Please enter your account number"),
 
-export interface IBankDetailSchema extends Yup.Asserts<typeof banDetailsSchema> { }
+  confirm_account_number: Yup.string()
+    .oneOf(
+      [Yup.ref("account_number")],
+      "Confirm account number must be the same as account number"
+    )
+    .matches(/^\d+$/, "Confirm account number must contain digits only")
+    .required("Please re-enter your account number"),
+
+  IFSC_code: Yup.string().trim().required("Please enter your IFSC code"),
+  phone_number: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+  account_holder_name: Yup.string()
+    .trim()
+    .required("Account holder name is required."),
+});
+
+export interface IBankDetailSchema
+  extends Yup.Asserts<typeof banDetailsSchema> {}

@@ -216,6 +216,18 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     }
   };
 
+  const today = new Date();
+  const maxDate = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate()
+  );
+  const minDate = new Date(
+    today.getFullYear() - 100,
+    today.getMonth(),
+    today.getDate()
+  );
+  const formatDate = (date: Date) => date.toISOString().split("T")[0];
   return (
     <>
       <FormProvider {...methods}>
@@ -349,8 +361,18 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
                   {translate("Date_of_Birth")}
                   <span className="text-red-500">*</span>
                 </span>
-                <input onChange={(e:any) => handleOnSelect(e.target?.value,"dob")} className="h-[54px] border rounded-xl p-2" type="date" name="dob" value={formState?.dob } max={new Date().toISOString().split("T")[0]} placeholder={translate("Select_date_of_birth")}/>
-                {Boolean(get(methods.formState.errors, "dob")) && methods.formState.errors["dob"]?.message && (
+                <input
+                  onChange={(e: any) => handleOnSelect(e.target?.value, "dob")}
+                  className="h-[54px] border rounded-xl p-2"
+                  type="date"
+                  name="dob"
+                  value={formState?.dob}
+                  min={formatDate(minDate)} // ✅ 100 years ago
+                  max={formatDate(maxDate)} // ✅ 18 years ago
+                  placeholder={translate("Select_date_of_birth")}
+                />
+                {Boolean(get(methods.formState.errors, "dob")) &&
+                  methods.formState.errors["dob"]?.message && (
                   <span className="text-red-600 text-sm p-2 block">
                     {methods.formState.errors["dob"]?.message}
                   </span>
