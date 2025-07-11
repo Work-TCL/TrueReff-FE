@@ -73,7 +73,7 @@ export default function StoreDetailCard({ store, isCreator }: IProps) {
               />
             </Link>
           )}
-          {store?.youtube_link && (
+          {store?.instagram_link && (
             <Link
               href={store?.instagram_link}
               className="text-gray-500 bg-gray-100 w-full px-2 md:px-4 py-1 md:py-2 rounded-3xl justify-center flex items-center gap-2"
