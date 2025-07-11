@@ -144,6 +144,7 @@ export default function ProfileCard({
                   alt={"youtubeIcon"}
                   width={35}
                   height={35}
+                  className="md:w-auto w-full"
                 />
                 {formatFollowers(channels?.youtubeFollowers || 0)}
               </div>

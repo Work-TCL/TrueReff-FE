@@ -14,7 +14,12 @@ import {
   getErrorMessage,
 } from "@/lib/utils/commonUtils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import {
   createCampaignProduct,
   updateCampaignProduct,
@@ -40,6 +45,7 @@ import {
   TooltipTrigger,
 } from "@radix-ui/react-tooltip";
 import TagInput from "@/components/ui/tag-input";
+import Link from "next/link";
 
 const Input = dynamic(() => import("../../ui/form/Input"), { ssr: false });
 
@@ -95,6 +101,7 @@ const typOptions = [
 export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const translate = useTranslations();
   const params = useParams();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
   const productId: any = params?.productId !== "add" ? params?.productId : null;
@@ -1195,13 +1202,13 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       </div>
                       <div>
                         {translate("campaignTerms_m")}{" "}
-                        <a
-                          href="/terms"
+                        <Link
+                          href={`/terms?next=${encodeURIComponent(pathname)}`}
                           target="_blank"
                           className="text-blue underline"
                         >
                           {translate("TermsCondition")}
-                        </a>
+                        </Link>
                         .
                       </div>
                     </div>

@@ -34,12 +34,14 @@ interface IProfile {
 export default function Profile() {
   const translate = useTranslations();
   const initialState = {
-    contacts: [{
-      name: "",
-      phone: "",
-      email: "",
-      isDefault: false,
-    },],
+    contacts: [
+      {
+        name: "",
+        phone: "",
+        email: "",
+        isDefault: false,
+      },
+    ],
     business_name: "",
     company_email: "",
     pin_code: "",
@@ -80,7 +82,7 @@ export default function Profile() {
 
   return (
     <>
-      <div className="flex flex-col  w-full lg:min-w-[562px] bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md flex-wrap">
+      <div className="flex flex-col  w-full lg:min-w-[562px] bg-white rounded-xl p-4 xl:p-6 gap-4 shadow-md flex-wrap lg:mt-0 mt-2">
         <div className="flex justify-between items-center border-b border-gray-300 pb-4">
           <h2 className="text-sm xl:text-xl font-medium">
             {translate("Personal_Information")}
@@ -126,43 +128,46 @@ export default function Profile() {
               className="w-[100px] h-[100px] object-cover rounded-full"
             />
           </div>
-          <div className="flex flex-col sm:flex-row md:flex-row gap-3">
-          <div className="flex flex-col gap-3">
-            {[
-              ["Name", profile.business_name || "-"],
-              ["Email", profile.company_email || "-"],
-              ["Website", profile.website || "-"],
-              ["Business_Type", profile.type_of_business || "-",],
-              ["GST_Number", profile.gst_number || "-"]
-            ].map(([label, value], idx) => (
-              <div key={idx} className="flex flex-col md:flex-row items-start gap-2">
-                <div className="w-[120px] text-sm text-gray-500 text-nowrap">
-                  {translate(label as string)}:
+          <div className="md:flex grid sm:grid-cols-2 flex-col sm:flex-row md:flex-row lg:gap-3 sm:gap-7 gap-3">
+            <div className="flex flex-col gap-3">
+              {[
+                ["Name", profile.business_name || "-"],
+                ["Email", profile.company_email || "-"],
+                ["Website", profile.website || "-"],
+                ["Business_Type", profile.type_of_business || "-"],
+                ["GST_Number", profile.gst_number || "-"],
+              ].map(([label, value], idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-row items-start gap-2 flex-wrap sm:flex-nowrap"
+                >
+                  <div className="w-[120px] text-sm text-gray-500 text-nowrap">
+                    {translate(label as string)}:
+                  </div>
+                  <div className=" font-medium text-sm break-words">
+                    {value || "-"}
+                  </div>
                 </div>
-                <div className=" font-medium text-sm break-words">
-                  {value || "-"}
+              ))}
+            </div>
+            <div className="flex flex-col gap-3">
+              {[
+                ["Address", profile.address || "-"],
+                ["Pin_Code", profile.pin_code || "-"],
+                ["State", profile.state || "-"],
+                ["City", profile.city || "-"],
+                ["PAN_Number", profile.pan_number || "-"],
+              ].map(([label, value], idx) => (
+                <div key={idx} className="flex flex-row items-start gap-2">
+                  <div className="w-[120px] text-sm text-gray-500 text-nowrap">
+                    {translate(label as string)}:
+                  </div>
+                  <div className="font-medium text-sm break-words">
+                    {value || "-"}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-col gap-3">
-            {[
-              ["Address", profile.address || "-"],
-              ["Pin_Code", profile.pin_code || "-"],
-              ["State", profile.state || "-"],
-              ["City", profile.city || "-"],
-              ["PAN_Number", profile.pan_number || "-"]
-            ].map(([label, value], idx) => (
-              <div key={idx} className="flex flex-row items-start gap-2">
-                <div className="w-[120px] text-sm text-gray-500 text-nowrap">
-                  {translate(label as string)}:
-                </div>
-                <div className="font-medium text-sm break-words">
-                  {value || "-"}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           </div>
         </div>
         <ContactsProfile

@@ -78,7 +78,7 @@ export default function ContactsProfile(props: any) {
           return (
             <div
               key={index}
-              className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3"
+              className="flex flex-col w-full max-w-[320px] xsmobile:max-w-full border border-gray-300 rounded-xl p-4 xl:p-5 gap-3"
             >
               <div className="flex items-center gap-4">
                 <span className="text-sm xl:text-lg font-semibold">
