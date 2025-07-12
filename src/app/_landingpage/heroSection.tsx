@@ -20,7 +20,7 @@ export default function HeroSection() {
         <div className=" text-center lg:text-left">
           <h1
             data-aos="fade-left"
-            className="capitalize text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[70px] leading-[90px] xsmobile:text-[40px] xsmobile:leading-[60px]  font-bold text-[#333333]"
+            className="capitalize text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[70px] leading-[90px] xsmobile:text-[30px] xsmobile:leading-[60px]  font-bold text-[#333333]"
           >
             Your
             <span className="text-primary capitalize ml-2">
