@@ -128,7 +128,11 @@ export function formatDateWithTime(dateString: string): string {
   // Combine date and time
   return `${day}-${month}-${year}, ${hours}:${minutes} ${ampm}`;
 }
-
+export const formatTime = (secs: number) => {
+  const minutes = String(Math.floor(secs / 60)).padStart(2, "0");
+  const seconds = String(secs % 60).padStart(2, "0");
+  return `${minutes}:${seconds}`;
+};
 export const formatFloatValue = (value: number = 0): any => {
   return value % 1 === 0 ? value : value.toFixed(2);
 };
