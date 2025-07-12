@@ -70,7 +70,7 @@ export default function SocialMediaSections() {
         <div className="flex xsmobile:flex-col md:flex-row flex-col xsmobile:justify-center xsmobile:items-center tablet:justify-center tablet:items-center md:gap-[20px]">
           <div
             data-aos="zoom-in-right"
-            className="rounded-tl-xl rounded-tr-xl   h-auto max-w-[300px] xsmobile:w-[250px]  xsmobile:h-[400px]  tablet:w-[250px]  tablet:h-[400px]  flex flex-col text-center items-center justify-end  p-[40px] bg-[#38a2f5]"
+            className="rounded-tl-xl rounded-tr-xl tablet:rounded-xl xsmobile:rounded-xl  h-auto max-w-[300px] xsmobile:w-[250px]  xsmobile:h-[400px]  tablet:w-[250px]  tablet:h-[400px]  flex flex-col text-center items-center justify-end  p-[40px] bg-[#38a2f5]"
           >
             <p className="font-black text-[60px] tablet:text-[40px]  leading-[46px] text-white opacity-25">
               1
@@ -84,7 +84,7 @@ export default function SocialMediaSections() {
           </div>
           <div
             data-aos="flip-left"
-            className="rounded-tl-xl rounded-tr-xl tablet:rounded-xl xsmobile:rounded-xl h-auto max-w-[600px]  xsmobile:w-[300px]  tablet:min-h-auto xsmobile:h-[536px]  bg-primary flex flex-col items-center text-center"
+            className="rounded-tl-xl rounded-tr-xl tablet:rounded-xl xsmobile:rounded-xl h-auto max-w-[600px] xsmobile:w-[250px] tablet:w-[250px]  tablet:min-h-auto xsmobile:h-[536px]  bg-primary flex flex-col items-center text-center"
           >
             <p className="font-black text-white tablet:text-[40px]  text-[60px] pt-[40px] leading-[46px]">
               2
@@ -101,7 +101,7 @@ export default function SocialMediaSections() {
           </div>
           <div
             data-aos="zoom-in-left"
-            className="rounded-tl-xl rounded-tr-xl h-auto max-w-[300px] xsmobile:w-[250px]  xsmobile:h-[400px] tablet:w-[250px]  tablet:h-[400px]  flex flex-col  text-center items-center justify-end  p-[40px] bg-[#38a2f5]"
+            className="rounded-tl-xl rounded-tr-xl tablet:rounded-xl xsmobile:rounded-xl h-auto max-w-[300px] xsmobile:w-[250px]  xsmobile:h-[400px] tablet:w-[250px]  tablet:h-[400px]  flex flex-col  text-center items-center justify-end  p-[40px] bg-[#38a2f5]"
           >
             <p className="font-black text-[60px] tablet:text-[40px]  leading-[46px] text-white opacity-25">
               3
