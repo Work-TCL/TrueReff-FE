@@ -104,7 +104,7 @@ export default function HeroSection() {
       <ShowCaseCreatorStore />
 
       {/* Section Two */}
-      <section className="bg-white flex flex-col xl:px-4 px-2">
+      <section className="bg-white flex flex-col xl:px-4 px-2 pt-10 sm:pt-20 md:pt-[100px]">
         <div
           data-aos="fade-down"
           className="flex flex-col text-center xsmobile:gap-[10px] lg:gap-[40px] sm:gap-[20px] items-center justify-center"
@@ -167,7 +167,7 @@ export default function HeroSection() {
 
           <div
             data-aos="zoom-in"
-            className="grid grid-cols-3 border xl:mt-[51px] mb-[51px] rounded-[9px] border-[#33333333] tablet:max-w-[400px] xsmobile:max-w-[300px] lg:max-w-full md:max-w-[500px] w-full"
+            className="grid grid-cols-3 border xl:mt-[51px] mb-[40px] rounded-[9px] border-[#33333333] tablet:max-w-[400px] xsmobile:max-w-[300px] lg:max-w-full md:max-w-[500px] w-full"
           >
             {[
               "/assets/landing/brand-1.png",

@@ -15,7 +15,7 @@ function page() {
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center gap-3">
           <img
             alt="TrueReff"
-            className="md:w-fit sm:max-w-[203px] w-fit max-w-[160px] mr-auto"
+            className="md:w-fit sm:max-w-[203px] w-fit max-w-[160px] mr-auto cursor-pointer"
             src="/assets/common/truereff-dark.svg"
             onClick={() => router?.push('/')}
           />
