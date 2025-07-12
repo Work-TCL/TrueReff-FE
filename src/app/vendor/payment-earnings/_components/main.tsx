@@ -103,9 +103,9 @@ export default function AccountRecharge() {
         fetchWalletBalance(true);
         fetchRechargeHistory(1,true);
     }
-    return <div className="w-full p-2 md:p-4 space-y-4 md:space-y-5 overflow-hidden">
+    return <div className="w-full p-2 md:p-4 space-y-3 md:space-y-5 overflow-hidden">
         {/* Top Cards */}
-        {loading ? <Loader /> : <><div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+        {loading ? <Loader /> : <><div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 items-stretch">
             {/* Wallet Balance Card */}
             <div className="relative rounded-2xl p-3 md:p-4 backdrop-blur-md bg-gradient-to-br from-[#D8B4FE]/60 via-[#FBCFE8]/60 to-[#C7D2FE]/60 shadow-lg border border-white/10 flex flex-col gap-3">
                 <div className="flex items-center justify-between">
@@ -146,7 +146,7 @@ export default function AccountRecharge() {
                 title={translate("Total_Item_Sold")}
                 value={formatNumber(vendorStats?.totalOrders)}
                 growth={5}
-                bgColor="bg-[#F9EFF5] h-[144px] max-h-[144px]"
+                bgColor="bg-[#F9EFF5] h-[80px] md:h-[144px] max-h-[144px]"
                 borderColor={"border-[#C861A0]"}
             />
             <StatsCard
@@ -154,7 +154,7 @@ export default function AccountRecharge() {
                 value={formatNumber(vendorStats?.totalRevenue)}
                 growth={5}
                 borderColor="border-[#9773C8]"
-                bgColor="bg-[#F5F1F9] h-[144px] max-h-[144px]"
+                bgColor="bg-[#F5F1F9] h-[80px] md:h-[144px] max-h-[144px]"
             />
         </div>
         {/* Recharge History */}

@@ -235,7 +235,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
             <div className="flex justify-center gap-2">
                 {!isYourOffer && <Button
                     type="button"
-                    className={cn("w-fit font-medium px-8", "block border bg-white border-black hover:bg-black text-black hover:text-white")}
+                    className={cn("w-fit font-medium px-5 md:px-8", "block border bg-white border-black hover:bg-black text-black hover:text-white")}
                     size="small"
                     loading={loading}
                     onClick={handleAcceptOffer}
@@ -245,7 +245,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
                 </Button>}
                 <Button
                     type="button"
-                    className={cn("w-fit font-medium px-10", "block border bg-white border-black hover:bg-black text-black hover:text-white")}
+                    className={cn("w-fit font-medium px-7 md:px-10", "block border bg-white border-black hover:bg-black text-black hover:text-white")}
                     size="small"
                     // loading={loading}
                     disabled={(isYourOffer) || (offerError !== "" || !yourOffer)}

@@ -196,7 +196,7 @@ export default function Overview() {
   return (
     <div className="flex flex-col gap-4 md:p-4 p-2 w-full">
       {mainLoading && <Loader />}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 md:grid-cols-3 gap-2 rounded-[20px] w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 md:grid-cols-3 gap-1.5 md:gap-2 rounded-[20px] w-full">
         <StatsCard
           title={translate("Pending_Campaigns")}
           value={formatNumber(statesInfo?.pendingCampaigns)}

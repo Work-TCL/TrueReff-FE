@@ -31,7 +31,7 @@ export default function AddBalanceForm({
 }: IAddBalanceFormProps) {
   const translate = useTranslations();
   const { vendor } = useVendorStore();
-  const [amount, setAmount] = useState<any>(100);
+  const [amount, setAmount] = useState<any>(500);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const minAmount = 1;
