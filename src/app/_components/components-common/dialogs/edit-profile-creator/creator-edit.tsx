@@ -160,6 +160,11 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         message: "Only JPG and PNG images are allowed.",
       });
       return;
+    } else {
+      methods.setError("profile_image", {
+        type: "manual",
+        message: "",
+      });
     }
 
     const previewURL = URL.createObjectURL(file);
@@ -382,7 +387,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
           <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
             <div className="text-sm">{translate("Profile_Image")}</div>
             <div
-              className="flex justify-center items-center border rounded-lg p-5"
+                className="flex justify-center items-center border rounded-lg p-5 flex-col"
               onDrop={(e) => handleDropImage(e, "profile")}
               onClick={() => {
                 document.getElementById("profile-image")?.click();
@@ -416,6 +421,12 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
                   {translate("Upload_your_photo")}
                 </Button> */}
               </div>
+                {Boolean(get(methods.formState.errors, "profile_image")) &&
+                  methods.formState.errors["profile_image"]?.message && (
+                    <span className="text-red-600 text-sm p-2 block">
+                      {methods.formState.errors["profile_image"]?.message}
+                    </span>
+                  )}
             </div>
           </div>
           </div>
