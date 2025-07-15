@@ -67,7 +67,7 @@ export default function SocialMediaSections() {
           start earning
         </p>
 
-        <div className="flex xsmobile:flex-col md:flex-row flex-col xsmobile:justify-center xsmobile:items-center tablet:justify-center tablet:items-center md:gap-[20px]">
+        <div className="flex xsmobile:flex-col md:flex-row flex-col xsmobile:justify-center xsmobile:items-center tablet:justify-center tablet:items-center tablet:gap-6 xsmobile:gap-6 tablet:pb-6 xsmobile:pb-6 md:gap-[20px]">
           <div
             data-aos="zoom-in-right"
             className="rounded-tl-xl rounded-tr-xl tablet:rounded-xl xsmobile:rounded-xl  h-auto max-w-[300px] xsmobile:w-[250px]  xsmobile:h-[400px]  tablet:w-[250px]  tablet:h-[400px]  flex flex-col text-center items-center justify-end  p-[40px] bg-[#38a2f5]"

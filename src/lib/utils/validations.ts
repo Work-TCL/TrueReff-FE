@@ -37,11 +37,11 @@ export interface ILoginSchema extends Yup.Asserts<typeof loginSchema> {}
 
 export const loginWithOtpSchema = Yup.object().shape({
   email: Yup.string()
-  .trim()
+    .trim()
     .email("Email must be a valid email address")
     .lowercase()
     .required("Email is required"),
-  password: Yup.string().optional(),
+  password: Yup.string().trim().optional(),
 });
 
 export interface ILoginWithOtpSchema
@@ -49,7 +49,7 @@ export interface ILoginWithOtpSchema
 
 export const forgotSchema = Yup.object().shape({
   email: Yup.string()
-  .trim()
+    .trim()
     .email("Email must be a valid email address")
     .lowercase()
     .required("Email is required"),
@@ -92,7 +92,9 @@ export const resetPasswordSchema = Yup.object().shape({
 export interface IResetSchema extends Yup.Asserts<typeof resetPasswordSchema> {}
 
 export const registerSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Name is required")
+  name: Yup.string()
+    .trim()
+    .required("Name is required")
     .min(5, "Name must be at least 5 characters")
     .max(50, "Name can't exceed 50 characters"),
   phone: Yup.string()
@@ -122,7 +124,7 @@ export const registerSchema = Yup.object().shape({
       "Password must contain at least one special character"
     ),
   terms: Yup.boolean().oneOf([true]),
-  // type: Yup.string().required("Type is required")
+  // type: Yup.string().trim().required("Type is required")
 });
 
 export interface IRegisterSchema extends Yup.Asserts<typeof registerSchema> {}
@@ -303,12 +305,12 @@ export interface IVendorRegisterSecondStepSchema
   extends Yup.Asserts<typeof vendorRegisterSecondStepSchema> {}
 export const preFormSchema = Yup.object().shape({
   business_name: Yup.string()
-  .trim()
+    .trim()
     .required("Business Name is required")
     .min(5, "Business Name must be at least 5 characters")
     .max(50, "Business Name can't exceed 50 characters"),
   company_email: Yup.string()
-  .trim()
+    .trim()
     .email("Company Email must be a valid email")
     .lowercase("Company Email must be a valid email")
     .required("Company Email is required"),
@@ -341,18 +343,16 @@ export const preFormSchema = Yup.object().shape({
   contacts: Yup.array()
     .of(
       Yup.object().shape({
-        name: Yup.string().trim().test(
-          "test-name",
-          "Name is required",
-          function (value) {
+        name: Yup.string()
+          .trim()
+          .test("test-name", "Name is required", function (value) {
             const { path, createError } = this;
             // Check if this is the first contact
             if (path === "contacts[0].name" && !value) {
               return createError({ path, message: "Name is required" });
             }
             return true; // No error
-          }
-        ),
+          }),
         phone: Yup.string().test(
           "test-phone",
           "Phone number is required",
@@ -372,7 +372,7 @@ export const preFormSchema = Yup.object().shape({
           }
         ),
         email: Yup.string()
-        .trim()
+          .trim()
           .email("Invalid email format")
           .lowercase()
           .test("test-email", "Email is required", function (value) {
@@ -403,10 +403,10 @@ export const vendorRegisterThirdStepSchema = Yup.object().shape({
   shopify_store_domain: Yup.string()
     .trim()
     .required("Shopify store domain is required")
-  .matches(
-    /^[a-z0-9][a-z0-9\-]*\.myshopify\.com$/,
-    "Enter a valid Shopify store domain ending with .myshopify.com"
-  ),
+    .matches(
+      /^[a-z0-9][a-z0-9\-]*\.myshopify\.com$/,
+      "Enter a valid Shopify store domain ending with .myshopify.com"
+    ),
 });
 
 export interface IVendorRegisterThirdStepSchema
@@ -426,13 +426,18 @@ export interface IVendorWordPressConnectSchema
 export interface IPreFormSchema extends Yup.Asserts<typeof preFormSchema> {}
 
 export const creatorFormSchema = Yup.object().shape({
-  full_name: Yup.string().trim()
+  full_name: Yup.string()
+    .trim()
     .required("Full Name is required")
     .min(5, "Full Name must be at least 5 characters")
     .max(50, "Full Name can't exceed 50 characters"),
-  user_name: Yup.string().trim()
+  user_name: Yup.string()
+    .trim()
     .required("User Name is required")
-    .matches(/^[a-z._0-9]+$/, "Only lowercase letters, digits,underscores (_) and dots (.) are allowed")
+    .matches(
+      /^[a-z._0-9]+$/,
+      "Only lowercase letters, digits,underscores (_) and dots (.) are allowed"
+    )
     .min(5, "Username must be at least 5 characters")
     .max(20, "Username can't exceed 20 characters"),
   email: Yup.string().trim().email().lowercase().required("Email is required"),
@@ -441,13 +446,16 @@ export const creatorFormSchema = Yup.object().shape({
   phone_number: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
-  profile_title: Yup.string().trim()
+  profile_title: Yup.string()
+    .trim()
     .required("Profile title is required")
     .min(2, "Profile title must be at least 2 characters"),
-  long_description: Yup.string().trim()
+  long_description: Yup.string()
+    .trim()
     .required("Long Description is required")
     .min(100, "Long Description must be at least 100 characters"),
-  short_description: Yup.string().trim()
+  short_description: Yup.string()
+    .trim()
     .required("Short Description is required")
     .min(10, "Short Description must be at least 10characters"),
   tags: Yup.array().of(Yup.string().trim().required("Tags is required")),
@@ -465,10 +473,13 @@ export interface ICreatorFormSchema
   extends Yup.Asserts<typeof creatorFormSchema> {}
 
 export const contactSchema = Yup.object().shape({
-  firstName: Yup.string().trim().required("First Name is required")
+  firstName: Yup.string()
+    .trim()
+    .required("First Name is required")
     .min(5, "First name must be at least 5 characters")
     .max(50, "First name can't exceed 50 characters"),
-  email: Yup.string().trim()
+  email: Yup.string()
+    .trim()
     .email("Email must be a valid email address")
     .lowercase()
     .required("Email is required"),
@@ -480,7 +491,8 @@ export interface IContactSchema extends Yup.Asserts<typeof contactSchema> {}
 
 export const profileUpdateSchema = Yup.object().shape({
   name: Yup.string().trim().required("Name is required"),
-  email: Yup.string().trim()
+  email: Yup.string()
+    .trim()
     .email("Email must be a valid email address")
     .lowercase()
     .required("Email is required"),
@@ -493,7 +505,8 @@ export interface IProfileUpdateSchema
   extends Yup.Asserts<typeof profileUpdateSchema> {}
 
 export const vendorProfileUpdateSchema = Yup.object().shape({
-  business_name: Yup.string().trim()
+  business_name: Yup.string()
+    .trim()
     .required("Business Name is required")
     .min(5, "Business Name must be at least 5 characters")
     .max(50, "Business Name can't exceed 50 characters"),
@@ -533,7 +546,9 @@ export interface IVendorProfileUpdateSchema
   extends Yup.Asserts<typeof vendorProfileUpdateSchema> {}
 
 export const addAddressVendorSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Name is required")
+  name: Yup.string()
+    .trim()
+    .required("Name is required")
     .min(5, "Name must be at least 5 characters")
     .max(50, "Name can't exceed 50 characters"),
   phone: Yup.string()
@@ -553,13 +568,16 @@ export interface IAddAddressVendorSchema
   extends Yup.Asserts<typeof addAddressVendorSchema> {}
 
 export const addContactVendorSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Name is required")
+  name: Yup.string()
+    .trim()
+    .required("Name is required")
     .min(5, "Name must be at least 5 characters")
     .max(50, "Name can't exceed 50 characters"),
   phone: Yup.string()
     .required("Phone is required")
     .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
-  email: Yup.string().trim()
+  email: Yup.string()
+    .trim()
     .email("Email must be a valid email address")
     .lowercase()
     .required("Email is required"),
@@ -571,10 +589,13 @@ export interface IAddContactVendorSchema
 
 // Add to wishlist
 export const creatorOnBoardingSchema = Yup.object().shape({
-  full_name: Yup.string().trim().required("Full name is required")
+  full_name: Yup.string()
+    .trim()
+    .required("Full name is required")
     .min(5, "Full name must be at least 5 characters")
     .max(50, "Full name can't exceed 50 characters"),
-  user_name: Yup.string().trim()
+  user_name: Yup.string()
+    .trim()
     .required("User name is required")
     .matches(
       /^[a-z._0-9]+$/,
@@ -582,7 +603,8 @@ export const creatorOnBoardingSchema = Yup.object().shape({
     )
     .min(5, "Username must be at least 5 characters")
     .max(20, "Username can't exceed 20 characters"),
-  email: Yup.string().trim()
+  email: Yup.string()
+    .trim()
     .email("Invalid email format")
     .lowercase()
     .required("Email is required"),
@@ -599,36 +621,33 @@ export interface ICreatorOnBoardingSchema
   extends Yup.Asserts<typeof creatorOnBoardingSchema> {}
 
 export const creatorStoreSetUpSchema = Yup.object().shape({
-  store_name: Yup.string().trim()
+  store_name: Yup.string()
+    .trim()
     .required("Store name is required")
     .min(5, "Store name must be at least 5 characters")
-  .max(20, "Store name must be at most 20 characters")
+    .max(20, "Store name must be at most 20 characters")
     .matches(
-    
       /^[a-z0-9._]+$/,
-     
-    "Only lowercase letters, numbers, underscores (_) and dots (.) are allowed"
-  
+
+      "Only lowercase letters, numbers, underscores (_) and dots (.) are allowed"
     )
     .matches(
-      
-    /^(?!.*[.]{2})(?![.])(?!.*\s)[a-z0-9.]+(?<![.])$/,
-     
-    "No spaces, no leading/trailing/consecutive _ or ."
-  
+      /^(?!.*[.]{2})(?![.])(?!.*\s)[a-z0-9.]+(?<![.])$/,
+
+      "No spaces, no leading/trailing/consecutive _ or ."
     ),
   store_description: Yup.string()
     .trim()
     .required("Store description is required"),
   tags: Yup.array()
-    .of(Yup.string().required("Each tag must be a string"))
+    .of(Yup.string().trim().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
     .required("Tags are required"),
   category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "Category is required")
@@ -636,8 +655,8 @@ export const creatorStoreSetUpSchema = Yup.object().shape({
   sub_category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "Sub-category is required")
@@ -660,8 +679,8 @@ export const creatorSocialConnectSchema = Yup.object().shape({
   // .of(
   //   Yup.object()
   //     .shape({
-  //       account_name: Yup.string().required("Account Name is required"),
-  //       handle_name: Yup.string().required("Handle Name is required"),
+  //       account_name: Yup.string().trim().required("Account Name is required"),
+  //       handle_name: Yup.string().trim().required("Handle Name is required"),
   //       account_link: Yup.string()
   //         .url("Account Link is Invalid")
   //         .required("Account Link is required"),
@@ -686,7 +705,9 @@ export interface ICreatorSocialConnectSchema
 // Add to wishlist
 export const productSchema = Yup.object().shape({
   images: Yup.array().of(Yup.string().url("Invalid image URL")).required(),
-  name: Yup.string().trim().required("Product name is required")
+  name: Yup.string()
+    .trim()
+    .required("Product name is required")
     .min(5, "Product name must be at least 5 characters")
     .max(50, "Product name can't exceed 50 characters"),
   description: Yup.string().trim().required("Description is required"),
@@ -707,13 +728,15 @@ export const productSchema = Yup.object().shape({
   variants: Yup.array()
     .of(
       Yup.object().shape({
-        variationType: Yup.string().required("Variation type is required"),
-        variation: Yup.string().required("Variation value is required"),
+        variationType: Yup.string()
+          .trim()
+          .required("Variation type is required"),
+        variation: Yup.string().trim().required("Variation value is required"),
       })
     )
     .required("Variants are required"),
   category: Yup.array()
-    .of(Yup.string())
+    .of(Yup.string().trim())
     .required("At least one category is required"),
   tags: Yup.array()
     .of(Yup.string().trim())
@@ -726,8 +749,8 @@ export const channlesToProduct = Yup.object().shape({
   category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "Category is required")
@@ -735,8 +758,8 @@ export const channlesToProduct = Yup.object().shape({
   subCategory: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "Sub-category is required")
@@ -760,6 +783,7 @@ export const utmSchema = Yup.object().shape({
     .min(0, "Discount value must be at least 0"),
 
   couponCode: Yup.string()
+    .trim()
     .required("Coupon code is required")
     .min(3, "Coupon code must be at least 3 characters"),
 
@@ -767,17 +791,24 @@ export const utmSchema = Yup.object().shape({
     .required("Commission percentage is required")
     .min(0, "Commission must be at least 0")
     .max(100, "Commission cannot exceed 100"),
-  expiresAt: Yup.string().required("Expiration date is required"),
+  expiresAt: Yup.string().trim().required("Expiration date is required"),
 });
 
 export interface IUTMSchema extends Yup.Asserts<typeof utmSchema> {}
 
 export const creatorProfileUpdateSchema = Yup.object().shape({
-  full_name: Yup.string().trim().required("Full name is required")
+  full_name: Yup.string()
+    .trim()
+    .required("Full name is required")
     .min(5, "Full name must be at least 5 characters")
     .max(50, "Full name can't exceed 50 characters"),
-  user_name: Yup.string().trim().required("User name is required")
-    .matches(/^[a-z._0-9]+$/, "Only lowercase letters, digits,underscores (_) and dots (.) are allowed")
+  user_name: Yup.string()
+    .trim()
+    .required("User name is required")
+    .matches(
+      /^[a-z._0-9]+$/,
+      "Only lowercase letters, digits,underscores (_) and dots (.) are allowed"
+    )
     .min(5, "Username must be at least 5 characters")
     .max(20, "Username can't exceed 20 characters"),
   phone: Yup.string().trim(),
@@ -794,7 +825,9 @@ export interface ICreatorProfileUpdateSchema
   extends Yup.Asserts<typeof creatorProfileUpdateSchema> {}
 
 export const campaignValidationSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Campaign name is required")
+  name: Yup.string()
+    .trim()
+    .required("Campaign name is required")
     .min(5, "Campaign name must be at least 5 characters")
     .max(50, "Campaign name can't exceed 50 characters"),
   description: Yup.string().trim().required("Description is required"),
@@ -847,7 +880,9 @@ export const campaignValidationSchema = Yup.object().shape({
     .moreThan(0, "Discount value must be greater than 0"),
 });
 export const campaignValidationUpdateSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Campaign name is required")
+  name: Yup.string()
+    .trim()
+    .required("Campaign name is required")
     .min(5, "Campaign name must be at least 5 characters")
     .max(50, "Campaign name can't exceed 50 characters"),
   description: Yup.string().trim().required("Description is required"),
@@ -893,7 +928,9 @@ export interface ICampaignValidationSchema
   extends Yup.Asserts<typeof campaignValidationSchema> {}
 
 export const campaignProductValidationSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Campaign name is required")
+  name: Yup.string()
+    .trim()
+    .required("Campaign name is required")
     .min(5, "Campaign name must be at least 5 characters")
     .max(50, "Campaign name can't exceed 50 characters"),
   description: Yup.string().trim().required("Description is required"),
@@ -906,8 +943,8 @@ export const campaignProductValidationSchema = Yup.object().shape({
   category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "Category is required")
@@ -915,8 +952,8 @@ export const campaignProductValidationSchema = Yup.object().shape({
   sub_category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "Sub Category is required")
@@ -960,7 +997,7 @@ export const campaignProductValidationSchema = Yup.object().shape({
     .required("Tearm & Condition required"),
   couponCode: Yup.string().trim().optional(),
   videoType: Yup.array()
-    .of(Yup.string().required("Each video type is required"))
+    .of(Yup.string().trim().required("Each video type is required"))
     .min(1, "Select at least one video type")
     .required("Video type is required"),
   notes: Yup.string().trim().notRequired(),
@@ -1031,7 +1068,9 @@ export interface ICampaignProductValidationSchema
   extends Yup.Asserts<typeof campaignProductValidationSchema> {}
 
 export const createStoreSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Name is required.")
+  name: Yup.string()
+    .trim()
+    .required("Name is required.")
     .min(5, "Full name must be at least 5 characters")
     .max(50, "Full name can't exceed 50 characters"),
   description: Yup.string().trim().required("Description is required"),
@@ -1043,8 +1082,8 @@ export const createStoreSchema = Yup.object().shape({
   category: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().required("Label is required"),
-        value: Yup.string().required("Value is required"),
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
       })
     )
     .min(1, "At least one category is required")
@@ -1052,14 +1091,14 @@ export const createStoreSchema = Yup.object().shape({
   // sub_category: Yup.array()
   //   .of(
   //     Yup.object().shape({
-  //       label: Yup.string().required("Label is required"),
-  //       value: Yup.string().required("Value is required"),
+  //       label: Yup.string().trim().required("Label is required"),
+  //       value: Yup.string().trim().required("Value is required"),
   //     })
   //   )
   //   .min(1, "Sub-category is required")
   //   .required("Sub-Category is required"), // Ensure at least one sub-category is selected
-  profile_image: Yup.string().required("Profile Image is required."),
-  banner_image: Yup.string().required("Banner Image is required."),
+  profile_image: Yup.string().trim().required("Profile Image is required."),
+  banner_image: Yup.string().trim().required("Banner Image is required."),
 });
 
 export interface ICreateStoreSchema
@@ -1067,6 +1106,7 @@ export interface ICreateStoreSchema
 
 export const banDetailsSchema = Yup.object().shape({
   account_number: Yup.string()
+    .trim()
     .matches(/^\d+$/, "Account number must contain digits only")
     .required("Please enter your account number"),
 
