@@ -117,6 +117,7 @@ export default function StoreDetailCard({ store, isCreator }: IProps) {
                 key={store?.profile_image}
                 src={store?.profile_image}
                 alt={"Store Profile"}
+                className="object-cover"
                 width={120}
                 height={120}
               />

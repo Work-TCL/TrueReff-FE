@@ -112,7 +112,7 @@ const ProductCard = ({
             <img
               src={product.media[0]}
               alt={product.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full"
             />
           ) : (
             <ImageOff className="w-8 h-8 text-gray-400" />
