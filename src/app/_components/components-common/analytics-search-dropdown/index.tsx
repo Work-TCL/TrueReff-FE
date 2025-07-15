@@ -97,8 +97,7 @@ export const SearchSuggestionDropdown = () => {
   return (
     <div
       className="md:max-w-[350px] sm:max-w-full max-w-xs flex flex-col w-full gap-4 relative 
-  transition-all duration-300 ease-in-out
-  sm:focus-within:relative focus-within:absolute sm:focus-within:left-auto focus-within:left-[40px] sm:focus-within:w-full focus-within:w-auto sm:h-fit h-[2rem]"
+  transition-all duration-300 ease-in-out sm:h-fit h-[2rem]"
     >
       {/* Search Input */}
       <div className="w-full rounded-xl bg-[#F2F4F5] flex items-center gap-2 px-4">

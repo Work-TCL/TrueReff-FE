@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 export default function RegisterPage() {
   const translate = useTranslations();
   return (
-    <AuthLayoutPage authImage="sign-up-image.svg">
+    <AuthLayoutPage authImage="sign-up-image.png">
       <div className="flex flex-col justify-center h-full w-full mx-auto max-w-lg min-h-fit">
         <HeaderAuth redirectUrl={"/"}/>
         <div className="w-full md:pt-6 pt-4 ">
