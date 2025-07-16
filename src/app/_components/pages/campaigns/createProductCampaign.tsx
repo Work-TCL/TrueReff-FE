@@ -272,6 +272,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         //@ts-ignore
         formData.append("commission", data.commission);
         formData.append("commission_type", data?.commission_type);
+        formData.append("couponCode", data?.couponCode || "");
 
         //@ts-ignore
         formData.append("freeProduct", data?.freeProduct);
