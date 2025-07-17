@@ -68,6 +68,7 @@ export default function ProfileCard({
                 alt={full_name}
                 width={120}
                 height={120}
+                className="object-cover"
               />
             ) : (
               <AvatarImage
