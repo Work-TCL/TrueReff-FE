@@ -527,6 +527,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
           methods.setValue("couponCode", response?.couponCode);
           methods.setValue("discount_type", response?.discountType);
           methods.setValue("discount_value", response?.discount);
+          if(response?.discount){
+            setShowDiscountSection(true);
+          }
           //@ts-ignore
           methods.setValue("endDate", formatForDateInput(response?.endDate));
           methods.setValue(
