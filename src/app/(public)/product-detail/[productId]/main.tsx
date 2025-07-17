@@ -8,7 +8,7 @@ import axios from "@/lib/web-api/axios";
 import Loading from "@/app/vendor/loading";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart,IndianRupee } from "lucide-react";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import Link from "next/link";
 import { RiLoader3Fill } from "react-icons/ri";
@@ -61,6 +61,8 @@ export interface IProduct {
   productType?: string;
   utmLink: string;
   isWishListed: boolean;
+  discountType?: string;
+  discount?: number;
 }
 
 export interface IRequest {
@@ -347,16 +349,16 @@ export default function ViewProductDetail({
                 </div>
                 <div className="">
                   <div className="flex items-center gap-2 ">
-                    <span className="text-xl font-bold">
-                      ₹
+                    <span className="flex items-center text-xl font-bold">
+                      {productData?.discountType === "FIXED_AMOUNT" ? <IndianRupee className="size-[14] sm:size-[16] md:size-[18]" />
                       {selectedVariant?.price
                         ? selectedVariant?.price
                         : productData?.price}
                     </span>
-                    <span className="text-green-600 text-sm font-semibold">{`${
-                      productData?.commission
+                    <span className="flex items-center text-green-600 text-sm font-semibold">{productData?.discountType === "FIXED_AMOUNT" ? <IndianRupee className="size-[12] sm:size-[14] md:size-[14]" />:""}{`${
+                      productData?.discount
                     }${
-                      productData?.commission_type === "PERCENTAGE" ? "%" : "₹"
+                      productData?.discountType === "PERCENTAGE" ? "%" : ""
                     } off`}</span>
                   </div>
                 </div>
