@@ -35,7 +35,7 @@ function CampaignProductView({
           <div className="shrink-0 mx-auto flex justify-center items-center flex-col lg:border-r pr-3 w-full">
             {activeImage || images?.length > 0 ? (
               <img
-                className="w-full dark:block h-56 object-contain"
+                className="w-full dark:block h-56 object-contain product-img"
                 src={activeImage || images[0]}
                 alt=""
               />
@@ -54,7 +54,7 @@ function CampaignProductView({
                       src={s}
                       onClick={() => setActiveImage(s)}
                       alt="Thumbnail 1"
-                      className="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
+                      className="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300 product-img"
                     />
                   ))}
               </div>
@@ -67,7 +67,14 @@ function CampaignProductView({
             </h1>
             <div className="mt-4 sm:items-center sm:gap-4 sm:flex">
               <p className="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">
-                {price ? <span className="flex items-center"><IndianRupee/>{price}</span> : "-"}
+                {price ? (
+                  <span className="flex items-center">
+                    <IndianRupee />
+                    {price}
+                  </span>
+                ) : (
+                  "-"
+                )}
               </p>
 
               <div className="flex items-center gap-2 mt-2 sm:mt-0">
@@ -75,7 +82,7 @@ function CampaignProductView({
                   href="#"
                   className="text-sm font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white"
                 >
-                  {totalInventory ? `${totalInventory} Inventory` : ""} 
+                  {totalInventory ? `${totalInventory} Inventory` : ""}
                 </a>
               </div>
             </div>
@@ -83,11 +90,14 @@ function CampaignProductView({
             <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800" />
 
             {description && (
-              <p dangerouslySetInnerHTML={{
-          __html: description
-        }} className="mb-6 text-gray-500 dark:text-gray-400"/>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: description,
+                }}
+                className="mb-6 text-gray-500 dark:text-gray-400"
+              />
             )}
-            {(tags && tags?.length > 0) && (
+            {tags && tags?.length > 0 && (
               <div className="flex gap-2 mt-1">
                 {tags.map((tag: string, index: number) => (
                   <TruncateWithToolTip
@@ -100,22 +110,33 @@ function CampaignProductView({
               </div>
             )}
             <div className="mt-6 sm:mt-8 lg:mt-0">
-            <h3 className="text-md font-semibold text-gray-900 sm:text-2xl dark:text-white">
-              {translate("variants")}
-            </h3>
-            {variants && variants?.length > 0 && variants.map((variant: any, index: number) => (
-              <div key={index} className="flex  md:flex-row items-start gap-2">
-              <div className="w-auto text-sm text-gray-500">
-                {variant?.title}:
-              </div>
-              <div className="font-medium text-sm ">
-                {variant?.price ?  <span className="flex items-center"><IndianRupee size={10}/>{variant?.price}</span>  : "-"}
-              </div>
+              <h3 className="text-md font-semibold text-gray-900 sm:text-2xl dark:text-white">
+                {translate("variants")}
+              </h3>
+              {variants &&
+                variants?.length > 0 &&
+                variants.map((variant: any, index: number) => (
+                  <div
+                    key={index}
+                    className="flex  md:flex-row items-start gap-2"
+                  >
+                    <div className="w-auto text-sm text-gray-500">
+                      {variant?.title}:
+                    </div>
+                    <div className="font-medium text-sm ">
+                      {variant?.price ? (
+                        <span className="flex items-center">
+                          <IndianRupee size={10} />
+                          {variant?.price}
+                        </span>
+                      ) : (
+                        "-"
+                      )}
+                    </div>
+                  </div>
+                ))}
             </div>
-            ))}
           </div>
-          </div>
-          
         </div>
       </div>
     </section>

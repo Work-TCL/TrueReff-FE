@@ -32,7 +32,7 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
             <img
               src={product.media[0]}
               alt={product.title}
-              className="w-full h-full"
+              className="w-full h-full product-img"
             />
           ) : (
             <ImageOff className="w-8 h-8 text-gray-400" />
@@ -94,9 +94,7 @@ export function calculateStatusChip(product: IProduct) {
   const now = new Date();
   const endDate = new Date(product.endDate || "");
   const isExpired =
-    !product.lifeTime &&
-    product.endDate &&
-    endDate.getTime() <= now.getTime();
+    !product.lifeTime && product.endDate && endDate.getTime() <= now.getTime();
 
   let chipText = product.status || "Unknown";
   let chipColor = "bg-gray-800 text-white";
@@ -105,7 +103,7 @@ export function calculateStatusChip(product: IProduct) {
     chipText = "Expired";
     chipColor = "bg-red-700 text-white";
   } else if (product.status === "ACTIVE") {
-    if(endDate && !product.lifeTime){
+    if (endDate && !product.lifeTime) {
       const diffMs = endDate.getTime() - now.getTime();
       const minutes = Math.floor(diffMs / (1000 * 60));
       const hours = Math.floor(minutes / 60);
@@ -117,7 +115,7 @@ export function calculateStatusChip(product: IProduct) {
       else if (hours > 0)
         chipText = `${hours} Hour${hours > 1 ? "s" : ""} Left`;
       else chipText = `${minutes} Minute${minutes > 1 ? "s" : ""} Left`;
-    } else if(product.lifeTime){
+    } else if (product.lifeTime) {
       chipText = "Never Expire";
     }
 

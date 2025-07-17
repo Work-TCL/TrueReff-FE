@@ -30,7 +30,7 @@ const ProductCard = ({ brand, onView, onAction }: IProductCardProps) => {
             <img
               src={brand.media[0]}
               alt={brand.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover product-img"
             />
           ) : (
             <ImageOff className="w-8 h-8 text-gray-400" />

@@ -50,7 +50,7 @@ const ProductCard = ({
   item: product,
   id,
   isWishListed,
-  refreshData = () => { },
+  refreshData = () => {},
 }: {
   item: IProduct;
   id?: string;
@@ -62,22 +62,23 @@ const ProductCard = ({
   const [loader, setLoader] = useState<boolean>(false);
   const [loginPopUp, setLoginPopUp] = useState<boolean>(false);
   const router = useRouter();
-  const {  vendor  } = useVendorStore();
-  const {  creator  } = useCreatorStore();
+  const { vendor } = useVendorStore();
+  const { creator } = useCreatorStore();
   const addToWishlist = async (productId: string) => {
     setLoader(true);
     try {
       if (account?.id) {
         const payload = {
           collaborationId: productId,
-          userId: account?.id
-        }
+          userId: account?.id,
+        };
         const response = await axios.post(
-          `/product/wishlist/add-remove`, payload
+          `/product/wishlist/add-remove`,
+          payload
         );
         if (response?.status === 200) {
           toastMessage.success(response?.data?.message);
-          refreshData()
+          refreshData();
         }
       } else {
         setLoginPopUp(true);
@@ -88,20 +89,22 @@ const ProductCard = ({
     } finally {
       setLoader(false);
     }
-  }
+  };
   return (
     <Card className="relative cursor-pointer w-full border border-stroke rounded-xl p-2 md:p-3 flex flex-col items-center text-center gap-3 hover:shadow-lg transition-shadow bg-white overflow-hidden">
       <CardContent className="w-full p-0 flex flex-col items-center gap-3">
         {/* Image */}
         <div
           className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
-          onClick={() => router.push(`/product-detail/${id ? id : product?._id}`)}
+          onClick={() =>
+            router.push(`/product-detail/${id ? id : product?._id}`)
+          }
         >
           {product?.media?.length > 0 ? (
             <img
               src={product.media[0]}
               alt={product.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover product-img"
             />
           ) : (
             <ImageOff className="w-8 h-8 text-gray-400" />
@@ -117,13 +120,22 @@ const ProductCard = ({
             text={product.title}
           />
           {/* Price and Discount */}
-          <div className={`flex ${product.price > 1_000_000 ? "flex-col":"flex-row"} items-center w-full text-xs md:text-sm space-x-2`}>
+          <div
+            className={`flex ${
+              product.price > 1_000_000 ? "flex-col" : "flex-row"
+            } items-center w-full text-xs md:text-sm space-x-2`}
+          >
             <span className="flex items-center text-green-600 py-1 font-bold">
-            <IndianRupee size={12} strokeWidth={2.5} /> {product.price || "0.00"}
+              <IndianRupee size={12} strokeWidth={2.5} />{" "}
+              {product.price || "0.00"}
             </span>
             {product.commission && (
               <span className="flex items-center text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
-                {product.commission_type === "FIXED_AMOUNT" ? <IndianRupee size={12} /> : ""}
+                {product.commission_type === "FIXED_AMOUNT" ? (
+                  <IndianRupee size={12} />
+                ) : (
+                  ""
+                )}
                 {product.commission}{" "}
                 {product.commission_type === "PERCENTAGE" ? "% " : ""}
                 {translate("Off")}
@@ -135,16 +147,39 @@ const ProductCard = ({
               <button
                 className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-xs md:text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition"
                 onClick={() => addToWishlist(id ? id : product?._id)}
-              >{loader && (
-                <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
-            )}{isWishListed ? <span className={`flex gap-2 items-center  ${loader ? "opacity-0":""}`}><Heart className="fill-primary group-hover:fill-white" size={15} /> {translate("Remove")}</span> : <><Heart size={15} /> {translate("Add")}</>}
-           {" "}
+              >
+                {loader && (
+                  <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
+                )}
+                {isWishListed ? (
+                  <span
+                    className={`flex gap-2 items-center  ${
+                      loader ? "opacity-0" : ""
+                    }`}
+                  >
+                    <Heart
+                      className="fill-primary group-hover:fill-white"
+                      size={15}
+                    />{" "}
+                    {translate("Remove")}
+                  </span>
+                ) : (
+                  <>
+                    <Heart size={15} /> {translate("Add")}
+                  </>
+                )}{" "}
               </button>
             </div>
           )}
         </div>
       </CardContent>
-      {loginPopUp && <LoginDialog title={"Login_Required"} description="Login_Required_Description" onClose={() => setLoginPopUp(false)} />}
+      {loginPopUp && (
+        <LoginDialog
+          title={"Login_Required"}
+          description="Login_Required_Description"
+          onClose={() => setLoginPopUp(false)}
+        />
+      )}
     </Card>
   );
 };

@@ -22,7 +22,7 @@ const CampaignCard = ({ item: campaign }: { item: ICampaignData }) => {
             <img
               src={campaign.imageUrls[0]}
               alt={campaign.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover product-img"
             />
           ) : (
             <ImageOff className="w-8 h-8 text-gray-400" />

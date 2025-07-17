@@ -155,7 +155,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               <img
                 src={img}
                 alt={`preview-${i}`}
-                className="w-full h-full object-cover rounded"
+                className="w-full h-full object-cover rounded product-img"
               />
               {!disabled && (
                 <button
@@ -176,7 +176,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               <img
                 src={img}
                 alt={`preview-${i}`}
-                className="w-full h-full object-cover rounded"
+                className="w-full h-full object-cover rounded product-img"
               />
               {!disabled && (
                 <button

@@ -1,7 +1,12 @@
 "use client";
 import { Button as ButtonOutline } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from "react-hook-form";
 import {
   campaignProductValidationSchema,
   ICampaignProductValidationSchema,
@@ -272,7 +277,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         //@ts-ignore
         formData.append("commission", data.commission);
         formData.append("commission_type", data?.commission_type);
-        formData.append("couponCode", data?.couponCode || "");
+        if (data?.couponCode) {
+          formData.append("couponCode", data?.couponCode || "");
+        }
 
         //@ts-ignore
         formData.append("freeProduct", data?.freeProduct);
@@ -384,39 +391,40 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
       const product: any = response?.data?.data;
 
-      
-
       // productId({ ...product, media: images });
-      if(channelType === "shopify"){
+      if (channelType === "shopify") {
         const images = product?.images
-        ?.filter((v: any) => v?.src)
-        ?.map((v: any) => v?.src);
+          ?.filter((v: any) => v?.src)
+          ?.map((v: any) => v?.src);
         handleProductSelect({
           ...product,
           title: product?.name,
           description: product?.description_html,
           media: [...images],
         });
-      } else if(channelType === "wordpress"){
+      } else if (channelType === "wordpress") {
         handleProductSelect({
           ...product,
           title: product?.name,
           description: product?.description,
           media: product?.images,
-          variants: product?.variations?.length > 0 ? product?.variations?.map((ele: any) => {
-            const attrs = ele.attributes ?? {};
-            // Grab all keys that have a value
-            const values = Object.keys(attrs)
-              .filter(key => attrs[key] != null)
-              .map(key => attrs[key]);
-            return {
-              ...ele,
-              title: `${values.join('/')}`
-            };
-          }) : [],
+          variants:
+            product?.variations?.length > 0
+              ? product?.variations?.map((ele: any) => {
+                  const attrs = ele.attributes ?? {};
+                  // Grab all keys that have a value
+                  const values = Object.keys(attrs)
+                    .filter((key) => attrs[key] != null)
+                    .map((key) => attrs[key]);
+                  return {
+                    ...ele,
+                    title: `${values.join("/")}`,
+                  };
+                })
+              : [],
         });
       }
-      
+
       setLoading(false);
     } catch (error: any) {
       toast.error(error?.message || "Product Fetch Failed.");
@@ -463,26 +471,34 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   //   }
   // }, []);
 
-  useEffect(() => {
-    (async () => {
-      const categoriesId =
-        (await methods.watch("category")?.map((v: any) => v.value)) || [];
+  const watchedCategories = useWatch({
+    control: methods.control,
+    name: "category",
+  });
 
-      const optionsSubCategory = await categories.filter((ele) =>
-        categoriesId?.includes(ele?.parentId)
+  useEffect(() => {
+    const updateSubCategories = async () => {
+      const categoriesId = watchedCategories?.map((v: any) => v.value) || [];
+
+      const optionsSubCategory = categories.filter((ele) =>
+        categoriesId.includes(ele?.parentId)
       );
 
       setSubCategory(optionsSubCategory);
+
       const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
-      const subCategoroies = methods.watch("sub_category") || [];
+      const selectedSubCategories = methods.watch("sub_category") || [];
+
       methods.setValue(
         "sub_category",
-        subCategoroies.filter((v: any) =>
+        selectedSubCategories.filter((v: any) =>
           availableSubCategoriesIds.includes(v.value)
         )
       );
-    })();
-  }, [methods.watch("category")?.length]);
+    };
+
+    updateSubCategories();
+  }, [watchedCategories, categories]);
 
   useEffect(() => {
     fetchCategory();
@@ -527,15 +543,36 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
           methods.setValue("couponCode", response?.couponCode);
           methods.setValue("discount_type", response?.discountType);
           methods.setValue("discount_value", response?.discount);
-          if(response?.discount){
+          if (response?.discount) {
             setShowDiscountSection(true);
+          }
+          if (
+            response?.couponCode ||
+            response?.discountType ||
+            response?.discount
+          ) {
+            setShowDiscountSection(true);
+          }
+          if (
+            response?.referenceLinks?.length > 0 ||
+            response.creatorMaterial?.length > 0
+          ) {
+            setShowCreatorMeterial(true);
           }
           //@ts-ignore
           methods.setValue("endDate", formatForDateInput(response?.endDate));
+          const incomingDate = new Date(response?.startDate);
+          const today = new Date();
+
+          // Strip time from today's date (set to 00:00:00)
+          today.setHours(0, 0, 0, 0);
+
+          // If incomingDate is before today, set it to today
+          const finalDate = incomingDate < today ? today : incomingDate;
           methods.setValue(
             "startDate",
             //@ts-ignore
-            formatForDateInput(response?.startDate)
+            formatForDateInput(finalDate)
           );
           methods.setValue("tearmAndCondition", true);
           methods.setValue("productId", response?._id);
@@ -582,9 +619,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       methods.setValue("videoType", [...(existingVal || []), value]);
     }
   };
-  const handleTagChange = (value:string[]) => {
-    methods.setValue("tags",value);
-  }
+  const handleTagChange = (value: string[]) => {
+    methods.setValue("tags", value);
+  };
 
   return (
     <FormProvider {...methods}>
@@ -630,7 +667,12 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 "
               >
                 <div className="md:col-span-1 col-span-2">
-                  <TagInput labelClassName={labelStyle} value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
+                  <TagInput
+                    labelClassName={labelStyle}
+                    value={methods.watch("tags")}
+                    onChange={handleTagChange}
+                    error={methods.formState.errors["tags"]?.message}
+                  />
                 </div>
 
                 <div className="md:col-span-1 col-span-2">
@@ -959,7 +1001,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                             !Boolean(methods.watch("freeProduct"))
                           )
                         }
-                        onChange={()=>{}}
+                        onChange={() => {}}
                       />
                       {/* <input
                         type="checkbox"

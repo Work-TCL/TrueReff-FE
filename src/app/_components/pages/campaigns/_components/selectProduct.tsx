@@ -125,7 +125,7 @@ const ProductSelectDropdown: React.FC<ProductSelectDropdownProps> = ({
             <img
               src={selectedProduct?.media[0]}
               alt={selectedProduct?.title}
-              className="w-12 h-12 rounded mr-3"
+              className="w-12 h-12 rounded mr-3 product-img"
             />
             <span>{selectedProduct?.title}</span>
           </div>

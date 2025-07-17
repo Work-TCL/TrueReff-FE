@@ -299,7 +299,7 @@ export default function CreateProduct({
                     {productData.images.map((url, index) => (
                       <img
                         src={url}
-                        className="w-[100px] h-[100px] border rounded"
+                        className="w-[100px] h-[100px] border rounded product-img"
                         key={index}
                       />
                     ))}

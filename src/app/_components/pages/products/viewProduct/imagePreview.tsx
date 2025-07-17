@@ -24,12 +24,15 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 overflow-auto max-h-[230px]">
           {images?.length > 1 &&
             images.slice(1).map((img, index) => (
-              <div key={index} className="flex justify-center items-center border border-border rounded-2xl p-2">
+              <div
+                key={index}
+                className="flex justify-center items-center border border-border rounded-2xl p-2"
+              >
                 <img
                   key={index}
                   src={img}
                   alt={`Thumbnail ${index}`}
-                  className="rounded-md object-contain w-[200px] h-[185px]"
+                  className="rounded-md object-contain w-[200px] h-[185px] product-img"
                 />
               </div>
             ))}

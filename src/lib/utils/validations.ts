@@ -995,7 +995,6 @@ export const campaignProductValidationSchema = Yup.object().shape({
   tearmAndCondition: Yup.boolean()
     .oneOf([true], "Tearm & Condition required")
     .required("Tearm & Condition required"),
-  couponCode: Yup.string().trim().optional(),
   videoType: Yup.array()
     .of(Yup.string().trim().required("Each video type is required"))
     .min(1, "Select at least one video type")
@@ -1014,24 +1013,26 @@ export const campaignProductValidationSchema = Yup.object().shape({
       "Commission type must be either FIXED_AMOUNT or PERCENTAGE"
     )
     .required("Commission type is required"),
+  couponCode: Yup.string()
+    .trim()
+    .test("require-if-any-exists", "Coupon code is required", function (value) {
+      const { discount_type, discount_value } = this.parent;
+      const anyFilled =
+        !!value || !!discount_type || discount_value !== undefined;
+      if (anyFilled && !value) return false;
+      return true;
+    }),
+
   discount_type: Yup.string()
-    .oneOf(
-      ["FIXED_AMOUNT", "PERCENTAGE"],
-      "Discount type must be FIXED_AMOUNT or PERCENTAGE"
-    )
-    .notRequired()
+    .oneOf(["FIXED_AMOUNT", "PERCENTAGE"], "Must be FIXED_AMOUNT or PERCENTAGE")
     .test(
-      "require-if-value-exists",
+      "require-if-any-exists",
       "Discount type is required",
       function (value) {
-        const { discount_value } = this.parent;
-        const hasValue =
-          discount_value !== undefined &&
-          discount_value !== null &&
-          discount_value !== "";
-        if (hasValue && !value) {
-          return false;
-        }
+        const { couponCode, discount_value } = this.parent;
+        const anyFilled =
+          !!couponCode || !!value || discount_value !== undefined;
+        if (anyFilled && !value) return false;
         return true;
       }
     ),
@@ -1039,18 +1040,15 @@ export const campaignProductValidationSchema = Yup.object().shape({
   discount_value: Yup.number()
     .typeError("Discount value must be a number")
     .moreThan(0, "Discount value must be greater than 0")
-    .notRequired()
     .test(
-      "require-if-type-exists",
+      "require-if-any-exists",
       "Discount value is required",
       function (value) {
-        const { discount_type } = this.parent;
-        const hasType = !!discount_type;
-        // @ts-ignore
-        const hasValue = value !== undefined && value !== null && value !== "";
-        if (hasType && !hasValue) {
-          return false;
-        }
+        const { couponCode, discount_type } = this.parent;
+        const anyFilled =
+          !!couponCode || !!discount_type || value !== undefined;
+        const hasValue = value !== undefined && value !== null && value;
+        if (anyFilled && !hasValue) return false;
         return true;
       }
     ),

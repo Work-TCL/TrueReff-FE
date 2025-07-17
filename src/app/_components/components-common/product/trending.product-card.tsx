@@ -104,34 +104,48 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
             <img
               src={product.media[0]}
               alt={product.title}
-              className="w-full h-full"
+              className="w-full h-full product-img"
             />
           ) : (
             <ImageOff className="w-8 h-8 text-gray-400" />
           )}
         </div>
 
-                {/* Info */}
-                <div className="flex flex-col gap-2 text-start w-full overflow-hidden">
-                    {/* Title */}
-                    <TruncateWithToolTip
-                        checkHorizontalOverflow={true}
-                        className="text-md font-semibold w-full truncate"
-                        text={product.title}
-                    />
-                    <div className="flex justify-center mb-3 !text-sm absolute top-0 right-0 m-2 ">
-                        <div className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center shadow" onClick={() => { }}>
-                            <ToolTip content={"Copy Product Link"} delayDuration={500}><LinkIcon className="text-primary cursor-pointer" size={20} onClick={handleCopyLink}/></ToolTip>
-                        </div>
-                    </div>
-                    {/* Price and Discount */}
+        {/* Info */}
+        <div className="flex flex-col gap-2 text-start w-full overflow-hidden">
+          {/* Title */}
+          <TruncateWithToolTip
+            checkHorizontalOverflow={true}
+            className="text-md font-semibold w-full truncate"
+            text={product.title}
+          />
+          <div className="flex justify-center mb-3 !text-sm absolute top-0 right-0 m-2 ">
+            <div
+              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center shadow"
+              onClick={() => {}}
+            >
+              <ToolTip content={"Copy Product Link"} delayDuration={500}>
+                <LinkIcon
+                  className="text-primary cursor-pointer"
+                  size={20}
+                  onClick={handleCopyLink}
+                />
+              </ToolTip>
+            </div>
+          </div>
+          {/* Price and Discount */}
           <div className="flex items-center w-full text-sm space-x-2">
             <span className="flex items-center text-green-600 py-1 font-bold">
-            <IndianRupee size={12} strokeWidth={2.5} /> {product.price || "0.00"}
+              <IndianRupee size={12} strokeWidth={2.5} />{" "}
+              {product.price || "0.00"}
             </span>
             {product.commission && (
               <span className="flex items-center text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
-                {product.commission_type === "FIXED_AMOUNT" ? <IndianRupee size={12} /> : ""}
+                {product.commission_type === "FIXED_AMOUNT" ? (
+                  <IndianRupee size={12} />
+                ) : (
+                  ""
+                )}
                 {product.commission}{" "}
                 {product.commission_type === "PERCENTAGE" ? "% " : ""}
                 {translate("Off")}
@@ -170,12 +184,16 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
           )}
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">
-              <Link href={product?.utmLink} target="_blank" className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition">
+              <Link
+                href={product?.utmLink}
+                target="_blank"
+                className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition"
+              >
                 {translate("buyNow")}
               </Link>
             </div>
           )}
-                    {/* <div className="flex items-center justify-between w-full">
+          {/* <div className="flex items-center justify-between w-full">
             <button
               className="flex items-center w-full justify-center gap-1 mt-2 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
               onClick={() => {
@@ -184,8 +202,8 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
             >
               <Heart size={15} /> Add </button>
           </div> */}
-                </div>
-            </CardContent>
+        </div>
+      </CardContent>
       {loginPopUp && (
         <LoginDialog
           title={"Login_Required"}
@@ -193,8 +211,8 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
           onClose={() => setLoginPopUp(false)}
         />
       )}
-        </Card>
-    );
+    </Card>
+  );
 };
 
 export default TrendingProductCard;

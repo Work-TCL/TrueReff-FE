@@ -195,7 +195,7 @@ const PreviewCard = ({
         <img
           src={src}
           alt="preview"
-          className="w-full h-full object-cover rounded"
+          className="w-full h-full object-cover rounded product-img"
         />
       ) : (
         <video

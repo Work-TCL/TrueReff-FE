@@ -18,7 +18,7 @@ const ProductCard = ({
   size = "reguler",
 }: {
   item: IBrandProduct;
-  handleUpdateProduct: (id: string,collaboration:any) => void;
+  handleUpdateProduct: (id: string, collaboration: any) => void;
   size?: "reguler" | "small";
 }) => {
   const router = useRouter();
@@ -41,7 +41,7 @@ const ProductCard = ({
         }
       );
       if (response.status === 201) {
-        handleUpdateProduct(product?._id,response?.data?.data?.collaboration);
+        handleUpdateProduct(product?._id, response?.data?.data?.collaboration);
         setIsOpen("");
         toast.success(response?.data?.message);
       }
@@ -71,7 +71,7 @@ const ProductCard = ({
               <img
                 src={product.media[0]}
                 alt={product.title}
-                className="w-full h-full"
+                className="w-full h-full product-img"
               />
             ) : (
               <ImageOff className="w-8 h-8 text-gray-400" />

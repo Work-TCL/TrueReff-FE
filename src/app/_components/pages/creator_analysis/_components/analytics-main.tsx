@@ -171,7 +171,7 @@ function AnyalyticsCombineUI({
                     product.productImage || "/assets/product/image-square.svg"
                   }
                   alt={product.productName}
-                  className="w-12 h-12 rounded-md object-cover border"
+                  className="w-12 h-12 rounded-md object-cover border product-img"
                 />
 
                 <div className="flex-1">
