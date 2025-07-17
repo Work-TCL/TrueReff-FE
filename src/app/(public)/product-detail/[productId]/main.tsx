@@ -350,7 +350,7 @@ export default function ViewProductDetail({
                 <div className="">
                   <div className="flex items-center gap-2 ">
                     <span className="flex items-center text-xl font-bold">
-                      {productData?.discountType === "FIXED_AMOUNT" ? <IndianRupee className="size-[14] sm:size-[16] md:size-[18]" />
+                      {productData?.discountType === "FIXED_AMOUNT" ? <IndianRupee className="size-[14] sm:size-[16] md:size-[18]" />:""}
                       {selectedVariant?.price
                         ? selectedVariant?.price
                         : productData?.price}
