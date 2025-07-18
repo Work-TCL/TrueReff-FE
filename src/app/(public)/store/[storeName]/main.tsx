@@ -27,6 +27,7 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { Info } from "lucide-react";
 import ToolTip from "@/app/_components/components-common/tool-tip";
 import { debounce } from "lodash";
+import imageCompression from 'browser-image-compression';
 
 interface ICategory {
   _id: string;
@@ -300,9 +301,14 @@ export default function PublicCreatorStore({
     if (!isValid) return;
 
     const previewURL = URL.createObjectURL(file);
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1, // Compress to 1MB or less
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
 
     if (type === "profile") {
-      setProfileFile(file);
+      setProfileFile(compressedFile);
       setProfilePreview(previewURL);
       storeMethods.setValue("profile_image", previewURL);
       storeMethods.setError("profile_image", {
@@ -310,7 +316,7 @@ export default function PublicCreatorStore({
         message: "",
       });
     } else {
-      setBannerFile(file);
+      setBannerFile(compressedFile);
       setBannerPreview(previewURL);
       storeMethods.setValue("banner_image", previewURL);
       storeMethods.setError("banner_image", {

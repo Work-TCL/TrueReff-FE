@@ -26,6 +26,7 @@ import { useTranslations } from "next-intl";
 import { getCategories } from "@/lib/web-api/auth";
 import { Camera,User } from "lucide-react";
 import { useSession } from "next-auth/react";
+import imageCompression from 'browser-image-compression';
 
 export interface ICategoryData {
   _id: string;
@@ -217,6 +218,7 @@ export default function EditVendorForm({
       );
     })();
   }, [methods.watch("category")?.length]);
+
   const handleImageSelect = async (
     e: React.ChangeEvent<HTMLInputElement> | any,
     type: "profile" | "banner"
@@ -234,10 +236,17 @@ export default function EditVendorForm({
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;
 
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1, // Compress to 1MB or less
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
+
+
     const previewURL = URL.createObjectURL(file);
 
     if (type === "profile") {
-      setProfileFile(file);
+      setProfileFile(compressedFile);
       setProfilePreview(previewURL);
       methods.setValue("profile_image", previewURL);
       methods.setError("profile_image", {
@@ -245,7 +254,7 @@ export default function EditVendorForm({
         message: "",
       });
     } else {
-      setBannerFile(file);
+      setBannerFile(compressedFile);
       setBannerPreview(previewURL);
       methods.setValue("banner_image", previewURL);
       methods.setError("banner_image", {

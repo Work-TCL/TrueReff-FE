@@ -36,6 +36,7 @@ import { CreditCard, FileText, Globe, Store } from "lucide-react";
 import ProfileAccess from "../../components-common/dialogs/profile-approval";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
+import imageCompression from 'browser-image-compression';
 
 let allTabs: {
   id: string;
@@ -494,9 +495,15 @@ export default function CreatorRegistrationPage() {
     if (!isValid) return;
 
     const previewURL = URL.createObjectURL(file);
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1, // Compress to 1MB or less
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
+
 
     if (type === "profile") {
-      setProfileFile(file);
+      setProfileFile(compressedFile);
       setProfilePreview(previewURL);
       storeMethods.setValue("profile_image", previewURL);
       storeMethods.setError("profile_image", {
@@ -504,7 +511,7 @@ export default function CreatorRegistrationPage() {
         message: "",
       });
     } else {
-      setBannerFile(file);
+      setBannerFile(compressedFile);
       setBannerPreview(previewURL);
       storeMethods.setValue("banner_image", previewURL);
       storeMethods.setError("banner_image", {

@@ -26,7 +26,6 @@ import { get } from "lodash";
 import { useTranslations } from "next-intl";
 import imageCompression from 'browser-image-compression';
 
-
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,

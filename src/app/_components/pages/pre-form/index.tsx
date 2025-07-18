@@ -28,6 +28,7 @@ import { CreditCard } from "lucide-react";
 import PackageDetails from "../settings/package-details";
 import ProfileAccess from "../../components-common/dialogs/profile-approval";
 import WordPressChannelForm from "./components/word-press-connect";
+import imageCompression from 'browser-image-compression';
 
 let allTabs: {
   id: string;
@@ -543,8 +544,15 @@ export default function PreFormPage() {
 
     const previewURL = URL.createObjectURL(file);
 
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1, // Compress to 1MB or less
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
+
+
     if (type === "profile") {
-      setProfileFile(file);
+      setProfileFile(compressedFile);
       setProfilePreview(previewURL);
       methods.setValue("profile_image", previewURL);
       methods.setError("profile_image", {
@@ -552,7 +560,7 @@ export default function PreFormPage() {
         message: "",
       });
     } else {
-      setBannerFile(file);
+      setBannerFile(compressedFile);
       setBannerPreview(previewURL);
       methods.setValue("banner_image", previewURL);
       methods.setError("banner_image", {
