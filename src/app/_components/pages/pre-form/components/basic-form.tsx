@@ -130,6 +130,7 @@ export default function BasicInfoForm({
             id="banner_image"
             accept={imageAccept}
             className="hidden"
+            capture={false} 
             onChange={(e) => handleImageSelect(e, "banner")}
           />
         </div>
@@ -165,6 +166,7 @@ export default function BasicInfoForm({
               id="profile-image"
               className="hidden"
               accept={imageAccept}
+              capture={false} 
               onChange={(e) => handleImageSelect(e, "profile")}
             />
           </div>

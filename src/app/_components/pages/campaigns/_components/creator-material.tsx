@@ -104,6 +104,7 @@ const CreatorMaterial: React.FC<MediaUploaderProps> = ({
               type="file"
               accept="image/*,video/*"
               multiple
+              capture={false} 
               onChange={handleUpload}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />

@@ -121,6 +121,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               type="file"
               accept="image/*"
               multiple
+              capture={false} 
               onChange={handleImageUpload}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
@@ -203,6 +204,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer relative">
             <input
               type="file"
+              capture={false} 
               accept="video/*"
               onChange={handleVideoUpload}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

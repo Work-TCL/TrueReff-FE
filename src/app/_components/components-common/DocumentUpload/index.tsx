@@ -82,6 +82,7 @@ export default function FileUploadBox({ handleUploadFile,uploadedFile }: IFileUp
                 <input
                     ref={inputRef}
                     type="file"
+                    capture={false} 
                     accept=".pdf,.docx,.xlsx"
                     className="hidden"
                     onChange={handleFileChange}

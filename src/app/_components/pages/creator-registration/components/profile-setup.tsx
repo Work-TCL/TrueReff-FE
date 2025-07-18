@@ -156,6 +156,7 @@ export default function ProfileSetup({
             <input
               type="file"
               id="profile-image"
+              capture={false} 
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               accept="image/*"
               onChange={(e) => handleImageSelect(e, "profile")}
@@ -195,6 +196,7 @@ export default function ProfileSetup({
               />
               <input
                 type="file"
+                capture={false} 
                 id="banner_image"
                 accept="image/*"
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

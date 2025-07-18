@@ -64,6 +64,7 @@ export default function PhotoUpload({
         <input
           name={name}
           type="file"
+          capture={false} 
           id={`${name}_image`}
           className="hidden"
           accept="image/*"
