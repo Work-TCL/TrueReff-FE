@@ -410,7 +410,8 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
                   id="profile-image"
                   className="hidden"
                   capture={false} 
-                  accept={imageAccept}
+                  accept=".jpg,.jpeg,.png"
+                  // accept={imageAccept}
                   onChange={(e) => handleImageSelect(e, "profile")}
                 />
                 {/* <Button
