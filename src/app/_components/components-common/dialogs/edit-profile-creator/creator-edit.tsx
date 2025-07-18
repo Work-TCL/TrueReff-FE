@@ -24,6 +24,9 @@ import {
 import Select from "react-select";
 import { get } from "lodash";
 import { useTranslations } from "next-intl";
+import imageCompression from 'browser-image-compression';
+
+
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,
@@ -167,13 +170,19 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       });
     }
 
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1, // Compress to 1MB or less
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
+
     const previewURL = URL.createObjectURL(file);
 
     if (type === "profile") {
-      setProfileFile(file);
+      setProfileFile(compressedFile);
       setProfilePreview(previewURL);
     } else {
-      setBannerFile(file);
+      setBannerFile(compressedFile);
       setBannerPreview(previewURL);
     }
   };
