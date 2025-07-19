@@ -1060,6 +1060,10 @@ export const campaignProductValidationSchema = Yup.object().shape({
     .typeError("Price is required")
     .required("Price is required")
     .moreThan(0, "Price must be greater than 0"),
+    blocking_commission_days: Yup.string()
+    .required("Blocking commission days is required")
+    .min(1, "Blocking commission days must be at least 1")
+    .max(30, "Blocking commission days must be at most 30")
 });
 
 export interface ICampaignProductValidationSchema

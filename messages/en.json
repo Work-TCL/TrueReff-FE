@@ -704,5 +704,6 @@
   "No_Notifications_Description": "You're all caught up! You’ll see notifications here when there’s something new.",
   "Notifications": "Notifications",
   "Main_Balance_Tooltip": "Withdrawable balance you can request payout for.",
-  "creator_bio": "Creator's bio"
+  "creator_bio": "Creator's bio",
+  "blocking_commission_days": "Blocking Commission Days"
 }

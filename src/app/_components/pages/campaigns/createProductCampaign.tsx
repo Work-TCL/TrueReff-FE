@@ -159,7 +159,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   }, [campaignData]); // dependencies
 
   const methods = useForm<ICampaignProductValidationSchema>({
-    defaultValues: {},
+    defaultValues: {
+      blocking_commission_days: "1",
+    },
     //@ts-ignore
     resolver: productId
       ? yupResolver(campaignProductValidationSchema)
@@ -285,6 +287,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         //@ts-ignore
         formData.append("commission", data.commission);
         formData.append("commission_type", data?.commission_type);
+        formData.append("blockedDays", data?.blocking_commission_days);
         if (data?.couponCode && !isSkipDiscountGroup) {
           formData.append("couponCode", data?.couponCode || "");
         }
@@ -551,6 +554,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
           methods.setValue("couponCode", response?.couponCode);
           methods.setValue("discount_type", response?.discountType);
           methods.setValue("discount_value", response?.discount);
+          methods.setValue("blocking_commission_days", response?.blockedDays);
           if (response?.discount) {
             setShowDiscountSection(true);
           }
@@ -1000,16 +1004,43 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       disabled={isDisabled}
                     />
                   </div>
-                  <div className="flex flex-col gap-2 cursor-pointer">
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="blocking_commission_days"
+                      type="number"
+                      placeholder={"Enter Blocking Commission Days"}
+                      label={translate("blocking_commission_days")}
+                      disabled={isDisabled}
+                      min={1}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        if (value < 1) {
+                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.setError("blocking_commission_days", {
+                            type: "manual",
+                            message: "Blocking commission days must be between 1 and 30",
+                          });
+                        } else if (value > 30) {
+                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.setError("blocking_commission_days", {
+                            type: "manual",
+                            message: "Blocking commission days must be between 1 and 30",
+                          });
+                        } else {
+                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.setError("blocking_commission_days", {
+                            type: "manual",
+                            message: "",
+                          });
+                        }
+                      }}
+                      max={30}
+                    />
+                  </div>
+                  <div className="mt-2 flex flex-col gap-2 cursor-pointer">
                     <label
                       htmlFor="freeProduct"
-                      className={cn(labelStyle, "opacity-0 lg:block hidden")}
-                    >
-                      {translate("free_promotional_product")}
-                    </label>
-                    <label
-                      htmlFor="freeProduct"
-                      className="mt-3 text-xs flex items-center gap-2 text-gray-600"
+                      className="text-xs flex items-center gap-2 text-gray-600"
                     >
                       <InputRadix
                         type="radio"
