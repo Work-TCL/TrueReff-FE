@@ -36,10 +36,13 @@ const channelsTypes: IChannelTypes[] = [
     icon: "/assets/vendor/word-press.webp",
     name: "wordpress",
     inputName: "wordpress_store_id",
-    bgColor: "bg-gradient-to-r from-[#6EC1E4] via-[#003B5C] to-[#21759B]"
-  }
-]
-export default function WordPressChannelForm({ loading, channels }: IChannelFormProps) {
+    bgColor: "bg-gradient-to-r from-[#6EC1E4] via-[#003B5C] to-[#21759B]",
+  },
+];
+export default function WordPressChannelForm({
+  loading,
+  channels,
+}: IChannelFormProps) {
   const translate = useTranslations();
   const getChannel = (channelName: string) => {
     return channels?.find((ele) => ele?.channelType === channelName) ?? null;
@@ -73,39 +76,39 @@ export default function WordPressChannelForm({ loading, channels }: IChannelForm
               )}
               {!channel && (
                 <div className="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 gap-4 items-end">
-                <div className="sm:col-span-6 md:col-span-4 w-full">
-                  <Input
-                    label={translate("WordPress_Store_Domain")}
-                    placeholder="Enter your WordPress store domain"
-                    name={`wordpress_store_domain`}
-                    type="text"
-                    disabled={loading}
+                  <div className="sm:col-span-6 md:col-span-4 w-full">
+                    <Input
+                      label={translate("WordPress_Store_Domain")}
+                      placeholder="Enter your WordPress store domain"
+                      name={`wordpress_store_domain`}
+                      type="text"
+                      disabled={loading}
                       lableClassName="sm:text-md font-[400] text-dark-100"
-                    autoFocus={false}
-                  />
-                </div>
-                <div className="sm:col-span-6 md:col-span-4 w-full">
-                  <Input
-                    label={translate("WordPress_Store_Id")}
-                    placeholder="Enter your WordPress store ID"
-                    name={`wordpress_store_id`}
-                    type="text"
-                    disabled={loading}
+                      autoFocus={false}
+                    />
+                  </div>
+                  <div className="sm:col-span-6 md:col-span-4 w-full">
+                    <Input
+                      label={translate("WordPress_Store_Id")}
+                      placeholder="Enter your WordPress store ID"
+                      name={`wordpress_store_id`}
+                      type="text"
+                      disabled={loading}
                       lableClassName="sm:text-md font-[400] text-dark-100"
-                    autoFocus={false}
-                  />
-                </div>
-                  <div className="sm:col-span-2 md:col-span-2 w-full flex  xsmobile:flex-col items-center gap-5 xsmobile:gap-2">
-                  <Button
-                    type="submit"
-                    loading={loading}
-                    className="w-full h-[54px] text-white rounded-lg hover:bg-blue-700 text-sm"
-                  >
-                    {translate("Connect")}
-                  </Button>
+                      autoFocus={false}
+                    />
+                  </div>
+                  <div className="sm:col-span-3 2xl:col-span-3 xl:col-span-3 lg:col-span-4 md:col-span-5 w-full flex  xsmobile:flex-col items-center gap-5 xsmobile:gap-2">
+                    <Button
+                      type="submit"
+                      loading={loading}
+                      className="w-full h-[54px] text-white rounded-lg hover:bg-blue-700 text-sm px-4"
+                    >
+                      {translate("Connect")}
+                    </Button>
                     <Button
                       type="button"
-                      className="w-full h-[54px] text-white rounded-lg hover:bg-blue-700 text-sm"
+                      className="w-full h-[54px] text-white rounded-lg hover:bg-blue-700 text-sm px-4"
                       onClick={handleDownloadZip}
                     >
                       {translate("Download")}
@@ -115,7 +118,7 @@ export default function WordPressChannelForm({ loading, channels }: IChannelForm
               )}
               {channel && (
                 <p className="text-gray-100 mb-4 md:text-base text-sm">
-                {translate("WordPress_Store_connected")}
+                  {translate("WordPress_Store_connected")}
                 </p>
               )}
               {channel && (
@@ -130,7 +133,7 @@ export default function WordPressChannelForm({ loading, channels }: IChannelForm
               )}
             </div>
           </div>
-        )
+        );
       })}
     </>
   );
