@@ -62,7 +62,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     state: creator?.state ?? "",
     city: creator?.city ?? "",
     gender: creator?.gender ?? "",
-    dob: new Date(creator?.dob)?.toISOString()?.split("T")[0]??""
+    dob: creator?.dob || ""
   };
   const [formState, setFormState] = useState(initialState);
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         state: creator?.state,
         city: creator?.city,
         gender: creator?.gender,
-        dob: new Date(creator?.dob)?.toISOString()?.split("T")[0]
+        dob: creator?.dob
       });
     }
   }, [creator]);
@@ -85,7 +85,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       state: creator?.state || "",
       city: creator?.city || "",
       gender: creator?.gender || "",
-      dob: new Date(creator?.dob).toLocaleDateString() || "",
+      dob: creator?.dob || "",
     },
     resolver: yupResolver(schema),
     mode: "onChange",

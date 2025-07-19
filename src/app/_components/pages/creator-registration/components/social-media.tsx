@@ -114,15 +114,15 @@ export default function SocialMedia({
       {isPageLoading && <Loader />}
       <div className="relative border-l-2 border-gray-dark ">
         {/* Instagram Step */}
-        <div className="mb-4 ml-6 relative">
-          <div className="absolute -left-6 top-0 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-lg">
+        <div className="mb-4 ml-4 md:ml-6 relative">
+          <div className="absolute -left-4 md:-left-6 top-0 w-8 h-8 md:w-12 md:h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-lg">
             <img
               src="/assets/creator/Instagram-icon.svg"
               alt="Instagram"
-              className="w-7 h-7"
+              className="w-6 h-6 md:w-7 md:h-7"
             />
           </div>
-          <div className="bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCAF45] p-6 rounded-20 shadow-md">
+          <div className="bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCAF45] p-3 md:p-6 px-4 md:px-6 rounded-20 shadow-md">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-gray-100 flex-1 md:text-xl text:sm font-semibold">
                 {translate("Connect_Instagram")}
@@ -173,15 +173,15 @@ export default function SocialMedia({
         </div>
 
         {/* YouTube Step */}
-        <div className="mb-1 ml-6 relative">
-          <div className="absolute -left-6 top-0 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-lg">
+        <div className="mb-1 ml-4 md:ml-6 relative">
+          <div className="absolute -left-4 md:-left-6 top-0 w-8 h-8 md:w-12 md:h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-lg">
             <img
               src="/assets/creator/Youtube-icon.svg"
               alt="YouTube"
-              className="w-7 h-7"
+              className="w-6 h-6 md:w-7 md:h-7"
             />
           </div>
-          <div className="bg-gradient-to-r from-[#FF6B6B] via-[#FF0000] to-[#c43c3c] p-6 rounded-20 shadow-md">
+          <div className="bg-gradient-to-r from-[#FF6B6B] via-[#FF0000] to-[#c43c3c] p-3 md:p-6 px-4 md:px-6 rounded-20 shadow-md ">
             <div className="flex items-center justify-between mb-2 flex-1">
               <h3 className="text-gray-100 md:text-xl text:sm font-semibold">
                 {translate("Connect_YouTube")}

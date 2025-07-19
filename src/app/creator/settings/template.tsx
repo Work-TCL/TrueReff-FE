@@ -20,5 +20,5 @@ const settingMenus: {
 ];
 
 export default function template({ children, ...props }: ILayout) {
-  return <SettingsLayout menus={settingMenus}>{children}</SettingsLayout>;
+  return <SettingsLayout type="creator">{children}</SettingsLayout>;
 }

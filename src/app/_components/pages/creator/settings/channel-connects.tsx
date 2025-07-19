@@ -11,9 +11,9 @@ export default function ChannelConnects({ className = "" }: IStoreConnects) {
   const translate = useTranslations();
   return (
     <div
-      className={`flex flex-col w-full h-full rounded-xl p-4 gap-2 ${className}`}
+      className={`flex flex-col w-full h-full rounded-xl p-2 md:p-4 gap-2 ${className}`}
     >
-      <div className="flex justify-between items-center pb-4">
+      <div className="flex justify-between items-center pb-2 md:pb-4">
         <h2 className="text-sm xl:text-lg font-semibold capitalize">
           {translate("channels_connect")}
         </h2>

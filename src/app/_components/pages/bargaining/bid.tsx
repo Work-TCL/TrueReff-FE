@@ -46,6 +46,10 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
 
     const handleOfferChange = (e: any) => {
         const inputValue = e.target.value;
+        // Accept only numbers (no letters, no symbols except ".")
+        if (!/^\d*\.?\d*$/.test(inputValue)) {
+            return;
+        }
 
         // If the first character is "0" and the length is greater than 1, remove the first character
         if (inputValue.charAt(0) === "0" && inputValue.length > 1) {
@@ -202,7 +206,8 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
                             value={yourOffer ?? ""}
                             onChange={handleOfferChange}
                             onBlur={() => setIsEditing(false)}
-                            className="w-1/2 text-center text-sm border border-gray-300 rounded-md px-2 py-1"
+                            min={1}
+                            className="w-1/2 text-center text-sm border border-gray-300 rounded-md px-2 py-1 text-black"
                             autoFocus={isYourOffer}
                         />
                             <span
@@ -215,7 +220,7 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
 
 
                     {(!isYourOffer && !isEditing) && <><button
-                        onClick={() => handleOfferChange({ target: { value: Math.max(0, yourOffer - 1).toString() } })}
+                        onClick={() => handleOfferChange({ target: { value: Math.max(1, yourOffer - 1).toString() } })}
                         className="absolute bottom-2 left-2 bg-gray-200 hover:bg-gray-300 p-1 rounded-full"
                     >
                         <Minus className="w-4 h-4" />

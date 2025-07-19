@@ -4,6 +4,7 @@ import Loader from "../../components-common/layout/loader";
 import EditProfileCreator from "../../components-common/dialogs/edit-profile-creator";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useTranslations } from "next-intl";
+import { formatDate } from "@/lib/utils/constants";
 interface IProfileCreator {
   user_name: string;
   full_name: string;
@@ -53,11 +54,7 @@ export default function ProfileCreator() {
               ["Mobile", creator.phone],
               [
                 "Date_Of_Birth",
-                new Date(creator.dob).toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                }),
+                formatDate(creator.dob),
               ],
             ].map(([label, value], idx) => (
               <div key={idx} className="flex items-start gap-2">
