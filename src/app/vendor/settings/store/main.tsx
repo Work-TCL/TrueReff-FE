@@ -160,8 +160,10 @@ export default function StoreConnect() {
 
   return (
     <>
-    {channelLoading ? <LoadingPage/> : 
-      <div className="flex flex-col p-4 gap-2 bg-white rounded-lg">
+      {channelLoading ? (
+        <LoadingPage />
+      ) : (
+        <div className="flex flex-col py-4 px-4 xsmobile:px-2 gap-2 bg-white rounded-lg">
         <FormProvider {...channelMethods}>
           <form
             onSubmit={channelMethods.handleSubmit(handleOnChannelConnect)}
@@ -178,8 +180,8 @@ export default function StoreConnect() {
             <WordPressChannelForm loading={wordPressLoading} channels={channels} />
           </form>
         </FormProvider>
-      </div>}
-      
+        </div>
+      )}
     </>
   );
 }

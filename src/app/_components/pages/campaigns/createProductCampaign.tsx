@@ -1,6 +1,6 @@
 "use client";
 import { Button as ButtonOutline } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FormProvider,
   useFieldArray,
@@ -137,25 +137,26 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const [showDiscountSection, setShowDiscountSection] = useState(false);
   const [showCreatorMeterial, setShowCreatorMeterial] = useState(false);
 
-  const fetchCategory = async () => {
+  const fetchCategory = useCallback(async () => {
     try {
       const response = await getCategories({ page: 0, limit: 0 });
       let data = response?.data?.data;
+
       setCategories(data);
       setParentCategory(data?.filter((ele) => ele?.parentId === null));
-      methods.setValue(
-        "sub_category",
-        categories
-          ?.filter((ele) => campaignData?.subCategory?.includes(ele?._id))
-          ?.map((v: any) => ({
-            label: v?.name,
-            value: v?._id,
-          }))
-      );
+
+      const selectedSubCategories = data
+        ?.filter((ele) => campaignData?.subCategory?.includes(ele?._id))
+        ?.map((v) => ({
+          label: v?.name,
+          value: v?._id,
+        }));
+
+      methods.setValue("sub_category", selectedSubCategories);
     } catch (error: any) {
-      console.log("Error Fetching channels", error.message);
+      console.log("Error Fetching categories", error.message);
     }
-  };
+  }, [campaignData]); // dependencies
 
   const methods = useForm<ICampaignProductValidationSchema>({
     defaultValues: {},
@@ -172,6 +173,91 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     name: "references",
   });
 
+  const validateCommissionGroup = (data: any) => {
+    let price =
+      selectedProduct?.variants?.length > 0
+        ? selectedProduct?.variants[0]?.price
+        : 0;
+    let discountError = "";
+    let commissionError = "";
+    // If the first character is "0" and the length is greater than 1, remove the first character
+    const commissionValue = data?.commission;
+    const discountValue = data?.discount_value;
+    if (!isNaN(commissionValue)) {
+      if (data?.commission_type === types.PERCENTAGE) {
+        // For percentage-based commission, calculate the maximum offer
+        const maxOffer = (parseFloat(price) * commissionValue) / 100;
+        if (price && maxOffer > parseFloat(price)) {
+          methods.setError("commission", {
+            type: "manual",
+            message: "Commission cannot exceed the product price.",
+          });
+          commissionError = "Commission cannot exceed the product price.";
+        } else {
+          commissionError = "";
+          methods.setError("commission", {
+            type: "manual",
+            message: "",
+          });
+        }
+      }
+      if (data.commission_type === types.FIXED_AMOUNT) {
+        // For fixed amount, ensure the offer does not exceed the product price
+
+        if (price && commissionValue > parseFloat(price)) {
+          methods.setError("commission", {
+            type: "manual",
+            message: "Commission cannot exceed the product price.",
+          });
+          commissionError = "Commission cannot exceed the product price.";
+        } else {
+          commissionError = "";
+          methods.setError("commission", {
+            type: "manual",
+            message: "",
+          });
+        }
+      }
+    }
+    if (discountValue && !isNaN(discountValue) && showDiscountSection) {
+      if (data.discount_type === types.PERCENTAGE) {
+        // For percentage-based commission, calculate the maximum offer
+        const maxOffer = (parseFloat(price) * discountValue) / 100;
+        if (price && maxOffer > parseFloat(price)) {
+          discountError = "Discount cannot exceed the product price.";
+          methods.setError("discount_value", {
+            type: "manual",
+            message: "Discount cannot exceed the product price.",
+          });
+        } else {
+          discountError = "";
+          methods.setError("discount_value", {
+            type: "manual",
+            message: "",
+          });
+        }
+      } else if (data.discount_type === types.FIXED_AMOUNT) {
+        // For fixed amount, ensure the offer does not exceed the product price
+        if (price && discountValue > parseFloat(price)) {
+          discountError = "Discount cannot exceed the product price.";
+          methods.setError("discount_value", {
+            type: "manual",
+            message: "Discount cannot exceed the product price.",
+          });
+        } else {
+          discountError = "";
+          methods.setError("discount_value", {
+            type: "manual",
+            message: "",
+          });
+        }
+      }
+    }
+
+    const isValid = discountError === "" && commissionError === "";
+    return isValid;
+  };
+
   const onSubmit = async (data: ICampaignProductValidationSchema) => {
     if (!selectedProduct) {
       toast.error("select product required.");
@@ -179,87 +265,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     }
     setLoading(true);
     try {
-      let price =
-        selectedProduct?.variants?.length > 0
-          ? selectedProduct?.variants[0]?.price
-          : 0;
-      let discountError = "";
-      let commissionError = "";
-      // If the first character is "0" and the length is greater than 1, remove the first character
-      const commissionValue = data?.commission;
-      const discountValue = data?.discount_value;
-      if (!isNaN(commissionValue)) {
-        if (data?.commission_type === types.PERCENTAGE) {
-          // For percentage-based commission, calculate the maximum offer
-          const maxOffer = (parseFloat(price) * commissionValue) / 100;
-          if (price && maxOffer > parseFloat(price)) {
-            methods.setError("commission", {
-              type: "manual",
-              message: "Commission cannot exceed the product price.",
-            });
-            commissionError = "Commission cannot exceed the product price.";
-          } else {
-            commissionError = "";
-            methods.setError("commission", {
-              type: "manual",
-              message: "",
-            });
-          }
-        }
-        if (data.commission_type === types.FIXED_AMOUNT) {
-          // For fixed amount, ensure the offer does not exceed the product price
-
-          if (price && commissionValue > parseFloat(price)) {
-            methods.setError("commission", {
-              type: "manual",
-              message: "Commission cannot exceed the product price.",
-            });
-            commissionError = "Commission cannot exceed the product price.";
-          } else {
-            commissionError = "";
-            methods.setError("commission", {
-              type: "manual",
-              message: "",
-            });
-          }
-        }
-      }
-      if (discountValue && !isNaN(discountValue)) {
-        if (data.discount_type === types.PERCENTAGE) {
-          // For percentage-based commission, calculate the maximum offer
-          const maxOffer = (parseFloat(price) * discountValue) / 100;
-          if (price && maxOffer > parseFloat(price)) {
-            discountError = "Discount cannot exceed the product price.";
-            methods.setError("discount_value", {
-              type: "manual",
-              message: "Discount cannot exceed the product price.",
-            });
-          } else {
-            discountError = "";
-            methods.setError("discount_value", {
-              type: "manual",
-              message: "",
-            });
-          }
-        } else if (data.discount_type === types.FIXED_AMOUNT) {
-          // For fixed amount, ensure the offer does not exceed the product price
-          if (price && discountValue > parseFloat(price)) {
-            discountError = "Discount cannot exceed the product price.";
-            methods.setError("discount_value", {
-              type: "manual",
-              message: "Discount cannot exceed the product price.",
-            });
-          } else {
-            discountError = "";
-            methods.setError("discount_value", {
-              type: "manual",
-              message: "",
-            });
-          }
-        }
-      }
-
-      const isValid = discountError === "" && commissionError === "";
+      const isSkipDiscountGroup = !showDiscountSection; // discount_type, discount_value, couponCode
+      const isSkipMetirialGroup = !showCreatorMeterial; // referenceLinks, creatorMaterial
+      const isValid = await validateCommissionGroup(data);
 
       if (isValid) {
         const formData: FormData = new FormData();
@@ -269,15 +277,15 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         formData.append("channelName", channelType);
         // formData.append("videoType", );
         if (data?.notes) formData.append("notes", data?.notes);
-        if (data.discount_type)
+        if (data.discount_type && !isSkipDiscountGroup)
           formData.append("discountType", data.discount_type);
-        if (data.discount_value)
+        if (data.discount_value && !isSkipDiscountGroup)
           formData.append("discount", data.discount_value.toString());
         formData.append("productId", selectedProduct?.id || "");
         //@ts-ignore
         formData.append("commission", data.commission);
         formData.append("commission_type", data?.commission_type);
-        if (data?.couponCode) {
+        if (data?.couponCode && !isSkipDiscountGroup) {
           formData.append("couponCode", data?.couponCode || "");
         }
 
@@ -304,18 +312,19 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         data.tags.forEach((tag: string, i: number) => {
           formData.append(`tags[${i}]`, tag);
         });
-        data?.references?.forEach((link: string, i: number) => {
-          formData.append(`referenceLinks[${i}]`, link);
-        });
-
-        // If you're including images as an array
-        if (mediaMixin.images && mediaMixin.images.length > 0) {
-          mediaMixin.images.forEach((image: File, index: number) => {
-            formData.append("creatorMaterial", image); // backend should expect array under 'images'
+        if (!isSkipMetirialGroup) {
+          data?.references?.forEach((link: string, i: number) => {
+            formData.append(`referenceLinks[${i}]`, link);
           });
-        }
-        if (mediaMixin?.video) {
-          formData.append("creatorMaterial", mediaMixin.video);
+          // If you're including images as an array
+          if (mediaMixin.images && mediaMixin.images.length > 0) {
+            mediaMixin.images.forEach((image: File, index: number) => {
+              formData.append("creatorMaterial", image); // backend should expect array under 'images'
+            });
+          }
+          if (mediaMixin?.video) {
+            formData.append("creatorMaterial", mediaMixin.video);
+          }
         }
 
         // Make API call with formData
@@ -476,29 +485,28 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     name: "category",
   });
 
+  const updateSubCategories = async () => {
+    const categoriesId = watchedCategories?.map((v: any) => v.value) || [];
+
+    const optionsSubCategory = categories.filter((ele) =>
+      categoriesId.includes(ele?.parentId)
+    );
+
+    setSubCategory(optionsSubCategory);
+
+    const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+    const selectedSubCategories = methods.watch("sub_category") || [];
+
+    methods.setValue(
+      "sub_category",
+      selectedSubCategories.filter((v: any) =>
+        availableSubCategoriesIds.includes(v.value)
+      )
+    );
+  };
   useEffect(() => {
-    const updateSubCategories = async () => {
-      const categoriesId = watchedCategories?.map((v: any) => v.value) || [];
-
-      const optionsSubCategory = categories.filter((ele) =>
-        categoriesId.includes(ele?.parentId)
-      );
-
-      setSubCategory(optionsSubCategory);
-
-      const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
-      const selectedSubCategories = methods.watch("sub_category") || [];
-
-      methods.setValue(
-        "sub_category",
-        selectedSubCategories.filter((v: any) =>
-          availableSubCategoriesIds.includes(v.value)
-        )
-      );
-    };
-
     updateSubCategories();
-  }, [watchedCategories, categories]);
+  }, [watchedCategories?.length, categories?.length, campaignData]);
 
   useEffect(() => {
     fetchCategory();
@@ -597,6 +605,19 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       }, 0);
     }
   }, [productId, categories]);
+
+  useEffect(() => {
+    if (categories && campaignData) {
+      const selectedSubCategories = categories
+        ?.filter((ele) => campaignData?.subCategory?.includes(ele?._id))
+        ?.map((v) => ({
+          label: v?.name,
+          value: v?._id,
+        }));
+
+      methods.setValue("sub_category", selectedSubCategories);
+    }
+  }, [categories?.length, campaignData]);
 
   const startDateRaw = methods.watch("startDate");
   const startDate = startDateRaw ? new Date(startDateRaw) : null;

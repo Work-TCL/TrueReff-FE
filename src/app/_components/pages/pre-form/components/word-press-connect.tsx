@@ -42,24 +42,37 @@ const channelsTypes: IChannelTypes[] = [
 export default function WordPressChannelForm({ loading, channels }: IChannelFormProps) {
   const translate = useTranslations();
   const getChannel = (channelName: string) => {
-    return channels?.find(ele => ele?.channelType === channelName) ?? null;
-  }
+    return channels?.find((ele) => ele?.channelType === channelName) ?? null;
+  };
+  const handleDownloadZip = () => {
+    typeof window !== undefined && window.open("/truereff.zip", "_blank");
+  };
   return (
     <>
       {channelsTypes.map((ele: IChannelTypes, index: number) => {
         const channel = getChannel(ele?.name);
         return (
           <div key={`${ele?.name}-${index}`} className="mb-1 ml-6 relative">
-            <div className="absolute -left-6 top-0 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-lg">
+            <div className="absolute -left-6 top-0 xsmobile:w-9 xsmobile:h-9 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-lg">
               <img
                 src={ele?.icon}
                 alt="YouTube"
                 className="w-7 h-7 object-contain rounded-2xl"
               />
             </div>
-            <div className={cn("bg-gray-dark flex flex-col gap-2 p-6 rounded-20 shadow-md",ele?.bgColor)}>
-              {!channel && <h3 className="font-semibold">{translate("WordPress_Store_Connect")}</h3>}
-              {!channel && <div className="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 gap-4 items-end">
+            <div
+              className={cn(
+                "bg-gray-dark flex flex-col gap-2 p-6 xsmobile:p-4 rounded-20 shadow-md",
+                ele?.bgColor
+              )}
+            >
+              {!channel && (
+                <h3 className="font-semibold">
+                  {translate("WordPress_Store_Connect")}
+                </h3>
+              )}
+              {!channel && (
+                <div className="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 gap-4 items-end">
                 <div className="sm:col-span-6 md:col-span-4 w-full">
                   <Input
                     label={translate("WordPress_Store_Domain")}
@@ -67,7 +80,7 @@ export default function WordPressChannelForm({ loading, channels }: IChannelForm
                     name={`wordpress_store_domain`}
                     type="text"
                     disabled={loading}
-                    lableClassName="text-md font-[400] text-dark-100"
+                      lableClassName="sm:text-md font-[400] text-dark-100"
                     autoFocus={false}
                   />
                 </div>
@@ -78,11 +91,11 @@ export default function WordPressChannelForm({ loading, channels }: IChannelForm
                     name={`wordpress_store_id`}
                     type="text"
                     disabled={loading}
-                    lableClassName="text-md font-[400] text-dark-100"
+                      lableClassName="sm:text-md font-[400] text-dark-100"
                     autoFocus={false}
                   />
                 </div>
-                <div className="sm:col-span-1 md:col-span-1 w-full">
+                  <div className="sm:col-span-2 md:col-span-2 w-full flex  xsmobile:flex-col items-center gap-5 xsmobile:gap-2">
                   <Button
                     type="submit"
                     loading={loading}
@@ -90,11 +103,21 @@ export default function WordPressChannelForm({ loading, channels }: IChannelForm
                   >
                     {translate("Connect")}
                   </Button>
+                    <Button
+                      type="button"
+                      className="w-full h-[54px] text-white rounded-lg hover:bg-blue-700 text-sm"
+                      onClick={handleDownloadZip}
+                    >
+                      {translate("Download")}
+                    </Button>
+                  </div>
                 </div>
-              </div>}
-              {channel && <p className="text-gray-100 mb-4 md:text-base text-sm">
+              )}
+              {channel && (
+                <p className="text-gray-100 mb-4 md:text-base text-sm">
                 {translate("WordPress_Store_connected")}
-              </p>}
+                </p>
+              )}
               {channel && (
                 <div className="text-sm text-gray-100">
                   <div>
