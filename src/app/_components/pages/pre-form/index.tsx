@@ -148,7 +148,7 @@ export default function PreFormPage() {
   },[account])
   const fetchCategory = async () => {
       try {
-        const response = await getCategories({ page: 0, limit: 0 });
+        const response = await getCategories({ page: 0, limit: 0,type: "vendor" });
         let data = response?.data?.data;
         setCategories(data);
       } catch (error) { }

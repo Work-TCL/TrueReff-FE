@@ -1,5 +1,5 @@
 "use client";
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useEffect, useState } from "react";
 import Loading from "@/app/vendor/loading";
 import { useTranslations } from "next-intl";
@@ -10,7 +10,7 @@ import { ICategory, IProducts } from "./all-product-list";
 import { LoaderCircle } from "lucide-react";
 import ProductCard from "./product-card";
 
-export default function ProductList({ category }: { category: string; }) {
+export default function ProductList({ category, subCategory }: { category: string; subCategory?: string }) {
   const translate = useTranslations();
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
@@ -55,7 +55,7 @@ export default function ProductList({ category }: { category: string; }) {
     isInternalLoader ? setInternalLoading(false) : setLoading(true);
     try {
       const response = await axios.get(
-        `/product/all?limit=${pageLimit}&page=${page}&category=${category}`
+        `/product/all?limit=${pageLimit}&page=${page}&category=${category}${(subCategory && subCategory !== "All") ? `&subCategory=${subCategory}` : ""}`
       );
 
       if (response.data.data?.list?.length > 0) {
@@ -78,7 +78,7 @@ export default function ProductList({ category }: { category: string; }) {
           return { ...product, categories, tag, subCategories };
         })
         setProductList(prev => {
-          let data = [...prev, ...productData];
+          let data = page === 1 ? [...productData] : [...prev, ...productData];
           const more = data?.length < response.data.data?.count;
           setHasMore(more);
           return data;
@@ -101,15 +101,29 @@ export default function ProductList({ category }: { category: string; }) {
   // Update useEffect to fetch the initial product list
   useEffect(() => {
     if (category) {
-      fetProductsList(currentPage);
+      fetProductsList(1);
+      setCurrentPage(1);
     }
-  }, [category]);
+  }, [category, subCategory]);
 
   // Update the onClick handlers for pagination buttons
   const handlePageChange = (page: number) => {
     page !== currentPage &&
       fetProductsList(page, true);
   };
+
+  const handleRefreshData = (id: string) => {
+    const products = productList?.map((item) => {
+      if(item?._id === id){
+        return {
+          ...item,
+          isWishListed: !item?.isWishListed
+        };
+      }
+      return item;
+    });
+    setProductList(products);
+  }
 
 
   return (
@@ -130,7 +144,7 @@ export default function ProductList({ category }: { category: string; }) {
                         item={item?.product}
                         id={item?._id}
                         isWishListed={item?.isWishListed}
-                        refreshData={() => fetProductsList(currentPage, true)}
+                        refreshData={handleRefreshData}
                       />
                     </div>
                   ))}

@@ -1053,9 +1053,9 @@ export const campaignProductValidationSchema = Yup.object().shape({
       }
     ),
   commission: Yup.number()
-    .typeError("Cmmission value is required")
-    .required("Cmmission value is required")
-    .moreThan(0, "Cmmission value must be greater than 0"),
+    .typeError("Commission value is required")
+    .required("Commission value is required")
+    .moreThan(0, "Commission value must be greater than 0"),
   price: Yup.number()
     .typeError("Price is required")
     .required("Price is required")

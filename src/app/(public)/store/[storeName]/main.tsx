@@ -183,7 +183,7 @@ export default function PublicCreatorStore({
   }, [isCreator]);
   const fetchCategory = async () => {
     try {
-      const response = await getCategories({ page: 0, limit: 0 });
+      const response = await getCategories({ page: 0, limit: 0,type: "creator" });
       let data = response?.data?.data;
       setCategories(data);
     } catch (error: any) {

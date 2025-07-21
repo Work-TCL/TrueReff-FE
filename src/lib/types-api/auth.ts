@@ -247,6 +247,8 @@ export interface IPostCreatorRegisterResponse {
 export interface IGetCategoryParams {
   page?: string | number;
   limit?: string | number;
+  parentId?: string;
+  type?: string;
 }
 
 export interface ICategoryData {

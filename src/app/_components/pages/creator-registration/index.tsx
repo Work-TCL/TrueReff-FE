@@ -345,26 +345,6 @@ export default function CreatorRegistrationPage() {
     }
   };
 
-  const handleTriggerStepper = async () => {
-    setLoading(true);
-    if (TABS_STATUS.STORE_SETUP === activeTab) {
-      const profileSetUpFields: any = [
-        "title",
-        "long_description",
-        "short_description",
-        "category",
-        "sub_category",
-        "tags",
-      ];
-      const isValid = await methods.trigger(profileSetUpFields);
-
-      if (isValid) {
-        router.push(`?tab=2`); // Move to next tab
-      }
-    }
-    setLoading(false);
-  };
-
   const getCreator = async () => {
     setIsCreatorLoading(true);
     try {
@@ -452,7 +432,7 @@ export default function CreatorRegistrationPage() {
   };
   const fetchCategory = async () => {
     try {
-      const response = await getCategories({ page: 0, limit: 0 });
+      const response = await getCategories({ page: 0, limit: 0, type: "creator" });
       let data = response?.data?.data;
       setCategories(data);
     } catch (error: any) {

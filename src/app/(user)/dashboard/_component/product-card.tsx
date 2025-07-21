@@ -50,12 +50,12 @@ const ProductCard = ({
   item: product,
   id,
   isWishListed,
-  refreshData = () => {},
+  refreshData = (id: string) => {},
 }: {
   item: IProduct;
   id?: string;
   isWishListed?: boolean;
-  refreshData?: () => void;
+  refreshData?: (id: string) => void;
 }) => {
   const translate = useTranslations();
   const { account } = useAuthStore();
@@ -78,7 +78,7 @@ const ProductCard = ({
         );
         if (response?.status === 200) {
           toastMessage.success(response?.data?.message);
-          refreshData();
+          refreshData(productId);
         }
       } else {
         setLoginPopUp(true);

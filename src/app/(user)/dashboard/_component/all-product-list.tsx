@@ -61,6 +61,7 @@ export interface IProducts {
     utmLink: string; // UTM link for tracking
     crmLink: string; // CRM link for product details
     product: IProduct; // Product object
+    isWishListed: boolean; // Whether the product is wishlisted
 }
 
 const customStyles = {

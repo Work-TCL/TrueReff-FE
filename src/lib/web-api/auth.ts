@@ -422,7 +422,7 @@ export const getCategories = async (
   params: IGetCategoryParams
 ): Promise<IGetCategoryResponse> => {
   try {
-    const response = await axios.get("/product/category/list?all=true");
+    const response = await axios.get(`/product/category/list?all=true${params?.type ? `&type=${params.type}` : ''}${params?.parentId ? `&parentId=${params.parentId}` : ''}`);
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);

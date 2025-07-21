@@ -574,7 +574,7 @@ export default function Input({
           );
 
           return (
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               {getLabel?.()}
               <Select
                 value={null} // keep the value empty to always show placeholder
@@ -582,7 +582,7 @@ export default function Input({
                 options={filteredOptions}
                 placeholder={placeholder ? placeholder : "Select option"}
                 classNamePrefix="select"
-                className="react-select-container"
+                className="react-select-container border-gray-light"
                 isDisabled={props?.disabled}
                 menuPortalTarget={menuPortalTarget ? menuPortalTarget : null}
                 menuPosition="fixed"
@@ -592,6 +592,13 @@ export default function Input({
                     ...base,
                     height: "54px",
                     borderRadius: "12px",
+                    borderColor: "#e4e1e5",
+                    "&:hover": {
+                      borderColor: "#e4e1e5",
+                    },
+                    "&:focus": {
+                      borderColor: "#e4e1e5",
+                    },
                   }),
                   placeholder: (base: any) => ({
                     ...base,
