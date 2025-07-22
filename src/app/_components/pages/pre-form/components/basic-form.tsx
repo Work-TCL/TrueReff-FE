@@ -222,6 +222,7 @@ export default function BasicInfoForm({
       <div className="md:col-span-1 col-span-2">
         <Input
           label={translate("Sub_category")}
+          required={false}
           placeholder={translate("Select_Sub_Category")}
           name="sub_category"
           type="multiSelectWithTags"

@@ -293,7 +293,7 @@ export default function PreFormPage() {
         state: data.state,
         city: data.city,
         category: data.category?.map(ele => ele.value),
-        sub_category: data.sub_category?.map(ele => ele.value),
+        sub_category: (data.sub_category && data.sub_category?.length > 0) ? data.sub_category?.map(ele => ele.value):[],
         address: data.address
       };
       if (profileFile) {
@@ -604,7 +604,21 @@ export default function PreFormPage() {
   const handleCheckTerms = (e: any) => {
     setTerms(e.target.checked);
   }
-
+  const handleTabChange = (index: number) => {
+    if (index > activeTab) {
+      if (index === TABS_STATUS.BASIC_INFO) {
+        router.push(`?tab=${index}`);
+      } else if (index === TABS_STATUS.DOCUMENT_INFO && vendor?.completed_step >= 1) {
+        router.push(`?tab=${index}`);
+      } else if (index === TABS_STATUS.OMNI_CHANNEL && vendor?.completed_step >= 2) {
+        router.push(`?tab=${index}`);
+      } else {
+        toastMessage.info(`Please complete the ${allTabs[index - 1]?.name} first.`);
+      }
+    } else {
+      router.push(`?tab=${index}`);
+    }
+  };
   const handleOnClick = async () => {
     router.push(`/creator/dashboard`)
   }
@@ -615,7 +629,7 @@ export default function PreFormPage() {
       <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
         <SlidingTabBar
           tabs={allTabs}
-          setActiveTabIndex={(value) => router.push(`?tab=${value}`) }
+          setActiveTabIndex={handleTabChange}
           activeTabIndex={activeTab}
           grid={3}
         />

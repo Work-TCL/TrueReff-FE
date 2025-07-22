@@ -385,7 +385,7 @@ export default function ProductList() {
               strokeWidth={1.5}
               color="#FF4979"
               className="cursor-pointer size-5 "
-              onClick={() => toast.success(translate("Comingsoon"))}
+              onClick={() => router.push(`/vendor/vendor-analysis`)}
             />
           </ToolTip>
 

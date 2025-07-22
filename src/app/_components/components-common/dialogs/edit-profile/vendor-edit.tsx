@@ -121,7 +121,7 @@ export default function EditVendorForm({
         state: data?.state,
         city: data?.city,
         category: data?.category?.map(el => el?.value),
-        sub_category: data?.sub_category?.map(el => el?.value)
+        sub_category: (data?.sub_category && data?.sub_category?.length > 0) ? data?.sub_category?.map(el => el?.value) : []
       };
 
       if (profileFile) {
@@ -354,6 +354,7 @@ export default function EditVendorForm({
           <div className="md:col-span-1 col-span-2">
             <Input
               label={translate("Sub_category")}
+              required={false}
               placeholder={translate("Select_Sub_Category")}
               name="sub_category"
               type="multiSelectWithTags"

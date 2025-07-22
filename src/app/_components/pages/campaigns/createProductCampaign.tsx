@@ -139,7 +139,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
   const fetchCategory = useCallback(async () => {
     try {
-      const response = await getCategories({ page: 0, limit: 0 });
+      const response = await getCategories({ page: 0, limit: 0,type: "vendor" });
       let data = response?.data?.data;
 
       setCategories(data);

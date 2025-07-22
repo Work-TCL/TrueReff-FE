@@ -195,6 +195,7 @@ export default function StoreSetup({
             label={translate("Sub_category")}
             placeholder={translate("Select_Sub_Category")}
             name="sub_category"
+            required={false}
             type="multiSelectWithTags"
             options={subCategory.map((ele) => ({
               value: ele?._id,

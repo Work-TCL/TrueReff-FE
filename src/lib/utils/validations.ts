@@ -223,9 +223,9 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
         label: Yup.string().trim().required("Label is required"),
         value: Yup.string().trim().required("Value is required"),
       })
-    )
-    .min(1, "Sub-category is required")
-    .required("Sub-Category is required"),
+    ),
+    // .min(1, "Sub-category is required")
+    // .required("Sub-Category is required"),
   contacts: Yup.array()
     .of(
       Yup.object().shape({
@@ -537,9 +537,9 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
         label: Yup.string().trim().required("Label is required"),
         value: Yup.string().trim().required("Value is required"),
       })
-    )
-    .min(1, "Sub-category is required")
-    .required("Sub-Category is required"),
+    ),
+    // .min(1, "Sub-category is required")
+    // .required("Sub-Category is required"),
 });
 
 export interface IVendorProfileUpdateSchema
@@ -658,9 +658,9 @@ export const creatorStoreSetUpSchema = Yup.object().shape({
         label: Yup.string().trim().required("Label is required"),
         value: Yup.string().trim().required("Value is required"),
       })
-    )
-    .min(1, "Sub-category is required")
-    .required("Sub-Category is required"), // Ensure at least one sub-category is selected
+    ),
+    // .min(1, "Sub-category is required")
+    // .required("Sub-Category is required"), // Ensure at least one sub-category is selected
   profile_image: Yup.string().trim().required("Profile Image is required"),
   banner_image: Yup.string().trim().required("Banner Image is required"),
   showTrending: Yup.boolean(),

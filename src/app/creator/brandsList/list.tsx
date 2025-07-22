@@ -191,7 +191,7 @@ export default function BrandList() {
           setCurrentPage(1);
           setHasMore(false);
         }
-        if (response?.data?.data?.suggestedList?.list?.length > 0) {
+        if (response?.data?.data?.suggestedList?.suggestedProductList?.length > 0) {
           const productData =
             response?.data?.data?.suggestedList?.suggestedProductList;
           const productCount = response?.data?.data?.suggestedList?.total;
@@ -380,10 +380,10 @@ export default function BrandList() {
             />
           )}
           {suggestedProductList?.length > 0 ? (
-            <div className="flex flex-col gap-3 h-full bg-white rounded-[20px]">
+            <div className="flex flex-col gap-3 h-full  rounded-[20px]">
               {search && (
                 <div className="font-bold">{`${translate(
-                  "Showing_results_for"
+                  "Suggested_Products_for"
                 )} "${search}"`}</div>
               )}
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-2 md:gap-4 h-full  overflow-auto">

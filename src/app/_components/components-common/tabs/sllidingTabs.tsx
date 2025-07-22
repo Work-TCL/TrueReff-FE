@@ -45,7 +45,7 @@ export const SlidingTabBar = ({
                 isActive ? "scale-105" : "hover:scale-105"
               }`}
               onClick={() =>
-                index < activeTabIndex ? setActiveTabIndex(index) : null
+                setActiveTabIndex(index)
               }
             >
               <Icon

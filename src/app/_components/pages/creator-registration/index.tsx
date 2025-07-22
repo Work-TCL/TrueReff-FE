@@ -229,7 +229,7 @@ export default function CreatorRegistrationPage() {
       data.category.length > 0 && data.category.forEach((ele, index) => {
         formData.append(`category[${index}]`, ele?.value);
       })
-      data.sub_category.length > 0 && data.sub_category.forEach((ele, index) => {
+      data.sub_category && data.sub_category.length > 0 && data.sub_category.forEach((ele, index) => {
         formData.append(`sub_category[${index}]`, ele?.value);
       })
       data.tags.length > 0 && data.tags.forEach((ele, index) => {
@@ -516,6 +516,22 @@ export default function CreatorRegistrationPage() {
     }
   };
 
+  const handleTabChange = (index: number) => {
+    if (index > activeTab) {
+      if (index === TABS_STATUS.BASIC_DETAILS) {
+          router.push(`?tab=${index}`);
+      } else if (index === TABS_STATUS.SOCIAL_MEDIA && creatorDetails?.completed_step >= 1) {
+          router.push(`?tab=${index}`);
+      } else if (index === TABS_STATUS.STORE_SETUP && creatorDetails?.completed_step >= 2) {
+          router.push(`?tab=${index}`);
+      } else {
+        toastMessage.info(`Please complete the ${allTabs[index - 1]?.name} first.`);
+      }
+    } else {
+      router.push(`?tab=${index}`);
+    }
+  };
+
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 md:pt-5 pt-5 pb-2  overflow-hidden flex flex-col gap-8">
       {isCreatorLoading && <Loader />}
@@ -535,7 +551,7 @@ export default function CreatorRegistrationPage() {
             </div> */}
             <SlidingTabBar
               tabs={allTabs}
-              setActiveTabIndex={(v) => router.push(`?tab=${v}`)}
+              setActiveTabIndex={handleTabChange}
               activeTabIndex={activeTab}
               grid={3}
             />

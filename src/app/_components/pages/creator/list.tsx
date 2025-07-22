@@ -100,7 +100,7 @@ export default function CreatorList() {
   const [pageSize] = useState(20);
   const fetchCategory = async () => {
     try {
-      const response = await getCategories({ page: 0, limit: 0 });
+      const response = await getCategories({ page: 0, limit: 0,type: "creator" });
       const data = response?.data?.data || [];
       setCategories(data);
       setParentCategory(data.filter((ele) => ele?.parentId === null));

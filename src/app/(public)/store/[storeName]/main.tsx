@@ -227,7 +227,7 @@ export default function PublicCreatorStore({
         data.category.forEach((ele, index) => {
           formData.append(`category[${index}]`, ele?.value);
         });
-      data.sub_category.length > 0 &&
+      data.sub_category && data.sub_category.length > 0 &&
         data.sub_category.forEach((ele, index) => {
           formData.append(`sub_category[${index}]`, ele?.value);
         });
