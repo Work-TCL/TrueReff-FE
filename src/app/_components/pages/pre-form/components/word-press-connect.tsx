@@ -36,7 +36,7 @@ const channelsTypes: IChannelTypes[] = [
     icon: "/assets/vendor/word-press.webp",
     name: "wordpress",
     inputName: "wordpress_store_id",
-    bgColor: "bg-gradient-to-r from-[#6EC1E4] via-[#003B5C] to-[#21759B]",
+    bgColor: "bg-gradient-to-r from-[#21759B]  to-[#6EC1E4]",
   },
 ];
 export default function WordPressChannelForm({

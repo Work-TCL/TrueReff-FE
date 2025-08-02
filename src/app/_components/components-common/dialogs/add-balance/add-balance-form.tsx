@@ -76,7 +76,6 @@ export default function AddBalanceForm({
   //   }
   // };
   const handleCheckout = (payment_session_id:string) => {
-    console.log("payment_session_id",payment_session_id)
     const cashfree = window.Cashfree({
       mode: 'production', // or 'production'
     });

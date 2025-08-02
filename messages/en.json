@@ -706,5 +706,11 @@
   "Notifications": "Notifications",
   "Main_Balance_Tooltip": "Withdrawable balance you can request payout for.",
   "creator_bio": "Creator's bio",
-  "blocking_commission_days": "Blocking Commission Days"
+  "blocking_commission_days": "Blocking Commission Days",
+  "Generate_key": "Generate Shopify Key",
+  "Download": "Download",
+  "Shopify_Key": "Use This Key to connect your Shopify store with TrueReff",
+  "Shopify_Key_Desc": "This key is used to connect your Shopify store with TrueReff. Please keep it secure and do not share it publicly.",
+  "Shopify_Connect": "After installing the app, please reload the page.",
+  "Domain": "Domain"
 }

@@ -3,6 +3,8 @@ import ToolTip from "@/app/_components/components-common/tool-tip";
 import Button from "@/app/_components/ui/button";
 import Input from "@/app/_components/ui/form/Input";
 import { cn } from "@/lib/utils/commonUtils";
+import { toastMessage } from "@/lib/utils/toast-message";
+import axios from "@/lib/web-api/axios";
 import { InfoIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
@@ -36,7 +38,7 @@ const channelsTypes: IChannelTypes[] = [
     icon: "/assets/vendor/shopify-image.png",
     name: "shopify",
     inputName: "shopify_store_id",
-    bgColor: "bg-gradient-to-r from-[#C8E6A3] via-[#4B7035] to-[#7FB743]",
+    bgColor: "bg-gradient-to-r from-[#7FB743]  to-[#C8E6A3]",
   },
 ];
 export default function ChannelForm({
@@ -46,6 +48,8 @@ export default function ChannelForm({
 }: IChannelFormProps) {
   const translate = useTranslations();
   const [installed, setInstalled] = useState<boolean>(false);
+  const [shopifyKey, setShopifyKey] = useState<string>("");
+  const [keyLoading, setKeyLoading] = useState<boolean>(false);
   const getChannel = (channelName: string) => {
     return channels?.find((ele) => ele?.channelType === channelName) ?? null;
   };
@@ -63,6 +67,36 @@ export default function ChannelForm({
         );
     } else {
       setInstalled(false);
+    }
+  };
+  const generateShopifyKey = async () => {
+    try {
+      const profileSetUpFields: string[] = ["shopify_store_domain"];
+      const isValid = await methods.trigger(profileSetUpFields);
+      if (isValid) {
+        setKeyLoading(true);
+        const response = await axios.post("/channel/shopify/generate-key", {
+          domain: methods.watch("shopify_store_domain"),
+        });
+        if (response.status === 200) {
+          const data = response?.data?.data;
+          setShopifyKey(data?.key);
+        } else {
+          console.error("Failed to generate Shopify key");
+        }
+      }
+    } catch (error) {
+      console.error("Error generating Shopify key:", error);
+    } finally {
+      setKeyLoading(false);
+    }
+  };
+  const handleCopyShopifyKey = async () => {
+    try {
+      await navigator.clipboard.writeText(shopifyKey);
+      toastMessage.success("Link copied to clipboard!");
+    } catch (err) {
+      toastMessage.error("Failed to copy!");
     }
   };
   return (
@@ -100,8 +134,7 @@ export default function ChannelForm({
                   </ToolTip>
                 </div>
               )}
-              {!channel &&
-                (!installed ? (
+              {!channel ? !shopifyKey ? (
                   <div className="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 gap-4 items-start">
                     <div className="sm:col-span-6 md:col-span-6 w-full">
                       <Input
@@ -109,7 +142,7 @@ export default function ChannelForm({
                         placeholder="Enter your Shopify store domain"
                         name={`shopify_store_domain`}
                         type="text"
-                        disabled={loading}
+                        disabled={keyLoading}
                         lableClassName="text-md font-[400] text-dark-100"
                         autoFocus={true}
                       />
@@ -117,64 +150,100 @@ export default function ChannelForm({
                     <div className="sm:col-span-6 md:col-span-2 w-full md:mt-7">
                       <Button
                         type="button"
-                        loading={loading}
+                        loading={keyLoading}
                         className="w-full h-[54px] text-white rounded-lg hover:bg-blue-700 text-sm"
-                        onClick={() => handleOnClick()}
+                        onClick={() => generateShopifyKey()}
                       >
-                        {translate("Install")}
+                        {translate("Generate_key")}
                       </Button>
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 gap-4">
-                    <div className="sm:col-span-6 md:col-span-4 w-full">
+                  <div className="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 gap-4 items-start">
+                    <div className="sm:col-span-6 md:col-span-6 w-full">
                       <Input
                         label={translate("Shopify_Store_Domain")}
                         placeholder="Enter your Shopify store domain"
                         name={`shopify_store_domain`}
                         type="text"
-                        disabled={loading}
+                        disabled={(keyLoading || shopifyKey) ? true : false}
                         lableClassName="text-md font-[400] text-dark-100"
                         autoFocus={true}
                       />
                     </div>
-                    <div className="sm:col-span-6 md:col-span-4 w-full">
-                      <Input
-                        label={translate("Shopify_Store_Id")}
-                        placeholder="Enter your Shopify store ID"
-                        name={`shopify_store_id`}
-                        type="text"
-                        disabled={loading}
-                        lableClassName="text-md font-[400] text-dark-100"
-                        autoFocus={false}
-                      />
-                    </div>
-                    <div className="sm:col-span-1 md:col-span-1 w-full">
+                    <div className="sm:col-span-2 md:col-span-2 w-full md:mt-7">
                       <Button
-                        type="submit"
-                        loading={loading}
+                        type="button"
+                        loading={keyLoading}
                         className="w-full h-[54px] text-white rounded-lg hover:bg-blue-700 text-sm"
+                        onClick={() => generateShopifyKey()}
+                        disabled={(shopifyKey) ? true : false}
                       >
-                        {translate("Connect")}
+                        {translate("Generate_key")}
                       </Button>
                     </div>
+                    <div className="sm:col-span-6 md:col-span-6 w-full">
+                      <Input
+                        label={translate("Shopify_Key")}
+                        placeholder="Enter your Shopify store ID"
+                        name={`shopify_store_id`}
+                        type="textarea"
+                        disabled={(keyLoading || shopifyKey) ? true : false}
+                        lableClassName="text-md font-[400] text-dark-100"
+                        value={shopifyKey}
+                        required={false}
+                      />
+                    </div>
+                    <div className="sm:col-span-3 md:col-span-2 w-full md:mt-7">
+                      <div className="flex flex-col sm:flex-row md:flex-col gap-2 items-center justify-center">
+                      <Button
+                        type="button"
+                        loading={keyLoading}
+                        className="w-full h-[54px] text-white rounded-lg hover:bg-blue-700 text-sm"
+                        onClick={() => handleCopyShopifyKey()}
+                      >
+                        {translate("Copy")}
+                      </Button>
+                      <Button
+                        type="button"
+                        loading={keyLoading}
+                        className="w-full h-[54px] text-white rounded-lg hover:bg-blue-700 text-sm"
+                        onClick={() => handleOnClick()}
+                      >
+                        {translate("Install")}
+                      </Button>
+                      </div>
+                    </div>
+                    <div className="col-span-8 w-full md:mt-2">
+                      <div className="text-sm text-primary">
+                        <p className="mb-2">
+                          {translate("Shopify_Key_Desc")}
+                        </p>
+                        <p className="mb-2">
+                          {translate("Shopify_Connect")}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                ))}
-              {channel && (
+                ) :  <>
                 <p className="text-gray-100 mb-4 md:text-base text-sm">
                   {translate("Shopify_Store_connected")}
                 </p>
-              )}
-              {channel && (
-                <div className="text-sm text-gray-100">
+                <div className="flex flex-col gap-2 text-xs sm:text-sm md:text-xl text-gray-100">
+                  <div>
+                    <strong>{translate("Domain")}:</strong>{" "}
+                    <span className=" text-primary py-1 rounded-2xl">
+                      {channel?.channelConfig?.domain}
+                    </span>
+                  </div>
                   <div>
                     <strong>{translate("Status")}:</strong>{" "}
                     <span className="bg-[#FFEDF2] text-primary text-[10px] xl:text-xs px-3 py-1 rounded-2xl">
-                      {channel?.channelStatus}
+                      {"Connected"}
                     </span>
                   </div>
                 </div>
-              )}
+              </>}
             </div>
           </div>
         );
