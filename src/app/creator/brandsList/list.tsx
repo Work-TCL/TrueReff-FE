@@ -13,6 +13,7 @@ import { debounce } from "lodash";
 import { SearchInput } from "@/app/_components/components-common/search-field";
 import ProductCard from "./_components/product-card";
 import CategorySingleSelect from "@/app/_components/components-common/category-only-dropdown";
+import CategorySliderFilter from "@/app/_components/components-common/categoryFilter";
 export interface ICollaboration {
   _id: string;
   productId: string;
@@ -183,15 +184,19 @@ export default function BrandList() {
             ele.tag = ele.tags?.join(",");
             return { ...ele };
           });
-          let more = (page === 1 ? [...data] : [...productList, ...data])?.length < productCount;
+          let more =
+            (page === 1 ? [...data] : [...productList, ...data])?.length <
+            productCount;
           setHasMore(more);
-          setProductList(page === 1 ? [...data] : [...productList, ...data])
+          setProductList(page === 1 ? [...data] : [...productList, ...data]);
         } else {
           setProductList([]);
           setCurrentPage(1);
           setHasMore(false);
         }
-        if (response?.data?.data?.suggestedList?.suggestedProductList?.length > 0) {
+        if (
+          response?.data?.data?.suggestedList?.suggestedProductList?.length > 0
+        ) {
           const productData =
             response?.data?.data?.suggestedList?.suggestedProductList;
           const productCount = response?.data?.data?.suggestedList?.total;
@@ -241,24 +246,23 @@ export default function BrandList() {
     }, 500),
     []
   );
-  const handleUpdateProduct = (id: string,collaboration:any) => {
-    const  updatedProductList = productList.map((product) => {
+  const handleUpdateProduct = (id: string, collaboration: any) => {
+    const updatedProductList = productList.map((product) => {
       if (product._id === id) {
-        return {...product,collaboration: collaboration};
+        return { ...product, collaboration: collaboration };
       }
       return product;
     });
     setProductList(updatedProductList);
     const updatedSuggestedProductList = suggestedProductList.map((product) => {
       if (product._id === id) {
-        return {...product,collaboration: collaboration};
+        return { ...product, collaboration: collaboration };
       }
       return product;
     });
     setSuggestedProductList(updatedSuggestedProductList);
-  }
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  };
+  const handleSearch = (value: string) => {
     setSearch(value);
     if (!value) {
       setBrands([]);
@@ -273,7 +277,13 @@ export default function BrandList() {
     setSearch(vendor?.business_name);
     setBrands([]);
     setSearchProductList([]);
-    getBrandProductList(1, true, search, vendor?._id, selectedCategories);
+    getBrandProductList(
+      1,
+      true,
+      vendor?.business_name,
+      vendor?._id,
+      selectedCategories
+    );
     setVendorId(vendor?._id);
     setCurrentPage(1);
   };
@@ -284,21 +294,27 @@ export default function BrandList() {
   };
   return (
     <div className={`flex flex-col p-2 md:p-4 gap-2 md:gap-4 h-full`}>
+      <CategorySliderFilter
+        onChange={handleSelectCategory}
+        isIncludeSearch
+        onSearch={handleSearch}
+        search={search}
+      />
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center flex-row gap-2">
-            <SearchInput
+          {/* <div className="flex justify-between items-center flex-row gap-2"> */}
+          {/* <SearchInput
               value={search}
               onChange={handleSearch}
               placeholder={"Search Brand or Product..."}
               className="md:max-w-[700px]"
-            />
-            <div className="flex md:flex-row flex-col gap-2 md:w-auto justify-end md:items-center items-end">
+            /> */}
+          {/* <div className="flex md:flex-row flex-col gap-2 md:w-auto justify-end md:items-center items-end">
               <CategorySingleSelect onChange={handleSelectCategory} />
-            </div>
-            {/* <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
+            </div> */}
+          {/* <div className="flex md:flex-row flex-col gap-2 justify-end items-center">
               <BrandFilter onChange={handleOnFilter} />
               <PiListChecksLight
                 className={`cursor-pointer md:size-[30px] size-6 ${
@@ -313,47 +329,49 @@ export default function BrandList() {
                 onClick={() => setViewMode("card")}
               />
             </div> */}
-          </div>
+          {/* </div> */}
           {internalLoader && !hasMore && <Loader />}
-          {(brands?.length > 0 || searchProductList?.length > 0) && <div className="flex flex-col gap-2">
-            {brands?.length > 0 &&
-              brands?.map((brand: Brand, index: number) => (
-                <div
-                  key={index}
-                  className="flex items-center cursor-pointer gap-4"
-                  onClick={() => handleOnSearch(brand)}
-                >
-                  <img
-                    src={
-                      brand?.profile_image
-                        ? brand?.profile_image
-                        : "/assets/product/image-square.svg"
-                    }
-                    alt={brand?.business_name}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <span className="text-black">{brand?.business_name}</span>
-                </div>
-              ))}
-            {searchProductList?.length > 0 &&
-              searchProductList?.map((product: IProduct, index: number) => (
-                <div
-                  key={index}
-                  className="flex items-center cursor-pointer gap-4"
-                >
-                  <img
-                    src={
-                      product?.media?.length > 0
-                        ? product?.media[0]
-                        : "/assets/product/image-square.svg"
-                    }
-                    alt={"Product Image"}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <span className="text-black">{`${product?.title}`}</span>
-                </div>
-              ))}
-          </div>}
+          {(brands?.length > 0 || searchProductList?.length > 0) && (
+            <div className="flex flex-col gap-2">
+              {brands?.length > 0 &&
+                brands?.map((brand: Brand, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center cursor-pointer gap-4"
+                    onClick={() => handleOnSearch(brand)}
+                  >
+                    <img
+                      src={
+                        brand?.profile_image
+                          ? brand?.profile_image
+                          : "/assets/product/image-square.svg"
+                      }
+                      alt={brand?.business_name}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-black">{brand?.business_name}</span>
+                  </div>
+                ))}
+              {searchProductList?.length > 0 &&
+                searchProductList?.map((product: IProduct, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center cursor-pointer gap-4"
+                  >
+                    <img
+                      src={
+                        product?.media?.length > 0
+                          ? product?.media[0]
+                          : "/assets/product/image-square.svg"
+                      }
+                      alt={"Product Image"}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-black">{`${product?.title}`}</span>
+                  </div>
+                ))}
+            </div>
+          )}
           {productList?.length > 0 ? (
             <div className="flex flex-col gap-3 rounded-[20px]">
               {search ? (

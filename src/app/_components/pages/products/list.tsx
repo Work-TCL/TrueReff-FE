@@ -35,6 +35,7 @@ import StatusBadge from "../../components-common/status-badge";
 import { cn } from "@sohanemon/utils";
 import { currency, formatNumber } from "@/lib/utils/constants";
 import toast from "react-hot-toast";
+import CategorySliderFilter from "../../components-common/categoryFilter";
 
 export interface ICategory {
   _id: string;
@@ -177,14 +178,18 @@ export default function ProductList() {
     }, 500),
     []
   );
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
+  const handleSearch = (value: string) => {
     setSearch(value);
     debouncedSearch(value, [...selectedCategories]);
   };
   const handleSelectCategory = (selectedOptions: any) => {
-    setSelectedCategories(selectedOptions);
-    fetProductsList(1, true, search, [...selectedOptions]);
+    setSelectedCategories(selectedOptions ? [selectedOptions] : []);
+    fetProductsList(
+      1,
+      true,
+      search,
+      selectedOptions ? [...[selectedOptions]] : []
+    );
   };
 
   const productColumns: ColumnDef<IProduct>[] = [
@@ -418,24 +423,30 @@ export default function ProductList() {
   };
   return (
     <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4 h-full">
+      <CategorySliderFilter
+        isIncludeSearch
+        search={search}
+        onSearch={handleSearch}
+        onChange={handleSelectCategory}
+      />
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center gap-2">
-            <SearchInput
+          {/* <div className="flex justify-between items-center gap-2"> */}
+          {/* <SearchInput
               value={search}
               onChange={handleSearch}
               placeholder={translate("Search_Product")}
-            />
-            <div className="flex flex-row gap-2 justify-end items-center ml-auto">
-              <ProductManageMentFilter
+            /> */}
+          {/* <div className="flex flex-row gap-2 justify-end items-center ml-auto"> */}
+          {/* <ProductManageMentFilter
                 onChange={handleSelectCategory}
                 handleSelectStatus={handleSelectStatus}
-              />
-              {/* <ViewToggle viewMode={viewMode} setViewMode={setViewMode} /> */}
-            </div>
-          </div>
+              /> */}
+          {/* <ViewToggle viewMode={viewMode} setViewMode={setViewMode} /> */}
+          {/* </div> */}
+          {/* </div> */}
           {internalLoading && <Loader />}
           {productList?.length > 0 ? (
             <>

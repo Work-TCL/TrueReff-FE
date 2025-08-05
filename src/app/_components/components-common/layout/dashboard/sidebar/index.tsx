@@ -50,30 +50,35 @@ const NavLink = ({
   Icon = undefined,
   label = "",
   hasSubmenu = false,
-  handleToggle = () => { },
+  handleToggle = () => {},
   expended = false,
   isChild = false,
   childIndex,
   childClassName,
-  handleInstall = () => { }
+  handleInstall = () => {},
 }: any) => {
-  const childLinkClasses = `relative block px-4 py-2 rounded-md ${isActive
-    ? "bg-primary-color text-white"
-    : "text-gray-500 hover:text-gray-700"
-    } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${childIndex === 0 ? "before:h-7" : "before:h-16"
-    } text-nowrap text-[14px] ${childClassName}`;
+  const childLinkClasses = `relative block px-4 py-2 rounded-md ${
+    isActive
+      ? "bg-primary-color text-white"
+      : "text-gray-500 hover:text-gray-700"
+  } before:absolute before:-left-5 before:bottom-1/2 before:w-5 before:border-b-2 before:border-l-2 before:border-gray-300 before:rounded-bl-xl ${
+    childIndex === 0 ? "before:h-7" : "before:h-16"
+  } text-nowrap text-[14px] ${childClassName}`;
 
   const classNames = isChild
     ? childLinkClasses
-    : `relative flex ${hasSubmenu ? "justify-between" : ""
-    } items-center text-[16px] cursor-pointer px-4 py-3 rounded-md text-nowrap  ${isActive
-      ? hasSubmenu
-        ? "bg-pink-100 text-black"
-        : "bg-primary-color text-white"
-      : "text-font-grey hover:bg-pink-100"
-    } `;
-  const iconClassNames = `w-5 h-5 shrink-0 ${isActive ? (hasSubmenu ? "text-black" : "text-white") : "text-font-grey"
-    }`;
+    : `relative flex ${
+        hasSubmenu ? "justify-between" : ""
+      } items-center text-[16px] cursor-pointer px-4 py-3 rounded-md text-nowrap  ${
+        isActive
+          ? hasSubmenu
+            ? "bg-pink-100 text-black"
+            : "bg-primary-color text-white"
+          : "text-font-grey hover:bg-pink-100"
+      } `;
+  const iconClassNames = `w-5 h-5 shrink-0 ${
+    isActive ? (hasSubmenu ? "text-black" : "text-white") : "text-font-grey"
+  }`;
   if (hasSubmenu) {
     return (
       <div className={classNames} onClick={handleToggle}>
@@ -83,8 +88,9 @@ const NavLink = ({
         </div>
         <div>
           <BsChevronDown
-            className={`ml-auto w-5 h-5 transition-transform duration-300 ease-in-out ${expended ? "rotate-180" : ""
-              }`}
+            className={`ml-auto w-5 h-5 transition-transform duration-300 ease-in-out ${
+              expended ? "rotate-180" : ""
+            }`}
           />
         </div>
       </div>
@@ -92,10 +98,7 @@ const NavLink = ({
   }
   if (link === "install-app") {
     return (
-      <span
-        className={`${classNames} gap-3`}
-        onClick={handleInstall}
-      >
+      <span className={`${classNames} gap-3`} onClick={handleInstall}>
         {Icon && <Icon className={iconClassNames} />}
         {label && <span>{label}</span>}
       </span>
@@ -159,7 +162,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     //   ],
     // },
     {
-      label: translate("Product_Lists"),
+      label: translate("My_Products"),
       icon: Box,
       link: "/vendor/products",
     },
@@ -281,9 +284,9 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       setIsVisible(true);
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener("beforeinstallprompt", handler);
 
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
   const handleInstall = async () => {
     if (!deferredPrompt) return;
@@ -292,10 +295,9 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     prompt.prompt();
 
     const choiceResult = await prompt.userChoice;
-    if (choiceResult.outcome === 'accepted') {
-      toastMessage.success("App Installed Successfully.")
+    if (choiceResult.outcome === "accepted") {
+      toastMessage.success("App Installed Successfully.");
     } else {
-
     }
 
     setDeferredPrompt(null);
@@ -313,8 +315,9 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
     <>
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-[9999] transition-all duration-300 ease-in-out shadow-lg  ${isSidebarExpanded ? "w-[300px]" : "w-[75px]"
-          }`}
+        className={`lg:flex hidden relative max-w-[300px] h-screen bg-white flex-col top-0 left-0 z-[9999] transition-all duration-300 ease-in-out shadow-lg  ${
+          isSidebarExpanded ? "w-[300px]" : "w-[75px]"
+        }`}
       >
         <div className="flex justify-center gap-10  ">
           <div
@@ -376,8 +379,8 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                                 !lg
                                   ? child.label
                                   : isSidebarExpanded
-                                    ? child.label
-                                    : ""
+                                  ? child.label
+                                  : ""
                               }
                               isChild
                               childIndex={idx}
@@ -460,12 +463,14 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                       side="right"
                     >
                       <div className="flex flex-col gap-1 pl-4 ">
-                        {(item.link === 'install-app') ? <span
-                          className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
-                          onClick={() => handleInstall()}
-                        >
-                          {item?.label}
-                        </span> : (
+                        {item.link === "install-app" ? (
+                          <span
+                            className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
+                            onClick={() => handleInstall()}
+                          >
+                            {item?.label}
+                          </span>
+                        ) : (
                           <Link
                             key={item.link}
                             href={item.link ?? ""}
@@ -484,46 +489,54 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               )}
             </div>
           ))}
-          {isVisible && <>{isSidebarExpanded ? <NavLink
-              key={'install-app'}
-              handleToggle={() => {
-                handleToggleMenu();
-              }}
-              link={"install-app"}
-              isActive={false}
-              Icon={ArrowDownToLine}
-              label={translate("Install_App")}
-              handleInstall={handleInstall}
-            /> : <ToolTipProvider delayDuration={0}>
-            <Tooltip>
-              <Tooltip.Trigger>
+          {isVisible && (
+            <>
+              {isSidebarExpanded ? (
                 <NavLink
-                  key={'install-app'}
+                  key={"install-app"}
                   handleToggle={() => {
                     handleToggleMenu();
                   }}
                   link={"install-app"}
                   isActive={false}
                   Icon={ArrowDownToLine}
-                  label={isSidebarExpanded && translate("Install_App")}
+                  label={translate("Install_App")}
                   handleInstall={handleInstall}
                 />
-              </Tooltip.Trigger>
-              <Tooltip.Content
-                className="bg-white rounded-r-md px-2 py-[9px] text-gray-500 hover:text-gray-700"
-                side="right"
-              >
-                <div className="flex flex-col gap-1 pl-4 ">
-                  <span
-                    className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
-                    onClick={() => handleInstall()}
-                  >
-                    {translate("Install_App")}
-                  </span>
-                </div>
-              </Tooltip.Content>
-            </Tooltip>
-          </ToolTipProvider>}</>}
+              ) : (
+                <ToolTipProvider delayDuration={0}>
+                  <Tooltip>
+                    <Tooltip.Trigger>
+                      <NavLink
+                        key={"install-app"}
+                        handleToggle={() => {
+                          handleToggleMenu();
+                        }}
+                        link={"install-app"}
+                        isActive={false}
+                        Icon={ArrowDownToLine}
+                        label={isSidebarExpanded && translate("Install_App")}
+                        handleInstall={handleInstall}
+                      />
+                    </Tooltip.Trigger>
+                    <Tooltip.Content
+                      className="bg-white rounded-r-md px-2 py-[9px] text-gray-500 hover:text-gray-700"
+                      side="right"
+                    >
+                      <div className="flex flex-col gap-1 pl-4 ">
+                        <span
+                          className={`text-gray-500 hover:text-gray-700 hover:bg-pink-100 px-2 py-1 cursor-pointer rounded-sm`}
+                          onClick={() => handleInstall()}
+                        >
+                          {translate("Install_App")}
+                        </span>
+                      </div>
+                    </Tooltip.Content>
+                  </Tooltip>
+                </ToolTipProvider>
+              )}
+            </>
+          )}
         </nav>
         <div
           className={cn(
@@ -546,8 +559,9 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
 
       <aside
         id="sidebar-multi-level-sidebar"
-        className={`max-w-[250px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-[9999] transition-transform ${expanded ? "-translate-x-full" : "shadow-lg"
-          }`}
+        className={`max-w-[250px] w-full h-screen bg-white flex flex-col fixed top-0 left-0 lg:hidden z-[9999] transition-transform ${
+          expanded ? "-translate-x-full" : "shadow-lg"
+        }`}
       >
         <div className="flex justify-end">
           <div className="p-4 text-primary-color font-bold text-4xl text-center">
@@ -576,8 +590,8 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                     )}
                     handleToggle={() => {
                       handleExpandSidebar();
-                      toggleMenu(item.label, false)}
-                    }
+                      toggleMenu(item.label, false);
+                    }}
                     label={item.label}
                     Icon={item.icon}
                     hasSubmenu
@@ -592,7 +606,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                             link={child.link}
                             handleToggle={() => {
                               handleExpandSidebar();
-                              toggleMenu(item.label, true)
+                              toggleMenu(item.label, true);
                             }}
                             isActive={pathname === child.link}
                             label={child.label}
@@ -618,9 +632,9 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               )}
             </div>
           ))}
-          {isVisible &&
+          {isVisible && (
             <NavLink
-              key={'install-app'}
+              key={"install-app"}
               handleToggle={() => {
                 handleToggleMenu();
               }}
@@ -629,7 +643,8 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
               Icon={ArrowDownToLine}
               label={translate("Install_App")}
               handleInstall={handleInstall}
-            />}
+            />
+          )}
         </nav>
       </aside>
     </>
