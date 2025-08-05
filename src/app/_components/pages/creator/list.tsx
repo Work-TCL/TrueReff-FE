@@ -211,7 +211,7 @@ export default function CreatorList() {
 
   const handleSearch = (value: string) => {
     setSearch(value);
-    debouncedSearch(value, []);
+    debouncedSearch(value);
   };
   const handleOnFilter = (filterState: any) => {
     getCreatorList(1, true, search, filterState);
