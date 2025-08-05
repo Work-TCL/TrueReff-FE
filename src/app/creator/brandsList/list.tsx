@@ -14,6 +14,7 @@ import { SearchInput } from "@/app/_components/components-common/search-field";
 import ProductCard from "./_components/product-card";
 import CategorySingleSelect from "@/app/_components/components-common/category-only-dropdown";
 import CategorySliderFilter from "@/app/_components/components-common/categoryFilter";
+import { useRouter } from "next/navigation";
 export interface ICollaboration {
   _id: string;
   productId: string;
@@ -75,6 +76,7 @@ export default function BrandList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const router = useRouter();
   const [vendorId, setVendorId] = useState<string>("");
   const [brands, setBrands] = useState<Brand[]>([]);
   const [searchProductList, setSearchProductList] = useState<IProduct[]>([]);
@@ -292,6 +294,10 @@ export default function BrandList() {
     setSelectedCategories(selectedOptions);
     getBrandProductList(currentPage, true, search, vendorId, selectedOptions);
   };
+
+  const handleDetailView = (id: string) => {
+    router.push(`/creator/product-management/${id}`);
+  };
   return (
     <div className={`flex flex-col p-2 md:p-4 gap-2 md:gap-4 h-full`}>
       <CategorySliderFilter
@@ -332,7 +338,7 @@ export default function BrandList() {
           {/* </div> */}
           {internalLoader && !hasMore && <Loader />}
           {(brands?.length > 0 || searchProductList?.length > 0) && (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 max-w-sm w-full mx-auto">
               {brands?.length > 0 &&
                 brands?.map((brand: Brand, index: number) => (
                   <div
@@ -357,6 +363,7 @@ export default function BrandList() {
                   <div
                     key={index}
                     className="flex items-center cursor-pointer gap-4"
+                    onClick={() => handleDetailView(product._id)}
                   >
                     <img
                       src={

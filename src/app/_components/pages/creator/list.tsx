@@ -21,6 +21,7 @@ import { ViewToggle } from "../../components-common/view-toggle";
 import { SearchInput } from "../../components-common/search-field";
 import CreatorFilter from "./creator-filter";
 import { getCategories } from "@/lib/web-api/auth";
+import CategorySliderFilter from "../../components-common/categoryFilter";
 export interface ICategory {
   _id: string;
   name: string;
@@ -100,7 +101,11 @@ export default function CreatorList() {
   const [pageSize] = useState(20);
   const fetchCategory = async () => {
     try {
-      const response = await getCategories({ page: 0, limit: 0,type: "creator" });
+      const response = await getCategories({
+        page: 0,
+        limit: 0,
+        type: "creator",
+      });
       const data = response?.data?.data || [];
       setCategories(data);
       setParentCategory(data.filter((ele) => ele?.parentId === null));
@@ -203,13 +208,19 @@ export default function CreatorList() {
     }, 500),
     []
   );
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-    debouncedSearch(value);
+
+  const handleSearch = (value: string) => {
     setSearch(value);
+    debouncedSearch(value, []);
   };
   const handleOnFilter = (filterState: any) => {
     getCreatorList(1, true, search, filterState);
+  };
+  const handleSelectCategory = (selectedOptions: any, subSelected: any) => {
+    getCreatorList(1, true, search, {
+      category: selectedOptions ? [selectedOptions] : [],
+      subCategory: subSelected ? [subSelected] : [],
+    });
   };
   return (
     <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4 h-full">
@@ -218,17 +229,23 @@ export default function CreatorList() {
       ) : (
         <>
           <div className="flex justify-between items-center flex-wrap gap-2">
-            <SearchInput
+            {/* <SearchInput
               value={search}
               onChange={handleSearch}
               placeholder={translate("Search_creator")}
+            /> */}
+            <CategorySliderFilter
+              isIncludeSearch
+              search={search}
+              onSearch={handleSearch}
+              onChange={handleSelectCategory}
             />
             <div className="flex items-center xsmobile:justify-between gap-[10px] md:w-fit w-full">
-              <CreatorFilter
+              {/* <CreatorFilter
                 categories={categories}
                 parentCategory={parentCategory}
                 onChange={handleOnFilter}
-              />
+              /> */}
               <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>

@@ -11,7 +11,7 @@ import Categories from "@/app/(user)/dashboard/_component/categories";
 import { usePathname } from "next/navigation";
 
 interface ICategorySliderFilter {
-  onChange?: (category: string) => void;
+  onChange?: (category: string, subCategory?: string) => void;
   onSearch?: (val: string) => void;
   isIncludeSearch?: boolean;
   search?: string;
@@ -87,12 +87,18 @@ export default function CategorySliderFilter({
     }
   };
 
-  const handleOnSelectCategory = (category: string) => {
-    if (category === activeCategory) return;
+  const handleOnSelectCategory = (
+    category: string,
+    subCategory: string = "All"
+  ) => {
     setActiveCategoryTabId(category);
     setActiveSubCategoryTabId("All");
     setSubCategories([initialCategory]);
-    onChange && onChange(category === "All" ? "" : category);
+    onChange &&
+      onChange(
+        category === "All" ? "" : category,
+        subCategory === "All" ? "" : subCategory
+      );
   };
   return (
     <div className="flex flex-col max-w-[1200px] mx-auto p-2 md:p-4 space-y-3 justify-center">
@@ -111,6 +117,7 @@ export default function CategorySliderFilter({
           categories={subCategories}
           activeCategory={activeSubCategory}
           setActiveCategoryTabId={setActiveSubCategoryTabId}
+          onChange={(cat) => handleOnSelectCategory(activeCategory, cat)}
         />
       )}
       {/* {activeCategory === "All" ? (

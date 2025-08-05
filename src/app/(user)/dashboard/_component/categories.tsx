@@ -144,7 +144,8 @@ export default function Categories({
                     />
                   )}
                   {activeSearch && search && (
-                    <button
+                    <div
+                      role="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         clearSearch();
@@ -152,7 +153,7 @@ export default function Categories({
                       className="ml-1 text-gray-500 hover:text-red-500 transition"
                     >
                       ✕
-                    </button>
+                    </div>
                   )}
                 </div>
               </TooltipTrigger>
