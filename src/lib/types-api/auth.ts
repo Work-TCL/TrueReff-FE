@@ -254,10 +254,16 @@ export interface IGetCategoryParams {
 export interface ICategoryData {
   _id: string;
   name: string;
-  parentId: string;
+  parentId: {
+    _id: string;
+    name: string;
+    parentId: string;
+    createdAt: string;
+    updatedAt: string;
+  };
   createdAt: string;
   updatedAt: string;
-}
+};
 export interface IGetCategoryResponse {
   status: number;
   message: string;

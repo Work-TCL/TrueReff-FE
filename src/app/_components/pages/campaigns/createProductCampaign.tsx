@@ -490,9 +490,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
   const updateSubCategories = async () => {
     const categoriesId = watchedCategories?.map((v: any) => v.value) || [];
+    console.log("watchedCategories", categories, categoriesId);
 
     const optionsSubCategory = categories.filter((ele) =>
-      categoriesId.includes(ele?.parentId)
+      categoriesId.includes(ele?.parentId?._id)
     );
 
     setSubCategory(optionsSubCategory);

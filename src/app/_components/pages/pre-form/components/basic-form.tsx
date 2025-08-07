@@ -12,7 +12,13 @@ import { useVendorStore } from "@/lib/store/vendor";
 export interface ICategoryData {
   _id: string;
   name: string;
-  parentId: string;
+  parentId: {
+    _id: string;
+    name: string;
+    parentId: string;
+    createdAt: string;
+    updatedAt: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -65,7 +71,7 @@ export default function BasicInfoForm({
         (await methods.watch("category")?.map((v: any) => v.value)) || [];
 
       const optionsSubCategory = await categories.filter((ele:ICategoryData) =>
-        categoriesId?.includes(ele?.parentId)
+        categoriesId?.includes(ele?.parentId?._id)
       );
 
       setSubCategory(optionsSubCategory);
