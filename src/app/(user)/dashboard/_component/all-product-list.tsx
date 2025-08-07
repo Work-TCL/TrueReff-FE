@@ -15,7 +15,13 @@ import ProductCard from "./product-card";
 export interface ICategory {
     _id: string;
     name: string;
-    parentId: string | null;
+    parentId: {
+        _id: string;
+        name: string;
+        parentId: string | null;
+        createdAt?: string; // ISO date string
+        updatedAt?: string; // ISO date string
+    } | null;
     createdAt?: string; // ISO date string
     updatedAt?: string; // ISO date string
 }

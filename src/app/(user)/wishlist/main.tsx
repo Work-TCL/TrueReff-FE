@@ -16,7 +16,7 @@ export default function Landing(){
         {
             name: "All",
             _id: "All",
-            parentId: "",
+            parentId: null,
         }
     ]);
     const [productCategories,setProductCategories] = useState<ICategory[]>([]);

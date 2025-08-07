@@ -28,7 +28,7 @@ export default function CategorySliderFilter({
   const initialCategory: ICategory = {
     name: "ALL",
     _id: "All",
-    parentId: "",
+    parentId: null,
   };
 
   const [categories, setCategories] = useState<ICategory[]>([initialCategory]);
