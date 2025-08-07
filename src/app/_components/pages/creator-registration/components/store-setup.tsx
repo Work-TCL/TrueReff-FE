@@ -46,35 +46,37 @@ export default function StoreSetup({
 }: IProps) {
   const translate = useTranslations();
   const { creator } = useCreatorStore();
-  const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
-  const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
-  useEffect(() => {
-    setParentCategory(categories?.filter((ele: ICategoryData) => ele?.parentId === null));
-  }, [categories]);
+  // const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
+  // const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
+  // useEffect(() => {
+  //   setParentCategory(
+  //     categories?.filter((ele: ICategoryData) => ele?.parentId === null)
+  //   );
+  // }, [categories]);
 
-  useEffect(() => {
-    (async () => {
-      const categoriesId =
-        (await methods.watch("category")?.map((v: any) => v.value)) || [];
+  // useEffect(() => {
+  //   (async () => {
+  //     const categoriesId =
+  //       (await methods.watch("category")?.map((v: any) => v.value)) || [];
 
-      const optionsSubCategory = await categories.filter((ele: ICategoryData) =>
-        categoriesId?.includes(ele?.parentId?._id)
-      );
+  //     const optionsSubCategory = await categories.filter((ele: ICategoryData) =>
+  //       categoriesId?.includes(ele?.parentId?._id)
+  //     );
 
-      setSubCategory(optionsSubCategory);
-      const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
-      const subCategoroies = methods.watch("sub_category") || [];
-      methods.setValue(
-        "sub_category",
-        subCategoroies.filter((v: any) =>
-          availableSubCategoriesIds.includes(v.value)
-        )
-      );
-    })();
-  }, [methods.watch("category"), creator?.category]);
-  const handleTagChange = (value:string[]) => {
-    methods.setValue("tags",value);
-  }
+  //     setSubCategory(optionsSubCategory);
+  //     const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+  //     const subCategoroies = methods.watch("sub_category") || [];
+  //     methods.setValue(
+  //       "sub_category",
+  //       subCategoroies.filter((v: any) =>
+  //         availableSubCategoriesIds.includes(v.value)
+  //       )
+  //     );
+  //   })();
+  // }, [methods.watch("category"), creator?.category]);
+  const handleTagChange = (value: string[]) => {
+    methods.setValue("tags", value);
+  };
   return (
     <div className="flex flex-col gap-4">
       {/* Banner + Profile Section */}
@@ -181,7 +183,7 @@ export default function StoreSetup({
         <div className="col-span-2">
           <TagInput value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
         </div>
-        <div className="md:col-span-1 col-span-2">
+        {/* <div className="md:col-span-1 col-span-2">
           <Input
             label={translate("Category")}
             placeholder={translate("Select_Category")}
@@ -210,7 +212,7 @@ export default function StoreSetup({
             autoFocus={false}
             lableClassName="text-md font-[400]"
           />
-        </div>
+        </div> */}
         <div className="col-span-2 ">
           <Input
             label={translate("Store_Description")}

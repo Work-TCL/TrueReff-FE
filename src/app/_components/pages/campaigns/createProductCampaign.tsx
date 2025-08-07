@@ -826,6 +826,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       label: ele?.name,
                     }))}
                     autoFocus={false}
+                    required={false}
                   />
                 </div>
               </div>

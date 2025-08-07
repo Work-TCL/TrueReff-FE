@@ -182,14 +182,16 @@ export default function ProductList() {
     setSearch(value);
     debouncedSearch(value, [...selectedCategories]);
   };
-  const handleSelectCategory = (selectedOptions: any) => {
-    setSelectedCategories(selectedOptions ? [selectedOptions] : []);
-    fetProductsList(
-      1,
-      true,
-      search,
-      selectedOptions ? [...[selectedOptions]] : []
-    );
+  const handleSelectCategory = (selectedOptions: any, subSelected: any) => {
+    const newData = [];
+    if (subSelected) {
+      newData.push(subSelected);
+    }
+    if (selectedOptions) {
+      newData.push(selectedOptions);
+    }
+    setSelectedCategories(newData);
+    fetProductsList(1, true, search, selectedOptions ? [...newData] : []);
   };
 
   const productColumns: ColumnDef<IProduct>[] = [

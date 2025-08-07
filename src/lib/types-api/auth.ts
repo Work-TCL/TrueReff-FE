@@ -201,6 +201,8 @@ export interface IPostCreatorRegisterStepOneRequest {
   gender: string;
   dob: string;
   phone: string;
+  category: string[];
+  sub_category: string[];
 }
 export interface IPutUpdateCreatorResponse {
   status: number;
@@ -210,8 +212,8 @@ export interface IPutUpdateCreatorResponse {
 export interface IPutUpdateCreatorRequest {
   full_name: string;
   user_name: string;
-  // email: string;
-  // phone: string;
+  category: string[];
+  sub_category: string[];
   state: string;
   city: string;
   gender: string;
@@ -263,7 +265,7 @@ export interface ICategoryData {
   };
   createdAt: string;
   updatedAt: string;
-};
+}
 export interface IGetCategoryResponse {
   status: number;
   message: string;
@@ -293,7 +295,7 @@ export interface IGetCreatorProgressResponse {
 }
 
 export interface IGetUserNameExistsResponse {
-  exists: boolean
+  exists: boolean;
 }
 export interface IPostCreatorCheckExistRequest {
   user_name: string;

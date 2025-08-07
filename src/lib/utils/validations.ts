@@ -217,8 +217,7 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
     )
     .length(1, "Only one category can be selected")
     .required("Category is required"), // Ensure at least one category is selected
-  sub_category: Yup.array()
-    .of(
+  sub_category: Yup.array().of(
       Yup.object().shape({
         label: Yup.string().trim().required("Label is required"),
         value: Yup.string().trim().required("Value is required"),
@@ -615,6 +614,21 @@ export const creatorOnBoardingSchema = Yup.object().shape({
   city: Yup.string().trim().required("City is required"),
   gender: Yup.string().trim().required("Gender is required"),
   dob: Yup.string().trim().required("Date of Birth is required"),
+  category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
+      })
+    )
+    .length(1, "Only one category can be selected")
+    .required("Category is required"), // Ensure at least one category is selected
+  sub_category: Yup.array().of(
+    Yup.object().shape({
+      label: Yup.string().trim().required("Label is required"),
+      value: Yup.string().trim().required("Value is required"),
+    })
+  ),
 });
 
 export interface ICreatorOnBoardingSchema
@@ -643,22 +657,22 @@ export const creatorStoreSetUpSchema = Yup.object().shape({
     .of(Yup.string().trim().required("Each tag must be a string"))
     .min(1, "At least one tag is required")
     .required("Tags are required"),
-  category: Yup.array()
-    .of(
-      Yup.object().shape({
-        label: Yup.string().trim().required("Label is required"),
-        value: Yup.string().trim().required("Value is required"),
-      })
-    )
-    .min(1, "Category is required")
-    .required("Category is required"), // Ensure at least one category is selected
-  sub_category: Yup.array()
-    .of(
-      Yup.object().shape({
-        label: Yup.string().trim().required("Label is required"),
-        value: Yup.string().trim().required("Value is required"),
-      })
-    ),
+  // category: Yup.array()
+  //   .of(
+  //     Yup.object().shape({
+  //       label: Yup.string().trim().required("Label is required"),
+  //       value: Yup.string().trim().required("Value is required"),
+  //     })
+  //   )
+  //   .min(1, "Category is required")
+  //   .required("Category is required"), // Ensure at least one category is selected
+  // sub_category: Yup.array()
+  //   .of(
+  //     Yup.object().shape({
+  //       label: Yup.string().trim().required("Label is required"),
+  //       value: Yup.string().trim().required("Value is required"),
+  //     })
+  //   ),
     // .min(1, "Sub-category is required")
     // .required("Sub-Category is required"), // Ensure at least one sub-category is selected
   profile_image: Yup.string().trim().required("Profile Image is required"),
@@ -812,6 +826,21 @@ export const creatorProfileUpdateSchema = Yup.object().shape({
     .min(5, "Username must be at least 5 characters")
     .max(20, "Username can't exceed 20 characters"),
   phone: Yup.string().trim(),
+  category: Yup.array()
+    .of(
+      Yup.object().shape({
+        label: Yup.string().trim().required("Label is required"),
+        value: Yup.string().trim().required("Value is required"),
+      })
+    )
+    .min(1, "Category is required")
+    .required("Category is required"), // Ensure at least one category is selected
+  sub_category: Yup.array().of(
+    Yup.object().shape({
+      label: Yup.string().trim().required("Label is required"),
+      value: Yup.string().trim().required("Value is required"),
+    })
+  ),
   // .required("Phone is required")
   // .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
   state: Yup.string().trim().required("State is required"),
@@ -949,15 +978,14 @@ export const campaignProductValidationSchema = Yup.object().shape({
     )
     .min(1, "Category is required")
     .required("Category is required"), // Ensure at least one category is selected
-  sub_category: Yup.array()
-    .of(
+  sub_category: Yup.array().of(
       Yup.object().shape({
         label: Yup.string().trim().required("Label is required"),
         value: Yup.string().trim().required("Value is required"),
       })
-    )
-    .min(1, "Sub Category is required")
-    .required("Sub Category is required"), // Ensure at least one sub-category is selected
+  ),
+  // .min(0, "Sub Category is required")
+  // .required("Sub Category is required"), // Ensure at least one sub-category is selected
   startDate: Yup.date()
     .required("Start date is required")
     .test(

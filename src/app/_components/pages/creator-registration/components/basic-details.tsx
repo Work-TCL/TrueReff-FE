@@ -2,12 +2,13 @@
 import Input, { inputStyle } from "@/app/_components/ui/form/Input";
 import { cities, gender, indianStates } from "@/lib/utils/constants";
 import { debounce, get } from "lodash";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import Select from "react-select";
 import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { fetchUserNameExists } from "@/lib/web-api/auth";
 import { useAuthStore } from "@/lib/store/auth-user";
+import { ICategoryData } from "@/lib/types-api/auth";
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,
@@ -16,17 +17,17 @@ const customStyles = {
     fontWeight: "normal",
   }),
   control: (base: any, state: any) => {
-    return ({
+    return {
       ...base,
       height: "54px",
       borderRadius: "8px",
       color: state.getValue()[0]?.value === "" ? "#9CA3AF" : "#000000",
-    })
+    };
   },
-  singleValue: (provided: any,state:any) => ({
+  singleValue: (provided: any, state: any) => ({
     ...provided,
     color: state.getValue()[0]?.value === "" ? "gray" : "#000000",
-    fontSize: '14px',
+    fontSize: "14px",
   }),
   menu: (base: any) => ({
     ...base,
@@ -36,46 +37,82 @@ const customStyles = {
 interface IBasicInfoFormProps {
   handleOnSelect: (value: any, name: any) => void;
   methods: any;
-  formState: { state: string; city: string; gender: string; dob: string,userName: string; };
+  categories: ICategoryData[];
+  formState: {
+    state: string;
+    city: string;
+    gender: string;
+    dob: string;
+    userName: string;
+  };
 }
 
 export default function BasicInfoForm({
   handleOnSelect,
   methods,
-  formState
+  formState,
+  categories,
 }: IBasicInfoFormProps) {
   const translate = useTranslations();
   const { account } = useAuthStore();
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
+  const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
+  useEffect(() => {
+    setParentCategory(
+      categories?.filter((ele: ICategoryData) => ele?.parentId === null)
+    );
+  }, [categories]);
+
+  useEffect(() => {
+    (async () => {
+      const categoriesId =
+        (await methods.watch("category")?.map((v: any) => v.value)) || [];
+
+      const optionsSubCategory = await categories.filter((ele: ICategoryData) =>
+        categoriesId?.includes(ele?.parentId?._id)
+      );
+
+      setSubCategory(optionsSubCategory);
+      const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+      const subCategoroies = methods.watch("sub_category") || [];
+      methods.setValue(
+        "sub_category",
+        subCategoroies.filter((v: any) =>
+          availableSubCategoriesIds.includes(v.value)
+        )
+      );
+    })();
+  }, [methods.watch("category")]);
   const getUserNameExists = async (value: string) => {
     try {
-      const response = await fetchUserNameExists({user_name: value});
-      if(!response?.exists){
+      const response = await fetchUserNameExists({ user_name: value });
+      if (!response?.exists) {
         methods.setError("user_name", {
           type: "manual",
           message: "",
         });
       }
-    } catch(error) {
+    } catch (error) {
       let errMessage = await getErrorMessage(error);
       methods.setError("user_name", {
         type: "manual",
         message: errMessage,
       });
     }
-  }
+  };
   const debouncedSearch = useCallback(
-      debounce((value: string) => {
-        getUserNameExists(value)
-      }, 500),
-      []
-    );
-    const handleUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
-      let value = e.target.value.toLowerCase();
-      debouncedSearch(value);
-      handleOnSelect(value,'userName');
-      methods.setValue("user_name",value)
-    };
+    debounce((value: string) => {
+      getUserNameExists(value);
+    }, 500),
+    []
+  );
+  const handleUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.toLowerCase();
+    debouncedSearch(value);
+    handleOnSelect(value, "userName");
+    methods.setValue("user_name", value);
+  };
 
   const today = new Date();
   const maxDate = new Date(
@@ -146,21 +183,26 @@ export default function BasicInfoForm({
             value={[
               {
                 value: formState.state,
-                label: formState.state ? formState.state : translate("Select_State"),
+                label: formState.state
+                  ? formState.state
+                  : translate("Select_State"),
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "state")}
-            options={indianStates?.map(ele => ({ value: ele, label: ele }))}
-            menuPortalTarget={typeof document !== "undefined" ? document.body:null} // Renders the dropdown outside of the current scrollable container
+            options={indianStates?.map((ele) => ({ value: ele, label: ele }))}
+            menuPortalTarget={
+              typeof document !== "undefined" ? document.body : null
+            } // Renders the dropdown outside of the current scrollable container
             menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder={translate("Select_State")}
           />
-          {Boolean(get(methods.formState.errors, "state")) && methods.formState.errors["state"]?.message && (
-            <span className="text-red-600 text-sm p-2 block">
-              {methods.formState.errors["state"]?.message}
-            </span>
-          )}
+          {Boolean(get(methods.formState.errors, "state")) &&
+            methods.formState.errors["state"]?.message && (
+              <span className="text-red-600 text-sm p-2 block">
+                {methods.formState.errors["state"]?.message}
+              </span>
+            )}
         </div>
       </div>
       <div className="col-span-1">
@@ -174,21 +216,33 @@ export default function BasicInfoForm({
             value={[
               {
                 value: formState.city,
-                label: formState.city ? formState.city : translate("Select_City"),
+                label: formState.city
+                  ? formState.city
+                  : translate("Select_City"),
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "city")}
-            options={formState.state ? cities[formState?.state]?.map((ele: string) => ({ value: ele, label: ele })) : []}
-            menuPortalTarget={typeof document !== "undefined" ? document.body:null} // Renders the dropdown outside of the current scrollable container
+            options={
+              formState.state
+                ? cities[formState?.state]?.map((ele: string) => ({
+                    value: ele,
+                    label: ele,
+                  }))
+                : []
+            }
+            menuPortalTarget={
+              typeof document !== "undefined" ? document.body : null
+            } // Renders the dropdown outside of the current scrollable container
             menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder={translate("Select_City")}
           />
-          {Boolean(get(methods.formState.errors, "city")) && methods.formState.errors["city"]?.message && (
-            <span className="text-red-600 text-sm p-2 block">
-              {methods.formState.errors["city"]?.message}
-            </span>
-          )}
+          {Boolean(get(methods.formState.errors, "city")) &&
+            methods.formState.errors["city"]?.message && (
+              <span className="text-red-600 text-sm p-2 block">
+                {methods.formState.errors["city"]?.message}
+              </span>
+            )}
         </div>
       </div>
       <div className="col-span-1">
@@ -202,25 +256,30 @@ export default function BasicInfoForm({
             value={[
               {
                 value: formState.gender,
-                label: formState.gender ? formState.gender : translate("Select_Gender"),
+                label: formState.gender
+                  ? formState.gender
+                  : translate("Select_Gender"),
               },
             ]}
             onChange={(value) => handleOnSelect(value?.value, "gender")}
-            options={gender?.map(ele => ({ value: ele, label: ele }))}
-            menuPortalTarget={typeof document !== "undefined" ? document.body:null} // Renders the dropdown outside of the current scrollable container
+            options={gender?.map((ele) => ({ value: ele, label: ele }))}
+            menuPortalTarget={
+              typeof document !== "undefined" ? document.body : null
+            } // Renders the dropdown outside of the current scrollable container
             menuPosition="fixed"
             className="basic-multi-select focus:outline-none focus:shadow-none"
             placeholder={translate("Select_Gender")}
           />
-          {Boolean(get(methods.formState.errors, "gender")) && methods.formState.errors["gender"]?.message && (
-            <span className="text-red-600 text-sm p-2 block">
-              {methods.formState.errors["gender"]?.message}
-            </span>
-          )}
+          {Boolean(get(methods.formState.errors, "gender")) &&
+            methods.formState.errors["gender"]?.message && (
+              <span className="text-red-600 text-sm p-2 block">
+                {methods.formState.errors["gender"]?.message}
+              </span>
+            )}
         </div>
       </div>
       <div className="col-span-1">
-      <div className="flex flex-col">
+        <div className="flex flex-col">
           <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("Date_of_Birth")}
             <span className="text-red-500">*</span>
@@ -239,11 +298,41 @@ export default function BasicInfoForm({
           />
           {Boolean(get(methods.formState.errors, "dob")) &&
             methods.formState.errors["dob"]?.message && (
-            <span className="text-red-600 text-sm p-2 block">
-              {methods.formState.errors["dob"]?.message}
-            </span>
-          )}
+              <span className="text-red-600 text-sm p-2 block">
+                {methods.formState.errors["dob"]?.message}
+              </span>
+            )}
         </div>
+      </div>
+      <div className="md:col-span-1 col-span-2 relative z-10">
+        <Input
+          label={translate("Business_Category")}
+          placeholder={translate("Select_Category")}
+          name="category"
+          type="multiSelectWithTags"
+          options={parentCategory?.map((ele) => ({
+            value: ele?._id,
+            label: ele?.name,
+          }))}
+          // menuPortalTarget={null}
+          max={1}
+          autoFocus={false}
+        />
+      </div>
+      <div className="md:col-span-1 col-span-2 relative z-10">
+        <Input
+          label={translate("Sub_category")}
+          required={false}
+          placeholder={translate("Select_Sub_Category")}
+          name="sub_category"
+          type="multiSelectWithTags"
+          options={subCategory.map((ele) => ({
+            value: ele?._id,
+            label: ele?.name,
+          }))}
+          // menuPortalTarget={null}
+          autoFocus={false}
+        />
       </div>
     </div>
   );

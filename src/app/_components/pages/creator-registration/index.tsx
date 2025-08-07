@@ -110,7 +110,9 @@ export default function CreatorRegistrationPage() {
       state: "",
       city: "",
       gender: "",
-      dob: ""
+      dob: "",
+      category: [],
+      sub_category: [],
     },
     resolver: yupResolver(creatorOnBoardingSchema),
     mode: "onSubmit",
@@ -120,8 +122,8 @@ export default function CreatorRegistrationPage() {
       store_name: "",
       store_description: "",
       tags: [],
-      category: [],
-      sub_category: [],
+      // category: [],
+      // sub_category: [],
       profile_image: "",
       banner_image: "",
     },
@@ -172,6 +174,10 @@ export default function CreatorRegistrationPage() {
         city: data?.city,
         gender: data?.gender,
         dob: data?.dob,
+        category: data.category.map((v) => v.value),
+        sub_category: data.sub_category
+          ? data.sub_category.map((v) => v.value)
+          : [],
       };
 
       const response: any = await creatorRegister(
@@ -226,13 +232,14 @@ export default function CreatorRegistrationPage() {
       formData.append("store_name", data?.store_name);
       formData.append("store_description", data?.store_description);
       formData.append("showTrending", showTrending ? "true" : "false");
-      data.category.length > 0 && data.category.forEach((ele, index) => {
-        formData.append(`category[${index}]`, ele?.value);
-      })
-      data.sub_category && data.sub_category.length > 0 && data.sub_category.forEach((ele, index) => {
-        formData.append(`sub_category[${index}]`, ele?.value);
-      })
-      data.tags.length > 0 && data.tags.forEach((ele, index) => {
+      // data.category.length > 0 && data.category.forEach((ele, index) => {
+      //   formData.append(`category[${index}]`, ele?.value);
+      // })
+      // data.sub_category && data.sub_category.length > 0 && data.sub_category.forEach((ele, index) => {
+      //   formData.append(`sub_category[${index}]`, ele?.value);
+      // })
+      data.tags.length > 0 &&
+        data.tags.forEach((ele, index) => {
         formData.append(`tags[${index}]`, ele);
       })
       if (bannerFile) {
@@ -448,14 +455,20 @@ export default function CreatorRegistrationPage() {
 
   useEffect(() => {
     if (creator?.category?.length > 0) {
-      let parentCategory = categories?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
-      storeMethods.setValue("category", parentCategory);
+      let parentCategory = categories
+        ?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))
+        ?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      methods.setValue("category", parentCategory);
     }
     if (creator?.sub_category?.length > 0) {
-      let subCategory = categories?.filter((ele: ICategoryData) => creator?.sub_category?.includes(ele?._id))?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
-      storeMethods.setValue("sub_category", subCategory);
+      let subCategory = categories
+        ?.filter((ele: ICategoryData) =>
+          creator?.sub_category?.includes(ele?._id)
+        )
+        ?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      methods.setValue("sub_category", subCategory);
     }
-  }, [categories, creator?.category, creator?.sub_category, tab])
+  }, [categories, creator?.category, creator?.sub_category, tab]);
 
   const handleImageSelect = async (
     e: React.ChangeEvent<HTMLInputElement> | any,
@@ -566,6 +579,7 @@ export default function CreatorRegistrationPage() {
                       handleOnSelect={handleOnSelect}
                       methods={methods}
                       formState={formState}
+                        categories={categories}
                     />
                     <div className="flex bg-white">
                       <Button

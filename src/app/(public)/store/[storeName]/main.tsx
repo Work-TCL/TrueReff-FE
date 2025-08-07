@@ -153,8 +153,8 @@ export default function PublicCreatorStore({
       store_name: "",
       store_description: "",
       tags: [],
-      category: [],
-      sub_category: [],
+      // category: [],
+      // sub_category: [],
       profile_image: "",
       banner_image: "",
     },
@@ -178,42 +178,46 @@ export default function PublicCreatorStore({
   }, [store]);
   useEffect(() => {
     if (isCreator && account?.role === "creator") {
-      fetchCategory();
+      // fetchCategory();
     }
   }, [isCreator]);
-  const fetchCategory = async () => {
-    try {
-      const response = await getCategories({ page: 0, limit: 0,type: "creator" });
-      let data = response?.data?.data;
-      setCategories(data);
-    } catch (error: any) {
-      console.log("Error Fetching channels", error.message);
-    }
-  };
+  // const fetchCategory = async () => {
+  //   try {
+  //     const response = await getCategories({
+  //       page: 0,
+  //       limit: 0,
+  //       type: "creator",
+  //     });
+  //     let data = response?.data?.data;
+  //     setCategories(data);
+  //   } catch (error: any) {
+  //     console.log("Error Fetching channels", error.message);
+  //   }
+  // };
   useEffect(() => {
     if (isCreator && account?.role === "creator") {
-      if (store?.category?.length > 0) {
-        let parentCategory = categories
-          ?.filter((ele: ICategoryData) =>
-            creator?.category?.includes(ele?._id)
-          )
-          ?.map((ele: ICategoryData) => ({
-            value: ele?._id,
-            label: ele?.name,
-          }));
-        storeMethods.setValue("category", parentCategory);
-      }
-      if (store?.sub_category?.length > 0) {
-        let subCategory = categories
-          ?.filter((ele: ICategoryData) =>
-            creator?.sub_category?.includes(ele?._id)
-          )
-          ?.map((ele: ICategoryData) => ({
-            value: ele?._id,
-            label: ele?.name,
-          }));
-        storeMethods.setValue("sub_category", subCategory);
-      }
+      // if (store?.category?.length > 0) {
+      //   let parentCategory = categories
+      //     ?.filter((ele: ICategoryData) =>
+      //       creator?.category?.includes(ele?._id)
+      //     )
+      //     ?.map((ele: ICategoryData) => ({
+      //       value: ele?._id,
+      //       label: ele?.name,
+      //     }));
+      //   storeMethods.setValue("category", parentCategory);
+      // }
+      // if (store?.sub_category?.length > 0) {
+      //   let subCategory = categories
+      //     ?.filter((ele: ICategoryData) =>
+      //       creator?.sub_category?.includes(ele?._id)
+      //     )
+      //     ?.map((ele: ICategoryData) => ({
+      //       value: ele?._id,
+      //       label: ele?.name,
+      //     }));
+      //   storeMethods.setValue("sub_category", subCategory);
+      // }
     }
   }, [categories, store?.category, store?.sub_category]);
   const onStoreSetUpSubmit = async (data: ICreatorStoreSetUpSchema,isTrending: boolean) => {
@@ -223,14 +227,15 @@ export default function PublicCreatorStore({
       formData.append("store_name", data?.store_name);
       formData.append("store_description", data?.store_description);
       formData.append("showTrending", data?.showTrending ? "true" : "false");
-      data.category.length > 0 &&
-        data.category.forEach((ele, index) => {
-          formData.append(`category[${index}]`, ele?.value);
-        });
-      data.sub_category && data.sub_category.length > 0 &&
-        data.sub_category.forEach((ele, index) => {
-          formData.append(`sub_category[${index}]`, ele?.value);
-        });
+      // data.category.length > 0 &&
+      //   data.category.forEach((ele, index) => {
+      //     formData.append(`category[${index}]`, ele?.value);
+      //   });
+      // data.sub_category &&
+      //   data.sub_category.length > 0 &&
+      //   data.sub_category.forEach((ele, index) => {
+      //     formData.append(`sub_category[${index}]`, ele?.value);
+      //   });
       data.tags.length > 0 &&
         data.tags.forEach((ele, index) => {
           formData.append(`tags[${index}]`, ele);
@@ -331,30 +336,32 @@ export default function PublicCreatorStore({
     if (isCreator && account?.role === "creator" && store?.store_name) {
       onStoreSetUpSubmit({
         ...store,
-        category:
-          store?.category?.length > 0
-            ? categories
-                ?.filter((ele: ICategoryData) =>
-                  creator?.category?.includes(ele?._id)
-                )
-                ?.map((ele: ICategoryData) => ({
-                  value: ele?._id,
-                  label: ele?.name,
-                }))
-            : [],
-        sub_category:
-          store?.sub_category?.length > 0
-            ? categories
-                ?.filter((ele: ICategoryData) =>
-                  creator?.sub_category?.includes(ele?._id)
-                )
-                ?.map((ele: ICategoryData) => ({
-                  value: ele?._id,
-                  label: ele?.name,
-                }))
-            : [],
-            showTrending: !showTrending
-      },true);
+          // category:
+          //   store?.category?.length > 0
+          //     ? categories
+          //         ?.filter((ele: ICategoryData) =>
+          //           creator?.category?.includes(ele?._id)
+          //         )
+          //         ?.map((ele: ICategoryData) => ({
+          //           value: ele?._id,
+          //           label: ele?.name,
+          //         }))
+          //     : [],
+          // sub_category:
+          //   store?.sub_category?.length > 0
+          //     ? categories
+          //         ?.filter((ele: ICategoryData) =>
+          //           creator?.sub_category?.includes(ele?._id)
+          //         )
+          //         ?.map((ele: ICategoryData) => ({
+          //           value: ele?._id,
+          //           label: ele?.name,
+          //         }))
+          //     : [],
+          showTrending: !showTrending,
+        },
+        true
+      );
     }
   };
 
