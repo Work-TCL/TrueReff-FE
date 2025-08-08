@@ -694,7 +694,14 @@
   "WordPress_Store_Id": "WordPress Store Id",
   "WordPress_Store_connected": "WordPress Store connected",
   "Install": "Install",
-  "Shopify_store_connect_info": "To connect your store, first install the app using your store's domain (e.g., yourstore.myshopify.com). After successful installation, you'll receive a unique Store ID — copy and paste it here to link your store.",
+  "Shopify_store_connect_info": {
+  "title": "Connect Your Shopify Store:",
+  "steps": {
+    "1": "1. Add your Shopify store domain (e.g., aapkastor.myshopify.com).",
+    "2": "2. Click the “Generate Key” button to create your Shopify API key.",
+    "3": "3. Copy the key and paste it into your Shopify store's settings — your store will be connected instantly."
+  }
+},
   "Account_Holder_Name": "Account Holder Name",
   "Enter_your_phone_number": "Enter your phone number",
   "Enter_Account_Holder_Number": "Enter Account Holder Name",

@@ -125,8 +125,13 @@ export default function ChannelForm({
                   </h3>
                   <ToolTip
                     content={
-                      <div className="max-w-[200px] text-sm text-wrap p-2 rounded-lg">
-                        {translate("Shopify_store_connect_info")}
+                      <div className="max-w-[250px] text-sm text-wrap p-2 rounded-lg">
+                        <h2>{translate("Shopify_store_connect_info.title")}</h2>
+                        <ol>
+                          <li key={1}>{translate("Shopify_store_connect_info.steps.1")}</li>
+                          <li key={2}>{translate("Shopify_store_connect_info.steps.2")}</li>
+                          <li key={3}>{translate("Shopify_store_connect_info.steps.3")}</li>
+                        </ol>
                       </div>
                     }
                   >
