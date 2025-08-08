@@ -152,7 +152,7 @@ export default function PublicCreatorStore({
     defaultValues: {
       store_name: "",
       store_description: "",
-      tags: [],
+      // tags: [],
       // category: [],
       // sub_category: [],
       profile_image: "",
@@ -167,7 +167,7 @@ export default function PublicCreatorStore({
     if (store) {
       storeMethods.setValue("store_name", store?.store_name);
       storeMethods.setValue("store_description", store?.store_description);
-      storeMethods.setValue("tags", store?.tags);
+      // storeMethods.setValue("tags", store?.tags);
       storeMethods.setValue("banner_image", store?.banner_image);
       storeMethods.setValue("profile_image", store?.profile_image);
       storeMethods.setValue("showTrending",store?.showTrending)
@@ -236,10 +236,10 @@ export default function PublicCreatorStore({
       //   data.sub_category.forEach((ele, index) => {
       //     formData.append(`sub_category[${index}]`, ele?.value);
       //   });
-      data.tags.length > 0 &&
-        data.tags.forEach((ele, index) => {
-          formData.append(`tags[${index}]`, ele);
-        });
+      // data.tags.length > 0 &&
+      //   data.tags.forEach((ele, index) => {
+      //     formData.append(`tags[${index}]`, ele);
+      //   });
       if (bannerFile) {
         formData.append("banner_image", bannerFile);
       }

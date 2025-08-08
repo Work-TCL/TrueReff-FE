@@ -74,9 +74,7 @@ export default function StoreSetup({
   //     );
   //   })();
   // }, [methods.watch("category"), creator?.category]);
-  const handleTagChange = (value: string[]) => {
-    methods.setValue("tags", value);
-  };
+  
   return (
     <div className="flex flex-col gap-4">
       {/* Banner + Profile Section */}
@@ -179,9 +177,6 @@ export default function StoreSetup({
             placeholder={translate("Enter_Store_Name")}
             lableClassName="text-md font-[400]"
           />
-        </div>
-        <div className="col-span-2">
-          <TagInput value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
         </div>
         {/* <div className="md:col-span-1 col-span-2">
           <Input

@@ -113,6 +113,7 @@ export default function CreatorRegistrationPage() {
       dob: "",
       category: [],
       sub_category: [],
+      tags:[]
     },
     resolver: yupResolver(creatorOnBoardingSchema),
     mode: "onSubmit",
@@ -121,7 +122,7 @@ export default function CreatorRegistrationPage() {
     defaultValues: {
       store_name: "",
       store_description: "",
-      tags: [],
+      // tags: [],
       // category: [],
       // sub_category: [],
       profile_image: "",
@@ -178,6 +179,7 @@ export default function CreatorRegistrationPage() {
         sub_category: data.sub_category
           ? data.sub_category.map((v) => v.value)
           : [],
+          tags: data.tags.length > 0 ? data.tags : [],
       };
 
       const response: any = await creatorRegister(
@@ -238,10 +240,7 @@ export default function CreatorRegistrationPage() {
       // data.sub_category && data.sub_category.length > 0 && data.sub_category.forEach((ele, index) => {
       //   formData.append(`sub_category[${index}]`, ele?.value);
       // })
-      data.tags.length > 0 &&
-        data.tags.forEach((ele, index) => {
-        formData.append(`tags[${index}]`, ele);
-      })
+      
       if (bannerFile) {
         formData.append("banner_image", bannerFile);
       }
@@ -399,7 +398,7 @@ export default function CreatorRegistrationPage() {
         })
         storeMethods.setValue("store_name", creator?.store_name);
         storeMethods.setValue("store_description", creator?.store_description);
-        storeMethods.setValue("tags", creator?.tags);
+        methods.setValue("tags", creator?.tags);
         storeMethods.setValue("profile_image", creator?.profile_image);
         storeMethods.setValue("banner_image", creator?.banner_image);
         setBannerPreview(creator?.banner_image);

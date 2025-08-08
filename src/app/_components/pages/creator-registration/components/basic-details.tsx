@@ -9,6 +9,7 @@ import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import { fetchUserNameExists } from "@/lib/web-api/auth";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { ICategoryData } from "@/lib/types-api/auth";
+import TagInput from "@/components/ui/tag-input";
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,
@@ -127,6 +128,9 @@ export default function BasicInfoForm({
   );
 
   const formatDate = (date: Date) => date.toISOString().split("T")[0];
+  const handleTagChange = (value: string[]) => {
+    methods.setValue("tags", value);
+  };
   return (
     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
       <div className="col-span-1">
@@ -306,7 +310,7 @@ export default function BasicInfoForm({
       </div>
       <div className="md:col-span-1 col-span-2 relative z-10">
         <Input
-          label={translate("Business_Category")}
+          label={translate("Category")}
           placeholder={translate("Select_Category")}
           name="category"
           type="multiSelectWithTags"
@@ -334,6 +338,10 @@ export default function BasicInfoForm({
           autoFocus={false}
         />
       </div>
+      
+      <div className="col-span-2">
+          <TagInput value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
+        </div>
     </div>
   );
 }

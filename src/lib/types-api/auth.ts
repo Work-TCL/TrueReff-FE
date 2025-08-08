@@ -203,6 +203,7 @@ export interface IPostCreatorRegisterStepOneRequest {
   phone: string;
   category: string[];
   sub_category: string[];
+  tags: string[];
 }
 export interface IPutUpdateCreatorResponse {
   status: number;
@@ -219,6 +220,7 @@ export interface IPutUpdateCreatorRequest {
   gender: string;
   dob: string;
   profile_image: any;
+  tags: string[];
 }
 export interface IPostVendorRegisterResponse {
   status: number;

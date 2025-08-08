@@ -25,6 +25,7 @@ import Select from "react-select";
 import { get } from "lodash";
 import { useTranslations } from "next-intl";
 import imageCompression from "browser-image-compression";
+import TagInput from "@/components/ui/tag-input";
 
 const customStyles = {
   placeholder: (base: any) => ({
@@ -90,6 +91,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     }
   };
   const schema = creatorProfileUpdateSchema;
+  console.log("creator", creator);
   const methods = useForm<ICreatorProfileUpdateSchema>({
     defaultValues: {
       full_name: creator?.full_name,
@@ -100,6 +102,8 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       city: creator?.city || "",
       gender: creator?.gender || "",
       dob: creator?.dob || "",
+      tags: creator?.tags || [],
+      
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -125,6 +129,7 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         dob: data?.dob,
         category: [],
         sub_category: [],
+        tags: data?.tags || [],
       };
       data.category.length > 0 &&
         data.category.forEach((ele, index) => {
@@ -318,6 +323,9 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     today.getDate()
   );
   const formatDate = (date: Date) => date.toISOString().split("T")[0];
+  const handleTagChange = (value: string[]) => {
+    methods.setValue("tags", value);
+  };
   return (
     <>
       <FormProvider {...methods}>
@@ -372,6 +380,9 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
                 autoFocus={false}
               />
             </div>
+            <div className="col-span-2">
+                      <TagInput value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
+                    </div>
             <div className="col-span-2">
               <Input
                 label={translate("PhoneNumber")}

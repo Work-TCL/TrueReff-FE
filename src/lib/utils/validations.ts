@@ -629,6 +629,10 @@ export const creatorOnBoardingSchema = Yup.object().shape({
       value: Yup.string().trim().required("Value is required"),
     })
   ),
+  tags: Yup.array()
+    .of(Yup.string().trim().required("Each tag must be a string"))
+    .min(1, "At least one tag is required")
+    .required("Tags are required"),
 });
 
 export interface ICreatorOnBoardingSchema
@@ -653,10 +657,10 @@ export const creatorStoreSetUpSchema = Yup.object().shape({
   store_description: Yup.string()
     .trim()
     .required("Store description is required"),
-  tags: Yup.array()
-    .of(Yup.string().trim().required("Each tag must be a string"))
-    .min(1, "At least one tag is required")
-    .required("Tags are required"),
+  // tags: Yup.array()
+  //   .of(Yup.string().trim().required("Each tag must be a string"))
+  //   .min(1, "At least one tag is required")
+  //   .required("Tags are required"),
   // category: Yup.array()
   //   .of(
   //     Yup.object().shape({
@@ -848,6 +852,10 @@ export const creatorProfileUpdateSchema = Yup.object().shape({
   gender: Yup.string().trim().required("Gender is required"),
   dob: Yup.string().trim().required("Date of Birth is required"),
   profile_image: Yup.string().trim().nullable(),
+  tags: Yup.array()
+    .of(Yup.string().trim().required("Each tag must be a string"))
+    .min(1, "At least one tag is required")
+    .required("Tags are required"),
 });
 
 export interface ICreatorProfileUpdateSchema
