@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useCallback, useEffect, useState } from "react";
+import { startTransition, useCallback, useEffect, useRef, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { CircleFadingPlus, ImageOff, IndianRupee } from "lucide-react";
 import {
@@ -55,6 +55,8 @@ export default function ChannelProductList() {
   const pageSize = 20;
   const translate = useTranslations();
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   // Fetch Chanel list
   useEffect(() => {
     startTransition(async () => {
@@ -68,46 +70,65 @@ export default function ChannelProductList() {
 
   // Update fetProductsList to set both cursors
   const fetchProductsList = async (
-    page: number = 1,
+    page = 1,
     isInternalLoader = false,
-    searchValue: string = ""
+    searchValue = ""
   ) => {
+    // Cancel previous request if running
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create a new controller for this request
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     isInternalLoader ? setInternalLoader(true) : setLoading(true);
+
     try {
       const response = await axios.get(
         `channel/${activeChannelTabId}/product/list?limit=${pageSize}&page=${page}${
           searchValue ? `&search=${searchValue}` : ""
-        }`
+        }`,
+        {
+          signal: controller.signal, // Pass abort signal to axios
+        }
       );
+
       if (response?.data?.data?.list?.length > 0) {
-        if(activeChannelTabId === "shopify"){
-          const dataCount = response.data.data.count;
-          setProductList(response.data.data.list);
-          setCurrentPage(page);
-          setTotalPages(Math.ceil(dataCount / pageSize));
-        } else if(activeChannelTabId === "wordpress") {
-            const dataCount = response.data.data.count;
-            setProductList(response.data.data.list);
-            setCurrentPage(page);
-            setTotalPages(Math.ceil(dataCount / pageSize));
-        } 
+        const dataCount = response.data.data.count;
+        setProductList(response.data.data.list);
+        setCurrentPage(page);
+        setTotalPages(Math.ceil(dataCount / pageSize));
+      }
+
+      setLoading(false);
+      setInternalLoader(false);
+    } catch (error: any) {
+      if (error.name === "CanceledError" || error.name === "AbortError") {
+        console.log("Request canceled");
+      } else {
+        console.error(error);
+        setCurrentPage(1);
+        setTotalPages(0);
+        setProductList([]);
       }
       setLoading(false);
       setInternalLoader(false);
-    } catch (error) {
-      setLoading(false);
-      setInternalLoader(false);
-      setCurrentPage(1);
-      setTotalPages(0);
-      setProductList([]);      
     }
   };
 
-  // Update useEffect to fetch the initial product list
   useEffect(() => {
-    if(activeChannelTabId){
+    if (activeChannelTabId) {
       fetchProductsList(1);
     }
+
+    // Cleanup when component unmounts
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, [activeChannelTabId]);
 
   const debouncedSearch = useCallback(

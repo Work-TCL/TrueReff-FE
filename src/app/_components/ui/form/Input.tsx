@@ -11,6 +11,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Editor from "./editor";
 import { Tag, X } from "lucide-react";
+import { on } from "events";
 
 const menuPortal = typeof window !== "undefined" ? document.body : null;
 interface IInput
@@ -31,6 +32,7 @@ interface IInput
   menuPortalTarget?: any;
   lableClassName?: string;
   inputClassName?: string;
+  onChange?: (value: any) => void;
 }
 
 export const inputStyle =
@@ -51,6 +53,7 @@ export default function Input({
   inputClassName,
   menuPortalTarget = menuPortal,
   max,
+  onChange,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -556,6 +559,7 @@ export default function Input({
           const handleChange = (selected: any) => {
             const updated = max === 1 ? [selected]:[...(field.value || []), selected];
             field.onChange(updated);
+            onChange && onChange(updated);
           };
 
           const handleRemove = (valueToRemove: any) => {

@@ -483,10 +483,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   //   }
   // }, []);
 
-  const watchedCategories = useWatch({
-    control: methods.control,
-    name: "category",
-  });
+  const watchedCategories = methods.watch("category");
 
   const updateSubCategories = async () => {
     const categoriesId = watchedCategories?.map((v: any) => v.value) || [];
@@ -503,9 +500,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
     methods.setValue(
       "sub_category",
-      selectedSubCategories.filter((v: any) =>
-        availableSubCategoriesIds.includes(v.value)
-      )
+      []
     );
   };
   useEffect(() => {
@@ -647,6 +642,24 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   };
   const handleTagChange = (value: string[]) => {
     methods.setValue("tags", value);
+  };
+
+  const handleChangeCategory = (value: string[], type: "category" | "sub_category") => {
+   const categoriesId = value?.map((v: any) => v.value) || [];
+
+    const optionsSubCategory = categories.filter((ele) =>
+      categoriesId.includes(ele?.parentId?._id)
+    );
+
+    setSubCategory(optionsSubCategory);
+
+    const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+    const selectedSubCategories = methods.watch("sub_category") || [];
+
+    methods.setValue(
+      "sub_category",
+      []
+    );
   };
 
   return (
@@ -812,7 +825,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       value: ele?._id,
                       label: ele?.name,
                     }))}
+                    onChange={(v: any) => {
+                      handleChangeCategory(v, "category");
+                    }}
                     autoFocus={false}
+                    max={1}
                   />
                 </div>
                 <div className="md:col-span-1 col-span-2">
