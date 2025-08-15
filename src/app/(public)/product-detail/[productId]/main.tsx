@@ -350,16 +350,16 @@ export default function ViewProductDetail({
                 <div className="">
                   <div className="flex items-center gap-2 ">
                     <span className="flex items-center text-xl font-bold">
-                      {productData?.discountType === "FIXED_AMOUNT" ? <IndianRupee className="size-[14] sm:size-[16] md:size-[18]" />:""}
+                      <IndianRupee className="size-[14] sm:size-[16] md:size-[18]" />
                       {selectedVariant?.price
                         ? selectedVariant?.price
-                        : productData?.price}
+                        : productData?.price??""}
                     </span>
-                    <span className="flex items-center text-green-600 text-sm font-semibold">{productData?.discountType === "FIXED_AMOUNT" ? <IndianRupee className="size-[12] sm:size-[14] md:size-[14]" />:""}{`${
+                    {productData?.discount ? <span className="flex items-center text-green-600 text-sm font-semibold">{productData?.discountType === "FIXED_AMOUNT" ? <IndianRupee className="size-[12] sm:size-[14] md:size-[14]" />:""}{`${
                       productData?.discount
                     }${
                       productData?.discountType === "PERCENTAGE" ? "%" : ""
-                    } off`}</span>
+                    } off`}</span>:""}
                   </div>
                 </div>
                 {productData.category?.length > 0 && (

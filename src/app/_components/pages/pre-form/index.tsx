@@ -181,12 +181,12 @@ export default function PreFormPage() {
         } else if (
           vendorData?.completed_step === 3 && vendorData?.status !== "APPROVED"
         ) {
-          setOpen(true);
+          // setOpen(true);
           setIsVendorLoading(false);
-          router.push(
-            `?tab=2`
-          );
-          // router.push(`/creator/dashboard`);
+          // router.push(
+          //   `?tab=2`
+          // );
+          router.push(`/vendor/dashboard`);
         }else if (vendorData?.completed_step === 3 && vendorData?.status === "APPROVED") {
           router.push(`/vendor/dashboard`);
         }
@@ -428,7 +428,8 @@ export default function PreFormPage() {
           },
         });
         toastMessage.success(response?.message);
-        setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
+        // setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
+        router.push("/vendor/dashboard")
         await getConnectedChannel();
         setVendorData("vendor", {
           vendorId: response?.data?._id,
@@ -486,7 +487,8 @@ export default function PreFormPage() {
           },
         });
         toastMessage.success(response?.message);
-        setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
+        // setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
+        router.push("/vendor/dashboard")
         await getConnectedChannel();
           setVendorData("vendor", {
             vendorId: response?.data?._id,
@@ -714,7 +716,7 @@ export default function PreFormPage() {
           }[activeTab]
         }
       </div>
-      {open && <ProfileAccess />}
+      {/* {open && <ProfileAccess />} */}
     </div>
   );
 }

@@ -32,7 +32,7 @@ interface IInput
   menuPortalTarget?: any;
   lableClassName?: string;
   inputClassName?: string;
-  onChange?: (value: any) => void;
+  // onChange?: (value: any) => void;
 }
 
 export const inputStyle =
@@ -53,7 +53,6 @@ export default function Input({
   inputClassName,
   menuPortalTarget = menuPortal,
   max,
-  onChange,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -557,9 +556,9 @@ export default function Input({
         rules={{ required: required ? `${label} is required` : false }}
         render={({ field }) => {
           const handleChange = (selected: any) => {
-            const updated = max === 1 ? [selected]:[...(field.value || []), selected];
+            const updated: any = max === 1 ? [selected]:[...(field.value || []), selected];
             field.onChange(updated);
-            onChange && onChange(updated);
+            props?.onChange && props?.onChange(updated);
           };
 
           const handleRemove = (valueToRemove: any) => {

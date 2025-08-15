@@ -256,7 +256,8 @@ export default function CreatorRegistrationPage() {
             creator: response?.data,
           },
         });
-        setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
+        // setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
+        router.push("/creator/dashboard");
         setCreatorData("creator", {
           creatorId: response?.data?._id,
           accountId: response?.data?.accountId,
@@ -370,12 +371,12 @@ export default function CreatorRegistrationPage() {
         } else if (
           creator?.completed_step === 3 && creator?.status !== "APPROVED"
         ) {
-          setOpen(true);
+          // setOpen(true);
           setIsCreatorLoading(false);
-          router.push(
-            `?tab=2`
-          );
-          // router.push(`/creator/dashboard`);
+          // router.push(
+          //   `?tab=2`
+          // );
+          router.push(`/creator/dashboard`);
         } else if (creator?.completed_step === 3 && creator?.status === "APPROVED") {
           router.push(`/creator/dashboard`);
         }
@@ -688,7 +689,7 @@ export default function CreatorRegistrationPage() {
           </div>
         </>
       )}
-      {open && <ProfileAccess />}
+      {/* {open && <ProfileAccess />} */}
     </div>
   );
 }

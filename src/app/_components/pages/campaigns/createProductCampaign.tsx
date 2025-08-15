@@ -383,6 +383,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     const channels = Array.isArray(methods.watch("channels"))
       ? methods.watch("channels")
       : [];
+      console.log("channels",channels)
     if (Boolean(channels?.includes(channelName))) {
       methods.setValue(
         "channels",
@@ -642,6 +643,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   };
   const handleTagChange = (value: string[]) => {
     methods.setValue("tags", value);
+    methods.trigger("tags");
   };
 
   const handleChangeCategory = (value: string[], type: "category" | "sub_category") => {
