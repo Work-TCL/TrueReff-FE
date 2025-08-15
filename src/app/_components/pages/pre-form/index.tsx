@@ -680,6 +680,18 @@ export default function PreFormPage() {
                 <WordPressChannelForm loading={wordPressLoading} channels={channels}/>
               </form>
             </FormProvider>
+            {vendor?.status === "APPROVED" && <div className="bg-white">
+                  <Button
+                    type="button"
+                    size="small"
+                    loading={loading}
+                    disabled={loading}
+                    onClick={() => router.push("/vendor/dashboard")}
+                    className="w-fit font-medium px-8 md:text-base text-sm"
+                  >
+                  {translate("Back_to_dashboard")}
+                  </Button>
+                </div>}
             </div>,
             [TABS_STATUS.DOCUMENT_INFO]: <FormProvider {...documentMethods}>
               <form

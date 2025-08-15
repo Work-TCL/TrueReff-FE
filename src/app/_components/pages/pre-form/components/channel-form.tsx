@@ -219,24 +219,7 @@ export default function ChannelForm({
                       </Button>
                       </div>
                     </div>
-                    <div className="col-span-8 w-full md:mt-2 text-text text-sm">
-                    <h2>{translate("Shopify_store_connect_info.title")} <a href="https://truereff.com" target="_blank">trureff.com.</a></h2>
-                        <ol className="mb-2">
-                          <li key={1}>{translate("Shopify_store_connect_info.steps.1")}</li>
-                          <li key={2}>{translate("Shopify_store_connect_info.steps.2")}</li>
-                          <li key={3}>{translate("Shopify_store_connect_info.steps.3")}</li>
-                          <li key={4}>{translate("Shopify_store_connect_info.steps.4")} <a href="https://truereff.com" target="_blank">trureff.com.</a></li>
-                          <li key={5}>{translate("Shopify_store_connect_info.steps.5")}</li>
-                        </ol>
-                      <div className="text-sm text-text">
-                        <p className="">
-                          {translate("Shopify_Key_Desc")}
-                        </p>
-                        <p className="mb-2">
-                          {translate("Shopify_Connect")}
-                        </p>
-                      </div>
-                    </div>
+                    
                   </div>
                 ) :  <>
                 <p className="text-gray-100 mb-4 md:text-base text-sm">
@@ -257,6 +240,24 @@ export default function ChannelForm({
                   </div>
                 </div>
               </>}
+              <div className="col-span-8 w-full md:mt-2 text-text text-sm">
+                <h2>{translate("Shopify_store_connect_info.title")} <a href="https://truereff.com" target="_blank">truereff.com.</a></h2>
+                <ol className="mb-2">
+                  <li key={1}>{translate("Shopify_store_connect_info.steps.1")}</li>
+                  <li key={2}>{translate("Shopify_store_connect_info.steps.2")}</li>
+                  <li key={3}>{translate("Shopify_store_connect_info.steps.3")}</li>
+                  <li key={4}>{translate("Shopify_store_connect_info.steps.4")} <a href="https://truereff.com" target="_blank">truereff.com.</a></li>
+                  <li key={5}>{translate("Shopify_store_connect_info.steps.5")}</li>
+                </ol>
+                <div className="text-sm text-text">
+                  <p className="">
+                    {translate("Shopify_Key_Desc")}
+                  </p>
+                  <p className="mb-2">
+                    {translate("Shopify_Connect")}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         );
