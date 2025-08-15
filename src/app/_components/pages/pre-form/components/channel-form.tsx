@@ -123,7 +123,7 @@ export default function ChannelForm({
                   <h3 className="font-semibold">
                     {translate("Shopify_Store_Connect")}{" "}
                   </h3>
-                  <ToolTip
+                  {/* <ToolTip
                     content={
                       <div className="max-w-[250px] text-sm text-wrap p-2 rounded-lg">
                         <h2>{translate("Shopify_store_connect_info.title")}</h2>
@@ -136,7 +136,7 @@ export default function ChannelForm({
                     }
                   >
                     <InfoIcon />
-                  </ToolTip>
+                  </ToolTip> */}
                 </div>
               )}
               {!channel ? !shopifyKey ? (
