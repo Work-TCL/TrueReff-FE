@@ -12,7 +12,7 @@ import Button from "@/app/_components/ui/button";
 import BasicInfoForm, { ICategoryData } from "./components/basic-form";
 import ChannelForm from "./components/channel-form";
 import toast from "react-hot-toast";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { clearLocalStorage, getErrorMessage } from "@/lib/utils/commonUtils";
 import { getCategories, getVendor, venderRegister } from "@/lib/web-api/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useVendorStore } from "@/lib/store/vendor";
@@ -22,7 +22,7 @@ import { toastMessage } from "@/lib/utils/toast-message";
 import DocumentDetailsForm from "./components/document-form";
 import { getConnectedChannelsList } from "@/lib/web-api/channel";
 import axios from "@/lib/web-api/axios";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { CreditCard } from "lucide-react";
 import PackageDetails from "../settings/package-details";
@@ -172,6 +172,11 @@ export default function PreFormPage() {
     try {
       const vendorData: any = await getVendor();
             if (vendorData) {
+              await update({
+                user: {
+                  vendor: vendorData,
+                },
+              });
         if (vendorData?.completed_step === 1) {
           router.push('?tab=1');          
           setIsVendorLoading(false);
@@ -186,9 +191,9 @@ export default function PreFormPage() {
           // router.push(
           //   `?tab=2`
           // );
-          router.push(`/vendor/dashboard`);
+          // router.push(`/vendor/dashboard`);
         }else if (vendorData?.completed_step === 3 && vendorData?.status === "APPROVED") {
-          router.push(`/vendor/dashboard`);
+          // router.push(`/vendor/dashboard`);
         }
         methods.setValue("business_name",vendorData?.business_name);
         methods.setValue("company_email",vendorData?.company_email);
@@ -245,6 +250,13 @@ export default function PreFormPage() {
     setLoading(true);
     try {
         const res: any[] = await getConnectedChannelsList();
+        if (vendor) {
+              await update({
+                user: {
+                  vendor: vendor,
+                },
+              });
+            }
       if (Array.isArray(res)) {
         setChannels(res);
         setLoading(false)
@@ -621,9 +633,13 @@ export default function PreFormPage() {
       router.push(`?tab=${index}`);
     }
   };
-  const handleOnClick = async () => {
-    router.push(`/creator/dashboard`)
-  }
+  const handleLogout = async () => {
+      await signOut({
+        callbackUrl: "/login",
+        redirect: true,
+      });
+      clearLocalStorage();
+    };
 
   return (
     <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 pb-2 md:pt-5 pt-5 h-screen overflow-hidden flex flex-col gap-8">
@@ -686,10 +702,10 @@ export default function PreFormPage() {
                     size="small"
                     loading={loading}
                     disabled={loading}
-                    onClick={() => router.push("/vendor/dashboard")}
+                    onClick={handleLogout}
                     className="w-fit font-medium px-8 md:text-base text-sm"
                   >
-                  {translate("Back_to_dashboard")}
+                  {translate("Login")}
                   </Button>
                 </div>}
             </div>,
