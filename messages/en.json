@@ -695,11 +695,13 @@
   "WordPress_Store_connected": "WordPress Store connected",
   "Install": "Install",
   "Shopify_store_connect_info": {
-  "title": "Connect Your Shopify Store:",
+  "title": "How to Connect Your Shopify Store with",
   "steps": {
     "1": "1. Add your Shopify store domain (e.g., aapkastor.myshopify.com).",
     "2": "2. Click the “Generate Key” button to create your Shopify API key.",
-    "3": "3. Copy the key and paste it into your Shopify store's settings — your store will be connected instantly."
+    "3": "3. Copy the key and click Install. You’ll be redirected to the Shopify Admin Panel, where you can install the app.",
+    "4": "4. Paste the Shopify store key into the installed app and click Connect to Truereff. Your store will now be connected to",
+    "5": "5. Refresh the page to update your connection."
   }
 },
   "Account_Holder_Name": "Account Holder Name",
@@ -716,7 +718,7 @@
   "blocking_commission_days": "Blocking Commission Days",
   "Generate_key": "Generate Shopify Key",
   "Download": "Download",
-  "Shopify_Key": "Use This Key to connect your Shopify store with TrueReff",
+  "Shopify_Key": "Shopify store key",
   "Shopify_Key_Desc": "This key is used to connect your Shopify store with TrueReff. Please keep it secure and do not share it publicly.",
   "Shopify_Connect": "After installing the app, please reload the page.",
   "Domain": "Domain"
