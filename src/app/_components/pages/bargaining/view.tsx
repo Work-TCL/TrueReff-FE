@@ -94,6 +94,8 @@ export interface ICollaboration {
   bids: CollaborationBid[];
   createdAt: string;
   updatedAt: string;
+  discountType?: string; //"PERCENTAGE" | "FIXED_AMOUNT";
+  discountValue?: number | null;
 }
 
 export interface IRating {
@@ -171,7 +173,9 @@ export default function BargainingView() {
     "expiresAt": "",
     "bids": [],
     "createdAt": "",
-    "updatedAt": ""
+    "updatedAt": "",
+    "discountType": "",
+    "discountValue": null,
   });
   const initialRating = {
     _id: "",
@@ -370,12 +374,15 @@ export default function BargainingView() {
                     ],
                     [translate("Base_Price"), <span className="flex items-center"><IndianRupee size={14}/>{collaborationData?.productId?.price}</span>],
                     [
-                      collaborationData?.productId?.commission_type === "PERCENTAGE"
+                      collaborationData?.discountType === "PERCENTAGE"
                         ? translate("Discount")
                         : translate("Discount_Price"),
-                      <span className="flex items-center">{collaborationData?.productId?.commission} {collaborationData?.productId?.commission_type === "PERCENTAGE"
-                        ? "%"
+                      <span className="flex items-center">{!collaborationData?.discountValue || collaborationData?.discountType === "PERCENTAGE"
+                        ? ""
                         : <IndianRupee size={14}/>
+                      } {collaborationData?.discountValue??"NA"} {collaborationData?.discountValue && collaborationData?.discountType === "PERCENTAGE"
+                        ? "%"
+                        : ""
                       }</span>,
                     ],
                   ].map(([label, value], idx) => (
@@ -383,10 +390,10 @@ export default function BargainingView() {
                       key={idx}
                       className="flex flex-row items-start gap-3"
                     >
-                      <div className="w-1/2 md:w-1/4 text-sm text-gray-500 text-nowrap">
+                      <div className="w-1/2 md:w-1/3 text-sm text-gray-500 text-nowrap">
                         {label}:
                       </div>
-                      <div className="w-1/2 md:w-3/4 font-medium text-sm break-words">{value || "-"}</div>
+                      <div className="w-1/2 md:w-2/3 font-medium text-sm break-words">{value || "-"}</div>
                     </div>
                   ))}
                 </div>
