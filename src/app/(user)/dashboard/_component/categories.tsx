@@ -116,7 +116,7 @@ export default function Categories({
                   className={cn(
                     "flex items-center transition-all duration-300 ease-in-out rounded-full h-[36px] border px-2",
                     activeSearch
-                      ? "bg-white text-primary border-primary w-96 justify-center"
+                      ? "bg-white text-primary border-primary sm:w-96 w-full justify-center"
                       : "bg-gray-50 text-secondary border-gray-200 hover:border-primary w-[36px] justify-center"
                   )}
                   onClick={() => {

@@ -376,6 +376,7 @@
   "Start_your_chat_now": "अब अपनी चैट शुरू करें।",
   "View_All_Notifications": "सभी सूचनाएं देखें",
   "Creator": "निर्माता",
+  "Go_Back": "वापस जाएं",
   "Creator_Profile": "Creator_profile",
   "Brand_Profile": "Brand_profile",
   "Brand_Products": "Brand_products",
@@ -700,5 +701,4 @@
   "Shopify_Connect": "ऐप इंस्टॉल करने के बाद, कृपया पेज को रीलोड करें।",
   "Domain": "डोमेन",
   "Generate_key": "Shopify कुंजी जनरेट करें"
-  
 }

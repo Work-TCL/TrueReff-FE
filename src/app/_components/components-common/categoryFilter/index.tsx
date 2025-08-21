@@ -101,7 +101,7 @@ export default function CategorySliderFilter({
       );
   };
   return (
-    <div className="flex flex-col max-w-[1200px] mx-auto p-2 md:p-4 space-y-3 justify-center">
+    <div className="flex flex-col max-w-[1200px] mx-auto p-2 md:p-4 space-y-3 justify-center w-full">
       {categories?.length > 1 && (
         <Categories
           categories={categories}

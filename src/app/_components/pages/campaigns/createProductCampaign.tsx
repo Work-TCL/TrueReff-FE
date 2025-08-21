@@ -551,7 +551,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
           methods.setValue("couponCode", response?.couponCode);
           methods.setValue("discount_type", response?.discountType);
           methods.setValue("discount_value", response?.discount);
-          methods.setValue("blocking_commission_days", response?.blockedDays);
+          methods.setValue(
+            "blocking_commission_days",
+            String(response?.blockedDays || 1)
+          );
           if (response?.discount) {
             setShowDiscountSection(true);
           }
@@ -1033,6 +1036,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       label={translate("blocking_commission_days")}
                       disabled={isDisabled}
                       min={1}
+                      defaultValue={1}
                       onChange={(e) => {
                         const value = parseInt(e.target.value);
                         if (value < 1) {

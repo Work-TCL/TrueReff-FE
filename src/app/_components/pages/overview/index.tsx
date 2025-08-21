@@ -230,7 +230,7 @@ export default function Overview() {
         <StatsCard
           title={translate("Revenue")}
           value={`${formatNumber(statesInfo?.totalRevenue)}`}
-          icon={<IndianRupee size={27} />}
+          icon={<IndianRupee size={27} className="size-4 sm:size-7" />}
           growth={5}
           borderColor="border-[#77EE8D]"
           bgColor="bg-[#f1fdf4]"
@@ -238,7 +238,7 @@ export default function Overview() {
         <StatsCard
           title={translate("Commission")}
           value={`${formatNumber(statesInfo?.totalCommission)}`}
-          icon={<IndianRupee size={27} />}
+          icon={<IndianRupee size={27} className="size-4 sm:size-7" />}
           growth={5}
           borderColor="border-[#EB815B]"
           bgColor="bg-[#fdf2ef]"
