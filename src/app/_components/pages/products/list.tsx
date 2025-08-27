@@ -426,6 +426,7 @@ export default function ProductList() {
   return (
     <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4 h-full">
       <CategorySliderFilter
+      type={"vendor"}
         isIncludeSearch
         search={search}
         onSearch={handleSearch}

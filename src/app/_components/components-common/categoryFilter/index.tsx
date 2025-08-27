@@ -11,6 +11,7 @@ import Categories from "@/app/(user)/dashboard/_component/categories";
 import { usePathname } from "next/navigation";
 
 interface ICategorySliderFilter {
+  type?: string;
   onChange?: (category: string, subCategory?: string) => void;
   onSearch?: (val: string) => void;
   isIncludeSearch?: boolean;
@@ -18,6 +19,7 @@ interface ICategorySliderFilter {
 }
 
 export default function CategorySliderFilter({
+  type,
   onChange,
   onSearch,
   search,
@@ -48,15 +50,16 @@ export default function CategorySliderFilter({
       fetchSubCategory();
     }
   }, [activeCategory]);
+
   const fetchCategory = async () => {
     try {
-      let type: "vendor" | "creator" | undefined = undefined;
-      if (pathname.includes("vendor")) type = "creator";
-      else if (pathname.includes("creator")) type = "vendor";
+      let temp: "vendor" | "creator" | undefined = undefined;
+      if (pathname.includes("vendor")) temp = "creator";
+      else if (pathname.includes("creator")) temp = "vendor";
       const response = await getCategories({
         page: 0,
         limit: 0,
-        ...(type ? { type: type } : {}),
+        ...(temp ? { type: type ?? temp } : {}),
       });
       let data = response?.data?.data;
       if (data?.length > 0) {
@@ -69,6 +72,7 @@ export default function CategorySliderFilter({
       console.log("Error Fetching categories", error.message);
     }
   };
+
   const fetchSubCategory = async () => {
     try {
       const response = await getCategories({
@@ -100,6 +104,7 @@ export default function CategorySliderFilter({
         subCategory === "All" ? "" : subCategory
       );
   };
+
   return (
     <div className="flex flex-col max-w-[1200px] mx-auto p-2 md:p-4 space-y-3 justify-center w-full">
       {categories?.length > 1 && (
