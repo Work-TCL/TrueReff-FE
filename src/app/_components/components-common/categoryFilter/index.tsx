@@ -16,6 +16,7 @@ interface ICategorySliderFilter {
   onSearch?: (val: string) => void;
   isIncludeSearch?: boolean;
   search?: string;
+  ShowSubCategories?: boolean;
 }
 
 export default function CategorySliderFilter({
@@ -24,6 +25,7 @@ export default function CategorySliderFilter({
   onSearch,
   search,
   isIncludeSearch = false,
+  ShowSubCategories = true,
 }: ICategorySliderFilter) {
   const translate = useTranslations();
   const pathname = usePathname();
@@ -74,6 +76,7 @@ export default function CategorySliderFilter({
   };
 
   const fetchSubCategory = async () => {
+    if (!ShowSubCategories) return;
     try {
       const response = await getCategories({
         page: 0,
@@ -95,9 +98,11 @@ export default function CategorySliderFilter({
     category: string,
     subCategory: string = "All"
   ) => {
+    if (category !== activeCategory) {
+      setSubCategories([initialCategory]);
+    }
     setActiveCategoryTabId(category);
-    setActiveSubCategoryTabId("All");
-    setSubCategories([initialCategory]);
+    setActiveSubCategoryTabId(subCategory !== "All" ? subCategory : "All");
     onChange &&
       onChange(
         category === "All" ? "" : category,
@@ -117,12 +122,13 @@ export default function CategorySliderFilter({
           search={search}
         />
       )}
-      {subCategories?.length > 1 && (
+      {subCategories?.length > 1 && ShowSubCategories && (
         <Categories
           categories={subCategories}
           activeCategory={activeSubCategory}
-          setActiveCategoryTabId={setActiveSubCategoryTabId}
-          onChange={(cat) => handleOnSelectCategory(activeCategory, cat)}
+          setActiveCategoryTabId={(cat) =>
+            handleOnSelectCategory(activeCategory, cat)
+          }
         />
       )}
       {/* {activeCategory === "All" ? (

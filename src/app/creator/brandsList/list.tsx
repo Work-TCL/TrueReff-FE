@@ -305,6 +305,7 @@ export default function BrandList() {
         isIncludeSearch
         onSearch={handleSearch}
         search={search}
+        ShowSubCategories={false}
       />
       {loading ? (
         <Loading />
