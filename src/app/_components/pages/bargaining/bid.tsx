@@ -11,7 +11,6 @@ import { ChevronDown, IndianRupee, Minus, Plus } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import Button from '../../ui/button';
-import CollaborationConfirmed from '../../components-common/dialogs/accept-offer';
 import { ICollaboration } from './view';
 import ViewAllBids from '../../components-common/dialogs/all-bids';
 import { useTranslations } from 'next-intl';
@@ -142,18 +141,10 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
         socketService.sendNewBid(data)
     }
 
-    const getDisabled = () => {
-        if (account?.role === "vendor") {
-            return !collaborationData?.negotiation?.agreedByCreator;
-        } else {
-            return !collaborationData?.negotiation?.agreedByVendor;
-        }
-    }
-
     const handleAcceptOffer = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(
+            const response = await axios.post(
                 `/product/collaboration/activate/${collaborationId}`
             );
             if (response?.status === 200) {

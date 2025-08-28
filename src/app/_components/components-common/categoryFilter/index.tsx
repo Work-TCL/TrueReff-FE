@@ -32,7 +32,6 @@ export default function CategorySliderFilter({
     _id: "All",
     parentId: null,
   };
-
   const [categories, setCategories] = useState<ICategory[]>([initialCategory]);
   const [subCategories, setSubCategories] = useState<ICategory[]>([
     initialCategory,
@@ -45,7 +44,7 @@ export default function CategorySliderFilter({
   }, []);
   useEffect(() => {
     if (activeCategory === "All") {
-      setSubCategories([]);
+      setSubCategories([initialCategory]);
     } else {
       fetchSubCategory();
     }
@@ -84,7 +83,7 @@ export default function CategorySliderFilter({
       if (data?.length > 0) {
         setSubCategories([...subCategories, ...data]);
       } else {
-        setSubCategories([...subCategories]);
+        setSubCategories([initialCategory]);
       }
     } catch (error: any) {
       console.log("Error Fetching categories", error.message);
@@ -96,17 +95,16 @@ export default function CategorySliderFilter({
     subCategory: string = "All"
   ) => {
     setActiveCategoryTabId(category);
-    setActiveSubCategoryTabId("All");
-    setSubCategories([initialCategory]);
+    setActiveSubCategoryTabId(subCategory??"All");
+    category === "All" && setSubCategories([initialCategory]);
     onChange &&
       onChange(
-        category === "All" ? "" : category,
-        subCategory === "All" ? "" : subCategory
+        subCategory === "All" ? category === "All" ? "" : category : subCategory
       );
   };
 
   return (
-    <div className="flex flex-col max-w-[1200px] mx-auto p-2 md:p-4 space-y-3 justify-center w-full">
+    <div className="flex flex-col max-w-[1200px] mx-auto  space-y-3 justify-center w-full">
       {categories?.length > 1 && (
         <Categories
           categories={categories}
@@ -121,7 +119,11 @@ export default function CategorySliderFilter({
         <Categories
           categories={subCategories}
           activeCategory={activeSubCategory}
-          setActiveCategoryTabId={setActiveSubCategoryTabId}
+          setActiveCategoryTabId={
+            (cat) => {
+              setActiveSubCategoryTabId(cat);
+              handleOnSelectCategory(activeCategory, cat)}
+            }
           onChange={(cat) => handleOnSelectCategory(activeCategory, cat)}
         />
       )}

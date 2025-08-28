@@ -14,6 +14,7 @@ import { debounce } from "lodash";
 import SingleSelect from "../../components-common/single-select";
 import { SearchInput } from "../../components-common/search-field";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useNotificationStore } from "@/lib/store/notifications";
 
 export interface ICategory {
   _id: string;
@@ -135,6 +136,7 @@ export default function CollaborationList() {
   const searchParams = useSearchParams();
   const dashboardStatus = searchParams.get("status");
   const { account: user } = useAuthStore();
+  const { creator, setNotificationData } = useNotificationStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
@@ -224,6 +226,22 @@ export default function CollaborationList() {
     },
     [pageSize]
   );
+  const readCollaborationNotification = async () => {
+    try {
+      const response = await axios.put(
+        `/message/notification/mark-collaboration-read`
+      );
+      if (response.status === 200) {
+        setNotificationData("creator",{...creator, collaboration: false});
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    readCollaborationNotification();
+  },[])
 
   useEffect(() => {
     if (dashboardStatus) {
@@ -266,7 +284,7 @@ export default function CollaborationList() {
               onChange={handleSearch}
               placeholder={translate("Search_Product")}
             />
-            <div className="flex md:flex-row flex-col gap-2 justify-end relative z-[999] md:w-fit w-full">
+            <div className="flex md:flex-row flex-col gap-2 justify-end relative  md:w-fit w-full">
               <SingleSelect
                 value={selectedStatus}
                 onChange={handleSelectStatus}

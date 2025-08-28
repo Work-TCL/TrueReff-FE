@@ -10,7 +10,7 @@ import { cn } from "@sohanemon/utils";
 import { BellRing, CircleX } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Notification {
   _id: string;
@@ -38,11 +38,11 @@ export default function NotificationPopover({
   const translate = useTranslations();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (open) {
-  //     fetchNotifications();
-  //   }
-  // }, [open]);
+  useEffect(() => {
+    if (open) {
+      fetchNotifications();
+    }
+  }, [open]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -57,7 +57,7 @@ export default function NotificationPopover({
         </div>
       </PopoverTrigger>
 
-      <PopoverContent className="absolute z-40 md:right-0  right-[-105px] mt-2 flex h-[480px] w-[350px] flex-col rounded-2xl border border-gray-200 bg-white p-3 sm:w-[361px] lg:right-0">
+      <PopoverContent className="absolute z-50 md:right-0  right-[-105px] mt-2 flex h-[480px] w-[350px] flex-col rounded-2xl border border-gray-200 bg-white p-3 sm:w-[361px] lg:right-0">
         <div className="flex justify-between items-center border-b pb-2">
           <h2 className="text-lg font-semibold">Notifications</h2>
           <div
@@ -91,7 +91,7 @@ export default function NotificationPopover({
                 }
               >
                 <div>
-                  <p className="text-sm text-gray-800 font-semibold">
+                  <p className="text-sm text-gray-800">
                     {notification.message}
                   </p>
                   <p className="text-xs text-gray-500">

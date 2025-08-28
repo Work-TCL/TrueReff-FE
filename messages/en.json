@@ -722,5 +722,9 @@
   "Shopify_Key": "Shopify store key",
   "Shopify_Key_Desc": "This key is used to connect your Shopify store with TrueReff. Please keep it secure and do not share it publicly.",
   "Shopify_Connect": "After installing the app, please reload this page.",
-  "Domain": "Domain"
+  "Domain": "Domain",
+  "Chat_with_Vendor": "Chat with Vendor",
+  "Chat_with_Creator": "Chat with Creator",
+  "Deactivate_Collaboration": "Deactivate Collaboration",
+  "Are_you_sure_you_want_to_deactivate_collaboration": "Are you sure you want to deactivate this collaboration?"
 }

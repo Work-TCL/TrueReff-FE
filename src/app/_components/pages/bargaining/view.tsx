@@ -28,6 +28,8 @@ import {
 import { toastMessage } from "@/lib/utils/toast-message";
 import Link from "next/link";
 import Rating from "../../components-common/dialogs/rating";
+import Confirmation from "../../components-common/dialogs/confirmation-dialog";
+import { set } from "lodash";
 export interface NegotiationStatus {
   agreedByVendor: boolean;
   agreedByCreator: boolean;
@@ -102,6 +104,7 @@ export interface ICollaboration {
   updatedAt: string;
   discountType?: string; //"PERCENTAGE" | "FIXED_AMOUNT";
   discountValue?: number | null;
+  deactivatedBy?: string | null;
 }
 
 export interface IRating {
@@ -125,6 +128,7 @@ export default function BargainingView() {
   const [showChant, setShowChat] = useState<boolean>(false);
   const [offerAccepted, setOfferAccepted] = useState(false);
   const [showRatingPopup, setShowRatingPopup] = useState(false);
+  const [deactivate, setDeactivate] = useState<boolean>(false);
   const [collaborationData, setCollaborationData] = useState<ICollaboration>({
     negotiation: {
       agreedByVendor: false,
@@ -292,6 +296,23 @@ export default function BargainingView() {
       setLoading(false);
     }
   };
+  const handleDeactivateCollaboration = async () => {
+    try {
+      const response = await axios.put(`/product/collaboration/deactivate/${collaborationData?._id}`);
+      if (response?.status === 200) {
+        fetchProductCollaboration();
+        setDeactivate(false);
+      }
+    } catch (error: any) {
+      const errorMessage = getErrorMessage(error);
+      toastMessage.error(errorMessage);
+      setLoading(false);
+      setDeactivate(false);
+    } finally {
+      setLoading(false);
+      setDeactivate(false);
+    }
+  };
   return (
     <div className="flex flex-col w-full p-2 md:p-4 gap-2 md:gap-4 md:h-full">
       {loading && <Loader />}
@@ -325,7 +346,7 @@ export default function BargainingView() {
           {showChant ? (
             <button
               type="button"
-              className="text-xs border rounded-lg p-2 text-nowrap bg-black/5"
+              className="text-xs border rounded-lg p-2 text-nowrap bg-white border-primary-color text-primary-color hover:bg-primary hover:text-white"
               onClick={() => setShowChat(!showChant)}
             >
               {translate("Go_Back")}
@@ -333,13 +354,12 @@ export default function BargainingView() {
           ) : (
             <button
               type="button"
-              className="text-xs border rounded-lg p-2 text-nowrap bg-black/5 flex items-center gap-1"
+              className="text-xs border rounded-lg p-2 text-nowrap bg-white border-primary-color text-primary-color hover:bg-primary hover:text-white"
               onClick={() => setShowChat(!showChant)}
             >
-              <MessageSquareText strokeWidth={1} color="#000" size={15} />
               {account?.role === "creator"
-                ? translate("Vendor")
-                : translate("Creator")}
+                ? translate("Chat_with_Vendor")
+                : translate("Chat_with_Creator")}
             </button>
           )}
         </div>
@@ -426,10 +446,10 @@ export default function BargainingView() {
                     ],
                   ].map(([label, value], idx) => (
                     <div key={idx} className="flex flex-row items-start gap-3">
-                      <div className="w-1/2 md:w-1/4 text-sm text-gray-500 text-nowrap">
+                      <div className="w-1/2 md:w-1/3 text-sm text-gray-500 text-nowrap">
                         {label}:
                       </div>
-                      <div className="w-1/2 md:w-3/4 font-medium text-sm break-words">
+                      <div className="w-1/2 md:w-2/3 font-medium text-sm break-words">
                         {value || "-"}
                       </div>
                     </div>
@@ -456,12 +476,41 @@ export default function BargainingView() {
 
             {/* Bid Section */}
             <div className="bg-white shadow-md rounded-lg">
-              {collaborationData?.collaborationStatus === "ACTIVE" ? (
+              {(collaborationData?.collaborationStatus === "ACTIVE" || collaborationData?.collaborationStatus === "DEACTIVATED") ? (
                 <div className="flex flex-col gap-2 md:gap-3 p-2 md:p-4">
                   <h3 className="font-semibold ">
                     {translate("Updated_Fixed_Bid_Section")}
                   </h3>
-                  <div
+                  {collaborationData?.collaborationStatus === "DEACTIVATED" ? <><div
+                    className={cn(
+                      "flex flex-col items-start justify-between text-left md:text-left p-3 md:p-6 rounded-2xl w-full bg-custom-gradient gap-4"
+                    )}
+                  >
+                    {/* Text Section */}
+                    <div className="flex-1 flex flex-col gap-1">
+                      <span className="font-semibold text-base md:text-lg text-gray-black">
+                        {`This collaboration has been deactivated by ${collaborationData?.deactivatedBy === account?.role ? "You" : collaborationData?.deactivatedBy}.`}
+                      </span>
+                    </div>
+                    {/* <div className="flex flex-column md:flex-row gap-2">
+                    <button
+                      className="mt-6 px-2 md:px-4 py-2 text-center text-xs md:text-xs xl:text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+                      onClick={() => {
+                        router.push(
+                          `/store/${collaborationData?.creatorId?.store_name}`
+                        );
+                      }}
+                    >
+                      {translate("View_in_Creator_Store")}
+                    </button>
+                    <button
+                      className="mt-6 px-2 md:px-4 py-2 text-center text-xs md:text-xs xl:text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+                      onClick={() => setDeactivate(true)}
+                    >
+                      {translate("Deactivate_Collaboration")} 
+                    </button>
+                    </div> */}
+                  </div></> : <><div
                     className={cn(
                       "flex flex-col items-start justify-between text-left md:text-left p-3 md:p-6 rounded-2xl w-full bg-custom-gradient gap-4"
                     )}
@@ -472,8 +521,9 @@ export default function BargainingView() {
                         {"This product has been added to your Creator Store"}
                       </span>
                     </div>
+                    <div className="flex flex-column md:flex-row gap-2">
                     <button
-                      className="mt-6 px-4 py-2 text-center text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+                      className="mt-6 px-2 md:px-4 py-2 text-center text-xs md:text-xs xl:text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
                       onClick={() => {
                         router.push(
                           `/store/${collaborationData?.creatorId?.store_name}`
@@ -482,6 +532,13 @@ export default function BargainingView() {
                     >
                       {translate("View_in_Creator_Store")}
                     </button>
+                    <button
+                      className="mt-6 px-2 md:px-4 py-2 text-center text-xs md:text-xs xl:text-sm font-medium text-black border border-black rounded-lg hover:bg-black hover:text-white transition"
+                      onClick={() => setDeactivate(true)}
+                    >
+                      {translate("Deactivate_Collaboration")} 
+                    </button>
+                    </div>
                   </div>
                   <div className="flex flex-col gap-2 md:gap-3 border rounded-lg p-2 md:p-4">
                     {[
@@ -553,7 +610,7 @@ export default function BargainingView() {
                         </div>
                       </div>
                     )}
-                  </div>
+                  </div></>}
                 </div>
               ) : (
                 <Bid
@@ -714,6 +771,7 @@ export default function BargainingView() {
           handleSubmitRatings={handleSubmitRatings}
         />
       )}
+      {deactivate && <Confirmation title={translate("Are_you_sure_you_want_to_deactivate_collaboration")} onClose={() => setDeactivate(false)} handleConfirm={handleDeactivateCollaboration} />}
     </div>
   );
 }

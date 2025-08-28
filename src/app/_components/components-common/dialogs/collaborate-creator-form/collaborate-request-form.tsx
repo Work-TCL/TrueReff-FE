@@ -118,25 +118,25 @@ export default function CollaborateRequestForm({
                       className="w-4 h-4 md:w-5 md:h-5 cursor-pointer accent-[#FF4979]"
                       checked={selectedProducts.includes(product?._id)}
                       disabled={
-                        product?.collaborationStatus !== null || submitting
+                        (product?.collaborationStatus !== null && product?.collaborationStatus !== "DEACTIVATED") || submitting
                       }
                       onChange={() => {}}
                     />
                     <div>
                       <div className="flex items-center gap-2">
                         {product?.media?.length > 0 ? (
-                          <Avatar className={`w-6 h-6 md:w-8 md:h-8 ${product?.collaborationStatus !== null ? "opacity-50" : ""}`}>
+                          <Avatar className={`w-6 h-6 md:w-8 md:h-8 ${(product?.collaborationStatus !== null && product?.collaborationStatus !== "DEACTIVATED") ? "opacity-50" : ""}`}>
                             <AvatarImage src={product?.media[0]} />
                           </Avatar>
                         ): <Avatar className={`w-6 h-6 md:w-8 md:h-8 flex justify-center items-center`}>
                         <ImageOff className="w-4 h-4 md:w-6 md:h-6 text-gray-400" />
                       </Avatar>}
-                        <span className={`hidden sm:block ${product?.collaborationStatus !== null ? "text-gray-500" : "text-black"}`}>{product?.title}</span>
+                        <span className={`hidden sm:block ${(product?.collaborationStatus !== null && product?.collaborationStatus !== "DEACTIVATED") ? "text-gray-500" : "text-black"}`}>{product?.title}</span>
                         <ToolTip content={product?.title}><span className={`sm:hidden text-sm md:text-base ${product?.collaborationStatus !== null ? "text-gray-500" : "text-black"}`}>{(product?.title?.length > 18 && product?.collaborationStatus !== null) ? `${product?.title?.slice(0,16)}...` : product?.title}</span></ToolTip>
                       </div>
                     </div>
                   </div>
-                  {product?.collaborationStatus && <div
+                  {(product?.collaborationStatus && product?.collaborationStatus !== "DEACTIVATED") && <div
                     className={`text-[8px] md:text-[10px] px-2 py-1 rounded-full font-semibold bg-opacity-10 ${badgeColor[product?.collaborationStatus]}`}
                   >
                     {statusMessage[product?.collaborationStatus]}

@@ -1219,7 +1219,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col bg-white rounded-xl p-[24px]">
+            <div className="hidden flex-col bg-white rounded-xl p-[24px]">
               <div className="flex items-center gap-4">
                 <div className="text-lg font-medium text-gray-500 flex items-center gap-1">
                   {translate("additional_offers")}

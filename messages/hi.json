@@ -700,5 +700,9 @@
   "Shopify_Key_Desc": "यह कुंजी आपके Shopify स्टोर को TrueReff से कनेक्ट करने के लिए उपयोग की जाती है। कृपया इसे सुरक्षित रखें और सार्वजनिक रूप से साझा न करें।",
   "Shopify_Connect": "ऐप इंस्टॉल करने के बाद, कृपया पेज को रीलोड करें।",
   "Domain": "डोमेन",
-  "Generate_key": "Shopify कुंजी जनरेट करें"
+  "Generate_key": "Shopify कुंजी जनरेट करें",
+  "Chat_with_Vendor": "विक्रेता से चैट करें",
+  "Chat_with_Creator": "निर्माता से चैट करें",
+  "Deactivate_Collaboration": "सहयोग को निष्क्रिय करें",
+  "Are_you_sure_you_want_to_deactivate_collaboration": "क्या आप वाकई इस सहयोग को निष्क्रिय करना चाहते हैं?"
 }

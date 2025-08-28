@@ -234,7 +234,7 @@ export default function CreatorList() {
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center flex-wrap gap-2">
+          <div className="flex justify-between items-start flex-wrap gap-2">
             {/* <SearchInput
               value={search}
               onChange={handleSearch}
@@ -246,7 +246,7 @@ export default function CreatorList() {
               onSearch={handleSearch}
               onChange={handleSelectCategory}
             />
-            <div className="flex items-center xsmobile:justify-between gap-[10px] md:w-fit w-full">
+            <div className="flex items-start xsmobile:justify-between gap-[10px] md:w-fit w-full">
               {/* <CreatorFilter
                 categories={categories}
                 parentCategory={parentCategory}

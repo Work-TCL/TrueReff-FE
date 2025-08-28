@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/commonUtils";
 import HeaderFilter from "../../../header-filter";
 import { SearchSuggestionDropdown } from "../../../analytics-search-dropdown";
+import { useNotificationStore } from "@/lib/store/notifications";
 
 interface IPageName {
   [key: string]: string;
@@ -68,6 +69,8 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const { account } = useAuthStore();
   const { vendor } = useVendorStore();
   const { creator } = useCreatorStore();
+  const notificationData = useNotificationStore();
+  const { setNotificationData } = notificationData;
   const [loading, setLoading] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -123,6 +126,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         setUnReadNotifications(notificationRes?.unreadCount);
         setTotalNotification(notificationRes?.total);
         setNotifications([...notificationRes?.data]);
+        if(account?.role === "vendor" || account?.role === "creator"){
+          setNotificationData(account?.role,{...notificationData[account?.role], collaboration: notificationRes?.unreadCollaborationNotificationsCount > 0});
+        }
       } else {
         setUnReadNotifications(0);
         setTotalNotification(0);
@@ -153,6 +159,9 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       if (data?.message) {
         setUnReadNotifications((prev) => prev + 1);
         fetchNotifications();
+        if(data?.notificationType === "collaboration" && (data?.userType === "vendor" || data?.userType === "creator")){
+          setNotificationData(data?.userType,{collaboration: true});
+        }        
       }
     });
 
@@ -277,13 +286,13 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
               {["/vendor/dashboard", "/creator/dashboard"].includes(
                 pathName
               ) && <HeaderFilter />}
-              {/* <NotificationPopover
+              <NotificationPopover
                 notifications={notifications}
                 unreadNotifications={unreadNotifications}
                 fetchNotifications={fetchNotifications}
                 readNotifications={readNotifications}
                 formatTimeAgo={formatTimeAgo}
-              /> */}
+              />
               <Link
                 href={
                   creator.creatorId ? `/creator/settings` : `/vendor/settings`

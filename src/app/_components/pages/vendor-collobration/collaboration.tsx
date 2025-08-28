@@ -9,11 +9,12 @@ import { useTranslations } from "next-intl";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useAuthStore } from "@/lib/store/auth-user";
 import axios from "@/lib/web-api/axios";
-import { debounce } from "lodash";
+import { debounce, set } from "lodash";
 import Loader from "../../components-common/layout/loader";
 import { SearchInput } from "../../components-common/search-field";
 import SingleSelect from "../../components-common/single-select";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useNotificationStore } from "@/lib/store/notifications";
 export interface ICategory {
   _id: string;
   name: string;
@@ -154,6 +155,7 @@ export default function CollaborationList() {
   const t = useTranslations();
   const router = useRouter();
   const { account: user } = useAuthStore();
+  const { vendor, setNotificationData } = useNotificationStore();
   const searchParams = useSearchParams();
   const status = searchParams.get("status") ?? "";
   const [loading, setLoading] = useState<boolean>(true);
@@ -240,6 +242,22 @@ export default function CollaborationList() {
     },
     [pageSize]
   );
+  const readCollaborationNotification = async () => {
+    try {
+      const response = await axios.put(
+        `/message/notification/mark-collaboration-read`
+      );
+      if (response.status === 200) {
+        setNotificationData("vendor",{...vendor, collaboration: false});
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    readCollaborationNotification();
+  },[])
 
   useEffect(() => {
     if (status) {

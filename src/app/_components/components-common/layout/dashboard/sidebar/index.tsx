@@ -36,12 +36,14 @@ import { cn } from "@/lib/utils/commonUtils";
 import { useCreatorStore } from "@/lib/store/creator";
 import { toastMessage } from "@/lib/utils/toast-message";
 import Image from "next/image";
+import { useNotificationStore } from "@/lib/store/notifications";
 
 type MenuItem = {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   link?: string;
   children?: { label: string; link: string }[];
+  notification: boolean;
 };
 
 const NavLink = ({
@@ -56,6 +58,7 @@ const NavLink = ({
   childIndex,
   childClassName,
   handleInstall = () => {},
+  item = null 
 }: any) => {
   const childLinkClasses = `relative block px-4 py-2 rounded-md ${
     isActive
@@ -112,6 +115,9 @@ const NavLink = ({
       >
         {Icon && <Icon className={iconClassNames} />}
         {label && <span>{label}</span>}
+        {item?.notification && (
+          <span className="absolute top-[5px] right-[7px] block h-1 w-1 rounded-full bg-primary-color"></span>
+        )}
       </Link>
     );
   }
@@ -127,6 +133,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
   const pathname = usePathname(); // Get the current path
   const { account: user } = useAuthStore();
   const { creator } = useCreatorStore();
+  const notification = useNotificationStore();
   const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -147,136 +154,112 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       [label]: !(isSubMenu ? obj : prev)[label],
     }));
   };
-  const menuItems: MenuItem[] = [
-    { label: translate("Dashboard"), icon: Home, link: "/vendor/dashboard" },
-    // {
-    //   label: translate("Product_Catalog"),
-    //   icon: Box,
-    //   children: [
-    //     // { label: translate("Add_New_Product"), link: "/vendor/products/add" },
-    //     { label: translate("Product_List"), link: "/vendor/products" },
-    //     {
-    //       label: translate("Channels"),
-    //       link: "/vendor/products/channel-products",
-    //     },
-    //   ],
-    // },
+  const [menuItems,setMenuItems] = useState<MenuItem[]>([
+    { label: translate("Dashboard"), icon: Home, link: "/vendor/dashboard",notification: false },
     {
       label: translate("My_Products"),
       icon: Box,
       link: "/vendor/products",
+      notification: false
     },
     {
       label: translate("Channels"),
       icon: Store,
       link: "/vendor/products/channel-products",
+      notification: false
     },
     {
       label: translate("Creators"),
       icon: UsersRound,
       link: "/vendor/creators",
-      // children: [
-      //   { label: translate("Creator_List"), link: "/vendor/creators" },
-      //   // {
-      //   //   label: translate("Available_Creators"),
-      //   //   link: "/vendor/creators/available-creators",
-      //   // },
-      // ],
+      notification: false
     },
     {
       label: translate("Collaboration"),
       icon: UserRound,
       link: "/vendor/creators/collaboration",
+      notification: true
     },
-    // {
-    //   label: translate("Campaign"),
-    //   icon: Megaphone,
-    //   children: [
-    //     { label: translate("Add_New_Campaign"), link: "/vendor/campaign/add" },
-    //     { label: translate("Campaign_List"), link: "/vendor/campaign" },
-    //     // { label: 'Campaign Metrics', link: '/campaign/metrics' },
-    //   ],
-    // },
-    // { label: translate("Bids"), icon: BarChart, link: "/bids" },
-    // {
-    //   label: translate("Brand_Analysis"),
-    //   icon: BarChart,
-    //   link: "/brand-analysis",
-    // },
     {
       label: translate("Vendor_Analysis"),
       icon: BarChart,
       link: "/vendor/vendor-analysis",
+      notification: false
     },
     {
       label: translate("Payment_Earnings"),
       icon: DollarSign,
       link: "/vendor/payment-earnings",
+      notification: false
     },
-    // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
-    { label: translate("Settings"), icon: Settings, link: "/vendor/settings" },
-  ];
-  const creatorMenuItem: MenuItem[] = [
+    { label: translate("Settings"), icon: Settings, link: "/vendor/settings", notification: false },
+  ]);
+  const [creatorMenuItem,setCreatorMenuItem] = useState<MenuItem[]>([
     {
       label: translate("Dashboard"),
       icon: LayoutGrid,
       link: "/creator/dashboard",
+      notification: false
     },
     {
       label: translate("My_Store"),
       icon: Store,
       link: `/creator/store/${creator?.store_name}`,
-      // children: [
-      //   {
-      //     label: translate("Store_set_up"),
-      //     link: `/creator/store/${creator?.store_name}`,
-      //   },
-      //   { label: translate("Product_List"), link: "/creator/my-store" },
-      // ],
+      notification: false
     },
     {
       label: translate("Product_List"),
       icon: Box,
       link: "/creator/product-management",
+      notification: false
     },
-    // {
-    //   label: translate("Bidding_Management"),
-    //   icon: BarChart,
-    //   link: "/brand-analysis",
-    // },
-    // {
-    //   label: translate("Brands_List"),
-    //   icon: Store,
-    //   link: "/creator/brandsList",
-    // },
-    // {
-    //   label: translate("Creator_Analysis"),
-    //   icon: BarChart,
-    //   link: "/creator/creator_analysis",
-    // },
     {
       label: translate("Collaboration"),
       icon: UserRound,
       link: "/creator/collaboration",
+      notification: true
     },
     {
       label: translate("Creator_Analysis"),
       icon: BarChart,
       link: "/creator/creator-analysis",
+      notification: false
     },
     {
       label: translate("Payment_Earnings"),
       icon: DollarSign,
       link: "/creator/payment-earnings",
+      notification: false
     },
-    { label: translate("Settings"), icon: Settings, link: "/creator/settings" },
-    // { label: translate("Support"), icon: LifeBuoy, link: "/support" },
-  ];
+    { label: translate("Settings"), icon: Settings, link: "/creator/settings", notification: false },
+  ]);
 
   const menu = {
     vendor: menuItems,
     creator: creatorMenuItem,
   }[user?.role || "vendor"];
+
+  useEffect(() => {
+    if(notification?.creator){
+      setCreatorMenuItem((prev) =>
+        prev.map((item) =>
+          item.label === translate("Collaboration")
+            ? { ...item, notification: notification.creator.collaboration }
+            : item
+        )
+      );
+    }
+    if(notification?.vendor){
+      setMenuItems((prev) =>
+        prev.map((item) =>
+          item.label === translate("Collaboration")
+            ? { ...item, notification: notification.vendor.collaboration }
+            : item
+        )
+      );
+    }
+
+  },[notification?.creator,notification?.vendor])
   useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault();
@@ -358,6 +341,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                       Icon={item.icon}
                       hasSubmenu
                       expended={expandedMenus[item.label]}
+                      item={item}
                     />
                     {expandedMenus[item.label] && (
                       <div className="ml-6 px-4">
@@ -384,6 +368,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                               }
                               isChild
                               childIndex={idx}
+                              item={item}
                             />
                           ))}
                         </div>
@@ -400,6 +385,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                     isActive={pathname === item.link}
                     Icon={item.icon}
                     label={isSidebarExpanded && item.label}
+                    item={item}
                   />
                 )
               ) : item.children ? (
@@ -414,6 +400,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                         handleToggle={() => toggleMenu(item.label, false)}
                         label={isSidebarExpanded && item.label}
                         Icon={item.icon}
+                        item={item}
                       />
                     </Tooltip.Trigger>
                     <Tooltip.Content
@@ -456,6 +443,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                         Icon={item.icon}
                         label={isSidebarExpanded && item.label}
                         handleInstall={handleInstall}
+                        item={item}
                       />
                     </Tooltip.Trigger>
                     <Tooltip.Content
@@ -596,6 +584,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                     Icon={item.icon}
                     hasSubmenu
                     expended={expandedMenus[item.label]}
+                    item={item}
                   />
                   {expandedMenus[item.label] && (
                     <div className="ml-6 px-4">
@@ -612,6 +601,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                             label={child.label}
                             isChild
                             childIndex={idx}
+                            item={item}
                           />
                         ))}
                       </div>
@@ -628,6 +618,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
                   isActive={pathname === item.link}
                   Icon={item.icon}
                   label={item.label}
+                  item={item}
                 />
               )}
             </div>

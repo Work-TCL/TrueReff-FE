@@ -108,7 +108,7 @@ class SocketService {
   /**
    * Listen for real-time notifications
    */
-  onNotification(callback: (data: { message: string }) => void): void {
+  onNotification(callback: (data: { message: string; userType?: string; notificationType?:string; }) => void): void {
     if (this.socket) {
       this.socket.on("notification", callback);
     }
