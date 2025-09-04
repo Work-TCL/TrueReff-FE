@@ -429,21 +429,21 @@ export default function BargainingView() {
                         {collaborationData?.productId?.price}
                       </span>,
                     ],
-                    [
-                      collaborationData?.productId?.commission_type ===
-                      "PERCENTAGE"
-                        ? translate("Discount")
-                        : translate("Discount_Price"),
-                      <span className="flex items-center">
-                        {collaborationData?.productId?.commission}{" "}
-                        {collaborationData?.productId?.commission_type ===
-                        "PERCENTAGE" ? (
-                          "%"
-                        ) : (
-                          <IndianRupee size={14} />
-                        )}
-                      </span>,
-                    ],
+                    // [
+                      // collaborationData?.productId?.commission_type ===
+                      // "PERCENTAGE"
+                      //   ? translate("Discount")
+                      //   : translate("Discount_Price"),
+                      // <span className="flex items-center">
+                      //   {collaborationData?.productId?.commission}{" "}
+                      //   {collaborationData?.productId?.commission_type ===
+                      //   "PERCENTAGE" ? (
+                      //     "%"
+                      //   ) : (
+                      //     <IndianRupee size={14} />
+                      //   )}
+                      // </span>,
+                    // ],
                   ].map(([label, value], idx) => (
                     <div key={idx} className="flex flex-row items-start gap-3">
                       <div className="w-1/2 md:w-1/3 text-sm text-gray-500 text-nowrap">
