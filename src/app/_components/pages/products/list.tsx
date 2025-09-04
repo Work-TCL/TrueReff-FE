@@ -118,6 +118,7 @@ export default function ProductList() {
     status: string = ""
   ) => {
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
+
     try {
       const response = await axios.get(
         `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${
@@ -126,7 +127,16 @@ export default function ProductList() {
           status ? `&status=${status}` : ""
         }`
       );
-      if (response.data.data?.list) {
+      console.log("response", response);
+      // Handle error response from API
+      if (response.data && response.data.status && response.data.status !== 200) {
+        console.log("responses", response);
+        setProductList([]);
+        setTotalPages(0);
+        setCurrentPage(1);
+        // Optionally, show a toast or error message here
+        // toast.error(response.data.message || "Failed to fetch product list");
+      } else if (response.data.data?.list) {
         setProductList(
           response.data.data?.list.map((product: IProduct) => {
             let categories =
@@ -149,14 +159,19 @@ export default function ProductList() {
         );
         setTotalPages(Math.ceil(response.data.data?.count / pageLimit));
         setCurrentPage(page);
+      } else {
+        setProductList([]);
+        setTotalPages(0);
+        setCurrentPage(1);
       }
-      setLoading(false);
-      setInternalLoading(false);
-    } catch (error) {
-      setLoading(false);
+    } catch (error: any) {
+      // Optionally, show a toast or error message here
+      // toast.error(error?.response?.data?.message || "Failed to fetch product list");
       setProductList([]);
       setTotalPages(0);
       setCurrentPage(1);
+    } finally {
+      setLoading(false);
       setInternalLoading(false);
     }
   };
