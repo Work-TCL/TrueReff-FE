@@ -64,6 +64,9 @@ export default function ChannelProductList() {
       if (Array.isArray(res)) {
         setChannels(res);
         setActiveChannelTabId(res?.[0]?.channelType);
+      } else {
+        setChannels([]);
+        setActiveChannelTabId("");
       }
     });
   }, []);
@@ -95,6 +98,8 @@ export default function ChannelProductList() {
         }
       );
 
+      setLoading(false);
+      setInternalLoader(false);
       if (response?.data?.data?.list?.length > 0) {
         const dataCount = response.data.data.count;
         setProductList(response.data.data.list);
@@ -102,8 +107,6 @@ export default function ChannelProductList() {
         setTotalPages(Math.ceil(dataCount / pageSize));
       }
 
-      setLoading(false);
-      setInternalLoader(false);
     } catch (error: any) {
       if (error.name === "CanceledError" || error.name === "AbortError") {
         console.log("Request canceled");

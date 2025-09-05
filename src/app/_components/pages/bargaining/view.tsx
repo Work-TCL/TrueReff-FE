@@ -440,6 +440,7 @@ export default function BargainingView() {
                       //     <IndianRupee size={14} />
                       //   )}
                       // </span>,
+
                     // ],
                   ].map(([label, value], idx) => (
                     <div key={idx} className="flex flex-row items-start gap-3">

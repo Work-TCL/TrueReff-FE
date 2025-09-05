@@ -344,7 +344,7 @@
   "Product_View_Revenue": "Product View Revenue",
   "Rating": "Rating",
   "No_Products_Available": "No Products Available",
-  "No_Products_Available_Description": "It seems there are currently no products to display. Please check back later.",
+  "No_Products_Available_Description": "It seems there are currently no products to display. Please check back later or verify that your shopify store is connected or not",
   "Search_collaboration": "Search collaboration",
   "No_Collaborations_Available_Title": "No Collaborations Available",
   "No_Collaborations_Available_Description": "It seems there are currently no collaborations to display. Please check back later.",
@@ -698,12 +698,62 @@
   "Shopify_store_connect_info": {
     "title": "How to Connect Your Shopify Store with",
     "steps": {
-      "1": "1. Add your Shopify store domain (e.g., aapkastor.myshopify.com).",
-      "2": "2. Click the “Generate Key” button to create your Shopify API key.",
-      "3": "3. Copy the key and click Install. You’ll be redirected to the Shopify Admin Panel, where you can install the app.",
-      "4": "4. Paste the Shopify store key into the installed app and click Connect to Truereff. Your store will now be connected to",
-      "5": "5. Refresh the page to update your connection."
-    }
+      "1": {
+        "title": "Generate Your Unique Key",
+        "substeps": [
+          "Click the button to generate your unique key.",
+          "Copy the generated key, it will be used to connect your Shopify store with Truereff."
+        ]
+      },
+  "2": {
+    "title": "Open the Truereff App Page",
+    "substeps": [
+      "Go to the Shopify App Store: Truereff Brand Connect."
+    ]
+  },
+  "3": {
+    "title": "Install the App",
+    "substeps": [
+      "Click on the \"Install\" button on the left-side panel.",
+      "This will begin installing the Truereff Shopify app into your store."
+    ]
+  },
+  "4": {
+    "title": "Log in to Shopify",
+    "substeps": [
+      "If prompted, log in with your Shopify website credentials.",
+      "Complete the login to continue installation."
+    ]
+  },
+  "5": {
+    "title": "Complete Installation",
+    "substeps": [
+      "Follow the on-screen instructions to finish installing the Truereff Shopify app."
+    ]
+  },
+  "6": {
+    "title": "Access Truereff in Admin Panel",
+    "substeps": [
+      "Once installed, Go to the Truereff app page in your shopify admin panel.",
+      "This will open the Truereff page inside Shopify."
+    ],
+    "image":"/assets/step.png"
+  },
+  "7": {
+    "title": "Enter and Connect",
+    "substeps": [
+      "Enter that copied generated key into the \"Truereff.com Connection Token\" field.",
+      "Click the Connect button to link your Shopify store with Truereff.com, and it will show the status as Connected."
+    ],
+    "image":"/assets/step7.png"
+  },
+  "8": {
+    "title": "Confirmation",
+    "substeps": [
+      "Once connected, refresh this page for update status."
+    ]
+  }
+}
   },
   "Account_Holder_Name": "Account Holder Name",
   "Enter_your_phone_number": "Enter your phone number",
