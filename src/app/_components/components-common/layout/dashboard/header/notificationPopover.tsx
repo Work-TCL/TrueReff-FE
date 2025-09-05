@@ -50,14 +50,14 @@ export default function NotificationPopover({
         <div className="relative">
           <BellRing className="cursor-pointer md:w-6 md:h-6 h-5 w-5 font-normal text-primary" />
           {unreadNotifications > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white md:text-[10px] text-[8px] font-bold px-1 py-0 rounded-full">
-              {unreadNotifications}
-            </span>
+            <div className="flex justify-center items-center absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-normal px-1 py-0 rounded-full">
+              {unreadNotifications > 10 ? "+10" : unreadNotifications}
+            </div>
           )}
         </div>
       </PopoverTrigger>
 
-      <PopoverContent className="absolute z-50 md:right-0  right-[-105px] mt-2 flex h-[480px] w-[350px] flex-col rounded-2xl border border-gray-200 bg-white p-3 sm:w-[361px] lg:right-0">
+      <PopoverContent className="absolute z-50 md:right-0  right-[-85px] mt-2 flex h-[480px] w-[300px] md:w-[350px] flex-col rounded-2xl border border-gray-200 bg-white p-2 md:p-3 sm:w-[361px] lg:right-0">
         <div className="flex justify-between items-center border-b pb-2">
           <h2 className="text-lg font-semibold">Notifications</h2>
           <div
@@ -70,7 +70,7 @@ export default function NotificationPopover({
 
         <div
           className={cn(
-            "mt-3 space-y-3 max-h-[357px] overflow-y-auto pr-2",
+            "mt-2 space-y-3 max-h-[357px] overflow-y-auto ",
             notifications.length === 0 &&
               "h-full flex justify-center items-center"
           )}

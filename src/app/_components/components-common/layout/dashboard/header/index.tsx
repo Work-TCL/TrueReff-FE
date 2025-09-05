@@ -73,9 +73,8 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
   const { setNotificationData } = notificationData;
   const [loading, setLoading] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<INotification[]>([]);
-  const [page, setPage] = useState<number>(1);
+  const page = 1;
   const [unreadNotifications, setUnReadNotifications] = useState<number>(0);
-  const [totalNotification, setTotalNotification] = useState<number>(0);
   const pageLimit: number = 10;
   const pageNames: IPageName = {
     "/vendor/dashboard": translate("Dashboard"),
@@ -124,19 +123,16 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
       if (response?.status === 200) {
         const notificationRes: any = response?.data;
         setUnReadNotifications(notificationRes?.unreadCount);
-        setTotalNotification(notificationRes?.total);
         setNotifications([...notificationRes?.data]);
         if(account?.role === "vendor" || account?.role === "creator"){
           setNotificationData(account?.role,{...notificationData[account?.role], collaboration: notificationRes?.unreadCollaborationNotificationsCount > 0});
         }
       } else {
         setUnReadNotifications(0);
-        setTotalNotification(0);
         setNotifications([]);
       }
     } catch (error: any) {
       setUnReadNotifications(0);
-      setTotalNotification(0);
       setNotifications([]);
     } finally {
       setLoading(false);
