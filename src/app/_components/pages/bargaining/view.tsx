@@ -22,14 +22,11 @@ import {
   Copy,
   ExternalLinkIcon,
   IndianRupee,
-  MessageSquareText,
-  MessagesSquare,
 } from "lucide-react";
 import { toastMessage } from "@/lib/utils/toast-message";
 import Link from "next/link";
 import Rating from "../../components-common/dialogs/rating";
 import Confirmation from "../../components-common/dialogs/confirmation-dialog";
-import { set } from "lodash";
 export interface NegotiationStatus {
   agreedByVendor: boolean;
   agreedByCreator: boolean;
@@ -370,7 +367,7 @@ export default function BargainingView() {
         {/* Left Section (Scrollable on large screens) */}
         <div
           className={cn(
-            "col-span-1 md:col-span-1 lg:col-span-2 lg:h-[calc(100vh-140px)] lg:overflow-y-auto flex flex-col gap-2 md:gap-4",
+            "col-span-1 md:col-span-1 lg:col-span-2 lg:h-[calc(100vh-140px)] md:overflow-y-auto flex flex-col gap-2 md:gap-4",
             showChant ? "order-1" : ""
           )}
         >
@@ -647,7 +644,7 @@ export default function BargainingView() {
                             <span
                               key={option}
                               className={cn(
-                                "text-sm px-3 py-1 rounded-full border transition",
+                                "text-xs md:text-sm px-3 py-1 rounded-full border transition",
                                 "bg-blue-600 text-primary border-primary"
                                 // : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
                                 // disabled && "opacity-50 cursor-not-allowed"
@@ -669,17 +666,14 @@ export default function BargainingView() {
                   collaborationData?.productId?.freeProduct ? "Yes" : "No",
                 ],
               ].map(([label, value], idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col md:flex-row md:items-center md:gap-2"
-                >
-                  <div className="w-[220px] text-sm text-gray-500 text-nowrap">
-                    {label}:
-                  </div>
-                  <div className="font-medium text-sm break-words">
-                    {value || "-"}
-                  </div>
-                </div>
+                <div key={idx} className="flex flex-row items-start gap-3">
+                      <div className="w-1/2 md:w-1/3 text-sm text-gray-500 text-nowrap">
+                        {label}:
+                      </div>
+                      <div className="w-1/2 md:w-2/3 font-medium text-sm break-words">
+                        {value || "-"}
+                      </div>
+                    </div>
               ))}
               {collaborationData?.collaborationStatus === "ACTIVE" && (
                 <>

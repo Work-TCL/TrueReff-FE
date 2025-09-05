@@ -1,13 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CircleUserRound, LoaderCircle, SendHorizontal } from "lucide-react";
 import socketService from "@/lib/services/socket-service";
 import { formatTo12Hour } from "@/lib/utils/commonUtils";
 import { getCollobrationConversation } from "@/lib/web-api/collobration";
 import { ICollaboration } from "./view";
-import Loading from "@/app/creator/loading";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useVendorStore } from "@/lib/store/vendor";
@@ -33,28 +32,9 @@ export default function ChatComponent({
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
 
-  // useEffect(() => {
-  //   socketService.connect();
-
-  //   if (creator.creatorId || vendor.vendorId) {
-  //     let id: any = creator.creatorId || vendor.vendorId;
-  //     id && socketService.registerUser(String(id));
-  //   }
-
-  //   collaborationId && socketService.joinCollaboration(collaborationId);
-  //   socketService.joinedCollaborationRoom((data) => {});
-  //   socketService.joinedCollaborationMessages((data) => {
-  //     setMessages((prev) => [data.message, ...prev]);
-  //   });
-
-  //   return () => {
-  //     socketService.disconnect();
-  //   };
-  // }, [creator.creatorId, vendor.vendorId, collaborationId]);
-
   useEffect(() => {
     // 1. Connect to socket
-    socketService.connect();
+    // socketService.connect();
   
     // 2. Register user by ID
     const id = creator.creatorId || vendor.vendorId;
@@ -65,13 +45,8 @@ export default function ChatComponent({
     // 3. Join collaboration room
     if (collaborationId) {
       socketService.joinCollaboration(collaborationId);
-  
-      // 4. Trigger callback after joining the room
-      socketService.joinedCollaborationRoom((data) => {
-        console.log(data.message);
-      });
-  
-      // 5. Handle receiving new messages
+
+      // 4. Handle receiving new messages
       socketService.joinedCollaborationMessages((data: any) => {
         setMessages((prev) => [data.message, ...prev]);
   
@@ -89,17 +64,12 @@ export default function ChatComponent({
         }
       });
   
-      // 6. On initial load — mark all unread messages as read
+      // 5. On initial load — mark all unread messages as read
       socketService.markAllMessagesAsRead({
         collaborationId,
         type: creator.creatorId ? 'creator': 'vendor'
       });
     }
-  
-    // 7. Clean up
-    return () => {
-      socketService.disconnect();
-    };
   }, [creator.creatorId, vendor.vendorId, collaborationId]);
   
 
@@ -208,7 +178,7 @@ export default function ChatComponent({
         </div>
       </div>
       {/* <div className="h-px w-full bg-stroke mx-2"></div>{" "} */}
-      <CardContent className="flex flex-col-reverse p-2 overflow-y-auto gap-3 h-full max-h-[calc(100vh-285px)]">
+      <CardContent className="flex flex-col-reverse p-0 overflow-y-auto gap-3 h-full max-h-[calc(100vh-285px)]">
         {/* {isLoading && <Loading />} */}
         {!isLoading && message?.length < 0 && (
           <p className="opacity-50 text-center">
@@ -250,7 +220,7 @@ export default function ChatComponent({
                     } `}
                   >
                     <div
-                      className={`p-3 rounded-lg max-w-[250px] ${
+                      className={`p-2 md:p-3 rounded-lg max-w-[250px] ${
                         owner ? "bg-pink-100" : "bg-gray-100"
                       }`}
                     >

@@ -6,7 +6,6 @@ import { useAuthStore } from '@/lib/store/auth-user';
 import { cn, getErrorMessage } from '@/lib/utils/commonUtils';
 import { toastMessage } from '@/lib/utils/toast-message';
 import axios from '@/lib/web-api/axios';
-import { get, set } from 'lodash';
 import { ChevronDown, IndianRupee, Minus, Plus } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -76,8 +75,6 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
     };
 
     useEffect(() => {
-        socketService.connect();
-
         const type = account.role;
         if (collaborationId) {
             socketService.joinCollaboration(collaborationId)
@@ -91,7 +88,6 @@ function Bid({ collaborationData, setCollaborationData, offerAccepted, setOfferA
 
             socketService.markAllBidsAsSeen({ collaborationId, type })
         }
-
     }, [collaborationData]);
 
     useEffect(() => {
