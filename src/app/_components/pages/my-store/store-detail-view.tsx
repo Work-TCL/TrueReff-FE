@@ -102,12 +102,9 @@ export default function StoreDetailView({ store, handleOnEdit }: any) {
             <label className="text-sm text-[#7E7E80]">
               {translate("Store_Description")}
             </label>
-            <div
-              className="text-base font-medium mt-1"
-              dangerouslySetInnerHTML={{
-                __html: store?.description,
-              }}
-            ></div>
+            <div className="text-base font-medium mt-1">
+              {store?.description || "-"}
+            </div>
           </div>
         </div>
       </div>

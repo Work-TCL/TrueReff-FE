@@ -8,12 +8,42 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        bannerFloat: {
+          "0%": { transform: "translate(0px, 0px)" },
+          "25%": { transform: "translate(100px, 100px)" },
+          "50%": { transform: "translate(0px, 100px)" },
+          "75%": { transform: "translate(-100px, 0px)" },
+          "100%": { transform: "translate(0px, 0px)" },
+        },
+      },
+      animation: {
+        bannerFloat: "bannerMove 2s linear infinite",
+      },
+      screens: {
+        xs: "320px",
+        xsmobile: { max: "500px" },
+        mobile: { max: "640px" },
+        tablet: { min: "501px", max: "767px" },
+        sm: "640px",
+        // => @media (min-width: 640px) { ... }
+
+        md: "768px",
+        // => @media (min-width: 768px) { ... }
+
+        lg: "1024px",
+        // => @media (min-width: 1024px) { ... }
+
+        xl: "1280px",
+        // => @media (min-width: 1280px) { ... }
+      },
       colors: {
         foreground: "hsl(var(--foreground))",
         "primary-color": "#FF4979",
         "light-primary": "#ff497917",
         "secondary-color": "#090919",
         // 'secondary': '#090919',
+        "gray-color-200": "#333333",
         "gray-color": "#89858C",
         "gray-darken": "#2B2A2B",
         "gray-black": "#262626",
@@ -32,6 +62,10 @@ export default {
         "light-blue": "#BBEEED",
         blue: "#808EFF",
         purple: "#978FED",
+        rating: "#FFAD33",
+        active: "#098228",
+        pending: "#FF9500",
+        failed: "#FF3B30",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -78,6 +112,9 @@ export default {
         20: "20px",
       },
       backgroundImage: {
+        "banner-bg": "url('/assets/common/banner-bg.svg')",
+        "banner-bg-4": "url('/assets/common/banner-bg4.svg')",
+        "pink-blue-gradient": "linear-gradient(1deg, #e9b9cf 0%, #d3f3f1 100%)",
         "custom-gradient": `
           linear-gradient(0deg, #ffffff00, #ffffff00),
           linear-gradient(87.38deg, 

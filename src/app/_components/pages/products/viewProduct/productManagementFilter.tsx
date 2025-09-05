@@ -9,7 +9,6 @@ import { useTranslations } from "next-intl";
 import { ICategory } from "../../product-management";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
 import { labelStyle } from "@/app/_components/ui/form/Input";
-import SingleSelect from "@/app/_components/components-common/single-select";
 import { IStatus } from "../../vendor-collobration/collaboration";
 
 type Option = {
@@ -46,6 +45,8 @@ const customStyles = {
             backgroundColor: "rgba(255, 73, 121, 0.2)",
         },
     }),
+    menuPortal: (base: any) => ({ ...base, zIndex: 99999 }),
+  menu: (base: any) => ({ ...base, zIndex: 99999 }),
     // multiValue: (base: any) => ({
     //   ...base,
     //   backgroundColor: "rgba(255, 73, 121, 0.15)",
@@ -97,7 +98,7 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
 
     const fetchCategory = async () => {
         try {
-            const response = await getCategories({ page: 0, limit: 0 });
+            const response = await getCategories({ page: 0, limit: 0,type: "vendor" });
             const data = response?.data?.data || [];
             setCategories(data);
             setParentCategory(data.filter((ele) => ele?.parentId === null));
@@ -185,7 +186,7 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
     return (
         <>
         {/* Desktop view */}
-        <div className={cn("hidden gap-4 relative z-[999] md:flex")}>
+        {/* <div className={cn("hidden gap-4 relative z-[999] md:flex")}>
                 <SingleSelect
                     value={selectedStatus}
                     onChange={(value) => { 
@@ -195,11 +196,11 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
                     placeholder="Select Status"
                     className="!w-full"
                 />
-            </div>
+            </div> */}
             {/* Mobile Button */}
             <Button
                 variant="outline"
-                className={cn("text-black w-[100px] rounded-[4px] md:h-10 h-8 bg-white")}
+                className={cn("text-black w-[100px] rounded-[4px] h-10 bg-white")}
                 onClick={() => setOpenDialog(true)}
             >
                 <FaSlidersH className="mr-1" /> {translate("Filters")}
@@ -212,8 +213,8 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
                 title="Product Filter"
                 onClose={() => setOpenDialog(false)}
             >
-                <div className="bg-white rounded-2xl p-4 m-4">
-                    <div className="space-y-6">
+                <div className="bg-white rounded-2xl p-4">
+                    <div className="flex flex-col gap-2">
                         <div>
                             <label className={cn(labelStyle)}>
                                 {translate("Parent_Categories")}
@@ -229,6 +230,7 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
                                     value: ele._id,
                                     label: ele.name,
                                 }))}
+                                menuPortalTarget={typeof document !== "undefined" ? document.body:null}
                                 isOptionDisabled={() => tempSelectedParents.length >= 3}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
@@ -251,32 +253,28 @@ const ProductManageMentFilter: React.FC<CategorySubCategorySelectProps> = ({
                                     value: ele._id,
                                     label: ele.name,
                                 }))}
+                                menuPortalTarget={typeof document !== "undefined" ? document.body:null}
                                 isOptionDisabled={() => tempSelectedSubs.length >= 3}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                                 placeholder="Subcategories (max 3)"
                             />
                         </div>
-                        <div className="w-full md:hidden">
-                            <SingleSelect
-                                value={selectedStatus}
-                                onChange={(value) => {
-                                    setSelectedStatus(value);
-                                    handleSelectStatus(value);
-                                }}
-                                options={statusOptions}
-                                placeholder="Select Status"
-                                className="!w-full"
-                            />
-                        </div>
-
                         {/* OK Button */}
+                        <div className="flex justify-end gap-2 mt-5">
+                            <Button
+                            onClick={() => setOpenDialog(false)}
+                            className="w-1/3 md:w-1/5 bg-white text-secondary border-2 hover:bg-gray-200 rounded-md"
+                        >
+                            {translate("Cancel")}
+                        </Button>
                         <Button
                             onClick={handleApplyFilters}
-                            className="w-full bg-primary text-white rounded-md"
+                            className="w-1/3 md:w-1/5 bg-primary text-white rounded-md"
                         >
                             {translate("Ok")}
                         </Button>
+                        </div>
                     </div>
                 </div>
             </DialogLayout>

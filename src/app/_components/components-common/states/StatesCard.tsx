@@ -7,28 +7,30 @@ export const StatsCard = ({
   title,
   value,
   growth,
+  icon,
   borderColor,
   bgColor,
   link,
 }: {
   title: string;
-  value: number | string;
+  value: any;
   growth: number;
   borderColor: string;
   bgColor: string;
+  icon?: any;
   link?: string;
 }) => {
   const router = useRouter();
   return (
     <Card
-      className={`w-full h-[100px] box-border border ${borderColor} ${bgColor} ${
+      className={`w-full box-border border ${borderColor} ${bgColor} ${
         link ? "cursor-pointer" : ""
-      } rounded-2xl`}
+      } rounded-2xl min-h-[60px]`}
       onClick={() => link && router.push(link)}
     >
-      <CardContent className="p-5 gap-2 flex flex-col justify-between h-full">
+      <CardContent className="p-2 md:p-3 gap-2 md:gap-4 flex flex-col justify-between h-full">
         <div className="flex justify-between items-start">
-          <h3 className=" text-secondary  md:text-[14px] lg:text-[14px]">
+          <h3 className=" text-secondary text-xs md:text-[14px] lg:text-[14px]">
             {title}
           </h3>
           <div className="text-success hidden bg-success-light md:text-sm text-xs px-2 py-1 rounded-sm">
@@ -36,8 +38,9 @@ export const StatsCard = ({
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="md:text-3xl text-lg font-medium text-text">
-            {value}
+          <span className="md:text-3xl text-sm font-medium text-text flex items-center">
+            {icon && icon}
+            <span>{value}</span>
           </span>
           <div className="w-20 hidden h-8">
             <StatesCardGraph />

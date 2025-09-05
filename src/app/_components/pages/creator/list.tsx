@@ -20,23 +20,32 @@ import SingleSelect from "../../components-common/single-select";
 import { ViewToggle } from "../../components-common/view-toggle";
 import { SearchInput } from "../../components-common/search-field";
 import CreatorFilter from "./creator-filter";
+import { getCategories } from "@/lib/web-api/auth";
+import CategorySliderFilter from "../../components-common/categoryFilter";
 export interface ICategory {
   _id: string;
   name: string;
+  parentId: {
+    _id: string;
+    name: string;
+    parentId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IChannel {
+  followers: number;
   _id: string;
   creatorId: string;
   channelId: string;
   channelName: string;
   handleName: string;
-  token: string;
   channelType: string;
   createdAt: string;
   updatedAt: string;
-  lastFiveVideoViews: number;
-  lastMonthViews: number;
 }
 export interface ICreator {
   _id: string;
@@ -57,9 +66,15 @@ export interface ICreator {
   channels: IChannel[];
   categories?: string;
   tag?: string;
-  instagramViews?: string;
-  youtubeViews?: string;
+  instagramFollowers?: string;
+  youtubeFollowers?: string;
   pastSales?: string;
+  averageRating: number;
+  totalRevenue?: number;
+  totalOrders?: number;
+  ratingCount?: number;
+  youtube_link: string;
+  instagram_link: string;
 }
 const customStyles = {
   placeholder: (base: any) => ({
@@ -83,23 +98,34 @@ export default function CreatorList() {
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [viewMode, setViewMode] = useState<"table" | "card">("table");
+  const [viewMode, setViewMode] = useState<"table" | "card">("card");
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
 
   const initialValue = { show: false, creatorId: "" };
   const [isOpen, setIsOpen] = useState(initialValue);
   const [pageSize] = useState(20);
-  const filterOption = [
-    { value: "5", label: "Last 5 Videos" },
-    { value: "30", label: "Last 1 Month" },
-  ];
-
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories({
+        page: 0,
+        limit: 0,
+        type: "creator",
+      });
+      const data = response?.data?.data || [];
+      setCategories(data);
+      setParentCategory(data.filter((ele) => ele?.parentId === null));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
   const getInstagramView: (channels: IChannel[]) => string = (
     channels: IChannel[]
   ) => {
     let instagram = channels.find(
       (ele: { channelType: string }) => ele.channelType === "instagram"
     );
-    return "";
+    return instagram ? formatNumber(instagram?.followers) : "0";
   };
   const getYoutubeView: (channels: IChannel[]) => string = (
     channels: IChannel[]
@@ -107,11 +133,7 @@ export default function CreatorList() {
     let youtube = channels.find(
       (ele: { channelType: string }) => ele.channelType === "youtube"
     );
-    return youtube
-      ? formatNumber(
-          filter === "5" ? youtube?.lastFiveVideoViews : youtube?.lastMonthViews
-        )
-      : "-";
+    return youtube ? formatNumber(youtube?.followers) : "0";
   };
   // Get Creator list
   const getCreatorList = useCallback(
@@ -126,8 +148,14 @@ export default function CreatorList() {
         const response = await axios.get(
           `/auth/creator/list?page=${page}&limit=${pageSize}${
             searchValue ? `&search=${searchValue}` : ""
-          }${filterState?.state ? `&state=${filterState?.state}` : ""}${
-            filterState?.city ? `&city=${filterState?.city}` : ""
+          }${
+            filterState?.category?.length > 0
+              ? `&category=${filterState?.category?.join(",")}`
+              : ""
+          }${
+            filterState?.sub_category?.length > 0
+              ? `&subcategory=${filterState?.sub_category?.join(",")}`
+              : ""
           }`
         );
         if (response.status === 200) {
@@ -140,12 +168,12 @@ export default function CreatorList() {
               let result = creatorsArray.map((ele: ICreator) => {
                 ele.categories = ele.category
                   ?.map((ele: { name: string }) => ele?.name)
-                  .join(",");
+                  .join(", ");
                 ele.tag = ele.tags?.join(",");
-                ele.instagramViews = getInstagramView(ele.channels);
-                ele.youtubeViews = getYoutubeView(ele.channels);
+                ele.instagramFollowers = getInstagramView(ele.channels);
+                ele.youtubeFollowers = getYoutubeView(ele.channels);
                 //@ts-ignore
-                ele.pastSales = ele?.pastSales || "";
+                // ele.pastSales = ele?.pastSales || "";
                 return { ...ele };
               });
               setCreators([...result]);
@@ -175,6 +203,7 @@ export default function CreatorList() {
 
   useEffect(() => {
     getCreatorList(currentPage);
+    fetchCategory();
   }, []);
   const handlePageChange = (page: number) => {
     page !== currentPage && getCreatorList(page, true, search);
@@ -185,28 +214,44 @@ export default function CreatorList() {
     }, 500),
     []
   );
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-    debouncedSearch(value);
+
+  const handleSearch = (value: string) => {
     setSearch(value);
+    debouncedSearch(value);
   };
   const handleOnFilter = (filterState: any) => {
     getCreatorList(1, true, search, filterState);
   };
+  const handleSelectCategory = (selectedOptions: any, subSelected: any) => {
+    getCreatorList(1, true, search, {
+      category: selectedOptions ? [selectedOptions] : [],
+      subCategory: subSelected ? [subSelected] : [],
+    });
+  };
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4 h-full">
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center flex-wrap gap-2">
-            <SearchInput
+          <div className="flex justify-between items-start flex-wrap gap-2">
+            {/* <SearchInput
               value={search}
               onChange={handleSearch}
               placeholder={translate("Search_creator")}
+            /> */}
+            <CategorySliderFilter
+              isIncludeSearch
+              search={search}
+              onSearch={handleSearch}
+              onChange={handleSelectCategory}
             />
-            <div className="flex items-center gap-[10px] md:w-fit w-full">
-              <CreatorFilter onChange={handleOnFilter} />
+            <div className="flex items-start xsmobile:justify-between gap-[10px] md:w-fit w-full">
+              {/* <CreatorFilter
+                categories={categories}
+                parentCategory={parentCategory}
+                onChange={handleOnFilter}
+              /> */}
               <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </div>
           </div>
@@ -223,7 +268,7 @@ export default function CreatorList() {
                 />
               )}
               {viewMode === "card" && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 h-full bg-white p-4 rounded-[20px] overflow-auto">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 md:gap-4 lg:h-full bg-white p-2 md:p-4 rounded-[20px] overflow-auto">
                   {creators.map((item: any, i) => (
                     <div key={i} className="flex h-fit w-full">
                       <CreatorCard

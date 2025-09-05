@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Loading from "@/app/vendor/loading";
 import { useTranslations } from "next-intl";
@@ -13,6 +13,7 @@ import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import ProductCard from "@/app/_components/components-common/product/product-card";
 import { SearchInput } from "@/app/_components/components-common/search-field";
 import CategorySubCategorySelect from "@/app/_components/components-common/category-dropdowns";
+import TrendingProductCard from "@/app/_components/components-common/product/trending.product-card";
 const Select = dynamic(() => import("react-select"), { ssr: false });
 
 export interface ICategory {
@@ -24,25 +25,31 @@ export interface ICategory {
 }
 
 export interface IProduct {
-  vendor: any;
-  collaboration: any;
-  request: any;
   _id: string;
   title: string;
   channelProductId: string;
-  vendorId: string;
   sku: string;
   description: string;
-  media: string[]; // assuming media is an array of image/video URLs or paths
-  channelName: string; // extend as needed
-  category: ICategory[];
-  tags: string[]; // if tags are strings
-  createdAt: string; // or Date
-  updatedAt: string;
-  categories?: string;
-  subCategories?: string;
-  tag?: string;
-  price?: string;
+  media: string[]; // Array of image/video URLs
+  price: number;
+  channelName: string;
+  category: ICategory[]; // Array of categories
+  subCategory: string[]; // Array of sub-category IDs
+  tags: string[]; // Array of tags
+  lifeTime: boolean;
+  startDate: string | null; // You can use `Date` if parsed
+  endDate: string | null; // You can use `Date` if parsed
+  status: string; // e.g., "ACTIVE"
+  commission: number; // Commission value
+  commission_type: "PERCENTAGE" | "FIXED_AMOUNT"; // Commission type
+  videoType: string[]; // Array of video types
+  channels: string[]; // Array of channel names
+  createdAt: string; // You can use `Date` if parsed
+  updatedAt: string; // You can use `Date` if parsed
+  crmLink: string; // CRM link
+  categories?: string; // Comma-separated string of category names
+  tag?: string; // Comma-separated string of tags
+  utmLink: string;
 }
 
 const customStyles = {
@@ -57,12 +64,13 @@ const customStyles = {
   }),
 };
 
-export default function ProductList({ storeName }: { storeName: string }) {
+export default function ProductList({ storeName,showTrending }: { storeName: string,showTrending: boolean }) {
   const translate = useTranslations();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
+  const [trendingProductList, setTrendingProductList] = useState<IProduct[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -79,30 +87,29 @@ export default function ProductList({ storeName }: { storeName: string }) {
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
-        `/auth/creator-store/product-list?limit=${pageLimit}&page=${page}&name=${storeName}`
+        `/auth/creator-store/product-list?limit=${pageLimit}&page=${page}&name=${storeName}${searchValue ? `&search=${searchValue}`: ""}`
       );
 
-      if (response.data.data?.products) {
-        setProductList(
-          response.data.data?.products.map((product: any) => {
-            let categories =
-              product.category?.length > 0
-                ? product.category
-                    .filter((cat: ICategory) => cat.parentId === null)
-                    .map((cat: ICategory) => cat?.name)
-                    ?.join(", ")
-                : "";
-            let subCategories =
-              product.category?.length > 0
-                ? product.category
-                    .filter((cat: ICategory) => cat.parentId !== null)
-                    .map((cat: ICategory) => cat?.name)
-                    ?.join(", ")
-                : "";
-            let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
-            return { ...product, categories, tag, subCategories };
-          })
-        );
+      if (response.data.data?.list?.length > 0) {
+        const productData = response.data.data?.list.map((product: any) => {
+          let categories =
+            product.category?.length > 0
+              ? product.category
+                .filter((cat: ICategory) => cat.parentId === null)
+                .map((cat: ICategory) => cat?.name)
+                ?.join(", ")
+              : "";
+          let subCategories =
+            product.category?.length > 0
+              ? product.category
+                .filter((cat: ICategory) => cat.parentId !== null)
+                .map((cat: ICategory) => cat?.name)
+                ?.join(", ")
+              : "";
+          let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
+          return { ...product, categories, tag, subCategories };
+        })
+        setProductList([...productData]);
         setTotalPages(Math.ceil(response.data.data?.count / pageLimit));
         setCurrentPage(page);
       }
@@ -116,11 +123,60 @@ export default function ProductList({ storeName }: { storeName: string }) {
       setInternalLoading(false);
     }
   };
+  const fetchTrendingProductsList = async (
+    page: number = currentPage,
+    isInternalLoader: boolean = false,
+    searchValue: string = "",
+    categoryIds: string[] = []
+  ) => {
+    isInternalLoader ? setInternalLoading(true) : setLoading(true);
+    try {
+      const response = await axios.get(
+        `/auth/creator-store/trending-product-list?limit=${pageLimit}&page=${page}&name=${storeName}`
+      );
+
+      if (response.data.data?.list?.length > 0) {
+        setTrendingProductList(
+          response.data.data?.list.map((product: any) => {
+            let categories =
+              product.category?.length > 0
+                ? product.category
+                  .filter((cat: ICategory) => cat.parentId === null)
+                  .map((cat: ICategory) => cat?.name)
+                  ?.join(", ")
+                : "";
+            let subCategories =
+              product.category?.length > 0
+                ? product.category
+                  .filter((cat: ICategory) => cat.parentId !== null)
+                  .map((cat: ICategory) => cat?.name)
+                  ?.join(", ")
+                : "";
+            let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
+            return { ...product, categories, tag, subCategories };
+          })
+        );
+        // setTotalPages(Math.ceil(response.data.data?.count / pageLimit));
+        // setCurrentPage(page);
+      }
+      setLoading(false);
+      setInternalLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setTrendingProductList([]);
+      // setTotalPages(0);
+      setCurrentPage(1);
+      setInternalLoading(false);
+    }
+  };
 
   // Update useEffect to fetch the initial product list
   useEffect(() => {
-    fetProductsList(currentPage);
-  }, []);
+    if(storeName){
+      fetProductsList(currentPage);
+      fetchTrendingProductsList(currentPage);
+    }
+  }, [storeName]);
 
   // Update the onClick handlers for pagination buttons
   const handlePageChange = (page: number) => {
@@ -145,13 +201,14 @@ export default function ProductList({ storeName }: { storeName: string }) {
     fetProductsList(1, true, search, [...selectedCategories]);
   };
 
+
   return (
-    <div className="bg-white p-4 rounded-lg flex flex-col gap-4 h-full w-full">
+    <div className="bg-white p-3 md:p-4 rounded-[20px] flex flex-col gap-3 h-full w-full">
       {loading ? (
         <Loading />
       ) : (
         <>
-          {productList?.length > 0 && (
+          {/* {productList?.length > 0 && (
             <div className="flex justify-between items-center gap-2 flex-nowrap">
               <SearchInput
                 value={search}
@@ -166,17 +223,33 @@ export default function ProductList({ storeName }: { storeName: string }) {
                 />
               </div>
             </div>
-          )}
+          )} */}
           {internalLoading && <Loader />}
+          {showTrending && trendingProductList?.length > 0 && (
+            <div>
+              <h3 className="font-semibold">
+                {translate("Trending_Products")}
+              </h3>
+              <div
+                className={`grid grid-cols-2 sm:grid-cols-4 ${
+                  trendingProductList?.length > 10 && "animate-marquee"
+                } md:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-6 whitespace-nowrap gap-2 py-2 text-sm font-medium`}
+              >
+                {trendingProductList.map((item: any) => (
+                  <div key={item?._id} className="flex h-full w-full">
+                    <TrendingProductCard item={item} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {productList?.length > 0 ? (
-            <>
-              <div className="grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-4 bg-white md:p-4 rounded-[20px] md:max-h-screen overflow-auto md:pt-4 pt-2 md:pb-4 pb-2 pr-2">
+            <div className="flex flex-col h-full">
+              <h3 className="font-semibold">{translate("Product_List")}</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-2 bg-white md:max-h-screen overflow-auto pt-2 pb-3">
                 {productList.map((item: IProduct) => (
                   <div key={item?._id} className="flex h-full w-full">
-                    <ProductCard
-                      item={item}
-                      productDetailLink="/product-detail"
-                    />
+                    <ProductCard item={item} />
                   </div>
                 ))}
               </div>
@@ -188,7 +261,7 @@ export default function ProductList({ storeName }: { storeName: string }) {
                   onPageChange={handlePageChange}
                 />
               )}
-            </>
+            </div>
           ) : (
             <EmptyPlaceHolder
               title={translate("No_Products_Available")}

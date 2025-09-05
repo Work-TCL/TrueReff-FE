@@ -127,7 +127,7 @@ const CategorySubCategorySelect: React.FC<CategorySubCategorySelectProps> = ({
     setTempSelectedParents(selectedIds);
 
     const optionsSubCategory = categories.filter((ele) =>
-      selectedIds.includes(ele?.parentId || "")
+      selectedIds.includes(ele?.parentId?._id || "")
     );
     setSubCategory(optionsSubCategory);
 

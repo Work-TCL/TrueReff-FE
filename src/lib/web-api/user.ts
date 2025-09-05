@@ -15,6 +15,7 @@ export const getProfileAPI = async () => {
         id: user?._id,
         name: user?.name,
         role: user?.type,
+        phone: user?.phone
       });
     }
     // creator
@@ -77,6 +78,7 @@ export const getProfileAPI = async () => {
         channelId: vendor?.channelId,
         channelStatus: vendor?.channelStatus,
         channelType: vendor?.channelType,
+        status: vendor?.status,
       });
     }
     return response?.data?.data;

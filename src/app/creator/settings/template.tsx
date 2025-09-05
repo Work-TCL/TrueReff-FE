@@ -14,11 +14,11 @@ const settingMenus: {
     path: "/creator/settings",
   },
   {
-    label: "Channel_connects",
+    label: "channels_connect",
     path: "/creator/settings/store",
   },
 ];
 
 export default function template({ children, ...props }: ILayout) {
-  return <SettingsLayout menus={settingMenus}>{children}</SettingsLayout>;
+  return <SettingsLayout type="creator">{children}</SettingsLayout>;
 }

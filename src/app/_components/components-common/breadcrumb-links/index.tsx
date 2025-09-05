@@ -29,7 +29,7 @@ const CommonBreadcrumb: React.FC<CommonBreadcrumbProps> = ({ items }) => {
               {item.href ? (
                 <BreadcrumbPage
                   className="cursor-pointer hover:text-grey hover:underline"
-                  onClick={() => router.push(item.href!)}
+                  onClick={() => item.href === "go_back" ? router?.back() : router.push(item.href!)}
                 >
                   {item.label}
                 </BreadcrumbPage>

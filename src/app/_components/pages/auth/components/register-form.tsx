@@ -13,6 +13,8 @@ import { MdOutlineEmail } from "react-icons/md";
 import { PiLockKey } from "react-icons/pi";
 import { IPostSignupRequest, IPostSignupResponse } from "@/lib/types-api/auth";
 import { useTranslations } from "next-intl";
+import { Phone, User } from "lucide-react";
+import Link from "next/link";
 interface IRedirectPaths {
   [key: string]: string;
 }
@@ -30,6 +32,8 @@ export default function RegisterForm() {
   const schema = registerSchema;
   const methods = useForm<IRegisterSchema>({
     defaultValues: {
+      name: "",
+      phone: "",
       email: "",
       password: "",
     },
@@ -42,6 +46,8 @@ export default function RegisterForm() {
     try {
       ("use server");
       const payload: IPostSignupRequest = {
+        name: data?.name,
+        phone: data?.phone,
         email: data?.email,
         password: data.password,
       };
@@ -74,11 +80,23 @@ export default function RegisterForm() {
         className="w-full flex flex-col gap-3"
       >
         <Input
+          name="name"
+          type="text"
+          placeholder={translate("Name")}
+          Icon={User}
+          autoFocus
+        />
+        <Input
+          name="phone"
+          type="number"
+          placeholder={translate("Phone")}
+          Icon={Phone}
+        />
+        <Input
           name="email"
           type="email"
           placeholder={translate("Email")}
           Icon={MdOutlineEmail}
-          autoFocus
         />
         <Input
           name="password"
@@ -95,13 +113,21 @@ export default function RegisterForm() {
           />
           <span className="text-sm">
             {translate("By_Signing_up,_you_agree_to_our")}{" "}
-            <span className="text-primary-color font-medium">
+            <Link
+              href="/privacy-policy"
+              target="_blank"
+              className="text-primary-color font-medium"
+            >
               {translate("Privacy_Policy")}
-            </span>{" "}
+            </Link>{" "}
             &{" "}
-            <span className="text-primary-color font-medium">
+            <Link
+              href="/terms-condition"
+              target="_blank"
+              className="text-primary-color font-medium"
+            >
               {translate("Terms_of_Use")}.
-            </span>
+            </Link>
           </span>
         </label>
         <Button

@@ -22,10 +22,10 @@ import axios from "@/lib/web-api/axios";
 import { useTranslations } from "next-intl";
 
 interface IProduct {
-  productId: string;
+  productId: number;
   channelName: string;
   handle: string;
-  id: string;
+  id: number;
   image: string;
   title: string;
   category: string;

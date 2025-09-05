@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Navigation } from "lucide-react";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils/commonUtils";
 
 interface DataTableProps {
   gridClasses?: string;
@@ -60,7 +61,17 @@ const DataTable: React.FC<DataTableProps> = ({
                 key={header.id}
                 colSpan={header.colSpan}
                 onClick={header.column.getToggleSortingHandler()}
-                className="sticky top-0 bg-stroke min-w-[150px] text-sm text-gray-600 whitespace-nowrap p-4 text-left z-10 dark:text-white xl:pl-4 cursor-pointer select-none font-medium"
+                className={cn(
+                  "sticky top-0 bg-stroke sm:min-w-[150px] min-w-[110px] text-sm p-4 text-left z-10 font-medium cursor-pointer select-none dark:text-white xl:pl-4 text-gray-600 whitespace-nowrap",
+                  header.column.columnDef.meta &&
+                    header.column.columnDef.meta.isColumnSticky &&
+                    header.column.columnDef.meta.stickySide === "left" &&
+                    "sticky left-0 z-[11] bg-stroke",
+                  header.column.columnDef.meta &&
+                    header.column.columnDef.meta.isColumnSticky &&
+                    header.column.columnDef.meta.stickySide === "right" &&
+                    "sticky right-0 z-[11] bg-stroke"
+                )}
               >
                 {flexRender(
                   header.column.columnDef.header,
@@ -81,14 +92,21 @@ const DataTable: React.FC<DataTableProps> = ({
       <tbody className="min-h-96">
         {table.getRowModel().rows.length > 0
           ? table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                className="hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-              >
+              <tr key={row.id} className="transition-colors group">
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="border-b border-[#eee] py-3 px-2 dark:border-strokedark xl:pl-4 text-sm text-gray-600"
+                    className={cn(
+                      "border-b border-[#eee] py-3 px-2 xl:pl-4 text-sm text-gray-600 dark:border-strokedark group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors",
+                      cell.column.columnDef.meta &&
+                        cell.column.columnDef.meta.isColumnSticky &&
+                        cell.column.columnDef.meta.stickySide === "left" &&
+                        "sticky left-0 z-[1] bg-white dark:bg-boxdark transition-colors",
+                      cell.column.columnDef.meta &&
+                        cell.column.columnDef.meta.isColumnSticky &&
+                        cell.column.columnDef.meta.stickySide === "right" &&
+                        "sticky right-0 z-[1] bg-white dark:bg-boxdark transition-colors"
+                    )}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
@@ -101,7 +119,7 @@ const DataTable: React.FC<DataTableProps> = ({
   );
 
   return (
-    <div className=" border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
+    <div className="flex-1 border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark overflow-hidden h-full rounded-xl">
       <div className="max-w-full h-full overflow-auto">
         {data.length > 0 && type === "table" ? (
           tableContent()

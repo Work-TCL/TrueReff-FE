@@ -16,7 +16,7 @@ export default function TruncateWithToolTip({
   checkHorizontalOverflow = false, // New prop to determine overflow direction
   linesToClamp = 1, // 👈 New prop to support custom line clamping
 }: {
-  text?: string;
+  text?: any;
   className?: string;
   tooltipContentClassName?: string;
   checkHorizontalOverflow?: boolean;
@@ -39,14 +39,14 @@ export default function TruncateWithToolTip({
             </p>
           </TooltipTrigger>
         ) : (
-          <p
+          <span
             ref={textRef}
             className={cn(`line-clamp-${linesToClamp}`, className)}
             onMouseEnter={handleMouseEnterTruncate}
             onMouseLeave={handleMouseLeaveTruncate}
           >
             {text}
-          </p>
+          </span>
         )}
         <TooltipContent
           side="bottom"
@@ -55,9 +55,9 @@ export default function TruncateWithToolTip({
             tooltipContentClassName
           )}
         >
-          <p className="rounded-md bg-white text-sm p-2 break-words whitespace-normal">
+          <span className="rounded-md bg-white text-sm p-2 break-words whitespace-normal">
             {text}
-          </p>
+          </span>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

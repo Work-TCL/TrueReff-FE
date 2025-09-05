@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "@/lib/web-api/axios";
 import { ICategory, ICollaboration } from "../creator/collaboration";
@@ -16,51 +16,38 @@ import { useTranslations } from "next-intl";
 export default function RecentCollaborations() {
   const translate = useTranslations();
   const router = useRouter();
-  const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
+  const [collaborations, setCollaborations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchCollaboration = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `/product/collaboration/list?page=1&limit=3`
+        `/product/collaboration/creator/list?page=1&limit=3`
       );
       if (response.status === 200) {
         const collaborationData = response.data.data;
         if (collaborationData && typeof collaborationData === "object") {
-          const collaborationArray = collaborationData.data || [];
+          const collaborationArray = collaborationData.list || [];
 
           if (Array.isArray(collaborationArray)) {
             let result = collaborationArray.map((ele: ICollaboration) => {
               let category =
-                ele.product.categories?.length > 0
-                  ? ele.product.categories
+                ele.productId.category?.length > 0
+                  ? ele.productId.category
                       .filter(
                         (category: ICategory) => category?.parentId === null
                       )
                       .map((category: ICategory) => {
                         return category?.name;
                       })
-                      .join(", ")
                   : "";
-              let subCategory =
-                ele.product.categories?.length > 0
-                  ? ele.product.categories
-                      .filter(
-                        (category: ICategory) => category?.parentId !== null
-                      )
-                      .map((category: ICategory) => {
-                        return category?.name;
-                      })
-                      .join(", ")
-                  : "";
-              let tag = ele.product.tags.join(", ");
+              let tag = ele.productId.tags.join(", ");
               return {
                 ...ele,
-                product: {
-                  ...ele?.product,
-                  category: category,
-                  subCategories: subCategory,
+                productId: {
+                  ...ele?.productId,
+                  categories: category,
                   tag,
                 },
               };
@@ -86,8 +73,8 @@ export default function RecentCollaborations() {
     fetchCollaboration();
   }, []);
   return (
-    <div className="p-4 bg-white rounded-[20px]">
-      <div className="flex justify-between items-center mb-4">
+    <div className="w-full p-3 md:p-4 flex flex-col gap-0 md:gap-2 bg-white rounded-[20px]">
+      <div className="flex justify-between items-center">
         <h2 className="md:text-xl text-base text-text font-semibold">
           {" "}
           {translate("Recent_Collaboration")}
@@ -95,7 +82,7 @@ export default function RecentCollaborations() {
         {collaborations?.length > 0 && (
           <Button
             variant="link"
-            className="text-primary md:h-10 h-7"
+            className="text-xs md:text-base xl:text-base text-primary p-0"
             onClick={() => router.push("/creator/collaboration")}
           >
             {translate("View_all")}

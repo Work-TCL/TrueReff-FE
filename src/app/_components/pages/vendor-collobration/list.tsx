@@ -140,7 +140,7 @@ export default function CreatorList() {
     setFilter(value);
   };
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4">
       <div className="flex justify-between items-center flex-wrap gap-2">
         <SearchInput
           value={search}

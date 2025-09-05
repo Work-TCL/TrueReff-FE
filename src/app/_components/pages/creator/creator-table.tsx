@@ -9,13 +9,16 @@ import { useTranslations } from "next-intl";
 import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../components-common/data-table";
+import { currency, formatFloatValue } from "@/lib/utils/constants";
+import { IndianRupee, Star } from "lucide-react";
+import Link from "next/link";
 function formatNumber(num: number = 0) {
   if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
   } else if (num >= 1_000) {
     return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
   }
-  return num === 0 ? "" : num.toString();
+  return num === 0 ? "0" : num.toString();
 }
 
 interface ICreatorTableProps {
@@ -32,28 +35,8 @@ const CreatorTable = ({
 }: ICreatorTableProps) => {
   const translate = useTranslations();
   const router = useRouter();
-  const getInstagramView: (channels: IChannel[]) => string = (
-    channels: IChannel[]
-  ) => {
-    let instagram = channels.find(
-      (ele: { channelType: string }) => ele.channelType === "instagram"
-    );
-    return "";
-  };
-  const getYoutubeView: (channels: IChannel[]) => string = (
-    channels: IChannel[]
-  ) => {
-    let youtube = channels.find(
-      (ele: { channelType: string }) => ele.channelType === "youtube"
-    );
-    return youtube
-      ? formatNumber(
-          filter === "5" ? youtube?.lastFiveVideoViews : youtube?.lastMonthViews
-        )
-      : "-";
-  };
   const handleViewCreatorDetails = (id: string) => {
-    router.push(`/creator/profile/${id}`);
+    router.push(`/vendor/creator-profile/${id}`);
   };
 
   const creatorColumns: ColumnDef<ICreator>[] = [
@@ -83,17 +66,6 @@ const CreatorTable = ({
       },
     },
     {
-      id: "bio",
-      header: () => translate("Creator_Bio"),
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.short_description || row.original.long_description}
-        />
-      ),
-    },
-    {
       id: "categories",
       header: () => translate("Categories"),
       cell: ({ row }) => (
@@ -106,50 +78,97 @@ const CreatorTable = ({
     },
     {
       id: "tags",
-      header: () => translate("Tags"),
+      header: () => translate("Ratings"),
       cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.tag ?? ""}
-        />
+        <div className="flex items-center gap-1">
+          <Star size={15} className="text-yellow-500 fill-yellow-500" />
+          <span>{`${formatFloatValue(row.original?.averageRating)}/${5}`}</span>
+        </div>
       ),
     },
     {
       id: "instagram_view",
-      header: () => (
-        <div className="text-center">{translate("Instagram_View")}</div>
+      header: () => <div className="text-center">{translate("Followers")}</div>,
+      cell: ({ row }) => (
+        <div className="flex gap-2 justify-center">
+          <Link
+            href={row?.original?.instagram_link}
+            target={row?.original?.instagram_link ? "_blank" : ""}
+            className="flex flex-col items-center p-2"
+          >
+            <div>
+              <img
+                src="/assets/creator/Instagram-icon.svg"
+                width={30}
+                height={30}
+              />
+            </div>
+            <div>{row?.original?.instagramFollowers}</div>
+          </Link>
+          <Link
+            href={row?.original?.youtube_link}
+            target={row?.original?.youtube_link ? "_blank" : ""}
+            className="flex flex-col items-center p-2"
+          >
+            <div>
+              <img
+                src="/assets/creator/Youtube-icon.svg"
+                width={30}
+                height={30}
+              />
+            </div>
+            <div>{row?.original?.youtubeFollowers}</div>
+          </Link>
+        </div>
       ),
+    },
+    // {
+    //   id: "youtube_view",
+    //   header: () => (
+    //     <div className="text-center">{translate("Youtube_followers")}</div>
+    //   ),
+    //   cell: ({ row }) => (
+    //     <div className="text-center">
+    //       {getYoutubeView(row.original.channels)}
+    //     </div>
+    //   ),
+    // },
+    {
+      id: "totalOrders",
+      header: () => <div className="text-center">{translate("Orders")}</div>,
       cell: ({ row }) => (
         <div className="text-center">
-          {getInstagramView(row.original.channels)}
+          {formatNumber(row.original.totalOrders) ?? ""}
         </div>
       ),
     },
     {
-      id: "youtube_view",
-      header: () => (
-        <div className="text-center">{translate("YouTube_View")}</div>
-      ),
+      id: "totalRevenue",
+      header: () => <div className="text-center">{translate("Revenue")}</div>,
       cell: ({ row }) => (
-        <div className="text-center">
-          {getYoutubeView(row.original.channels)}
+        <div className="text-center flex items-center justify-center">
+          <IndianRupee size={15} />
+          {formatNumber(row.original.totalRevenue)}
         </div>
       ),
     },
-    {
-      id: "past_sales",
-      header: () => translate("Past_Sales"),
-      cell: ({ row }) => row.original.pastSales ?? "",
-    },
+    // {
+    //   id: "conversion_rate",
+    //   header: () => translate("Conversion_Rate"),
+    //   cell: ({ row }) => row.original.pastSales ?? "",
+    // },
     {
       id: "action",
       header: () => <div className="text-center">{translate("Action")}</div>,
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => (
         <div className="flex justify-center">
           <Button
             variant="outline"
-            className="whitespace-nowrap border border-[#FFEDF2] bg-[#FFEDF2] text-[#FF4979] rounded-md transition-all py-3 px-[10px] text-sm"
+            className="whitespace-nowrap border border-primary bg-white hover:bg-primary text-[#FF4979] hover:text-white rounded-md transition-all py-3 px-[10px] text-sm"
             onClick={() => handleCollaborateNow(row.original._id)}
           >
             {translate("Collaborate_Now")}

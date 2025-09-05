@@ -9,7 +9,7 @@ interface IAuthTitle {
 export default function AuthTitle({ text, className = "" }: IAuthTitle) {
   return (
     <div
-      className={cn("text-[32px] font-semibold text-gray-darken", className)}
+      className={cn("text-[32px] md:text-start text-center font-semibold text-gray-darken", className)}
     >
       {text}
     </div>

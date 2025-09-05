@@ -7,7 +7,7 @@ interface IProps {
 
 export default function AuthLayoutPage({
   children,
-  authImage = "login-image.svg",
+  authImage = "sign-in-image.png",
 }: IProps) {
   return (
     <div className="h-screen text-gray-900 grid lg:grid-cols-2 grid-cols-1 overflow-hidden bg-white">

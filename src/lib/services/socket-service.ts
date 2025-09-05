@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_SERVER_URL = "http://localhost:5004"; // Update this with your actual backend URL
+const SOCKET_SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_URL; // Update this with your actual backend URL
 
 class SocketService {
   private socket: Socket | null = null;
@@ -14,11 +14,9 @@ class SocketService {
         transports: ["websocket"],
       });
 
-      this.socket.on("connect", () => {
-      });
+      this.socket.on("connect", () => {});
 
-      this.socket.on("disconnect", () => {
-      });
+      this.socket.on("disconnect", () => {});
     }
   }
 
@@ -34,7 +32,7 @@ class SocketService {
   /**
    * Join a collaboration room
    */
-  joinCollaboration(collaborationId: string|string[]): void {
+  joinCollaboration(collaborationId: string | string[]): void {
     if (this.socket) {
       this.socket.emit("joinCollaboration", collaborationId);
     }
@@ -56,6 +54,18 @@ class SocketService {
   ): void {
     if (this.socket) {
       this.socket.on("newCollaborationMessage", callback);
+    }
+  }
+
+  markMessagesAsRead(payload: any): void {
+    if (this.socket) {
+      this.socket.emit("markMessagesAsRead", payload);
+    }
+  }
+
+  markAllMessagesAsRead(payload: any) {
+    if (this.socket) {
+      this.socket.emit("markAllMessagesAsRead", payload);
     }
   }
 
@@ -98,9 +108,41 @@ class SocketService {
   /**
    * Listen for real-time notifications
    */
-  onNotification(callback: (data: { message: string }) => void): void {
+  onNotification(callback: (data: { message: string; userType?: string; notificationType?:string; }) => void): void {
     if (this.socket) {
       this.socket.on("notification", callback);
+    }
+  }
+  //receive bid
+  newBidReceived(callback: (data: any) => void): void {
+    if (this.socket) {
+      this.socket.on("newBid", callback);
+    }
+  }
+
+  //send new bid
+  sendNewBid(data: any): void {
+    if (this.socket) {
+      this.socket.emit("bidRequest", data);
+    }
+  }
+
+  markBidAsSeen(data: any): void {
+    if (this.socket) {
+      this.socket.emit("markBidAsSeen", data);
+    }
+  }
+
+  markAllBidsAsSeen(data: any) {
+    if (this.socket) {
+      this.socket.emit("markAllBidsAsSeen", data);
+    }
+  }
+
+  //bid send fail
+  errorSendBid(callback: (data: any) => void): void {
+    if (this.socket) {
+      this.socket.on("bid-error", callback);
     }
   }
 

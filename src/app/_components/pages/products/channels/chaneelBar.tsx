@@ -87,13 +87,13 @@ export default function ChannelBar({
         className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       >
         {channels.map((el) => {
-          const channelLabel = `${el.channelType}(${el?.channelConfig?.name})`;
+          const channelLabel = `${el.channelType}`;
 
           const renderedChannel = (
             <div
-              key={el.value}
+              key={channelLabel}
               className={cn(
-                " rounded-full capitalize h-[36px] px-3 gap-1",
+                " rounded-full capitalize h-[36px] px-3 gap-1 cursor-pointer",
                 el.channelType === activeChannelTabId
                   ? "bg-primary/90 text-white hover:bg-primary/90 "
                   : "bg-primary/10 text-primary hover:bg-primary/5 "
@@ -114,7 +114,7 @@ export default function ChannelBar({
             </div>
           );
           return channelLabel.length > 20 ? (
-            <TooltipProvider>
+            <TooltipProvider key={channelLabel}>
               <Tooltip>
                 <TooltipTrigger>{renderedChannel}</TooltipTrigger>
                 <TooltipContent

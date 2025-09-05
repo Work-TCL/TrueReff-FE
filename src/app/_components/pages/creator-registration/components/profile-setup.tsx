@@ -8,7 +8,13 @@ import { useTranslations } from "next-intl";
 export interface ICategoryData {
   _id: string;
   name: string;
-  parentId: string;
+  parentId: {
+    _id: string;
+    name: string;
+    parentId: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -36,7 +42,7 @@ export default function ProfileSetup({
       let data = response?.data?.data;
       setCategories(data);
       setParentCategory(data?.filter((ele) => ele?.parentId === null));
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -50,7 +56,7 @@ export default function ProfileSetup({
         (await methods.watch("category")?.map((v: any) => v.value)) || [];
 
       const optionsSubCategory = await categories.filter((ele) =>
-        categoriesId?.includes(ele?.parentId)
+        categoriesId?.includes(ele?.parentId?._id || "")
       );
 
       setSubCategory(optionsSubCategory);
@@ -156,6 +162,7 @@ export default function ProfileSetup({
             <input
               type="file"
               id="profile-image"
+              capture={false}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               accept="image/*"
               onChange={(e) => handleImageSelect(e, "profile")}
@@ -195,6 +202,7 @@ export default function ProfileSetup({
               />
               <input
                 type="file"
+                capture={false}
                 id="banner_image"
                 accept="image/*"
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

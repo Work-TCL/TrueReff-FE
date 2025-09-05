@@ -5,12 +5,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import OtpInput from "react-otp-input";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { otpSchema, IOtpSchema } from "@/lib/utils/validations";
 import { signIn } from "next-auth/react";
 import { verifyEmail } from "@/lib/web-api/auth";
 import { useTranslations } from "next-intl";
+import axios from "@/lib/web-api/axios";
+import { RiLoader3Fill } from "react-icons/ri";
+import { formatTime } from "@/lib/utils/constants";
 
 export default function EmailVerifyOTPForm() {
   const translate = useTranslations();
@@ -21,6 +24,9 @@ export default function EmailVerifyOTPForm() {
   const [email, setEmail] = useState<string | null>(null);
   const [userType, setUserType] = useState<string>("vendor");
   const [loading, setLoading] = useState(false);
+  const [timer, setTimer] = useState(60);
+  const [disabled, setDisabled] = useState(true);
+  const [resendLoading, setResendLoading] = useState(false);
 
   const methods = useForm<IOtpSchema>({
     defaultValues: { otpCode: "" },
@@ -38,6 +44,37 @@ export default function EmailVerifyOTPForm() {
   useEffect(() => {
     methods.setValue("otpCode", otp);
   }, [otp, methods]);
+
+  useEffect(() => {
+    let interval: any;
+    if (disabled && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else {
+      setDisabled(false);
+    }
+    return () => clearInterval(interval);
+  }, [timer, disabled]);
+  const resendOtp = async () => {
+    setResendLoading(true);
+    try {
+      const response: any = await axios.post(`/auth/register-resend-otp`, {
+        email
+      });
+
+      if (response?.status === 200) {
+        toast.success(response?.data?.message);
+        setTimer(60);
+        setDisabled(true);
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
   const onSubmit = async (data: IOtpSchema) => {
     if (!email) {
@@ -78,30 +115,30 @@ export default function EmailVerifyOTPForm() {
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="w-full flex flex-col gap-3"
+        className="w-full flex flex-col md:items-start items-center gap-3"
       >
-        <div>
+        <div className="flex flex-col md:items-start items-center gap-4">
           <OtpInput
             value={otp}
             onChange={setOtp}
             numInputs={6}
             renderSeparator={<span> </span>}
-            renderInput={(props,index) => (
+            renderInput={(props, index) => (
               <input
                 {...props}
                 autoFocus={index === 0}
-                className={`min-w-14 min-h-14 max-w-14 max-h-14 mr-4 rounded-lg border-[1.5px] 
-                  focus:outline-none focus:border-black text-lg ${
-                    props?.value ? "border-black" : "border-gray-dark"
-                  }`}
+                className={`md:min-w-14 min-w-10 md:min-h-14 min-h-10 max-w-14 max-h-14 mr-2 md:mr-4 rounded-lg border-[1.5px] focus:outline-none focus:border-black text-lg ${
+                  props?.value ? "border-black" : "border-gray-dark"
+                }`}
               />
             )}
           />
+          <span onClick={() => (!disabled && !resendLoading) && resendOtp()} className={cn("md:text-sm text-xs",!disabled ? "hover:cursor-pointer hover:underline text-primary":"text-secondary")}>{resendLoading ? <RiLoader3Fill className="animate-spin text-center duration-300 text-xl" /> : disabled ? <span>Resend OTP in <span className="text-primary">{formatTime(timer)}</span></span> : "Resend OTP"}</span>
           <Button
             type="submit"
-            className="mt-8"
+            className="w-1/3 flex justify-center"
             loading={loading}
-            disabled={!otp || otp.length !== 6 || loading}
+            disabled={!otp || otp?.split("").length != 6 || loading}
           >
             {translate("Verify")}
           </Button>

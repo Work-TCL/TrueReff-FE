@@ -11,6 +11,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Editor from "./editor";
 import { Tag, X } from "lucide-react";
+import { on } from "events";
+
+const menuPortal = typeof window !== "undefined" ? document.body : null;
 interface IInput
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
@@ -29,6 +32,7 @@ interface IInput
   menuPortalTarget?: any;
   lableClassName?: string;
   inputClassName?: string;
+  // onChange?: (value: any) => void;
 }
 
 export const inputStyle =
@@ -47,7 +51,8 @@ export default function Input({
   hideError,
   lableClassName,
   inputClassName,
-  menuPortalTarget = typeof document !== "undefined" ? document.body : null,
+  menuPortalTarget = menuPortal,
+  max,
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -90,6 +95,7 @@ export default function Input({
   const getError = () => {
     return (
       Boolean(get(errors, name)) &&
+      getErrorMessage(name) &&
       !hideError && (
         <span className="text-red-600 text-sm p-2">
           {getErrorMessage(name)}
@@ -129,6 +135,40 @@ export default function Input({
                 }
               }}
               autoComplete="off"
+              {...props}
+            />
+            {Icon ? (
+              <Icon
+                fontSize={25}
+                className="absolute top-[50%] left-4 text-gray-black z-10 translate-y-[-50%]"
+              />
+            ) : null}
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
+  const renderPhoneInput = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative">
+            <input
+              type={type}
+              className={cn(inputStyle, Icon ? "!pl-12" : "")}
+              placeholder={placeholder}
+              {...field}
+              onChange={(e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                field.onChange(e);
+              }}
+              autoComplete="off"
+              maxLength={10}
               {...props}
             />
             {Icon ? (
@@ -185,7 +225,7 @@ export default function Input({
               selected={field.value}
               className={cn(inputStyle, "!pl-10")}
               placeholderText={placeholder}
-              dateFormat="MM/dd/yyyy"
+              dateFormat="dd/MM/yyyy"
               wrapperClassName="w-full"
               {...(props?.minDate ? { minDate: props.minDate } : {})}
               {...(props?.maxDate ? { maxDate: props.maxDate } : {})}
@@ -261,7 +301,10 @@ export default function Input({
               onKeyDown={addTag}
               onBlur={field.onBlur}
               placeholder={placeholder}
-              className={cn('w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2',inputClassName)}
+              className={cn(
+                "w-full bg-white text-gray-700 border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2",
+                inputClassName
+              )}
               {...props}
             />
             <Tag
@@ -362,6 +405,35 @@ export default function Input({
     />
   );
 
+  const renderNewSelectInput = () => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: required ? `${label} is required` : false }}
+      render={({ field }) => (
+        <div className="flex flex-col">
+          {getLabel()}
+          <div className="relative">
+            <Select
+              styles={customStyles}
+              options={options}
+              className="basic-multi-select focus:outline-none focus:shadow-none"
+              classNamePrefix="select"
+              {...field}
+              onChange={(v) => setValue(name, v?.value)}
+              value={options?.find((v) => v?.value === field?.value)}
+              isDisabled={props?.disabled}
+              menuPortalTarget={menuPortal} // Renders the dropdown outside of the current scrollable container
+              menuPosition="fixed" // Makes the dropdown position fixed
+              autoFocus={false} // Prevents focus behavior causing auto-scroll
+            />
+          </div>
+          {getError()}
+        </div>
+      )}
+    />
+  );
+
   const renderSelectInput = () => (
     <Controller
       control={control}
@@ -431,9 +503,7 @@ export default function Input({
               classNamePrefix="select"
               {...field}
               isDisabled={props?.disabled}
-              menuPortalTarget={
-                typeof document !== "undefined" ? document.body : null
-              } // Renders the dropdown outside of the current scrollable container
+              menuPortalTarget={menuPortal} // Renders the dropdown outside of the current scrollable container
               menuPosition="fixed" // Makes the dropdown position fixed
               autoFocus={false} // Prevents focus behavior causing auto-scroll
             />
@@ -460,9 +530,7 @@ export default function Input({
               classNamePrefix="select"
               {...field}
               isDisabled={props?.disabled}
-              menuPortalTarget={
-                typeof document !== "undefined" ? document.body : null
-              } // render dropdown outside the parent container
+              menuPortalTarget={menuPortal} // render dropdown outside the parent container
               styles={{
                 menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                 menu: (base) => ({ ...base, zIndex: 9999 }),
@@ -488,8 +556,9 @@ export default function Input({
         rules={{ required: required ? `${label} is required` : false }}
         render={({ field }) => {
           const handleChange = (selected: any) => {
-            const updated = [...(field.value || []), selected];
+            const updated: any = max === 1 ? [selected]:[...(field.value || []), selected];
             field.onChange(updated);
+            props?.onChange && props?.onChange(updated);
           };
 
           const handleRemove = (valueToRemove: any) => {
@@ -508,7 +577,7 @@ export default function Input({
           );
 
           return (
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               {getLabel?.()}
               <Select
                 value={null} // keep the value empty to always show placeholder
@@ -516,22 +585,23 @@ export default function Input({
                 options={filteredOptions}
                 placeholder={placeholder ? placeholder : "Select option"}
                 classNamePrefix="select"
-                className="react-select-container"
+                className="react-select-container border-gray-light"
                 isDisabled={props?.disabled}
-                menuPortalTarget={
-                  menuPortalTarget
-                    ? typeof document !== "undefined"
-                      ? document.body
-                      : null
-                    : null
-                }
+                menuPortalTarget={menuPortalTarget ? menuPortalTarget : null}
                 menuPosition="fixed"
                 autoFocus={false}
                 styles={{
                   control: (base: any) => ({
                     ...base,
                     height: "54px",
-                    borderRadius: "8px",
+                    borderRadius: "12px",
+                    borderColor: "#e4e1e5",
+                    "&:hover": {
+                      borderColor: "#e4e1e5",
+                    },
+                    "&:focus": {
+                      borderColor: "#e4e1e5",
+                    },
                   }),
                   placeholder: (base: any) => ({
                     ...base,
@@ -616,7 +686,7 @@ export default function Input({
                 >
                   <input
                     type="checkbox"
-                    className="mr-3 mt-1 w-4 h-4"
+                    className="mr-3 mt-1 w-4 h-4 cursor-pointer"
                     checked={field?.value}
                     {...field}
                     {...props}
@@ -628,9 +698,64 @@ export default function Input({
             )}
           />
         );
+      case "toggle":
+        return (
+          <Controller
+            control={control}
+            name={name}
+            rules={{ required: required ? `${label} is required` : false }}
+            render={({ field }) => (
+              <div className="flex flex-col">
+                <div className="flex gap-2 items-center">
+                  <label className="inline-flex items-center cursor-pointer relative">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer hidden"
+                      checked={field?.value}
+                      {...field}
+                      {...props}
+                      onChange={(e) => {
+                        if (props?.disabled) return;
+                        //@ts-ignore
+                        props?.onChange(e);
+                      }}
+                    />
+                    <div
+                      className={`relative w-9 h-5 ${
+                        props?.checked ? "bg-primary" : "bg-gray-200"
+                      } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                    ></div>
+                  </label>
+                  <label
+                    className={`flex items-start text-black font-medium sm:text-base text-sm ${
+                      props?.disabled ? "opacity-50 cursor-not-allowed" : ""
+                    } ${props?.className ? props?.className : ""}`}
+                    onClick={() => {
+                      if (props?.disabled) return;
+                      //@ts-ignore
+                      props?.onChange && props?.onChange(!props?.checked);
+                    }}
+                  >
+                    {/* <input
+                    type="checkbox"
+                    className="mr-3 mt-1 w-4 h-4 cursor-pointer"
+                    checked={field?.value}
+                    {...field}
+                    {...props}
+                  /> */}
+                    {label}
+                  </label>
+                </div>
+                {getError()}
+              </div>
+            )}
+          />
+        );
 
       case "select":
         return renderSelectInput();
+      case "react-select":
+        return renderNewSelectInput();
       case "select-multiple":
         return renderMultiSelectInput();
 
@@ -652,6 +777,10 @@ export default function Input({
         return multiSelectWithTags();
       case "renderTagInputUpdated":
         return renderTagInputUpdated();
+      case "tel":
+        return renderPhoneInput();
+      case "phone":
+        return renderPhoneInput();
       default:
         return renderTextInput();
     }

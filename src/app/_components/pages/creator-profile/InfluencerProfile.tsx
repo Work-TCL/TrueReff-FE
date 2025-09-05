@@ -4,6 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Link as LinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface IProps {
   banner_image?: string;
@@ -14,6 +15,14 @@ interface IProps {
   long_description?: string;
   tags?: string[];
   categories?: string[];
+  channels?: {
+    facebook_link?: string;
+    twitter_link?: string;
+    youtube_link?: string;
+    instagram_link?: string;
+  }
+  store_name?: string;
+  store_link?: string;
 }
 
 export default function InfluencerProfile({
@@ -22,10 +31,14 @@ export default function InfluencerProfile({
   full_name,
   user_name,
   short_description,
-  long_description,
+  long_description = "",
   tags = [],
   categories = [],
+  channels,
+  store_name,
+  store_link
 }: IProps) {
+  const router = useRouter();
   return (
     <Card className="bg-white rounded-[20PX] overflow-hidden border-0 shadow-none">
       <div className="relative h-40 md:h-48 w-full bg-blue-100 rounded-b-[20px]">
@@ -52,6 +65,7 @@ export default function InfluencerProfile({
                 alt={full_name}
                 width={120}
                 height={120}
+                className="object-cover"
               />
             ) : (
               <AvatarImage
@@ -68,8 +82,8 @@ export default function InfluencerProfile({
           </Avatar>
         </div>
         <div className="flex gap-2 md:gap-4 text-gray-500 text-lg md:text-2xl">
-          <Link
-            href="#"
+          {channels?.facebook_link && <Link
+            href={channels?.facebook_link}
             target="_blank"
             className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
           >
@@ -79,9 +93,9 @@ export default function InfluencerProfile({
               width={35}
               height={35}
             />
-          </Link>
-          <Link
-            href="#"
+          </Link>}
+          {channels?.twitter_link && <Link
+            href={channels?.twitter_link}
             target="_blank"
             className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
           >
@@ -91,9 +105,9 @@ export default function InfluencerProfile({
               width={35}
               height={35}
             />
-          </Link>
-          <Link
-            href="#"
+          </Link>}
+          {channels?.instagram_link && <Link
+            href={channels?.instagram_link}
             target="_blank"
             className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
           >
@@ -103,9 +117,9 @@ export default function InfluencerProfile({
               width={35}
               height={35}
             />
-          </Link>
-          <Link
-            href="#"
+          </Link>}
+          {channels?.youtube_link && <Link
+            href={channels?.youtube_link}
             target="_blank"
             className="w-[35px] h-[35px] rounded-full bg-background flex items-center justify-center p-1.5"
           >
@@ -115,7 +129,7 @@ export default function InfluencerProfile({
               width={35}
               height={35}
             />
-          </Link>
+          </Link>}
         </div>
       </div>
       <CardContent className="pt-2 md:pt-2 pb-4 md:pb-6 px-4 md:px-6 flex flex-col gap-3 md:gap-4">
@@ -124,9 +138,9 @@ export default function InfluencerProfile({
             {full_name}
           </h2>
           <span className="text-lg md:text-xl font-medium text-gray-black">
-            {user_name ? `(@${user_name})` : ""}
+            {user_name ? `(@${store_name})` : ""}
           </span>
-          <LinkIcon className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
+          <LinkIcon onClick={()=> router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/store/${store_name}`)} className="text-primary cursor-pointer w-4 h-4 md:w-5 md:h-5" />
         </div>
         <p className="text-sm md:text-base text-font-grey">
           {short_description}
@@ -141,12 +155,13 @@ export default function InfluencerProfile({
             </span>
           ))}
         </div>
-        <p className="text-sm md:text-base text-font-grey">
+        <div className="text-sm md:text-base text-font-grey">
           {long_description}
-        </p>
+        </div>
         <div className="flex gap-2 md:gap-4">
           {categories?.map((v) => (
             <Button
+              key={v}
               size={"lg"}
               className="bg-primary-color hover:bg-pink-600 text-white px-4 md:px-5 py-1 md:py-3 rounded-md text-xs md:text-sm"
             >

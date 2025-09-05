@@ -2,7 +2,6 @@
 import LightButton from "@/app/_components/ui/button/variant/light-button";
 import { useTranslations } from "next-intl";
 import React from "react";
-import { FaApple } from "react-icons/fa";
 
 export default function SocialAuth() {
   const translate = useTranslations();
@@ -17,7 +16,8 @@ export default function SocialAuth() {
   };
 
   return (
-    <div className="grid sm:grid-cols-2 sm:gap-3 gap-2">
+    // <div className="grid sm:grid-cols-2 sm:gap-3 gap-2">
+    <div className="grid sm:grid-cols-1 sm:gap-3 gap-2">
       <LightButton
         onClick={() => handleGoogleLogin()}
         type="button"
@@ -43,13 +43,13 @@ export default function SocialAuth() {
         </svg>
         <span>{translate("Continue_with_Google")}</span>
       </LightButton>
-      <LightButton
+      {/* <LightButton
         type="button"
         className="w-full flex justify-center items-center gap-2"
       >
         <FaApple className="text-xl" />
         <span>{translate("Continue_with_Apple")}</span>
-      </LightButton>
+      </LightButton> */}
     </div>
   );
 }

@@ -5,25 +5,30 @@ import HeaderAuth from "../auth/components/header-auth";
 import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
 import { GrDocumentText } from "react-icons/gr";
 import { FaRegUserCircle } from "react-icons/fa";
-import { IVendorRegisterFirstStepSchema, IVendorRegisterSecondStepSchema,  IVendorRegisterThirdStepSchema,  vendorRegisterFirstStepSchema, vendorRegisterSecondStepSchema, vendorRegisterThirdStepSchema } from "@/lib/utils/validations";
+import { IVendorRegisterFirstStepSchema, IVendorRegisterSecondStepSchema,  IVendorRegisterThirdStepSchema,  IVendorWordPressConnectSchema,  vendorRegisterFirstStepSchema, vendorRegisterSecondStepSchema, vendorRegisterThirdStepSchema, vendorWordPressConnectSchema } from "@/lib/utils/validations";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/app/_components/ui/button";
-import BasicInfoForm from "./components/basic-form";
+import BasicInfoForm, { ICategoryData } from "./components/basic-form";
 import ChannelForm from "./components/channel-form";
 import toast from "react-hot-toast";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
-import { getVendor, venderRegister } from "@/lib/web-api/auth";
-import { useRouter } from "next/navigation";
+import { clearLocalStorage, getErrorMessage } from "@/lib/utils/commonUtils";
+import { getCategories, getVendor, venderRegister } from "@/lib/web-api/auth";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useVendorStore } from "@/lib/store/vendor";
-import { fileUploadLimitValidator } from "@/lib/utils/constants";
+import { allowedImageTypes, fileUploadLimitValidator } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import { toastMessage } from "@/lib/utils/toast-message";
 import DocumentDetailsForm from "./components/document-form";
 import { getConnectedChannelsList } from "@/lib/web-api/channel";
 import axios from "@/lib/web-api/axios";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useAuthStore } from "@/lib/store/auth-user";
+import { CreditCard } from "lucide-react";
+import PackageDetails from "../settings/package-details";
+import ProfileAccess from "../../components-common/dialogs/profile-approval";
+import WordPressChannelForm from "./components/word-press-connect";
+import imageCompression from 'browser-image-compression';
 
 let allTabs: {
   id: string;
@@ -42,15 +47,21 @@ let allTabs: {
     },
     {
       id: "3",
-      name: "Omni-channel",
+      name: "Connect Stores",
       Icon: FaRegUserCircle,
     },
+    // {
+    //   id: "4",
+    //   name: "Payment Detail",
+    //   Icon: CreditCard,
+    // },
   ];
 
 const TABS_STATUS = {
   BASIC_INFO: 0,
   DOCUMENT_INFO: 1,
   OMNI_CHANNEL: 2,
+  // PAYMENT_DETAIL: 3,
 };
 
 export default function PreFormPage() {
@@ -60,22 +71,26 @@ export default function PreFormPage() {
   const [terms, setTerms] = useState(false);
   const { update } = useSession();
   const { vendor,setVendorData } = useVendorStore();
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab")??"0";
   const { account } = useAuthStore();
   const [isVendorLoading, setIsVendorLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [profileFile, setProfileFile] = useState<File | null>(null);
   const [gstCertificateFile, setGstCertificateFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string>("");
   const [bannerPreview, setBannerPreview] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<number>(TABS_STATUS.BASIC_INFO);
+  const activeTab = parseInt(tab);
   const [channels, setChannels] = useState<any[]>([]);
+  const [wordPressLoading, setWordPressLoading] = useState<boolean>(false);
   const initialState = {
     state: "",
     city: "",
-    channels: [],
     type_of_business: ""
   };
   const [formState, setFormState] = useState(initialState);
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
   const methods = useForm<IVendorRegisterFirstStepSchema>({
     defaultValues: {
       business_name: "",
@@ -108,6 +123,14 @@ export default function PreFormPage() {
     resolver: yupResolver(vendorRegisterThirdStepSchema),
     mode: "onSubmit",
   });
+  const wordPressMethods = useForm<IVendorWordPressConnectSchema>({
+      defaultValues: {
+        wordpress_store_domain: "",
+        wordpress_store_id: ""
+      },
+      resolver: yupResolver(vendorWordPressConnectSchema),
+      mode: "onSubmit",
+    });
   const documentMethods = useForm<IVendorRegisterSecondStepSchema>({
     defaultValues: {
       gst_number: "",
@@ -120,26 +143,61 @@ export default function PreFormPage() {
   useEffect(()=> {
     if(account?.email){
       methods.setValue("company_email",account?.email)
+      methods.setValue("business_name",account?.name)
     }
   },[account])
+  const fetchCategory = async () => {
+      try {
+        const response = await getCategories({ page: 0, limit: 0,type: "vendor" });
+        let data = response?.data?.data;
+        setCategories(data);
+      } catch (error) { }
+    };
+  
+    useEffect(() => {
+      fetchCategory();
+    }, []);
+    useEffect(() => {
+      if(vendor?.category?.length > 0){
+        let parentCategory = categories?.filter((ele:ICategoryData) => vendor?.category?.includes(ele?._id))?.map((ele:ICategoryData) => ({value: ele?._id,label:ele?.name}));
+        methods.setValue("category",parentCategory);
+      }
+      if(vendor?.sub_category?.length > 0){
+        let subCategory = categories?.filter((ele:ICategoryData) => vendor?.sub_category?.includes(ele?._id))?.map((ele:ICategoryData) => ({value: ele?._id,label:ele?.name}));
+        methods.setValue("sub_category",subCategory);
+      }
+    },[categories,vendor])
   const getVendorData = async () => {
     setIsVendorLoading(true);
     try {
       const vendorData: any = await getVendor();
             if (vendorData) {
+              await update({
+                user: {
+                  vendor: vendorData,
+                },
+              });
         if (vendorData?.completed_step === 1) {
-          setActiveTab(TABS_STATUS.DOCUMENT_INFO)
+          router.push('?tab=1');          
           setIsVendorLoading(false);
         } else if (vendorData?.completed_step === 2) {
-          setActiveTab(TABS_STATUS.OMNI_CHANNEL)
+          router.push('?tab=2');
           setIsVendorLoading(false);
-        } else if (vendorData?.completed_step === 3) {
-          router.push(`/vendor/dashboard`);
+        } else if (
+          vendorData?.completed_step === 3 && vendorData?.status !== "APPROVED"
+        ) {
+          // setOpen(true);
+          setIsVendorLoading(false);
+          // router.push(
+          //   `?tab=2`
+          // );
+          // router.push(`/vendor/dashboard`);
+        }else if (vendorData?.completed_step === 3 && vendorData?.status === "APPROVED") {
+          // router.push(`/vendor/dashboard`);
         }
         methods.setValue("business_name",vendorData?.business_name);
         methods.setValue("company_email",vendorData?.company_email);
         methods.setValue("contacts",vendorData?.contacts);
-        methods.setValue("category",vendorData?.category);
         methods.setValue("sub_category",vendorData?.sub_category);
         methods.setValue("address",vendorData?.address);
         methods.setValue("pin",vendorData?.pin_code);
@@ -149,6 +207,9 @@ export default function PreFormPage() {
         methods.setValue("website",vendorData?.website);
         methods.setValue("profile_image",vendorData?.profile_image);
         methods.setValue("banner_image",vendorData?.banner_image);
+        documentMethods.setValue("pan_number",vendorData?.pan_number);
+        documentMethods.setValue("gst_number",vendorData?.gst_number);
+        setFormState({state:vendorData?.state,city: vendorData?.city,type_of_business: vendorData?.type_of_business})
         setVendorData("vendor", {
           vendorId: vendorData?._id,
           accountId: vendorData?.accountId,
@@ -175,6 +236,7 @@ export default function PreFormPage() {
           channelId: vendorData?.channelId,
           channelStatus: vendorData?.channelStatus,
           channelType: vendorData?.channelType,
+          status: vendorData?.status,
         })        
       }
 
@@ -188,6 +250,13 @@ export default function PreFormPage() {
     setLoading(true);
     try {
         const res: any[] = await getConnectedChannelsList();
+        if (vendor) {
+              await update({
+                user: {
+                  vendor: vendor,
+                },
+              });
+            }
       if (Array.isArray(res)) {
         setChannels(res);
         setLoading(false)
@@ -205,6 +274,7 @@ export default function PreFormPage() {
   useEffect(() => {
     (async () => {
       await getVendorData();
+      await fetchCategory();
     })();
   }, []);
   useEffect(() => {
@@ -235,7 +305,7 @@ export default function PreFormPage() {
         state: data.state,
         city: data.city,
         category: data.category?.map(ele => ele.value),
-        sub_category: data.sub_category?.map(ele => ele.value),
+        sub_category: (data.sub_category && data.sub_category?.length > 0) ? data.sub_category?.map(ele => ele.value):[],
         address: data.address
       };
       if (profileFile) {
@@ -281,8 +351,9 @@ export default function PreFormPage() {
           channelId: response?.data?.channelId,
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
+          status: response?.data?.status,
         })
-        setActiveTab(TABS_STATUS.DOCUMENT_INFO)
+        router.push(`?tab=${TABS_STATUS.DOCUMENT_INFO}`)
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -339,8 +410,9 @@ export default function PreFormPage() {
           channelId: response?.data?.channelId,
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
+          status: response?.data?.status,
         })
-        setActiveTab(TABS_STATUS.OMNI_CHANNEL)
+        router.push(`?tab=${TABS_STATUS.OMNI_CHANNEL}`)
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -353,7 +425,8 @@ export default function PreFormPage() {
     setLoading(true);
     try {
       const payload: any = {
-        id_string: data.shopify_store_id,
+        uniqueId: data.shopify_store_id,
+        shopUrl: data.shopify_store_domain,
       };
       let { data: response }: any = await axios.post(
         "/channel/shopify/connect",
@@ -367,6 +440,8 @@ export default function PreFormPage() {
           },
         });
         toastMessage.success(response?.message);
+        // setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
+        router.push("/vendor/dashboard")
         await getConnectedChannel();
         setVendorData("vendor", {
           vendorId: response?.data?._id,
@@ -394,8 +469,9 @@ export default function PreFormPage() {
           channelId: response?.data?.channelId,
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
+          status: response?.data?.status,
         })
-        setActiveTab(TABS_STATUS.OMNI_CHANNEL)
+        router.push(`?tab=${TABS_STATUS.OMNI_CHANNEL}`)
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -404,6 +480,65 @@ export default function PreFormPage() {
       setLoading(false);
     }
   }
+  const handleOnWordPressConnect = async (data: IVendorWordPressConnectSchema) => {
+      setWordPressLoading(true);
+      try {
+        const payload: any = {
+          uniqueId: data.wordpress_store_id,
+          shopUrl: data.wordpress_store_domain,
+        };
+        let { data: response }: any = await axios.post(
+          "/channel/wordpress/connect",
+          payload
+        );
+  
+        if (response?.status === 200) {
+           await update({
+          user: {
+            vendor: response?.data,
+          },
+        });
+        toastMessage.success(response?.message);
+        // setOpen(response?.data?.completed_step === 3 && response?.data?.status === "PENDING_APPROVAL");
+        router.push("/vendor/dashboard")
+        await getConnectedChannel();
+          setVendorData("vendor", {
+            vendorId: response?.data?._id,
+            accountId: response?.data?.accountId,
+            category: response?.data?.category,
+            sub_category: response?.data?.sub_category,
+            completed_step: response?.data?.completed_step,
+            contacts: response?.data?.contacts,
+            business_name: response?.data?.business_name,
+            company_email: response?.data?.company_email,
+            pin_code: response?.data?.pin_code,
+            type_of_business: response?.data?.type_of_business,
+            website: response?.data?.website,
+            state: response?.data?.state,
+            city: response?.data?.city,
+            address: response?.data?.address,
+            profile_image: response?.data?.profile_image,
+            banner_image: response?.data?.banner_image,
+            createdAt: response?.data?.createdAt,
+            updatedAt: response?.data?.updatedAt,
+            gst_certificate: response?.data?.gst_certificate,
+            gst_number: response?.data?.gst_number,
+            pan_number: response?.data?.pan_number,
+            channelConfig: response?.data?.channelConfig,
+            channelId: response?.data?.channelId,
+            channelStatus: response?.data?.channelStatus,
+            channelType: response?.data?.channelType,
+            status: response?.data?.status,
+          })
+          router.push(`?tab=${TABS_STATUS.OMNI_CHANNEL}`)
+        }
+      } catch (error) {
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+      } finally {
+        setWordPressLoading(false);
+      }
+    }
 
   const handleImageSelect = async (
     e: React.ChangeEvent<HTMLInputElement> | any,
@@ -411,14 +546,27 @@ export default function PreFormPage() {
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+    if (!allowedImageTypes.includes(file.type)) {
+      methods.setError(type === "banner" ? "banner_image" : "profile_image", {
+        type: "manual",
+        message: "Only JPG and PNG images are allowed.",
+      });
+      return;
+    }
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;
 
     const previewURL = URL.createObjectURL(file);
 
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1, // Compress to 1MB or less
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
+
+
     if (type === "profile") {
-      setProfileFile(file);
+      setProfileFile(compressedFile);
       setProfilePreview(previewURL);
       methods.setValue("profile_image", previewURL);
       methods.setError("profile_image", {
@@ -426,7 +574,7 @@ export default function PreFormPage() {
         message: "",
       });
     } else {
-      setBannerFile(file);
+      setBannerFile(compressedFile);
       setBannerPreview(previewURL);
       methods.setValue("banner_image", previewURL);
       methods.setError("banner_image", {
@@ -470,19 +618,36 @@ export default function PreFormPage() {
   const handleCheckTerms = (e: any) => {
     setTerms(e.target.checked);
   }
-
-  const handleOnClick = async () => {
-    router.push("/vendor/dashboard")
-  }
+  const handleTabChange = (index: number) => {
+    if (index > activeTab) {
+      if (index === TABS_STATUS.BASIC_INFO) {
+        router.push(`?tab=${index}`);
+      } else if (index === TABS_STATUS.DOCUMENT_INFO && vendor?.completed_step >= 1) {
+        router.push(`?tab=${index}`);
+      } else if (index === TABS_STATUS.OMNI_CHANNEL && vendor?.completed_step >= 2) {
+        router.push(`?tab=${index}`);
+      } else {
+        toastMessage.info(`Please complete the ${allTabs[index - 1]?.name} first.`);
+      }
+    } else {
+      router.push(`?tab=${index}`);
+    }
+  };
+  const handleLogout = async () => {
+      await signOut({
+        callbackUrl: "/login",
+        redirect: true,
+      });
+      clearLocalStorage();
+    };
 
   return (
-    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 pb-2 md:pt-5 pt-5 h-screen overflow-hidden flex flex-col">
+    <div className="max-w-[960px] w-full mx-auto lg:px-0 md:px-4 px-2 pb-2 md:pt-5 pt-5 h-screen overflow-hidden flex flex-col gap-8">
       <HeaderAuth />
-
       <div className="w-full md:py-6 md:px-6 drop-shadow-sm bg-white rounded-lg h-full overflow-hidden flex-1 flex flex-col">
         <SlidingTabBar
           tabs={allTabs}
-          setActiveTabIndex={() => { }}
+          setActiveTabIndex={handleTabChange}
           activeTabIndex={activeTab}
           grid={3}
         />
@@ -500,6 +665,7 @@ export default function PreFormPage() {
                   formState={formState}
                   bannerPreview={bannerPreview}
                   methods={methods}
+                  categories={categories}
                 />
                 <div className="bg-white">
                   <Button
@@ -514,32 +680,41 @@ export default function PreFormPage() {
                 </div>
               </form>
             </FormProvider>,
-            [TABS_STATUS.OMNI_CHANNEL]: <FormProvider {...channelMethods}>
+            [TABS_STATUS.OMNI_CHANNEL]: <div className="flex flex-col overflow-auto gap-3 md:pt-6 mt-3 md:px-5 px-3"><FormProvider {...channelMethods}>
               <form
                 onSubmit={channelMethods.handleSubmit(handleOnChannelConnect)}
-                className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
+                className="w-full flex flex-col justify-between gap-3 relative"
               >
-                <ChannelForm loading={loading} channels={channels}/>
-                <div className="bg-white">
+                <ChannelForm loading={loading} channels={channels} methods={channelMethods}/>
+              </form>
+            </FormProvider>
+            <FormProvider {...wordPressMethods}>
+              <form
+                onSubmit={wordPressMethods.handleSubmit(handleOnWordPressConnect)}
+                className="w-full flex flex-col justify-between gap-3 relative"
+              >
+                <WordPressChannelForm loading={wordPressLoading} channels={channels}/>
+              </form>
+            </FormProvider>
+            {vendor?.status === "APPROVED" && <div className="bg-white">
                   <Button
                     type="button"
-                    // loading={loading}
-                    disabled={channels?.length === 0}
-                    className="w-fit font-medium px-8"
                     size="small"
-                    onClick={handleOnClick}
+                    loading={loading}
+                    disabled={loading}
+                    onClick={handleLogout}
+                    className="w-fit font-medium px-8 md:text-base text-sm"
                   >
-                    {translate("Back_to_dashboard")}
+                  {translate("Login")}
                   </Button>
-                </div>
-              </form>
-            </FormProvider>,
+                </div>}
+            </div>,
             [TABS_STATUS.DOCUMENT_INFO]: <FormProvider {...documentMethods}>
               <form
                 onSubmit={documentMethods.handleSubmit(handleOnDocumentSubmit)}
                 className="md:pt-6 mt-3 pb-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
               >
-                <DocumentDetailsForm terms={terms} handleCheckTerms={handleCheckTerms} methods={documentMethods} handleDocumentUpload={handleDocumentUpload} />
+                <DocumentDetailsForm gstCertificateFile={gstCertificateFile} terms={terms} handleCheckTerms={handleCheckTerms} methods={documentMethods} handleDocumentUpload={handleDocumentUpload} />
                 <div className="bg-white">
                   <Button
                     type="submit"
@@ -553,9 +728,23 @@ export default function PreFormPage() {
                 </div>
               </form>
             </FormProvider>,
+            // [TABS_STATUS.PAYMENT_DETAIL]: 
+            // <div className="flex flex-col items-center overflow-auto">
+            // <PackageDetails/>
+            // <Button
+            //         type="submit"
+            //         size="small"
+            //         loading={loading}
+            //         disabled={!terms || loading}
+            //         className="w-fit font-medium px-8 md:text-base text-sm"
+            //       >
+            //         {translate("Save_and_Continue")}
+            //       </Button>
+            // </div>,
           }[activeTab]
         }
       </div>
+      {/* {open && <ProfileAccess />} */}
     </div>
   );
 }

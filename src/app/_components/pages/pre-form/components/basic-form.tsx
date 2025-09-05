@@ -4,15 +4,21 @@ import React, { useEffect, useState } from "react";
 import { get } from "lodash";
 import { useFormContext } from "react-hook-form";
 import Select from "react-select";
-import { cities, indianStates, businessTypes } from "@/lib/utils/constants";
+import { cities, indianStates, businessTypes, imageAccept } from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import { Camera, ImageIcon, Pencil, User } from "lucide-react";
-import { getCategories } from "@/lib/web-api/auth";
+import { useVendorStore } from "@/lib/store/vendor";
 
 export interface ICategoryData {
   _id: string;
   name: string;
-  parentId: string;
+  parentId: {
+    _id: string;
+    name: string;
+    parentId: string;
+    createdAt: string;
+    updatedAt: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -44,40 +50,32 @@ export default function BasicInfoForm({
   methods,
   formState,
   profilePreview,
-  bannerPreview
+  bannerPreview,
+  categories = []
 }: any) {
   const translate = useTranslations();
   const {
     formState: { errors, touchedFields, submitCount },
   } = useFormContext();
-  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const {vendor} = useVendorStore();
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
 
-  const fetchCategory = async () => {
-    try {
-      const response = await getCategories({ page: 0, limit: 0 });
-      let data = response?.data?.data;
-      setCategories(data);
-      setParentCategory(data?.filter((ele) => ele?.parentId === null));
-    } catch (error) { }
-  };
-
   useEffect(() => {
-    fetchCategory();
-  }, []);
+    setParentCategory(categories?.filter((ele:ICategoryData) => ele?.parentId === null));
+  }, [categories]);
 
   useEffect(() => {
     (async () => {
       const categoriesId =
         (await methods.watch("category")?.map((v: any) => v.value)) || [];
 
-      const optionsSubCategory = await categories.filter((ele) =>
-        categoriesId?.includes(ele?.parentId)
+      const optionsSubCategory = await categories.filter((ele:ICategoryData) =>
+        categoriesId?.includes(ele?.parentId?._id)
       );
 
       setSubCategory(optionsSubCategory);
-      const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+      const availableSubCategoriesIds = optionsSubCategory.map((v:ICategoryData) => v?._id);
       const subCategoroies = methods.watch("sub_category") || [];
       methods.setValue(
         "sub_category",
@@ -86,7 +84,7 @@ export default function BasicInfoForm({
         )
       );
     })();
-  }, [methods.watch("category")?.length]);
+  }, [methods.watch("category"),vendor?.category,parentCategory]);
   const getErrorMessage = (name: string) => {
     const error = get(errors, name);
     if (error && error.message) {
@@ -108,22 +106,21 @@ export default function BasicInfoForm({
       {/* Banner + Profile Section */}
       <div className="relative col-span-2 w-full h-[200px] rounded-lg bg-gray-100">
         <div
-          className="absolute inset-0 w-full h-full cursor-pointer"
+          className="absolute inset-0 w-full h-full cursor-pointer rounded-lg"
           onClick={() => document.getElementById("banner_image")?.click()}
         >
           {bannerPreview || methods.watch("banner_image") ? (
             <img
               src={bannerPreview || methods.watch("banner_image")}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-xl"
               alt="Banner"
             />
           ) : (
-            <div className="flex flex-col items-center justify-center text-gray-500 pt-6">
-              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow mb-2">
-                <ImageIcon className="w-6 h-6" />
-              </div>
-              <p className="text-sm font-medium">{translate("Click_to_upload_banner")}</p>
-            </div>
+            <img
+              src={"/assets/banner-image.png"}
+              className="w-full h-full object-cover rounded-xl"
+              alt="Banner"
+            />
 
           )}
         </div>
@@ -137,8 +134,9 @@ export default function BasicInfoForm({
           <input
             type="file"
             id="banner_image"
-            accept="image/*"
+            accept={imageAccept}
             className="hidden"
+            capture={false} 
             onChange={(e) => handleImageSelect(e, "banner")}
           />
         </div>
@@ -173,7 +171,8 @@ export default function BasicInfoForm({
               type="file"
               id="profile-image"
               className="hidden"
-              accept="image/*"
+              accept={imageAccept}
+              capture={false} 
               onChange={(e) => handleImageSelect(e, "profile")}
             />
           </div>
@@ -197,6 +196,7 @@ export default function BasicInfoForm({
           name="business_name"
           type="text"
           placeholder={translate("Enter_your_Business_Name_or_Company Name")}
+          lableClassName="text-md font-[400]"
           autoFocus
         />
       </div>
@@ -207,6 +207,7 @@ export default function BasicInfoForm({
           type="email"
           disabled
           placeholder={translate("Enter_your_email")}
+          lableClassName="text-md font-[400]"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -219,12 +220,15 @@ export default function BasicInfoForm({
             value: ele?._id,
             label: ele?.name,
           }))}
+          max={1}
+          lableClassName="text-md font-[400]"
           autoFocus={false}
         />
       </div>
       <div className="md:col-span-1 col-span-2">
         <Input
           label={translate("Sub_category")}
+          required={false}
           placeholder={translate("Select_Sub_Category")}
           name="sub_category"
           type="multiSelectWithTags"
@@ -233,6 +237,7 @@ export default function BasicInfoForm({
             label: ele?.name,
           }))}
           autoFocus={false}
+          lableClassName="text-md font-[400]"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -240,12 +245,13 @@ export default function BasicInfoForm({
           label={translate("Website")}
           placeholder={translate("Enter your website link")}
           name="website"
+          lableClassName="text-md font-[400]"
           type="url"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("Type_of_business")}
             <span className="text-red-500">*</span>
           </span>
@@ -281,8 +287,8 @@ export default function BasicInfoForm({
           label={translate("Address")}
           name="address"
           type="text"
+          lableClassName="text-md font-[400]"
           placeholder={translate("Enter_your_address")}
-          autoFocus
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -291,11 +297,12 @@ export default function BasicInfoForm({
           name="pin"
           type="number"
           placeholder="XXXXXX"
+          lableClassName="text-md font-[400]"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("State")}
             <span className="text-red-500">*</span>
           </span>
@@ -323,7 +330,7 @@ export default function BasicInfoForm({
       </div>
       <div className="md:col-span-1 col-span-2">
         <div className="flex flex-col">
-          <span className="mb-1 text-sm text-gray-500 font-semibold">
+          <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("City")}
             <span className="text-red-500">*</span>
           </span>
@@ -361,8 +368,8 @@ export default function BasicInfoForm({
           label={translate("Contact_Person_Name")}
           name={`contacts[0].name`}
           type="text"
+          lableClassName="text-md font-[400]"
           placeholder={translate("Enter your contact person name")}
-          autoFocus
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -371,6 +378,7 @@ export default function BasicInfoForm({
           placeholder={translate("Enter_your_contact_person_email")}
           name={`contacts[0].email`}
           type="email"
+          lableClassName="text-md font-[400]"
         />
       </div>
       <div className="md:col-span-1 col-span-2">
@@ -379,6 +387,7 @@ export default function BasicInfoForm({
           name={`contacts[0].phone`}
           type="tel"
           placeholder="XXXXX XXXXX"
+          lableClassName="text-md font-[400]"
         />
       </div>
     </div>

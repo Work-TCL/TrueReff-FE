@@ -1,11 +1,8 @@
 "use client";
 import EditContactProfile from "@/app/_components/components-common/dialogs/contacts-profile";
-import AnchorButton from "@/app/_components/ui/button/variant";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import axios from "@/lib/web-api/axios";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ConfirmDialog from "./confirmDialog";
@@ -81,7 +78,7 @@ export default function ContactsProfile(props: any) {
           return (
             <div
               key={index}
-              className="flex flex-col w-full xl:max-w-[320px] border border-gray-300 rounded-xl p-4 xl:p-5 gap-3"
+              className="flex flex-col w-full max-w-[320px] xsmobile:max-w-full border border-gray-300 rounded-xl p-4 xl:p-5 gap-3"
             >
               <div className="flex items-center gap-4">
                 <span className="text-sm xl:text-lg font-semibold">

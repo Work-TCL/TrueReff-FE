@@ -1,5 +1,6 @@
-import { redirect } from "next/navigation";
+import LandingPage from "./_landingpage/landing_main";
 
+  
 export default function App() {
-  return redirect("/dashboard");
+  return <LandingPage />;
 }

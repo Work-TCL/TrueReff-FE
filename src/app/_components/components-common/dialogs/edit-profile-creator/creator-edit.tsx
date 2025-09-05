@@ -14,14 +14,19 @@ import { useCreatorStore } from "@/lib/store/creator";
 import { getCategories, updateCreator } from "@/lib/web-api/auth";
 import { ICategoryData, IPutUpdateCreatorRequest } from "@/lib/types-api/auth";
 import {
+  allowedImageTypes,
   cities,
   fileUploadLimitValidator,
   gender,
+  imageAccept,
   indianStates,
 } from "@/lib/utils/constants";
 import Select from "react-select";
 import { get } from "lodash";
 import { useTranslations } from "next-intl";
+import imageCompression from "browser-image-compression";
+import TagInput from "@/components/ui/tag-input";
+
 const customStyles = {
   placeholder: (base: any) => ({
     ...base,
@@ -31,7 +36,7 @@ const customStyles = {
   control: (base: any) => ({
     ...base,
     height: "54px",
-    borderRadius: "8px",
+    borderRadius: "12px",
   }),
   options: (base: any) => ({
     ...base,
@@ -58,18 +63,35 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     state: creator?.state ?? "",
     city: creator?.city ?? "",
     gender: creator?.gender ?? "",
+    dob: creator?.dob || "",
   };
   const [formState, setFormState] = useState(initialState);
   useEffect(() => {
+    fetchCategory();
     if (creator) {
       setFormState({
         state: creator?.state,
         city: creator?.city,
         gender: creator?.gender,
+        dob: creator?.dob,
       });
     }
   }, [creator]);
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories({
+        page: 0,
+        limit: 0,
+        type: "creator",
+      });
+      let data = response?.data?.data;
+      setCategories(data);
+    } catch (error: any) {
+      console.log("Error Fetching channels", error.message);
+    }
+  };
   const schema = creatorProfileUpdateSchema;
+  console.log("creator", creator);
   const methods = useForm<ICreatorProfileUpdateSchema>({
     defaultValues: {
       full_name: creator?.full_name,
@@ -79,7 +101,9 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
       state: creator?.state || "",
       city: creator?.city || "",
       gender: creator?.gender || "",
-      dob: new Date(creator?.dob).toLocaleDateString() || "",
+      dob: creator?.dob || "",
+      tags: creator?.tags || [],
+      
     },
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -89,6 +113,12 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     setLoading(true);
     try {
       // ("use server");
+      // data.category.length > 0 && data.category.forEach((ele, index) => {
+      //   formData.append(`category[${index}]`, ele?.value);
+      // })
+      // data.sub_category && data.sub_category.length > 0 && data.sub_category.forEach((ele, index) => {
+      //   formData.append(`sub_category[${index}]`, ele?.value);
+      // })
       const payload: IPutUpdateCreatorRequest = {
         user_name: data.user_name,
         full_name: data.full_name,
@@ -97,7 +127,21 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
         city: data?.city,
         gender: data?.gender,
         dob: data?.dob,
+        category: [],
+        sub_category: [],
+        tags: data?.tags || [],
       };
+      data.category.length > 0 &&
+        data.category.forEach((ele, index) => {
+          // @ts-ignore
+          payload[`category[${index}]`] = ele?.value;
+        });
+      data.sub_category &&
+        data.sub_category.length > 0 &&
+        data.sub_category.forEach((ele, index) => {
+          // @ts-ignore
+          payload[`sub_category[${index}]`] = ele?.value;
+        });
 
       const response: any = await updateCreator(payload);
 
@@ -141,6 +185,50 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     }
   };
 
+  useEffect(() => {
+    setParentCategory(
+      categories?.filter((ele: ICategoryData) => ele?.parentId === null)
+    );
+  }, [categories]);
+
+  useEffect(() => {
+    if (creator?.category?.length > 0) {
+      let parentCategory = categories
+        ?.filter((ele: ICategoryData) => creator?.category?.includes(ele?._id))
+        ?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      methods.setValue("category", parentCategory);
+    }
+    if (creator?.sub_category?.length > 0) {
+      let subCategory = categories
+        ?.filter((ele: ICategoryData) =>
+          creator?.sub_category?.includes(ele?._id)
+        )
+        ?.map((ele: ICategoryData) => ({ value: ele?._id, label: ele?.name }));
+      methods.setValue("sub_category", subCategory);
+    }
+  }, [categories, creator?.category, creator?.sub_category]);
+
+  useEffect(() => {
+    (async () => {
+      const categoriesId =
+        (await methods.watch("category")?.map((v: any) => v.value)) || [];
+
+      const optionsSubCategory = await categories.filter((ele: ICategoryData) =>
+        categoriesId?.includes(ele?.parentId?._id)
+      );
+
+      setSubCategory(optionsSubCategory);
+      const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+      const subCategoroies = methods.watch("sub_category") || [];
+      methods.setValue(
+        "sub_category",
+        subCategoroies.filter((v: any) =>
+          availableSubCategoriesIds.includes(v.value)
+        )
+      );
+    })();
+  }, [methods.watch("category"), creator?.category]);
+
   const handleImageSelect = async (
     e: React.ChangeEvent<HTMLInputElement>,
     type: "profile" | "banner"
@@ -150,14 +238,32 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
 
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;
+    if (!allowedImageTypes.includes(file.type)) {
+      methods.setError("profile_image", {
+        type: "manual",
+        message: "Only JPG and PNG images are allowed.",
+      });
+      return;
+    } else {
+      methods.setError("profile_image", {
+        type: "manual",
+        message: "",
+      });
+    }
+
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1, // Compress to 1MB or less
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
 
     const previewURL = URL.createObjectURL(file);
 
     if (type === "profile") {
-      setProfileFile(file);
+      setProfileFile(compressedFile);
       setProfilePreview(previewURL);
     } else {
-      setBannerFile(file);
+      setBannerFile(compressedFile);
       setBannerPreview(previewURL);
     }
   };
@@ -169,6 +275,13 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
     if (!file) return;
+    if (!allowedImageTypes.includes(file.type)) {
+      methods.setError("profile_image", {
+        type: "manual",
+        message: "Only JPG and PNG images are allowed.",
+      });
+      return;
+    }
 
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;
@@ -198,172 +311,237 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
     }
   };
 
+  const today = new Date();
+  const maxDate = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate()
+  );
+  const minDate = new Date(
+    today.getFullYear() - 100,
+    today.getMonth(),
+    today.getDate()
+  );
+  const formatDate = (date: Date) => date.toISOString().split("T")[0];
+  const handleTagChange = (value: string[]) => {
+    methods.setValue("tags", value);
+  };
   return (
     <>
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="grid grid-cols-2 text-left gap-3 w-full relative"
+          className="flex flex-col text-left gap-3 w-full"
         >
-          <div className="col-span-1">
-            <Input
-              label={translate("FullName")}
-              name="full_name"
-              type="text"
-              placeholder="John Doe"
-            />
-          </div>
-          <div className="col-span-1">
-            <Input
-              label={translate("Username")}
-              name="user_name"
-              type="text"
-              placeholder="john_doe_90"
-            />
-          </div>
-          <div className="col-span-2">
-            <Input
-              label={translate("PhoneNumber")}
-              name="phone"
-              type="phone"
-              placeholder="XXXXX XXXXX"
-              disabled
-            />
-          </div>
-          <div className="col-span-1">
-            <div className="flex flex-col">
-              <span className="mb-1 text-sm text-gray-500 font-semibold">
-                {translate("State")}
-                <span className="text-red-500">*</span>
-              </span>
-              <Select
-                styles={customStyles}
-                value={[
-                  {
-                    value: formState.state,
-                    label: formState.state
-                      ? formState.state
-                      : translate("Select_State"),
-                  },
-                ]}
-                onChange={(value) => handleOnSelect(value?.value, "state")}
-                options={indianStates?.map((ele) => ({
-                  value: ele,
-                  label: ele,
-                }))}
-                className="basic-multi-select focus:outline-none focus:shadow-none"
-                placeholder={translate("Select_State")}
-              />
-              {Boolean(get(methods.formState.errors, "state")) && (
-                <span className="text-red-600 text-sm p-2 block">
-                  {methods.formState.errors["state"]?.message}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="col-span-1">
-            <div className="flex flex-col">
-              <span className="mb-1 text-sm text-gray-500 font-semibold">
-                {translate("City")}
-                <span className="text-red-500">*</span>
-              </span>
-              <Select
-                styles={customStyles}
-                value={[
-                  {
-                    value: formState.city,
-                    label: formState.city
-                      ? formState.city
-                      : translate("selectCity"),
-                  },
-                ]}
-                onChange={(value) => handleOnSelect(value?.value, "city")}
-                options={
-                  formState.state
-                    ? cities[formState?.state]?.map((ele: string) => ({
-                        value: ele,
-                        label: ele,
-                      }))
-                    : []
-                }
-                className="basic-multi-select focus:outline-none focus:shadow-none"
-                placeholder={translate("selectCity")}
-              />
-              {Boolean(get(methods.formState.errors, "city")) && (
-                <span className="text-red-600 text-sm p-2 block">
-                  {methods.formState.errors["city"]?.message}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="col-span-1">
-            <div className="flex flex-col">
-              <span className="mb-1 text-sm text-gray-500 font-semibold">
-                {translate("Gender")}
-                <span className="text-red-500">*</span>
-              </span>
-              <Select
-                styles={customStyles}
-                value={[
-                  {
-                    value: formState.gender,
-                    label: formState.gender
-                      ? formState.gender
-                      : translate("SelectGender"),
-                  },
-                ]}
-                onChange={(value) => handleOnSelect(value?.value, "gender")}
-                options={gender?.map((ele) => ({ value: ele, label: ele }))}
-                className="basic-multi-select focus:outline-none focus:shadow-none"
-                placeholder={translate("SelectGender")}
-              />
-              {Boolean(get(methods.formState.errors, "gender")) && (
-                <span className="text-red-600 text-sm p-2 block">
-                  {methods.formState.errors["gender"]?.message}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="col-span-1">
-            <div className="flex flex-col">
+          <div className="grid grid-cols-2 text-left gap-3 w-full overflow-y-auto max-h-[60vh]">
+            <div className="col-span-2 sm:col-span-1 md:col-span-1">
               <Input
-                name="dob"
-                type="date"
-                placeholder={translate("Select_date_of_birth")}
-                label={translate("DateofBirth")}
-                maxDate={new Date(new Date().setDate(new Date().getDate()))}
+                label={translate("FullName")}
+                name="full_name"
+                type="text"
+                placeholder="John Doe"
               />
             </div>
-          </div>
-          <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
-            <div className="text-sm">{translate("Profile_Image")}</div>
-            <div
-              className="flex justify-center items-center border rounded-lg p-5"
-              onDrop={(e) => handleDropImage(e, "profile")}
-              onClick={() => {
-                document.getElementById("profile-image")?.click();
-              }}
-              onDragOver={(e) => e.preventDefault()}
-            >
-              <div className="flex flex-col w-full gap-4">
-                <div className="flex justify-center">
-                  <img
-                    src={
-                      profilePreview ||
-                      methods.watch("profile_image") ||
-                      "/assets/product/image-square.svg"
-                    }
-                    className="w-[100px] h-[100px] object-cover rounded-full"
-                  />
-                </div>
-                <input
-                  type="file"
-                  id="profile-image"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={(e) => handleImageSelect(e, "profile")}
+            <div className="col-span-2 sm:col-span-1 md:col-span-1">
+              <Input
+                label={translate("Username")}
+                name="user_name"
+                type="text"
+                placeholder="john_doe_90"
+              />
+            </div>
+            <div className="md:col-span-1 col-span-2">
+              <Input
+                label={translate("Business_Category")}
+                placeholder={translate("Select_Category")}
+                name="category"
+                type="multiSelectWithTags"
+                options={parentCategory?.map((ele) => ({
+                  value: ele?._id,
+                  label: ele?.name,
+                }))}
+                menuPortalTarget={null}
+                max={1}
+                autoFocus={false}
+              />
+            </div>
+            <div className="md:col-span-1 col-span-2">
+              <Input
+                label={translate("Sub_category")}
+                required={false}
+                placeholder={translate("Select_Sub_Category")}
+                name="sub_category"
+                type="multiSelectWithTags"
+                options={subCategory.map((ele) => ({
+                  value: ele?._id,
+                  label: ele?.name,
+                }))}
+                menuPortalTarget={null}
+                autoFocus={false}
+              />
+            </div>
+            <div className="col-span-2">
+                      <TagInput value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
+                    </div>
+            <div className="col-span-2">
+              <Input
+                label={translate("PhoneNumber")}
+                name="phone"
+                type="phone"
+                placeholder="XXXXX XXXXX"
+                disabled
+              />
+            </div>
+            <div className="col-span-2 sm:col-span-1 md:col-span-1">
+              <div className="flex flex-col">
+                <span className="mb-1 text-sm text-gray-500 font-semibold">
+                  {translate("State")}
+                  <span className="text-red-500">*</span>
+                </span>
+                <Select
+                  styles={customStyles}
+                  value={[
+                    {
+                      value: formState.state,
+                      label: formState.state
+                        ? formState.state
+                        : translate("Select_State"),
+                    },
+                  ]}
+                  onChange={(value) => handleOnSelect(value?.value, "state")}
+                  options={indianStates?.map((ele) => ({
+                    value: ele,
+                    label: ele,
+                  }))}
+                  className="basic-multi-select focus:outline-none focus:shadow-none"
+                  placeholder={translate("Select_State")}
                 />
-                {/* <Button
+                {Boolean(get(methods.formState.errors, "state")) && (
+                  <span className="text-red-600 text-sm p-2 block">
+                    {methods.formState.errors["state"]?.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="col-span-2 sm:col-span-1 md:col-span-1">
+              <div className="flex flex-col">
+                <span className="mb-1 text-sm text-gray-500 font-semibold">
+                  {translate("City")}
+                  <span className="text-red-500">*</span>
+                </span>
+                <Select
+                  styles={customStyles}
+                  value={[
+                    {
+                      value: formState.city,
+                      label: formState.city
+                        ? formState.city
+                        : translate("selectCity"),
+                    },
+                  ]}
+                  onChange={(value) => handleOnSelect(value?.value, "city")}
+                  options={
+                    formState.state
+                      ? cities[formState?.state]?.map((ele: string) => ({
+                          value: ele,
+                          label: ele,
+                        }))
+                      : []
+                  }
+                  className="basic-multi-select focus:outline-none focus:shadow-none"
+                  placeholder={translate("selectCity")}
+                />
+                {Boolean(get(methods.formState.errors, "city")) && (
+                  <span className="text-red-600 text-sm p-2 block">
+                    {methods.formState.errors["city"]?.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="col-span-1">
+              <div className="flex flex-col">
+                <span className="mb-1 text-sm text-gray-500 font-semibold">
+                  {translate("Gender")}
+                  <span className="text-red-500">*</span>
+                </span>
+                <Select
+                  styles={customStyles}
+                  value={[
+                    {
+                      value: formState.gender,
+                      label: formState.gender
+                        ? formState.gender
+                        : translate("SelectGender"),
+                    },
+                  ]}
+                  onChange={(value) => handleOnSelect(value?.value, "gender")}
+                  options={gender?.map((ele) => ({ value: ele, label: ele }))}
+                  className="basic-multi-select focus:outline-none focus:shadow-none"
+                  placeholder={translate("SelectGender")}
+                />
+                {Boolean(get(methods.formState.errors, "gender")) && (
+                  <span className="text-red-600 text-sm p-2 block">
+                    {methods.formState.errors["gender"]?.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="col-span-1">
+              <div className="flex flex-col">
+                <span className="mb-1 text-sm text-gray-500 font-semibold">
+                  {translate("Date_of_Birth")}
+                  <span className="text-red-500">*</span>
+                </span>
+                <input
+                  onChange={(e: any) => handleOnSelect(e.target?.value, "dob")}
+                  className="h-[54px] border rounded-xl p-2"
+                  type="date"
+                  name="dob"
+                  value={formState?.dob}
+                  min={formatDate(minDate)} // ✅ 100 years ago
+                  max={formatDate(maxDate)} // ✅ 18 years ago
+                  placeholder={translate("Select_date_of_birth")}
+                />
+                {Boolean(get(methods.formState.errors, "dob")) &&
+                  methods.formState.errors["dob"]?.message && (
+                    <span className="text-red-600 text-sm p-2 block">
+                      {methods.formState.errors["dob"]?.message}
+                    </span>
+                  )}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl col-span-2 flex flex-col gap-2">
+              <div className="text-sm">{translate("Profile_Image")}</div>
+              <div
+                className="flex justify-center items-center border rounded-lg p-5 flex-col"
+                onDrop={(e) => handleDropImage(e, "profile")}
+                onClick={() => {
+                  document.getElementById("profile-image")?.click();
+                }}
+                onDragOver={(e) => e.preventDefault()}
+              >
+                <div className="flex flex-col w-full gap-4">
+                  <div className="flex justify-center">
+                    <img
+                      src={
+                        profilePreview ||
+                        methods.watch("profile_image") ||
+                        "/assets/product/image-square.svg"
+                      }
+                      className="w-[100px] h-[100px] object-cover rounded-full"
+                    />
+                  </div>
+                  <input
+                    type="file"
+                    id="profile-image"
+                    className="hidden"
+                    capture={false}
+                    accept=".jpg,.jpeg,.png"
+                    // accept={imageAccept}
+                    onChange={(e) => handleImageSelect(e, "profile")}
+                  />
+                  {/* <Button
                   className="w-full disabled:cursor-not-allowed"
                   onClick={() => {
                     document.getElementById("profile-image")?.click();
@@ -371,11 +549,31 @@ export default function EditCreatorForm({ onClose }: { onClose: any }) {
                 >
                   {translate("Upload_your_photo")}
                 </Button> */}
+                </div>
+                {Boolean(get(methods.formState.errors, "profile_image")) &&
+                  methods.formState.errors["profile_image"]?.message && (
+                    <span className="text-red-600 text-sm p-2 block">
+                      {methods.formState.errors["profile_image"]?.message}
+                    </span>
+                  )}
               </div>
             </div>
           </div>
-          <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
-            <Button type="submit" loading={loading}>
+          <div className="flex gap-2 justify-end">
+            <Button
+              size="small"
+              className="w-1/3 sm:w-1/4 md:w-1/4 bg-white border text-secondary"
+              type="button"
+              onClick={() => onClose(true)}
+            >
+              {translate("Cancel")}
+            </Button>
+            <Button
+              size="small"
+              className="w-1/3 sm:w-1/4 md:w-1/4"
+              type="submit"
+              loading={loading}
+            >
               {translate("Save")}
             </Button>
           </div>

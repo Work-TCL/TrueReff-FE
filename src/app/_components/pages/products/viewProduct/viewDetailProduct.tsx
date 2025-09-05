@@ -19,6 +19,7 @@ import Loading from "@/app/vendor/loading";
 import CommonBreadcrumb from "@/app/_components/components-common/breadcrumb-links";
 import NotFound from "@/app/_components/components-common/404";
 import { useTranslations } from "next-intl";
+import { toastMessage } from "@/lib/utils/toast-message";
 
 interface ICategory {
   _id: string;
@@ -41,6 +42,12 @@ export interface IProduct {
   tags: string[];
   category?: string;
   vendorId?: string;
+  commission?: string;
+  commission_type?: string;
+  discount?: string; 
+  discountType?: string;
+  freeProduct?: string;
+  attributes?: any[];
 }
 export interface IRequest {
   _id: string;
@@ -75,11 +82,13 @@ const statusText: { [key: string]: string } = {
   PENDING: "Start Bargaining",
   LIVE: "Live",
   EXPIRED: "Expired",
-  "": "Send Request",
+  ACTIVE: "Active",
+  "": "Send_Request",
 };
 
 const buttonColor: { [key: string]: string } = {
   LIVE: "bg-[#098228] text-[#098228]",
+  ACTIVE: "bg-[#098228] text-[#098228]",
   REQUESTED: "bg-[#FF9500] text-[#FF9500]",
   EXPIRED: "bg-[#FF3B30] text-[#FF3B30]",
   REJECTED: "bg-[#FF3B30] text-[#FF3B30]",
@@ -145,33 +154,77 @@ export default function ViewProductDetail({
     tags: [],
     category: "",
     vendorId: "",
+    commission: "",
+  commission_type: "",
+  discount: "",
+  discountType: "",
+  freeProduct: ""
   });
   // Update fetProductsList to set both cursors
   const fetchShopifyProductById = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product?productId=${shopifyId}`
+        `channel/${channelType}/product?productId=${shopifyId}`
       );
 
       const product: any = response?.data?.data;
-      const images = product?.media?.nodes?.map((ele: any) => ele?.image.url);
-      // ✅ Update product state
-      const updatedProduct = {
-        productId: product.id,
-        images: images,
-        name: product.title,
-        tags: product?.tags || [],
-        description: product?.description || "", // Add description if available
-        price: product?.price || 0,
-        sku: product?.sku || "",
-        barcode: product?.variants?.nodes[0]?.barcode || "",
-        quantity: product?.quantity || 0,
-        totalInventory: product?.totalInventory || 0,
-        variants: product?.variants?.nodes || [],
-      };
-
-      setProductData(updatedProduct);
+      if(channelType === "shopify"){
+        const images = product?.images?.map((ele: any) => ele?.src);
+        // ✅ Update product state
+        const updatedProduct = {
+          productId: product.id,
+          images: images,
+          name: product.name,
+          tags: product?.tags? product?.tags?.split(", ") :[],
+          description: product?.description_html || "", // Add description if available
+          price: product?.price || 0,
+          sku: product?.sku || "",
+          barcode: product?.variants[0]?.barcode || "",
+          quantity: product?.quantity || 0,
+          totalInventory: product?.totalInventory || 0,
+          variants: product?.variants || [],
+          commission: product?.commission,
+          commission_type: product?.commission_type,
+          discount: product?.discount,
+          discountType: product?.discountType,
+          freeProduct: product?.freeProduct
+        };
+        setProductData(updatedProduct);
+      } else if(channelType === "wordpress"){
+        const updatedProduct = {
+          productId: product.id,
+          images: product?.images,
+          name: product.name,
+          tags: product?.tags? product?.tags?.split(", ") :[],
+          description: product?.description || "",
+          price: product?.price || 0,
+          sku: product?.sku || "",
+          barcode: "",
+          quantity: product?.quantity || 0,
+          totalInventory: product?.totalInventory || 0,
+          variants: product?.variations?.length > 0 ? product?.variations?.map((ele: any) => {
+            const attrs = ele.attributes ?? {};
+            // Grab all keys that have a value
+            const values = Object.keys(attrs)
+              .filter(key => attrs[key] != null)
+              .map(key => attrs[key]);
+            return {
+              ...ele,
+              title: `${values.join('/')}`
+            };
+          }) : [],
+          attributes: product?.attributes,
+          commission: product?.commission??"",
+          commission_type: product?.commission_type??"",
+          discount: product?.discount??"",
+          discountType: product?.discountType??"",
+          freeProduct: product?.freeProduct??false,
+          category: product?.categories?.join(', '),
+        };
+        setProductData(updatedProduct);
+      }
+      
     } catch (error: any) {
       toast.error(error?.message || "Product Fetch Failed.");
     } finally {
@@ -202,15 +255,20 @@ export default function ViewProductDetail({
           description: product?.description || "", // Add description if available
           price: product?.price || 0,
           sku: product?.sku || "",
-          barcode: product?.variants?.nodes[0]?.barcode || "",
+          barcode: product?.variants?.[0]?.barcode || "",
           quantity: product?.quantity || 0,
           totalInventory: product?.totalInventory || 0,
-          variants: product?.variants?.nodes || [],
+          variants: product?.variants || [],
           category: product?.category
             ?.filter((ele: ICategory) => ele?.parentId === null)
             ?.map((ele: ICategory) => ele?.name)
             ?.join(", "),
           vendorId: product?.vendorId,
+          commission: product?.commission,
+          commission_type: product?.commission_type,
+          discount: product?.discount,
+          discountType: product?.discountType,
+          freeProduct: product?.freeProduct
         };
 
         setProductData(updatedProduct);
@@ -266,21 +324,16 @@ export default function ViewProductDetail({
     setLoading(true);
     try {
       const response: any = await axios.post(
-        `/product/collaboration/creator/request`,
-        {
-          productIds: [productData?.productId],
-          creatorId: creator.creatorId,
-          vendorId: productData?.vendorId,
-        }
+        `/product/collaboration/creator/request-creator`,
+                {
+                    productId: productData?.productId,
+                    vendorId: productData?.vendorId,
+                }
       );
       if (response.status === 201) {
         let data = response?.data?.data?.results;
-        if (data && data?.length > 0 && data[0]?.data) {
-          fetchProductCollaborationStatus();
-        }
-        if (data && data?.length > 0 && data[0]?.message) {
-          toast.success(data[0]?.message);
-        }
+        toast.success(response?.data?.message);
+        fetchProductCollaborationStatus();
         setLoading(false);
       } else {
         setLoading(false);
@@ -301,17 +354,16 @@ export default function ViewProductDetail({
   };
 
   const getRequestStatus = (collaboration: ICollaboration) => {
-    const { requestId } = collaboration;
-    if (requestId) {
-      if (
-        requestId?.collaborationStatus === "REQUESTED" ||
-        requestId?.collaborationStatus === "REJECTED"
-      ) {
-        return requestId?.collaborationStatus;
-      } else {
-        return collaboration?.collaborationStatus;
-      }
-    } else return "SEND_REQUEST";
+     return collaboration?.collaborationStatus;
+  };
+  const handleCopyLink = async () => {
+    try {
+      const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/product-detail/${collaborationData?._id}`;
+      await navigator.clipboard.writeText(url);
+      toastMessage.success("Link copied to clipboard!");
+    } catch (err) {
+      toastMessage.error("Failed to copy!");
+    }
   };
 // Product id required condition removed as it is not required.
   if (notFounded) {
@@ -323,7 +375,7 @@ export default function ViewProductDetail({
       {loading ? (
         <Loading className="h-screen" />
       ) : (
-        <div className="flex flex-col w-full p-3 md:p-6 gap-4 h-[100vh]">
+        <div className="flex flex-col w-full p-2 md:p-6 gap-4">
           {/* Breadcrumb and Button */}
           <div className="flex md:flex-row items-center justify-between md:items-center gap-2">
             <CommonBreadcrumb
@@ -331,11 +383,11 @@ export default function ViewProductDetail({
                 {
                   label: translate("Product_List"),
                   href: isFromPublic
-                    ? "/store/creatorstore"
+                    ? "go_back"
                     : creator?.creatorId
                     ? pathName.includes("/product-management")
                       ? `/creator/product-management`
-                      : `/creator/brandsList/${params.id}`
+                      : `/creator/brandsList`
                     : channelType
                     ? `/vendor/products/channel-products`
                     : `/vendor/products`,
@@ -346,8 +398,7 @@ export default function ViewProductDetail({
               ]}
             />
 
-            {((!pathName.includes("/creators/") && creator?.creatorId) ||
-              creatorId) && (
+            {((!pathName.includes("/creators/") && creator?.creatorId)) && (
               <Button
                 disabled={
                   collaborationStatus === "REQUESTED" ||
@@ -357,7 +408,7 @@ export default function ViewProductDetail({
                 className={`${buttonColor[collaborationStatus]} text-white ml-auto`}
                 onClick={() => handleButtonClick(collaborationStatus)}
               >
-                {translate(statusText[collaborationStatus]?.replace(/ /g, "_"))}
+                {translate(statusText[collaborationStatus])}
               </Button>
             )}
             {/* {(pathName.includes("/creators/")) && (
@@ -376,12 +427,12 @@ export default function ViewProductDetail({
           </div>
 
           {/* Card Section */}
-          <Card className="bg-white rounded-lg overflow-auto mr-2">
-            <CardContent className=" p-3 md:p-6">
+          <Card className="bg-white rounded-lg overflow-auto max-h-[calc(100vh-150px)]">
+            <CardContent className="p-3 md:p-6">
               <div className="flex flex-col md:grid grid-cols-1 md:grid-cols-3 gap-4">
                 <ProductImageGallery images={productData?.images} />
                 <div className="col-span-2">
-                  <ProductInfo productData={productData} />
+                  <ProductInfo productData={productData} channelType={channelType} handleCopyLink={handleCopyLink}/>
                 </div>
               </div>
             </CardContent>

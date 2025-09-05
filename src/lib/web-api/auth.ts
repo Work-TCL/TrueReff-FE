@@ -55,7 +55,10 @@ export const loginAPI = async (
   params: IPostLoginRequest
 ): Promise<IPostLoginResponse> => {
   try {
-    const response = await axios.post("/auth/login", params);
+    const response = await axios.post("/auth/login", {
+      userName: params?.email,
+      password: params?.password,
+    });
     const user = response?.data;
     if (user) {
       useAuthStore.getState().setAccountData({
@@ -63,6 +66,7 @@ export const loginAPI = async (
         id: user?._id,
         name: user?.name,
         role: user?.type,
+        phone: user?.phone,
       });
     }
     return response?.data;
@@ -83,6 +87,7 @@ export const SocialLoginAPI = async (
         id: user?._id,
         name: user?.name,
         role: user?.type,
+        phone: user?.phone,
       });
       if (user?.token) {
         useAuthStore.getState().setIsAuthStatus("authenticated");
@@ -107,6 +112,7 @@ export const getUserApi = async (): Promise<IGetUserResponse> => {
         email: user?.email,
         id: user?._id,
         name: user?.name,
+        phone: user?.phone,
         role: user?.type,
       });
     }
@@ -170,6 +176,7 @@ export const getUserApi = async (): Promise<IGetUserResponse> => {
         channelId: vendor?.channelId,
         channelStatus: vendor?.channelStatus,
         channelType: vendor?.channelType,
+        status: vendor?.status,
       });
     }
     useAuthStore.getState().setIsAuthStatus("authenticated");
@@ -218,6 +225,7 @@ export const verifyEmail = async (
         id: user?._id,
         name: user?.name,
         role: user?.type,
+        phone: user?.phone,
       });
       useAuthStore.getState().setToken(response.data?.data?.token);
     }
@@ -281,6 +289,7 @@ export const verifyEmail = async (
         channelId: vendor?.channelId,
         channelStatus: vendor?.channelStatus,
         channelType: vendor?.channelType,
+        status: vendor?.status,
       });
     }
     if (response.data?.data?.token) {
@@ -330,7 +339,8 @@ export const contactUsAPI = async (
 };
 
 export const venderRegister = async (
-  params: IPostVendorRegisterRequest,step:number
+  params: IPostVendorRegisterRequest,
+  step: number
 ): Promise<IPostVendorRegisterResponse> => {
   try {
     const response = await axios.post(
@@ -349,27 +359,31 @@ export const venderRegister = async (
   }
 };
 
-export const getVendor =
-  async (): Promise<any> => {
-    try {
-      const response = await axios.get(`/auth/vendor`);
-      return response?.data?.data?.vendor;
-    } catch (error: unknown) {
-      const errorMessage = getErrorMessage(error);
-      throw errorMessage || new Error("Error While fetching creator progress.");
-    }
-  };
+export const getVendor = async (): Promise<any> => {
+  try {
+    const response = await axios.get(`/auth/vendor`);
+    return response?.data?.data?.vendor;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While fetching creator progress.");
+  }
+};
 
 export const creatorRegister = async (
-  params: IPostCreatorRegisterStepOneRequest|any,
-  step: number
+  params: IPostCreatorRegisterStepOneRequest | any,
+  step: number,
+  storeEdit: boolean = false
 ): Promise<IPostCreatorRegisterResponse> => {
   try {
-    const response = await axios.post(`/auth/creator/register?step=${step}`, params, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axios.post(
+      `/auth/creator/register?step=${step}&storeEdit=${storeEdit}`,
+      params,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
@@ -408,7 +422,7 @@ export const getCategories = async (
   params: IGetCategoryParams
 ): Promise<IGetCategoryResponse> => {
   try {
-    const response = await axios.get("/product/category/list?all=true");
+    const response = await axios.get(`/product/category/list?all=true${params?.type ? `&type=${params.type}` : ''}${params?.parentId ? `&parentId=${params.parentId}` : ''}`);
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
@@ -428,17 +442,43 @@ export const getCreatorProgress =
       };
     }
   };
-  // get username exists or not
-export const fetchUserNameExists =
-  async (params:{user_name:string}): Promise<IGetUserNameExistsResponse> => {
-    try {
-      const response = await axios.post(`/auth/creator/check-exists`,params);
-      return response?.data?.data;
-    } catch (error: unknown) {
-      const errorMessage = getErrorMessage(error);
-      throw errorMessage || new Error("Error While fetching user name.");
-    }
-  };
+export const getSuggestedProducts = async (): Promise<[]> => {
+  try {
+    const response = await axios.get(
+      `/auth/creator-dashboard/suggested-product`
+    );
+    return response?.data?.data?.products;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    // throw errorMessage || new Error("Error While fetching creator progress.");
+    return [];
+  }
+};
+export const getSuggestedCreators = async (): Promise<[]> => {
+  try {
+    const response = await axios.get(
+      `/auth/vendor-dashboard/suggested-creators`
+    );
+
+    return response?.data?.data?.list;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    // throw errorMessage || new Error("Error While fetching creator progress.");
+    return [];
+  }
+};
+// get username exists or not
+export const fetchUserNameExists = async (params: {
+  user_name: string;
+}): Promise<IGetUserNameExistsResponse> => {
+  try {
+    const response = await axios.post(`/auth/creator/check-exists`, params);
+    return response?.data?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While fetching user name.");
+  }
+};
 export const checkCreatorUserNameExist = async (
   params: IPostCreatorCheckExistRequest
 ): Promise<IPostCreatorCheckExistResponse | null> => {
@@ -452,35 +492,42 @@ export const checkCreatorUserNameExist = async (
   }
 };
 
-export const getCreatorList =
-  async (page: number, limit: number): Promise<any> => {
-    try {
-      const response = await axios.get(`/auth/creator/list?page=${page}&limit=${limit}`);
-      return response?.data?.data;
-    } catch (error: unknown) {
-      const errorMessage = getErrorMessage(error);
-      throw errorMessage || new Error("Error While fetching creator list.");
-    }
-  };
+export const getCreatorList = async (
+  page: number,
+  limit: number
+): Promise<any> => {
+  try {
+    const response = await axios.get(
+      `/auth/creator/list?page=${page}&limit=${limit}`
+    );
+    return response?.data?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While fetching creator list.");
+  }
+};
 
-export const getVendorList =
-  async (page: number, limit: number): Promise<any> => {
-    try {
-      const response = await axios.get(`/auth/vendor/list?page=${page}&limit=${limit}`);
-      return response?.data?.data;
-    } catch (error: unknown) {
-      const errorMessage = getErrorMessage(error);
-      throw errorMessage || new Error("Error While fetching creator list.");
-    }
-  };
+export const getVendorList = async (
+  page: number,
+  limit: number
+): Promise<any> => {
+  try {
+    const response = await axios.get(
+      `/auth/vendor/list?page=${page}&limit=${limit}`
+    );
+    return response?.data?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While fetching creator list.");
+  }
+};
 
-export const getVendorCreatorCount =
-  async (): Promise<any> => {
-    try {
-      const response = await axios.get(`/auth/creator/creator-vendor-count`);
-      return response?.data?.data;
-    } catch (error: unknown) {
-      const errorMessage = getErrorMessage(error);
-      throw errorMessage || new Error("Error While fetching creator list.");
-    }
-  };
+export const getVendorCreatorCount = async (): Promise<any> => {
+  try {
+    const response = await axios.get(`/auth/creator/creator-vendor-count`);
+    return response?.data?.data;
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While fetching creator list.");
+  }
+};

@@ -13,9 +13,11 @@ import Button from "@/app/_components/ui/button";
 import { useVendorStore } from "@/lib/store/vendor";
 import axios from "@/lib/web-api/axios";
 import {
+  allowedImageTypes,
   businessTypes,
   cities,
   fileUploadLimitValidator,
+  imageAccept,
   indianStates,
 } from "@/lib/utils/constants";
 import Select from "react-select";
@@ -24,11 +26,18 @@ import { useTranslations } from "next-intl";
 import { getCategories } from "@/lib/web-api/auth";
 import { Camera,User } from "lucide-react";
 import { useSession } from "next-auth/react";
+import imageCompression from 'browser-image-compression';
 
 export interface ICategoryData {
   _id: string;
   name: string;
-  parentId: string;
+  parentId: {
+    _id: string;
+    name: string;
+    parentId: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -118,7 +127,7 @@ export default function EditVendorForm({
         state: data?.state,
         city: data?.city,
         category: data?.category?.map(el => el?.value),
-        sub_category: data?.sub_category?.map(el => el?.value)
+        sub_category: (data?.sub_category && data?.sub_category?.length > 0) ? data?.sub_category?.map(el => el?.value) : []
       };
 
       if (profileFile) {
@@ -167,6 +176,7 @@ export default function EditVendorForm({
           channelId: response?.data?.channelId,
           channelStatus: response?.data?.channelStatus,
           channelType: response?.data?.channelType,
+          status: response?.data?.status,
         })
         toast.success(response?.message);
         methods?.reset();
@@ -183,7 +193,7 @@ export default function EditVendorForm({
 
   const fetchCategory = async () => {
     try {
-      const response = await getCategories({ page: 0, limit: 0 });
+      const response = await getCategories({ page: 0, limit: 0,type: "vendor" });
       let data = response?.data?.data;
       setCategories(data);
       setParentCategory(data?.filter((ele) => ele?.parentId === null));
@@ -200,7 +210,7 @@ export default function EditVendorForm({
         (await methods.watch("category")?.map((v: any) => v.value)) || [];
 
       const optionsSubCategory = await categories.filter((ele) =>
-        categoriesId?.includes(ele?.parentId)
+        categoriesId?.includes(ele?.parentId?._id)
       );
 
       setSubCategory(optionsSubCategory);
@@ -214,20 +224,35 @@ export default function EditVendorForm({
       );
     })();
   }, [methods.watch("category")?.length]);
+
   const handleImageSelect = async (
     e: React.ChangeEvent<HTMLInputElement> | any,
     type: "profile" | "banner"
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!allowedImageTypes.includes(file.type)) {
+      methods.setError(type === "banner" ? "banner_image" : "profile_image", {
+        type: "manual",
+        message: "Only JPG and PNG images are allowed.",
+      });
+      return;
+    }
 
     const isValid = await fileUploadLimitValidator(file.size);
     if (!isValid) return;
 
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1, // Compress to 1MB or less
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
+
+
     const previewURL = URL.createObjectURL(file);
 
     if (type === "profile") {
-      setProfileFile(file);
+      setProfileFile(compressedFile);
       setProfilePreview(previewURL);
       methods.setValue("profile_image", previewURL);
       methods.setError("profile_image", {
@@ -235,7 +260,7 @@ export default function EditVendorForm({
         message: "",
       });
     } else {
-      setBannerFile(file);
+      setBannerFile(compressedFile);
       setBannerPreview(previewURL);
       methods.setValue("banner_image", previewURL);
       methods.setError("banner_image", {
@@ -295,7 +320,8 @@ export default function EditVendorForm({
                   type="file"
                   id="profile-image"
                   className="hidden"
-                  accept="image/*"
+                  capture={false}
+                  accept={imageAccept}
                   onChange={(e) => handleImageSelect(e, "profile")}
                 />
               </div>
@@ -307,7 +333,7 @@ export default function EditVendorForm({
               </span>
             )}
           </div>
-          <div className="md:col-span-2 col-span-1 mt-2">
+          <div className="col-span-2 mt-2">
             <Input
               label={translate("Business_Name")}
               name="business_name"
@@ -327,12 +353,14 @@ export default function EditVendorForm({
                 label: ele?.name,
               }))}
               menuPortalTarget={null}
+              max={1}
               autoFocus={false}
             />
           </div>
           <div className="md:col-span-1 col-span-2">
             <Input
               label={translate("Sub_category")}
+              required={false}
               placeholder={translate("Select_Sub_Category")}
               name="sub_category"
               type="multiSelectWithTags"
@@ -462,7 +490,7 @@ export default function EditVendorForm({
               )}
             </div>
           </div>
-          <div className="pt-6 col-span-2 sticky bottom-0 bg-white">
+          <div className="pt-6 col-span-2 sticky bottom-0 ">
             <Button type="submit" loading={loading}>
               {translate("Save")}
             </Button>

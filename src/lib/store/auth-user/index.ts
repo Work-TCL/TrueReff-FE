@@ -11,6 +11,7 @@ interface IAuthDataState {
   account: {
     name: string;
     email: string;
+    phone: string;
     id: string;
     role: (typeof USER_TYPE)[keyof typeof USER_TYPE];
   };
@@ -22,6 +23,7 @@ interface IAuthStoreSetterState {
   setAccountData: (data: {
     name: string;
     email: string;
+    phone: string;
     id: string;
     role: (typeof USER_TYPE)[keyof typeof USER_TYPE];
   }) => void;
@@ -37,8 +39,9 @@ export const useAuthStore = create<IAuthDataState & IAuthStoreSetterState>()(
       account: {
         name: "",
         email: "",
+        phone: "",
         id: "",
-        role: USER_TYPE.Vendor,
+        role: "",
       },
       token: "",
       status: "unauthenticated",

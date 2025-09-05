@@ -13,10 +13,10 @@ export default function SendOtpPage() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   return (
-    <AuthLayoutPage authImage="forgot-pass-image.svg">
+    <AuthLayoutPage authImage="forgot-pass-image.png">
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full min-h-fit">
         <div className="w-full">
-          <BackButton className="mb-5" />
+          <BackButton className="mb-5 w-1/2" />
           <AuthTitle text={translate("Enter_OTP")} />
           <AuthDescription
             className="mt-2"
@@ -24,7 +24,7 @@ export default function SendOtpPage() {
               "We_have_share_a_code_of_your_registered_email_address"
             )} ${email}`}
           />
-          <div className="mt-5">
+          <div className="mt-5 flex md:justify-start justify-center">
             <VerifyOTPForm />
           </div>
         </div>

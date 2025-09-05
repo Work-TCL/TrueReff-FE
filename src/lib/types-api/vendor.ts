@@ -49,6 +49,7 @@ export interface IVendor {
   channelId: string;
   channelStatus: string;
   channelType: string;
+  status: string;
 }
 export interface ICategory {
   _id: string;
@@ -73,23 +74,32 @@ export interface IProduct {
   updatedAt: string;
 }
 export interface IVendorUpdate {
-  vendorId?: string;
-  accountId?: string;
-  business_name?: string;
-  company_email?: string;
-  company_phone?: string;
-  gst_number?: string;
-  website?: string;
-  profile_image?: string;
-  type_of_business?: string;
-  contacts?: VendorContact[];
-  omni_channels?: string[];
-  brand_documents?: any[];
-  addresses?: any[];
-  banner_image?: string;
-  user_name?: string;
-  short_description?: string;
-  long_description?: string;
+  vendorId: string;
+  accountId: string;
+  category: string[];
+  sub_category: string[];
+  completed_step: number;
+  contacts: VendorContact[];
+  business_name: string;
+  company_email: string;
+  pin_code: string;
+  type_of_business: string;
+  website: string;
+  state: string;
+  city: string;
+  address: string;
+  profile_image: string;
+  banner_image: string;
+  createdAt: string;
+  updatedAt: string;
+  gst_certificate: string;
+  gst_number: string;
+  pan_number: string;
+  channelConfig: IChannelConfig;
+  channelId: string;
+  channelStatus: string;
+  channelType: string;
+  status: string;
 }
 
 export interface IVendorByIdRequest {

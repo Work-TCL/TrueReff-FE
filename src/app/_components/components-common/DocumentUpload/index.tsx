@@ -1,19 +1,24 @@
 "use client";
 import { toastMessage } from "@/lib/utils/toast-message";
 import { BookText } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 interface IFileUploadBoxProps {
     handleUploadFile: (file: any) => void;
+    uploadedFile?: File | null;
 }
-export default function FileUploadBox({ handleUploadFile }: IFileUploadBoxProps) {
+export default function FileUploadBox({ handleUploadFile,uploadedFile }: IFileUploadBoxProps) {
     const translate = useTranslations();
     const [file, setFile] = useState<File | null>(null);
     const [uploadProgress, setUploadProgress] = useState(0);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDragging, setIsDragging] = useState(false);
-
+    useEffect(()=> {
+        if(uploadedFile){
+            setFile(uploadedFile);
+        }
+    },[uploadedFile])
     const handleFileSelect = (file: File) => {
         simulateUpload();
         const allowedTypes = [
@@ -40,9 +45,9 @@ export default function FileUploadBox({ handleUploadFile }: IFileUploadBoxProps)
         setUploadProgress(0); // Reset before upload
         const interval = setInterval(() => {
             setUploadProgress((prev) => {
-                if (prev >= 100) {
+                if (prev >= 110) {
                     clearInterval(interval);
-                    return 100;
+                    return 110;
                 }
                 return prev + 10;
             });
@@ -77,6 +82,7 @@ export default function FileUploadBox({ handleUploadFile }: IFileUploadBoxProps)
                 <input
                     ref={inputRef}
                     type="file"
+                    capture={false} 
                     accept=".pdf,.docx,.xlsx"
                     className="hidden"
                     onChange={handleFileChange}
@@ -100,15 +106,15 @@ export default function FileUploadBox({ handleUploadFile }: IFileUploadBoxProps)
                 </div>
             </div>
 
-            {file && (
+            {(file) && (
                 <div className="mt-6 bg-white border rounded-md p-4 shadow-sm flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <div className="text-red-600"><BookText /></div>
                         <div>
-                            <p className="text-sm font-medium">{file.name}</p>
-                            <p className="text-xs text-gray-500">
-                                Uploading... {(file.size / (1024 * 1024)).toFixed(1)}MB
-                            </p>
+                            <p className="text-sm font-medium">{file?.name}</p>
+                            {/* <p className="text-xs text-gray-500">
+                                Uploading... {((file?.size??0) / (1024 * 1024)).toFixed(1)}MB
+                            </p> */}
                         </div>
                     </div>
                     <button
@@ -116,6 +122,9 @@ export default function FileUploadBox({ handleUploadFile }: IFileUploadBoxProps)
                             setFile(null);
                             handleUploadFile(null);
                             setUploadProgress(0);
+                            if (inputRef.current) {
+                                inputRef.current.value = "";
+                            }
                         }}
                         className="text-gray-400 hover:text-gray-600"
                     >
@@ -124,7 +133,7 @@ export default function FileUploadBox({ handleUploadFile }: IFileUploadBoxProps)
                 </div>
             )}
 
-            {file && (
+            {file && (uploadProgress > 0 && uploadProgress < 110) && (
                 <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                     <div
                         className="bg-blue opacity-50 h-2 rounded-full transition-all duration-300"

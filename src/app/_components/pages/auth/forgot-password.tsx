@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 export default function ForgotPasswordPage() {
   const translate = useTranslations();
   return (
-    <AuthLayoutPage authImage="forgot-pass-image.svg">
+    <AuthLayoutPage authImage="forgot-pass-image.png">
       <div className="flex flex-col justify-center mx-auto max-w-lg w-full h-full min-h-fit">
         <div className="w-full">
           <BackButton className="mb-5" />

@@ -8,6 +8,7 @@ import {
   Settings,
   User,
 } from "lucide-react";
+import { toastMessage } from "./toast-message";
 
 export const MENU = {
   "/dashboard": { label: "Overview", icon: Home, link: "/dashboard" },
@@ -74,6 +75,8 @@ export const badgeColor: { [key: string]: string } = {
   LIVE: "bg-[#098228] text-[#098228]",
   REQUESTED: "bg-[#FF9500] text-[#FF9500]",
   EXPIRED: "bg-[#FF3B30] text-[#FF3B30]",
+  DEACTIVATED: "bg-[#FF3B30] text-[#FF3B30]",
+  PAUSED: "bg-[#5856D6] text-[#5856D6]",
   REJECTED: "bg-[#FF3B30] text-[#FF3B30]",
   PENDING: "bg-[#5856D6] text-[#5856D6]",
   ACTIVE: "bg-[#098228] text-[#098228]",
@@ -85,29 +88,70 @@ export const statusMessage: { [key: string]: string } = {
   LIVE: "Collaboration Live",
   EXPIRED: "Collaboration Expired",
   ACTIVE: "Collaboration Active",
+  DEACTIVATED: "Collaboration Deactivated",
+  PAUSED: "Collaboration Paused",
   REQUESTED_CREATOR_TO_VENDOR: "Creator Requested",
   REQUESTED_VENDOR_TO_CREATOR: "Requested creator",
   REQUESTED_CREATOR_FROM_VENDOR: "Requested vendor",
   REQUESTED_VENDOR_FROM_CREATOR: "Vendor invited",
 };
-export function formatNumber(num: number = 0) {
-  if (num >= 1_000_000) {
-    return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+export function formatNumber(num: number = 0): string {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B"; // Billion
+  } else if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M"; // Million
   } else if (num >= 1_000) {
-    return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+    return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K"; // Thousand
   }
-  return num === 0 ? "" : num.toString();
+  return num === 0 ? "0" : formatFloatValue(num).toString(); // Default case
 }
+export const formatDate = (dateString: string | null): string => {
+  if (!dateString) return "-"; // Handle empty or null dates
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+};
 
-export const fileUploadLimitValidator = (size: number = 0, mb: number = 20) => {
+export function formatDateWithTime(dateString: string): string {
+  const date = new Date(dateString);
+
+  // Extract date components
+  const day = String(date.getDate()).padStart(2, "0"); // Ensure 2-digit day
+  const month = date.toLocaleString("en-US", { month: "short" }); // Short month name
+  const year = date.getFullYear();
+
+  // Extract time components
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0"); // Ensure 2-digit minutes
+  const ampm = hours >= 12 ? "PM" : "AM"; // Determine AM/PM
+  hours = hours % 12 || 12; // Convert to 12-hour format
+
+  // Combine date and time
+  return `${day}-${month}-${year}, ${hours}:${minutes} ${ampm}`;
+}
+export const formatTime = (secs: number) => {
+  const minutes = String(Math.floor(secs / 60)).padStart(2, "0");
+  const seconds = String(secs % 60).padStart(2, "0");
+  return `${minutes}:${seconds}`;
+};
+export const formatFloatValue = (value: number = 0): any => {
+  return value % 1 === 0 ? value : value.toFixed(2);
+};
+export const fileUploadLimitValidator = (size: number = 0, mb: number = 5) => {
   const maxSizeInBytes = mb * 1024 * 1024; // 20MB
   if (size > maxSizeInBytes) {
-    alert("File size should be less than 10MB.");
+    toastMessage.info(`File size should be less than ${mb}MB.`);
     return false;
   }
   return true;
 };
-
+export interface IOption {
+  label: string;
+  value: any;
+}
 export const indianStates: string[] = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
@@ -139,7 +183,7 @@ export const indianStates: string[] = [
   "West Bengal",
 ];
 
-export const VIDEO_TYPE: { label: string; value: string }[] = [
+export const VIDEO_TYPE: IOption[] = [
   {
     label: "UGC",
     value: "UGC",
@@ -1438,4 +1482,115 @@ export const businessTypes = [
   "Partnership",
 ];
 
+export const daysFilter: IOption[] = [
+  { label: "Past 7 Days", value: "7" },
+  { label: "Past 28 Days", value: "28" },
+  { label: "Past 90 Days", value: "90" },
+  { label: "Past 365 Days", value: "365" },
+];
+
+export const sortOptions: IOption[] = [
+  { label: "Top to Bottom", value: "desc" },
+  { label: "Bottom to Top", value: "asc" },
+];
+
+export const minFollowersOptions: IOption[] = [
+  { label: "1K+", value: 1000 },
+  { label: "5K+", value: 5000 },
+  { label: "10K+", value: 10000 },
+  { label: "50K+", value: 50000 },
+  { label: "100K+", value: 100000 },
+  { label: "500K+", value: 500000 },
+  { label: "1M+", value: 1000000 },
+];
+
+export const minOrdersOptions: IOption[] = [
+  { label: "10+", value: 10 },
+  { label: "50+", value: 50 },
+  { label: "100+", value: 100 },
+  { label: "500+", value: 500 },
+  { label: "1000+", value: 1000 },
+];
+
+export const minRevenueOptions: IOption[] = [
+  { label: "$100+", value: 100 },
+  { label: "$500+", value: 500 },
+  { label: "$1,000+", value: 1000 },
+  { label: "$5,000+", value: 5000 },
+  { label: "$10,000+", value: 10000 },
+  { label: "$50,000+", value: 50000 },
+];
+
 export const gender: string[] = ["Male", "Female"];
+export const currency: { [key: string]: string } = {
+  INR: "₹",
+};
+export const vendorPlans = [
+  {
+    name: "Free",
+    price: 0,
+    features: [
+      { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
+      {
+        label: "Creator Collaborations",
+        icon: "/assets/pricing/unsubscribed.svg",
+      },
+      {
+        label: "Analytics & Reports",
+        icon: "/assets/pricing/unsubscribed.svg",
+      },
+      { label: "Store Integrations", icon: "/assets/pricing/unsubscribed.svg" },
+      { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" },
+    ],
+    description: "per user/month, billed annually",
+  },
+  {
+    name: "Gold",
+    price: 39,
+    features: [
+      { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
+      {
+        label: "Creator Collaborations",
+        icon: "/assets/pricing/subscribed.svg",
+      },
+      { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Store Integrations", icon: "/assets/pricing/unsubscribed.svg" },
+      { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" },
+    ],
+    description: "per user/month, billed annually",
+  },
+  {
+    name: "Platinum",
+    price: 59,
+    features: [
+      { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
+      {
+        label: "Creator Collaborations",
+        icon: "/assets/pricing/subscribed.svg",
+      },
+      { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Store Integrations", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Priority Support", icon: "/assets/pricing/subscribed.svg" },
+    ],
+    description: "per user/month, billed annually",
+    popular: true,
+  },
+  {
+    name: "Diamond",
+    price: 19,
+    features: [
+      { label: "Product Listings", icon: "/assets/pricing/subscribed.svg" },
+      {
+        label: "Creator Collaborations",
+        icon: "/assets/pricing/subscribed.svg",
+      },
+      { label: "Analytics & Reports", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Store Integrations", icon: "/assets/pricing/subscribed.svg" },
+      { label: "Priority Support", icon: "/assets/pricing/unsubscribed.svg" },
+    ],
+    description: "per user/month, billed annually",
+  },
+];
+
+export const allowedImageTypes = [".jpg", ".jpeg", ".png","image/jpeg", "image/png","image/jpg"];
+export const imageAccept = allowedImageTypes.join(", ");

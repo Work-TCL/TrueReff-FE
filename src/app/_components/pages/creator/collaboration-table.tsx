@@ -5,13 +5,12 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import {
   CheckCircle,
-  Copy,
-  Eye,
   ImageOff,
+  IndianRupee,
   MessagesSquare,
   XCircle,
 } from "lucide-react";
-import { ICollaboration, IRequest } from "./collaboration";
+import { ICollaboration } from "./collaboration";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import CancelRequest from "../../components-common/dialogs/cancel-request";
@@ -125,17 +124,7 @@ const CollaborationTable = ({
   };
 
   const getRequestStatus = (collaboration: ICollaboration) => {
-    const { request } = collaboration;
-    if (request) {
-      if (
-        request?.collaborationStatus === "REQUESTED" ||
-        request?.collaborationStatus === "REJECTED"
-      ) {
-        return request?.collaborationStatus;
-      } else {
-        return collaboration?.collaborationStatus;
-      }
-    } else return "SEND_REQUEST";
+    return collaboration?.collaborationStatus;
   };
   const handleCopyLink = async (textToCopy: string | null) => {
     try {
@@ -145,14 +134,38 @@ const CollaborationTable = ({
       toastMessage.error("Failed to copy!");
     }
   };
-  const getMessages = (status: string, request: IRequest) => {
+  const getMessages = (status: string, request: string) => {
     let userStatus: { [key: string]: string } = {
-      CREATOR: "REQUESTED_CREATOR_FROM_VENDOR",
-      VENDOR: "REQUESTED_VENDOR_FROM_CREATOR",
+      creator: "REQUESTED_CREATOR_FROM_VENDOR",
+      vendor: "REQUESTED_VENDOR_FROM_CREATOR",
     };
-    return status === "REQUESTED" && request?.requestFrom
-      ? userStatus[request?.requestFrom]
-      : status;
+    return status === "REQUESTED" && request ? userStatus[request] : status;
+  };
+  const getCommission = (collaboration: ICollaboration) => {
+    if (collaboration?.collaborationStatus === "REQUESTED") {
+      let product = collaboration?.productId;
+      return product?.commission
+        ? <div
+        className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center  flex items-center`}
+      >{
+            product?.commission_type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""
+          } {product?.commission} {
+            product?.commission_type === "PERCENTAGE" ? "%" : ""          
+          }
+        </div>: "-";
+    } else if (collaboration?.bids?.length > 0) {
+      const bid = collaboration?.bids?.[collaboration?.bids?.length - 1];
+      if (bid?.proposal) {
+        return <div
+        className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center  flex items-center`}
+      >{bid?.type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""} {
+          bid?.proposal
+        } {bid?.type === "PERCENTAGE" ? "%" : ""}</div>
+      } else {
+        return "-";
+      }
+    }
+    // return "-"
   };
 
   const columns: ColumnDef<ICollaboration>[] = [
@@ -160,7 +173,7 @@ const CollaborationTable = ({
       accessorKey: "product.title",
       header: () => translate("Product_Name"),
       cell: ({ row }) => {
-        const product = row.original.product;
+        const product = row.original.productId;
         return (
           <div
             className="flex items-center gap-2 cursor-pointer"
@@ -169,10 +182,9 @@ const CollaborationTable = ({
             {product?.media?.[0] ? (
               <Avatar className="w-8 h-8">
                 <AvatarImage src={product.media[0]} />
-                <AvatarImage src={"/assets/product/image-square.svg"} />
               </Avatar>
             ) : (
-              <ImageOff className="w-6 h-6 text-gray-400" />
+              <Avatar className={`w-8 h-8 flex justify-center items-center`}><ImageOff className="w-6 h-6 text-gray-400" /></Avatar>
             )}
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
@@ -183,45 +195,19 @@ const CollaborationTable = ({
         );
       },
     },
-    ...(!isDashboard
-      ? ([
-          {
-            accessorKey: "product.category",
-            header: () => translate("Product_Category"),
-            cell: ({ row }) => (
-              <TruncateWithToolTip
-                checkHorizontalOverflow={false}
-                linesToClamp={2}
-                text={row.original.product?.category ?? ""}
-              />
-            ),
-          },
-          {
-            accessorKey: "product.tag",
-            header: () => translate("Product_Tags"),
-            cell: ({ row }) => (
-              <TruncateWithToolTip
-                checkHorizontalOverflow={false}
-                linesToClamp={2}
-                text={row.original.product?.tag ?? ""}
-              />
-            ),
-          },
-        ] as ColumnDef<ICollaboration>[])
-      : []),
     {
       accessorKey: "fromUser.business_name",
       header: () => translate("Brand"),
       cell: ({ row }) => {
-        const fromUser = row.original.fromUser;
+        const fromUser = row.original.vendorId;
         return (
           <div
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() => router.push(`/vendor/profile/${fromUser?._id}`)}
+            // onClick={() => router.push(`/creator/vendor-profile/${fromUser?._id}`)}
           >
             <Avatar className="w-8 h-8">
               <AvatarImage
-                className={fromUser?.profile_image ? "" : "opacity-50"}
+                className={fromUser?.profile_image ? "object-cover" : "opacity-50"}
                 src={
                   fromUser?.profile_image
                     ? fromUser.profile_image
@@ -239,6 +225,63 @@ const CollaborationTable = ({
       },
     },
     {
+      accessorKey: "product.category",
+      header: () => translate("Product_Category"),
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.productId?.categories?.join(", ") ?? ""}
+        />
+      ),
+    },
+    ...(isDashboard
+      ? ([
+          {
+            accessorKey: "product.tag",
+            header: () => translate("Base_Commission"),
+            cell: ({ row }) => (
+              <TruncateWithToolTip
+                checkHorizontalOverflow={false}
+                linesToClamp={2}
+                text={getCommission(row?.original)}
+              />
+            ),
+          },
+        ] as ColumnDef<ICollaboration>[])
+      : []),
+    {
+      id: "last-bid",
+      header: () => <div className="text-center">{translate("Last_Bid")}</div>,
+      cell: ({ row }) => {
+        const bids =
+          row.original?.bids?.length > 0 ? row.original?.bids[0] : null;
+        return bids ? (
+          <div className="flex justify-center">
+            {!bids?.isSeen ? (
+              <div
+                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-white bg-primary/90 flex items-center`}
+              >
+                {bids?.type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""}
+                {bids?.proposal}
+                {bids?.type === "FIXED_AMOUNT" ? "" : "%"}
+              </div>
+            ) : (
+              <div
+                className={`text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm text-center text-primary flex items-center`}
+              >
+                {bids?.type === "FIXED_AMOUNT" ? <IndianRupee size={15} /> : ""}
+                {bids?.proposal}
+                {bids?.type === "FIXED_AMOUNT" ? "" : "%"}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex justify-center">-</div>
+        );
+      },
+    },
+    {
       id: "status",
       header: () => <div className="text-center">{translate("Status")}</div>,
       cell: ({ row }) => {
@@ -246,10 +289,7 @@ const CollaborationTable = ({
         const status = getRequestStatus(collaboration);
         return status ? (
           <div className="flex justify-center">
-            <StatusBadge
-              status={status}
-              messageStatus={getMessages(status, collaboration?.request)}
-            />
+            <StatusBadge status={status} messageStatus={status} />
           </div>
         ) : null;
       },
@@ -259,104 +299,108 @@ const CollaborationTable = ({
       header: () => <div className="text-center">{translate("Action")}</div>,
       cell: ({ row }) => {
         const collaboration = row.original;
-        const product = row.original.product;
+        const product = row.original.productId;
         const status = getRequestStatus(collaboration);
 
-        if (isDashboard) {
-          return (
-            <div className="flex justify-between w-fit gap-3 mx-auto">
-              {collaboration?.crmLink && (
-                <ToolTip content="Copy Link" delayDuration={1000}>
-                  <Copy
+        // if (isDashboard) {
+        //   return (
+        //     <div className="flex justify-between w-fit gap-3 mx-auto">
+        //       {collaboration?.crmLink && (
+        //         <ToolTip content="Copy Link" delayDuration={1000}>
+        //           <Copy
+        //             strokeWidth={1.5}
+        //             color="#22c55e"
+        //             className="cursor-pointer"
+        //             size={25}
+        //             onClick={() => handleCopyLink(collaboration?.crmLink)}
+        //           />
+        //         </ToolTip>
+        //       )}
+        //       <ToolTip content="View Detail" delayDuration={1000}>
+        //         <Eye
+        //           strokeWidth={1.5}
+        //           className="cursor-pointer"
+        //           size={25}
+        //           color="#ef4444"
+        //           onClick={() => handleProductDetail(product?._id)}
+        //         />
+        //       </ToolTip>
+        //     </div>
+        //   );
+        // } else {
+        if (status === "REQUESTED") {
+          if (collaboration?.requestedBy === "vendor") {
+            return (
+              <div className="flex justify-between w-fit gap-1 md:gap-3 mx-auto">
+                <ToolTip content="Accept Request" delayDuration={1000}>
+                  <CheckCircle
                     strokeWidth={1.5}
                     color="#22c55e"
-                    className="cursor-pointer"
-                    size={25}
-                    onClick={() => handleCopyLink(collaboration?.crmLink)}
+                    className="cursor-pointer md:size-[25] size-[20]"
+                    onClick={() =>
+                      handleStatusChangeRequest("accepted", collaboration._id)
+                    }
                   />
                 </ToolTip>
-              )}
-              <ToolTip content="View Detail" delayDuration={1000}>
-                <Eye
-                  strokeWidth={1.5}
-                  className="cursor-pointer"
-                  size={25}
-                  color="#ef4444"
-                  onClick={() => handleProductDetail(product?._id)}
-                />
-              </ToolTip>
-            </div>
-          );
-        } else {
-          if (status === "REQUESTED") {
-            if (collaboration?.request?.requestFrom === "VENDOR") {
-              return (
-                <div className="flex justify-between w-fit gap-3 mx-auto">
-                  <ToolTip content="Accept Request" delayDuration={1000}>
-                    <CheckCircle
-                      strokeWidth={1.5}
-                      color="#22c55e"
-                      className="cursor-pointer"
-                      size={25}
-                      onClick={() =>
-                        handleStatusChangeRequest("accepted", collaboration._id)
-                      }
-                    />
-                  </ToolTip>
-                  <ToolTip content="Reject Request" delayDuration={1000}>
-                    <XCircle
-                      strokeWidth={1.5}
-                      className="cursor-pointer"
-                      size={25}
-                      color="#ef4444"
-                      onClick={() =>
-                        setIsOpen({
-                          show: true,
-                          collaborationId: collaboration._id,
-                          status: "reject",
-                        })
-                      }
-                    />
-                  </ToolTip>
-                </div>
-              );
-            } else if (collaboration?.request?.requestFrom === "CREATOR") {
-              return (
-                <div className="flex gap-3 mx-auto w-fit">
-                  <ToolTip content="Cancel Request" delayDuration={1000}>
-                    <XCircle
-                      strokeWidth={1.5}
-                      className="cursor-pointer"
-                      size={25}
-                      color="#ef4444"
-                      onClick={() =>
-                        setIsOpen({
-                          show: true,
-                          collaborationId: collaboration._id,
-                          status: "cancel",
-                        })
-                      }
-                    />
-                  </ToolTip>
-                </div>
-              );
-            }
-          } else if (status === "PENDING") {
+                <ToolTip content="Reject Request" delayDuration={1000}>
+                  <XCircle
+                    strokeWidth={1.5}
+                    className="cursor-pointer md:size-[25] size-[20]"
+                    color="#ef4444"
+                    onClick={() =>
+                      setIsOpen({
+                        show: true,
+                        collaborationId: collaboration._id,
+                        status: "reject",
+                      })
+                    }
+                  />
+                </ToolTip>
+              </div>
+            );
+          } else if (collaboration?.requestedBy === "creator") {
             return (
               <div className="flex gap-3 mx-auto w-fit">
-                <ToolTip content="Start Bargaining" delayDuration={1000}>
-                  <MessagesSquare
+                <ToolTip content="Cancel Request" delayDuration={1000}>
+                  <XCircle
                     strokeWidth={1.5}
-                    color="#3b82f680"
-                    className="cursor-pointer"
-                    size={25}
-                    onClick={() => handleChatView(collaboration._id)}
+                    className="cursor-pointer md:size-[25] size-[20]"
+                    color="#ef4444"
+                    onClick={() =>
+                      setIsOpen({
+                        show: true,
+                        collaborationId: collaboration._id,
+                        status: "cancel",
+                      })
+                    }
                   />
                 </ToolTip>
               </div>
             );
           }
+        } else if (
+          status === "PENDING" ||
+          status === "ACTIVE" ||
+          status === "EXPIRED"
+        ) {
+          return (
+            <div className="flex gap-2 md:gap-3 mx-auto w-fit relative">
+              <ToolTip content="Start Bargaining" delayDuration={1000}>
+                <MessagesSquare
+                  strokeWidth={1.5}
+                  color="#3b82f6"
+                  className="cursor-pointer md:size-[25] size-[20]"
+                  onClick={() => handleChatView(collaboration._id)}
+                />
+              </ToolTip>
+              {collaboration?.lastMessage &&
+                collaboration?.lastMessage?.isRead === false && (
+                  <div className="w-2 h-2 rounded-full bg-primary absolute top-0 right-0 -mb-1" />
+                )}
+            </div>
+          );
         }
+        // }
         return null;
       },
     },
@@ -364,7 +408,7 @@ const CollaborationTable = ({
   return (
     <>
       {/* <div className="min-w-full border-2 border-gray-200 overflow-hidden rounded-2xl"> */}
-      <DataTable columns={columns} data={[...data]} type={"table"} />
+      <DataTable columns={columns} data={[...data]} type={"table"}/>
       {/* </div> */}
       {isOpen?.show && (
         <CancelRequest

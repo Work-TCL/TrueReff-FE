@@ -6,16 +6,22 @@ import React from "react";
 export default function StatusBadge({
   status,
   messageStatus,
+  className = ''
 }: {
   status: string;
   messageStatus?: string;
+  className?: string;
 }) {
   const t = useTranslations("statusMessage");
+
+  function capitalizeFirstLetter(string:string = "") {
+    return string.charAt(0).toUpperCase() + string.toLocaleLowerCase().slice(1);
+  }
   return (
     <div
-      className={`${badgeColor[status]} text-sm bg-opacity-10 font-medium me-2 px-2.5 py-0.5 rounded-sm text-center`}
+      className={`${badgeColor[status]} ${className} text-sm bg-opacity-10 font-medium me-2 px-2.5 py-0.5 rounded-sm text-center`}
     >
-      {t(messageStatus ?? status)}
+      {messageStatus ? capitalizeFirstLetter(messageStatus) : statusMessage[status]}
     </div>
   );
 }

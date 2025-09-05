@@ -9,11 +9,12 @@ import { useTranslations } from "next-intl";
 import { EmptyPlaceHolder } from "../../ui/empty-place-holder";
 import { useAuthStore } from "@/lib/store/auth-user";
 import axios from "@/lib/web-api/axios";
-import { debounce } from "lodash";
+import { debounce, set } from "lodash";
 import Loader from "../../components-common/layout/loader";
 import { SearchInput } from "../../components-common/search-field";
 import SingleSelect from "../../components-common/single-select";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useNotificationStore } from "@/lib/store/notifications";
 export interface ICategory {
   _id: string;
   name: string;
@@ -22,7 +23,21 @@ export interface ICategory {
   updatedAt: string;
 }
 
+export interface IChannel {
+  _id: string;
+  creatorId: string;
+  channelId: string;
+  channelName: string;
+  handleName: string;
+  channelType: string;
+  followers: number;
+  createdAt: string;
+  updatedAt: string;
+  lastFiveVideoViews: number;
+  lastMonthViews: number;
+}
 export interface IProduct {
+  freeProduct: boolean;
   _id: string;
   title: string;
   channelProductId: string;
@@ -30,19 +45,54 @@ export interface IProduct {
   sku: string;
   description: string;
   media: string[];
+  price: number;
   channelName: string;
-  categories: ICategory[];
-  category?: string;
-  subCategories?: string;
-  tag?: string;
+  category: ICategory[];
+  subCategory: string[];
   tags: string[];
+  lifeTime: boolean;
+  startDate: string;
+  endDate: string | null;
+  status: string;
+  commission: number;
+  commission_type: string;
+  referenceLinks: string[];
+  creatorMaterial: string[];
+  videoType: string[];
+  channels: string[];
   createdAt: string;
   updatedAt: string;
+  categories?: string;
+  tag?: string;
 }
 
 export interface ICreator {
   _id: string;
+  accountId: string;
+  full_name: string;
   user_name: string;
+  email: string;
+  phone: string;
+  dob: string; // or Date if you parse it
+  gender: "Male" | "Female" | "Other" | string;
+  state: string;
+  city: string;
+  category: ICategory[]; // Array of category IDs
+  sub_category: string[]; // Array of subcategory IDs
+  tags: string[];
+  channels: IChannel[]; // Channels
+  completed_step: number;
+  status: "APPROVED" | "PENDING" | "REJECTED" | string;
+  createdAt: string; // or Date
+  updatedAt: string; // or Date
+  completed: number;
+  instagram_link?: string;
+  youtube_link?: string;
+  banner_image?: string;
+  profile_image?: string;
+  store_description?: string; // HTML string
+  store_name: string;
+  categories?: string;
 }
 
 export interface IRequest {
@@ -59,30 +109,29 @@ export interface IVendor {
   _id: string;
   business_name: string;
 }
+
+interface INegotiation {
+  agreedByVendor: boolean;
+  agreedByCreator: boolean;
+}
 export interface ICollaboration {
+  negotiation: INegotiation;
   _id: string;
-  creatorId: string;
-  productId: string;
+  creatorId: ICreator;
+  productId: IProduct;
   vendorId: string;
-  requestId: string;
+  requestedBy: string;
   collaborationStatus: string;
   utmLink: string | null;
-  discountType: string;
-  discountValue: number;
-  couponCode: string;
-  commissionPercentage: number;
+  crmLink: string | null;
+  commissionValue: number;
+  commissionType: string;
+  startAt: string | null;
   expiresAt: string;
-  agreedByCreator: boolean;
-  agreedByVendor: boolean;
+  bids: any[];
+  lastMessage: any;
   createdAt: string;
   updatedAt: string;
-  product: IProduct;
-  request: IRequest;
-  fromUser: {
-    _id: string;
-    user_name: string;
-    profile_image: string;
-  };
 }
 
 export interface IStatus {
@@ -106,8 +155,9 @@ export default function CollaborationList() {
   const t = useTranslations();
   const router = useRouter();
   const { account: user } = useAuthStore();
+  const { vendor, setNotificationData } = useNotificationStore();
   const searchParams = useSearchParams();
-  const status = searchParams.get("status")??"";
+  const status = searchParams.get("status") ?? "";
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
@@ -140,21 +190,22 @@ export default function CollaborationList() {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/product/collaboration/list?page=${page}&limit=${pageSize}${
+          `/product/collaboration/vendor/list?page=${page}&limit=${pageSize}${
             searchValue ? `&search=${searchValue}` : ""
-          }${status ? `&collaborationStatus=${status}` : ""}`
+          }${status ? `&status=${status}` : ""}`
         );
+
         if (response.status === 200) {
           const collaborationData = response.data.data;
           if (collaborationData && typeof collaborationData === "object") {
-            const collaborationArray = collaborationData.data || [];
+            const collaborationArray = collaborationData.list || [];
             const collaborationCount = collaborationData.total || 0;
 
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
-                ele.product.category =
-                  ele.product.categories?.length > 0
-                    ? ele.product.categories
+                ele.creatorId.categories =
+                (ele.creatorId && ele.creatorId?.category?.length > 0)
+                    ? ele.creatorId.category
                         .filter(
                           (category: ICategory) => category?.parentId === null
                         )
@@ -163,18 +214,7 @@ export default function CollaborationList() {
                         })
                         .join(", ")
                     : "";
-                ele.product.subCategories =
-                  ele.product.categories?.length > 0
-                    ? ele.product.categories
-                        .filter(
-                          (category: ICategory) => category?.parentId !== null
-                        )
-                        .map((category: ICategory) => {
-                          return category?.name;
-                        })
-                        .join(", ")
-                    : "";
-                ele.product.tag = ele.product.tags.join(", ");
+                ele.productId.tag = ele.productId.tags.join(", ");
                 return { ...ele };
               });
               setCollaborations([...result]);
@@ -202,15 +242,31 @@ export default function CollaborationList() {
     },
     [pageSize]
   );
+  const readCollaborationNotification = async () => {
+    try {
+      const response = await axios.put(
+        `/message/notification/mark-collaboration-read`
+      );
+      if (response.status === 200) {
+        setNotificationData("vendor",{...vendor, collaboration: false});
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
-    if(status){
+    readCollaborationNotification();
+  },[])
+
+  useEffect(() => {
+    if (status) {
       setSelectedStatus(status);
       fetchCollaboration(currentPage, true, search, status);
-    }
-    else {
+    } else {
       setSelectedStatus("");
-      fetchCollaboration(currentPage);}
+      fetchCollaboration(currentPage,true, search, status);
+    }
   }, [status]);
   const handlePageChange = (page: number) => {
     page !== currentPage &&
@@ -229,15 +285,15 @@ export default function CollaborationList() {
     debouncedSearch(value, selectedStatus);
   };
   const handleSelectStatus = (selectedOptions: any) => {
-    router.push(`?status=${selectedOptions}`)
+    router.push(`?status=${selectedOptions}`);
   };
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-3 md:gap-4 h-full">
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center gap-2">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
             <SearchInput
               value={search}
               onChange={handleSearch}

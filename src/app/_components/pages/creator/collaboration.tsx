@@ -14,6 +14,7 @@ import { debounce } from "lodash";
 import SingleSelect from "../../components-common/single-select";
 import { SearchInput } from "../../components-common/search-field";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useNotificationStore } from "@/lib/store/notifications";
 
 export interface ICategory {
   _id: string;
@@ -24,6 +25,7 @@ export interface ICategory {
 }
 
 export interface IProduct {
+  freeProduct: boolean;
   _id: string;
   title: string;
   channelProductId: string;
@@ -31,60 +33,85 @@ export interface IProduct {
   sku: string;
   description: string;
   media: string[];
+  price: number;
   channelName: string;
-  categories: ICategory[];
-  category?: string;
-  subCategories?: string;
-  tag?: string;
+  category: ICategory[];
+  subCategory: string[];
   tags: string[];
+  lifeTime: boolean;
+  startDate: string;
+  endDate: string;
+  status: string;
+  commission: number;
+  commission_type: string;
+  referenceLinks: string[];
+  creatorMaterial: string[];
+  videoType: string[];
+  channels: string[];
+  notes: string;
+  discount: number;
+  discountType: string;
+  couponCode: string;
   createdAt: string;
   updatedAt: string;
+  categories?: string[];
+  tag?: string;
 }
 
-export interface ICreator {
+export interface IVendorContact {
+  name: string;
+  email: string;
+  phone: string;
   _id: string;
-  user_name: string;
 }
 
-export interface IRequest {
-  _id: string;
-  creatorId: string;
-  productId: string;
-  vendorId: string;
-  collaborationStatus: string;
-  requestFrom: string;
-  createdAt: string;
-  updatedAt: string;
-}
 export interface IVendor {
   _id: string;
+  accountId: string;
+  category: string[];
+  sub_category: string[];
+  completed_step: number;
+  contacts: IVendorContact[];
   business_name: string;
-}
-export interface ICollaboration {
-  _id: string;
-  creatorId: string;
-  productId: string;
-  vendorId: string;
-  requestId: string;
-  collaborationStatus: string;
-  utmLink: string | null;
-  discountType: string;
-  discountValue: number;
-  couponCode: string;
-  commissionPercentage: number;
-  expiresAt: string;
-  agreedByCreator: boolean;
-  agreedByVendor: boolean;
+  company_email: string;
+  type_of_business: string;
+  address: string;
+  state: string;
+  city: string;
+  pin_code: string;
+  website: string;
   createdAt: string;
   updatedAt: string;
-  product: IProduct;
-  request: IRequest;
-  fromUser: {
-    _id: string;
-    business_name: string;
-    profile_image: string;
-  };
+  banner_image: string;
+  profile_image: string;
+  gst_certificate: string;
+  gst_number: string;
+  pan_number: string;
+}
+
+export interface INegotiation {
+  agreedByVendor: boolean;
+  agreedByCreator: boolean;
+}
+
+export interface ICollaboration {
+  negotiation: INegotiation;
+  _id: string;
+  creatorId: string;
+  productId: IProduct;
+  vendorId: IVendor;
+  requestedBy: string;
+  collaborationStatus: string;
+  utmLink: string | null;
   crmLink: string | null;
+  commissionValue: number;
+  commissionType: string;
+  startAt: string | null;
+  expiresAt: string | null;
+  bids: any[]; // Replace `any` with a specific type if bids have a defined structure
+  lastMessage: any; // Replace `any` with a specific type if bids have a defined structure
+  createdAt: string;
+  updatedAt: string;
 }
 
 const customStyles = {
@@ -109,12 +136,13 @@ export default function CollaborationList() {
   const searchParams = useSearchParams();
   const dashboardStatus = searchParams.get("status");
   const { account: user } = useAuthStore();
+  const { creator, setNotificationData } = useNotificationStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [internalLoader, setInternalLoader] = useState<boolean>(false);
   const [collaborations, setCollaborations] = useState<ICollaboration[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const statusOptions: IStatus[] = [
-    { value: "", label: "Select Status" },
+    { value: "ALL", label: "ALL" },
     { value: "REQUESTED", label: "Requested" },
     { value: "REJECTED", label: "Rejected" },
     { value: "PENDING", label: "Pending" },
@@ -141,47 +169,34 @@ export default function CollaborationList() {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
       try {
         const response = await axios.get(
-          `/product/collaboration/list?page=${page}&limit=${pageSize}${
+          `/product/collaboration/creator/list?page=${page}&limit=${pageSize}${
             searchValue ? `&search=${searchValue}` : ""
-          }${status ? `&collaborationStatus=${status}` : ""}`
+          }${status ? `&status=${status}` : ""}`
         );
         if (response.status === 200) {
           const collaborationData = response.data.data;
           if (collaborationData && typeof collaborationData === "object") {
-            const collaborationArray = collaborationData.data || [];
+            const collaborationArray = collaborationData.list || [];
             const collaborationCount = collaborationData.total || 0;
 
             if (Array.isArray(collaborationArray)) {
               let result = collaborationArray.map((ele: ICollaboration) => {
                 let category =
-                  ele.product.categories?.length > 0
-                    ? ele.product.categories
+                  ele.productId.category?.length > 0
+                    ? ele.productId.category
                         .filter(
                           (category: ICategory) => category?.parentId === null
                         )
                         .map((category: ICategory) => {
                           return category?.name;
                         })
-                        .join(", ")
-                    : "";
-                let subCategory =
-                  ele.product.categories?.length > 0
-                    ? ele.product.categories
-                        .filter(
-                          (category: ICategory) => category?.parentId !== null
-                        )
-                        .map((category: ICategory) => {
-                          return category?.name;
-                        })
-                        .join(", ")
-                    : "";
-                let tag = ele.product.tags.join(", ");
+                    : [];
+                let tag = ele.productId.tags.join(", ");
                 return {
                   ...ele,
-                  product: {
-                    ...ele?.product,
-                    category: category,
-                    subCategories: subCategory,
+                  productId: {
+                    ...ele?.productId,
+                    categories: category,
                     tag,
                   },
                 };
@@ -211,13 +226,29 @@ export default function CollaborationList() {
     },
     [pageSize]
   );
+  const readCollaborationNotification = async () => {
+    try {
+      const response = await axios.put(
+        `/message/notification/mark-collaboration-read`
+      );
+      if (response.status === 200) {
+        setNotificationData("creator",{...creator, collaboration: false});
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    readCollaborationNotification();
+  },[])
 
   useEffect(() => {
     if (dashboardStatus) {
       setSelectedStatus(dashboardStatus);
-      fetchCollaboration(1, true, search, dashboardStatus);
+      fetchCollaboration(1, true, search, dashboardStatus !== "ALL" ? dashboardStatus : "");
     } else {
-      setSelectedStatus("");
+      setSelectedStatus("ALL");
       fetchCollaboration(currentPage);
     }
   }, [dashboardStatus]);
@@ -239,11 +270,10 @@ export default function CollaborationList() {
       fetchCollaboration(page, true, search, selectedStatus);
   };
   const handleSelectStatus = (selectedOption: string) => {
-    router.push(`?status=${selectedOption}`)
+    router.push(`?status=${selectedOption}`);
   };
-  console.log("selectedStatus", selectedStatus);
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-3 h-full">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-3 h-full">
       {loading ? (
         <Loading />
       ) : (
@@ -254,7 +284,7 @@ export default function CollaborationList() {
               onChange={handleSearch}
               placeholder={translate("Search_Product")}
             />
-            <div className="flex md:flex-row flex-col gap-2 justify-end relative z-[999] md:w-fit w-full">
+            <div className="flex md:flex-row flex-col gap-2 justify-end relative  md:w-fit w-full">
               <SingleSelect
                 value={selectedStatus}
                 onChange={handleSelectStatus}

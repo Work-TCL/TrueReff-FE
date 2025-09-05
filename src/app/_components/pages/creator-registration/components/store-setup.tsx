@@ -1,16 +1,24 @@
 "use client";
 import Input from "@/app/_components/ui/form/Input";
 import React, { useEffect, useState } from "react";
-import { getCategories } from "@/lib/web-api/auth";
-import { useFormContext } from "react-hook-form";
-import { Camera, Image, ImageIcon, Layout, Pencil, User } from "lucide-react";
+import { Camera, Info, User } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { get } from "lodash";
+import { useCreatorStore } from "@/lib/store/creator";
+import ToolTip from "@/app/_components/components-common/tool-tip";
+import TagInput from "@/components/ui/tag-input";
+import { imageAccept } from "@/lib/utils/constants";
 
 export interface ICategoryData {
   _id: string;
   name: string;
-  parentId: string;
+  parentId: {
+    _id: string;
+    name: string;
+    parentId: string;
+    createdAt: string;
+    updatedAt: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -20,6 +28,10 @@ interface IProps {
   profilePreview: any;
   bannerPreview: any;
   methods: any;
+  categories: ICategoryData[];
+  showTrending: boolean;
+  setShowTrending: (value: boolean) => void;
+  isRegistration?: boolean;
 }
 
 export default function StoreSetup({
@@ -27,48 +39,42 @@ export default function StoreSetup({
   bannerPreview,
   profilePreview,
   methods,
+  categories,
+  showTrending,
+  setShowTrending,
+  isRegistration = false,
 }: IProps) {
   const translate = useTranslations();
-  const [categories, setCategories] = useState<ICategoryData[]>([]);
-  const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
-  const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
+  const { creator } = useCreatorStore();
+  // const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
+  // const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
+  // useEffect(() => {
+  //   setParentCategory(
+  //     categories?.filter((ele: ICategoryData) => ele?.parentId === null)
+  //   );
+  // }, [categories]);
 
-  const fetchCategory = async () => {
-    try {
-      const response = await getCategories({ page: 0, limit: 0 });
-      let data = response?.data?.data;
-      setCategories(data);
-      setParentCategory(data?.filter((ele) => ele?.parentId === null));
-    } catch (error:any) {
-      console.log("Error Fetching channels",error.message);
-     }
-  };
+  // useEffect(() => {
+  //   (async () => {
+  //     const categoriesId =
+  //       (await methods.watch("category")?.map((v: any) => v.value)) || [];
 
-  useEffect(() => {
-    fetchCategory();
-  }, []);
+  //     const optionsSubCategory = await categories.filter((ele: ICategoryData) =>
+  //       categoriesId?.includes(ele?.parentId?._id)
+  //     );
 
-  useEffect(() => {
-    (async () => {
-      const categoriesId =
-        (await methods.watch("category")?.map((v: any) => v.value)) || [];
-
-      const optionsSubCategory = await categories.filter((ele) =>
-        categoriesId?.includes(ele?.parentId)
-      );
-
-      setSubCategory(optionsSubCategory);
-      const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
-      const subCategoroies = methods.watch("sub_category") || [];
-      methods.setValue(
-        "sub_category",
-        subCategoroies.filter((v: any) =>
-          availableSubCategoriesIds.includes(v.value)
-        )
-      );
-    })();
-  }, [methods.watch("category")?.length]);
-
+  //     setSubCategory(optionsSubCategory);
+  //     const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+  //     const subCategoroies = methods.watch("sub_category") || [];
+  //     methods.setValue(
+  //       "sub_category",
+  //       subCategoroies.filter((v: any) =>
+  //         availableSubCategoriesIds.includes(v.value)
+  //       )
+  //     );
+  //   })();
+  // }, [methods.watch("category"), creator?.category]);
+  
   return (
     <div className="flex flex-col gap-4">
       {/* Banner + Profile Section */}
@@ -101,8 +107,9 @@ export default function StoreSetup({
           <input
             type="file"
             id="banner_image"
-            accept="image/*"
+            accept={imageAccept}
             className="hidden"
+            capture={false} 
             onChange={(e) => handleImageSelect(e, "banner")}
           />
         </div>
@@ -137,7 +144,8 @@ export default function StoreSetup({
               type="file"
               id="profile-image"
               className="hidden"
-              accept="image/*"
+              accept={imageAccept}
+              capture={false} 
               onChange={(e) => handleImageSelect(e, "profile")}
             />
           </div>
@@ -161,23 +169,16 @@ export default function StoreSetup({
 
       {/* Form Fields */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-2">
+        <div className={"col-span-2"}>
           <Input
             label={translate("Store_Name")}
             name="store_name"
             type="text"
             placeholder={translate("Enter_Store_Name")}
+            lableClassName="text-md font-[400]"
           />
         </div>
-        <div className="col-span-2">
-          <Input
-            label={translate("Tags")}
-            name="tags"
-            type="renderTagInputUpdated"
-            placeholder={translate("Enter_your_tags")}
-          />
-        </div>
-        <div className="md:col-span-1 col-span-2">
+        {/* <div className="md:col-span-1 col-span-2">
           <Input
             label={translate("Category")}
             placeholder={translate("Select_Category")}
@@ -188,6 +189,8 @@ export default function StoreSetup({
               label: ele?.name,
             }))}
             autoFocus={false}
+            max={1}
+            lableClassName="text-md font-[400]"
           />
         </div>
         <div className="md:col-span-1 col-span-2">
@@ -195,21 +198,24 @@ export default function StoreSetup({
             label={translate("Sub_category")}
             placeholder={translate("Select_Sub_Category")}
             name="sub_category"
+            required={false}
             type="multiSelectWithTags"
             options={subCategory.map((ele) => ({
               value: ele?._id,
               label: ele?.name,
             }))}
             autoFocus={false}
+            lableClassName="text-md font-[400]"
           />
-        </div>
+        </div> */}
         <div className="col-span-2 ">
           <Input
             label={translate("Store_Description")}
             name="store_description"
-            type="editor"
+            type="textarea"
             rows={4}
-            placeholder="I'm John, a fashion influencer sharing style tips, outfit inspiration, and grooming advice for men. Follow me for daily fashion insights!"
+            placeholder={translate("Enter_your_store_description")}
+            lableClassName="text-md font-[400]"
           />
         </div>
       </div>

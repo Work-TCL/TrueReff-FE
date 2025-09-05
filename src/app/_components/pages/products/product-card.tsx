@@ -32,7 +32,7 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
             <img
               src={product.media[0]}
               alt={product.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full product-img"
             />
           ) : (
             <ImageOff className="w-8 h-8 text-gray-400" />
@@ -94,9 +94,7 @@ export function calculateStatusChip(product: IProduct) {
   const now = new Date();
   const endDate = new Date(product.endDate || "");
   const isExpired =
-    !product.lifeTime &&
-    product.endDate &&
-    endDate.getTime() <= now.getTime();
+    !product.lifeTime && product.endDate && endDate.getTime() <= now.getTime();
 
   let chipText = product.status || "Unknown";
   let chipColor = "bg-gray-800 text-white";
@@ -105,17 +103,21 @@ export function calculateStatusChip(product: IProduct) {
     chipText = "Expired";
     chipColor = "bg-red-700 text-white";
   } else if (product.status === "ACTIVE") {
-    const diffMs = endDate.getTime() - now.getTime();
-    const minutes = Math.floor(diffMs / (1000 * 60));
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const weeks = Math.floor(days / 7);
+    if (endDate && !product.lifeTime) {
+      const diffMs = endDate.getTime() - now.getTime();
+      const minutes = Math.floor(diffMs / (1000 * 60));
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const weeks = Math.floor(days / 7);
 
-    if (weeks > 0) chipText = `${weeks} Week${weeks > 1 ? "s" : ""} Left`;
-    else if (days > 0) chipText = `${days} Day${days > 1 ? "s" : ""} Left`;
-    else if (hours > 0)
-      chipText = `${hours} Hour${hours > 1 ? "s" : ""} Left`;
-    else chipText = `${minutes} Minute${minutes > 1 ? "s" : ""} Left`;
+      if (weeks > 0) chipText = `${weeks} Week${weeks > 1 ? "s" : ""} Left`;
+      else if (days > 0) chipText = `${days} Day${days > 1 ? "s" : ""} Left`;
+      else if (hours > 0)
+        chipText = `${hours} Hour${hours > 1 ? "s" : ""} Left`;
+      else chipText = `${minutes} Minute${minutes > 1 ? "s" : ""} Left`;
+    } else if (product.lifeTime) {
+      chipText = "Never Expire";
+    }
 
     chipColor = "bg-green-700 text-white";
   } else if (product.status === "PENDING") {

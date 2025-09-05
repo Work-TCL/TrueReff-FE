@@ -31,31 +31,83 @@ export default function ChatComponent({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
+
+  // useEffect(() => {
+  //   socketService.connect();
+
+  //   if (creator.creatorId || vendor.vendorId) {
+  //     let id: any = creator.creatorId || vendor.vendorId;
+  //     id && socketService.registerUser(String(id));
+  //   }
+
+  //   collaborationId && socketService.joinCollaboration(collaborationId);
+  //   socketService.joinedCollaborationRoom((data) => {});
+  //   socketService.joinedCollaborationMessages((data) => {
+  //     setMessages((prev) => [data.message, ...prev]);
+  //   });
+
+  //   return () => {
+  //     socketService.disconnect();
+  //   };
+  // }, [creator.creatorId, vendor.vendorId, collaborationId]);
 
   useEffect(() => {
+    // 1. Connect to socket
     socketService.connect();
-
-    if (creator.creatorId || vendor.vendorId) {
-      let id: any = creator.creatorId || vendor.vendorId;
-      id && socketService.registerUser(String(id));
+  
+    // 2. Register user by ID
+    const id = creator.creatorId || vendor.vendorId;
+    if (id) {
+      socketService.registerUser(String(id));
     }
-
-    collaborationId && socketService.joinCollaboration(collaborationId);
-    socketService.joinedCollaborationRoom((data) => {});
-    socketService.joinedCollaborationMessages((data) => {
-      setMessages((prev) => [data.message, ...prev]);
-    });
-
+  
+    // 3. Join collaboration room
+    if (collaborationId) {
+      socketService.joinCollaboration(collaborationId);
+  
+      // 4. Trigger callback after joining the room
+      socketService.joinedCollaborationRoom((data) => {
+        console.log(data.message);
+      });
+  
+      // 5. Handle receiving new messages
+      socketService.joinedCollaborationMessages((data: any) => {
+        setMessages((prev) => [data.message, ...prev]);
+  
+        // If the message was not sent by this user, mark it as read
+        const isSender =
+          (data.message.creatorId && data.message.creatorId._id === creator.creatorId) ||
+          (data.message.vendorId && data.message.vendorId._id === vendor.vendorId);
+ 
+        if (!isSender) {
+          socketService.markMessagesAsRead({
+            collaborationId,
+            vendorId: data.message?.vendorId?._id,
+            creatorId: data.message?.creatorId?._id,
+          });
+        }
+      });
+  
+      // 6. On initial load — mark all unread messages as read
+      socketService.markAllMessagesAsRead({
+        collaborationId,
+        type: creator.creatorId ? 'creator': 'vendor'
+      });
+    }
+  
+    // 7. Clean up
     return () => {
       socketService.disconnect();
     };
   }, [creator.creatorId, vendor.vendorId, collaborationId]);
+  
+
   const fetchCollaborationConversions = async (
     page: number,
     isLoadMore: boolean = false
   ) => {
-    if (!hasMore || isLoading) return;
+    if ( isLoading) return;
     isLoadMore ? setLoading(true) : setIsLoading(true);
 
     try {
@@ -135,14 +187,14 @@ export default function ChatComponent({
   }, [loadingRef, hasMore, isLoading]);
 
   return (
-    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden flex flex-col md:h-full h-[80vh] md:sticky md:top-0">
+    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden shadow-md flex flex-col md:h-full h-[80vh] md:sticky md:top-0">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
         <Avatar>
           {collaborationData.creatorId?.profile_image ||
           collaborationData.vendorId?.profile_image ? (
             <AvatarImage
               src={getProfile()}
-              className="rounded-full border border-border"
+              className="rounded-full object-cover border border-border"
             />
           ) : (
             <CircleUserRound className="w-8 h-8" color="#EB815B" />
@@ -152,11 +204,11 @@ export default function ChatComponent({
           <p className="font-medium text-text md:text-lg text-base">
             {getUserName()}
           </p>
-          <p className="text-[#13AD3A] md:text-sm text-xs">Online</p>
+          <p className="text-[#13AD3A] md:text-sm text-xs">{translate("Online")}</p>
         </div>
       </div>
-      <div className="h-px w-full bg-stroke mx-2"></div>{" "}
-      <CardContent className="flex flex-col-reverse overflow-y-auto gap-3 h-full">
+      {/* <div className="h-px w-full bg-stroke mx-2"></div>{" "} */}
+      <CardContent className="flex flex-col-reverse p-2 overflow-y-auto gap-3 h-full max-h-[calc(100vh-285px)]">
         {/* {isLoading && <Loading />} */}
         {!isLoading && message?.length < 0 && (
           <p className="opacity-50 text-center">
@@ -181,7 +233,7 @@ export default function ChatComponent({
               >
                 <div className="flex items-end overflow-hidden">
                   {!owner && (
-                    <Avatar>
+                    <Avatar key={idx} className="md:size-9 size-7">
                       <AvatarImage
                         src={
                           user?.role === "creator"
@@ -198,7 +250,7 @@ export default function ChatComponent({
                     } `}
                   >
                     <div
-                      className={`p-3 rounded-lg w-full ${
+                      className={`p-3 rounded-lg max-w-[250px] ${
                         owner ? "bg-pink-100" : "bg-gray-100"
                       }`}
                     >
@@ -212,7 +264,7 @@ export default function ChatComponent({
                   </div>
                 </div>
                 {owner && (
-                  <Avatar>
+                  <Avatar key={idx} className="md:size-9 size-7">
                     <AvatarImage
                       src={
                         user?.role === "creator"
@@ -239,6 +291,7 @@ export default function ChatComponent({
         <Input
           placeholder="Message"
           value={message}
+          className="bg-white focus:outline-none"
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -248,7 +301,7 @@ export default function ChatComponent({
           }}
         />
         <SendHorizontal
-          className="cursor-pointer text-text font-normal"
+          className="cursor-pointer text-text font-normal stroke-primary"
           onClick={() => sendMessage()}
         />
       </div>

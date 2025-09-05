@@ -8,7 +8,7 @@ interface IAuthTitle {
 
 export default function AuthDescription({ text, className }: IAuthTitle) {
     return (
-        <div className={cn("text-gray-desc text-sm", className)}>
+        <div className={cn("text-gray-desc text-sm md:text-start text-center", className)}>
             {text}
         </div>
     )

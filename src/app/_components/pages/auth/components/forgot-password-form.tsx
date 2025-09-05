@@ -37,9 +37,8 @@ export default function ForgotPasswordForm() {
 
       if (response?.status === 200) {
         toast.success(response?.data?.message);
-        methods?.reset();
-        router.push(`/send-otp?email=${data?.email}`);
-        return true;
+        await router.push(`/send-otp?email=${data?.email || payload?.email}`);
+        await methods?.reset();
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);

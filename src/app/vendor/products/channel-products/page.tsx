@@ -3,5 +3,5 @@ import ChannelProductList from "@/app/_components/pages/products/channels/channe
 import React from "react";
 
 export default function ChannelProductsPage() {
-  return <ChannelProductList channelName={"shopify"} />;
+  return <ChannelProductList />;
 }

@@ -3,9 +3,11 @@ import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
+  ChartNoAxesCombined,
   CircleFadingPlus,
   Eye,
   ImageOff,
+  IndianRupee,
   Pencil,
   PencilLine,
   Search,
@@ -31,6 +33,9 @@ import ProductManageMentFilter from "./viewProduct/productManagementFilter";
 import ToolTip from "../../components-common/tool-tip";
 import StatusBadge from "../../components-common/status-badge";
 import { cn } from "@sohanemon/utils";
+import { currency, formatNumber } from "@/lib/utils/constants";
+import toast from "react-hot-toast";
+import CategorySliderFilter from "../../components-common/categoryFilter";
 
 export interface ICategory {
   _id: string;
@@ -74,6 +79,7 @@ export interface IProduct {
   discount: number;
   discountType: string;
   couponCode: string;
+  activeCollabCount: number;
 }
 
 const customStyles = {
@@ -95,7 +101,7 @@ export default function ProductList() {
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<"table" | "card">("card");
+  const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -112,6 +118,7 @@ export default function ProductList() {
     status: string = ""
   ) => {
     isInternalLoader ? setInternalLoading(true) : setLoading(true);
+
     try {
       const response = await axios.get(
         `product/vendor-product/product/list?page=${page}&limit=${pageLimit}${
@@ -120,7 +127,16 @@ export default function ProductList() {
           status ? `&status=${status}` : ""
         }`
       );
-      if (response.data.data?.list) {
+      console.log("response", response);
+      // Handle error response from API
+      if (response.data && response.data.status && response.data.status !== 200) {
+        console.log("responses", response);
+        setProductList([]);
+        setTotalPages(0);
+        setCurrentPage(1);
+        // Optionally, show a toast or error message here
+        // toast.error(response.data.message || "Failed to fetch product list");
+      } else if (response.data.data?.list) {
         setProductList(
           response.data.data?.list.map((product: IProduct) => {
             let categories =
@@ -143,14 +159,19 @@ export default function ProductList() {
         );
         setTotalPages(Math.ceil(response.data.data?.count / pageLimit));
         setCurrentPage(page);
+      } else {
+        setProductList([]);
+        setTotalPages(0);
+        setCurrentPage(1);
       }
-      setLoading(false);
-      setInternalLoading(false);
-    } catch (error) {
-      setLoading(false);
+    } catch (error: any) {
+      // Optionally, show a toast or error message here
+      // toast.error(error?.response?.data?.message || "Failed to fetch product list");
       setProductList([]);
       setTotalPages(0);
       setCurrentPage(1);
+    } finally {
+      setLoading(false);
       setInternalLoading(false);
     }
   };
@@ -172,22 +193,34 @@ export default function ProductList() {
     }, 500),
     []
   );
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
+  const handleSearch = (value: string) => {
     setSearch(value);
     debouncedSearch(value, [...selectedCategories]);
   };
-  const handleSelectCategory = (selectedOptions: any) => {
-    setSelectedCategories(selectedOptions);
-    fetProductsList(1, true, search, [...selectedOptions]);
+  const handleSelectCategory = (selectedOptions: any, subSelected: any) => {
+    const newData = [];
+    if (subSelected) {
+      newData.push(subSelected);
+    }
+    if (selectedOptions) {
+      newData.push(selectedOptions);
+    }
+    setSelectedCategories(newData);
+    fetProductsList(1, true, search, selectedOptions ? [...newData] : []);
   };
 
   const productColumns: ColumnDef<IProduct>[] = [
     {
-      id: "channelName",
-      header: () => translate("Channel"),
-      accessorKey: "channelName",
-      cell: ({ row }) => row.original.channelName,
+      id: "sku",
+      header: () => translate("SKU"),
+      accessorKey: "sku",
+      cell: ({ row }) => (
+        <TruncateWithToolTip
+          checkHorizontalOverflow={false}
+          linesToClamp={2}
+          text={row.original.sku ?? ""}
+        />
+      ),
     },
     {
       id: "title",
@@ -205,7 +238,9 @@ export default function ProductList() {
                 <AvatarImage src={product.media[0]} />
               </Avatar>
             ) : (
-              <ImageOff className="w-6 h-6 text-gray-400" />
+              <Avatar className="w-8 h-8 flex justify-center items-center">
+                <ImageOff className="w-6 h-6 text-gray-400" />
+              </Avatar>
             )}
             <TruncateWithToolTip
               checkHorizontalOverflow={false}
@@ -216,28 +251,30 @@ export default function ProductList() {
         );
       },
     },
+    // {
+    //   id: "categories",
+    //   header: () => translate("Categories"),
+    //   accessorKey: "categories",
+    //   cell: ({ row }) => (
+    //     <TruncateWithToolTip
+    //       checkHorizontalOverflow={false}
+    //       linesToClamp={2}
+    //       text={row.original.categories ?? ""}
+    //     />
+    //   ),
+    // },
     {
-      id: "sku",
-      header: () => translate("SKU"),
+      id: "activeCollabCount",
+      header: () => (
+        <span className="flex items-center justify-center">
+          {translate("Active_Collabs")}
+        </span>
+      ),
       accessorKey: "sku",
       cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.sku ?? ""}
-        />
-      ),
-    },
-    {
-      id: "categories",
-      header: () => translate("Categories"),
-      accessorKey: "categories",
-      cell: ({ row }) => (
-        <TruncateWithToolTip
-          checkHorizontalOverflow={false}
-          linesToClamp={2}
-          text={row.original.categories ?? ""}
-        />
+        <span className="flex items-center justify-center">
+          {formatNumber(row?.original?.activeCollabCount)}
+        </span>
       ),
     },
     // {
@@ -267,40 +304,45 @@ export default function ProductList() {
     //   //   />
     //   // ),
     // },
-    {
-      id: "tags",
-      header: () => translate("Tags"),
-      accessorKey: "tags",
-      cell: ({ row }) =>
-        row.original.tags?.length > 0 ? (
-          <div className="flex gap-2 w-full">
-            {row.original.tags.slice(0, 2).map((tag, index) => (
-              <TruncateWithToolTip
-                key={index}
-                checkHorizontalOverflow={true}
-                className={cn(
-                  "flex items-center gap-1 text-[10px] md:px-3 text-center px-1 py-0.5 rounded-full bg-muted text-muted-foreground border border-muted-foreground"
-                )}
-                text={`#${tag}`}
-              />
-            ))}
-          </div>
-        ) : (
-          <span className="text-xs text-gray-400">-</span>
-        ),
-    },
+    // {
+    //   id: "tags",
+    //   header: () => translate("Tags"),
+    //   accessorKey: "tags",
+    //   cell: ({ row }) =>
+    //     row.original.tags?.length > 0 ? (
+    //       <div className="flex gap-2 w-full">
+    //         {row.original.tags.slice(0, 2).map((tag, index) => (
+    //           <TruncateWithToolTip
+    //             key={index}
+    //             checkHorizontalOverflow={true}
+    //             className={cn(
+    //               "flex items-center gap-1 text-[10px] md:px-3 text-center px-1 py-0.5 rounded-full bg-muted text-muted-foreground border border-muted-foreground"
+    //             )}
+    //             text={`#${tag}`}
+    //           />
+    //         ))}
+    //       </div>
+    //     ) : (
+    //       <span className="text-xs text-gray-400">-</span>
+    //     ),
+    // },
     {
       id: "commission",
       header: () => (
         <span className="flex items-center justify-center">
-          {translate("Commission")}
+          {translate("Base_Commission")}
         </span>
       ),
       accessorKey: "commission",
       cell: ({ row }) => (
         <span className="w-full flex items-center justify-center">
-          {row?.original?.commission_type === "FIXED_AMOUNT" ? `₹ ` : `$ `}
+          {row?.original?.commission_type === "FIXED_AMOUNT" ? (
+            <IndianRupee size={15} />
+          ) : (
+            ``
+          )}
           {row?.original?.commission}
+          {row?.original?.commission_type === "PERCENTAGE" ? ` % ` : ``}
         </span>
       ),
     },
@@ -308,13 +350,14 @@ export default function ProductList() {
       id: "price",
       header: () => (
         <span className="flex items-center justify-center">
-          {translate("Price")}
+          {translate("Product_Price")}
         </span>
       ),
       accessorKey: "price",
       cell: ({ row }) => (
         <span className="w-full flex items-center justify-center">
-          {row?.original?.price ? row?.original?.price : ''}
+          <IndianRupee size={15} />{" "}
+          {row?.original?.price ? row?.original?.price : ""}
         </span>
       ),
     },
@@ -332,30 +375,39 @@ export default function ProductList() {
 
         return (
           <div className="flex items-center justify-center">
-          <div
-            className={`flex justify-center item min-w-[100px] w-fit md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold uppercase ${chipColor}`}
-          >
-            {chipText}
-          </div>
+            <div
+              className={`flex justify-center item min-w-[100px] w-fit md:text-[10px] text-[8px] px-2 py-1 rounded-full font-semibold uppercase ${chipColor} ${
+                chipText === "Expired" ? "cursor-pointer" : ""
+              }`}
+              onClick={() => {
+                if (chipText === "Expired") {
+                  router.push(`/vendor/campaign/product/${row?.original?._id}`);
+                }
+              }}
+            >
+              {chipText}
+            </div>
           </div>
         );
       },
     },
     {
-      id: "price",
-      header: () => <>{translate("Action")}</>,
-      accessorKey: "price",
+      id: "action",
+      header: () => <div className="text-center">{translate("Action")}</div>,
+      accessorKey: "",
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 justify-center">
           {/* View button (currently commented) */}
-          <ToolTip content="View Product" delayDuration={1000}>
-            <Eye
+          <ToolTip content="Show Analytics" delayDuration={1000}>
+            <ChartNoAxesCombined
               strokeWidth={1.5}
               color="#FF4979"
               className="cursor-pointer size-5 "
-              onClick={() =>
-                router.push(`/vendor/products/view/${row?.original?._id}`)
-              }
+              onClick={() => router.push(`/vendor/vendor-analysis`)}
             />
           </ToolTip>
 
@@ -365,10 +417,10 @@ export default function ProductList() {
             }
             className="cursor-pointer"
           >
-            <ToolTip content="Add Product to CRM" delayDuration={1000}>
+            <ToolTip content="Edit Product" delayDuration={1000}>
               <UserRoundPen
                 strokeWidth={1.5}
-                color="#3b82f680"
+                color="#3b82f6"
                 className="cursor-pointer size-5"
               />
             </ToolTip>
@@ -387,25 +439,32 @@ export default function ProductList() {
     setSelectedStatus(selectedOptions);
   };
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
+    <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4 h-full">
+      <CategorySliderFilter
+      type={"vendor"}
+        isIncludeSearch
+        search={search}
+        onSearch={handleSearch}
+        onChange={handleSelectCategory}
+      />
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className="flex justify-between items-center gap-2">
-            <SearchInput
+          {/* <div className="flex justify-between items-center gap-2"> */}
+          {/* <SearchInput
               value={search}
               onChange={handleSearch}
               placeholder={translate("Search_Product")}
-            />
-            <div className="flex flex-row gap-2 justify-end items-center ml-auto">
-              <ProductManageMentFilter
+            /> */}
+          {/* <div className="flex flex-row gap-2 justify-end items-center ml-auto"> */}
+          {/* <ProductManageMentFilter
                 onChange={handleSelectCategory}
                 handleSelectStatus={handleSelectStatus}
-              />
-              <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
-            </div>
-          </div>
+              /> */}
+          {/* <ViewToggle viewMode={viewMode} setViewMode={setViewMode} /> */}
+          {/* </div> */}
+          {/* </div> */}
           {internalLoading && <Loader />}
           {productList?.length > 0 ? (
             <>

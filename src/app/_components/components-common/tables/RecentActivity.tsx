@@ -67,7 +67,7 @@ export default function RecentActivities() {
     setLoading(true);
     try {
       const response: any = await axios.delete(
-        `/product/collaboration/request/cancel/${isOpen?.collaborationId}`
+        `/product/collaboration/vendor/cancel-request/${isOpen?.collaborationId}`
       );
       if (response.status === 200) {
         toast.success(response.data.message);
@@ -97,42 +97,33 @@ export default function RecentActivities() {
   const fetchCollaboration = async () => {
     try {
       const response = await axios.get(
-        `/product/collaboration/list?page=${1}&limit=${pageSize}`
+        `/product/collaboration/vendor/list?page=${1}&limit=${pageSize}`
       );
       if (response.status === 200) {
         const collaborationData = response.data.data;
         if (collaborationData && typeof collaborationData === "object") {
-          const collaborationArray = collaborationData.data || [];
+          const collaborationArray = collaborationData.list || [];
+          const collaborationCount = collaborationData.total || 0;
 
           if (Array.isArray(collaborationArray)) {
             let result = collaborationArray.map((ele: ICollaboration) => {
-              ele.product.category =
-                ele.product.categories?.length > 0
-                  ? ele.product.categories
-                      .filter(
-                        (category: ICategory) => category?.parentId === null
-                      )
-                      .map((category: ICategory) => {
-                        return category?.name;
-                      })
-                      .join(", ")
+              ele.creatorId.categories =
+                ele.creatorId.category?.length > 0
+                  ? ele.creatorId.category
+                    .filter(
+                      (category: ICategory) => category?.parentId === null
+                    )
+                    .map((category: ICategory) => {
+                      return category?.name;
+                    })
+                    .join(", ")
                   : "";
-              ele.product.subCategories =
-                ele.product.categories?.length > 0
-                  ? ele.product.categories
-                      .filter(
-                        (category: ICategory) => category?.parentId !== null
-                      )
-                      .map((category: ICategory) => {
-                        return category?.name;
-                      })
-                      .join(", ")
-                  : "";
-              ele.product.tag = ele.product.tags.join(", ");
+              ele.productId.tag = ele.productId.tags.join(", ");
               return { ...ele };
             });
             setCollaborations([...result]);
           } else {
+            setCollaborations([]);
           }
           setLoading(false);
         } else {
@@ -178,6 +169,7 @@ export default function RecentActivities() {
             user={getUserType()}
             refreshCentral={() => fetchCollaboration()}
             loader={false}
+            isDashboard={true}
           />
         ) : (
           <EmptyPlaceHolder

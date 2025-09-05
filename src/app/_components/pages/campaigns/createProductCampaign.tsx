@@ -1,45 +1,56 @@
 "use client";
 import { Button as ButtonOutline } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from "react-hook-form";
 import {
   campaignProductValidationSchema,
-  campaignValidationSchema,
-  campaignValidationUpdateSchema,
   ICampaignProductValidationSchema,
-  ICampaignValidationSchema,
 } from "@/lib/utils/validations";
 import toast from "react-hot-toast";
+import { Input as InputRadix } from "@/components/ui/input";
 import {
   cn,
   formatForDateInput,
   getErrorMessage,
 } from "@/lib/utils/commonUtils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import MediaUploader from "./_components/mediaUploader";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
-  createCampaign,
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
+import {
   createCampaignProduct,
-  updateCampaign,
   updateCampaignProduct,
 } from "@/lib/web-api/campaign";
 import Button from "../../ui/button";
 import Loader from "../../components-common/layout/loader";
 import { get } from "lodash";
 import dynamic from "next/dynamic";
-import { ICampaign } from "@/lib/types-api/campaign";
 import { useTranslations } from "next-intl";
 import LightButton from "../../ui/button/variant/light-button";
 import { labelStyle } from "../../ui/form/Input";
-import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 import axios from "@/lib/web-api/axios";
 import { ICategoryData } from "@/lib/types-api/auth";
 import { getCategories } from "@/lib/web-api/auth";
 import CreatorMaterial from "./_components/creator-material";
 import CampaignProductView from "./_components/product-view";
 import { VIDEO_TYPE } from "@/lib/utils/constants";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { CircleX, Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
+import TagInput from "@/components/ui/tag-input";
+import Link from "next/link";
 
 const Input = dynamic(() => import("../../ui/form/Input"), { ssr: false });
 
@@ -47,27 +58,60 @@ interface IAddProductDetailProps {
   isDetailView?: boolean;
 }
 
-interface IProduct {
-  handle: string;
-  id: string;
-  image: string;
-  title: string;
-  category: string;
-  tags: string[];
-  sku: string;
-  price: string;
-  totalInventory: number;
-  description: string;
-  createdAt: string;
+export interface IImage {
+  id: number;
+  src: string;
+  alt: string;
 }
 
+export interface IVariant {
+  id: number;
+  title: string;
+  price: string;
+  sku: string;
+  inventory_quantity: number;
+  available_quantity: number;
+  barcode: string | null;
+  image_id: number | null;
+}
+
+export interface IProduct {
+  id: number;
+  name: string;
+  handle: string;
+  description_html: string;
+  vendor: string;
+  product_type: string;
+  status: string;
+  tags: string;
+  images: IImage[];
+  variants: IVariant[];
+  title?: string;
+  description?: string;
+}
+const types = {
+  FIXED_AMOUNT: "FIXED_AMOUNT",
+  PERCENTAGE: "PERCENTAGE",
+};
+const typOptions = [
+  {
+    label: "Fixed Amount",
+    value: "FIXED_AMOUNT",
+  },
+  {
+    label: "Percentage",
+    value: "PERCENTAGE",
+  },
+];
 export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const translate = useTranslations();
   const params = useParams();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
   const productId: any = params?.productId !== "add" ? params?.productId : null;
   const shopifyId: any = searchParams?.get("productId");
+  const channelType: any = searchParams?.get("channelType");
   const isDisabled: any = props?.isDetailView;
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [campaignData, setCampaignData] = useState<any | null>(null);
@@ -90,31 +134,33 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategoryData[]>([]);
   const [subCategory, setSubCategory] = useState<ICategoryData[]>([]);
-  const [showDiscountSection, setShowDiscountSection] = useState(true);
+  const [showDiscountSection, setShowDiscountSection] = useState(false);
+  const [showCreatorMeterial, setShowCreatorMeterial] = useState(false);
 
-  const fetchCategory = async () => {
+  const fetchCategory = useCallback(async () => {
     try {
-      const response = await getCategories({ page: 0, limit: 0 });
+      const response = await getCategories({ page: 0, limit: 0,type: "vendor" });
       let data = response?.data?.data;
+
       setCategories(data);
       setParentCategory(data?.filter((ele) => ele?.parentId === null));
-      methods.setValue(
-        "sub_category",
-        categories
-          ?.filter((ele) => campaignData?.subCategory?.includes(ele?._id))
-          ?.map((v: any) => ({
-            label: v?.name,
-            value: v?._id,
-          }))
-      );
+
+      const selectedSubCategories = data
+        ?.filter((ele) => campaignData?.subCategory?.includes(ele?._id))
+        ?.map((v) => ({
+          label: v?.name,
+          value: v?._id,
+        }));
+
+      methods.setValue("sub_category", selectedSubCategories);
     } catch (error: any) {
-      console.log("Error Fetching channels", error.message);
+      console.log("Error Fetching categories", error.message);
     }
-  };
+  }, [campaignData]); // dependencies
 
   const methods = useForm<ICampaignProductValidationSchema>({
     defaultValues: {
-      references: [""],
+      blocking_commission_days: "1",
     },
     //@ts-ignore
     resolver: productId
@@ -129,99 +175,194 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     name: "references",
   });
 
-  console.log("------errors", methods.formState.errors);
+  const validateCommissionGroup = (data: any) => {
+    let price =
+      selectedProduct?.variants?.length > 0
+        ? selectedProduct?.variants[0]?.price
+        : 0;
+    let discountError = "";
+    let commissionError = "";
+    // If the first character is "0" and the length is greater than 1, remove the first character
+    const commissionValue = data?.commission;
+    const discountValue = data?.discount_value;
+    if (!isNaN(commissionValue)) {
+      if (data?.commission_type === types.PERCENTAGE) {
+        // For percentage-based commission, calculate the maximum offer
+        const maxOffer = (parseFloat(price) * commissionValue) / 100;
+        if (price && maxOffer > parseFloat(price)) {
+          methods.setError("commission", {
+            type: "manual",
+            message: "Commission cannot exceed the product price.",
+          });
+          commissionError = "Commission cannot exceed the product price.";
+        } else {
+          commissionError = "";
+          methods.setError("commission", {
+            type: "manual",
+            message: "",
+          });
+        }
+      }
+      if (data.commission_type === types.FIXED_AMOUNT) {
+        // For fixed amount, ensure the offer does not exceed the product price
+
+        if (price && commissionValue > parseFloat(price)) {
+          methods.setError("commission", {
+            type: "manual",
+            message: "Commission cannot exceed the product price.",
+          });
+          commissionError = "Commission cannot exceed the product price.";
+        } else {
+          commissionError = "";
+          methods.setError("commission", {
+            type: "manual",
+            message: "",
+          });
+        }
+      }
+    }
+    if (discountValue && !isNaN(discountValue) && showDiscountSection) {
+      if (data.discount_type === types.PERCENTAGE) {
+        // For percentage-based commission, calculate the maximum offer
+        const maxOffer = (parseFloat(price) * discountValue) / 100;
+        if (price && maxOffer > parseFloat(price)) {
+          discountError = "Discount cannot exceed the product price.";
+          methods.setError("discount_value", {
+            type: "manual",
+            message: "Discount cannot exceed the product price.",
+          });
+        } else {
+          discountError = "";
+          methods.setError("discount_value", {
+            type: "manual",
+            message: "",
+          });
+        }
+      } else if (data.discount_type === types.FIXED_AMOUNT) {
+        // For fixed amount, ensure the offer does not exceed the product price
+        if (price && discountValue > parseFloat(price)) {
+          discountError = "Discount cannot exceed the product price.";
+          methods.setError("discount_value", {
+            type: "manual",
+            message: "Discount cannot exceed the product price.",
+          });
+        } else {
+          discountError = "";
+          methods.setError("discount_value", {
+            type: "manual",
+            message: "",
+          });
+        }
+      }
+    }
+
+    const isValid = discountError === "" && commissionError === "";
+    return isValid;
+  };
 
   const onSubmit = async (data: ICampaignProductValidationSchema) => {
-    console.log("data-->>", data);
-
     if (!selectedProduct) {
       toast.error("select product required.");
       return;
     }
     setLoading(true);
     try {
-      const formData: FormData = new FormData();
+      const isSkipDiscountGroup = !showDiscountSection; // discount_type, discount_value, couponCode
+      const isSkipMetirialGroup = !showCreatorMeterial; // referenceLinks, creatorMaterial
+      const isValid = await validateCommissionGroup(data);
 
-      formData.append("name", data.name);
-      formData.append("description", data.description);
-      formData.append("channelName", "shopify");
-      // formData.append("videoType", );
-      formData.append("notes", data?.notes);
-      formData.append("discount_type", data.discount_type);
-      formData.append("discount_value", data.discount_value.toString());
-      formData.append("productId", selectedProduct?.id || "");
-      //@ts-ignore
-      formData.append("commission", data.commission);
-      formData.append("commission_type", data?.commission_type);
+      if (isValid) {
+        const formData: FormData = new FormData();
 
-      //@ts-ignore
-      formData.append("lifeTime", data?.campaignLifeTime);
-      formData.append("startDate", String(data.startDate));
-      if (!data?.campaignLifeTime) {
-        formData.append("endDate", String(data.endDate));
-      }
-      data.channels.forEach((channel) => {
-        formData.append("channels[]", channel);
-      });
-      data.videoType.forEach((v: string, i: number) => {
-        formData.append(`videoType[${i}]`, v);
-      });
-      data?.category?.forEach((opt: any, i: number) => {
-        formData.append(`category[${i}]`, opt?.value);
-      });
-      data?.sub_category?.forEach((opt: any, i: number) => {
-        formData.append(`subCategory[${i}]`, opt?.value);
-      });
-      data.tags.forEach((tag: string, i: number) => {
-        formData.append(`tags[${i}]`, tag);
-      });
-      data?.references?.forEach((link: string, i: number) => {
-        formData.append(`referenceLinks[${i}]`, link);
-      });
+        formData.append("name", data.name);
+        formData.append("description", data.description);
+        formData.append("channelName", channelType);
+        // formData.append("videoType", );
+        if (data?.notes) formData.append("notes", data?.notes);
+        if (data.discount_type && !isSkipDiscountGroup)
+          formData.append("discountType", data.discount_type);
+        if (data.discount_value && !isSkipDiscountGroup)
+          formData.append("discount", data.discount_value.toString());
+        formData.append("productId", selectedProduct?.id || "");
+        //@ts-ignore
+        formData.append("commission", data.commission);
+        formData.append("commission_type", data?.commission_type);
+        formData.append("blockedDays", data?.blocking_commission_days);
+        if (data?.couponCode && !isSkipDiscountGroup) {
+          formData.append("couponCode", data?.couponCode || "");
+        }
 
-      // If you're including images as an array
-      if (mediaMixin.images && mediaMixin.images.length > 0) {
-        mediaMixin.images.forEach((image: File, index: number) => {
-          formData.append("creatorMaterial", image); // backend should expect array under 'images'
+        //@ts-ignore
+        formData.append("freeProduct", data?.freeProduct);
+        //@ts-ignore
+        formData.append("lifeTime", Boolean(data?.campaignLifeTime));
+        formData.append("startDate", String(data.startDate));
+        if (!data?.campaignLifeTime) {
+          formData.append("endDate", String(data.endDate));
+        }
+        data.channels.forEach((channel) => {
+          formData.append("channels[]", channel);
         });
+        data.videoType.forEach((v: string, i: number) => {
+          formData.append(`videoType[${i}]`, v);
+        });
+        data?.category?.forEach((opt: any, i: number) => {
+          formData.append(`category[${i}]`, opt?.value);
+        });
+        data?.sub_category?.forEach((opt: any, i: number) => {
+          formData.append(`subCategory[${i}]`, opt?.value);
+        });
+        data.tags.forEach((tag: string, i: number) => {
+          formData.append(`tags[${i}]`, tag);
+        });
+        if (!isSkipMetirialGroup) {
+          data?.references?.forEach((link: string, i: number) => {
+            formData.append(`referenceLinks[${i}]`, link);
+          });
+          // If you're including images as an array
+          if (mediaMixin.images && mediaMixin.images.length > 0) {
+            mediaMixin.images.forEach((image: File, index: number) => {
+              formData.append("creatorMaterial", image); // backend should expect array under 'images'
+            });
+          }
+          if (mediaMixin?.video) {
+            formData.append("creatorMaterial", mediaMixin.video);
+          }
+        }
+
+        // Make API call with formData
+        let response: any;
+        if (productId) {
+          // const deletedImages: string[] =
+          //   campaignData?.imageUrls?.filter(
+          //     (url) => !mediaPreview.images.includes(url)
+          //   ) || [];
+
+          // // 2. If there was a video on the campaign but the preview no longer has one, mark that for deletion
+          // const deletedVideo: string[] =
+          //   campaignData?.videoUrl && !mediaPreview.video
+          //     ? [campaignData.videoUrl]
+          //     : [];
+
+          // // 3. Combine into one array
+          // const deletedFiles = [...deletedImages, ...deletedVideo];
+          // if (deletedFiles && deletedFiles.length > 0) {
+          //   formData.append("deleteMedias", JSON.stringify(deletedFiles));
+          // }
+
+          response = await updateCampaignProduct(formData);
+        } else {
+          response = await createCampaignProduct(formData);
+        }
+
+        if (response?.status === 201 || response?.status === 200) {
+          toast.success(response?.message);
+          methods?.reset();
+          router?.push("/vendor/products");
+          return true;
+        }
+        throw response;
       }
-      if (mediaMixin?.video) {
-        formData.append("creatorMaterial", mediaMixin.video);
-      }
-
-      // Make API call with formData
-      let response: any;
-      if (productId) {
-        // const deletedImages: string[] =
-        //   campaignData?.imageUrls?.filter(
-        //     (url) => !mediaPreview.images.includes(url)
-        //   ) || [];
-
-        // // 2. If there was a video on the campaign but the preview no longer has one, mark that for deletion
-        // const deletedVideo: string[] =
-        //   campaignData?.videoUrl && !mediaPreview.video
-        //     ? [campaignData.videoUrl]
-        //     : [];
-
-        // // 3. Combine into one array
-        // const deletedFiles = [...deletedImages, ...deletedVideo];
-        // if (deletedFiles && deletedFiles.length > 0) {
-        //   formData.append("deleteMedias", JSON.stringify(deletedFiles));
-        // }
-
-        response = await updateCampaignProduct(formData);
-      } else {
-        response = await createCampaignProduct(formData);
-      }
-      console.log("response", response);
-
-      if (response?.status === 201 || response?.status === 200) {
-        toast.success(response?.message);
-        methods?.reset();
-        router?.push("/vendor/products/channel-products");
-        return true;
-      }
-      throw response;
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
@@ -230,7 +371,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     }
   };
   const handleProductSelect = (product: IProduct) => {
-    console.log("Selected product:", product);
     setSelectedProduct(product);
     methods.setValue("name", String(product?.title));
     methods.setValue("description", String(product?.description || "-"));
@@ -243,6 +383,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     const channels = Array.isArray(methods.watch("channels"))
       ? methods.watch("channels")
       : [];
+      console.log("channels",channels)
     if (Boolean(channels?.includes(channelName))) {
       methods.setValue(
         "channels",
@@ -258,31 +399,56 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     setLoading(true);
     try {
       const response = await axios.get(
-        `channel/shopify/product?productId=${shopifyId}`
+        `channel/${channelType}/product?productId=${shopifyId}`
       );
 
       const product: any = response?.data?.data;
-      console.log("product", product);
-
-      const images = product?.media?.nodes?.map(
-        (v: any) => v?.image?.url && v?.image?.url
-      );
 
       // productId({ ...product, media: images });
-      handleProductSelect({ ...product, media: images });
+      if (channelType === "shopify") {
+        const images = product?.images
+          ?.filter((v: any) => v?.src)
+          ?.map((v: any) => v?.src);
+        handleProductSelect({
+          ...product,
+          title: product?.name,
+          description: product?.description_html,
+          media: [...images],
+        });
+      } else if (channelType === "wordpress") {
+        handleProductSelect({
+          ...product,
+          title: product?.name,
+          description: product?.description,
+          media: product?.images,
+          variants:
+            product?.variations?.length > 0
+              ? product?.variations?.map((ele: any) => {
+                  const attrs = ele.attributes ?? {};
+                  // Grab all keys that have a value
+                  const values = Object.keys(attrs)
+                    .filter((key) => attrs[key] != null)
+                    .map((key) => attrs[key]);
+                  return {
+                    ...ele,
+                    title: `${values.join("/")}`,
+                  };
+                })
+              : [],
+        });
+      }
+
+      setLoading(false);
     } catch (error: any) {
       toast.error(error?.message || "Product Fetch Failed.");
     } finally {
       setLoading(false);
     }
   };
-
   const fetchProductById = async () => {
     setLoading(true);
     try {
       const response = await axios.get(`/product/${productId}`);
-
-      console.log("response -->>", response);
       const product: any = response?.data?.data?.data;
 
       if (product) {
@@ -312,32 +478,35 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       setLoading(false);
     }
   };
+  // useEffect(() => {
+  //   if (fields.length === 0) {
+  //     append(""); // adds an empty string if none exists
+  //   }
+  // }, []);
+
+  const watchedCategories = methods.watch("category");
+
+  const updateSubCategories = async () => {
+    const categoriesId = watchedCategories?.map((v: any) => v.value) || [];
+    console.log("watchedCategories", categories, categoriesId);
+
+    const optionsSubCategory = categories.filter((ele) =>
+      categoriesId.includes(ele?.parentId?._id)
+    );
+
+    setSubCategory(optionsSubCategory);
+
+    const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+    const selectedSubCategories = methods.watch("sub_category") || [];
+
+    methods.setValue(
+      "sub_category",
+      []
+    );
+  };
   useEffect(() => {
-    if (fields.length === 0) {
-      append(""); // adds an empty string if none exists
-    }
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const categoriesId =
-        (await methods.watch("category")?.map((v: any) => v.value)) || [];
-
-      const optionsSubCategory = await categories.filter((ele) =>
-        categoriesId?.includes(ele?.parentId)
-      );
-
-      setSubCategory(optionsSubCategory);
-      const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
-      const subCategoroies = methods.watch("sub_category") || [];
-      methods.setValue(
-        "sub_category",
-        subCategoroies.filter((v: any) =>
-          availableSubCategoriesIds.includes(v.value)
-        )
-      );
-    })();
-  }, [methods.watch("category")?.length]);
+    updateSubCategories();
+  }, [watchedCategories?.length, categories?.length, campaignData]);
 
   useEffect(() => {
     fetchCategory();
@@ -347,9 +516,8 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   }, []);
 
   useEffect(() => {
-    console.log("productId", params, productId, productId);
-    if (productId) {
-      (async () => {
+    if (productId && !campaignData && categories) {
+      setTimeout(async () => {
         setLoading(true);
         try {
           const response = await fetchProductById();
@@ -374,6 +542,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
           methods.setValue("description", response?.description || "-");
           methods.setValue("notes", response?.notes);
           methods.setValue("campaignLifeTime", Boolean(response?.lifeTime));
+          methods.setValue("freeProduct", Boolean(response?.freeProduct));
           methods.setValue("videoType", response?.videoType);
           methods.setValue("commission", response?.commission);
           methods.setValue("commission_type", response?.commission_type);
@@ -382,12 +551,40 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
           methods.setValue("couponCode", response?.couponCode);
           methods.setValue("discount_type", response?.discountType);
           methods.setValue("discount_value", response?.discount);
+          methods.setValue(
+            "blocking_commission_days",
+            String(response?.blockedDays || 1)
+          );
+          if (response?.discount) {
+            setShowDiscountSection(true);
+          }
+          if (
+            response?.couponCode ||
+            response?.discountType ||
+            response?.discount
+          ) {
+            setShowDiscountSection(true);
+          }
+          if (
+            response?.referenceLinks?.length > 0 ||
+            response.creatorMaterial?.length > 0
+          ) {
+            setShowCreatorMeterial(true);
+          }
           //@ts-ignore
           methods.setValue("endDate", formatForDateInput(response?.endDate));
+          const incomingDate = new Date(response?.startDate);
+          const today = new Date();
+
+          // Strip time from today's date (set to 00:00:00)
+          today.setHours(0, 0, 0, 0);
+
+          // If incomingDate is before today, set it to today
+          const finalDate = incomingDate < today ? today : incomingDate;
           methods.setValue(
             "startDate",
             //@ts-ignore
-            formatForDateInput(response?.startDate)
+            formatForDateInput(finalDate)
           );
           methods.setValue("tearmAndCondition", true);
           methods.setValue("productId", response?._id);
@@ -409,20 +606,32 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         } finally {
           setLoading(false);
         }
-      })();
+      }, 0);
     }
-  }, [productId]);
+  }, [productId, categories]);
+
+  useEffect(() => {
+    if (categories && campaignData) {
+      const selectedSubCategories = categories
+        ?.filter((ele) => campaignData?.subCategory?.includes(ele?._id))
+        ?.map((v) => ({
+          label: v?.name,
+          value: v?._id,
+        }));
+
+      methods.setValue("sub_category", selectedSubCategories);
+    }
+  }, [categories?.length, campaignData]);
 
   const startDateRaw = methods.watch("startDate");
   const startDate = startDateRaw ? new Date(startDateRaw) : null;
 
   const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setDate(tomorrow.getDate());
 
   const endMinDate = startDate
     ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000) // next day after startDate
     : new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // 2 days from now
-  console.log("selectedProduct", selectedProduct);
 
   const toggleChip = (value: string) => {
     const existingVal = methods.watch("videoType") || [];
@@ -435,6 +644,28 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       methods.setValue("videoType", [...(existingVal || []), value]);
     }
   };
+  const handleTagChange = (value: string[]) => {
+    methods.setValue("tags", value);
+    methods.trigger("tags");
+  };
+
+  const handleChangeCategory = (value: string[], type: "category" | "sub_category") => {
+   const categoriesId = value?.map((v: any) => v.value) || [];
+
+    const optionsSubCategory = categories.filter((ele) =>
+      categoriesId.includes(ele?.parentId?._id)
+    );
+
+    setSubCategory(optionsSubCategory);
+
+    const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
+    const selectedSubCategories = methods.watch("sub_category") || [];
+
+    methods.setValue(
+      "sub_category",
+      []
+    );
+  };
 
   return (
     <FormProvider {...methods}>
@@ -443,16 +674,17 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         className="flex flex-col gap-5 h-full px-4 py-3"
       >
         {loading && <Loader />}
-        <div className="flex justify-between items-center flex-wrap gap-3">
+        {/* <div className="flex justify-between items-center flex-wrap gap-3">
           <div className="md:text-[20px] text-base text-500">
             {translate("Campaign_Details_Form")}
           </div>
-        </div>
+        </div> */}
         <div className="flex flex-col lg:flex-row gap-5 w-full">
           <div className="flex flex-col gap-5 w-full">
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
               <div className="text-lg font-medium text-gray-500">
-                {translate("General_Information")}
+                {/* {translate("General_In/formation")} */}
+                {translate("Product_Information")}
               </div>
               <CampaignProductView
                 images={
@@ -462,41 +694,56 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 }
                 title={selectedProduct?.title}
                 description={selectedProduct?.description}
-                // tags={
-                //   Array.isArray(selectedProduct?.tags)
-                //     ? selectedProduct?.tags
-                //     : undefined
-                // }
                 price={
-                  selectedProduct?.variants?.nodes?.length > 0
-                    ? selectedProduct?.variants?.nodes[0]?.price || undefined
+                  selectedProduct?.variants?.length
+                    ? selectedProduct?.variants[0]?.price
+                    : selectedProduct?.price
+                }
+                variants={selectedProduct?.variants}
+                totalInventory={
+                  selectedProduct?.variants?.length
+                    ? selectedProduct?.variants[0]?.inventory_quantity
                     : undefined
                 }
-                totalInventory={selectedProduct?.totalInventory}
               />
-              <div className="grid md:grid-cols-2 grid-cols-1 gap-3 mb-2">
-                {/* <div className="md:col-span-2 col-span-2"> */}
-                <Input
-                  label={translate("Tags")}
-                  name="tags"
-                  type="renderTagInputUpdated"
-                  placeholder={translate("Enter_your_tags")}
-                  inputClassName="h-[50]"
-                />
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2
+"
+              >
+                <div className="md:col-span-1 col-span-2">
+                  <TagInput
+                    labelClassName={labelStyle}
+                    value={methods.watch("tags")}
+                    onChange={handleTagChange}
+                    error={methods.formState.errors["tags"]?.message}
+                  />
+                </div>
 
-                <div className="flex flex-col">
+                <div className="md:col-span-1 col-span-2">
                   <label className={cn(labelStyle)}>
                     {translate("Campaign_Channels")}
                   </label>
-                  <div className="flex items-center h-full">
-                    <div className="flex flex-col md:flex-row gap-6">
+                  <div className="py-3">
+                    <div className="flex flex-row flex-wrap lg:gap-6 gap-3">
                       {!isDisabled ? (
                         <div className="flex gap-1 cursor-pointer">
                           <Input
                             name="channels"
-                            type="checkbox"
+                            type="toggle"
                             placeholder={translate("Add_link")}
-                            label={translate("Instagram")}
+                            //@ts-ignore
+                            label={
+                              <div className="flex items-center">
+                                <div>
+                                  <img
+                                    src="/assets/creator/Instagram-icon.svg"
+                                    width={30}
+                                    height={30}
+                                  />
+                                </div>
+                                <div>{translate("Instagram")}</div>
+                              </div>
+                            }
                             checked={Boolean(
                               methods.watch("channels")?.includes("instagram")
                             )}
@@ -513,9 +760,21 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                         <div className="flex gap-1 cursor-pointer">
                           <Input
                             name="chanls"
-                            type="checkbox"
+                            type="toggle"
                             placeholder={translate("Add_link")}
-                            label={translate("You_tube")}
+                            //@ts-ignore
+                            label={
+                              <div className="flex items-center">
+                                <div>
+                                  <img
+                                    src="/assets/creator/Youtube-icon.svg"
+                                    width={30}
+                                    height={30}
+                                  />
+                                </div>
+                                <div>{translate("You_tube")}</div>
+                              </div>
+                            }
                             checked={Boolean(
                               methods.watch("channels")?.includes("youtube")
                             )}
@@ -526,7 +785,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                           />
                         </div>
                       ) : null}
-                      {!isDisabled ? (
+                      {/* {!isDisabled ? (
                         <div className="flex gap-1 cursor-pointer">
                           <Input
                             name="cha"
@@ -542,7 +801,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                             disabled
                           />
                         </div>
-                      ) : null}
+                      ) : null} */}
                       {isDisabled
                         ? methods
                             .watch("channels")
@@ -554,7 +813,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                         : null}
                     </div>
                     {Boolean(get(methods.formState.errors, "channels")) && (
-                      <span className="text-red-600 text-sm p-2 block">
+                      <span className="text-red-600 text-sm p-2 block mt-2">
                         {methods.formState.errors["channels"]?.message}
                       </span>
                     )}
@@ -571,7 +830,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       value: ele?._id,
                       label: ele?.name,
                     }))}
+                    onChange={(v: any) => {
+                      handleChangeCategory(v, "category");
+                    }}
                     autoFocus={false}
+                    max={1}
                   />
                 </div>
                 <div className="md:col-span-1 col-span-2">
@@ -585,6 +848,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       label: ele?.name,
                     }))}
                     autoFocus={false}
+                    required={false}
                   />
                 </div>
               </div>
@@ -619,58 +883,44 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 {/* // )} */}
 
                 <div className="flex flex-col gap-2 cursor-pointer">
-                  <label className={cn(labelStyle, "opacity-0")}>
+                  <label
+                    className={cn(labelStyle, "opacity-0 md:block hidden")}
+                  >
                     {translate("CampaignLifeTime")}
                   </label>
                   <label className="mt-3 text-xs flex align-middle gap-2 text-gray-600">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4"
-                      {...methods.register("campaignLifeTime")}
-                      checked={Boolean(methods.watch("campaignLifeTime"))}
-                      onChange={(v) => {
-                        methods.setValue(
-                          "campaignLifeTime",
-                          !Boolean(methods.watch("campaignLifeTime"))
-                        );
-                        // methods.trigger(["startDate", "endDate"]);
-                      }}
-                    />
+                    <label className="inline-flex items-center cursor-pointer relative">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer hidden"
+                        checked={Boolean(methods.watch("campaignLifeTime"))}
+                        onChange={(v) => {
+                          methods.setValue(
+                            "campaignLifeTime",
+                            !Boolean(methods.watch("campaignLifeTime"))
+                          );
+                          // methods.trigger(["startDate", "endDate"]);
+                        }}
+                      />
+                      <div
+                        className={`relative w-9 h-5 ${
+                          Boolean(methods.watch("campaignLifeTime"))
+                            ? "bg-primary"
+                            : "bg-gray-200"
+                        } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                      ></div>
+                    </label>
                     <span className="text-sm">
                       {translate("Never_Expires")} ({" "}
                       {translate("CampaignLifeTime")} )
-                      {/* {translate("CampaignLifeTime")}{" "}
-                      <span className="text-primary-color font-medium">
-                        {translate("CampaignLifeTime")}
-                      </span>{" "}
-                      &{" "}
-                      <span className="text-primary-color font-medium">
-                        {translate("CampaignLifeTime")}.
-                      </span> */}
                     </span>
                   </label>
-                  {/* <Input
-                    name="channels"
-                    type="checkbox"
-                    placeholder={translate("Add_link")}
-                    label={translate("CampaignLifeTime")}
-                    checked={Boolean(methods.watch("campaignLifeTime"))}
-                    onChange={(v) => {
-                      methods.setValue(
-                        "campaignLifeTime",
-                        !Boolean(methods.watch("campaignLifeTime"))
-                      );
-                      methods.trigger(["startDate", "endDate"]);
-                    }}
-                    hideError={true}
-                    disabled={isDisabled}
-                  /> */}
                 </div>
               </div>
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
               <div className="text-lg font-medium text-gray-500">
-                {translate("Creator_material")}
+                {translate("campaignObjective")}
               </div>
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col w-full gap-2">
@@ -682,7 +932,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       <button
                         key={option.value}
                         type="button"
-                        onClick={() => toggleChip(option.value)}
+                        onClick={() => {
+                          toggleChip(option.value);
+                          methods.trigger("videoType");
+                        }}
                         className={cn(
                           "text-sm px-3 py-1 rounded-full border transition",
                           methods.watch("videoType")?.includes(option?.value)
@@ -695,69 +948,19 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       </button>
                     ))}
                   </div>
-                </div>
-                <div className="flex flex-col w-full gap-1">
-                  <CreatorMaterial
-                    onMediaChange={setMediaMixin}
-                    mediaPreview={mediaPreviewMixin}
-                    setMediaPriview={setMediaPriviewMixin}
-                    disabled={isDisabled}
-                  />
-                </div>
-                <div className="flex flex-col w-full gap-2">
-                  <label className={cn(labelStyle)}>
-                    {translate("Reference_Links")}
-                  </label>
-                  <div className="flex flex-col w-full gap-1">
-                    {fields.map((field, index) => (
-                      <div
-                        key={field.id}
-                        className="flex items-center gap-3 mb-1 md:w-[50%]"
-                      >
-                        <label className={cn(labelStyle)}>{index + 1}.</label>
-                        <div className="flex-1">
-                          <Input
-                            name={`references.${index}`}
-                            type="text"
-                            placeholder="https://example.com"
-                            label={``}
-                          />
-                          {/* {errors.references?.[index] && (
-                          <p className="text-sm text-red-500">
-                            {errors.references[index]?.message}
-                          </p>
-                        )} */}
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => remove(index)}
-                          className="text-red-500 hover:underline h-full mt-2"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                    <LightButton
-                      type="button"
-                      onClick={() => append("")}
-                      className="text-blue-600 hover:underline me-auto mt-2 mb-3"
-                    >
-                      + {translate("Add_References_Link")}
-                    </LightButton>
-                    {Boolean(get(methods.formState.errors, "references")) && (
-                      <span className="text-red-600 text-sm p-2 block">
-                        {methods.formState.errors["references"]?.message}
-                      </span>
-                    )}
-                  </div>
+                  {Boolean(get(methods.formState.errors, "videoType")) && (
+                    <span className="text-red-600 text-sm p-2 block">
+                      {methods.formState.errors["videoType"]?.message}
+                    </span>
+                  )}
                 </div>
                 <div className="flex flex-col lg:flex-row gap-3">
                   <div className="flex flex-col w-full gap-1">
                     {/* <div className="flex flex-col gap-1"> */}
                     <Input
                       type="textarea"
-                      placeholder={translate("Type_product_note_here")}
-                      label={translate("Product_Note")}
+                      placeholder={translate("Type_campaign_goals_note_here")}
+                      label={translate("Campaign_Goals")}
                       name="notes"
                       rows={5}
                       disabled={isDisabled}
@@ -778,6 +981,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 </div>
               </div>
             </div>
+
             <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
               <div className="text-lg font-medium text-gray-500">
                 {translate("CreatorCommission")}
@@ -787,20 +991,31 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   <div className="flex flex-col w-full gap-1">
                     <Input
                       name="commission_type"
-                      type="select"
+                      type="react-select"
                       placeholder={translate("Select_Commission_Type")}
-                      label={translate("Commission_Type")}
-                      options={[
-                        {
-                          label: "Amount",
-                          value: "FIXED_AMOUNT",
-                        },
-                        {
-                          label: "Percentage",
-                          value: "PERCENTAGE",
-                        },
-                      ]}
+                      // @ts-ignore
+                      label={
+                        <span className="flex items-center gap-1">
+                          {translate("Commission_Type")}
+                          <TooltipProvider key={`Commission_Type`}>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Info className="w-4 h-4 text-gray-500" />
+                              </TooltipTrigger>
+                              <TooltipContent
+                                className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                                side="top"
+                              >
+                                {translate("commisionTooltip")}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </span>
+                      }
+                      lableClassName="flex"
+                      options={typOptions}
                       disabled={isDisabled}
+                      required={false}
                     />
                   </div>
 
@@ -808,95 +1023,317 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     <Input
                       name="commission"
                       type="number"
-                      placeholder={"10"}
+                      placeholder={"Enter Your Commission"}
                       label={translate("commission")}
                       disabled={isDisabled}
                     />
                   </div>
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="blocking_commission_days"
+                      type="number"
+                      placeholder={"Enter Blocking Commission Days"}
+                      label={translate("blocking_commission_days")}
+                      disabled={isDisabled}
+                      min={1}
+                      defaultValue={1}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        if (value < 1) {
+                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.setError("blocking_commission_days", {
+                            type: "manual",
+                            message: "Blocking commission days must be between 1 and 30",
+                          });
+                        } else if (value > 30) {
+                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.setError("blocking_commission_days", {
+                            type: "manual",
+                            message: "Blocking commission days must be between 1 and 30",
+                          });
+                        } else {
+                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.setError("blocking_commission_days", {
+                            type: "manual",
+                            message: "",
+                          });
+                        }
+                      }}
+                      max={30}
+                    />
+                  </div>
+                  <div className="mt-2 flex flex-col gap-2 cursor-pointer">
+                    <label
+                      htmlFor="freeProduct"
+                      className="text-xs flex items-center gap-2 text-gray-600"
+                    >
+                      <InputRadix
+                        type="radio"
+                        name={`freeProduct`}
+                        className="w-5 h-5 cursor-pointer accent-[#FF4979]"
+                        checked={Boolean(methods.watch("freeProduct"))}
+                        onClick={() =>
+                          methods.setValue(
+                            "freeProduct",
+                            !Boolean(methods.watch("freeProduct"))
+                          )
+                        }
+                        onChange={() => {}}
+                      />
+                      {/* <input
+                        type="checkbox"
+                        className="w-4 h-4 cursor-pointer"
+                        {...methods.register("freeProduct")}
+                        checked={Boolean(methods.watch("freeProduct"))}
+                        onChange={(v) => {
+                          methods.setValue(
+                            "freeProduct",
+                            !Boolean(methods.watch("freeProduct"))
+                          );
+                          // methods.trigger(["startDate", "endDate"]);
+                        }}
+                      /> */}
+                      <span
+                        className="text-sm cursor-pointer flex items-center gap-1"
+                        onClick={(v) => {
+                          methods.setValue(
+                            "freeProduct",
+                            !Boolean(methods.watch("freeProduct"))
+                          );
+                        }}
+                      >
+                        {translate("free_promotional_product")}
+                        <TooltipProvider key={`free_promotional_product`}>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Info className="w-4 h-4 text-gray-500" />
+                            </TooltipTrigger>
+                            <TooltipContent
+                              className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                              side="top"
+                            >
+                              {translate("freeProductTooltip")}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col bg-white rounded-xl p-[24px] gap-3">
-              <div className="flex items-center gap-4">
-                <div className="text-lg font-medium text-gray-500">
-                  {translate("Discount/Price Range")}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowDiscountSection(!showDiscountSection)}
-                  className="text-gray-400 hover:text-gray-600 px-4 py-1"
-                >
-                  {showDiscountSection ? (
-                    <ChevronUp size={20} />
-                  ) : (
-                    <ChevronDown size={20} />
-                  )}
-                </button>
+            <div className="flex flex-col bg-white rounded-xl p-[24px]">
+              <div className="text-lg font-medium text-gray-500 flex items-center gap-x-2">
+                {translate("Creator_material")}{" "}
+                <TooltipProvider key={`Creator_material`}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info />
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                      side="top"
+                    >
+                      {translate("campaignMaterialTolltip")}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <label className="inline-flex items-center cursor-pointer relative">
+                  <input
+                    type="checkbox"
+                    value=""
+                    checked={showCreatorMeterial}
+                    className="sr-only peer"
+                    onChange={() =>
+                      setShowCreatorMeterial(!showCreatorMeterial)
+                    }
+                  />
+                  <div
+                    className={`relative w-11 h-6 ${
+                      showCreatorMeterial ? "bg-primary" : "bg-gray-200"
+                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                  ></div>
+                </label>
               </div>
-              {showDiscountSection && (
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-col md:flex-row gap-3">
-                    <div className="flex flex-col w-full gap-1">
-                      <Input
-                        name="couponCode"
-                        type="text"
-                        placeholder={"COUP0nC0dE"}
-                        label={translate("couponCode")}
-                      />
-                    </div>
-                    <div className="flex flex-col w-full gap-1">
-                      <Input
-                        name="discount_type"
-                        type="select"
-                        placeholder={translate("Select_Discount_Type")}
-                        label={translate("Discount_Type")}
-                        options={[
-                          {
-                            label: "Amount",
-                            value: "FIXED_AMOUNT",
-                          },
-                          {
-                            label: "Percentage",
-                            value: "PERCENTAGE",
-                          },
-                        ]}
-                        disabled={isDisabled}
-                      />
-                    </div>
-
-                    <div className="flex flex-col w-full gap-1">
-                      <Input
-                        name="discount_value"
-                        type="number"
-                        placeholder={"10"}
-                        label={translate("Discount")}
-                        disabled={isDisabled}
-                      />
-                    </div>
+              <div
+                className={`flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden ${
+                  showCreatorMeterial
+                    ? "max-h-[1000px] opacity-100 pt-3"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
+                <div className="flex flex-col w-full gap-1">
+                  <CreatorMaterial
+                    onMediaChange={setMediaMixin}
+                    mediaPreview={mediaPreviewMixin}
+                    setMediaPriview={setMediaPriviewMixin}
+                    disabled={isDisabled}
+                  />
+                </div>
+                <div className="flex flex-col w-full gap-2">
+                  <label className={cn(labelStyle)}>
+                    {translate("Reference_Links")}
+                  </label>
+                  <div className="flex flex-col w-full gap-1">
+                    {fields.map((field, index) => (
+                      <div
+                        key={field.id}
+                        className="flex items-start gap-3 mb-1 lg:w-[50%]"
+                      >
+                        <label className={cn(labelStyle, "py-[15px] h-fit")}>
+                          {index + 1}.
+                        </label>
+                        <div className="flex-1">
+                          <Input
+                            name={`references.${index}`}
+                            type="text"
+                            placeholder="https://example.com"
+                            label={``}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className="text-red-500 hover:underline h-fit my-[15px] cursor-pointer"
+                        >
+                          <span className="md:inline-block hidden">Remove</span>
+                          <span className="md:hidden">
+                            <CircleX />
+                          </span>
+                        </button>
+                      </div>
+                    ))}
+                    <LightButton
+                      type="button"
+                      onClick={() => append("")}
+                      className="text-blue-600 me-auto mt-2 mb-3 cursor-pointer"
+                    >
+                      + {translate("Add_References_Link")}
+                    </LightButton>
+                    {Boolean(get(methods.formState.errors, "references")) && (
+                      <span className="text-red-600 text-sm p-2 block">
+                        {methods.formState.errors["references"]?.message}
+                      </span>
+                    )}
                   </div>
                 </div>
-              )}
+              </div>
+            </div>
+            <div className="hidden flex-col bg-white rounded-xl p-[24px]">
+              <div className="flex items-center gap-4">
+                <div className="text-lg font-medium text-gray-500 flex items-center gap-1">
+                  {translate("additional_offers")}
+                  <TooltipProvider key={`additional_offers`}>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                        side="top"
+                      >
+                        {translate("additionTooltip")}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <label className="inline-flex items-center cursor-pointer relative">
+                  <input
+                    type="checkbox"
+                    value=""
+                    checked={showDiscountSection}
+                    className="sr-only peer"
+                    onChange={() =>
+                      setShowDiscountSection(!showDiscountSection)
+                    }
+                  />
+                  <div
+                    className={`relative w-11 h-6 ${
+                      showDiscountSection ? "bg-primary" : "bg-gray-200"
+                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                  ></div>
+                </label>
+              </div>
+              {/* {showDiscountSection && ( */}
+              <div
+                className={`
+                flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden
+                ${
+                  showDiscountSection
+                    ? "max-h-[1000px] opacity-100 pt-3"
+                    : "max-h-0 opacity-0"
+                }
+              `}
+              >
+                <div className="flex flex-col md:flex-row gap-3">
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="couponCode"
+                      type="text"
+                      placeholder={"Enter your coupon code"}
+                      label={translate("couponCode")}
+                      required={false}
+                    />
+                  </div>
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="discount_type"
+                      type="react-select"
+                      placeholder={translate("Select_Discount_Type")}
+                      label={translate("Discount_Type")}
+                      options={typOptions}
+                      disabled={isDisabled}
+                      required={false}
+                    />
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <Input
+                      name="discount_value"
+                      type="number"
+                      placeholder={"Enter Your Discount"}
+                      label={translate("Discount")}
+                      disabled={isDisabled}
+                      required={false}
+                    />
+                  </div>
+                </div>
+              </div>
+              {/* )} */}
             </div>
 
             <div className="flex flex-col gap-4 pb-5">
               <div className="pt-2">
                 <div className="flex flex-col md:flex-row gap-6">
                   {!isDisabled ? (
-                    <div className="flex gap-1 cursor-pointer">
-                      <Input
-                        name="tearmAndCondition"
-                        type="checkbox"
-                        label={translate("campaignTerms")}
-                        checked={Boolean(methods.watch("tearmAndCondition"))}
-                        onChange={(v) => {
-                          methods.setValue(
-                            "tearmAndCondition",
-                            !Boolean(methods.watch("tearmAndCondition"))
-                          );
-                          methods.trigger(["tearmAndCondition"]);
-                        }}
-                        hideError={true}
-                      />
+                    <div className="flex gap-1 cursor-pointer items-center">
+                      <div className="mb-1">
+                        <Input
+                          name="tearmAndCondition"
+                          type="checkbox"
+                          // label={translate("campaignTerms")}
+                          checked={Boolean(methods.watch("tearmAndCondition"))}
+                          onChange={(v) => {
+                            methods.setValue(
+                              "tearmAndCondition",
+                              !Boolean(methods.watch("tearmAndCondition"))
+                            );
+                            methods.trigger(["tearmAndCondition"]);
+                          }}
+                          hideError={true}
+                        />
+                      </div>
+                      <div>
+                        {translate("campaignTerms_m")}{" "}
+                        <Link
+                          href={`/terms?next=${encodeURIComponent(pathname)}`}
+                          target="_blank"
+                          className="text-blue underline"
+                        >
+                          {translate("TermsCondition")}
+                        </Link>
+                        .
+                      </div>
                     </div>
                   ) : null}
                 </div>
@@ -913,7 +1350,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   <Button
                     type="button"
                     className="rounded-[10px] w-fit h-10 px-4 py-2 text-sm font-medium"
-                    onClick={() => router?.push("/vendor/campaign")}
+                    onClick={() => router?.push("/vendor/products")}
                   >
                     {translate("Cancel")}
                   </Button>
@@ -923,7 +1360,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     className="rounded-[10px]"
                   >
                     {!productId
-                      ? translate("Create_Campaign")
+                      ? translate("Add_Product")
                       : translate("Edit_Campaign")}
                   </ButtonOutline>
                 </div>

@@ -1,5 +1,7 @@
 // POST SignUp
 export interface IPostSignupRequest {
+  name: string;
+  phone: string;
   email: string;
   password: string;
 }
@@ -85,6 +87,7 @@ export interface IGetUserResponse {
     name: string;
     email: string;
     password: string;
+    phone: string;
     type: string;
     isActive: boolean;
     isEmailVerified: boolean;
@@ -198,6 +201,9 @@ export interface IPostCreatorRegisterStepOneRequest {
   gender: string;
   dob: string;
   phone: string;
+  category: string[];
+  sub_category: string[];
+  tags: string[];
 }
 export interface IPutUpdateCreatorResponse {
   status: number;
@@ -207,13 +213,14 @@ export interface IPutUpdateCreatorResponse {
 export interface IPutUpdateCreatorRequest {
   full_name: string;
   user_name: string;
-  // email: string;
-  // phone: string;
+  category: string[];
+  sub_category: string[];
   state: string;
   city: string;
   gender: string;
   dob: string;
   profile_image: any;
+  tags: string[];
 }
 export interface IPostVendorRegisterResponse {
   status: number;
@@ -244,12 +251,20 @@ export interface IPostCreatorRegisterResponse {
 export interface IGetCategoryParams {
   page?: string | number;
   limit?: string | number;
+  parentId?: string;
+  type?: string;
 }
 
 export interface ICategoryData {
   _id: string;
   name: string;
-  parentId: string;
+  parentId: {
+    _id: string;
+    name: string;
+    parentId: string;
+    createdAt: string;
+    updatedAt: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -282,7 +297,7 @@ export interface IGetCreatorProgressResponse {
 }
 
 export interface IGetUserNameExistsResponse {
-  exists: boolean
+  exists: boolean;
 }
 export interface IPostCreatorCheckExistRequest {
   user_name: string;

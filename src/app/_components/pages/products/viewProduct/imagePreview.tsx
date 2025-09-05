@@ -4,8 +4,8 @@ interface ProductImageGalleryProps {
 }
 export function ProductImageGallery({ images }: ProductImageGalleryProps) {
   return (
-    <div className="flex flex-col gap-6 p-6 bg-white border-0 md:border-r rounded-0 w-full pl-0">
-      <div className="grid grid-cols-1 gap-3">
+    <div className="flex flex-col col-span-3 md:col-span-1 gap-3 md:gap-6 p-1 md:p-6 bg-white border-0 md:border-r rounded-0 w-full">
+      <div className="grid grid-cols-1 gap-2 md:gap-3">
         {images?.length > 0 && (
           <div
             key={images[0]}
@@ -24,14 +24,15 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 overflow-auto max-h-[230px]">
           {images?.length > 1 &&
             images.slice(1).map((img, index) => (
-              <div key={index} className="border border-border rounded-2xl p-2">
+              <div
+                key={index}
+                className="flex justify-center items-center border border-border rounded-2xl p-2"
+              >
                 <img
                   key={index}
                   src={img}
                   alt={`Thumbnail ${index}`}
-                  width={200}
-                  height={185}
-                  className="rounded-md object-contain w-full h-full"
+                  className="rounded-md object-contain w-[200px] h-[185px] product-img"
                 />
               </div>
             ))}
