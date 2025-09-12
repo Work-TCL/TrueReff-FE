@@ -1484,9 +1484,9 @@ export const businessTypes = [
 
 export const daysFilter: IOption[] = [
   { label: "Past 7 Days", value: "7" },
-  { label: "Past 28 Days", value: "28" },
   { label: "Past 90 Days", value: "90" },
-  { label: "Past 365 Days", value: "365" },
+  { label: "Past 180 Days", value: "180" },
+  { label: "Lifetime", value: "" },
 ];
 
 export const sortOptions: IOption[] = [
@@ -1592,5 +1592,12 @@ export const vendorPlans = [
   },
 ];
 
-export const allowedImageTypes = [".jpg", ".jpeg", ".png","image/jpeg", "image/png","image/jpg"];
+export const allowedImageTypes = [
+  ".jpg",
+  ".jpeg",
+  ".png",
+  "image/jpeg",
+  "image/png",
+  "image/jpg",
+];
 export const imageAccept = allowedImageTypes.join(", ");

@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { overviewFilter } from "../../pages/overview";
 import { creatorDashboardFilter } from "../../pages/dashboard";
+import { usePathname } from "next/navigation";
+import { AnalyticsDaysFilter } from "../../pages/creator_analysis";
 
 const options = [
   { value: "7", label: "7 Days" },
-  { value: "15", label: "15 Days" },
-  { value: "30", label: "30 Days" },
-  { value: "all", label: "All Days" },
+  { value: "90", label: "90 Days" },
+  { value: "180", label: "180 Days" },
+  { value: "all", label: "Lifetime" },
 ];
 
 const customStyles = {
@@ -62,7 +64,10 @@ const customStyles = {
 };
 
 export default function HeaderFilter() {
-  const [selected, setSelected] = useState(options[0]);
+  const [selected, setSelected] = useState(
+    options.find((val) => val.value === "all")
+  );
+  const pathName = usePathname();
   const { account } = useAuthStore();
   const isCreator = account?.role === "creator";
 
@@ -70,10 +75,14 @@ export default function HeaderFilter() {
     console.log("selected", selected, isCreator);
     if (selected?.value) {
       setSelected(selected);
-      if (isCreator) {
-        creatorDashboardFilter?.next(selected?.value || "7");
-      } else {
-        overviewFilter?.next(selected?.value || "7");
+      if (pathName === "/creator/dashboard") {
+        creatorDashboardFilter?.next(selected?.value || "all");
+      } else if (pathName === "/vendor/dashboard") {
+        overviewFilter?.next(selected?.value || "all");
+      } else if (pathName === "/vendor/vendor-analysis") {
+        AnalyticsDaysFilter?.next(selected?.value || "all");
+      } else if (pathName === "/creator/creator-analysis") {
+        AnalyticsDaysFilter?.next(selected?.value || "all");
       }
     }
   };

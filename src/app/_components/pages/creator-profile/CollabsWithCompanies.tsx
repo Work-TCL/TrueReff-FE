@@ -58,7 +58,7 @@ interface ICollabStats {
 export default function CollabsWithCompanies() {
   const translate = useTranslations();
   const { id } = useParams();
-  const [filter, setFilter] = useState<string>("7");
+  const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const initialState = {
     totalCollaborations: 0,
@@ -114,7 +114,7 @@ export default function CollabsWithCompanies() {
                   value: filter,
                   label: filter
                     ? daysFilter.find((ele) => ele?.value === filter)?.label
-                    : "Select Days",
+                    : "Lifetime",
                 },
               ]}
               onChange={handleFilterValue}

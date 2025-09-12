@@ -176,8 +176,11 @@ const CollaborationTable = ({
         const product = row.original.productId;
         return (
           <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => handleProductDetail(product?._id)}
+            className="flex items-center gap-2 cursor-pointer w-fit"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleProductDetail(product?._id);
+            }}
           >
             {product?.media?.[0] ? (
               <Avatar className="w-8 h-8">
@@ -297,6 +300,10 @@ const CollaborationTable = ({
     {
       id: "action",
       header: () => <div className="text-center">{translate("Action")}</div>,
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => {
         const collaboration = row.original;
         const product = row.original.productId;
@@ -337,9 +344,10 @@ const CollaborationTable = ({
                     strokeWidth={1.5}
                     color="#22c55e"
                     className="cursor-pointer md:size-[25] size-[20]"
-                    onClick={() =>
-                      handleStatusChangeRequest("accepted", collaboration._id)
-                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStatusChangeRequest("accepted", collaboration._id);
+                    }}
                   />
                 </ToolTip>
                 <ToolTip content="Reject Request" delayDuration={1000}>
@@ -347,13 +355,14 @@ const CollaborationTable = ({
                     strokeWidth={1.5}
                     className="cursor-pointer md:size-[25] size-[20]"
                     color="#ef4444"
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setIsOpen({
                         show: true,
                         collaborationId: collaboration._id,
                         status: "reject",
-                      })
-                    }
+                      });
+                    }}
                   />
                 </ToolTip>
               </div>
@@ -366,13 +375,14 @@ const CollaborationTable = ({
                     strokeWidth={1.5}
                     className="cursor-pointer md:size-[25] size-[20]"
                     color="#ef4444"
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setIsOpen({
                         show: true,
                         collaborationId: collaboration._id,
                         status: "cancel",
-                      })
-                    }
+                      });
+                    }}
                   />
                 </ToolTip>
               </div>
@@ -390,7 +400,10 @@ const CollaborationTable = ({
                   strokeWidth={1.5}
                   color="#3b82f6"
                   className="cursor-pointer md:size-[25] size-[20]"
-                  onClick={() => handleChatView(collaboration._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleChatView(collaboration._id);
+                  }}
                 />
               </ToolTip>
               {collaboration?.lastMessage &&
@@ -405,10 +418,23 @@ const CollaborationTable = ({
       },
     },
   ];
+
+  const handleRowClick = (rowOriginal: any) => {
+    const collaboration = rowOriginal;
+    const status = getRequestStatus(collaboration);
+    if (status === "PENDING" || status === "ACTIVE" || status === "EXPIRED") {
+      handleChatView(collaboration?._id);
+    }
+  };
   return (
     <>
       {/* <div className="min-w-full border-2 border-gray-200 overflow-hidden rounded-2xl"> */}
-      <DataTable columns={columns} data={[...data]} type={"table"}/>
+      <DataTable
+        columns={columns}
+        data={[...data]}
+        type={"table"}
+        handleRowClick={handleRowClick}
+      />
       {/* </div> */}
       {isOpen?.show && (
         <CancelRequest

@@ -263,6 +263,10 @@ export default function ProductTable({
       header: () => (
         <div className="flex justify-center mx-auto">{translate("Action")}</div>
       ),
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => {
         const product = row.original;
         const status = getRequestStatus(product);

@@ -19,6 +19,7 @@ interface DataTableProps {
   columns: ColumnDef<any, any>[];
   type?: "table" | "card";
   CardComponent?: (item: any) => ReactElement;
+  handleRowClick?: (item: any) => void;
 }
 
 const DataTable: React.FC<DataTableProps> = ({
@@ -27,6 +28,7 @@ const DataTable: React.FC<DataTableProps> = ({
   columns,
   type = "table",
   CardComponent,
+  handleRowClick,
 }) => {
   const t = useTranslations();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -92,7 +94,11 @@ const DataTable: React.FC<DataTableProps> = ({
       <tbody className="min-h-96">
         {table.getRowModel().rows.length > 0
           ? table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="transition-colors group">
+              <tr
+                key={row.id}
+                className="transition-colors group"
+                onClick={() => handleRowClick && handleRowClick(row.original)}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}

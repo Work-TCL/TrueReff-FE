@@ -165,7 +165,7 @@ export default function AccountRecharge() {
             />
         </div>
             {/* Recharge History */}
-            <RechargeHistory loading={loading} rechargeHistory={rechargeHistory} fetchRechargeHistory={fetchRechargeHistory} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} /></>}
+            <RechargeHistory isCreator={true} loading={loading} rechargeHistory={rechargeHistory} fetchRechargeHistory={fetchRechargeHistory} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} /></>}
         {open && <AddBankDetails handleRefresh={() => { }} open={open} onClose={() => setOpen(false)} />}
     </div>
 }

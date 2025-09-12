@@ -249,6 +249,10 @@ export default function ChannelProductList() {
     {
       id: "actions",
       header: () => <div className="text-center">{translate("Action")}</div>,
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => {
         const product = row.original;
         return (
