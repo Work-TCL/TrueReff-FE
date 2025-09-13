@@ -14,7 +14,7 @@ firebase.initializeApp({
 });
 
 // Retrieve firebase messaging
-export const messaging = firebase.messaging();
+const messaging = firebase.messaging();
 
 // Handle background messages
 messaging.onBackgroundMessage(function(payload) {
