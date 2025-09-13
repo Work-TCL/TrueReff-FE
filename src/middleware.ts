@@ -96,6 +96,6 @@ export default stackMiddlewares(middlewares);
 
 export const config = {
     matcher: [
-      '/((?!_next/static|_next/image|favicon.ico|manifest.json|service-worker.js|icons|assets|web-app-manifest-192x192.png|web-app-manifest-512x512.png|api).*)',
+      '/((?!_next/static|_next/image|favicon.ico|manifest.json|service-worker.js|firebase-messaging-sw.js|icons|assets|web-app-manifest-192x192.png|web-app-manifest-512x512.png|api).*)',
     ],
   };
