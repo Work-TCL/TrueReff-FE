@@ -285,6 +285,7 @@ export default function CollaborationList() {
     debouncedSearch(value, selectedStatus);
   };
   const handleSelectStatus = (selectedOptions: any) => {
+    setCurrentPage(1);
     router.push(`?status=${selectedOptions}`);
   };
   return (

@@ -122,10 +122,10 @@ export default function Overview() {
     }
   };
 
-  const fetchStatesInfo = async (value: string = "7") => {
+  const fetchStatesInfo = async (value: string = "") => {
     setMailLoading(true);
     try {
-      const response = await getStatesInfo(value || "7");
+      const response = await getStatesInfo(value || "");
       if (response) {
         setStatesInfo(response);
       } else {
@@ -139,10 +139,10 @@ export default function Overview() {
       setMailLoading(false);
     }
   };
-  const fetchRevenuePerformance = async (value: string = "7") => {
+  const fetchRevenuePerformance = async (value: string = "") => {
     setRevenueLoading(true);
     try {
-      const response = await getVendorRevenuePerformance(value || "7");
+      const response = await getVendorRevenuePerformance(value || "");
       if (response) {
         const currentData = response?.current?.map((ele: IRevenue) => ({
           ...ele,

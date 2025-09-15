@@ -1,5 +1,6 @@
 //write all the api functions here
 //always add suffix at the end of the function
+import { handleLogout } from "@/app/_components/components-common/dialogs/logout/signOut";
 import { useAuthStore } from "../store/auth-user";
 import { useCreatorStore } from "../store/creator";
 import { useVendorStore } from "../store/vendor";
@@ -422,7 +423,11 @@ export const getCategories = async (
   params: IGetCategoryParams
 ): Promise<IGetCategoryResponse> => {
   try {
-    const response = await axios.get(`/product/category/list?all=true${params?.type ? `&type=${params.type}` : ''}${params?.parentId ? `&parentId=${params.parentId}` : ''}`);
+    const response = await axios.get(
+      `/product/category/list?all=true${
+        params?.type ? `&type=${params.type}` : ""
+      }${params?.parentId ? `&parentId=${params.parentId}` : ""}`
+    );
     return response?.data;
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
@@ -529,5 +534,15 @@ export const getVendorCreatorCount = async (): Promise<any> => {
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While fetching creator list.");
+  }
+};
+
+export const deleteAccount = async (): Promise<any> => {
+  try {
+    await axios.delete("/auth/delete-account");
+    return handleLogout();
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    throw errorMessage || new Error("Error While Signup");
   }
 };

@@ -1,6 +1,6 @@
 import axios from "./axios";
 
-export const getStatesInfo = async (days: string = "7") => {
+export const getStatesInfo = async (days: string = "") => {
   try {
     const response = await axios.get(
       `/auth/vendor-dashboard/states${days !== "all" ? `?days=${days}` : ""}`
@@ -11,7 +11,7 @@ export const getStatesInfo = async (days: string = "7") => {
   }
 };
 
-export const getVendorRevenuePerformance = async (days: string = "7") => {
+export const getVendorRevenuePerformance = async (days: string = "") => {
   try {
     const response = await axios.get(
       `/auth/vendor-dashboard/revenue-graph${

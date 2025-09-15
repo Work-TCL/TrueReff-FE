@@ -87,7 +87,7 @@ export default function HeaderFilter() {
     }
   };
   return (
-    <div className="text-nowrap sm:min-w-24 min-w-20 sm:text-base text-sm">
+    <div className="text-nowrap sm:min-w-24 min-w-20 sm:text-base text-sm z-[10]">
       <Select
         options={options}
         styles={customStyles}

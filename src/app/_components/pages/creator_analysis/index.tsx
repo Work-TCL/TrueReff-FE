@@ -225,6 +225,7 @@ export default function CombineAnalytics({ mode }: IProps) {
 
     const subscriptionAnaytics = AnalyticsDaysFilter.subscribe(
       (val: string) => {
+        setPage(1);
         setDays(val == "all" ? "" : val);
       }
     );
