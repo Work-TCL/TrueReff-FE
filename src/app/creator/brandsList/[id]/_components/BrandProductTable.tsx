@@ -157,6 +157,10 @@ export default function BrandProductTable({
     {
       id: "actions",
       header: () => <div className="text-center">{translate("Action")}</div>,
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => {
         const brand = row.original;
         const status = getRequestStatus(brand);

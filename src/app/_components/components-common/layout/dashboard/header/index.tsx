@@ -279,9 +279,12 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
           </div>
           <div className="flex items-center sm:w-full xs:gap-2 ml-auto">
             <div className="ml-auto flex items-center md:gap-3 gap-2">
-              {["/vendor/dashboard", "/creator/dashboard"].includes(
-                pathName
-              ) && <HeaderFilter />}
+              {[
+                "/vendor/dashboard",
+                "/creator/dashboard",
+                "/vendor/vendor-analysis",
+                "/creator/creator-analysis",
+              ].includes(pathName) && <HeaderFilter />}
               <NotificationPopover
                 notifications={notifications}
                 unreadNotifications={unreadNotifications}

@@ -126,6 +126,34 @@ const CollaborationTable = ({
     return youtube ? formatNumber(youtube?.followers) : "-";
   };
 
+  const handleRowClick = (rowOriginal: any) => {
+    const collaboration = rowOriginal;
+    const status = collaboration?.collaborationStatus;
+    switch (status) {
+      case "EXPIRED":
+        // do expired logic
+        router.push(`/vendor/creators/collaboration/${collaboration._id}`);
+        break;
+
+      case "PENDING":
+      case "ACTIVE":
+        // start bargaining
+        router.push(`/vendor/creators/collaboration/${collaboration._id}`);
+        break;
+
+      case "REQUESTED":
+        if (collaboration?.requestedBy === "creator") {
+          // accept or reject based on UI — pass action explicitly above
+        } else if (collaboration?.requestedBy === "vendor") {
+          // cancel based on UI — pass action explicitly above
+        }
+        break;
+
+      default:
+        console.log("No action for status:", status);
+    }
+  };
+
   const productCollaborationColumns: ColumnDef<ICollaboration>[] = [
     {
       id: "product_name",
@@ -135,12 +163,13 @@ const CollaborationTable = ({
         const router = useRouter();
         return (
           <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() =>
+            className="flex items-center gap-2 cursor-pointer w-fit"
+            onClick={(e: any) => {
+              e.stopPropagation();
               router.push(
                 `/vendor/products/view/${collaboration?.productId?._id}`
-              )
-            }
+              );
+            }}
           >
             {collaboration?.productId?.media?.[0] ? (
               <Avatar className="w-8 h-8">
@@ -184,11 +213,12 @@ const CollaborationTable = ({
         return (
           <div
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() =>
+            onClick={(e: any) => {
+              e.stopPropagation();
               router.push(
                 `/vendor/creator-profile/${collaboration?.creatorId?._id}`
-              )
-            }
+              );
+            }}
           >
             <ToolTip
               content={
@@ -326,12 +356,13 @@ const CollaborationTable = ({
                             color="#22c55e"
                             className="cursor-pointer"
                             size={25}
-                            onClick={() =>
+                            onClick={(e) => {
+                              e?.stopPropagation();
                               handleStatusChangeRequest(
                                 "accepted",
                                 collaboration?._id
-                              )
-                            }
+                              );
+                            }}
                           />
                         </ToolTip>
                         <ToolTip content="Reject Request" delayDuration={1000}>
@@ -340,13 +371,14 @@ const CollaborationTable = ({
                             color="#ef4444"
                             className="cursor-pointer"
                             size={25}
-                            onClick={() =>
+                            onClick={(e) => {
+                              e.stopPropagation();
                               setIsOpen({
                                 show: true,
                                 collaborationId: collaboration?._id,
                                 status: "reject",
-                              })
-                            }
+                              });
+                            }}
                           />
                         </ToolTip>
                       </div>
@@ -358,13 +390,14 @@ const CollaborationTable = ({
                           color="#ef4444"
                           className="cursor-pointer"
                           size={25}
-                          onClick={() =>
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setIsOpen({
                               show: true,
                               collaborationId: collaboration?._id,
                               status: "cancel",
-                            })
-                          }
+                            });
+                          }}
                         />
                       </ToolTip>
                     ),
@@ -377,11 +410,12 @@ const CollaborationTable = ({
                         color="#3b82f6"
                         className="cursor-pointer"
                         size={25}
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           router.push(
                             `/vendor/creators/collaboration/${collaboration?._id}`
-                          )
-                        }
+                          );
+                        }}
                       />
                     </ToolTip>
                     {collaboration?.lastMessage &&
@@ -398,11 +432,12 @@ const CollaborationTable = ({
                         color="#3b82f6"
                         className="cursor-pointer"
                         size={25}
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           router.push(
                             `/vendor/creators/collaboration/${collaboration?._id}`
-                          )
-                        }
+                          );
+                        }}
                       />
                       {collaboration?.lastMessage &&
                         collaboration?.lastMessage?.isRead === false && (
@@ -419,11 +454,12 @@ const CollaborationTable = ({
                         color="#3b82f6"
                         className="cursor-pointer"
                         size={25}
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           router.push(
                             `/vendor/creators/collaboration/${collaboration?._id}`
-                          )
-                        }
+                          );
+                        }}
                       />
                       {collaboration?.lastMessage &&
                         collaboration?.lastMessage?.isRead === false && (
@@ -442,7 +478,11 @@ const CollaborationTable = ({
   return (
     <>
       {(loading || loader) && <Loader />}
-      <DataTable columns={productCollaborationColumns} data={data} />
+      <DataTable
+        columns={productCollaborationColumns}
+        data={data}
+        handleRowClick={handleRowClick}
+      />
       {isOpen?.show && (
         <CancelRequest
           onClose={() => setIsOpen(initialValue)}

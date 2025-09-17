@@ -1,6 +1,6 @@
 import axios from "./axios";
 
-export const getCreatorStatesInfo = async (days: string = "7") => {
+export const getCreatorStatesInfo = async (days: string = "") => {
   try {
     const response = await axios.get(
       `/auth/creator-dashboard/states${days !== "all" ? `?days=${days}` : ""}`
@@ -22,7 +22,7 @@ export const getTopPerformingBrand = async () => {
   }
 };
 
-export const getRevenuePerformance = async (days: string = "7") => {
+export const getRevenuePerformance = async (days: string = "") => {
   try {
     const response = await axios.get(
       `/auth/creator-dashboard/revenue-graph${

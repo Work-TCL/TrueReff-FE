@@ -7,11 +7,13 @@ export interface IGETCreatorsRequest {
   productId?: string;
   page?: number;
   limit?: number;
+  days?: string;
 }
 
 export interface IGETCreatorsStateRequest {
   vendorId?: string;
   productId?: string;
+  days?: string;
 }
 
 export const getAnalyticsCreatorsList = async (
@@ -62,10 +64,12 @@ export interface IGETVendorsRequest {
   productId?: string;
   page?: number;
   limit?: number;
+  days?: string;
 }
 export interface IGETVendorsStateRequest {
   creatorId?: string;
   productId?: string;
+  days?: string;
 }
 
 export const getAnalyticsVendorsList = async (

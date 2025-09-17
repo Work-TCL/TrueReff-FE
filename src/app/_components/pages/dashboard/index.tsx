@@ -66,8 +66,8 @@ export default function Dashboard() {
     fetchRevenuePerformance();
     const subscription = creatorDashboardFilter.subscribe((value) => {
       console.log("Received value:", value);
-      fetchStatesInfo(value || "7");
-      fetchRevenuePerformance(value || "7");
+      fetchStatesInfo(value || "");
+      fetchRevenuePerformance(value || "");
     });
 
     return () => {
@@ -79,10 +79,10 @@ export default function Dashboard() {
     fetchTopPerformingBrand();
     getProductSuggested();
   }, []);
-  const fetchStatesInfo = async (value: string = "7") => {
+  const fetchStatesInfo = async (value: string = "") => {
     setMailLoading(true);
     try {
-      const response = await getCreatorStatesInfo(value || "7");
+      const response = await getCreatorStatesInfo(value || "");
       if (response) {
         setStatesInfo(response);
       } else {
@@ -109,10 +109,10 @@ export default function Dashboard() {
       setBrandLoading(false);
     }
   };
-  const fetchRevenuePerformance = async (value: string = "7") => {
+  const fetchRevenuePerformance = async (value: string = "") => {
     setRevenueLoading(true);
     try {
-      const response = await getRevenuePerformance(value || "7");
+      const response = await getRevenuePerformance(value || "");
       if (response) {
         const currentData = response?.current?.map((ele: IRevenue) => ({
           ...ele,

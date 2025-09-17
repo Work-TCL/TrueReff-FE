@@ -82,6 +82,10 @@ export default function BrandProductTable({
     {
       id: "action", // Use `id` for non-accessor columns
       header: "Action",
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => {
         const product = row.original;
         return <div className="w-4 h-4 mx-auto rounded-full bg-green-600" />;

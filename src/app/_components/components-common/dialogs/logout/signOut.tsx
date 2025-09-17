@@ -5,15 +5,15 @@ import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import React from "react";
 
+export const handleLogout = async () => {
+  await signOut({
+    callbackUrl: "/login",
+    redirect: true,
+  });
+  clearLocalStorage();
+};
 export default function SignOut() {
   const t = useTranslations();
-  const handleLogout = async () => {
-    await signOut({
-      callbackUrl: "/login",
-      redirect: true,
-    });
-    clearLocalStorage();
-  };
   return (
     <Button
       onClick={handleLogout}

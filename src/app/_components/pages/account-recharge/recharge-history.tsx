@@ -28,11 +28,12 @@ interface IRechargeHistoryProps {
     currentPage: number;
     rechargeHistory: IRechargeHistory[];
     loading: boolean;
+    isCreator?: boolean;
     totalPages: number;
     setCurrentPage: (page:number) => void;
     fetchRechargeHistory: (page:number,internalLoader?:boolean) => void;
 }
-export default function RechargeHistory({loading,rechargeHistory,fetchRechargeHistory,currentPage,setCurrentPage,totalPages}:IRechargeHistoryProps){
+export default function RechargeHistory({loading,rechargeHistory,fetchRechargeHistory,currentPage,setCurrentPage,totalPages,isCreator}:IRechargeHistoryProps){
     const translate = useTranslations();
     const handlePageChange = (page:number) => {
         page !== currentPage && fetchRechargeHistory(page,true);
@@ -41,7 +42,7 @@ export default function RechargeHistory({loading,rechargeHistory,fetchRechargeHi
     return (
         <div className="bg-white rounded-xl shadow p-2 md:p-4 flex-1 overflow-hidden flex flex-col">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-2 gap-4">
-                <h3 className="text-lg font-semibold">{translate("Recharge_History")}</h3>
+                <h3 className="text-lg font-semibold">{isCreator ? translate("Payout_History") : translate("Recharge_History")}</h3>
                 {/* <div className="flex gap-2 items-center">
                     <input
                         type="text"

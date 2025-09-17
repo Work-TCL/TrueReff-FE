@@ -5,6 +5,7 @@ import EditProfileCreator from "../../components-common/dialogs/edit-profile-cre
 import { useCreatorStore } from "@/lib/store/creator";
 import { useTranslations } from "next-intl";
 import { formatDate } from "@/lib/utils/constants";
+import DeleteAccountCard from "../../components-common/account-deletion/account-deleting";
 interface IProfileCreator {
   user_name: string;
   full_name: string;
@@ -52,10 +53,7 @@ export default function ProfileCreator() {
               ["User_Name", creator.user_name],
               ["Name", creator.full_name],
               ["Mobile", creator.phone],
-              [
-                "Date_Of_Birth",
-                formatDate(creator.dob),
-              ],
+              ["Date_Of_Birth", formatDate(creator.dob)],
             ].map(([label, value], idx) => (
               <div key={idx} className="flex items-start gap-2">
                 <div className="w-[120px] text-sm text-gray-500 text-nowrap">
@@ -91,6 +89,7 @@ export default function ProfileCreator() {
           }}
         />
       </div>
+      <DeleteAccountCard />
       {loading && <Loader />}
     </>
   );

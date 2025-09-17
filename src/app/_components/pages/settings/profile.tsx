@@ -7,6 +7,7 @@ import { getProfileAPI } from "@/lib/web-api/user";
 import Loader from "../../components-common/layout/loader";
 import { useVendorStore } from "@/lib/store/vendor";
 import { useTranslations } from "next-intl";
+import DeleteAccountCard from "../../components-common/account-deletion/account-deleting";
 interface IProfile {
   business_name: string;
   company_email: string;
@@ -183,6 +184,7 @@ export default function Profile() {
           }}
         />
       </div>
+      <DeleteAccountCard />
       {loading && <Loader />}
     </>
   );

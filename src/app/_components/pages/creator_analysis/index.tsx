@@ -63,6 +63,7 @@ const limit = 10;
 export const HandleSearchProduct = new Subject<IAnalyticsProductData>();
 export const HandleSearchBrand = new Subject<IAnalyticsBrandData>();
 export const HandleSearchCreator = new Subject<IAnalyticsCreatorData>();
+export const AnalyticsDaysFilter = new Subject<string>();
 
 export default function CombineAnalytics({ mode }: IProps) {
   const t = useTranslations();
@@ -73,6 +74,7 @@ export default function CombineAnalytics({ mode }: IProps) {
   const [list, setList] = useState<IAnalyticsData[]>([]);
   const [isStatesLoading, setIsStatesLoading] = useState<boolean>(false);
   const [isListLoading, setIsListLoading] = useState<boolean>(false);
+  const [days, setDays] = useState<string>("");
   const [states, setStates] = useState<IStatesAnalytics>({
     totalOrders: 0,
     totalRevenue: 0,
@@ -104,6 +106,7 @@ export default function CombineAnalytics({ mode }: IProps) {
       const payload: IGETCreatorsRequest = {
         page: p || page,
         limit,
+        ...(days ? { days: days } : {}),
       };
 
       if (filter && filter.key === FILTER_KEYS.VENDOR) {
@@ -117,7 +120,6 @@ export default function CombineAnalytics({ mode }: IProps) {
       setCount(response.count);
       setList(response.list);
     } catch (error) {
-      
     } finally {
       setIsListLoading(false);
     }
@@ -126,7 +128,9 @@ export default function CombineAnalytics({ mode }: IProps) {
     if (mode !== "creator") return;
     setIsStatesLoading(true);
     try {
-      const payload: IGETCreatorsStateRequest = {};
+      const payload: IGETCreatorsStateRequest = {
+        ...(days ? { days: days } : {}),
+      };
 
       if (filter && filter.key === FILTER_KEYS.VENDOR) {
         payload.vendorId = filter.value.vendorId;
@@ -137,7 +141,6 @@ export default function CombineAnalytics({ mode }: IProps) {
       const response = await getAnalyticsCreatorsState(payload);
       setStates(response);
     } catch (error) {
-      
     } finally {
       setIsStatesLoading(false);
     }
@@ -151,6 +154,7 @@ export default function CombineAnalytics({ mode }: IProps) {
       const payload: IGETVendorsRequest = {
         page: p || page,
         limit,
+        ...(days ? { days: days } : {}),
       };
 
       if (filter && filter.key === FILTER_KEYS.VENDOR) {
@@ -164,7 +168,6 @@ export default function CombineAnalytics({ mode }: IProps) {
       setCount(response.count);
       setList(response.list);
     } catch (error) {
-      
     } finally {
       setIsListLoading(false);
     }
@@ -174,7 +177,9 @@ export default function CombineAnalytics({ mode }: IProps) {
     if (mode !== "vendor") return;
     setIsStatesLoading(true);
     try {
-      const payload: IGETVendorsStateRequest = {};
+      const payload: IGETVendorsStateRequest = {
+        ...(days ? { days: days } : {}),
+      };
 
       if (filter && filter.key === FILTER_KEYS.VENDOR) {
         payload.creatorId = filter.value.creatorId;
@@ -182,10 +187,9 @@ export default function CombineAnalytics({ mode }: IProps) {
       if (product) {
         payload.productId = product.productId;
       }
-      const response = await getAnalyticsVendorsState({ ...product });
+      const response = await getAnalyticsVendorsState({ ...payload });
       setStates(response);
     } catch (error) {
-      
     } finally {
       setIsStatesLoading(false);
     }
@@ -219,10 +223,18 @@ export default function CombineAnalytics({ mode }: IProps) {
       }
     );
 
+    const subscriptionAnaytics = AnalyticsDaysFilter.subscribe(
+      (val: string) => {
+        setPage(1);
+        setDays(val == "all" ? "" : val);
+      }
+    );
+
     return () => {
       subscriptionProduct.unsubscribe();
       subscriptionBrand.unsubscribe();
       subscriptionCreator.unsubscribe();
+      subscriptionAnaytics.unsubscribe();
     };
   }, []);
 
@@ -233,7 +245,7 @@ export default function CombineAnalytics({ mode }: IProps) {
       await fetchCreatorList(1);
       await fetchVendorList(1);
     })();
-  }, [filter, product]);
+  }, [filter, product, days]);
 
   const handleOnSearchVendor = (vendor: IAnalyticsBrandData) => {
     setPage(1);

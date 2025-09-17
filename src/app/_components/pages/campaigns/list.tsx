@@ -229,6 +229,10 @@ export default function CampaignList() {
     {
       id: "action",
       header: () => <div className="text-center">{translate("Action")}</div>,
+      meta: {
+        isColumnSticky: true,
+        stickySide: "right",
+      },
       cell: ({ row }) => {
         const campaign = row.original;
         const router = useRouter();

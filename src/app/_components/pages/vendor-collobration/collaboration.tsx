@@ -164,7 +164,7 @@ export default function CollaborationList() {
   const [search, setSearch] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const statusOptions: IStatus[] = [
-    { value: "", label: "Select Status" },
+    { value: "", label: "ALL" },
     { value: "REQUESTED", label: "Requested" },
     { value: "REJECTED", label: "Rejected" },
     { value: "PENDING", label: "Pending" },
@@ -285,6 +285,7 @@ export default function CollaborationList() {
     debouncedSearch(value, selectedStatus);
   };
   const handleSelectStatus = (selectedOptions: any) => {
+    setCurrentPage(1);
     router.push(`?status=${selectedOptions}`);
   };
   return (
@@ -304,7 +305,7 @@ export default function CollaborationList() {
                 value={selectedStatus}
                 onChange={handleSelectStatus}
                 options={statusOptions}
-                placeholder="Select Status"
+                placeholder="ALL"
               />
             </div>
           </div>

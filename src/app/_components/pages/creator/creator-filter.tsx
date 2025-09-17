@@ -6,7 +6,15 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@sohanemon/utils";
 import DialogLayout from "@/app/_components/ui/layout/dialog";
 import { labelStyle } from "@/app/_components/ui/form/Input";
-import { cities, daysFilter, indianStates, minFollowersOptions, minOrdersOptions, minRevenueOptions, sortOptions } from "@/lib/utils/constants";
+import {
+  cities,
+  daysFilter,
+  indianStates,
+  minFollowersOptions,
+  minOrdersOptions,
+  minRevenueOptions,
+  sortOptions,
+} from "@/lib/utils/constants";
 import { useTranslations } from "next-intl";
 import { ICategory } from "./list";
 
@@ -17,8 +25,8 @@ type Option = {
 
 interface ICreatorFilterProps {
   onChange: (values: any) => void;
-  categories: ICategory[],
-  parentCategory: ICategory[],
+  categories: ICategory[];
+  parentCategory: ICategory[];
 }
 
 interface IInitialState {
@@ -93,15 +101,23 @@ const filterCustomStyles = {
   menu: (base: any) => ({ ...base, zIndex: 99999 }),
 };
 
-const CreatorFilter: React.FC<ICreatorFilterProps> = ({ onChange,categories,parentCategory }) => {
+const CreatorFilter: React.FC<ICreatorFilterProps> = ({
+  onChange,
+  categories,
+  parentCategory,
+}) => {
   const translate = useTranslations();
   const [openDialog, setOpenDialog] = useState(false);
   const [subCategory, setSubCategory] = useState<ICategory[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<{label:string,value:string}[]>([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState<{label:string,value:string}[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<
+    { label: string; value: string }[]
+  >([]);
 
   // Temporary States for Dialog
-  const initialState:IInitialState = {
+  const initialState: IInitialState = {
     state: "",
     city: "",
     days: "",
@@ -110,7 +126,7 @@ const CreatorFilter: React.FC<ICreatorFilterProps> = ({ onChange,categories,pare
     minFollowers: 0,
     minRevenues: 0,
     minOrders: 0,
-    sort: ""
+    sort: "",
   };
   const [filterState, setFilterState] = useState(initialState);
 
@@ -123,7 +139,7 @@ const CreatorFilter: React.FC<ICreatorFilterProps> = ({ onChange,categories,pare
     if (name === "state") {
       setFilterState({ ...filterState, [name]: value, city: "" });
     } else if (name === "category") {
-      let selectedValue = value?.map((el:any) => el?.value);
+      let selectedValue = value?.map((el: any) => el?.value);
       const optionsSubCategory = categories.filter((ele) =>
         selectedValue.includes(ele?.parentId || "")
       );
@@ -134,12 +150,18 @@ const CreatorFilter: React.FC<ICreatorFilterProps> = ({ onChange,categories,pare
       let selectedSubCategory = filterState.sub_category.filter((id) =>
         availableSubCategoriesIds.includes(id)
       );
-      let subCats = optionsSubCategory?.filter((el:ICategory) => selectedSubCategory?.includes(el?._id))?.map(el => ({label: el?.name,value: el?._id}))
-      setFilterState({ ...filterState, [name]: selectedValue,sub_category: selectedSubCategory });
+      let subCats = optionsSubCategory
+        ?.filter((el: ICategory) => selectedSubCategory?.includes(el?._id))
+        ?.map((el) => ({ label: el?.name, value: el?._id }));
+      setFilterState({
+        ...filterState,
+        [name]: selectedValue,
+        sub_category: selectedSubCategory,
+      });
       setSelectedCategory(value);
-      setSelectedSubCategory(subCats)
-    } else if(name === "sub_category"){
-      let selectedValue = value?.map((el:any) => el?.value);
+      setSelectedSubCategory(subCats);
+    } else if (name === "sub_category") {
+      let selectedValue = value?.map((el: any) => el?.value);
       setFilterState({ ...filterState, [name]: selectedValue });
       setSelectedSubCategory(value);
     }
@@ -149,22 +171,19 @@ const CreatorFilter: React.FC<ICreatorFilterProps> = ({ onChange,categories,pare
   };
   return (
     <>
-    {/* Desktop view */}
-    <div className="hidden lg:hidden grid-cols-1 gap-4 z-[11]">
+      {/* Desktop view */}
+      <div className="hidden lg:hidden grid-cols-1 gap-4 z-[11]">
         <Select
           name="Days"
           styles={customStyles}
           value={[
             {
               value: filterState?.days,
-              label: filterState?.days ? filterState?.days : "Select Days",
+              label: filterState?.days ? filterState?.days : "Lifetime",
             },
           ]}
           onChange={(val) => handleOnSelect(val?.value, "days")}
-          options={[
-            { value: "", label: "Select Days" },
-            ...daysFilter
-          ]}
+          options={[...daysFilter]}
           className="basic-multi-select"
           classNamePrefix="select"
           placeholder="Select Days"
