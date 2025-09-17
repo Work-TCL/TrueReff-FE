@@ -25,9 +25,9 @@ import {
 } from "@/lib/utils/rememberUtils";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { useTranslations } from "next-intl";
-import { messaging, generateToken } from "@/notifications/firebase";
+// import { messaging, generateToken } from "@/notifications/firebase";
 
-import { onMessage } from "firebase/messaging";
+// import { onMessage } from "firebase/messaging";
 import { toastMessage } from "@/lib/utils/toast-message";
 
 export default function LoginForm() {
@@ -38,7 +38,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
   const [isRemember, setIsRemember] = useState(false);
-  const [messagingToken, setMessagingToken] = useState<string | null | undefined>(null);
+  // const [messagingToken, setMessagingToken] = useState<string | null | undefined>(null);
   const schema = loginSchema;
   const { setAccountData, setIsAuthStatus, setToken } = useAuthStore();
   const { setCreatorData } = useCreatorStore();
@@ -215,27 +215,27 @@ export default function LoginForm() {
       setIsRemember(true);
       methods.trigger(["email", "password"]);
     }
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/firebase-messaging-sw.js")
-        .then(async () => {
-          console.log("Service Worker registered");
-          const token = await generateToken();
-          console.log("FCM Token:", token);
-          setMessagingToken(token);
-        })
-        .catch((err) => console.error("SW registration failed:", err));
-    }
+    // if ("serviceWorker" in navigator) {
+    //   navigator.serviceWorker
+    //     .register("/firebase-messaging-sw.js")
+    //     .then(async () => {
+    //       console.log("Service Worker registered");
+    //       const token = await generateToken();
+    //       console.log("FCM Token:", token);
+    //       setMessagingToken(token);
+    //     })
+    //     .catch((err) => console.error("SW registration failed:", err));
+    // }
   }, []);
 
-  useEffect(() => {
-    if (!messaging) return; 
-    onMessage(messaging, (payload) => {
-      console.log("Message received. ", payload);
-      // Handle foreground messages
-      toastMessage.info(payload?.notification?.title || "New Notification");
-    });
-  }, [messaging]); 
+  // useEffect(() => {
+  //   if (!messaging) return; 
+  //   onMessage(messaging, (payload) => {
+  //     console.log("Message received. ", payload);
+  //     // Handle foreground messages
+  //     toastMessage.info(payload?.notification?.title || "New Notification");
+  //   });
+  // }, [messaging]); 
 
   useEffect(() => {
     if (token) {
@@ -269,14 +269,14 @@ export default function LoginForm() {
     }
   }, [token]);
 
-  const handleCopyToken = async () => {
-      try {
-        await navigator.clipboard.writeText(messagingToken ?? "");
-        toastMessage.success("Token copied to clipboard!");
-      } catch (err) {
-        toastMessage.error("Failed to copy!");
-      }
-    };
+  // const handleCopyToken = async () => {
+  //     try {
+  //       await navigator.clipboard.writeText(messagingToken ?? "");
+  //       toastMessage.success("Token copied to clipboard!");
+  //     } catch (err) {
+  //       toastMessage.error("Failed to copy!");
+  //     }
+  //   };
 
   return (
     <FormProvider {...methods}>
@@ -325,20 +325,6 @@ export default function LoginForm() {
           {translate("Login")}
         </Button>
       </form>
-      {messagingToken && <div className="flex items-center">
-        <p className="text-sm text-gray-500 mt-4">
-          {messagingToken?.slice(0, 20)}...
-        </p>
-        <Button
-          type="button"
-          className="mt-3 w-[100px]"
-          // loading={loading}
-          disabled={!messagingToken}
-          onClick={handleCopyToken}
-        >
-          {translate("Copy")}
-        </Button>
-      </div>}
     </FormProvider>
   );
 }
