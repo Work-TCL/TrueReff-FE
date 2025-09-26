@@ -116,7 +116,7 @@ const NavLink = ({
         {Icon && <Icon className={iconClassNames} />}
         {label && <span>{label}</span>}
         {item?.notification && (
-          <span className="absolute top-[5px] right-[7px] block h-1 w-1 rounded-full bg-primary-color"></span>
+          <span className="absolute top-[5px] right-[7px] block h-2 w-2 rounded-full bg-primary-color"></span>
         )}
       </Link>
     );

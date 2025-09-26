@@ -137,9 +137,9 @@ export default function AccountRecharge() {
                 </div>
 
                 {/* Subtle watermark */}
-                <div className="absolute top-1.5 right-3 opacity-10 rotate-12 pointer-events-none">
+                {/* <div className="absolute top-1.5 right-3 opacity-10 rotate-12 pointer-events-none">
                     <IndianRupee size={64} />
-                </div>
+                </div> */}
             </div>
             {/* Total Items Sold */}
             <StatsCard

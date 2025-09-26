@@ -967,16 +967,14 @@ export interface ICampaignValidationSchema
 export const campaignProductValidationSchema = Yup.object().shape({
   name: Yup.string()
     .trim()
-    .required("Campaign name is required")
-    .min(5, "Campaign name must be at least 5 characters")
-    .max(50, "Campaign name can't exceed 50 characters"),
+    .required("Campaign name is required"),
   description: Yup.string().trim().required("Description is required"),
   campaignLifeTime: Yup.boolean().default(false).required(),
   freeProduct: Yup.boolean().default(false).required(),
-  tags: Yup.array()
-    .of(Yup.string().trim().required("Each tag must be a string"))
-    .min(1, "At least one tag is required")
-    .required("Tags are required"),
+  tags: Yup.array().optional() // Make tags optional
+    .of(Yup.string().trim().required("Each tag must be a string")),
+    // .min(1, "At least one tag is required")
+    // .required("Tags are required"),
   category: Yup.array()
     .of(
       Yup.object().shape({

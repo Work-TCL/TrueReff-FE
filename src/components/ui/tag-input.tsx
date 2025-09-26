@@ -17,11 +17,13 @@ export default function TagInput({
   value = [],
   onChange,
   error,
+  isRequired = true,
 }: {
   labelClassName?: string;
   value: string[];
   onChange: (tags: string[]) => void;
   error?: string;
+  isRequired?: boolean;
 }) {
   const translate = useTranslations();
   const [input, setInput] = useState("");
@@ -99,7 +101,7 @@ export default function TagInput({
         )}
       >
         {translate("Tags")}
-        <span className="text-red-500">*</span>
+        {isRequired && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">
         <div className="relative w-full flex justify-between sm:gap-0 gap-2 items-center">

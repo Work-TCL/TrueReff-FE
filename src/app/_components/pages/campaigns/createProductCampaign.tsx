@@ -5,7 +5,6 @@ import {
   FormProvider,
   useFieldArray,
   useForm,
-  useWatch,
 } from "react-hook-form";
 import {
   campaignProductValidationSchema,
@@ -161,6 +160,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const methods = useForm<ICampaignProductValidationSchema>({
     defaultValues: {
       blocking_commission_days: "1",
+      tags: [],
     },
     //@ts-ignore
     resolver: productId
@@ -312,9 +312,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
         data?.sub_category?.forEach((opt: any, i: number) => {
           formData.append(`subCategory[${i}]`, opt?.value);
         });
-        data.tags.forEach((tag: string, i: number) => {
+        data?.tags ? data?.tags.forEach((tag: string, i: number) => {
           formData.append(`tags[${i}]`, tag);
-        });
+        }) : null;
         if (!isSkipMetirialGroup) {
           data?.references?.forEach((link: string, i: number) => {
             formData.append(`referenceLinks[${i}]`, link);
@@ -622,7 +622,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       methods.setValue("sub_category", selectedSubCategories);
     }
   }, [categories?.length, campaignData]);
-
+console.log("methods",methods.formState.errors)
   const startDateRaw = methods.watch("startDate");
   const startDate = startDateRaw ? new Date(startDateRaw) : null;
 
@@ -713,9 +713,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 <div className="md:col-span-1 col-span-2">
                   <TagInput
                     labelClassName={labelStyle}
-                    value={methods.watch("tags")}
+                    value={methods.watch("tags")??[]}
                     onChange={handleTagChange}
                     error={methods.formState.errors["tags"]?.message}
+                    isRequired={false}
                   />
                 </div>
 
