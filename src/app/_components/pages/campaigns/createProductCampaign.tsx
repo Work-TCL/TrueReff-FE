@@ -103,6 +103,20 @@ const typOptions = [
     value: "PERCENTAGE",
   },
 ];
+
+// utils/scrollToContainer.ts
+export const scrollToContainerByInputName = (name: string) => {
+  const container = document.getElementById(`${name}-container`);
+  if (container) {
+    container.scrollIntoView({ behavior: "smooth", block: "center" });
+    // optional: focus the input inside the container
+    const input = container.querySelector<HTMLInputElement>(
+      `input[name="${name}"]`
+    );
+    input?.focus();
+  }
+};
+
 export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const translate = useTranslations();
   const params = useParams();
@@ -139,7 +153,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
 
   const fetchCategory = useCallback(async () => {
     try {
-      const response = await getCategories({ page: 0, limit: 0,type: "vendor" });
+      const response = await getCategories({
+        page: 0,
+        limit: 0,
+        type: "vendor",
+      });
       let data = response?.data?.data;
 
       setCategories(data);
@@ -383,7 +401,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     const channels = Array.isArray(methods.watch("channels"))
       ? methods.watch("channels")
       : [];
-      console.log("channels",channels)
+    console.log("channels", channels);
     if (Boolean(channels?.includes(channelName))) {
       methods.setValue(
         "channels",
@@ -478,11 +496,12 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       setLoading(false);
     }
   };
-  // useEffect(() => {
-  //   if (fields.length === 0) {
-  //     append(""); // adds an empty string if none exists
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (Object.keys(methods.formState.errors)?.length > 0) {
+      const firstError = Object.keys(methods.formState.errors)[0];
+      scrollToContainerByInputName(firstError);
+    }
+  }, [Object.keys(methods.formState.errors)?.length]);
 
   const watchedCategories = methods.watch("category");
 
@@ -499,10 +518,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
     const selectedSubCategories = methods.watch("sub_category") || [];
 
-    methods.setValue(
-      "sub_category",
-      []
-    );
+    methods.setValue("sub_category", []);
   };
   useEffect(() => {
     updateSubCategories();
@@ -649,8 +665,11 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     methods.trigger("tags");
   };
 
-  const handleChangeCategory = (value: string[], type: "category" | "sub_category") => {
-   const categoriesId = value?.map((v: any) => v.value) || [];
+  const handleChangeCategory = (
+    value: string[],
+    type: "category" | "sub_category"
+  ) => {
+    const categoriesId = value?.map((v: any) => v.value) || [];
 
     const optionsSubCategory = categories.filter((ele) =>
       categoriesId.includes(ele?.parentId?._id)
@@ -661,10 +680,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
     const availableSubCategoriesIds = optionsSubCategory.map((v) => v?._id);
     const selectedSubCategories = methods.watch("sub_category") || [];
 
-    methods.setValue(
-      "sub_category",
-      []
-    );
+    methods.setValue("sub_category", []);
   };
 
   return (
@@ -710,7 +726,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2
 "
               >
-                <div className="md:col-span-1 col-span-2">
+                <div className="md:col-span-1 col-span-2" id="tags-container">
                   <TagInput
                     labelClassName={labelStyle}
                     value={methods.watch("tags")}
@@ -719,11 +735,14 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   />
                 </div>
 
-                <div className="md:col-span-1 col-span-2">
+                <div
+                  className="md:col-span-1 col-span-2"
+                  id="campaign-container"
+                >
                   <label className={cn(labelStyle)}>
                     {translate("Campaign_Channels")}
                   </label>
-                  <div className="py-3">
+                  <div className="py-3" id="channels-container">
                     <div className="flex flex-row flex-wrap lg:gap-6 gap-3">
                       {!isDisabled ? (
                         <div className="flex gap-1 cursor-pointer">
@@ -757,7 +776,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       ) : null}
 
                       {!isDisabled ? (
-                        <div className="flex gap-1 cursor-pointer">
+                        <div
+                          className="flex gap-1 cursor-pointer"
+                          id="chanls-container"
+                        >
                           <Input
                             name="chanls"
                             type="toggle"
@@ -820,7 +842,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   </div>
                 </div>
                 {/* </div> */}
-                <div className="md:col-span-1 col-span-2">
+                <div
+                  className="md:col-span-1 col-span-2"
+                  id="category-container"
+                >
                   <Input
                     label={translate("Category")}
                     placeholder={translate("Select_Category")}
@@ -855,7 +880,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               <div className="grid md:grid-cols-3 grid-cols-1 gap-3 mb-2">
                 {/* {methods.watch("campaignLifeTime") ? null : ( */}
                 {/* <div className="flex flex-col lg:flex-row gap-3"> */}
-                <div className="flex flex-col w-full gap-1">
+                <div
+                  className="flex flex-col w-full gap-1"
+                  id="startDate-container"
+                >
                   <Input
                     name="startDate"
                     type="date"
@@ -866,7 +894,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   />
                 </div>
                 {
-                  <div className="flex flex-col w-full gap-1">
+                  <div
+                    className="flex flex-col w-full gap-1"
+                    id="endDate-container"
+                  >
                     <Input
                       name="endDate"
                       type="date"
@@ -922,7 +953,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               <div className="text-lg font-medium text-gray-500">
                 {translate("campaignObjective")}
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3" id="videoType-container">
                 <div className="flex flex-col w-full gap-2">
                   <label className={cn(labelStyle)}>
                     {translate("videoType")}
@@ -954,7 +985,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     </span>
                   )}
                 </div>
-                <div className="flex flex-col lg:flex-row gap-3">
+                <div
+                  className="flex flex-col lg:flex-row gap-3"
+                  id="notes-container"
+                >
                   <div className="flex flex-col w-full gap-1">
                     {/* <div className="flex flex-col gap-1"> */}
                     <Input
@@ -987,7 +1021,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                 {translate("CreatorCommission")}
               </div>
               <div className="flex flex-col gap-3">
-                <div className="grid lg:grid-cols-3 grid-cols-1 gap-3">
+                <div
+                  className="grid lg:grid-cols-3 grid-cols-1 gap-3"
+                  id="commission_type-container"
+                >
                   <div className="flex flex-col w-full gap-1">
                     <Input
                       name="commission_type"
@@ -1019,7 +1056,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     />
                   </div>
 
-                  <div className="flex flex-col w-full gap-1">
+                  <div
+                    className="flex flex-col w-full gap-1"
+                    id="commission-container"
+                  >
                     <Input
                       name="commission"
                       type="number"
@@ -1028,7 +1068,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       disabled={isDisabled}
                     />
                   </div>
-                  <div className="flex flex-col w-full gap-1">
+                  <div
+                    className="flex flex-col w-full gap-1"
+                    id="blocking_commission_days-container"
+                  >
                     <Input
                       name="blocking_commission_days"
                       type="number"
@@ -1040,19 +1083,30 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       onChange={(e) => {
                         const value = parseInt(e.target.value);
                         if (value < 1) {
-                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.setValue(
+                            "blocking_commission_days",
+                            e.target.value
+                          );
                           methods.setError("blocking_commission_days", {
                             type: "manual",
-                            message: "Blocking commission days must be between 1 and 30",
+                            message:
+                              "Blocking commission days must be between 1 and 30",
                           });
                         } else if (value > 30) {
-                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.setValue(
+                            "blocking_commission_days",
+                            e.target.value
+                          );
                           methods.setError("blocking_commission_days", {
                             type: "manual",
-                            message: "Blocking commission days must be between 1 and 30",
+                            message:
+                              "Blocking commission days must be between 1 and 30",
                           });
                         } else {
-                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.setValue(
+                            "blocking_commission_days",
+                            e.target.value
+                          );
                           methods.setError("blocking_commission_days", {
                             type: "manual",
                             message: "",
@@ -1062,7 +1116,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       max={30}
                     />
                   </div>
-                  <div className="mt-2 flex flex-col gap-2 cursor-pointer">
+                  <div
+                    className="mt-2 flex flex-col gap-2 cursor-pointer"
+                    id="freeProduct-container"
+                  >
                     <label
                       htmlFor="freeProduct"
                       className="text-xs flex items-center gap-2 text-gray-600"
@@ -1170,7 +1227,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     disabled={isDisabled}
                   />
                 </div>
-                <div className="flex flex-col w-full gap-2">
+                <div
+                  className="flex flex-col w-full gap-2"
+                  id="references-container"
+                >
                   <label className={cn(labelStyle)}>
                     {translate("Reference_Links")}
                   </label>
@@ -1266,7 +1326,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               `}
               >
                 <div className="flex flex-col md:flex-row gap-3">
-                  <div className="flex flex-col w-full gap-1">
+                  <div
+                    className="flex flex-col w-full gap-1"
+                    id="couponCode-container"
+                  >
                     <Input
                       name="couponCode"
                       type="text"
@@ -1275,7 +1338,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       required={false}
                     />
                   </div>
-                  <div className="flex flex-col w-full gap-1">
+                  <div
+                    className="flex flex-col w-full gap-1"
+                    id="discount_type-container"
+                  >
                     <Input
                       name="discount_type"
                       type="react-select"
@@ -1287,7 +1353,10 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     />
                   </div>
 
-                  <div className="flex flex-col w-full gap-1">
+                  <div
+                    className="flex flex-col w-full gap-1"
+                    id="discount_value-container"
+                  >
                     <Input
                       name="discount_value"
                       type="number"
@@ -1303,7 +1372,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
             </div>
 
             <div className="flex flex-col gap-4 pb-5">
-              <div className="pt-2">
+              <div className="pt-2" id="tearmAndCondition-container">
                 <div className="flex flex-col md:flex-row gap-6">
                   {!isDisabled ? (
                     <div className="flex gap-1 cursor-pointer items-center">
@@ -1358,6 +1427,15 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     type="submit"
                     variant="default"
                     className="rounded-[10px]"
+                    onClick={() => {
+                      if (Object.keys(methods.formState.errors)?.length > 0) {
+                        const firstError = Object.keys(
+                          methods.formState.errors
+                        )[0];
+                        console.log("firstError", firstError);
+                        scrollToContainerByInputName(firstError);
+                      }
+                    }}
                   >
                     {!productId
                       ? translate("Add_Product")
