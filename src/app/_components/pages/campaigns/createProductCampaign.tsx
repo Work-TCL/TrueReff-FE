@@ -115,6 +115,9 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [campaignData, setCampaignData] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [commissionTypeOpen, setCommissionTypeOpen] = useState(false);
+  const [freeProductOpen, setFreeProductOpen] = useState(false);
+  const [creatorMaterialOpen, setCreatorMaterialOpen] = useState(false);
   // campaign mixin
   const [mediaMixin, setMediaMixin] = useState<{
     images: File[];
@@ -926,7 +929,7 @@ console.log("methods",methods.formState.errors)
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col w-full gap-2">
                   <label className={cn(labelStyle)}>
-                    {translate("videoType")}
+                    {translate("videoType")}<span className="text-red-500">*</span>
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {VIDEO_TYPE.map((option) => (
@@ -996,12 +999,18 @@ console.log("methods",methods.formState.errors)
                       placeholder={translate("Select_Commission_Type")}
                       // @ts-ignore
                       label={
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center">
                           {translate("Commission_Type")}
+                          <span className="text-red-500">*</span>
                           <TooltipProvider key={`Commission_Type`}>
-                            <Tooltip>
+                            <Tooltip open={commissionTypeOpen}>
                               <TooltipTrigger>
-                                <Info className="w-4 h-4 text-gray-500" />
+                                <Info onClick={(event:any) => {
+                                  event.stopPropagation();
+                                  event.preventDefault();
+                                  setCommissionTypeOpen(prev => !prev);
+                                }} onMouseOver={() => setCommissionTypeOpen(true)}
+                                onMouseLeave={() => setCommissionTypeOpen(false)} className="w-4 h-4 text-gray-500 ml-1" />
                               </TooltipTrigger>
                               <TooltipContent
                                 className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
@@ -1068,32 +1077,26 @@ console.log("methods",methods.formState.errors)
                       htmlFor="freeProduct"
                       className="text-xs flex items-center gap-2 text-gray-600"
                     >
-                      <InputRadix
-                        type="radio"
-                        name={`freeProduct`}
-                        className="w-5 h-5 cursor-pointer accent-[#FF4979]"
-                        checked={Boolean(methods.watch("freeProduct"))}
-                        onClick={() =>
-                          methods.setValue(
+                      <label className="inline-flex items-center cursor-pointer relative">
+                  <input
+                    type="checkbox"
+                    value=""
+                    name="freeProduct"
+                    checked={Boolean(methods.watch("freeProduct"))}
+                    className="sr-only peer"
+                    onChange={() =>
+                      methods.setValue(
                             "freeProduct",
                             !Boolean(methods.watch("freeProduct"))
                           )
-                        }
-                        onChange={() => {}}
-                      />
-                      {/* <input
-                        type="checkbox"
-                        className="w-4 h-4 cursor-pointer"
-                        {...methods.register("freeProduct")}
-                        checked={Boolean(methods.watch("freeProduct"))}
-                        onChange={(v) => {
-                          methods.setValue(
-                            "freeProduct",
-                            !Boolean(methods.watch("freeProduct"))
-                          );
-                          // methods.trigger(["startDate", "endDate"]);
-                        }}
-                      /> */}
+                    }
+                  />
+                  <div
+                    className={`relative w-11 h-6 ${
+                      Boolean(methods.watch("freeProduct")) ? "bg-primary" : "bg-gray-200"
+                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                  ></div>
+                </label>
                       <span
                         className="text-sm cursor-pointer flex items-center gap-1"
                         onClick={(v) => {
@@ -1105,9 +1108,13 @@ console.log("methods",methods.formState.errors)
                       >
                         {translate("free_promotional_product")}
                         <TooltipProvider key={`free_promotional_product`}>
-                          <Tooltip>
+                          <Tooltip open={freeProductOpen}>
                             <TooltipTrigger>
-                              <Info className="w-4 h-4 text-gray-500" />
+                              <Info onClick={(event:any) => {
+                                  event.stopPropagation();
+                                  event.preventDefault();
+                                  setFreeProductOpen(prev => !prev);
+                                }} onMouseOver={() => setFreeProductOpen(true)} onMouseLeave={() => setFreeProductOpen(false)} className="w-4 h-4 text-gray-500" />
                             </TooltipTrigger>
                             <TooltipContent
                               className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
@@ -1127,9 +1134,13 @@ console.log("methods",methods.formState.errors)
               <div className="text-lg font-medium text-gray-500 flex items-center gap-x-2">
                 {translate("Creator_material")}{" "}
                 <TooltipProvider key={`Creator_material`}>
-                  <Tooltip>
+                  <Tooltip open={creatorMaterialOpen}>
                     <TooltipTrigger>
-                      <Info />
+                      <Info onClick={(event:any) => {
+                                  event.stopPropagation();
+                                  event.preventDefault();
+                                  setCreatorMaterialOpen(prev => !prev);
+                                }} onMouseOver={() => setCreatorMaterialOpen(true)} onMouseLeave={() => setCreatorMaterialOpen(false)} />
                     </TooltipTrigger>
                     <TooltipContent
                       className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
