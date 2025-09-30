@@ -64,7 +64,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 colSpan={header.colSpan}
                 onClick={header.column.getToggleSortingHandler()}
                 className={cn(
-                  "sticky top-0 bg-stroke sm:min-w-[150px] min-w-[110px] text-sm p-4 text-left z-10 font-medium cursor-pointer select-none dark:text-white xl:pl-4 text-gray-600 whitespace-nowrap",
+                  "sticky top-0 bg-stroke sm:min-w-[150px] min-w-[110px] text-sm p-4 text-left z-[9] font-medium cursor-pointer select-none dark:text-white xl:pl-4 text-gray-600 whitespace-nowrap",
                   header.column.columnDef.meta &&
                     header.column.columnDef.meta.isColumnSticky &&
                     header.column.columnDef.meta.stickySide === "left" &&
