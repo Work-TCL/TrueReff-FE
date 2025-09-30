@@ -716,7 +716,7 @@
   "2": {
     "title": "Open the Truereff App Page",
     "substeps": [
-      "Go to the Shopify App Store: Truereff Brand Connect."
+      "Go to the Shopify App Store:"
     ]
   },
   "3": {
@@ -742,8 +742,8 @@
   "6": {
     "title": "Access Truereff in Admin Panel",
     "substeps": [
-      "Once installed, Go to the Truereff app page in your shopify admin panel.",
-      "This will open the Truereff page inside Shopify."
+      "Once installed, Click on the Truereff app that appeare in your installed app list.",
+      "This will open the Truereff app page standalone."
     ],
     "image":"/assets/step.png"
   },
