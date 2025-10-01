@@ -41,7 +41,7 @@ import { getCategories } from "@/lib/web-api/auth";
 import CreatorMaterial from "./_components/creator-material";
 import CampaignProductView from "./_components/product-view";
 import { VIDEO_TYPE } from "@/lib/utils/constants";
-import { CircleX, Info } from "lucide-react";
+import { CircleX, IndianRupee, Info, Percent } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -189,6 +189,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       ? yupResolver(campaignProductValidationSchema)
       : yupResolver(campaignProductValidationSchema),
     mode: "onChange",
+    reValidateMode: "onSubmit",
   });
   const { control } = methods;
   const { fields, append, remove } = useFieldArray({
@@ -940,8 +941,8 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       />
                       <div
                         className={`relative w-9 h-5 ${Boolean(methods.watch("campaignLifeTime"))
-                            ? "bg-primary"
-                            : "bg-gray-200"
+                          ? "bg-primary"
+                          : "bg-gray-200"
                           } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
                       ></div>
                     </label>
@@ -1024,11 +1025,12 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               <div className="text-lg font-medium text-gray-500">
                 {translate("CreatorCommission")}
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-4">
                 <div
-                  className="grid lg:grid-cols-3 grid-cols-1 gap-3"
+                  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
                   id="commission_type-container"
                 >
+                  {/* Commission Type */}
                   <div className="flex flex-col w-full gap-1">
                     <Input
                       name="commission_type"
@@ -1042,15 +1044,19 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                           <TooltipProvider key={`Commission_Type`}>
                             <Tooltip open={commissionTypeOpen}>
                               <TooltipTrigger>
-                                <Info onClick={(event: any) => {
-                                  event.stopPropagation();
-                                  event.preventDefault();
-                                  setCommissionTypeOpen(prev => !prev);
-                                }} onMouseOver={() => setCommissionTypeOpen(true)}
-                                  onMouseLeave={() => setCommissionTypeOpen(false)} className="w-4 h-4 text-gray-500 ml-1" />
+                                <Info
+                                  onClick={(event: any) => {
+                                    event.stopPropagation();
+                                    event.preventDefault();
+                                    setCommissionTypeOpen((prev) => !prev);
+                                  }}
+                                  onMouseOver={() => setCommissionTypeOpen(true)}
+                                  onMouseLeave={() => setCommissionTypeOpen(false)}
+                                  className="w-4 h-4 text-gray-500 ml-1"
+                                />
                               </TooltipTrigger>
                               <TooltipContent
-                                className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                                className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-200 bg-white text-[14px] md:max-w-[300px] overflow-hidden"
                                 side="top"
                               >
                                 {translate("commisionTooltip")}
@@ -1066,22 +1072,34 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                     />
                   </div>
 
-                  <div
-                    className="flex flex-col w-full gap-1"
-                    id="commission-container"
-                  >
+                  {/* Commission */}
+                  <div className="flex flex-col w-full gap-1">
                     <Input
                       name="commission"
                       type="number"
                       placeholder={"Enter Your Commission"}
                       label={translate("commission")}
                       disabled={isDisabled}
+                      Icon={methods.watch("commission_type") === "FIXED_AMOUNT" ? IndianRupee : Percent}
+                      iconPosition="end"
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        if (methods.watch("commission_type") === "PERCENTAGE" && value > 100) {
+                          methods.setValue("commission", value);
+                          methods.setError("commission", {
+                            type: "manual",
+                            message: "Commission must be between 1 and 100",
+                          });
+                        } else {
+                          methods.setValue("commission", value);
+                          methods.clearErrors("commission");
+                        }
+                      }}
                     />
                   </div>
-                  <div
-                    className="flex flex-col w-full gap-1"
-                    id="blocking_commission_days-container"
-                  >
+
+                  {/* Blocking Commission Days */}
+                  <div className="flex flex-col w-full gap-1">
                     <Input
                       name="blocking_commission_days"
                       type="number"
@@ -1090,106 +1108,86 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                       disabled={isDisabled}
                       min={1}
                       defaultValue={1}
+                      max={30}
                       onChange={(e) => {
                         const value = parseInt(e.target.value);
-                        if (value < 1) {
-                          methods.setValue(
-                            "blocking_commission_days",
-                            e.target.value
-                          );
+                        if (value < 1 || value > 30) {
+                          methods.setValue("blocking_commission_days", e.target.value);
                           methods.setError("blocking_commission_days", {
                             type: "manual",
-                            message:
-                              "Blocking commission days must be between 1 and 30",
-                          });
-                        } else if (value > 30) {
-                          methods.setValue(
-                            "blocking_commission_days",
-                            e.target.value
-                          );
-                          methods.setError("blocking_commission_days", {
-                            type: "manual",
-                            message:
-                              "Blocking commission days must be between 1 and 30",
+                            message: "Blocking commission days must be between 1 and 30",
                           });
                         } else {
-                          methods.setValue(
-                            "blocking_commission_days",
-                            e.target.value
-                          );
-                          methods.setError("blocking_commission_days", {
-                            type: "manual",
-                            message: "",
-                          });
+                          methods.setValue("blocking_commission_days", e.target.value);
+                          methods.clearErrors("blocking_commission_days");
                         }
                       }}
-                      max={30}
                     />
                   </div>
-                  <div
-                    className="mt-2 flex flex-col gap-2 cursor-pointer col-span-3"
-                    id="freeProduct-container"
-                  >
-                    <div className="flex items-center gap-2 text-lg font-medium text-gray-500">
-                      {translate("Free_Product")}
-                      <TooltipProvider key={`free_promotional_product`}>
-                          <Tooltip open={freeProductOpen}>
-                            <TooltipTrigger>
-                              <Info onClick={(event: any) => {
-                                event.stopPropagation();
-                                event.preventDefault();
-                                setFreeProductOpen(prev => !prev);
-                              }} onMouseOver={() => setFreeProductOpen(true)} onMouseLeave={() => setFreeProductOpen(false)} className="w-4 h-4 text-gray-500" />
-                            </TooltipTrigger>
-                            <TooltipContent
-                              className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
-                              side="top"
-                            >
-                              {translate("freeProductTooltip")}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      <label className="inline-flex items-center cursor-pointer relative">
-                        <input
-                          type="checkbox"
-                          value=""
-                          name="freeProduct"
-                          checked={Boolean(methods.watch("freeProduct"))}
-                          className="sr-only peer"
-                          onChange={() =>
-                            methods.setValue(
-                              "freeProduct",
-                              !Boolean(methods.watch("freeProduct"))
-                            )
-                          }
-                        />
-                        <div
-                          className={`relative w-11 h-6 ${Boolean(methods.watch("freeProduct")) ? "bg-primary" : "bg-gray-200"
-                            } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
-                        ></div>
-                      </label>
-                    </div>
-                    <label
-                      htmlFor="freeProduct"
-                      className="text-xs flex items-center gap-2 text-gray-600"
-                    >
+                </div>
 
-                      <span
-                        className="text-sm cursor-pointer flex items-center gap-1"
-                        onClick={(v) => {
-                          methods.setValue(
-                            "freeProduct",
-                            !Boolean(methods.watch("freeProduct"))
-                          );
-                        }}
-                      >
-                        {translate("Free_Product_Desc")}
-                        
-                      </span>
+                {/* Free Product - Always full width */}
+                <div
+                  className="mt-2 flex flex-col gap-2 cursor-pointer w-full"
+                  id="freeProduct-container"
+                >
+                  <div className="flex items-center gap-2 text-lg font-medium text-gray-500">
+                    {translate("Free_Product")}
+                    <TooltipProvider key={`free_promotional_product`}>
+                      <Tooltip open={freeProductOpen}>
+                        <TooltipTrigger>
+                          <Info
+                            onClick={(event: any) => {
+                              event.stopPropagation();
+                              event.preventDefault();
+                              setFreeProductOpen((prev) => !prev);
+                            }}
+                            onMouseOver={() => setFreeProductOpen(true)}
+                            onMouseLeave={() => setFreeProductOpen(false)}
+                            className="w-4 h-4 text-gray-500"
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent
+                          className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-200 bg-white text-[14px] md:max-w-[300px] overflow-hidden"
+                          side="top"
+                        >
+                          {translate("freeProductTooltip")}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <label className="inline-flex items-center cursor-pointer relative">
+                      <input
+                        type="checkbox"
+                        name="freeProduct"
+                        checked={Boolean(methods.watch("freeProduct"))}
+                        className="sr-only peer"
+                        onChange={() =>
+                          methods.setValue("freeProduct", !Boolean(methods.watch("freeProduct")))
+                        }
+                      />
+                      <div
+                        className={`relative w-11 h-6 ${Boolean(methods.watch("freeProduct")) ? "bg-primary" : "bg-gray-200"
+                          } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}
+                      ></div>
                     </label>
                   </div>
+
+                  <label
+                    htmlFor="freeProduct"
+                    className="text-xs flex items-center gap-2 text-gray-600"
+                  >
+                    <span
+                      className="text-sm cursor-pointer flex items-center gap-1"
+                      onClick={() =>
+                        methods.setValue("freeProduct", !Boolean(methods.watch("freeProduct")))
+                      }
+                    >
+                      {translate("Free_Product_Desc")}
+                    </span>
+                  </label>
                 </div>
               </div>
+
             </div>
             <div className="flex flex-col bg-white rounded-xl p-[24px]">
               <div className="text-lg font-medium text-gray-500 flex items-center gap-x-2">
@@ -1229,8 +1227,8 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
               </div>
               <div
                 className={`flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden ${showCreatorMeterial
-                    ? "max-h-[1000px] opacity-100 pt-3"
-                    : "max-h-0 opacity-0"
+                  ? "max-h-[1000px] opacity-100 pt-3"
+                  : "max-h-0 opacity-0"
                   }`}
               >
                 <div className="flex flex-col w-full gap-1">
@@ -1442,7 +1440,8 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                   <ButtonOutline
                     type="submit"
                     variant="default"
-                    className="rounded-[10px]"
+                    className="rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={Object.keys(methods.formState.errors)?.length > 0}
                     onClick={() => {
                       if (Object.keys(methods.formState.errors)?.length > 0) {
                         const firstError = Object.keys(

@@ -32,6 +32,7 @@ interface IInput
   menuPortalTarget?: any;
   lableClassName?: string;
   inputClassName?: string;
+  iconPosition?: "start" | "end";
   // onChange?: (value: any) => void;
 }
 
@@ -53,6 +54,7 @@ export default function Input({
   inputClassName,
   menuPortalTarget = menuPortal,
   max,
+  iconPosition = "start",
   ...props
 }: IInput) {
   const [showPassword, setShowPassword] = useState(false);
@@ -123,7 +125,7 @@ export default function Input({
           <div className="relative">
             <input
               type={type}
-              className={cn(inputStyle, Icon ? "!pl-12" : "")}
+              className={cn(inputStyle, Icon ? iconPosition === "start" ? "!pl-12" : "!pr-12":"")}
               placeholder={placeholder}
               {...field}
               onChange={(e) => {
@@ -137,10 +139,17 @@ export default function Input({
               autoComplete="off"
               {...props}
             />
-            {Icon ? (
+            {Icon ? iconPosition === "start" ? (
               <Icon
-                fontSize={25}
+                fontSize={20}
+                size={18}
                 className="absolute top-[50%] left-4 text-gray-black z-10 translate-y-[-50%]"
+              />
+            ) : (
+              <Icon
+                fontSize={20}
+                size={18}
+                className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-600"
               />
             ) : null}
           </div>
