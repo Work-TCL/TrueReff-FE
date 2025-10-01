@@ -116,7 +116,8 @@ export default function CreatorRegistrationPage() {
       tags:[]
     },
     resolver: yupResolver(creatorOnBoardingSchema),
-    mode: "onSubmit",
+    mode: "all",
+    reValidateMode: "onSubmit"
   });
   const storeMethods = useForm<ICreatorStoreSetUpSchema>({
     defaultValues: {
@@ -129,7 +130,7 @@ export default function CreatorRegistrationPage() {
       banner_image: "",
     },
     resolver: yupResolver(creatorStoreSetUpSchema),
-    mode: "onChange",
+    mode: "all",
     reValidateMode: "onSubmit"
   });
 

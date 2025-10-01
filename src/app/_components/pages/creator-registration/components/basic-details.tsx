@@ -130,6 +130,7 @@ export default function BasicInfoForm({
   const formatDate = (date: Date) => date.toISOString().split("T")[0];
   const handleTagChange = (value: string[]) => {
     methods.setValue("tags", value);
+    methods.trigger("tags");
   };
   return (
     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">

@@ -19,16 +19,20 @@ import {
   ICreatorStoreSetUpSchema,
 } from "@/lib/utils/validations";
 import { fileUploadLimitValidator } from "@/lib/utils/constants";
-import { creatorRegister, getCategories } from "@/lib/web-api/auth";
+import { creatorRegister } from "@/lib/web-api/auth";
 import { useCreatorStore } from "@/lib/store/creator";
 import { useSession } from "next-auth/react";
 import { ICategoryData } from "@/lib/types-api/auth";
 import { useAuthStore } from "@/lib/store/auth-user";
 import { Info } from "lucide-react";
-import ToolTip from "@/app/_components/components-common/tool-tip";
 import { debounce } from "lodash";
 import imageCompression from 'browser-image-compression';
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 interface ICategory {
   _id: string;
   name: string;
@@ -80,6 +84,7 @@ export default function PublicCreatorStore({
   const { update } = useSession();
   const [notFounded, setNotFounded] = useState(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [trendingProductsOpen, setTrendingProductsOpen] = useState<boolean>(false);
   const [store, setStore] = useState({
     _id: "",
     accountId: "",
@@ -443,18 +448,26 @@ export default function PublicCreatorStore({
               <div className="flex gap-4">
                 <div className="text-xs md:text-lg font-medium flex items-center space-x-2 text-gray-500">
                   <span>{translate("Trending_Products")}</span>{" "}
-                  <ToolTip
-                    position="top"
-                    content={
-                      <div className="max-w-[200px] text-wrap p-2 rounded-lg">
-                        {
-                          "Enable this option to display trending products in your store. Trending products are popular items that attract more customers and increase engagement. Turning this on helps highlight these products to boost visibility and sales."
-                        }
-                      </div>
-                    }
-                  >
-                    <Info className="size-4 md:size-5"/>
-                  </ToolTip>
+                  <TooltipProvider key={`Trending_Products`}>
+                    <Tooltip open={trendingProductsOpen}>
+                      <TooltipTrigger>
+                        <Info className="size-4 md:size-5" 
+                          onClick={(event: any) => {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            setTrendingProductsOpen(prev => !prev)}}
+                          onMouseOver={() => setTrendingProductsOpen(true)}
+                          onMouseLeave={() => setTrendingProductsOpen(false)}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className="z-[99] px-1 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white  md:max-w-[300px] overflow-hidden"
+                        side="top"
+                      >
+                        <div className="max-w-[200px] text-wrap p-2 rounded-lg">{translate("Show_Trending_Products")}</div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <label className="inline-flex items-center cursor-pointer relative">
                   <input

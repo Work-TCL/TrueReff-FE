@@ -784,5 +784,9 @@
   "Chat_with_Vendor": "Chat with Vendor",
   "Chat_with_Creator": "Chat with Creator",
   "Deactivate_Collaboration": "Deactivate Collaboration",
-  "Are_you_sure_you_want_to_deactivate_collaboration": "Are you sure you want to deactivate this collaboration?"
+  "Are_you_sure_you_want_to_deactivate_collaboration": "Are you sure you want to deactivate this collaboration?",
+  "Deactivate_Desc": "Note: Once you deactivate this collaboration, it cannot be reactivated. You will need to create a new collaboration if you wish to work together again.",
+  "Show_Trending_Products": "Enable this option to display trending products in your store. Trending products are popular items that attract more customers and increase engagement. Turning this on helps highlight these products to boost visibility and sales.",
+  "Free_Product": "Provide free product to the creator for making content",
+  "Free_Product_Desc": "I understand that whether the product is returned or kept is my decision, and the platform is not responsible."
 }

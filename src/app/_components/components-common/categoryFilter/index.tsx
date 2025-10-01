@@ -81,7 +81,7 @@ export default function CategorySliderFilter({
       });
       let data = response?.data?.data;
       if (data?.length > 0) {
-        setSubCategories([...subCategories, ...data]);
+        setSubCategories([initialCategory,...data]);
       } else {
         setSubCategories([initialCategory]);
       }

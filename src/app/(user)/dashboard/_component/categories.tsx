@@ -8,9 +8,10 @@ import {
 } from "@radix-ui/react-tooltip";
 import { cn } from "@sohanemon/utils";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { startTransition, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
 type CategoriesProps = {
-  categories: ICategory[]; // Replace `any` with your actual channel type
+  categories: ICategory[];
   activeCategory: string;
   setActiveCategoryTabId: (id: string) => void;
   isIncludeSearch?: boolean;
@@ -31,6 +32,9 @@ export default function Categories({
   const [activeSearch, setActiveSearch] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // 🔑 Keep refs for each category
+  const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
   useEffect(() => {
     const checkScrollable = () => {
       if (channelsRef.current) {
@@ -40,56 +44,47 @@ export default function Categories({
       }
     };
 
-    // Check if the div is scrollable on mount and on window resize
     checkScrollable();
     window.addEventListener("resize", checkScrollable);
-
     return () => {
       window.removeEventListener("resize", checkScrollable);
     };
   }, [categories]);
 
-  /**
-   * Scrolls the channels container to the left with smooth animation.
-   *
-   * @return {void} No return value.
-   */
-  const scrollLeft = () => {
-    if (channelsRef.current) {
-      const visibleWidth = channelsRef.current.clientWidth;
-
-      channelsRef.current.scrollBy({
-        left: -1 * visibleWidth,
-        behavior: "smooth",
-      });
-    }
-  };
-
   // Auto-focus input on expand
   useEffect(() => {
     if (activeSearch) {
-      setTimeout(() => inputRef.current?.focus(), 150); // slight delay for smooth animation
+      setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [activeSearch]);
+
+  // 🔑 Auto-scroll active category into view
+  useEffect(() => {
+    if (activeCategory && categoryRefs.current[activeCategory]) {
+      categoryRefs.current[activeCategory]?.scrollIntoView({
+        behavior: "smooth",
+        inline: "center", // keeps it centered in the scroll area
+        block: "nearest",
+      });
+    }
+  }, [activeCategory]);
 
   const clearSearch = () => {
     onChange && onChange("");
     setActiveSearch(false);
   };
 
-  /**
-   * Scrolls the channels container to the right with smooth animation.
-   *
-   * @return {void} No return value.
-   */
+  const scrollLeft = () => {
+    if (channelsRef.current) {
+      const visibleWidth = channelsRef.current.clientWidth;
+      channelsRef.current.scrollBy({ left: -1 * visibleWidth, behavior: "smooth" });
+    }
+  };
+
   const scrollRight = () => {
     if (channelsRef.current) {
       const visibleWidth = channelsRef.current.clientWidth;
-
-      channelsRef.current.scrollBy({
-        left: visibleWidth,
-        behavior: "smooth",
-      });
+      channelsRef.current.scrollBy({ left: visibleWidth, behavior: "smooth" });
     }
   };
 
@@ -97,7 +92,7 @@ export default function Categories({
     <div className="flex gap-3 justify-center items-center">
       {channelsScrollable && (
         <div
-          className="bg-primary cursor-pointer text-primary-foreground hover:text-primary-foreground rounded-full bg-primary/10 text-primary hover:bg-primary/5  p-2 gap-1 text-[12px] flex items-center justify-center"
+          className="bg-primary cursor-pointer text-primary-foreground hover:text-primary-foreground rounded-full bg-primary/10 text-primary hover:bg-primary/5  p-2"
           onClick={scrollLeft}
         >
           <ChevronLeft size={20} className="text-primary" />
@@ -105,7 +100,7 @@ export default function Categories({
       )}
       <div
         ref={channelsRef}
-        className={`flex gap-3 overflow-x-auto bg-white p-2 rounded-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]`}
+        className="flex gap-3 overflow-x-auto bg-white p-2 rounded-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       >
         {isIncludeSearch && (
           <TooltipProvider key="search">
@@ -166,42 +161,38 @@ export default function Categories({
             </Tooltip>
           </TooltipProvider>
         )}
+
         {!activeSearch &&
           categories.map((el: ICategory) => {
-            const channelLabel = `${el.name}`;
+            const channelLabel = el.name;
 
             const renderedChannel = (
               <div
-                key={channelLabel}
+                key={el._id}
+                ref={(elRef: HTMLDivElement | null) => {
+                  categoryRefs.current[el._id] = elRef
+                }} // store ref
                 className={cn(
-                  " rounded-full capitalize h-[36px] px-3 gap-1 cursor-pointer",
+                  "rounded-full capitalize h-[36px] px-3 gap-1 cursor-pointer flex items-center",
                   el._id === activeCategory
-                    ? "bg-primary/10 text-primary border border-primary hover:bg-primary/5 "
+                    ? "bg-primary/10 text-primary border border-primary hover:bg-primary/5"
                     : "bg-gray-50 text-secondary hover:bg-primary/10 border border-gray-50 hover:border-primary"
                 )}
-                onClick={() => {
-                  setActiveCategoryTabId(el._id);
-                }}
+                onClick={() => setActiveCategoryTabId(el._id)}
               >
-                <span
-                  className={`flex justify-center h-full items-center whitespace-nowrap text-sm font-[500] ${
-                    el._id === activeCategory ? "text-secondary" : ""
-                  }`}
-                >
+                <span className="whitespace-nowrap text-sm font-[500]">
                   {channelLabel.length > 20
                     ? channelLabel.substring(0, 20) + "..."
                     : channelLabel}
                 </span>
               </div>
             );
+
             return channelLabel.length > 20 ? (
-              <TooltipProvider key={channelLabel}>
+              <TooltipProvider key={el._id}>
                 <Tooltip>
                   <TooltipTrigger>{renderedChannel}</TooltipTrigger>
-                  <TooltipContent
-                    className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
-                    side="bottom"
-                  >
+                  <TooltipContent className="z-[99] px-3 py-2 rounded-md border bg-white text-[14px] max-w-[300px]">
                     {channelLabel}
                   </TooltipContent>
                 </Tooltip>
@@ -213,7 +204,7 @@ export default function Categories({
       </div>
       {channelsScrollable && (
         <div
-          className="bg-primary cursor-pointer text-primary-foreground hover:text-primary-foreground rounded-full bg-primary/10 text-primary hover:bg-primary/5  p-2 gap-1 text-[12px] flex items-center justify-center"
+          className="bg-primary cursor-pointer text-primary-foreground hover:text-primary-foreground rounded-full bg-primary/10 text-primary hover:bg-primary/5 p-2"
           onClick={scrollRight}
         >
           <ChevronRight size={20} className="text-primary" />

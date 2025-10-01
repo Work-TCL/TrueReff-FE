@@ -129,7 +129,7 @@ const ProductCard = ({
               <IndianRupee size={12} strokeWidth={2.5} />{" "}
               {product.price || "0.00"}
             </span>
-            {product.commission && (
+            {/* {product.commission && (
               <span className="flex items-center text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
                 {product.commission_type === "FIXED_AMOUNT" ? (
                   <IndianRupee size={12} />
@@ -140,7 +140,7 @@ const ProductCard = ({
                 {product.commission_type === "PERCENTAGE" ? "% " : ""}
                 {translate("Off")}
               </span>
-            )}
+            )} */}
           </div>
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">

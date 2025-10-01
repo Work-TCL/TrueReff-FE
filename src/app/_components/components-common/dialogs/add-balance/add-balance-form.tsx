@@ -30,9 +30,9 @@ export default function AddBalanceForm({
   handleRefresh = () => {}
 }: IAddBalanceFormProps) {
   const translate = useTranslations();
-  const { vendor } = useVendorStore();
   const [amount, setAmount] = useState<any>(500);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [mainBalanceOpen, setMainBalanceOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const minAmount = 1;
   const maxAmount = 500000;
@@ -157,9 +157,16 @@ export default function AddBalanceForm({
             <span className="text-red-500">*</span>
               {translate("Amount")}
               <TooltipProvider key={`main_balance`}>
-                <Tooltip>
+                <Tooltip open={mainBalanceOpen}>
                   <TooltipTrigger>
-                    <Info className="w-4 h-4 ml-1 text-gray-500" />
+                    <Info className="w-4 h-4 ml-1 text-gray-500" 
+                      onClick={(event:any) => {                          
+                          event.stopPropagation();
+                          event.preventDefault();
+                        setMainBalanceOpen(prev => !prev)}} 
+                      onMouseOver={() => setMainBalanceOpen(true)} 
+                      onMouseLeave={() => setMainBalanceOpen(false)}
+                    />
                   </TooltipTrigger>
                   <TooltipContent
                     className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"

@@ -132,6 +132,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
   const [commissionTypeOpen, setCommissionTypeOpen] = useState(false);
   const [freeProductOpen, setFreeProductOpen] = useState(false);
   const [creatorMaterialOpen, setCreatorMaterialOpen] = useState(false);
+  const [additionalOfferOpen, setAdditionalOfferOpen] = useState(false);
   // campaign mixin
   const [mediaMixin, setMediaMixin] = useState<{
     images: File[];
@@ -445,16 +446,16 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
           variants:
             product?.variations?.length > 0
               ? product?.variations?.map((ele: any) => {
-                  const attrs = ele.attributes ?? {};
-                  // Grab all keys that have a value
-                  const values = Object.keys(attrs)
-                    .filter((key) => attrs[key] != null)
-                    .map((key) => attrs[key]);
-                  return {
-                    ...ele,
-                    title: `${values.join("/")}`,
-                  };
-                })
+                const attrs = ele.attributes ?? {};
+                // Grab all keys that have a value
+                const values = Object.keys(attrs)
+                  .filter((key) => attrs[key] != null)
+                  .map((key) => attrs[key]);
+                return {
+                  ...ele,
+                  title: `${values.join("/")}`,
+                };
+              })
               : [],
         });
       }
@@ -641,7 +642,7 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
       methods.setValue("sub_category", selectedSubCategories);
     }
   }, [categories?.length, campaignData]);
-console.log("methods",methods.formState.errors)
+  console.log("methods", methods.formState.errors)
   const startDateRaw = methods.watch("startDate");
   const startDate = startDateRaw ? new Date(startDateRaw) : null;
 
@@ -732,7 +733,7 @@ console.log("methods",methods.formState.errors)
                 <div className="md:col-span-1 col-span-2" id="tags-container">
                   <TagInput
                     labelClassName={labelStyle}
-                    value={methods.watch("tags")??[]}
+                    value={methods.watch("tags") ?? []}
                     onChange={handleTagChange}
                     error={methods.formState.errors["tags"]?.message}
                     isRequired={false}
@@ -830,12 +831,12 @@ console.log("methods",methods.formState.errors)
                       ) : null} */}
                       {isDisabled
                         ? methods
-                            .watch("channels")
-                            ?.map((v) => (
-                              <div className="flex gap-1 bg-background p-2 rounded-md">
-                                {v}
-                              </div>
-                            ))
+                          .watch("channels")
+                          ?.map((v) => (
+                            <div className="flex gap-1 bg-background p-2 rounded-md">
+                              {v}
+                            </div>
+                          ))
                         : null}
                     </div>
                     {Boolean(get(methods.formState.errors, "channels")) && (
@@ -938,11 +939,10 @@ console.log("methods",methods.formState.errors)
                         }}
                       />
                       <div
-                        className={`relative w-9 h-5 ${
-                          Boolean(methods.watch("campaignLifeTime"))
+                        className={`relative w-9 h-5 ${Boolean(methods.watch("campaignLifeTime"))
                             ? "bg-primary"
                             : "bg-gray-200"
-                        } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                          } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
                       ></div>
                     </label>
                     <span className="text-sm">
@@ -1042,12 +1042,12 @@ console.log("methods",methods.formState.errors)
                           <TooltipProvider key={`Commission_Type`}>
                             <Tooltip open={commissionTypeOpen}>
                               <TooltipTrigger>
-                                <Info onClick={(event:any) => {
+                                <Info onClick={(event: any) => {
                                   event.stopPropagation();
                                   event.preventDefault();
                                   setCommissionTypeOpen(prev => !prev);
                                 }} onMouseOver={() => setCommissionTypeOpen(true)}
-                                onMouseLeave={() => setCommissionTypeOpen(false)} className="w-4 h-4 text-gray-500 ml-1" />
+                                  onMouseLeave={() => setCommissionTypeOpen(false)} className="w-4 h-4 text-gray-500 ml-1" />
                               </TooltipTrigger>
                               <TooltipContent
                                 className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
@@ -1127,51 +1127,19 @@ console.log("methods",methods.formState.errors)
                     />
                   </div>
                   <div
-                    className="mt-2 flex flex-col gap-2 cursor-pointer"
+                    className="mt-2 flex flex-col gap-2 cursor-pointer col-span-3"
                     id="freeProduct-container"
                   >
-                    <label
-                      htmlFor="freeProduct"
-                      className="text-xs flex items-center gap-2 text-gray-600"
-                    >
-                      <label className="inline-flex items-center cursor-pointer relative">
-                  <input
-                    type="checkbox"
-                    value=""
-                    name="freeProduct"
-                    checked={Boolean(methods.watch("freeProduct"))}
-                    className="sr-only peer"
-                    onChange={() =>
-                      methods.setValue(
-                            "freeProduct",
-                            !Boolean(methods.watch("freeProduct"))
-                          )
-                    }
-                  />
-                  <div
-                    className={`relative w-11 h-6 ${
-                      Boolean(methods.watch("freeProduct")) ? "bg-primary" : "bg-gray-200"
-                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
-                  ></div>
-                </label>
-                      <span
-                        className="text-sm cursor-pointer flex items-center gap-1"
-                        onClick={(v) => {
-                          methods.setValue(
-                            "freeProduct",
-                            !Boolean(methods.watch("freeProduct"))
-                          );
-                        }}
-                      >
-                        {translate("free_promotional_product")}
-                        <TooltipProvider key={`free_promotional_product`}>
+                    <div className="flex items-center gap-2 text-lg font-medium text-gray-500">
+                      {translate("Free_Product")}
+                      <TooltipProvider key={`free_promotional_product`}>
                           <Tooltip open={freeProductOpen}>
                             <TooltipTrigger>
-                              <Info onClick={(event:any) => {
-                                  event.stopPropagation();
-                                  event.preventDefault();
-                                  setFreeProductOpen(prev => !prev);
-                                }} onMouseOver={() => setFreeProductOpen(true)} onMouseLeave={() => setFreeProductOpen(false)} className="w-4 h-4 text-gray-500" />
+                              <Info onClick={(event: any) => {
+                                event.stopPropagation();
+                                event.preventDefault();
+                                setFreeProductOpen(prev => !prev);
+                              }} onMouseOver={() => setFreeProductOpen(true)} onMouseLeave={() => setFreeProductOpen(false)} className="w-4 h-4 text-gray-500" />
                             </TooltipTrigger>
                             <TooltipContent
                               className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
@@ -1181,6 +1149,42 @@ console.log("methods",methods.formState.errors)
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
+                      <label className="inline-flex items-center cursor-pointer relative">
+                        <input
+                          type="checkbox"
+                          value=""
+                          name="freeProduct"
+                          checked={Boolean(methods.watch("freeProduct"))}
+                          className="sr-only peer"
+                          onChange={() =>
+                            methods.setValue(
+                              "freeProduct",
+                              !Boolean(methods.watch("freeProduct"))
+                            )
+                          }
+                        />
+                        <div
+                          className={`relative w-11 h-6 ${Boolean(methods.watch("freeProduct")) ? "bg-primary" : "bg-gray-200"
+                            } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                        ></div>
+                      </label>
+                    </div>
+                    <label
+                      htmlFor="freeProduct"
+                      className="text-xs flex items-center gap-2 text-gray-600"
+                    >
+
+                      <span
+                        className="text-sm cursor-pointer flex items-center gap-1"
+                        onClick={(v) => {
+                          methods.setValue(
+                            "freeProduct",
+                            !Boolean(methods.watch("freeProduct"))
+                          );
+                        }}
+                      >
+                        {translate("Free_Product_Desc")}
+                        
                       </span>
                     </label>
                   </div>
@@ -1193,11 +1197,11 @@ console.log("methods",methods.formState.errors)
                 <TooltipProvider key={`Creator_material`}>
                   <Tooltip open={creatorMaterialOpen}>
                     <TooltipTrigger>
-                      <Info onClick={(event:any) => {
-                                  event.stopPropagation();
-                                  event.preventDefault();
-                                  setCreatorMaterialOpen(prev => !prev);
-                                }} onMouseOver={() => setCreatorMaterialOpen(true)} onMouseLeave={() => setCreatorMaterialOpen(false)} />
+                      <Info onClick={(event: any) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        setCreatorMaterialOpen(prev => !prev);
+                      }} onMouseOver={() => setCreatorMaterialOpen(true)} onMouseLeave={() => setCreatorMaterialOpen(false)} />
                     </TooltipTrigger>
                     <TooltipContent
                       className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
@@ -1218,18 +1222,16 @@ console.log("methods",methods.formState.errors)
                     }
                   />
                   <div
-                    className={`relative w-11 h-6 ${
-                      showCreatorMeterial ? "bg-primary" : "bg-gray-200"
-                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                    className={`relative w-11 h-6 ${showCreatorMeterial ? "bg-primary" : "bg-gray-200"
+                      } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
                   ></div>
                 </label>
               </div>
               <div
-                className={`flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden ${
-                  showCreatorMeterial
+                className={`flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden ${showCreatorMeterial
                     ? "max-h-[1000px] opacity-100 pt-3"
                     : "max-h-0 opacity-0"
-                }`}
+                  }`}
               >
                 <div className="flex flex-col w-full gap-1">
                   <CreatorMaterial
@@ -1296,9 +1298,13 @@ console.log("methods",methods.formState.errors)
                 <div className="text-lg font-medium text-gray-500 flex items-center gap-1">
                   {translate("additional_offers")}
                   <TooltipProvider key={`additional_offers`}>
-                    <Tooltip>
+                    <Tooltip open={additionalOfferOpen}>
                       <TooltipTrigger>
-                        <Info />
+                        <Info onClick={(event: any) => {
+                          event.stopPropagation();
+                          event.preventDefault();
+                          setAdditionalOfferOpen(prev => !prev)
+                        }} onMouseOver={() => setAdditionalOfferOpen(true)} onMouseLeave={() => setAdditionalOfferOpen(false)} />
                       </TooltipTrigger>
                       <TooltipContent
                         className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden"
@@ -1320,9 +1326,8 @@ console.log("methods",methods.formState.errors)
                     }
                   />
                   <div
-                    className={`relative w-11 h-6 ${
-                      showDiscountSection ? "bg-primary" : "bg-gray-200"
-                    } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
+                    className={`relative w-11 h-6 ${showDiscountSection ? "bg-primary" : "bg-gray-200"
+                      } rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600`}
                   ></div>
                 </label>
               </div>
@@ -1330,11 +1335,10 @@ console.log("methods",methods.formState.errors)
               <div
                 className={`
                 flex flex-col gap-3 transition-all duration-500 ease-in-out overflow-hidden
-                ${
-                  showDiscountSection
+                ${showDiscountSection
                     ? "max-h-[1000px] opacity-100 pt-3"
                     : "max-h-0 opacity-0"
-                }
+                  }
               `}
               >
                 <div className="flex flex-col md:flex-row gap-3">
@@ -1421,10 +1425,10 @@ console.log("methods",methods.formState.errors)
                 {Boolean(
                   get(methods.formState.errors, "tearmAndCondition")
                 ) && (
-                  <span className="text-red-600 text-sm p-2 block">
-                    {methods.formState.errors["tearmAndCondition"]?.message}
-                  </span>
-                )}
+                    <span className="text-red-600 text-sm p-2 block">
+                      {methods.formState.errors["tearmAndCondition"]?.message}
+                    </span>
+                  )}
               </div>
               {!isDisabled ? (
                 <div className="flex gap-[10px] ">

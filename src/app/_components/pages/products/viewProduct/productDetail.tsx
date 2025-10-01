@@ -104,11 +104,11 @@ export function ProductInfo({ productData,channelType, handleCopyLink }: IProduc
         <div className="space-y-2 sm:text-sm text-xs text-gray-700">
           <div className="flex justify-between">
             <span>{translate("Commission")}</span>
-            <span className="flex items-center">{productData?.commission_type === "FIXED_AMOUNT" ? <IndianRupee className="size-[11] md:size-[14] "/> : ""}{productData?.commission}{productData?.commission ? productData?.commission_type === "FIXED_AMOUNT" ? "" : "%": "NA" }</span>
+            <span className="flex items-center font-bold">{productData?.commission_type === "FIXED_AMOUNT" ? <IndianRupee className="size-[11] md:size-[14] "/> : ""}{productData?.commission}{productData?.commission ? productData?.commission_type === "FIXED_AMOUNT" ? "" : "%": "NA" }</span>
           </div>
           <div className="flex justify-between">
             <span>{translate("free_promotional_product")}</span>
-            <span className="text-gray-500">{productData?.freeProduct?"Yes":"No"}</span>
+            <span className=" font-bold">{productData?.freeProduct?"Yes":"No"}</span>
           </div>
         </div>
       </div>

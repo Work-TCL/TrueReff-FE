@@ -394,6 +394,7 @@ export default function BrandList() {
                     key={i}
                     item={item}
                     handleUpdateProduct={handleUpdateProduct}
+                    isCreatorView={true}
                   />
                 ))}
               </div>
@@ -417,6 +418,7 @@ export default function BrandList() {
                     key={i}
                     item={item}
                     handleUpdateProduct={handleUpdateProduct}
+                    isCreatorView={true}
                   />
                 ))}
               </div>

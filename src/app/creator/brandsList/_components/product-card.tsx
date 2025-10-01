@@ -16,10 +16,12 @@ const ProductCard = ({
   item: product,
   handleUpdateProduct,
   size = "reguler",
+  isCreatorView = false,
 }: {
   item: IBrandProduct;
   handleUpdateProduct: (id: string, collaboration: any) => void;
   size?: "reguler" | "small";
+  isCreatorView?: boolean;
 }) => {
   const router = useRouter();
   const translate = useTranslations();
@@ -105,14 +107,14 @@ const ProductCard = ({
               <div className="flex items-center space-x-2">
                 <span
                   className={`text-xs ${
-                    product.discount ? "text-black" : "text-white"
+                    product.commission ? "text-black" : "text-white"
                   }`}
                 >
                   {translate("Commission")}:{" "}
                 </span>
                 <span
                   className={`text-red-500 text-xs ${
-                    product.discount ? "bg-red-100" : "bg-white text-white"
+                    product.commission ? "bg-red-100" : "bg-white text-white"
                   } px-1 py-1 rounded-full flex items-center`}
                 >
                   {product.commission_type === "FIXED_AMOUNT" ? (
@@ -120,9 +122,9 @@ const ProductCard = ({
                   ) : (
                     ""
                   )}{" "}
-                  {product.discount}
+                  {product.commission}
                   {product.commission_type === "PERCENTAGE" ? "%" : ""}
-                  {product?.discount ? "/sale" : ""}
+                  {product?.commission ? "/sale" : ""}
                 </span>
               </div>
             </div>

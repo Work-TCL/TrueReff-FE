@@ -9,7 +9,12 @@ import axios from "@/lib/web-api/axios";
 import RechargeHistory, { IRechargeHistory } from "@/app/_components/pages/account-recharge/recharge-history";
 import Loader from "@/app/_components/components-common/layout/loader";
 import AddBankDetails from "@/app/_components/components-common/dialogs/add-bank-details";
-import ToolTip from "@/app/_components/components-common/tool-tip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 
 interface ICreatorStats {
     _id: string | null;
@@ -28,6 +33,7 @@ export default function AccountRecharge() {
     const [balance, setBalance] = useState<number>(0);
     const [blockedBalance, setBlockedBalance] = useState<number>(0);
     const [rechargeHistory, setRechargeHistory] = useState<IRechargeHistory[]>([]);
+    const [mainBalanceOpen, setMainBalanceOpen] = useState<boolean>(false);
     const initialState = {
         _id: null,
         totalRevenue: 0,
@@ -115,9 +121,27 @@ export default function AccountRecharge() {
                     <div className="space-y-1">
                         <div className="flex items-center gap-2 text-base font-semibold text-white">
                             {translate("Main_Balance")}
-                            <ToolTip position="bottom" content={<div className=" max-w-[250px] font-normal text-wrap p-2 rounded-lg">{translate("Main_Balance_Tooltip")}</div>}>
-                                <Info className="w-4 h-4 text-white/70 hover:text-white transition" />
-                            </ToolTip>
+                            <TooltipProvider key={`Main_Balance`}>
+                                <Tooltip open={mainBalanceOpen}>
+                                    <TooltipTrigger>
+                                        <Info className="w-4 h-4 text-white/70 hover:text-white transition"
+                                            onClick={(event: any) => {
+                                                event.stopPropagation();
+                                                event.preventDefault();
+                                                setMainBalanceOpen(prev => !prev)
+                                            }}
+                                            onMouseOver={() => setMainBalanceOpen(true)}
+                                            onMouseLeave={() => setMainBalanceOpen(false)}
+                                        />
+                                    </TooltipTrigger>
+                                    <TooltipContent
+                                        className="z-[99] px-1 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white  md:max-w-[300px] overflow-hidden"
+                                        side="top"
+                                    >
+                                        <div className="max-w-[200px] text-secondary font-normal text-wrap p-2 rounded-lg">{translate("Main_Balance_Tooltip")}</div>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                         </div>
                         <div className="text-2xl font-bold text-white flex items-center gap-1">
                             <IndianRupee size={18} /> {formatNumber(balance)}
