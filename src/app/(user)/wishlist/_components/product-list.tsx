@@ -196,6 +196,7 @@ export default function ProductList() {
                     {productList.map((item: any, index: number) => (
                       <div key={index} className="flex h-full w-full">
                         <ProductCard
+                          parentItem={item}
                           item={item?.product}
                           id={item?._id}
                           isWishListed={item?.isWishListed}
