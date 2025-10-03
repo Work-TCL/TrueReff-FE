@@ -390,8 +390,8 @@ const CollaborationTable = ({
           }
         } else if (
           status === "PENDING" ||
-          status === "ACTIVE" ||
-          status === "EXPIRED"
+          status === "ACTIVE"
+          // status === "EXPIRED"
         ) {
           return (
             <div className="flex gap-2 md:gap-3 mx-auto w-fit relative">
@@ -422,7 +422,7 @@ const CollaborationTable = ({
   const handleRowClick = (rowOriginal: any) => {
     const collaboration = rowOriginal;
     const status = getRequestStatus(collaboration);
-    if (status === "PENDING" || status === "ACTIVE" || status === "EXPIRED") {
+    if (status === "PENDING" || status === "ACTIVE") {
       handleChatView(collaboration?._id);
     }
   };

@@ -141,6 +141,7 @@ export default function ProductList({ category, subCategory }: { category: strin
                   {productList.map((item: any) => (
                     <div key={item?._id} className="flex h-full w-full">
                       <ProductCard
+                        parentItem={item}
                         item={item?.product}
                         id={item?._id}
                         isWishListed={item?.isWishListed}

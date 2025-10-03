@@ -1,5 +1,5 @@
 "use client";
-import { Heart, ImageOff, IndianRupee } from "lucide-react";
+import { ShoppingCart, ImageOff, IndianRupee } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
@@ -9,9 +9,10 @@ import { useAuthStore } from "@/lib/store/auth-user";
 import { useState } from "react";
 import { toastMessage } from "@/lib/utils/toast-message";
 import axios from "@/lib/web-api/axios";
-import { RiLoader3Fill } from "react-icons/ri";
 import TruncateWithToolTip from "@/app/_components/ui/truncatWithToolTip/TruncateWithToolTip";
 import LoginDialog from "@/app/_components/components-common/dialogs/login";
+import Link from "next/link";
+import { IProducts } from "./all-product-list";
 
 export interface ICategory {
   _id: string;
@@ -45,15 +46,18 @@ export interface IProduct {
   crmLink?: string; // CRM link
   categories?: string; // Comma-separated string of category names
   tag?: string; // Comma-separated string of tags
+  utmLink?: string; // UTM link
 }
 const ProductCard = ({
   item: product,
   id,
+  parentItem,
   isWishListed,
   refreshData = (id: string) => {},
 }: {
   item: IProduct;
   id?: string;
+  parentItem: IProducts;
   isWishListed?: boolean;
   refreshData?: (id: string) => void;
 }) => {
@@ -144,31 +148,15 @@ const ProductCard = ({
           </div>
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">
-              <button
+              <Link
+                target="_blank"
                 className="flex items-center w-full justify-center group gap-1 mt-2 px-4 py-2 text-center text-xs md:text-sm font-medium text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition"
-                onClick={() => addToWishlist(id ? id : product?._id)}
+                href={parentItem?.utmLink ? parentItem?.utmLink : "#"}
               >
-                {loader && (
-                  <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
-                )}
-                {isWishListed ? (
-                  <span
-                    className={`flex gap-2 items-center  ${
-                      loader ? "opacity-0" : ""
-                    }`}
-                  >
-                    <Heart
-                      className="fill-primary group-hover:fill-white"
-                      size={15}
-                    />{" "}
-                    {translate("Remove")}
-                  </span>
-                ) : (
                   <>
-                    <Heart size={15} /> {translate("Add")}
+                    <ShoppingCart size={15} /> {translate("Shop_Now")}
                   </>
-                )}{" "}
-              </button>
+              </Link>
             </div>
           )}
         </div>

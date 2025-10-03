@@ -235,6 +235,7 @@ export default function ProductList({ category, setActiveCategoryTabId }: { cate
                                     <div key={item?._id} className="flex px-1 md:px-2 h-full w-full">
                                         <ProductCard
                                             item={item?.product}
+                                            parentItem={item}
                                             id={item?._id}
                                             isWishListed={item?.isWishListed}
                                             refreshData={() => fetProductsList(currentPage, true)}
