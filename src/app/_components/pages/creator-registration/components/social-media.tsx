@@ -163,7 +163,7 @@ export default function SocialMedia({
                           type="button"
                           onClick={() => {
                             setVideoUrl(
-                              "https://www.youtube.com/embed/eNvUS-6PTbs?si=HzfziQOYNGSaJCJx"
+                              "https://www.youtube.com/watch?v=fCRfmJB6Csc"
                             );
                             setShowVideo(true);
                           }}
@@ -249,7 +249,7 @@ export default function SocialMedia({
                           type="button"
                           onClick={() => {
                             setVideoUrl(
-                              "https://www.youtube.com/embed/gyjRT6WlLUU?si=0WmzBzPuw6r-NUYf"
+                              "https://www.youtube.com/watch?v=YIkAbs4jTNM"
                             );
                             setShowVideo(true);
                           }}
