@@ -574,7 +574,7 @@ export default function CreatorRegistrationPage() {
                 [TABS_STATUS.BASIC_DETAILS]: <FormProvider {...methods}>
                   <form
                     onSubmit={methods.handleSubmit(onSubmit)}
-                    className="md:pt-6 mt-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3 relative"
+                    className="md:pt-6 mt-3 w-full h-full overflow-auto md:px-5 px-3 flex-1 flex flex-col justify-between gap-3"
                   >
                     <BasicInfoForm
                       handleOnSelect={handleOnSelect}

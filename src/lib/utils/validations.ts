@@ -520,7 +520,7 @@ export const vendorProfileUpdateSchema = Yup.object().shape({
     .trim()
     .required("Type of business is required"),
   profile_image: Yup.string().trim().required("Profile Image is required"),
-  banner_image: Yup.string().trim().required("Banner Image is required"),
+  banner_image: Yup.string().trim().optional(),
   category: Yup.array()
     .of(
       Yup.object().shape({

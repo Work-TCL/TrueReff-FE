@@ -24,7 +24,7 @@ import Select from "react-select";
 import { get } from "lodash";
 import { useTranslations } from "next-intl";
 import { getCategories } from "@/lib/web-api/auth";
-import { Camera,User } from "lucide-react";
+import { Camera, Pencil, User } from "lucide-react";
 import { useSession } from "next-auth/react";
 import imageCompression from 'browser-image-compression';
 
@@ -66,7 +66,7 @@ export default function EditVendorForm({
   onClose: any;
 }) {
   const translate = useTranslations();
-   const { update } = useSession();
+  const { update } = useSession();
   const { setVendorData } = useVendorStore();
   const [loading, setLoading] = useState(false);
   const [profileFile, setProfileFile] = useState<File | null>(null);
@@ -193,7 +193,7 @@ export default function EditVendorForm({
 
   const fetchCategory = async () => {
     try {
-      const response = await getCategories({ page: 0, limit: 0,type: "vendor" });
+      const response = await getCategories({ page: 0, limit: 0, type: "vendor" });
       let data = response?.data?.data;
       setCategories(data);
       setParentCategory(data?.filter((ele) => ele?.parentId === null));
@@ -291,10 +291,49 @@ export default function EditVendorForm({
           onSubmit={methods.handleSubmit(onSubmit)}
           className="grid grid-cols-2 text-left gap-3 w-full relative"
         >
-          <div
-              className="flex justify-center col-span-2 cursor-pointer"
+          {/* Banner + Profile Section */}
+          <div className="relative col-span-2 w-full h-[200px] rounded-lg bg-gray-100">
+            <div
+              className="absolute inset-0 w-full h-full cursor-pointer rounded-lg"
+              onClick={() => document.getElementById("banner_image")?.click()}
             >
-              <div onClick={() => document.getElementById("profile-image")?.click()} className="relative w-[130px] h-[130px] rounded-full border-4 border-white  bg-white shadow-lg flex items-center justify-center">
+              {bannerPreview || methods.watch("banner_image") ? (
+                <img
+                  src={bannerPreview || methods.watch("banner_image")}
+                  className="w-full h-full object-cover rounded-xl"
+                  alt="Banner"
+                />
+              ) : (
+                <img
+                  src={"/assets/banner-image.png"}
+                  className="w-full h-full object-cover rounded-xl"
+                  alt="Banner"
+                />
+
+              )}
+            </div>
+            <div className="absolute top-1 right-3 z-10">
+              <div
+                className="absolute -left-6 top-0 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg cursor-pointer"
+                onClick={() => document.getElementById("banner_image")?.click()}
+              >
+                <Pencil size={14} className="text-gray-600" />
+              </div>
+              <input
+                type="file"
+                id="banner_image"
+                accept={imageAccept}
+                className="hidden"
+                capture={false}
+                onChange={(e) => handleImageSelect(e, "banner")}
+              />
+            </div>
+            {/* Profile image */}
+            <div
+              className="absolute left-1/2 -bottom-[50px] transform -translate-x-1/2 z-10 cursor-pointer"
+              onClick={() => document.getElementById("profile-image")?.click()}
+            >
+              <div className="relative w-[130px] h-[130px] rounded-full border-4 border-white  bg-white shadow-lg flex items-center justify-center">
                 {profilePreview || methods.watch("profile_image") ? (
                   <img
                     src={profilePreview || methods.watch("profile_image")}
@@ -320,20 +359,26 @@ export default function EditVendorForm({
                   type="file"
                   id="profile-image"
                   className="hidden"
-                  capture={false}
                   accept={imageAccept}
+                  capture={false}
                   onChange={(e) => handleImageSelect(e, "profile")}
                 />
               </div>
             </div>
+          </div>
           <div className="col-span-2 flex justify-between">
+            {Boolean(get(methods.formState.errors, "banner_image")) && (
+              <span className="text-red-600 text-sm p-2 block">
+                {methods.formState.errors["banner_image"]?.message}
+              </span>
+            )}
             {Boolean(get(methods.formState.errors, "profile_image")) && (
               <span className="text-red-600 text-sm p-2 block">
                 {methods.formState.errors["profile_image"]?.message}
               </span>
             )}
           </div>
-          <div className="col-span-2 mt-2">
+          <div className="col-span-2 mt-10">
             <Input
               label={translate("Business_Name")}
               name="business_name"

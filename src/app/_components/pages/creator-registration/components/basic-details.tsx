@@ -133,7 +133,7 @@ export default function BasicInfoForm({
     methods.trigger("tags");
   };
   return (
-    <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+    <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
       <div className="col-span-1">
         <Input
           label={translate("Full_Name")}

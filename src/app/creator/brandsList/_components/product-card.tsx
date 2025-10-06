@@ -110,7 +110,7 @@ const ProductCard = ({
                     product.commission ? "text-black" : "text-white"
                   }`}
                 >
-                  {translate("Commission")}:{" "}
+                  {translate("Base_Commission")}:{" "}
                 </span>
                 <span
                   className={`text-red-500 text-xs ${
@@ -139,7 +139,7 @@ const ProductCard = ({
               )}
               onClick={() => setIsOpen(product?._id)}
             >
-              {translate("Collab_Now")}
+              {translate("Bid_Now")}
             </button>
           </div>
         </CardContent>
