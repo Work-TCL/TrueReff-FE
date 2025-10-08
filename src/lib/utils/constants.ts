@@ -152,7 +152,8 @@ export interface IOption {
   label: string;
   value: any;
 }
-export const indianStates: string[] = [
+export const indianStatesAndUTs: string[] = [
+  // States
   "Andhra Pradesh",
   "Arunachal Pradesh",
   "Assam",
@@ -181,6 +182,16 @@ export const indianStates: string[] = [
   "Uttar Pradesh",
   "Uttarakhand",
   "West Bengal",
+
+  // Union Territories
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Lakshadweep",
+  "Puducherry",
 ];
 
 export const VIDEO_TYPE: IOption[] = [
@@ -969,7 +980,6 @@ export const cities: any = {
     "Puthuppally",
     "Panamattom",
   ],
-  Delhi: ["Delhi", "New Delhi"],
   "Dadra and Nagar Haveli": ["Silvassa"],
   Puducherry: ["Pondicherry", "Karaikal", "Yanam", "Mahe"],
   Uttarakhand: [
@@ -1473,6 +1483,28 @@ export const cities: any = {
     "Srirampore",
     "Adra",
   ],
+  "Dadra and Nagar Haveli and Daman and Diu": [
+    "Silvassa", // Dadra & Nagar Haveli
+    "Daman", // Daman
+    "Diu", // Diu
+  ],
+  Delhi: [
+    "New Delhi", // Capital of India
+    "Dwarka",
+    "Rohini",
+    "Saket",
+    "Karol Bagh",
+    "Connaught Place",
+    "Laxmi Nagar",
+    "Janakpuri",
+  ],
+  Ladakh: [
+    "Leh", // Capital of Leh district
+    "Kargil", // Capital of Kargil district
+  ],
+  Lakshadweep: [
+    "Kavaratti", // Capital
+  ]
 };
 
 export const businessTypes = [
