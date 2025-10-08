@@ -152,7 +152,7 @@ export interface IOption {
   label: string;
   value: any;
 }
-export const indianStatesAndUTs: string[] = [
+export const indianStates: string[] = [
   // States
   "Andhra Pradesh",
   "Arunachal Pradesh",
