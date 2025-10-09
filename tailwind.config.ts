@@ -66,6 +66,7 @@ export default {
         active: "#098228",
         pending: "#FF9500",
         failed: "#FF3B30",
+        shopify: "rgb(150 191 72)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

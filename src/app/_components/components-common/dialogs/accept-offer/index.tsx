@@ -18,8 +18,8 @@ export default function CollaborationConfirmed({
             open={true}
             size="!max-w-[700px] w-full overflow-auto m-2"
             title=""
-            skipClose={true}
-        // onClose={() => !loading && onClose()}
+            // skipClose={true}
+        onClose={() =>  onClose()}
         >
             <div className="mx-auto shadow-xl p-6 text-center">
                 <div className="flex justify-center mb-4">

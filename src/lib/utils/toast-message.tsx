@@ -27,5 +27,20 @@ export const toastMessage = {
             icon: <TriangleAlert strokeWidth={1.5} color="#FFE982" />,
         }
     ),
+    custom: (message: React.ReactNode, onClick: () => void) => toast.custom((t: any) => (
+      <div
+        onClick={() => {
+          toast.dismiss(t.id); // close toast
+          onClick(); // call the onClick function
+        }}
+        className={`${
+          t.visible ? "animate-enter" : "animate-leave"
+        } bg-white shadow-lg rounded-lg p-4 cursor-pointer border border-gray-200`}
+      >
+        <p className="text-gray-800 font-medium">
+          {message}
+        </p>
+      </div>
+    ))
 
 }

@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils/commonUtils";
 import HeaderFilter from "../../../header-filter";
 import { SearchSuggestionDropdown } from "../../../analytics-search-dropdown";
 import { useNotificationStore } from "@/lib/store/notifications";
+import { toastMessage } from "@/lib/utils/toast-message";
 
 interface IPageName {
   [key: string]: string;
@@ -157,7 +158,14 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         fetchNotifications();
         if(data?.notificationType === "collaboration" && (data?.userType === "vendor" || data?.userType === "creator")){
           setNotificationData(data?.userType,{collaboration: true});
-        }        
+        }
+        // console.log("Notification Received: ", data);
+        // toastMessage.success(data?.message); 
+        // toastMessage.custom("✅ Click here to view details", () => {
+        //   // if(data?.redirectUrl){
+        //     router.push("/vendor/creators/collaboration");
+        //   // }
+        // });
       }
     });
 

@@ -757,6 +757,10 @@ export default function BargainingView() {
         <CollaborationConfirmed
           collaborationData={collaborationData}
           getCommissionType={getCommissionType}
+          onClose={() => {
+            router.refresh();
+            setOfferAccepted(false);
+          }}
         />
       )}
       {showRatingPopup && (
