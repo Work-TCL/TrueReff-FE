@@ -159,13 +159,12 @@ export default function Header({ handleExpandSidebar }: IHeaderProps) {
         if(data?.notificationType === "collaboration" && (data?.userType === "vendor" || data?.userType === "creator")){
           setNotificationData(data?.userType,{collaboration: true});
         }
-        // console.log("Notification Received: ", data);
-        // toastMessage.success(data?.message); 
-        // toastMessage.custom("✅ Click here to view details", () => {
-        //   // if(data?.redirectUrl){
-        //     router.push("/vendor/creators/collaboration");
-        //   // }
-        // });
+        const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+        if(data?.path && data?.path !== currentPath){
+          toastMessage.custom(data?.message, "success" ,() => {
+            router.push(data?.path??"");
+          });
+        }
       }
     });
 
