@@ -62,8 +62,8 @@ export default function WordPressChannelForm({
   const handleDownloadZip = () => {
     if (typeof window !== "undefined") {
       const link = document.createElement("a");
-      link.href = "/truereff.zip";
-      link.download = "truereff.zip"; // forces download instead of open
+      link.href = "/assets/truereff-wordpress.zip";
+      link.download = "truereff-wordpress.zip"; // forces download instead of open
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
