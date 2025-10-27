@@ -60,8 +60,16 @@ export default function WordPressChannelForm({
   };
 
   const handleDownloadZip = () => {
-    typeof window !== undefined && window.open("/truereff.zip", "_blank");
+    if (typeof window !== "undefined") {
+      const link = document.createElement("a");
+      link.href = "/truereff.zip";
+      link.download = "truereff.zip"; // forces download instead of open
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
+  
 
   return (
     <>
