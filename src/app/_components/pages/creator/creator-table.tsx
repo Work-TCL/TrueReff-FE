@@ -26,12 +26,14 @@ interface ICreatorTableProps {
   filter: string;
   loader: boolean;
   handleCollaborateNow: (creatorId: string) => void;
+  paginationComponent?: any;
 }
 const CreatorTable = ({
   data,
   filter,
   loader,
   handleCollaborateNow,
+  paginationComponent,
 }: ICreatorTableProps) => {
   const translate = useTranslations();
   const router = useRouter();
@@ -178,7 +180,13 @@ const CreatorTable = ({
     },
   ];
 
-  return <DataTable data={data} columns={creatorColumns} />;
+  return (
+    <DataTable
+      data={data}
+      columns={creatorColumns}
+      paginationComponent={paginationComponent}
+    />
+  );
 };
 
 export default CreatorTable;

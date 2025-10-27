@@ -2,8 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
-import { useCallback, useEffect, useState } from "react";
-import { TablePagination } from "@/app/_components/components-common/tables/Pagination";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { PiListChecksLight } from "react-icons/pi";
 import { IoGridOutline } from "react-icons/io5";
 import CreatorTable from "./creator-table";
@@ -101,10 +100,12 @@ export default function CreatorList() {
   const [viewMode, setViewMode] = useState<"table" | "card">("card");
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [parentCategory, setParentCategory] = useState<ICategory[]>([]);
+  const [appliedFilter, setAppliedFilter] = useState<any>({});
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const initialValue = { show: false, creatorId: "" };
   const [isOpen, setIsOpen] = useState(initialValue);
-  const [pageSize] = useState(20);
+  const [pageSize] = useState(18);
   const fetchCategory = async () => {
     try {
       const response = await getCategories({
@@ -141,9 +142,11 @@ export default function CreatorList() {
       page: number,
       isInternalLoader?: boolean,
       searchValue: string = "",
-      filterState?: any
+      filterState?: any,
+      append: boolean = false
     ) => {
       isInternalLoader ? setInternalLoader(true) : setLoading(true);
+      // set the requested page (will be updated on success)
       try {
         const response = await axios.get(
           `/auth/creator/list?page=${page}&limit=${pageSize}${
@@ -176,20 +179,32 @@ export default function CreatorList() {
                 // ele.pastSales = ele?.pastSales || "";
                 return { ...ele };
               });
-              setCreators([...result]);
+
+              if (append) {
+                setCreators((prev) => [...prev, ...result]);
+              } else {
+                setCreators([...result]);
+              }
+
               setTotalPages(Math.ceil(creatorsCount / pageSize));
+              setCurrentPage(page);
             } else {
-              setCreators([]);
+              if (!append) setCreators([]);
               setCurrentPage(1);
             }
             setLoading(false);
             setInternalLoader(false);
           } else {
-            setCreators([]);
+            if (!append) setCreators([]);
             setCurrentPage(1);
             setLoading(false);
             setInternalLoader(false);
           }
+        } else {
+          // non-200
+          if (!append) setCreators([]);
+          setLoading(false);
+          setInternalLoader(false);
         }
       } catch (error) {
         const errorMessage = getErrorMessage(error);
@@ -202,32 +217,96 @@ export default function CreatorList() {
   );
 
   useEffect(() => {
-    getCreatorList(currentPage);
+    // initial load with page 1 and current applied filters (initially empty)
+    getCreatorList(1, false, "", appliedFilter, false);
     fetchCategory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const handlePageChange = (page: number) => {
-    page !== currentPage && getCreatorList(page, true, search);
-  };
+
   const debouncedSearch = useCallback(
-    debounce((value: string) => {
-      getCreatorList(1, true, value);
+    debounce((value: string, currentAppliedFilter: any) => {
+      getCreatorList(1, true, value, currentAppliedFilter, false);
     }, 500),
-    []
+    [getCreatorList]
   );
 
   const handleSearch = (value: string) => {
     setSearch(value);
-    debouncedSearch(value);
+    debouncedSearch(value, appliedFilter);
   };
   const handleOnFilter = (filterState: any) => {
-    getCreatorList(1, true, search, filterState);
+    setAppliedFilter(filterState || {});
+    getCreatorList(1, true, search, filterState, false);
   };
   const handleSelectCategory = (selectedOptions: any, subSelected: any) => {
-    getCreatorList(1, true, search, {
+    const filterState = {
       category: selectedOptions ? [selectedOptions] : [],
-      subCategory: subSelected ? [subSelected] : [],
-    });
+      sub_category: subSelected ? [subSelected] : [],
+    };
+    setAppliedFilter(filterState);
+    getCreatorList(1, true, search, filterState, false);
   };
+
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (
+          entry.isIntersecting &&
+          !internalLoader &&
+          !loading &&
+          currentPage < totalPages
+        ) {
+          // load next page and append
+          getCreatorList(currentPage + 1, true, search, appliedFilter, true);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0.1,
+      }
+    );
+
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+    return () => {
+      observer.disconnect();
+    };
+  }, [
+    sentinelRef,
+    currentPage,
+    totalPages,
+    internalLoader,
+    loading,
+    search,
+    appliedFilter,
+    getCreatorList,
+  ]);
+
+  const paginationLoader = () => {
+    return (
+      totalPages > currentPage &&
+      internalLoader && (
+        <div className="2xl:col-span-6 xl:col-span-5 lg:col-span-4 md:col-span-3 col-span-2 mt-3">
+          <div className="py-2">
+            <Loading />
+          </div>
+        </div>
+      )
+    );
+  };
+
+  const infiniteScroller = () =>
+    totalPages > currentPage && (
+      <div
+        ref={sentinelRef}
+        className="h-2 w-full 2xl:col-span-6 xl:col-span-5 lg:col-span-4 md:col-span-3 col-span-2"
+      />
+    );
+
   return (
     <div className="p-2 md:p-4 rounded-lg flex flex-col gap-2 md:gap-4 h-full">
       {loading ? (
@@ -265,6 +344,13 @@ export default function CreatorList() {
                   handleCollaborateNow={(creatorId: string) => {
                     setIsOpen({ show: true, creatorId });
                   }}
+                  paginationComponent={
+                    <>
+                      {/* infinite scroll sentinel */}
+                      {paginationLoader()}
+                      {infiniteScroller()}
+                    </>
+                  }
                 />
               )}
               {viewMode === "card" && (
@@ -279,15 +365,10 @@ export default function CreatorList() {
                       />
                     </div>
                   ))}
+                  {/* infinite scroll sentinel */}
+                  {paginationLoader()}
+                  {infiniteScroller()}
                 </div>
-              )}
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <TablePagination
-                  totalPages={totalPages}
-                  activePage={currentPage}
-                  onPageChange={handlePageChange}
-                />
               )}
             </>
           ) : (
