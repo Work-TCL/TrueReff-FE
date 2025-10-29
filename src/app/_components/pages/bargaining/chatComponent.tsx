@@ -174,7 +174,7 @@ export default function ChatComponent({
           <p className="font-medium text-text md:text-lg text-base">
             {getUserName()}
           </p>
-          <p className="text-[#13AD3A] md:text-sm text-xs">{translate("Online")}</p>
+          {/* <p className="text-[#13AD3A] md:text-sm text-xs">{translate("Online")}</p> */}
         </div>
       </div>
       {/* <div className="h-px w-full bg-stroke mx-2"></div>{" "} */}

@@ -20,6 +20,7 @@ interface DataTableProps {
   type?: "table" | "card";
   CardComponent?: (item: any) => ReactElement;
   handleRowClick?: (item: any) => void;
+  paginationComponent?: any;
 }
 
 const DataTable: React.FC<DataTableProps> = ({
@@ -29,6 +30,7 @@ const DataTable: React.FC<DataTableProps> = ({
   type = "table",
   CardComponent,
   handleRowClick,
+  paginationComponent,
 }) => {
   const t = useTranslations();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -186,6 +188,7 @@ const DataTable: React.FC<DataTableProps> = ({
             </div>
           </div>
         )}
+        {paginationComponent && paginationComponent}
       </div>
     </div>
   );
