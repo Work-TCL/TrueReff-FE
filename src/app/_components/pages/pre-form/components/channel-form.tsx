@@ -42,6 +42,19 @@ const StepItem = ({ step, stepData }: {
             <li key={index} className="text-sm text-slate-300 relative">
               <span className="absolute -left-4 top-1 w-1.5 h-1.5 bg-slate-400 rounded-full"></span>
               {substep}
+              {step === 2 && (
+                <>
+                  {" "}
+                  <a 
+                    href="https://apps.shopify.com/truereff" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-400 underline"
+                  >
+                    Truereff
+                  </a>
+                </>
+              )}
             </li>
           ))}
         </ul>
