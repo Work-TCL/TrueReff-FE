@@ -49,8 +49,10 @@ export interface IProduct {
     categories?: string; // Comma-separated string of category names
     tag?: string; // Comma-separated string of tags
     utmLink: string;
+    discountType?: string;
+  discount?: number;
 }
-const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
+const TrendingProductCard = ({ item: product, refreshData }: { item: IProduct, refreshData: (id: string) => void }) => {
   const translate = useTranslations();
   const router = useRouter();
   const { account } = useAuthStore();
@@ -72,7 +74,7 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
         );
         if (response?.status === 200) {
           toastMessage.success(response?.data?.message);
-          // refreshData();
+          refreshData(productId);
         }
       } else {
         setLoginPopUp(true);
@@ -119,43 +121,11 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
             className="text-md font-semibold w-full truncate"
             text={product.title}
           />
-          <div className="flex justify-center mb-3 !text-sm absolute top-0 right-0 m-2 ">
-            <div
-              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center shadow"
-              onClick={() => {}}
-            >
-              <ToolTip content={"Copy Product Link"} delayDuration={500}>
-                <LinkIcon
-                  className="text-primary cursor-pointer"
-                  size={20}
-                  onClick={handleCopyLink}
-                />
-              </ToolTip>
-            </div>
-          </div>
-          {/* Price and Discount */}
-          <div className="flex items-center w-full text-sm space-x-2">
-            <span className="flex items-center text-green-600 py-1 font-bold">
-              <IndianRupee size={12} strokeWidth={2.5} />{" "}
-              {product.price || "0.00"}
-            </span>
-            {product.commission && (
-              <span className="flex items-center text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
-                {product.commission_type === "FIXED_AMOUNT" ? (
-                  <IndianRupee size={12} />
-                ) : (
-                  ""
-                )}
-                {product.commission}{" "}
-                {product.commission_type === "PERCENTAGE" ? "% " : ""}
-                {translate("Off")}
-              </span>
-            )}
-          </div>
-          {vendor?.vendorId === "" && creator?.creatorId === "" && (
-            <div className="flex items-center justify-between w-fit absolute top-0 right-0">
-              <button
-                className="flex items-center w-full justify-center group gap-1 m-2 px-2 py-2 text-center text-sm font-medium text-primary rounded-lg hover:bg-primary hover:text-white transition"
+          <div className="flex justify-center mb-3 !text-sm absolute top-0 right-0 m-2 gap-2">
+            {vendor?.vendorId === "" && creator?.creatorId === "" && ( 
+              <div>
+            <button
+                className="w-8 h-8 flex items-center justify-center group gap-1 px-2 py-2 text-center text-sm font-medium bg-gray-200 text-primary rounded-full hover:bg-primary hover:text-white transition"
                 onClick={() => addToWishlist(product?._id)}
               >
                 {loader && (
@@ -180,8 +150,40 @@ const TrendingProductCard = ({ item: product }: { item: IProduct }) => {
                   </>
                 )}{" "}
               </button>
+              </div>
+            )}
+            <div
+              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center shadow"
+              onClick={() => {}}
+            >
+              <ToolTip content={"Copy Product Link"} delayDuration={500}>
+                <LinkIcon
+                  className="text-primary cursor-pointer"
+                  size={20}
+                  onClick={handleCopyLink}
+                />
+              </ToolTip>
             </div>
-          )}
+          </div>
+          {/* Price and Discount */}
+          <div className="flex items-center w-full text-sm space-x-2">
+            <span className="flex items-center text-green-600 py-1 font-bold">
+              <IndianRupee size={12} strokeWidth={2.5} />{" "}
+              {product.price || "0.00"}
+            </span>
+            {product.discount && (
+              <span className="flex items-center text-red-500 text-xs bg-red-100 px-2 py-1 rounded-full">
+                {product.discountType === "FIXED_AMOUNT" ? (
+                  <IndianRupee size={12} />
+                ) : (
+                  ""
+                )}
+                {product.discount}{" "}
+                {product.discountType === "PERCENTAGE" ? "% " : ""}
+                {translate("Off")}
+              </span>
+            )}
+          </div>
           {vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">
               <Link

@@ -8,7 +8,7 @@ import axios from "@/lib/web-api/axios";
 import Loading from "@/app/vendor/loading";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Heart, ShoppingCart,IndianRupee } from "lucide-react";
+import { Heart, ShoppingCart, IndianRupee } from "lucide-react";
 import { EmptyPlaceHolder } from "@/app/_components/ui/empty-place-holder";
 import Link from "next/link";
 import { RiLoader3Fill } from "react-icons/ri";
@@ -232,16 +232,16 @@ export default function ViewProductDetail({
             let categories =
               product.category?.length > 0
                 ? product.category
-                    .filter((cat: ICategory) => cat.parentId === null)
-                    .map((cat: ICategory) => cat?.name)
-                    ?.join(", ")
+                  .filter((cat: ICategory) => cat.parentId === null)
+                  .map((cat: ICategory) => cat?.name)
+                  ?.join(", ")
                 : "";
             let subCategories =
               product.category?.length > 0
                 ? product.category
-                    .filter((cat: ICategory) => cat.parentId !== null)
-                    .map((cat: ICategory) => cat?.name)
-                    ?.join(", ")
+                  .filter((cat: ICategory) => cat.parentId !== null)
+                  .map((cat: ICategory) => cat?.name)
+                  ?.join(", ")
                 : "";
             let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
             return { ...product, categories, tag, subCategories };
@@ -268,6 +268,18 @@ export default function ViewProductDetail({
     }
   }, [productId]);
   // Product id required condition removed as it is not required.
+  const handleRefreshData = (id: string) => {
+    const products = trendingProductList?.map((item) => {
+      if (item?._id === id) {
+        return {
+          ...item,
+          isWishListed: !item?.isWishListed
+        };
+      }
+      return item;
+    });
+    setTrendingProductList(products);
+  }
   if (notFounded) {
     return (
       <div className="grid grid-cols-1 h-screen p-4">
@@ -285,34 +297,29 @@ export default function ViewProductDetail({
           {/* Card Section */}
           <div className="flex flex-col md:grid grid-cols-1 md:grid-cols-6 gap-4 md:mx-auto">
             <div className="col-span-2">
-              <div className="flex bg-white p-2 rounded-xl shadow-md">
+              <div className="flex bg-white p-2 rounded-xl shadow-md h-[400px] max-h-[400px] gap-2">
                 {/* Left Thumbnails */}
                 <div
-                  className={`flex flex-col gap-2 overflow-y-auto max-h-[400px] ${
-                    productData?.media?.length > 1 && "pr-2"
-                  }`}
+                  className={`flex flex-col gap-2 overflow-y-auto overflow-x-hidden pr-2 h-full ${productData?.media?.length > 1 ? "" : ""
+                    }`}
                 >
-                  {productData?.media?.length > 1 &&
-                    [...productData?.media].map((img, index) => (
-                      <div
-                        key={index}
-                        onClick={() => setSelectedImage(index)}
-                        className={`cursor-pointer border hover:border-gray-400 rounded-md p-1 w-[100px] h-[100px] overflow-hidden ${
-                          selectedImage === index
-                            ? "border-black"
-                            : "border-transparent"
+                  {productData?.media?.map((img, index) => (
+                    <div
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`cursor-pointer border hover:border-gray-400 rounded-md w-[100px] h-[100px] overflow-hidden flex-shrink-0 ${selectedImage === index ? "border-black" : "border-transparent"
                         }`}
-                      >
-                        <Image
-                          loader={({ src }) => src}
-                          src={img}
-                          alt={`Thumbnail ${index + 1}`}
-                          width={60}
-                          height={60}
-                          className="rounded w-[100px] h-[100px] object-contain"
-                        />
-                      </div>
-                    ))}
+                    >
+                      <Image
+                        loader={({ src }) => src}
+                        src={img}
+                        alt={`Thumbnail ${index + 1}`}
+                        width={100}
+                        height={100}
+                        className="rounded w-[100px] h-[100px] object-contain"
+                      />
+                    </div>
+                  ))}
                 </div>
 
                 {/* Main Image */}
@@ -331,6 +338,7 @@ export default function ViewProductDetail({
                   />
                 </div>
               </div>
+
             </div>
             <div className="col-span-4">
               <div className="w-full p-4 bg-white rounded-xl shadow border space-y-4 text-sm">
@@ -353,13 +361,11 @@ export default function ViewProductDetail({
                       <IndianRupee className="size-[14] sm:size-[16] md:size-[18]" />
                       {selectedVariant?.price
                         ? selectedVariant?.price
-                        : productData?.price??""}
+                        : productData?.price ?? ""}
                     </span>
-                    {productData?.discount ? <span className="flex items-center text-green-600 text-sm font-semibold">{productData?.discountType === "FIXED_AMOUNT" ? <IndianRupee className="size-[12] sm:size-[14] md:size-[14]" />:""}{`${
-                      productData?.discount
-                    }${
-                      productData?.discountType === "PERCENTAGE" ? "%" : ""
-                    } off`}</span>:""}
+                    {productData?.discount ? <span className="flex items-center text-green-600 text-sm font-semibold">{productData?.discountType === "FIXED_AMOUNT" ? <IndianRupee className="size-[12] sm:size-[14] md:size-[14]" /> : ""}{`${productData?.discount
+                      }${productData?.discountType === "PERCENTAGE" ? "%" : ""
+                      } off`}</span> : ""}
                   </div>
                 </div>
                 {productData.category?.length > 0 && (
@@ -406,11 +412,10 @@ export default function ViewProductDetail({
                         productData?.variants?.map((variant: any, index) => (
                           <span
                             key={index}
-                            className={`${
-                              selectedVariant?.title === variant?.title
+                            className={`${selectedVariant?.title === variant?.title
                                 ? "bg-gray-darken text-white"
                                 : "border bg-white text-black"
-                            } py-1 px-3 rounded-full flex items-center gap-2 cursor-pointer hover:bg-gray-darken/80 hover:text-white transition-colors`}
+                              } py-1 px-3 rounded-full flex items-center gap-2 cursor-pointer hover:bg-gray-darken/80 hover:text-white transition-colors`}
                             onClick={() =>
                               setSelectedVariant({
                                 title: variant?.title,
@@ -434,9 +439,8 @@ export default function ViewProductDetail({
                       <RiLoader3Fill className="absolute animate-spin duration-300 text-xl" />
                     ) : productData?.isWishListed ? (
                       <span
-                        className={`flex gap-2 items-center  ${
-                          loader ? "opacity-0" : ""
-                        }`}
+                        className={`flex gap-2 items-center  ${loader ? "opacity-0" : ""
+                          }`}
                       >
                         <Heart
                           className="fill-primary group-hover:fill-white"
@@ -478,28 +482,28 @@ export default function ViewProductDetail({
                         <div className="flex space-x-2">
                           {productData.category?.length > 0
                             ? productData.category.map((category, idx) => (
-                                <span
-                                  key={idx}
-                                  className="text-sm  font-medium text-gray-700 flex items-center gap-1 px-3 py-1 rounded-full bg-muted text-muted-foreground border border-muted-foreground"
-                                >
-                                  {category?.name}
-                                </span>
-                              ))
+                              <span
+                                key={idx}
+                                className="text-sm  font-medium text-gray-700 flex items-center gap-1 px-3 py-1 rounded-full bg-muted text-muted-foreground border border-muted-foreground"
+                              >
+                                {category?.name}
+                              </span>
+                            ))
                             : "-"}
                         </div>,
                       ],
                       [
                         translate("Tags"),
-                        <div className="flex space-x-2">
+                        <div className="flex flex-wrap gap-2">
                           {productData.tags?.length > 0
                             ? productData.tags.map((tag, idx) => (
-                                <span
-                                  key={idx}
-                                  className="bg-background py-1 px-2 rounded"
-                                >
-                                  #{tag}
-                                </span>
-                              ))
+                              <span
+                                key={idx}
+                                className="bg-background py-1 px-2 rounded"
+                              >
+                                #{tag}
+                              </span>
+                            ))
                             : "-"}
                         </div>,
                       ],
@@ -544,13 +548,12 @@ export default function ViewProductDetail({
                   {translate("Trending_Products")}
                 </h3>
                 <div
-                  className={`grid grid-cols-2 sm:grid-cols-4 ${
-                    trendingProductList?.length > 10 && "animate-marquee"
-                  } md:grid-cols-4 xl:grid-cols-5  2xl:grid-cols-7 whitespace-nowrap gap-2 py-2 text-sm font-medium px-1 md:px-2`}
+                  className={`grid grid-cols-2 sm:grid-cols-4 ${trendingProductList?.length > 10 && "animate-marquee"
+                    } md:grid-cols-4 xl:grid-cols-5  2xl:grid-cols-7 whitespace-nowrap gap-2 py-2 text-sm font-medium px-1 md:px-2`}
                 >
                   {[...trendingProductList].map((item: any) => (
                     <div key={item?._id} className="flex h-full w-full">
-                      <TrendingProductCard item={item} />
+                      <TrendingProductCard item={item} refreshData={handleRefreshData} />
                     </div>
                   ))}
                 </div>
