@@ -1,12 +1,12 @@
 "use client";
 import Button from "@/app/_components/ui/button";
 import Input from "@/app/_components/ui/form/Input";
-import { IChannel } from "@/lib/types-api/vendor";
 import { cn } from "@/lib/utils/commonUtils";
 import { ChevronDown, ChevronUp, Download, Link, CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
+import ModalPortal from "@/lib/components/dialogs/ModelPortal";
 
 const Options = [
   {
@@ -50,6 +50,8 @@ export default function WordPressChannelForm({
 }: IChannelFormProps) {
   const translate = useTranslations();
   const [expandedAccordion, setExpandedAccordion] = useState<string | null>(null);
+  const [showVideo, setShowVideo] = useState(false);
+  const [videoUrl, setVideoUrl] = useState("");
 
   const getChannel = (channelName: string) => {
     return channels?.find((ele) => ele?.channelType === channelName) ?? null;
@@ -106,6 +108,30 @@ export default function WordPressChannelForm({
                     {channel?.channelStatus}
                   </span>
                 )}
+                <TooltipProvider key={`how-to-connect-youtube`}>
+                    <Tooltip>
+                      <TooltipTrigger type="button">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVideoUrl(
+                              "https://www.youtube.com/embed/c5yasKJBxrU?si=47hlR55Rcb-A4V5F"
+                            );
+                            setShowVideo(true);
+                          }}
+                          className="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white bg-opacity-40 px-2 py-1 rounded-lg text-xs hover:bg-opacity-60 transition"
+                        >
+                          ▶ Watch How
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className="z-[99] px-3 py-2 w-auto max-w-[80vw] rounded-md border border-gray-color bg-white text-sm md:max-w-[300px] overflow-hidden"
+                        side="left"
+                      >
+                        🎥 Watch How to Connect
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 {isExpanded ? (
                   <ChevronUp className="w-5 h-5 text-white" />
                 ) : (
@@ -201,6 +227,32 @@ export default function WordPressChannelForm({
           </div>
         );
       })}
+      {/* Video Modal */}
+      {showVideo && (
+        <ModalPortal>
+          <div className="fixed top-0 right-0 bottom-0 left-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-3">
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl relative group">
+              <button
+                onClick={() => setShowVideo(false)}
+                className="absolute -top-[30px] right-3 text-white text-2xl font-bold group-hover:primary hover:primary"
+              >
+                ✕
+              </button>
+              <div className="aspect-w-16 aspect-h-9">
+                <iframe
+                  className="w-full h-[400px] rounded-lg"
+                  src={videoUrl}
+                  title="Watch How"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </div>
+        </ModalPortal>
+      )}
     </>
   );
 }
