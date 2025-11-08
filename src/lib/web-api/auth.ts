@@ -68,6 +68,7 @@ export const loginAPI = async (
         name: user?.name,
         role: user?.type,
         phone: user?.phone,
+        videoCount: user?.videoCount,
       });
     }
     return response?.data;
@@ -89,6 +90,7 @@ export const SocialLoginAPI = async (
         name: user?.name,
         role: user?.type,
         phone: user?.phone,
+        videoCount: user?.videoCount,
       });
       if (user?.token) {
         useAuthStore.getState().setIsAuthStatus("authenticated");
@@ -115,6 +117,7 @@ export const getUserApi = async (): Promise<IGetUserResponse> => {
         name: user?.name,
         phone: user?.phone,
         role: user?.type,
+        videoCount: user?.videoCount,
       });
     }
     // creator
@@ -227,6 +230,7 @@ export const verifyEmail = async (
         name: user?.name,
         role: user?.type,
         phone: user?.phone,
+        videoCount: user?.videoCount,
       });
       useAuthStore.getState().setToken(response.data?.data?.token);
     }

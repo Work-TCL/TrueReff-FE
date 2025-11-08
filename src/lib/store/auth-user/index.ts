@@ -13,6 +13,7 @@ interface IAuthDataState {
     email: string;
     phone: string;
     id: string;
+    videoCount?: number;
     role: (typeof USER_TYPE)[keyof typeof USER_TYPE];
   };
   status: string;
@@ -25,6 +26,7 @@ interface IAuthStoreSetterState {
     email: string;
     phone: string;
     id: string;
+    videoCount?: number;
     role: (typeof USER_TYPE)[keyof typeof USER_TYPE];
   }) => void;
   setIsAuthStatus: (
@@ -42,6 +44,7 @@ export const useAuthStore = create<IAuthDataState & IAuthStoreSetterState>()(
         phone: "",
         id: "",
         role: "",
+        videoCount: 0
       },
       token: "",
       status: "unauthenticated",

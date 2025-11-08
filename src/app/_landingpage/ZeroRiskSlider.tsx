@@ -26,7 +26,7 @@ const sliderSettings = {
 const ZeroRiskSlider = ({
   heading = "Zero Risk Model",
   subtext1 = "Set your own bid price and only pay for actual sales generated through creators. No results?",
-  subtext2 = "No charge. Just performance-driven spending.",
+  subtext2 = "No charge. Just performance driven spending.",
   images,
   bgColor = "#FF4E80",
 }: ZeroRiskSliderProps) => {

@@ -11,6 +11,7 @@ import NavbarCommon from "./NavbarCommon";
 import WhyTruereff from "./WhyTruereff";
 import ZeroRiskSlider from "./ZeroRiskSlider";
 import SignupFlow from "./SignupFlow";
+import PromoBanner from "./PromoBanner";
 
 export default function VendorLandingPage() {
   useEffect(() => {
@@ -96,7 +97,7 @@ export default function VendorLandingPage() {
       <ZeroRiskSlider
         bgColor="#9F5DE9"
         heading="Visibility + Organic Growth"
-        subtext1="Not only increase your product’s visibility but also drive organic traffic directly to your website — no third-party brand dilution. "
+        subtext1="Not only increase your product’s visibility but also drive organic traffic directly to your website no third party brand dilution. "
         subtext2="Build brand recall and boost your SEO through direct creator traffic"
         images={["/assets/landing/zero-risk/Img.svg"]}
       />
@@ -123,6 +124,7 @@ export default function VendorLandingPage() {
       <FaqSection type="vendor" />
       <Launchpad />
       <LandingPageFooter />
+      <PromoBanner />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import {
   User,
 } from "lucide-react";
 import { toastMessage } from "./toast-message";
+import { creatorRegister } from "../web-api/auth";
 
 export const MENU = {
   "/dashboard": { label: "Overview", icon: Home, link: "/dashboard" },
@@ -1633,3 +1634,10 @@ export const allowedImageTypes = [
   "image/jpg",
 ];
 export const imageAccept = allowedImageTypes.join(", ");
+
+export const youtubeVideoUrls = {
+  creatorPanelWorkflow: "https://youtu.be/Fi71j4ADYPU",
+  vendorPanelWorkflow: "https://youtu.be/clqWjF4npTQ",
+  creatorRegistration: "https://youtu.be/q88k12FyE6I?si=MstTw-MhC-fAVzib",
+  vendorRegistration: "https://youtu.be/w9IixwxofTg?si=da6r78JOXsS-o_SI",
+}

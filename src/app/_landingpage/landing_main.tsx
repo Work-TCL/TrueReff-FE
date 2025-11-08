@@ -12,6 +12,7 @@ import "aos/dist/aos.css";
 import TruereffHeroSlider from "./TruereffHeroSlider";
 import FaqSection from "./FAQSection";
 import NavbarCommon from "./NavbarCommon";
+import PromoBanner from "./PromoBanner";
 
 export default function LandingPage() {
   useEffect(() => {
@@ -92,8 +93,9 @@ export default function LandingPage() {
       <SocialMedia />
       <ContentCategories />
       <FaqSection type="creator" />
-      <Launchpad />
+      <Launchpad />      
       <LandingPageFooter />
+      <PromoBanner />
     </div>
   );
 }

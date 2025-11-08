@@ -9,9 +9,11 @@ import { useRouter } from "next/navigation";
 import { SwitchingText } from "./TruereffHeroSlider";
 import ZeroRiskSlider from "./ZeroRiskSlider";
 import ShowCaseCreatorStore from "./showcase";
+import { useTranslations } from "next-intl";
 
 export default function HeroSection() {
   const router = useRouter();
+  const translate = useTranslations();
 
   return (
     <div className="w-[100vw] overflow-hidden items-center bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff]">
@@ -40,11 +42,9 @@ export default function HeroSection() {
               and earn fair commissions — zero upfront cost, zero stress.
             </p>
             <ButtonLogin
-              label="Get Started"
               dataAos="flip-up"
-              onClick={() => {
-                router.push("/login");
-              }}
+              label={translate("Sign_up_now")}
+              onClick={() => router.push("/register")}
             />
           </div>
         </div>

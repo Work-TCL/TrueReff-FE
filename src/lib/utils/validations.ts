@@ -1166,3 +1166,27 @@ export const banDetailsSchema = Yup.object().shape({
 
 export interface IBankDetailSchema
   extends Yup.Asserts<typeof banDetailsSchema> {}
+
+  // Get In Touch
+export const getInTouchSchema = Yup.object().shape({
+  link: Yup.string()
+    .trim().url("Invalid URL"),
+    // .required("Business Name is required"),
+  name: Yup.string()
+    .trim()
+    .required("Business Name is required"),
+  email: Yup.string()
+    .trim()
+    .email("Company Email must be a valid email")
+    .lowercase("Company Email must be a valid email")
+    .required("Company Email is required"),
+  phone: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+  role: Yup.string()
+    .trim()
+    .required("This Field is required"),
+});
+
+export interface IGetInTouchSchema
+  extends Yup.Asserts<typeof getInTouchSchema> {}

@@ -24,7 +24,7 @@ const ButtonLogin: React.FC<AnimatedButtonProps> = ({
     dataAos,
     iconClassName = "h-[44px] w-[44px]",
     spanClassName='',
-    className = "w-[210px] h-[50px] ",
+    className = "w-[210px] h-[50px]",
 }) => {
     return (
         <button
@@ -37,8 +37,8 @@ const ButtonLogin: React.FC<AnimatedButtonProps> = ({
         transition-all duration-300 ease-in-out hover:border-pink-600 
         ${className}
       `}    >
-            <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-700 ease-in-out group-hover:scale-x-100 z-0" />
-            <span className={`relative z-10 transition-colors duration-300 ease-in-out group-hover:text-primary text-[20px] ${spanClassName}`}>
+            <span className="absolute inset-0 bg-white transform scale-x-0 origin-right transition-transform duration-700 ease-in-out group-hover:scale-x-100 z-0 rounded-full" />
+            <span className={`relative z-10 transition-colors duration-300 ease-in-out group-hover:text-primary text-sm md:text-[20px] ${spanClassName}`}>
                 {label}
             </span>
             <div className={`

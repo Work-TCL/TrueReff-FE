@@ -7,6 +7,7 @@ import PhoneImage from "../../../public/assets/svg/PhoneImage";
 import Image from "next/image";
 import Link from "next/link";
 import { AiFillInstagram, AiFillYoutube } from "react-icons/ai";
+import GetInTouchModal from "./GetInTouchModal";
 
 export default function LandingPageFooter({
   className = "",
@@ -21,6 +22,7 @@ export default function LandingPageFooter({
           ? "xsmobile:pt-[100px] tablet:pt-[120px] sm:pt-[160px] lg:pt-[325px] mt-[-596px]"
           : ""
       } lg:px-5 px-8`}
+      id="landing-footer"
     >
       <div className="mx-auto w-full max-w-[1720px] ">
         <div className="flex mobile:flex-col tablet:pt-0  sm:flex-col lg:flex-row gap-[40px] sm:pt-20 xl:gap-[40px]">
@@ -191,6 +193,7 @@ export default function LandingPageFooter({
           </div>
         </div>
       </div>
+      <GetInTouchModal />
     </footer>
   );
 }

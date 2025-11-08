@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import ButtonLogin from "../_components/components-common/Button-Login";
+import { useTranslations } from "next-intl";
 
 const stats = [
   {
@@ -46,6 +47,7 @@ const stats = [
 
 export default function WhyTruereff() {
   const router = useRouter();
+  const translate = useTranslations();
   const { ref, inView } = useInView({
     triggerOnce: false,
     threshold: 0.4,
@@ -82,7 +84,7 @@ export default function WhyTruereff() {
           <p className="text-gray-color-200 text-base tablet:text-lg md:text-xl py-4 max-w-3xl">
             Truereff is India’s trusted platform connecting top creators with
             brands to deliver authentic content and guaranteed sales. Join
-            thousands of brands who grow faster with performance-driven
+            thousands of brands who grow faster with performance driven
             influencer campaigns and transparent results.
           </p>
         </div>
@@ -144,8 +146,8 @@ export default function WhyTruereff() {
           data-aos-delay="400"
         >
           <ButtonLogin
-            label="Get Started"
-            onClick={() => router.push("/login")}
+            label={translate("Sign_up_now")}
+            onClick={() => router.push("/register")}
           />
         </div>
       </div>

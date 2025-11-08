@@ -21,6 +21,7 @@ import {
   UsersRound,
   ArrowDownToLine,
   SquareUserRound,
+  MonitorPlay,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -37,6 +38,8 @@ import { useCreatorStore } from "@/lib/store/creator";
 import { toastMessage } from "@/lib/utils/toast-message";
 import Image from "next/image";
 import { useNotificationStore } from "@/lib/store/notifications";
+import { youtubeVideoUrls } from "@/lib/utils/constants";
+import { it } from "node:test";
 
 type MenuItem = {
   label: string;
@@ -44,6 +47,7 @@ type MenuItem = {
   link?: string;
   children?: { label: string; link: string }[];
   notification: boolean;
+  isVideo?: boolean;
 };
 
 const NavLink = ({
@@ -58,7 +62,7 @@ const NavLink = ({
   childIndex,
   childClassName,
   handleInstall = () => {},
-  item = null 
+  item = null
 }: any) => {
   const childLinkClasses = `relative block px-4 py-2 rounded-md ${
     isActive
@@ -110,6 +114,7 @@ const NavLink = ({
     return (
       <Link
         href={link}
+        target={item?.isVideo ? "_blank" : "_self"}
         className={`${classNames} gap-3`}
         onClick={handleToggle}
       >
@@ -193,6 +198,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       notification: false
     },
     { label: translate("Settings"), icon: Settings, link: "/vendor/settings", notification: false },
+    { label: translate("how_panel_works"), icon: MonitorPlay, link: youtubeVideoUrls?.vendorPanelWorkflow, notification: false, isVideo:true },
   ]);
   const [creatorMenuItem,setCreatorMenuItem] = useState<MenuItem[]>([
     {
@@ -232,6 +238,7 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       notification: false
     },
     { label: translate("Settings"), icon: Settings, link: "/creator/settings", notification: false },
+    { label: translate("how_panel_works"), icon: MonitorPlay, link: youtubeVideoUrls?.creatorPanelWorkflow, notification: false, isVideo:true },
   ]);
 
   const menu = {

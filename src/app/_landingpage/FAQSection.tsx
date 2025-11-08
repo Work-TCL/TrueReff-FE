@@ -18,12 +18,12 @@ export const creatorFaqData: IFaqItem[] = [
   {
     question: "Can I negotiate the brand’s offer?",
     answer:
-      "Absolutely. Brands set a base bid, but you can counter-bid with your preferred rate. You’re always in control of your value.",
+      "Absolutely. Brands set a base bid, but you can counter bid with your preferred rate. You’re always in control of your value.",
   },
   {
     question: "Do I need to sign a contract?",
     answer:
-      "No long-term contracts. You choose which deals to accept, and you can leave the platform anytime. It’s built for creator flexibility.",
+      "No long term contracts. You choose which deals to accept, and you can leave the platform anytime. It’s built for creator flexibility.",
   },
   {
     question: "How do I showcase my selected products?",
@@ -41,17 +41,17 @@ export const brandFaqData = [
   {
     question: "How is pricing handled?",
     answer:
-      "You set your own bid price per product sale. There’s no upfront cost — you only pay when a creator drives an actual conversion.",
+      "You set your own bid price per product sale. There’s no upfront cost you only pay when a creator drives an actual conversion.",
   },
   {
     question: "Can I chat with creators before confirming a collaboration?",
     answer:
-      "Yes, Truereff includes a built-in chat system where you can communicate with creators, clarify expectations, and build better relationships.",
+      "Yes, Truereff includes a built in chat system where you can communicate with creators, clarify expectations, and build better relationships.",
   },
   {
     question: "How is campaign performance tracked?",
     answer:
-      "You’ll have access to a real-time analytics dashboard with complete visibility on clicks, conversions, and ROI — all in one place.",
+      "You’ll have access to a real-time analytics dashboard with complete visibility on clicks, conversions, and ROI all in one place.",
   },
   {
     question: "What support does Truereff provide?",

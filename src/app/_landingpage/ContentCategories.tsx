@@ -14,9 +14,11 @@ import Music from "../../../public/assets/svg/Music";
 import { MoveRight } from "lucide-react";
 import ButtonLogin from "../_components/components-common/Button-Login";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function ContentCategories() {
   const router = useRouter();
+  const translate = useTranslations();
   const categories = [
     { cateGoriesIcon: <Enagel /> },
     { cateGoriesIcon: <CupPlus /> },
@@ -84,10 +86,8 @@ export default function ContentCategories() {
             </p>
 
             <ButtonLogin
-              label="Get Started"
-              onClick={() => {
-                router.push("/login");
-              }}
+              label={translate("Sign_up_now")}
+              onClick={() => router.push("/register")}
             />
           </div>
         </div>

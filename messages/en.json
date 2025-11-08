@@ -788,5 +788,19 @@
   "Deactivate_Desc": "Note: Once you deactivate this collaboration, it cannot be reactivated. You will need to create a new collaboration if you wish to work together again.",
   "Show_Trending_Products": "Enable this option to display trending products in your store. Trending products are popular items that attract more customers and increase engagement. Turning this on helps highlight these products to boost visibility and sales.",
   "Free_Product": "Provide free product to the creator for making content",
-  "Free_Product_Desc": "I understand that whether the product is returned or kept is my decision, and the platform is not responsible."
+  "Free_Product_Desc": "I understand that whether the product is returned or kept is my decision, and the platform is not responsible.",
+  "Sign_up_now": "Sign up now",
+  "Brand_Website": "Brand Website",
+  "Social_Media_Handles": "Social media profile link",
+  "Enter_your_social_media_profile_link": "https://youtube.com/@truereff",
+  "Enter_your_name": "Enter your name",
+  "Email_address": "Email address",
+  "Enter_your_email_address": "Enter your email address",
+  "Phone_number": "Phone No.",
+  "Or_Else": "Or else",
+  "Watch_Video": "Or else, you can watch the full video on how to register as a ",
+  "Tell_me_about_you_as_a": "Tell me about you self",
+  "Enter_your_role": "Creator or Brand",
+  "Form_submitted_successfully": "Form submitted successfully",
+  "how_panel_works": "How panel works?"
 }

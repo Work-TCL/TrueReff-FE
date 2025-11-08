@@ -5,6 +5,7 @@ import Header from "./header";
 import { getUserApi } from "@/lib/web-api/auth";
 import { useAuthStore } from "@/lib/store/auth-user";
 import LoadingPage from "@/lib/components/loading-page";
+import WatchHowModal from "../../WatchHow";
 
 interface IDashboardLayout {
   children: React.ReactNode;
@@ -29,6 +30,7 @@ export default function DashboardLayout({ children }: IDashboardLayout) {
         <Header handleExpandSidebar={handleExpandSidebar} />
         <div className="flex-1 overflow-auto">{children}</div>
       </main>
+      <WatchHowModal />
     </div>
   );
 }

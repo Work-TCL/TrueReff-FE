@@ -67,7 +67,8 @@ export default function LoginForm() {
       id: res?.data?._id,
       role: res?.data?.type,
       name: res?.data?.name,
-      phone: res?.data?.phone
+      phone: res?.data?.phone,
+      videoCount: res?.data?.videoCount ?? 0,
     });
     if (
       !res?.data?.detailsFilled &&

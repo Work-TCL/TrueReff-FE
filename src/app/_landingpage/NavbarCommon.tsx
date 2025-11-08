@@ -3,9 +3,11 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import ButtonLogin from "../_components/components-common/Button-Login";
+import { useTranslations } from "next-intl";
 
 function NavbarCommon() {
   const router = useRouter();
+   const translate = useTranslations();
   const [activeLink, setActiveLink] = useState("brand");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleLinkClick = (linkName: string) => {
@@ -83,8 +85,8 @@ function NavbarCommon() {
         </ul>
 
         <ButtonLogin
-          label="Get Started"
-          onClick={() => router.push("/login")}
+          label={translate("Sign_up_now")}
+          onClick={() => router.push("/register")}
         />
       </div>
     </nav>

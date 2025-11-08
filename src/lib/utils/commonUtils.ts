@@ -93,6 +93,7 @@ export function formatForDateInput(isoString: string): string {
 export function clearLocalStorage() {
   const removeItems = ["vendor-storage", "user-storage", "creator-storage"];
   removeItems.forEach((key) => localStorage.removeItem(key));
+  sessionStorage.clear();
 }
 
 export function formatFollowers(count: number = 0) {

@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import ButtonLogin from "../_components/components-common/Button-Login";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 const steps = [
   {
@@ -14,33 +16,34 @@ const steps = [
     icon: "/assets/landing/signup-flow/01.png",
     title: "Signup",
     desc: "Using your Instagram or YouTube account",
-    img: "/assets/signup-flow/screen-01.png",
+    img: "/assets/landing/signup-flow/screen-01.png",
   },
   {
     id: "02",
     icon: "/assets/landing/signup-flow/02.png",
     title: "Setup Profile",
     desc: "Setup your creator and storefront profile.",
-    img: "/assets/signup-flow/screen-02.png",
+    img: "/assets/landing/signup-flow/screen-02.png",
   },
   {
     id: "03",
     icon: "/assets/landing/signup-flow/03.png",
     title: "Bid with Your Rate",
     desc: "Browse brand campaigns and bid with your rate.",
-    img: "/assets/signup-flow/screen-03.png",
+    img: "/assets/landing/signup-flow/screen-03.png",
   },
-  {
-    id: "04",
-    icon: "/assets/landing/signup-flow/03.png",
-    title: "Bid with Your Rate",
-    desc: "Browse brand campaigns and bid with your rate.",
-    img: "/assets/signup-flow/screen-03.png",
-  },
+  // {
+  //   id: "04",
+  //   icon: "/assets/landing/signup-flow/03.png",
+  //   title: "Bid with Your Rate",
+  //   desc: "Browse brand campaigns and bid with your rate.",
+  //   img: "/assets/signup-flow/screen-03.png",
+  // },
 ];
 
 export default function SignupFlow() {
   const router = useRouter();
+  const translate = useTranslations();
   const sliderRef = useRef<Slider | null>(null);
 
   const settings = {
@@ -88,8 +91,8 @@ export default function SignupFlow() {
               <span className="text-primary">Mobile</span> Signup Flow?
             </h2>
             <ButtonLogin
-              label="Get Started"
-              onClick={() => router.push("/login")}
+              label={translate("Sign_up_now")}
+              onClick={() => router.push("/register")}
             />
           </div>
 
@@ -137,16 +140,27 @@ export default function SignupFlow() {
                 </div>
 
                 {/* Screenshot */}
-                <div className="bg-gray-100 min-h-[320px] sm:min-h-[500px] rounded-lg flex items-center justify-center text-gray-400 text-sm">
-                  <img
-                    src={step.img}
-                    alt="Mobile Screenshot"
-                    className="object-contain w-full h-full rounded-md"
-                  />
+                <div className="relative min-h-[320px] sm:min-h-[500px] rounded-lg flex items-center justify-center">
+                  <Image
+                          fill
+                          src={step.img}
+                          alt="TrueReff"
+                          className={`object-contain w-full h-full rounded-md`}
+                        />
                 </div>
               </div>
             </div>
           ))}
+          <div
+              key={4}
+              className="px-3 sm:px-4 w-full flex justify-center items-center"
+              data-aos="zoom-in-up"
+              data-aos-delay={`${4 * 100 + 100}`}
+            >
+              <div className="bg-white rounded-tl-lg rounded-tr-lg p-4 sm:p-6 flex justify-center items-center text-center text-[30px] md:text-[40px] font-semibold text-secondary md:min-h-[665px] sm:min-h-[655px] min-h-[440px]">
+                That's it! Now watch Creator's magic in action as your sales skyrocket.
+              </div>
+            </div>
         </Slider>
       </div>
     </section>

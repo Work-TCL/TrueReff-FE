@@ -4,9 +4,11 @@ import { MoveRight } from "lucide-react";
 import React from "react";
 import ButtonLogin from "../_components/components-common/Button-Login";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function Launchpad() {
   const router = useRouter();
+  const translate = useTranslations();
   return (
     <>
       <div className="w-[100vw] overflow-hidden bg-[url('/assets/landing/launchpad.png')] bg-cover bg-center bg-no-repeat tablet:pb-[220px] xsmobile:px-[20px] xsmobile:pb-[130px]  xsmobile:pt-[80px] tablet:px-[20px] tablet:pt-[140px] sm:pb-[250px] sm:pt-[140px] lg:pb-[301px] xl:pt-[240px] lg:pt-[150px] w-full sm:px-[20px] xl:px-0">
@@ -15,7 +17,7 @@ export default function Launchpad() {
             data-aos="fade-down"
             className="xl:text-[60px] md:text-5xl sm:text-4xl text-3xl font-medium text-gray-900 2xl:max-w-[762px] xl:max-w-[565px] xl:leading-[70px] md:leading-[60px]"
           >
-            Drive more sales through creator-powered
+            Drive more sales through creator powered
             <span className="text-primary font-bold"> recommendations.</span>
           </div>
           <div
@@ -25,7 +27,7 @@ export default function Launchpad() {
             <p>
               Tap into the trust creators have built with their followers.
               Truereff helps your brand connect with authentic influencers, run
-              high-converting campaigns, and track every click and sale — all
+              high converting campaigns, and track every click and sale all
               from one simple dashboard.
             </p>
           </div>
@@ -46,11 +48,11 @@ export default function Launchpad() {
             className="absolute tablet:top-auto  md:top-auto lg:top-[-140px] xsmobile:top-auto xsmobile:right-[80px]  tablet:right-[140px] md:right-[200px] xsmobile:w-[100px] tablet:w-[180px] sm:w-[160px] md:w-[280px]  lg:h-[620px] lg:w-[460px] xl:w-[550px] object-contain"
           />
           <ButtonLogin
-            label="Get Started"
             spanClassName=" tablet:text-[14px] mobile:text-[8px]"
             className=" tablet:w-[130px]  xsmobile:w-[75px] w-[210px] h-[50px] xsmobile:pl-[4px] tablet:h-[40px] tablet:pl-[10px] xsmobile:h-[25px]"
             iconClassName=" h-[44px] w-[44px] tablet:h-[30px] tablet:w-[30px] xsmobile:h-[15px] xsmobile:w-[15px]"
-            onClick={() => router.push("/login")}
+            label={translate("Sign_up_now")}
+            onClick={() => router.push("/register")}
           />
         </div>
       </div>
