@@ -52,7 +52,7 @@ export interface IProduct {
     discountType?: string;
   discount?: number;
 }
-const TrendingProductCard = ({ item: product, refreshData }: { item: IProduct, refreshData: (id: string) => void }) => {
+const TrendingProductCard = ({ item: product, refreshData }: { item: IProduct, refreshData?: (id: string) => void }) => {
   const translate = useTranslations();
   const router = useRouter();
   const { account } = useAuthStore();
@@ -74,7 +74,7 @@ const TrendingProductCard = ({ item: product, refreshData }: { item: IProduct, r
         );
         if (response?.status === 200) {
           toastMessage.success(response?.data?.message);
-          refreshData(productId);
+          refreshData?.(productId);
         }
       } else {
         setLoginPopUp(true);
