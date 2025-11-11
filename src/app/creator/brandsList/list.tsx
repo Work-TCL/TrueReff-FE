@@ -102,7 +102,7 @@ export default function BrandList() {
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting && !isLoading) {
+        if (entry.isIntersecting && !isLoading && !internalLoader) {
           setCurrentPage((prev) => prev + 1);
         }
       },
@@ -155,6 +155,7 @@ export default function BrandList() {
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
+    } finally {
       setLoading(false);
       setInternalLoader(false);
     }
