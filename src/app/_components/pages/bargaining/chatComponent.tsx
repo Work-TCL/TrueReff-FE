@@ -137,7 +137,7 @@ export default function ChatComponent({
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting && !isLoading) {
+        if (entry.isIntersecting && !isLoading && !isLoading) {
           setCurrentPage((prev) => prev + 1);
         }
       },
