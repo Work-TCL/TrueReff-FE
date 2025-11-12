@@ -74,17 +74,10 @@ export default function ChannelForm({ loading, channels, methods }: IChannelForm
     setExpandedAccordion(expandedAccordion === channelName ? null : channelName);
   };
 
-  const handleOnClick = async () => {
-    const profileSetUpFields: string[] = ["shopify_store_domain"];
-    const isValid = await methods.trigger(profileSetUpFields);
-    if (isValid) {
-      setInstalled(true);
-      typeof window !== "undefined" &&
-        window.open(`${process.env.NEXT_PUBLIC_SHOPIFY_URL}?shop=${methods.watch("shopify_store_domain")}`, "_blank");
-    } else {
-      setInstalled(false);
-    }
-  };
+const handleOnClick = () => {
+  window.open("https://apps.shopify.com/truereff", "_blank");
+};
+
 
   const generateShopifyKey = async () => {
     try {
