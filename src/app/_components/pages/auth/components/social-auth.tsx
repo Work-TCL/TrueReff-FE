@@ -2,17 +2,27 @@
 import LightButton from "@/app/_components/ui/button/variant/light-button";
 import { useTranslations } from "next-intl";
 import React from "react";
-
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 export default function SocialAuth() {
   const translate = useTranslations();
   const handleGoogleLogin = () => {
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;    
     const redirectUri = `${BACKEND_URL}/auth/callback/google`;
     const scope = encodeURIComponent("openid email profile");
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
 
     window.location.href = authUrl;
+  };
+  const handleAppleLogin = () => {
+ const params = new URLSearchParams({
+      response_type: "code id_token",
+      response_mode: "form_post",
+      client_id: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!,
+      redirect_uri: `${BACKEND_URL}/auth/callback/apple`,
+      scope: "name email",
+    });
+
+    window.location.href = `https://appleid.apple.com/auth/authorize?${params}`;
   };
 
   return (
@@ -43,13 +53,14 @@ export default function SocialAuth() {
         </svg>
         <span>{translate("Continue_with_Google")}</span>
       </LightButton>
-      {/* <LightButton
+      <LightButton
+      onClick={() => handleAppleLogin()}
         type="button"
         className="w-full flex justify-center items-center gap-2"
       >
-        <FaApple className="text-xl" />
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 17 17"><path d="M13.72 9.15c-.02-2.3 1.87-3.4 1.95-3.45-1.07-1.57-2.74-1.79-3.33-1.82-1.42-.14-2.77.84-3.48.84-.72 0-1.83-.82-3.01-.8-1.54.03-2.96.9-3.76 2.28-1.6 2.8-.4 6.94 1.15 9.2.76 1.09 1.66 2.3 2.85 2.25 1.15-.04 1.59-.72 2.99-.72 1.4 0 1.79.72 3.02.7 1.25-.02 2.04-1.1 2.79-2.2.88-1.3 1.25-2.57 1.26-2.63-.03-.01-2.4-.92-2.43-3.65z"/><path d="M11.2 2.68c.62-.75 1.04-1.78.93-2.83-.9.04-1.98.6-2.63 1.35-.57.64-1.07 1.67-.93 2.67.98.08 1.99-.5 2.63-1.19z"/></svg>
         <span>{translate("Continue_with_Apple")}</span>
-      </LightButton> */}
+      </LightButton>
     </div>
   );
 }
