@@ -97,29 +97,28 @@ export default function BrandList() {
 
   const itemsPerPage = 20;
   useEffect(() => {
-    if (!hasMore) return;
+    if (!hasMore && !hasSuggestedMore) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting && !isLoading && !internalLoader) {
-          setCurrentPage((prev) => prev + 1);
+        if (entries[0].isIntersecting && !isLoading && !internalLoader) {
+          setCurrentPage((p) => p + 1);
         }
       },
-      { root: null, rootMargin: "0px", threshold: 1.0 }
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0,
+      }
     );
 
-    const currentRef = loadingRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
+    const el = loadingRef.current;
+    if (el) observer.observe(el);
 
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
+      if (el) observer.unobserve(el);
     };
-  }, [loadingRef, hasMore, isLoading]);
+  }, [hasMore, hasSuggestedMore, isLoading, internalLoader]);
   // Get Brand list
   const getBrandList = async (
     page: number,

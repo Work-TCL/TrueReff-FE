@@ -39,7 +39,7 @@ const PromoBanner = () => {
                 <div className="fixed bottom-4 sm:bottom-6 w-full flex justify-center z-40 px-3 sm:px-6">
       <div
         data-aos="fade-up"
-        className="w-[90%] bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 px-4 sm:px-6 py-4 rounded-xl md:rounded-full shadow-lg border border-gray-200"
+        className="w-[95%] bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 px-2 sm:px-6 py-4 rounded-xl md:rounded-full shadow-lg border border-gray-200"
       >
         {/* Text */}
         <p className="text-center sm:text-left text-orange-700 font-medium text-sm sm:text-base leading-snug">

@@ -123,7 +123,7 @@ const CollaborationTable = ({
     }
   };
 
-  const getRequestStatus = (collaboration: ICollaboration) => {
+  const getRequestStatus:any = (collaboration: ICollaboration) => {
     return collaboration?.collaborationStatus;
   };
   const handleCopyLink = async (textToCopy: string | null) => {

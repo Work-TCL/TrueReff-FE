@@ -59,7 +59,7 @@ export default function ProfileCard({
           />
         )}
       </div>
-      <div className="flex items-end px-6 -mt-14 w-full justify-between">
+      <div className="flex items-end px-3 md:px-6 -mt-14 w-full justify-between">
         <div className="w-[120px] h-[120px] md:w-[120px] md:h-[120px]">
           <Avatar className="w-[120px] h-[120px] md:w-[120px] md:h-[120px] border-1 border-white bg-white">
             {profile_image ? (
@@ -119,9 +119,9 @@ export default function ProfileCard({
             <Link
               href={channels?.instagram_link}
               target="_blank"
-              className="flex items-center justify-center p-1.5"
+              className="flex items-center justify-center"
             >
-              <div className="text-gray-500 bg-gray-100 w-full px-4 py-2 rounded-3xl justify-center flex items-center gap-2 text-sm">
+              <div className="text-gray-500 bg-gray-100 w-full px-3 py-1 rounded-3xl justify-center flex items-center gap-2 text-sm">
                 <img
                   src="/assets/creator/insta-gram.svg"
                   width={15}
@@ -137,9 +137,9 @@ export default function ProfileCard({
             <Link
               href={channels?.youtube_link}
               target="_blank"
-              className="flex items-center justify-center p-1.5"
+              className="flex items-center justify-center"
             >
-              <div className="text-gray-500 bg-gray-100 w-full px-4 py-1 rounded-3xl justify-center flex items-center gap-2 text-sm">
+              <div className="text-gray-500 bg-gray-100 w-full px-3 py-1 rounded-3xl justify-center flex items-center gap-2 text-sm">
                 <Image
                   src="/assets/creator/profile/ytIcon.svg"
                   alt={"youtubeIcon"}

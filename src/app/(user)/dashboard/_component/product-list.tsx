@@ -21,38 +21,38 @@ export default function ProductList({ category, subCategory }: { category: strin
   const loadingRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-      if (!hasMore) return;
-  
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const [entry] = entries;
-          if (entry.isIntersecting && !loading) {
-            setCurrentPage((prev) => {
-              handlePageChange(prev + 1)
-              return prev + 1
-            });
-          }
-        },
-        { root: null, rootMargin: "0px", threshold: 1.0 }
-      );
-  
-      const currentRef = loadingRef.current;
-      if (currentRef) {
-        observer.observe(currentRef);
-      }
-  
-      return () => {
-        if (currentRef) {
-          observer.unobserve(currentRef);
+    if (!hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading && !internalLoading) {
+          setCurrentPage((prev) => {
+            const nextPage = prev + 1;
+            handlePageChange(nextPage);
+            return nextPage;
+          });
         }
-      };
-    }, [loadingRef, hasMore, loading]);
+      },
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0,
+      }
+    );
+
+    const el = loadingRef.current;
+    if (el) observer.observe(el);
+
+    return () => {
+      if (el) observer.unobserve(el);
+    };
+  }, [hasMore,currentPage,loading,internalLoading]);
   // Update fetProductsList to set both cursors
   const fetProductsList = async (
     page: number = currentPage,
     isInternalLoader: boolean = false
   ) => {
-    isInternalLoader ? setInternalLoading(false) : setLoading(true);
+    isInternalLoader ? setInternalLoading(true) : setLoading(true);
     try {
       const response = await axios.get(
         `/product/all?limit=${pageLimit}&page=${page}&category=${category}${(subCategory && subCategory !== "All") ? `&subCategory=${subCategory}` : ""}`
@@ -77,12 +77,11 @@ export default function ProductList({ category, subCategory }: { category: strin
           let tag = product.tags?.length > 0 ? product.tags?.join(", ") : "";
           return { ...product, categories, tag, subCategories };
         })
-        setProductList(prev => {
-          let data = page === 1 ? [...productData] : [...prev, ...productData];
-          const more = data?.length < response.data.data?.count;
+        let more =
+            (page === 1 ? [...productData] : [...productList, ...productData])?.length < response.data.data?.count;
+            console.log("more", more);
           setHasMore(more);
-          return data;
-        })      
+          setProductList(page === 1 ? [...productData] : [...productList, ...productData]);    
       } else {
         setProductList([]);
         setHasMore(false);
@@ -108,6 +107,7 @@ export default function ProductList({ category, subCategory }: { category: strin
 
   // Update the onClick handlers for pagination buttons
   const handlePageChange = (page: number) => {
+    console.log("Requested Page:", page);
     page !== currentPage &&
       fetProductsList(page, true);
   };
@@ -132,7 +132,6 @@ export default function ProductList({ category, subCategory }: { category: strin
         <Loading />
       ) : (
         <>
-          {internalLoading && <Loader />}
           {productList?.length > 0 ? (
             <div className="flex flex-col h-full overflow-auto">
               <h3 className="font-semibold">{translate("Product_List")}</h3>

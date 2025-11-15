@@ -115,7 +115,11 @@ export function getAnalyticsColumns(
                 className="object-cover"
               />
             </Avatar>
-            <TruncateWithToolTip text={product.productName} />
+            <TruncateWithToolTip
+                          checkHorizontalOverflow={false}
+                          linesToClamp={2}
+                          text={product.productName}
+                        />
           </div>
         );
       },

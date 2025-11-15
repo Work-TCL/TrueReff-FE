@@ -61,7 +61,7 @@ export default function HeroSection() {
                 fill
                 className="object-cover"
               />
-              <div className="flex items-center justify-center absolute top-[40px] xsmobile:right-[120px] right-[135px] bg-white p-1 rounded-lg shadow xsmobile:h-[30px] xsmobile:w-[30px] h-[50px] w-[50px]">
+              <div className="flex items-center justify-center absolute top-[40px] xsmobile:right-[90px] right-[135px] bg-white p-1 rounded-lg shadow xsmobile:h-[30px] xsmobile:w-[30px] h-[50px] w-[50px]">
                 <img src="/assets/landing/smile.png" className="w-4 h-4" />
               </div>
             </div>

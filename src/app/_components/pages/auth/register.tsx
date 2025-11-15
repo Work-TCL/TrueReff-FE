@@ -21,7 +21,7 @@ export default function RegisterPage() {
           <div className="mt-5">
             <RegisterForm />
           </div>
-          <div className="flex items-center justify-center gap-4 my-6">
+          <div className="flex items-center justify-center gap-4 my-4 md:my-6 lg:my-6">
               <div className="flex-1 h-px bg-gray-300" />
               <span className="text-sm text-gray-500 whitespace-nowrap">
                 {translate("Or_Continue_with")}
@@ -29,7 +29,7 @@ export default function RegisterPage() {
               <div className="flex-1 h-px bg-gray-300" />
             </div>
           <SocialAuth />
-          <div className="my-6 text-center">
+          <div className="my-3 md:my-6 lg:my-6 text-center">
             <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
               {translate("Log_inAlready_have_an_account?")}{" "}
               <Link href="/login" className="text-primary-color font-medium">

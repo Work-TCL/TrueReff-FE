@@ -42,6 +42,9 @@ const customStyles = {
   menu: (base: any) => ({
     ...base,
     width: "150px",
+    left: -30,             // shift menu to the left edge
+    right: "auto",       // disable right alignment
+    transform: "translateX(0)" // prevent default shift
   }),
 };
 interface ICollabStats {
@@ -121,6 +124,8 @@ export default function CollabsWithCompanies() {
               options={daysFilter}
               className="basic-multi-select focus:outline-none focus:shadow-none"
               placeholder="Select Days"
+              menuPosition="absolute"
+              menuPlacement="auto"
             />
           </div>
 
@@ -143,7 +148,7 @@ export default function CollabsWithCompanies() {
       </div> */}
 
           {/* Company Stats */}
-          <div className="mt-3 md:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-3">
+          <div className="mt-3 md:mt-6 grid grid-cols-2 sm:grid-cols-2 gap-3 md:gap-3">
             <StatCard
               name={translate("Collaboration")}
               value={formatNumber(collabStats?.totalCollaborations)}

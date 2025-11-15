@@ -40,7 +40,7 @@ const TruereffHeroSlider = ({ isVendor }: ITrueReffSliderProps) => {
 
   // COMMON CLASSES
   const wrapperClass =
-    "h-screen w-full text-white bg-white/10 backdrop:blur-sm capitalize relative";
+    "h-screen w-full text-white bg-white/10 backdrop:blur-sm capitalize relative p-2";
   const slideContainerClass =
     "h-screen flex items-center justify-center text-center flex-col md:space-y-6 space-y-3";
   const headlineClass =

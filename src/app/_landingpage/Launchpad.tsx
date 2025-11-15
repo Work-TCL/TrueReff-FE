@@ -38,7 +38,7 @@ export default function Launchpad() {
         data-aos="zoom-in"
         className="flex justify-center items-center relative  bottom-[150px] h-[300px] mb-[300px] xl:px-0 lg:px-8 px-4"
       >
-        <div className="relative xsmobile:py-[20px] tablet:py-[30px] md:py-[60px] tablet:w-[480px] xsmobile:w-[300px]  sm:w-[450px] md:w-[700px] lg:py-[125px] lg:w-[1000px] xl:w-full flex justify-between items-center bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff] 2xl:max-w-[1450px] max-w-[1300px] mobile:rounded-[10px] sm:rounded-[10px] md:rounded-[15px] w-full mobile:px-[20px] sm:px-[20px] md:px-[30px] lg:px-[60px]">
+        <div className="relative xsmobile:py-[20px] tablet:py-[30px] md:py-[60px] tablet:w-[480px] xsmobile:w-[315px]  sm:w-[450px] md:w-[700px] lg:py-[125px] lg:w-[1000px] xl:w-full flex justify-between items-center bg-gradient-to-br from-[#ffe2ec] to-[#e1f1ff] 2xl:max-w-[1450px] max-w-[1300px] mobile:rounded-[10px] sm:rounded-[10px] md:rounded-[15px] w-full mobile:px-[15px] sm:px-[20px] md:px-[30px] lg:px-[60px]">
           <p className="xsmobile:text-xs	 sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl font-medium text-gray-900">
             Try <span className="text-primary font-bold "> Truereff</span> for
             free
@@ -53,6 +53,7 @@ export default function Launchpad() {
             iconClassName=" h-[44px] w-[44px] tablet:h-[30px] tablet:w-[30px] xsmobile:h-[15px] xsmobile:w-[15px]"
             label={translate("Sign_up_now")}
             onClick={() => router.push("/register")}
+            icon={<MoveRight className="text-primary transition-colors duration-300 ease-in-out xsmobile:size-3" />}
           />
         </div>
       </div>

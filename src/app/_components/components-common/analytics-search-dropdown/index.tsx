@@ -122,7 +122,7 @@ export const SearchSuggestionDropdown = () => {
 
       {/* Results Dropdown */}
       {(showDropdown || isLoading) && (
-        <div className="absolute top-full mt-2 bg-white shadow-md rounded-xl w-full z-50 max-h-80 overflow-y-auto p-2 flex flex-col gap-2">
+        <div className="absolute top-full mt-2 bg-white shadow-md rounded-xl w-[280px] z-50 max-h-80 overflow-y-auto p-2 flex flex-col gap-2">
           {isLoading && (
             <div className="text-sm text-gray-500 px-2 py-1">Loading...</div>
           )}
@@ -140,7 +140,7 @@ export const SearchSuggestionDropdown = () => {
                 alt={creator?.name}
                 className="w-8 h-8 rounded-full"
               />
-              <span className="text-black">{creator?.name}</span>
+              <span className="text-black">{creator?.name?.length > 16 ? `${creator?.name.slice(0, 18)}...` : creator?.name}</span>
             </div>
           ))}
 
