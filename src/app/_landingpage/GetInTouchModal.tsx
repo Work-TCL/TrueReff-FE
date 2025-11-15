@@ -121,7 +121,7 @@ const GetInTouchModal: React.FC = () => {
                         </div>
 
                         {/* Form */}
-                        <div className="overflow-y-auto h-[320px] md:h-[400px] lg:h-[450px] xl:h-full pr-2">
+                        <div className="overflow-y-auto h-[320px] md:h-[400px] lg:h-[450px] pr-2">
                             <FormProvider {...methods}>
                                 <form
                                     onSubmit={methods.handleSubmit(onSubmit)}
