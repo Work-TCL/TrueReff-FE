@@ -18,7 +18,7 @@ export default function SocialAuth() {
       response_type: "code",
       response_mode: "form_post",
       client_id: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!,
-      redirect_uri: `https://3b128870bff4.ngrok-free.app/api/auth/callback/apple`,
+      redirect_uri: `${BACKEND_URL}/auth/callback/apple`,
       scope: "name email",
       nonce: "12345"
     });
