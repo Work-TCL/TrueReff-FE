@@ -15,11 +15,12 @@ export default function SocialAuth() {
   };
   const handleAppleLogin = () => {
  const params = new URLSearchParams({
-      response_type: "code id_token",
+      response_type: "code",
       response_mode: "form_post",
       client_id: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!,
-      redirect_uri: `${BACKEND_URL}/auth/callback/apple`,
+      redirect_uri: `https://3b128870bff4.ngrok-free.app/api/auth/callback/apple`,
       scope: "name email",
+      nonce: "12345"
     });
 
     window.location.href = `https://appleid.apple.com/auth/authorize?${params}`;
