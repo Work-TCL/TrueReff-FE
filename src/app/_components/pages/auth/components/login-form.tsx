@@ -25,6 +25,7 @@ import {
 } from "@/lib/utils/rememberUtils";
 import Loader from "@/app/_components/components-common/layout/loader";
 import { useTranslations } from "next-intl";
+import NotificationSetup from "@/components/NotificationSetup";
 // import { messaging, generateToken } from "@/notifications/firebase";
 
 // import { onMessage } from "firebase/messaging";
@@ -38,7 +39,8 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
   const [isRemember, setIsRemember] = useState(false);
-  // const [messagingToken, setMessagingToken] = useState<string | null | undefined>(null);
+  const [messagingToken, setMessagingToken] = useState<string | null>(null);
+
   const schema = loginSchema;
   const { setAccountData, setIsAuthStatus, setToken } = useAuthStore();
   const { setCreatorData } = useCreatorStore();
@@ -136,15 +138,15 @@ export default function LoginForm() {
       }
       setIsAuthStatus("authenticated");
       if (res?.data?.type === USER_TYPE.Vendor) {
-        if(((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2) || res?.data?.vendor?.completed_step === 3)&& res?.data?.vendor?.status !== "APPROVED"){
+        if (((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2) || res?.data?.vendor?.completed_step === 3) && res?.data?.vendor?.status !== "APPROVED") {
           router.push("/vendor-register");
-        } else if(res?.data?.vendor?.completed_step === 3 && res?.data?.vendor?.status === "APPROVED"){
+        } else if (res?.data?.vendor?.completed_step === 3 && res?.data?.vendor?.status === "APPROVED") {
           router.push("/vendor/dashboard");
         } else router.push("/dashboard");
       } else if (res?.data?.type === USER_TYPE.Creator) {
-        if((res?.data?.creator?.completed_step === 1 || res?.data?.creator?.completed_step === 2 ||res?.data?.creator?.completed_step === 3) &&  res?.data?.creator?.status !== "APPROVED"){
+        if ((res?.data?.creator?.completed_step === 1 || res?.data?.creator?.completed_step === 2 || res?.data?.creator?.completed_step === 3) && res?.data?.creator?.status !== "APPROVED") {
           router.push("/creator-registration");
-        } else if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status === "APPROVED"){
+        } else if (res?.data?.creator?.completed_step === 3 && res?.data?.creator?.status === "APPROVED") {
           router.push("/creator/dashboard");
         }
         else router.push("/dashboard");
@@ -153,15 +155,15 @@ export default function LoginForm() {
       }
     } else {
       if (res?.data?.type === USER_TYPE.Vendor) {
-        if(((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2) || res?.data?.vendor?.completed_step === 3)&& res?.data?.vendor?.status !== "APPROVED"){
+        if (((res?.data?.vendor?.completed_step === 1) || (res?.data?.vendor?.completed_step === 2) || res?.data?.vendor?.completed_step === 3) && res?.data?.vendor?.status !== "APPROVED") {
           router.push("/vendor-register");
-        } else if(res?.data?.vendor?.completed_step === 3 && res?.data?.vendor?.status === "APPROVED"){
+        } else if (res?.data?.vendor?.completed_step === 3 && res?.data?.vendor?.status === "APPROVED") {
           router.push("/vendor/dashboard");
         } else router.push("/dashboard");
       } else if (res?.data?.type === USER_TYPE.Creator) {
-        if((res?.data?.creator?.completed_step === 1 || res?.data?.creator?.completed_step === 2 ||res?.data?.creator?.completed_step === 3) &&  res?.data?.creator?.status !== "APPROVED"){
+        if ((res?.data?.creator?.completed_step === 1 || res?.data?.creator?.completed_step === 2 || res?.data?.creator?.completed_step === 3) && res?.data?.creator?.status !== "APPROVED") {
           router.push("/creator-registration");
-        } else if(res?.data?.creator?.completed_step === 3 &&  res?.data?.creator?.status === "APPROVED"){
+        } else if (res?.data?.creator?.completed_step === 3 && res?.data?.creator?.status === "APPROVED") {
           router.push("/creator/dashboard");
         }
         else router.push("/dashboard");
@@ -174,11 +176,13 @@ export default function LoginForm() {
   const onSubmit = async (data: ILoginSchema) => {
     setLoading(true);
     setIsAuthStatus("loading");
+
     try {
       ("use server");
       const res: IPostLoginResponse | any = await loginAPI({
         email: data?.email,
         password: data?.password,
+        fcmToken: messagingToken
       });
       if (res?.status === 200 || res?.status === 201) {
         if (res?.data?.otpSent) {
@@ -189,6 +193,7 @@ export default function LoginForm() {
         const response = await signIn("credentials", {
           username: data?.email,
           password: data?.password,
+          ...(messagingToken ? { fcmToken: messagingToken } : {}),
           redirect: false,
         });
         if (response?.ok) {
@@ -216,27 +221,7 @@ export default function LoginForm() {
       setIsRemember(true);
       methods.trigger(["email", "password"]);
     }
-    // if ("serviceWorker" in navigator) {
-    //   navigator.serviceWorker
-    //     .register("/firebase-messaging-sw.js")
-    //     .then(async () => {
-    //       console.log("Service Worker registered");
-    //       const token = await generateToken();
-    //       console.log("FCM Token:", token);
-    //       setMessagingToken(token);
-    //     })
-    //     .catch((err) => console.error("SW registration failed:", err));
-    // }
   }, []);
-
-  // useEffect(() => {
-  //   if (!messaging) return; 
-  //   onMessage(messaging, (payload) => {
-  //     console.log("Message received. ", payload);
-  //     // Handle foreground messages
-  //     toastMessage.info(payload?.notification?.title || "New Notification");
-  //   });
-  // }, [messaging]); 
 
   useEffect(() => {
     if (token) {
@@ -281,6 +266,7 @@ export default function LoginForm() {
 
   return (
     <FormProvider {...methods}>
+      <NotificationSetup setMessagingToken={setMessagingToken} />
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-3"

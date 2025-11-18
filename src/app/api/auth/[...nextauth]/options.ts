@@ -8,6 +8,7 @@ interface AuthorizeCredentials {
   otp?: string;
   password?: string;
   redirect?: boolean;
+  fcmToken?: string | null
 }
 interface AuthorizeGoogleCredentials {
   token: string;
@@ -21,6 +22,7 @@ const authOptions: NextAuthOptions = {
       credentials: {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password", optional: true },
+        fcmToken: { label: "FcmToken", type: "text", optional: true },
         token: { label: "token", type: "text", optional: true },
         otp: { label: "OTP", type: "text", optional: true }, // Add OTP field
       },
@@ -50,6 +52,7 @@ const authOptions: NextAuthOptions = {
             const response: IPostLoginResponse = await loginAPI({
               email: credentials?.username,
               password: credentials?.password,
+              fcmToken: credentials?.fcmToken,
             });
             if (response?.data) {
               return {

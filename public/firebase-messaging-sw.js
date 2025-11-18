@@ -1,31 +1,63 @@
-// public/firebase-messaging-sw.js
+/* eslint-disable no-undef */
+importScripts(
+  "https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"
+);
+importScripts(
+  "https://www.gstatic.com/firebasejs/10.12.3/firebase-messaging-compat.js"
+);
 
-// Import the Firebase scripts (must be compat for service worker!)
-importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js");
+// ✅ Initialize Firebase
 firebase.initializeApp({
-  apiKey: "AIzaSyABfVhx4Yd70PlKMAypvu0i2Fsaz_V-9fA",
-  authDomain: "truereff-dec3e.firebaseapp.com",
-  projectId: "truereff-dec3e",
-  storageBucket: "truereff-dec3e.firebasestorage.app",
-  messagingSenderId: "12015132178",
-  appId: "1:12015132178:web:d59b64737c5c1e7fbb02cb",
-  measurementId: "G-8WKYZ55KDG"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID",
 });
 
-// Retrieve firebase messaging
+// ✅ Get messaging instance
 const messaging = firebase.messaging();
 
-// Handle background messages
-messaging.onBackgroundMessage(function(payload) {
+// ✅ Handle background notification
+messaging.onBackgroundMessage(function (payload) {
   console.log("Received background message ", payload);
-  console.log("API Key:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
 
-  const notificationTitle = payload.notification?.title || "Background Message Title";
+  const notificationTitle = "Trureff Notification";
+  const data = JSON.parse(payload?.data?.payload);
   const notificationOptions = {
-    body: payload.notification?.body || "Background Message body.",
-    icon: "/assets/common/truereff-logo.svg"
+    body: payload.notification?.title,
+    icon: "https://truereff.com/favicon.ico",
+    data: {
+      url:
+        "https://www.truereff.com" + data?.path || "https://www.truereff.com", // 👈 redirect target
+    },
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+// ✅ Handle notification click redirect
+self.addEventListener("notificationclick", function (event) {
+  console.log("Notification click: ", event.notification.data);
+  event.notification.close();
+
+  const redirectUrl =
+    event.notification.data?.path || "https://www.truereff.com";
+
+  // Focus existing tab or open a new one
+  event.waitUntil(
+    clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (client.url === redirectUrl && "focus" in client) {
+            return client.focus();
+          }
+        }
+        if (clients.openWindow) {
+          return clients.openWindow(redirectUrl);
+        }
+      })
+  );
 });

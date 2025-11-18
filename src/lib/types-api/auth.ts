@@ -21,6 +21,7 @@ export interface IPostSocialLoginRequest {
 export interface IPostLoginRequest {
   email: string;
   password?: string;
+  fcmToken?: string | null;
 }
 export interface IPostLoginResponse {
   status: number;

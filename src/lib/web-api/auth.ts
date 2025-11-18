@@ -59,6 +59,7 @@ export const loginAPI = async (
     const response = await axios.post("/auth/login", {
       userName: params?.email,
       password: params?.password,
+      fcmToken: params?.fcmToken
     });
     const user = response?.data;
     if (user) {
