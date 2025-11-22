@@ -42,7 +42,7 @@ messaging.onBackgroundMessage(function (payload) {
 
 // ✅ Handle notification click redirect
 self.addEventListener("notificationclick", function (event) {
-  console.log("Notification click: ", event.notification.data);
+  console.log("Notification click: ", event.notification);
   event.notification.close();
 
   const redirectUrl =
