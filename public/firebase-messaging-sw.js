@@ -23,18 +23,21 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage(function (payload) {
   console.log("Received background message ", payload);
 
-  const notificationTitle = "Trureff Notification";
-  const data = JSON.parse(payload?.data?.payload);
-  const notificationOptions = {
-    body: payload.notification?.title,
-    icon: "https://truereff.com/favicon.ico",
-    data: {
-      url:
-        "https://www.truereff.com" + data?.path || "https://www.truereff.com", // 👈 redirect target
-    },
-  };
+  const notificationTitle = "Truereff Notification";
+  const data = JSON.parse(payload?.data?.payload ?? "{}")
+  console.log("Payload data:", data);
+  if (data?.message) {
+    const notificationOptions = {
+      body: data?.message,
+      icon: "https://truereff.com/favicon.ico",
+      data: {
+        url:
+          "https://www.truereff.com" + data?.path || "https://www.truereff.com", // 👈 redirect target
+      },
+    };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+    self.registration.showNotification(notificationTitle, notificationOptions);
+  }
 });
 
 // ✅ Handle notification click redirect
@@ -43,7 +46,7 @@ self.addEventListener("notificationclick", function (event) {
   event.notification.close();
 
   const redirectUrl =
-    event.notification.data?.path || "https://www.truereff.com";
+    event.notification.data?.path || "https://truereff.com";
 
   // Focus existing tab or open a new one
   event.waitUntil(

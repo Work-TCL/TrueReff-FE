@@ -38,6 +38,16 @@ export default function NotificationSetup({ setMessagingToken }: { setMessagingT
                 console.error("🔥 FCM error:", err);
             }
         })();
+        onMessage(messaging!, (payload: any) => {
+            // 👇 manually show notification popup
+            const data = JSON.parse(payload?.data?.payload??"{}")
+            if (data?.message) {                                
+                new Notification("Truereff Notification", {
+                    body: data?.message,
+                    icon: "https://truereff.com/favicon.ico", // optional icon
+                });
+            }
+        });
     }, []);
     
 
