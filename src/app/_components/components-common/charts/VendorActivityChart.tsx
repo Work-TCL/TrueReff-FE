@@ -47,7 +47,7 @@ const CustomizedLabel: React.FC<CustomizedLabelProps> = ({
   value,
 }) => {
   return (
-    <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="center">
+    <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="start">
       {value}
     </text>
   );
