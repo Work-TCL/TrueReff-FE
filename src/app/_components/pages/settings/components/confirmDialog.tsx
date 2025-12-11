@@ -36,7 +36,8 @@ export default function ConfirmDialog({
           <p className="text-xs md:text-sm text-red-500">{warning}</p>
         )}
 
-        <div className="grid grid-cols-2 gap-x-4 mt-4">
+        <div className="grid grid-cols-3 gap-x-4 mt-4">
+          <div/>
           <CButton
             variant="outline"
             type="button"

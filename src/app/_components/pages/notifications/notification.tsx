@@ -117,7 +117,7 @@ export default function Notification() {
   }, [page]);
 
   useEffect(() => {
-    socketService.connect();
+    // socketService.connect();
     if (creator.creatorId || vendor.vendorId) {
       let id: any = creator.creatorId || vendor.vendorId;
       id && socketService.registerUser(String(id));

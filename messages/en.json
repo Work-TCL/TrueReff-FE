@@ -802,5 +802,10 @@
   "Tell_me_about_you_as_a": "Tell me about you self",
   "Enter_your_role": "Creator or Brand",
   "Form_submitted_successfully": "Form submitted successfully",
-  "how_panel_works": "How panel works?"
+  "how_panel_works": "How panel works?",
+  "Message_deleted": "This message is deleted.",
+  "Edited": "Edited",
+  "Edit_Message": "Edit Message",
+  "Confirm_Delete_Message": "Are you sure you want to delete this message?",
+  "Confirm_Delete_Warning": "Note: This action cannot be undone."
 }

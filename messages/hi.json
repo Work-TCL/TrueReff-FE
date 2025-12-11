@@ -779,5 +779,10 @@
   "Tell_me_about_you_as_a": "अपने बारे में बताएं",
   "Enter_your_role": "निर्माता या ब्रांड",
   "Form_submitted_successfully": "फॉर्म सफलतापूर्वक सबमिट किया गया",
-  "how_panel_works": "पैनल कैसे काम करता है?"
+  "how_panel_works": "पैनल कैसे काम करता है?",
+  "Message_deleted": "यह संदेश हटा दिया गया है।",
+  "Edited": "संपादित",
+  "Edit_Message": "संदेश संपादित करें",
+  "Confirm_Delete_Message": "क्या आप वाकई इस संदेश को हटाना चाहते हैं?",
+  "Confirm_Delete_Warning": "नोट: इस क्रिया को पूर्ववत नहीं किया जा सकता।"
 }

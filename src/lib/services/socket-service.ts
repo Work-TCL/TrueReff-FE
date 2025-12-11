@@ -53,7 +53,7 @@ class SocketService {
     callback: (data: { message: string }) => void
   ): void {
     if (this.socket) {
-      this.socket.on("newCollaborationMessage", callback);
+      this.socket.on("newMessage", callback);
     }
   }
 
@@ -79,23 +79,67 @@ class SocketService {
   }
 
   /**
-   * Send a message to the collaboration room
+   * Listen for message read event
    */
-  sendMessage(
-    collaborationId: string,
-    message: string,
-    creatorId?: string,
-    vendorId?: string
-  ): void {
+
+  onReadMessages(callback: (data: { message: string }) => void): void {
     if (this.socket) {
-      this.socket.emit("collaborationMessage", {
-        message,
-        creatorId,
-        vendorId,
-      });
+      this.socket.on("messageRead", callback);
     }
   }
 
+  /**
+   * Emit a read message event
+   */
+  readMessage(data: any): void {
+    if (this.socket) {
+      this.socket.emit("readMessage", data);
+    }
+  }
+
+  /**
+   * Send a message to the collaboration room
+   */
+  sendMessage(message: any): void {
+    if (this.socket) {
+      this.socket.emit("sendMessage", message);
+    }
+  }
+
+  /**
+   * Edit a message in the collaboration room
+   */
+  editMessage(message: any): void {
+    if (this.socket) {
+      this.socket.emit("editMessage", message);
+    }
+  }
+
+  /**
+   * Listen for message edited event
+   */
+  onMessageEdited(callback: (data: { message: string }) => void): void {
+    if (this.socket) {
+      this.socket.on("messageEdited", callback);
+    }
+  }
+
+  /**
+   * Listen for message deleted event
+   */
+  onMessageDeleted(callback: (data: { messageId: string }) => void): void {
+    if (this.socket) {
+      this.socket.on("messageDeleted", callback);
+    }
+  }
+  /**
+   * Delete a message in the collaboration room
+   */
+  deleteMessage({messageId,roomId}: { messageId: string, roomId: string }): void {
+    if (this.socket) {
+      this.socket.emit("deleteMessage", { messageId, roomId });
+    }
+  }
   /**
    * Listen for new collaboration messages
    */
