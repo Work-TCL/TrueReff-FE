@@ -262,12 +262,12 @@ export default function CollaborationList() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setSearch(value);
-    debouncedSearch(value, selectedStatus);
+    debouncedSearch(value, selectedStatus !== "ALL" ? selectedStatus : "");
   };
 
   const handlePageChange = (page: number) => {
     page !== currentPage &&
-      fetchCollaboration(page, true, search, selectedStatus);
+      fetchCollaboration(page, true, search, selectedStatus !== "ALL" ? selectedStatus : "");
   };
   const handleSelectStatus = (selectedOption: string) => {
     router.push(`?status=${selectedOption}`);
