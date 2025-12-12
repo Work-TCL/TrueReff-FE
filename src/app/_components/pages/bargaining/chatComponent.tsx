@@ -174,11 +174,15 @@ export default function ChatComponent({
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting && !isLoading && !isLoading) {
+        if (entry.isIntersecting && !isLoading) {
           setCurrentPage((prev) => prev + 1);
         }
       },
-      { root: null, rootMargin: "0px", threshold: 1.0 }
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0,
+      }
     );
 
     const currentRef = loadingRef.current;
@@ -252,7 +256,7 @@ export default function ChatComponent({
               : "";
             return (
               <div key={idx} className={`flex ${owner ? "justify-end" : "justify-start"} gap-2.5`}>
-                <div className={`flex items-start gap-1 ${owner ? "flex-row-reverse" : "flex-row"}`}>
+                <div className={`flex flex-1 items-start gap-1 ${owner ? "flex-row-reverse" : "flex-row"}`}>
                   <Avatar key={idx} className="md:size-8 size-6">
                     <AvatarImage
                       src={
@@ -263,21 +267,21 @@ export default function ChatComponent({
                       className="rounded-full border border-border md:size-8 size-6 "
                     />
                   </Avatar>
-                  <div className={`flex flex-col leading-1.5 p-2 max-w-[70%] min-w-[40%] rounded-lg ${owner ? "bg-pink-100" : "bg-gray-100"} rounded-e-base rounded-es-base`}>
+                  <div className={`flex flex-col leading-1.5 p-2 max-w-[65%] min-w-[30%] rounded-lg ${owner ? "bg-pink-100" : "bg-gray-100"} rounded-e-base rounded-es-base`}>
                     {msg?.isDeleted ? <span className="text-gray-500">{translate("Message_deleted")}</span> : <><div className="flex justify-end space-x-1.5 rtl:space-x-reverse">
                       <span className="text-xs text-gray-600">{msg?.isEdited && <span className="text-gray-400">{translate("Edited")}{" "}</span>}{messageSentTime}</span>
                     </div>
                       <p className="text-sm py-1 text-body">{text}</p>
                       {owner && <span className="text-[10px] text-gray-400">{msg.isRead ? "Seen" : "Delivered"}</span>}</>}
                   </div>
-                  <div className="relative" ref={dropDownRef}>
+                  <div className="relative my-auto" ref={dropDownRef}>
                     {owner && !msg?.isDeleted && 
-                      <EllipsisVertical className="cursor-pointer" onClick={(e) => {
+                      <EllipsisVertical className="cursor-pointer text-gray-400" onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
                         setMessageId(messageId ? "" : msg?._id)}} />
                     }
-                    <div id="dropdownDots" className={`z-10 bg-neutral-primary-medium border border-default-medium rounded-md shadow-lg w-30 absolute ${messageId === msg?._id ? "block" : "hidden"} right-5 -top-1 bg-white`}>
+                    <div id="dropdownDots" className={`z-10 bg-neutral-primary-medium border border-default-medium rounded-md shadow-lg w-30 absolute ${messageId === msg?._id ? "block" : "hidden"} right-5 -top-7 bg-white`}>
                       <ul className="p-1 text-sm text-body font-medium" aria-labelledby="dropdownMenuIconButton">
                         <li onClick={() => {
                           setEditMessage(msg);
