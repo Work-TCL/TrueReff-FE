@@ -72,7 +72,7 @@ export default function ChatComponent({
         setMessages((prev) => [data, ...prev]);
 
         // If the message was not sent by this user, mark it as read
-        if (collaborationId === data.collaborationId && data.senderId !== userId) {
+        if (collaborationId === data.collaborationId && ( user.role === "creator" ? data.creatorId !== userId  : data.vendorId !== userId)) {
           socketService.readMessage({ messageId: data._id, roomId: collaborationId, userId });
         }
       });
@@ -213,7 +213,7 @@ export default function ChatComponent({
   }
 
   return (
-    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden shadow-md flex flex-col md:h-full h-[80vh] md:sticky md:top-0">
+    <Card className="bg-white md:flex-1 rounded-lg p-4 overflow-hidden shadow-md flex flex-col h-full md:sticky md:top-0">
       <div className="flex items-center gap-3 pb-4 border-b-2 border-stroke">
         <Avatar>
           {collaborationData.creatorId?.profile_image ||
@@ -234,7 +234,7 @@ export default function ChatComponent({
         </div>
       </div>
       {/* <div className="h-px w-full bg-stroke mx-2"></div>{" "} */}
-      <CardContent className="flex flex-col-reverse p-0 pb-2 overflow-y-auto gap-3 h-full max-h-[calc(100vh-285px)]">
+      <CardContent className="flex flex-col-reverse p-0 pb-2 overflow-y-auto gap-3 h-full">
         {/* {isLoading && <Loading />} */}
         {!isLoading && message?.length < 0 && (
           <p className="opacity-50 text-center">

@@ -749,7 +749,7 @@ export default function BargainingView() {
         </div>
 
         {/* Right Section: Chat */}
-        <div className="col-span-1">
+        <div className="col-span-1 max-h-[calc(100vh-140px)]">
           <ChatComponent collaborationData={collaborationData} />
         </div>
       </div>
