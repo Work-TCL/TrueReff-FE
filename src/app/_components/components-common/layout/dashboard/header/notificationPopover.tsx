@@ -11,12 +11,15 @@ import {
 import { cn } from "@sohanemon/utils";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/auth-user";
 
 interface Notification {
   _id: string;
   message: string;
   read: boolean;
   createdAt: string;
+  notificationType?: string;
+  path?: string;
 }
 
 interface NotificationPopoverProps {
@@ -38,6 +41,7 @@ export default function NotificationPopover({
   const [animate, setAnimate] = useState(false);
   const prevUnread = useRef(unreadNotifications);
   const translate = useTranslations();
+  const { account } = useAuthStore();
   const router = useRouter();
 
   // trigger animation when unreadNotifications increases
@@ -55,6 +59,20 @@ export default function NotificationPopover({
     }
   }, [open]);
 
+  const handleNotificationClick = (notification: Notification) => {
+    if(notification?.notificationType === "collaboration"){
+      if(notification?.path){
+        router.push(notification.path);
+      } else {
+        if(account?.role === "creator"){
+          router.push("/creator/collaboration");
+        } else {
+          router.push("/vendor/creators/collaboration");
+        }
+      }
+    }
+    setOpen(false);
+  }
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -99,9 +117,10 @@ export default function NotificationPopover({
                 key={notification._id}
                 className={`flex items-start border-b gap-3 cursor-pointer p-2
                 ${!notification.read ? "font-semibold" : "font-normal"}`}
-                onClick={() =>
+                onClick={() => {
                   !notification.read && readNotifications(notification._id)
-                }
+                  handleNotificationClick(notification);
+                }}
               >
                 <div>
                   <p className="text-sm text-gray-800">
