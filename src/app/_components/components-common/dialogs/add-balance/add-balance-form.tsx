@@ -9,6 +9,8 @@ import axios from "@/lib/web-api/axios";
 import { Info } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { useAuthStore } from "@/lib/store/auth-user";
+import { toastMessage } from "@/lib/utils/toast-message";
 interface IAddBalanceFormProps {
   onClose: () => void;
   submitting: boolean;
@@ -22,14 +24,17 @@ declare global {
   }
 }
 interface IDeposit {
-  razorpayOrderId: string;
   amount: number;
+  currency: string;
+  order_id: string;
 }
 export default function AddBalanceForm({
   onClose,
   handleRefresh = () => {}
 }: IAddBalanceFormProps) {
   const translate = useTranslations();
+  const {vendor} = useVendorStore();
+  const {account} = useAuthStore();
   const [amount, setAmount] = useState<any>(500);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [mainBalanceOpen, setMainBalanceOpen] = useState<boolean>(false);
@@ -37,69 +42,38 @@ export default function AddBalanceForm({
   const minAmount = 1;
   const maxAmount = 500000;
 
-  // const handlePayment = async ({amount,razorpayOrderId}:IDeposit) => {  
-  //   const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
-  //   try {  
-  //     // Step 1: Configure Razorpay options
-  //     const options = {
-  //       key: key, // Replace with your Razorpay Key ID
-  //       amount: amount, // Amount in paise
-  //       currency: 'INR',
-  //       name: 'truereff',
-  //       description: 'Wallet Recharge',
-  //       order_id: razorpayOrderId, // Use the order ID from the backend
-  //       prefill: {
-  //         name: vendor?.business_name, // Replace with dynamic user data
-  //         email: vendor?.company_email, // Replace with dynamic user data
-  //       },
-  //       theme: {
-  //         color: '#3399cc',
-  //       },
-  //       handler: async function (response: any) {
-  //         // Step 2: Handle payment success
-  //         console.log('Payment successful', response);
-  //         handleRefresh()
-  //       },
-  //       modal: {
-  //         ondismiss: function () {
-  //           console.log('Payment popup closed');
-  //         },
-  //       },
-  //     };
-  
-  //     // Step 4: Open Razorpay payment popup
-  //     const rzp = new window.Razorpay(options);
-  //     rzp.open();
-  //   } catch (error) {
-  //     console.error('Error creating Razorpay order:', error);
-  //     // alert('Failed to initiate payment. Please try again.');
-  //   }
-  // };
-  const handleCheckout = (payment_session_id:string) => {
-    const cashfree = window.Cashfree({
-      mode: 'production', // or 'production'
-    });
-
-    const checkoutOptions = {
-      paymentSessionId:payment_session_id,
-      redirectTarget: '_blank',
-      appearance: {
-        width: '425px',
-        height: '700px',
+  const handlePayment = async ({amount,currency, order_id}:IDeposit) => {  
+    const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    try {  
+      var options = {
+      "key": key,        // Razorpay secret key of test mode
+      "currency": currency,
+      "name": "truereff",
+      "description": "Test Transaction",
+      "order_id": order_id,     //  order ID from API response
+      
+      "handler": function () {
+        toastMessage.success("Payment Successful!");
+        handleRefresh();
       },
+
+      "prefill": {
+        "name": vendor?.business_name,
+        "email": vendor?.company_email,
+        "contact": account?.phone
+      },
+
+      "theme": {
+        "color": "#3399cc"
+      }
     };
 
-    cashfree.checkout(checkoutOptions).then((result:any) => {
-      if (result.error) {
-        console.error('Payment error:', result.error);
-      }
-      if (result.redirect) {
-        console.log('Redirection triggered.');
-      }
-      if (result.paymentDetails) {
-        console.log('Payment completed:', result.paymentDetails.paymentMessage);
-      }
-    });
+      var rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error('Error creating Razorpay order:', error);
+      // alert('Failed to initiate payment. Please try again.');
+    }
   };
   const handleAddBalance = async () => {
     setSubmitting(true);
@@ -113,7 +87,7 @@ export default function AddBalanceForm({
       if (response.status === 200) {
         onClose();
         setSubmitting(false);
-        handleCheckout(response?.data?.data?.payment_session_id)
+        handlePayment(response?.data?.data)
       } else {
         setSubmitting(false);
       }
