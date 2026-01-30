@@ -7,6 +7,7 @@ import StatusBadge from "@/app/_components/components-common/status-badge";
 import DataTable from "@/app/_components/components-common/data-table";
 import { IRechargeHistory } from "./recharge-history";
 import { formatDateWithTime } from "@/lib/utils/constants";
+import TruncateWithToolTip from "../../ui/truncatWithToolTip/TruncateWithToolTip";
 
 interface ICreatorTableProps {
     data: IRechargeHistory[];
@@ -62,6 +63,17 @@ const RechargeHistoryTable = ({
             header: () => <div className="flex justify-center">{translate("Transaction_Id")}</div>,
             cell: ({ row }) => (
               <div className="flex justify-center">{row?.original?.paymentId}</div>
+            )
+        },
+        {
+            accessorKey: "error",
+            header: () => <div className="flex">{translate("Error")}</div>,
+            cell: ({ row }) => (
+                <TruncateWithToolTip
+                    checkHorizontalOverflow={false}
+                    linesToClamp={2}
+                    text={row?.original?.error ?? ""}
+                />
             )
         },
         {

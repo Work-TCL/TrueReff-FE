@@ -51,11 +51,11 @@ export default function TruncateWithToolTip({
         <TooltipContent
           side="bottom"
           className={cn(
-            "z-[99] w-auto max-w-[80vw] rounded-md border border-igray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden",
+            "z-[99] w-auto max-w-[80vw] rounded-md border border-igray-color bg-white text-[14px] md:max-w-[300px] overflow-hidden p-2",
             tooltipContentClassName
           )}
         >
-          <span className="rounded-md bg-white text-sm p-2 break-words whitespace-normal">
+          <span className="rounded-md text-sm break-words whitespace-normal">
             {text}
           </span>
         </TooltipContent>
