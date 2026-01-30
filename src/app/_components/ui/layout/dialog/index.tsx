@@ -14,6 +14,7 @@ interface IDialogLayout {
   title?: string;
   titleClassName?: string;
   className?: string;
+  clickOutsideToClose?: boolean;
 }
 
 export default function DialogLayout({
@@ -25,6 +26,7 @@ export default function DialogLayout({
   title = "",
   titleClassName,
   className,
+  clickOutsideToClose = true,
   ...props
 }: IDialogLayout) {
   useEffect(() => {
@@ -50,7 +52,7 @@ export default function DialogLayout({
           >
             {onClose ? (
               <div
-                onClick={() => onClose()}
+                onClick={() => clickOutsideToClose && onClose()}
                 className="block fixed inset-0 bg-black bg-opacity-60 transition-opacity z-1 lg:backdrop-blur-none backdrop-blur-sm"
                 aria-hidden="true"
               ></div>

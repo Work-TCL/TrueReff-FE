@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { X, AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getWalletBalance } from "@/lib/web-api/vendor-dashboard";
+import DialogLayout from "../../ui/layout/dialog";
 
 const BalanceWarningBanner: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -40,37 +41,59 @@ const BalanceWarningBanner: React.FC = () => {
     setVisible(false);
   };
 
-  if (!visible) return null;
-
   return (
-    <div className="fixed top-4 right-4 z-50 w-[90%] max-w-sm sm:w-[400px] bg-yellow-50 border border-yellow-300 text-yellow-900 px-4 py-4 rounded-xl shadow-xl backdrop-blur-md transition-all duration-500">
-      <div className="flex justify-between items-start gap-3">
-        <div className="flex gap-2 text-sm sm:text-base leading-snug">
-          <AlertTriangle className="text-yellow-500 sm:w-12 w-7 mt-0.5 flex-shrink-0" />
-          <div className="flex-1">
-            <p className="font-semibold">Account balance warning</p>
-            <p className="text-yellow-800">{message}</p>
+    <DialogLayout
+      open={Boolean(visible)}
+      size="!max-w-[482px] w-full overflow-auto m-4"
+      onClose={() => handleClose()}
+      clickOutsideToClose={false}
+    >
+      <div className="pt-0 px-2 pb-2 sm:px-4 sm:pb-4 sm:bg-white sm:rounded-md sm:shadow-sm w-full overflow-y-auto relative">
+        <div className="flex flex-col justify-center items-center gap-2">
+          <div className="flex justify-center gap-1">
+            <AlertTriangle className="text-yellow-500 sm:w-12 w-7 mt-0.5 flex-shrink-0" />
+            <h2 className="text-lg font-bold text-gray-800">
+              Low Balance Alert
+            </h2>
+            <AlertTriangle className="text-yellow-500 sm:w-12 w-7 mt-0.5 flex-shrink-0" />
           </div>
+          <p className="text-yellow-800 text-center">Action Required</p>
+        </div>
+        <div className="max-w-md bg-white p-6 text-gray-800">
+          <p className="text-base font-medium mb-4">
+            Your Truereff account balance is low.
+          </p>
+
+          <ul className="list-disc list-inside space-y-2 mb-6 text-gray-700">
+            <li>Collaborations with creators will be paused</li>
+            <li>Your product visibility will be limited</li>
+          </ul>
+
+          <p className="text-md text-gray-700 mb-6">
+            To keep your product live, visible, and actively promoted by creators,
+            <span className="font-semibold text-gray-900">{" "}recharge your account now.
+            </span>
+          </p>
+
+          <p className="text-md font-medium text-gray-700">
+            Don’t lose sales. Don’t lose reach.
+            <span className="font-semibold"> Recharge immediately.</span>
+          </p>
         </div>
 
-        <button
-          onClick={handleClose}
-          className="hover:bg-yellow-200 p-1 rounded-full transition flex-shrink-0"
-          aria-label="Close"
-        >
-          <X className="w-4 h-4 text-yellow-700" />
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={() => {
+              router.push("/vendor/payment-earnings")
+              handleClose();
+            }}
+            className="text-sm bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-medium px-3 py-1.5 rounded-md transition"
+          >
+            Recharge Now
+          </button>
+        </div>
       </div>
-
-      <div className="mt-3 flex justify-end">
-        <button
-          onClick={() => router.push("/vendor/payment-earnings")}
-          className="text-sm bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-medium px-3 py-1.5 rounded-md transition"
-        >
-          Recharge Now
-        </button>
-      </div>
-    </div>
+    </DialogLayout>
   );
 };
 
