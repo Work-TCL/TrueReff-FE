@@ -186,6 +186,8 @@ export interface IChangePasswordSchema
 
 // Vendor register
 export const vendorRegisterFirstStepSchema = Yup.object().shape({
+  banner_image: Yup.string().trim().nullable(),
+  profile_image: Yup.string().trim().required("Profile Image is required"),
   business_name: Yup.string()
     .trim()
     .required("Business Name is required")
@@ -196,18 +198,6 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
     .email("Company Email must be a valid email")
     .lowercase("Company Email must be a valid email")
     .required("Company Email is required"),
-  pin: Yup.string()
-    .required("Pin code is required")
-    .matches(/^[0-9]{6}$/, "Pin code must be a valid 6-digit number"),
-  address: Yup.string().trim().required("Address is required"),
-  state: Yup.string().trim().required("State is required"),
-  city: Yup.string().trim().required("City is required"),
-  website: Yup.string().trim().url().required("Website is required"),
-  type_of_business: Yup.string()
-    .trim()
-    .required("Type of business is required"),
-  profile_image: Yup.string().trim().required("Profile Image is required"),
-  banner_image: Yup.string().trim().nullable(),
   category: Yup.array()
     .of(
       Yup.object().shape({
@@ -218,13 +208,24 @@ export const vendorRegisterFirstStepSchema = Yup.object().shape({
     .length(1, "Only one category can be selected")
     .required("Category is required"), // Ensure at least one category is selected
   sub_category: Yup.array().of(
-      Yup.object().shape({
-        label: Yup.string().trim().required("Label is required"),
-        value: Yup.string().trim().required("Value is required"),
-      })
-    ),
+    Yup.object().shape({
+      label: Yup.string().trim().required("Label is required"),
+      value: Yup.string().trim().required("Value is required"),
+    })
+  ),
     // .min(1, "Sub-category is required")
     // .required("Sub-Category is required"),
+  website: Yup.string().trim().url().required("Website is required"),
+  type_of_business: Yup.string()
+    .trim()
+    .required("Type of business is required"),
+  address: Yup.string().trim().required("Address is required"),
+  pin: Yup.string()
+    .required("Pin code is required")
+    .matches(/^[0-9]{6}$/, "Pin code must be a valid 6-digit number"),
+  state: Yup.string().trim().required("State is required"),
+  city: Yup.string().trim().required("City is required"),
+  
   contacts: Yup.array()
     .of(
       Yup.object().shape({

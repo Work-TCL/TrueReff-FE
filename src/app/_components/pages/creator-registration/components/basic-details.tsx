@@ -178,112 +178,50 @@ export default function BasicInfoForm({
         />
       </div>
       <div className="col-span-1">
-        <div className="flex flex-col">
-          <span className="mb-1 text-md text-gray-500 font-[400]">
-            {translate("State")}
-            <span className="text-red-500">*</span>
-          </span>
-          <Select
-            styles={customStyles}
-            value={[
-              {
-                value: formState.state,
-                label: formState.state
-                  ? formState.state
-                  : translate("Select_State"),
-              },
-            ]}
-            onChange={(value) => handleOnSelect(value?.value, "state")}
-            options={indianStates?.map((ele) => ({ value: ele, label: ele }))}
-            menuPortalTarget={
-              typeof document !== "undefined" ? document.body : null
-            } // Renders the dropdown outside of the current scrollable container
-            menuPosition="fixed"
-            className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder={translate("Select_State")}
-          />
-          {Boolean(get(methods.formState.errors, "state")) &&
-            methods.formState.errors["state"]?.message && (
-              <span className="text-red-600 text-sm p-2 block">
-                {methods.formState.errors["state"]?.message}
-              </span>
-            )}
-        </div>
+        <Input
+          label={translate("State")}
+          required={true}
+          placeholder={translate("Select_State")}
+          name="state"
+          type="react-select"
+          options={indianStates?.map((ele) => ({
+            value: ele,
+            label: ele,
+          }))}
+          autoFocus={false}
+          lableClassName="text-md font-[400]"
+        />
       </div>
       <div className="col-span-1">
-        <div className="flex flex-col">
-          <span className="mb-1 text-md text-gray-500 font-[400]">
-            {translate("City")}
-            <span className="text-red-500">*</span>
-          </span>
-          <Select
-            styles={customStyles}
-            value={[
-              {
-                value: formState.city,
-                label: formState.city
-                  ? formState.city
-                  : translate("Select_City"),
-              },
-            ]}
-            onChange={(value) => handleOnSelect(value?.value, "city")}
-            options={
-              formState.state
-                ? cities[formState?.state]?.map((ele: string) => ({
-                    value: ele,
-                    label: ele,
-                  }))
-                : []
-            }
-            menuPortalTarget={
-              typeof document !== "undefined" ? document.body : null
-            } // Renders the dropdown outside of the current scrollable container
-            menuPosition="fixed"
-            className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder={translate("Select_City")}
-          />
-          {Boolean(get(methods.formState.errors, "city")) &&
-            methods.formState.errors["city"]?.message && (
-              <span className="text-red-600 text-sm p-2 block">
-                {methods.formState.errors["city"]?.message}
-              </span>
-            )}
-        </div>
+        <Input
+          label={translate("City")}
+          required={true}
+          placeholder={translate("Select_City")}
+          name="city"
+          type="react-select"
+          options={methods.getValues()?.state
+            ? cities[methods.getValues()?.state]?.map((ele: string) => ({
+              value: ele,
+              label: ele,
+            }))
+            : []}
+          autoFocus={false}
+          lableClassName="text-md font-[400]"
+        />
       </div>
       <div className="col-span-1">
-        <div className="flex flex-col">
-          <span className="mb-1 text-md text-gray-500 font-[400]">
-            {translate("Gender")}
-            <span className="text-red-500">*</span>
-          </span>
-          <Select
-            styles={customStyles}
-            value={[
-              {
-                value: formState.gender,
-                label: formState.gender
-                  ? formState.gender
-                  : translate("Select_Gender"),
-              },
-            ]}
-            onChange={(value) => handleOnSelect(value?.value, "gender")}
-            options={gender?.map((ele) => ({ value: ele, label: ele }))}
-            menuPortalTarget={
-              typeof document !== "undefined" ? document.body : null
-            } // Renders the dropdown outside of the current scrollable container
-            menuPosition="fixed"
-            className="basic-multi-select focus:outline-none focus:shadow-none"
-            placeholder={translate("Select_Gender")}
-          />
-          {Boolean(get(methods.formState.errors, "gender")) &&
-            methods.formState.errors["gender"]?.message && (
-              <span className="text-red-600 text-sm p-2 block">
-                {methods.formState.errors["gender"]?.message}
-              </span>
-            )}
-        </div>
+        <Input
+          label={translate("Gender")}
+          required={true}
+          placeholder={translate("Select_Gender")}
+          name="gender"
+          type="react-select"
+          options={gender?.map((ele) => ({ value: ele, label: ele }))}
+          autoFocus={false}
+          lableClassName="text-md font-[400]"
+        />
       </div>
-      <div className="col-span-1">
+      <div className="col-span-1" id="dob-container">
         <div className="flex flex-col">
           <span className="mb-1 text-md text-gray-500 font-[400]">
             {translate("Date_of_Birth")}
@@ -309,7 +247,7 @@ export default function BasicInfoForm({
             )}
         </div>
       </div>
-      <div className="md:col-span-1 col-span-2 relative z-10">
+      <div className="md:col-span-1 col-span-2 relative z-10" id="category-container">
         <Input
           label={translate("Category")}
           placeholder={translate("Select_Category")}
@@ -320,6 +258,7 @@ export default function BasicInfoForm({
             label: ele?.name,
           }))}
           // menuPortalTarget={null}
+          required={true}
           max={1}
           autoFocus={false}
         />
@@ -340,8 +279,8 @@ export default function BasicInfoForm({
         />
       </div>
       
-      <div className="col-span-2">
-          <TagInput value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
+      <div className="col-span-2" id="tags-container">
+          <TagInput name="tags" value={methods.watch("tags")} onChange={handleTagChange} error={methods.formState.errors["tags"]?.message}/>
         </div>
     </div>
   );

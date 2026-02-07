@@ -15,7 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@/app/_components/ui/button";
 import BasicInfoForm from "./components/basic-details";
 import SocialMedia from "./components/social-media";
-import { cn, getErrorMessage } from "@/lib/utils/commonUtils";
+import { cn, getErrorMessage, scrollToContainerByInputName } from "@/lib/utils/commonUtils";
 import { useRouter, useSearchParams } from "next/navigation";
 import PaymentDetails from "./components/payment-details";
 import {
@@ -453,6 +453,15 @@ export default function CreatorRegistrationPage() {
       await fetchCategory();
     })();
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(methods.formState.errors)?.length > 0) {
+      const error = Object.keys(methods.formState.errors)[0];
+      if (error) {
+        scrollToContainerByInputName(error);
+      }
+    }
+  }, [Object.keys(methods.formState.errors)?.length]);
 
   useEffect(() => {
     if (creator?.category?.length > 0) {

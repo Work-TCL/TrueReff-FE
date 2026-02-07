@@ -102,3 +102,16 @@ export function formatFollowers(count: number = 0) {
   }
   return count.toString();
 }
+
+export const scrollToContainerByInputName = (name: string) => {
+  const container = document.getElementById(`${name}-container`);
+  if (container) {
+    container.scrollIntoView({ behavior: "smooth", block: "center" });
+    // optional: focus the input inside the container
+    const input = container.querySelector<HTMLInputElement>(
+      `input[name="${name}"]`
+    );
+    
+    input?.focus();
+  }
+};

@@ -1447,7 +1447,6 @@ export default function CreateProductCampaign(props: IAddProductDetailProps) {
                         const firstError = Object.keys(
                           methods.formState.errors
                         )[0];
-                        console.log("firstError", firstError);
                         scrollToContainerByInputName(firstError);
                       }
                     }}

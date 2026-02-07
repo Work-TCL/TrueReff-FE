@@ -12,7 +12,7 @@ import Button from "@/app/_components/ui/button";
 import BasicInfoForm, { ICategoryData } from "./components/basic-form";
 import ChannelForm from "./components/channel-form";
 import toast from "react-hot-toast";
-import { clearLocalStorage, getErrorMessage } from "@/lib/utils/commonUtils";
+import { clearLocalStorage, getErrorMessage, scrollToContainerByInputName } from "@/lib/utils/commonUtils";
 import { getCategories, getVendor, venderRegister } from "@/lib/web-api/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useVendorStore } from "@/lib/store/vendor";
@@ -114,7 +114,8 @@ export default function PreFormPage() {
       ]
     },
     resolver: yupResolver(vendorRegisterFirstStepSchema),
-    mode: "onSubmit",
+    mode: "onChange",
+    reValidateMode: "onSubmit",
   });
   const channelMethods = useForm<IVendorRegisterThirdStepSchema>({
     defaultValues: {
@@ -284,6 +285,14 @@ export default function PreFormPage() {
       }
     })();
   }, [vendor?.vendorId]);
+   useEffect(() => {
+      if (Object.keys(methods.formState.errors)?.length > 0) {
+        const error = Object.keys(methods.formState.errors)[0];
+        if(error){
+          scrollToContainerByInputName(error);
+        }
+      }
+    }, [Object.keys(methods.formState.errors)?.length]);
   const onSubmit = async (data: IVendorRegisterFirstStepSchema) => {
     setLoading(true);
     try {

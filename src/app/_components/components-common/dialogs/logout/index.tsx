@@ -16,7 +16,7 @@ export default function Logout() {
   return (
     <DialogLayout
       open={Boolean(dialogPath)}
-      size="!max-w-[638px] w-full overflow-auto"
+      size="!max-w-[638px] w-full overflow-auto m-2"
     >
       <div className="p-4 sm:p-10 sm:bg-white sm:rounded-md sm:shadow-sm w-full text-center overflow-y-auto">
         <span className="mb-4 inline-flex justify-center items-center w-[62px] h-[62px] rounded-full border-4 border-yellow-50 bg-yellow-100 text-yellow-500">

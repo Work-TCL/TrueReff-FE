@@ -15,6 +15,7 @@ interface ITag {
 export default function TagInput({
   labelClassName,
   value = [],
+  name = "",
   onChange,
   error,
   isRequired = true,
@@ -24,6 +25,7 @@ export default function TagInput({
   onChange: (tags: string[]) => void;
   error?: string;
   isRequired?: boolean;
+  name?: string;
 }) {
   const translate = useTranslations();
   const [input, setInput] = useState("");
@@ -108,6 +110,7 @@ export default function TagInput({
           <input
             type="text"
             value={input}
+            name={name}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder={translate("Type_to_search_or_create_a_tag")}
