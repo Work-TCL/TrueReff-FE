@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "54Q5J7LL32.com.truerefforg.apptruereff.dev",
+        "paths": ["/login", "/login/*"]
+      }
+    ]
+  }
+}

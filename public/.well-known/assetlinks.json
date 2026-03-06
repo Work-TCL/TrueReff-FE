@@ -1,10 +1,10 @@
 [
-    {
-        "relation": ["delegate_permission/common.handle_all_urls"],
-        "target": {
-            "namespace": "android-app",
-            "package_name": "com.hirenbhuva.apptruereff",
-            "sha256_cert_fingerprints": ["9B:87:80:F8:5D:0D:1B:D8:33:8A:11:A8:7B:52:22:E2:AF:55:E8:E3:70:CE:D5:C5:4A:96:BE:16:56:64:A4:80"]
-        }
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.truerefforg.apptruereff.dev",
+      "sha256_cert_fingerprints": ["91:B7:EB:AA:CC:BB:14:29:DB:2A:A9:1C:BB:A2:20:22:81:BB:F0:DD:7C:D6:50:0B:EE:CE:21:4D:DE:16:4C:33"]
     }
+  }
 ]
