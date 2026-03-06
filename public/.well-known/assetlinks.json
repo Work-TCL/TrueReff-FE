@@ -3,7 +3,7 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.truerefforg.apptruereff.dev",
+      "package_name": "com.truerefforg.apptruereff",
       "sha256_cert_fingerprints": ["91:B7:EB:AA:CC:BB:14:29:DB:2A:A9:1C:BB:A2:20:22:81:BB:F0:DD:7C:D6:50:0B:EE:CE:21:4D:DE:16:4C:33"]
     }
   }
