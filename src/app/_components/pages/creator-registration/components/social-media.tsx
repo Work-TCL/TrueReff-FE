@@ -2,6 +2,7 @@
 import Loader from "@/app/_components/components-common/layout/loader";
 import Button from "@/app/_components/ui/button";
 import ModalPortal from "@/lib/components/dialogs/ModelPortal";
+import { openApp } from "@/lib/utils/commonUtils";
 import { getConnectedChannel } from "@/lib/web-api/creator";
 import {
   Tooltip,
@@ -51,9 +52,11 @@ export default function SocialMedia({
     if (message) {
       toast.success(message);
       removeQueryParam("message");
+      openApp("creator-register");
     } else if (error) {
       toast.error(error);
       removeQueryParam("error");
+      openApp("creator-register");
     }
   }, [message, error]);
 

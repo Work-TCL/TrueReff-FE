@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getErrorMessage } from "@/lib/utils/commonUtils";
+import { getErrorMessage, openApp } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import Input from "@/app/_components/ui/form/Input";
@@ -225,6 +225,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (token) {
+      openApp("login");
       (async () => {
         setLoadingPage(true);
         try {

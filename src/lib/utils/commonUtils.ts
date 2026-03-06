@@ -115,3 +115,17 @@ export const scrollToContainerByInputName = (name: string) => {
     input?.focus();
   }
 };
+
+export function openApp(url: string = "login") {
+  const now = Date.now();
+
+  window.location.href = `apptruereff://${url}`;
+
+  setTimeout(function () {
+    if (Date.now() - now < 2000) {
+      // Android Play Store
+      window.location.href = `apptruereff://${url}`;
+        // "https://play.google.com/store/apps/details?id=com.truerefforg.apptruereff";
+    }
+  }, 1500);
+}
