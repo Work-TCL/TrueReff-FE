@@ -92,22 +92,23 @@ const authOptions: NextAuthOptions = {
         if(session && session.user.creator){
           token.creator = session.user.creator;
         }
+        console.log("callbacks",token, user,session, account)
         try {
-          const updatedUser = await getUserApi();
-          const user = updatedUser?.data;
-          if (user) {
-            token._id = user?._id;
-            token.name = user?.name;
-            token.email = user?.email;
-            token.phone = user?.phone;
-            token.type = user?.type;
-            token.isActive = user?.isActive;
-            token.isEmailVerified = user?.isEmailVerified;
-            token.createdAt = user?.createdAt;
-            token.updatedAt = user?.updatedAt;
-            token.creator = user?.creator;
-            token.vendor = user?.vendor;
-          }
+          // const updatedUser = await getUserApi();
+          // const user = updatedUser?.data;
+          // if (user) {
+          //   token._id = user?._id;
+          //   token.name = user?.name;
+          //   token.email = user?.email;
+          //   token.phone = user?.phone;
+          //   token.type = user?.type;
+          //   token.isActive = user?.isActive;
+          //   token.isEmailVerified = user?.isEmailVerified;
+          //   token.createdAt = user?.createdAt;
+          //   token.updatedAt = user?.updatedAt;
+          //   token.creator = user?.creator;
+          //   token.vendor = user?.vendor;
+          // }
 
           return token;
         } catch (error) {
