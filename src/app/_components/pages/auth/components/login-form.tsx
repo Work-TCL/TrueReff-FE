@@ -226,7 +226,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (token) {
-      console.log("token",token)
+      console.log("token===>",token)
       openApp(`login?token=${token}`);
       (async () => {
         setLoadingPage(true);
