@@ -36,7 +36,6 @@ export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  console.log("token",token)
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
   const [isRemember, setIsRemember] = useState(false);
@@ -226,35 +225,37 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (token) {
-      console.log("token===>",token)
-      openApp(`login?token=${token}`);
-      (async () => {
-        setLoadingPage(true);
-        try {
-          const res: any = await SocialLoginAPI({
-            accessToken: token
-          });
-
-          if (res?.status === 200 || res?.status === 201) {
-            const response = await signIn("credentials", {
-              username: res?.data?.email,
-              token: token,
-              redirect: false,
+      const appOpened = openApp(`login?token=${token}`);
+      console.log("appOpened",appOpened)
+      if (!appOpened) {
+        (async () => {
+          setLoadingPage(true);
+          try {
+            const res: any = await SocialLoginAPI({
+              accessToken: token
             });
-            if (response?.ok) {
-              toast.success("Login Successfully.");
-              await commonLogin(res);
-              methods?.reset();
-              return true;
+
+            if (res?.status === 200 || res?.status === 201) {
+              const response = await signIn("credentials", {
+                username: res?.data?.email,
+                token: token,
+                redirect: false,
+              });
+              if (response?.ok) {
+                toast.success("Login Successfully.");
+                await commonLogin(res);
+                methods?.reset();
+                return true;
+              }
+              throw "Internal server error";
             }
-            throw "Internal server error";
+          } catch (error) {
+            toast.error("social login failed.");
+          } finally {
+            setLoadingPage(false);
           }
-        } catch (error) {
-          toast.error("social login failed.");
-        } finally {
-          setLoadingPage(false);
-        }
-      })();
+        })();
+      }
     }
   }, [token]);
 
@@ -269,7 +270,7 @@ export default function LoginForm() {
 
   return (
     <FormProvider {...methods}>
-      <NotificationSetup setMessagingToken={setMessagingToken} />
+      {/* <NotificationSetup setMessagingToken={setMessagingToken} /> */}
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-3"
