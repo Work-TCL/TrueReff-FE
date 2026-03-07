@@ -36,6 +36,7 @@ export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  console.log("token",token)
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
   const [isRemember, setIsRemember] = useState(false);
@@ -225,12 +226,13 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (token) {
+      console.log("token",token)
       openApp(`login?token=${token}`);
       (async () => {
         setLoadingPage(true);
         try {
           const res: any = await SocialLoginAPI({
-            accessToken: token,
+            accessToken: token
           });
 
           if (res?.status === 200 || res?.status === 201) {

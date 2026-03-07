@@ -17,6 +17,7 @@ export interface IPostSignupResponse {
 // POST Login
 export interface IPostSocialLoginRequest {
   accessToken: string;
+  platform?: "web"
 }
 export interface IPostLoginRequest {
   email: string;

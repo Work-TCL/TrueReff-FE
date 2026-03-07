@@ -65,6 +65,7 @@ const authOptions: NextAuthOptions = {
             // Handle password login
             const response: IPostLoginResponse = await SocialLoginAPI({
               accessToken: credentials.token,
+              platform: "web"
             });
             if (response?.data) {
               return {
