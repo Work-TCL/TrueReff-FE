@@ -46,7 +46,6 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
   return async (request: NextRequest) => {
     const { pathname } = request.nextUrl;
     const user: any = await getToken({ req: request });
-    console.log("pathname",pathname,request.nextUrl.searchParams.get("token"))
     const token =
       request.cookies.get("next-auth.session-token") ||
       request.cookies.get("__Secure-next-auth.session-token");

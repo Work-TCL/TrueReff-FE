@@ -25,6 +25,11 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
+    const requestUrl = error?.config?.url;
+    const requestMethod = error?.config?.method;
+
+    console.log("API Path:", requestUrl);
+    console.log("Method:", requestMethod);
     if (error?.status === 401) {
       try {
         // Optional: refresh token logic here
