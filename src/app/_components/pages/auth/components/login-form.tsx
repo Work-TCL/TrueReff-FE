@@ -225,7 +225,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (token) {
-      openApp("login");
+      openApp(`login?token=${token}`);
       (async () => {
         setLoadingPage(true);
         try {

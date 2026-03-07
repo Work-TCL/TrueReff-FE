@@ -111,21 +111,23 @@ export const scrollToContainerByInputName = (name: string) => {
     const input = container.querySelector<HTMLInputElement>(
       `input[name="${name}"]`
     );
-    
+
     input?.focus();
   }
 };
 
 export function openApp(url: string = "login") {
   const now = Date.now();
+  console.log("window",window)
+  if (typeof window !== "undefined") {
+    window.location.href = `apptruereff://${url}`;
 
-  window.location.href = `apptruereff://${url}`;
-
-  setTimeout(function () {
-    if (Date.now() - now < 2000) {
-      // Android Play Store
-      window.location.href = `apptruereff://${url}`;
+    setTimeout(function () {
+      if (Date.now() - now < 2000) {
+        // Android Play Store
+        window.location.href = `apptruereff://${url}`;
         // "https://play.google.com/store/apps/details?id=com.truerefforg.apptruereff";
-    }
-  }, 1500);
+      }
+    }, 1500);
+  }
 }

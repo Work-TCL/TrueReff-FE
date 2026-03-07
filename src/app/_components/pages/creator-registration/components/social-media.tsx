@@ -52,11 +52,11 @@ export default function SocialMedia({
     if (message) {
       toast.success(message);
       removeQueryParam("message");
-      openApp("creator-register");
+      openApp(`creator-register?message=${message}`);
     } else if (error) {
       toast.error(error);
       removeQueryParam("error");
-      openApp("creator-register");
+      openApp(`creator-register?error=${message}`);
     }
   }, [message, error]);
 

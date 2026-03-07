@@ -37,14 +37,15 @@ const PUBLIC_ROUTES = [
   "/terms-condition",
   "/transaction-policy",
   "/privacy-policy",
+  "/open-app"
 ];
-const USER_PUBLIC_ROUTES = ["/store",'/product-detail'];
-const routes = ["/dashboard","/wishlist","/terms-condition","/privacy-policy"];
+const USER_PUBLIC_ROUTES = ["/store", '/product-detail'];
+const routes = ["/dashboard", "/wishlist", "/terms-condition", "/privacy-policy"];
 
 const withAuthMiddleware: MiddlewareFactory = (next) => {
   return async (request: NextRequest) => {
     const { pathname } = request.nextUrl;
-    const user:any = await getToken({req: request});
+    const user: any = await getToken({ req: request });
     const token =
       request.cookies.get("next-auth.session-token") ||
       request.cookies.get("__Secure-next-auth.session-token");
@@ -62,28 +63,33 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
 
     // Redirect Unauthenticated Users Trying to Access Protected Pages
     if (!token && !PUBLIC_ROUTES.includes(pathname)) {
+      if (pathname.startsWith("/creator-registration") && (request.nextUrl.searchParams.get("message") || request.nextUrl.searchParams.get("error"))) {
+        return NextResponse.redirect(
+          new URL(`/open-app${request.nextUrl.search}`, request.url)
+        );
+      }
       return NextResponse.redirect(new URL("/login", request.url));
     }
     // if(USER_PUBLIC_ROUTES.includes(pathname)){
     //   return NextResponse.redirect(new URL(pathname, request.url));
     // }
     // Redirect Authenticated Users Away from Auth 
-    
-    if(user?.creator && !pathname.startsWith("/creator-registration") && !routes.includes(pathname) && user?.creator?.status !== "APPROVED"){
+
+    if (user?.creator && !pathname.startsWith("/creator-registration") && !routes.includes(pathname) && user?.creator?.status !== "APPROVED") {
       return NextResponse.redirect(new URL('/creator-registration', request.url));
     }
-    if(user?.vendor && !pathname.startsWith("/vendor-register") && !routes.includes(pathname) && user?.vendor?.status !== "APPROVED"){
+    if (user?.vendor && !pathname.startsWith("/vendor-register") && !routes.includes(pathname) && user?.vendor?.status !== "APPROVED") {
       return NextResponse.redirect(new URL('/vendor-register', request.url));
     }
-    if (token && (pathname === "/" || match(["/login", "/register","/email-verify","/reset-password","/forgot-password","/send-otp"], request))) {
-      return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard`:`/dashboard`, request.url));
+    if (token && (pathname === "/" || match(["/login", "/register", "/email-verify", "/reset-password", "/forgot-password", "/send-otp"], request))) {
+      return NextResponse.redirect(new URL(user?.type ? `/${user?.type}/dashboard` : `/dashboard`, request.url));
     }
-    if(token && user?.type === "vendor" && user?.vendor?.status === "APPROVED" && (pathname.includes("/store/") && pathname.startsWith("/creator") || ["/creator-registration","/dashboard"].includes(pathname))){
-        return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
+    if (token && user?.type === "vendor" && user?.vendor?.status === "APPROVED" && (pathname.includes("/store/") && pathname.startsWith("/creator") || ["/creator-registration", "/dashboard"].includes(pathname))) {
+      return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
-    if(token && user?.type === "creator" && user?.creator?.status === "APPROVED" && (pathname.startsWith("/vendor") || ['/vendor-register','/dashboard'].includes(pathname))){
-        return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
+    if (token && user?.type === "creator" && user?.creator?.status === "APPROVED" && (pathname.startsWith("/vendor") || ['/vendor-register', '/dashboard'].includes(pathname))) {
+      return NextResponse.redirect(new URL(`/${user?.type}/dashboard`, request.url));
     }
 
     return next(request);
@@ -95,7 +101,7 @@ const middlewares = [withAuthMiddleware];
 export default stackMiddlewares(middlewares);
 
 export const config = {
-    matcher: [
-      '/((?!_next/static|_next/image|favicon.ico|manifest.json|.well-known|assetlinks.json|service-worker.js|firebase-messaging-sw.js|icons|assets|web-app-manifest-192x192.png|web-app-manifest-512x512.png|api).*)',
-    ],
-  };
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|manifest.json|service-worker.js|firebase-messaging-sw.js|icons|assets|web-app-manifest-192x192.png|web-app-manifest-512x512.png|api).*)',
+  ],
+};

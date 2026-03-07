@@ -22,6 +22,7 @@ export interface IPostLoginRequest {
   email: string;
   password?: string;
   fcmToken?: string | null;
+  platform?: "web"
 }
 export interface IPostLoginResponse {
   status: number;

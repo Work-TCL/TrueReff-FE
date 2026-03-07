@@ -53,6 +53,7 @@ const authOptions: NextAuthOptions = {
               email: credentials?.username,
               password: credentials?.password,
               fcmToken: credentials?.fcmToken,
+              platform: "web"
             });
             if (response?.data) {
               return {
