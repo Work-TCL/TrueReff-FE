@@ -2,7 +2,6 @@
 import Loader from "@/app/_components/components-common/layout/loader";
 import Button from "@/app/_components/ui/button";
 import ModalPortal from "@/lib/components/dialogs/ModelPortal";
-import { openApp } from "@/lib/utils/commonUtils";
 import { getConnectedChannel } from "@/lib/web-api/creator";
 import {
   Tooltip,
@@ -52,11 +51,9 @@ export default function SocialMedia({
     if (message) {
       toast.success(message);
       removeQueryParam("message");
-      openApp(`creator-register?message=${message}`);
     } else if (error) {
       toast.error(error);
       removeQueryParam("error");
-      openApp(`creator-register?error=${message}`);
     }
   }, [message, error]);
 
@@ -112,7 +109,7 @@ export default function SocialMedia({
       const scope = encodeURIComponent(
         "https://www.googleapis.com/auth/youtube.readonly"
       );
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${creatorId}`;
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${creatorId + "-" + "web"}`;
       window.location.href = authUrl;
     } catch (e) {
       setShowHelpTip(true);
@@ -124,7 +121,7 @@ export default function SocialMedia({
       const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID;
       const callBackUri = `${process.env.NEXT_PUBLIC_BACKEND_URL}/channel/creator/instagram/auth/callback`;
       const scope = "instagram_business_basic";
-      const authUrl = `https://www.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${callBackUri}&response_type=code&scope=${scope}&state=${creatorId}`;
+      const authUrl = `https://www.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${callBackUri}&response_type=code&scope=${scope}&state=${creatorId + "-" + "web"}`;
       window.location.href = authUrl;
     } catch (e) {
       setShowHelpTip(true);

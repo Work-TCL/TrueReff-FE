@@ -9,7 +9,7 @@ export default function SocialAuth() {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;    
     const redirectUri = `${BACKEND_URL}/auth/callback/google`;
     const scope = encodeURIComponent("openid email profile");
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=web`;
 
     window.location.href = authUrl;
   };
@@ -23,7 +23,7 @@ export default function SocialAuth() {
       nonce: "12345"
     });
 
-    window.location.href = `https://appleid.apple.com/auth/authorize?${params}`;
+    window.location.href = `https://appleid.apple.com/auth/authorize?${params}&state=web`;
   };
 
   return (

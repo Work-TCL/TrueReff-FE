@@ -36,8 +36,7 @@ const PUBLIC_ROUTES = [
   "/send-otp",
   "/terms-condition",
   "/transaction-policy",
-  "/privacy-policy",
-  "/open-app"
+  "/privacy-policy"
 ];
 const USER_PUBLIC_ROUTES = ["/store", '/product-detail'];
 const routes = ["/dashboard", "/wishlist", "/terms-condition", "/privacy-policy"];
@@ -63,11 +62,6 @@ const withAuthMiddleware: MiddlewareFactory = (next) => {
 
     // Redirect Unauthenticated Users Trying to Access Protected Pages
     if (!token && !PUBLIC_ROUTES.includes(pathname)) {
-      if (pathname.startsWith("/creator-registration") && (request.nextUrl.searchParams.get("message") || request.nextUrl.searchParams.get("error"))) {
-        return NextResponse.redirect(
-          new URL(`/open-app${request.nextUrl.search}`, request.url)
-        );
-      }
       return NextResponse.redirect(new URL("/login", request.url));
     }
     // if(USER_PUBLIC_ROUTES.includes(pathname)){

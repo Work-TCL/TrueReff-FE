@@ -115,39 +115,3 @@ export const scrollToContainerByInputName = (name: string) => {
     input?.focus();
   }
 };
-
-export function openApp(url: string = "login") {
-  const now = Date.now();
-  let appOpened = false;
-
-  if (typeof window !== "undefined") {
-    const deepLink = `apptruereff://${url}`;
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        appOpened = true;
-      }
-    };
-
-    const handleBlur = () => {
-      appOpened = true;
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("blur", handleBlur);
-
-    window.location.href = deepLink;
-
-    setTimeout(() => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("blur", handleBlur);
-
-      if (!appOpened && Date.now() - now < 2500) {
-        // App not installed → redirect to store
-        window.location.href = deepLink;
-          // "https://play.google.com/store/apps/details?id=com.truerefforg.apptruereff";
-      }
-    }, 2000);
-  }
-  return appOpened;
-}

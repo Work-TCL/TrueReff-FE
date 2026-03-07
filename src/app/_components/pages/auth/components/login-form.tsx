@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getErrorMessage, openApp } from "@/lib/utils/commonUtils";
+import { getErrorMessage } from "@/lib/utils/commonUtils";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import Input from "@/app/_components/ui/form/Input";
@@ -225,37 +225,34 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (token) {
-      const appOpened = openApp(`login?token=${token}`);
-      console.log("appOpened",appOpened)
-      if (!appOpened) {
-        (async () => {
-          setLoadingPage(true);
-          try {
-            const res: any = await SocialLoginAPI({
-              accessToken: token
-            });
+      (async () => {
+        setLoadingPage(true);
+        try {
+          const res: any = await SocialLoginAPI({
+            accessToken: token,
+            platform: "web"
+          });
 
-            if (res?.status === 200 || res?.status === 201) {
-              const response = await signIn("credentials", {
-                username: res?.data?.email,
-                token: token,
-                redirect: false,
-              });
-              if (response?.ok) {
-                toast.success("Login Successfully.");
-                await commonLogin(res);
-                methods?.reset();
-                return true;
-              }
-              throw "Internal server error";
+          if (res?.status === 200 || res?.status === 201) {
+            const response = await signIn("credentials", {
+              username: res?.data?.email,
+              token: token,
+              redirect: false,
+            });
+            if (response?.ok) {
+              toast.success("Login Successfully.");
+              await commonLogin(res);
+              methods?.reset();
+              return true;
             }
-          } catch (error) {
-            toast.error("social login failed.");
-          } finally {
-            setLoadingPage(false);
+            throw "Internal server error";
           }
-        })();
-      }
+        } catch (error) {
+          toast.error("social login failed.");
+        } finally {
+          setLoadingPage(false);
+        }
+      })();
     }
   }, [token]);
 
@@ -270,7 +267,7 @@ export default function LoginForm() {
 
   return (
     <FormProvider {...methods}>
-      {/* <NotificationSetup setMessagingToken={setMessagingToken} /> */}
+      <NotificationSetup setMessagingToken={setMessagingToken} />
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-3"
