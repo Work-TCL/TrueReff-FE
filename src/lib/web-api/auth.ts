@@ -543,10 +543,10 @@ export const getVendorCreatorCount = async (): Promise<any> => {
   }
 };
 
-export const deleteAccount = async (): Promise<any> => {
+export const deleteAccount = async (id: string): Promise<any> => {
   try {
     await axios.delete("/auth/delete-account");
-    return handleLogout();
+    return handleLogout(id);
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error);
     throw errorMessage || new Error("Error While Signup");

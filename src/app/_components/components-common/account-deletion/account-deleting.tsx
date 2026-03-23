@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/lib/store/auth-user";
 import { deleteAccount } from "@/lib/web-api/auth";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 const DeleteAccountCard = () => {
   const translate = useTranslations();
+  const {account} = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -16,7 +18,7 @@ const DeleteAccountCard = () => {
     setLoading(true);
     try {
       // API call to delete account
-      await deleteAccount();
+      await deleteAccount(account.id);
       setLoading(false);
       setShowConfirm(false);
     } catch (error) {

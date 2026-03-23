@@ -88,7 +88,7 @@ const CollaborationTable = ({
     setLoading(true);
     try {
       const response: any = await axios.delete(
-        `/product/collaboration/request/cancel/${isOpen?.collaborationId}`
+        `/product/collaboration/vendor/cancel-request/${isOpen?.collaborationId}`
       );
       if (response.status === 200) {
         toast.success(response.data.message);

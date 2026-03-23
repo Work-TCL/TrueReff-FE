@@ -35,6 +35,7 @@ const PUBLIC_ROUTES = [
   "/forgot-password",
   "/send-otp",
   "/terms-condition",
+  "/terms",
   "/transaction-policy",
   "/privacy-policy"
 ];
