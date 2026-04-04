@@ -323,7 +323,7 @@ export default function ViewProductDetail({
                 </div>
 
                 {/* Main Image */}
-                <div className="flex-1 flex items-center justify-center">
+                <div className="flex-1 flex items-start">
                   <Image
                     loader={({ src }) => src}
                     src={
