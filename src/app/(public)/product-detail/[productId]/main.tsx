@@ -332,8 +332,8 @@ export default function ViewProductDetail({
                         : "/assets/product/image-square.svg"
                     }
                     alt="Main Preview"
-                    width={400}
-                    height={400}
+                    width={350}
+                    height={350}
                     className="rounded-xl md:max-h-[500px] max-h-[400px] object-contain"
                   />
                 </div>
