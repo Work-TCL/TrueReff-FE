@@ -33,7 +33,6 @@ export default function RegisterForm() {
   const methods = useForm<IRegisterSchema>({
     defaultValues: {
       name: "",
-      phone: "",
       email: "",
       password: "",
     },
@@ -47,7 +46,6 @@ export default function RegisterForm() {
       ("use server");
       const payload: IPostSignupRequest = {
         name: data?.name,
-        phone: data?.phone,
         email: data?.email,
         password: data.password,
       };
@@ -85,12 +83,6 @@ export default function RegisterForm() {
           placeholder={translate("Name")}
           Icon={User}
           autoFocus
-        />
-        <Input
-          name="phone"
-          type="number"
-          placeholder={translate("Phone")}
-          Icon={Phone}
         />
         <Input
           name="email"

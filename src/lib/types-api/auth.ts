@@ -1,7 +1,6 @@
 // POST SignUp
 export interface IPostSignupRequest {
   name: string;
-  phone: string;
   email: string;
   password: string;
 }

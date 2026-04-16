@@ -97,10 +97,10 @@ export const registerSchema = Yup.object().shape({
     .required("Name is required")
     .min(5, "Name must be at least 5 characters")
     .max(50, "Name can't exceed 50 characters"),
-  phone: Yup.string()
-    .trim()
-    .required("Phone number is required")
-    .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
+  // phone: Yup.string()
+  //   .trim()
+  //   .required("Phone number is required")
+  //   .matches(/^[0-9]{10}$/, "Phone number must be a valid 10-digit number"),
   email: Yup.string()
     .trim()
     .email("Email must be a valid email address")
