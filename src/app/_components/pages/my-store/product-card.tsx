@@ -55,11 +55,11 @@ const ProductCard = ({ item: product }: { item: IProduct }) => {
           ) : (
             "-"
           )}
-          <div onClick={() => router?.push(`${product?.crmLink}`)}>
+          <div onClick={() => router?.push(`${product?.utmLink??"/"}`)}>
             <TruncateWithToolTip
               className="line-clamp-none truncate text-[10px] sm:text-xs font-medium text-[#0000EE] hover:underline cursor-pointer pt-3"
               checkHorizontalOverflow={true}
-              text={`${product?.crmLink}`}
+              text={`${product?.utmLink??""}`}
             />
           </div>
         </div>

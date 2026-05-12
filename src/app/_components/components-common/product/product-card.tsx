@@ -95,7 +95,7 @@ const ProductCard = ({
   };
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(product?.crmLink ?? "");
+      await navigator.clipboard.writeText(product?.utmLink ?? "");
       toastMessage.success("Link copied to clipboard!");
     } catch (err) {
       toastMessage.error("Failed to copy!");
@@ -220,7 +220,7 @@ const ProductCard = ({
               </button>
             </div>
           )} */}
-          {vendor?.vendorId === "" && creator?.creatorId === "" && (
+          {product?.utmLink && vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">
               <Link
                 href={product?.utmLink}

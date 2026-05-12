@@ -64,16 +64,16 @@ export default function BrandProductTable({
       header: "Tags",
     },
     {
-      accessorKey: "crmLink",
-      header: () => translate("CRM_Link"),
+      accessorKey: "utmLink",
+      header: () => translate("UTM_Link"),
       cell: ({ row }) => {
         const product = row.original;
         return (
-          <div onClick={() => router?.push(product?.crmLink)}>
+          <div onClick={() => router?.push(product?.utmLink ?? "")}>
             <TruncateWithToolTip
               className="text-xs sm:text-sm font-medium text-[#0000EE] hover:underline w-full max-w-[350px] line-clamp-none truncate"
               checkHorizontalOverflow={true}
-              text={product?.crmLink}
+              text={product?.utmLink ? product.utmLink : "-"}
             />
           </div>
         );

@@ -47,12 +47,12 @@ export default function CollaborationConfirmed({
                     <p>
                         <span className="font-semibold">Your Affiliate Link:</span>{" "}
                         <Link
-                            href={collaborationData?.crmLink??""}
+                            href={collaborationData?.utmLink??""}
                             className="text-pink-600 hover:underline break-words"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                           {collaborationData?.crmLink}
+                           {collaborationData?.utmLink??""}
                         </Link>
                     </p>
                 </div>

@@ -27,6 +27,7 @@ export interface IProduct {
   categories: string;
   collaborationStatus: string;
   crmLink: string;
+  utmLink?: string;
 }
 
 const fetchProductData = async (page: number, pageSize: number) => {

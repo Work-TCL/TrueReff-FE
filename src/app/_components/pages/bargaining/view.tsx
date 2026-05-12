@@ -543,7 +543,7 @@ export default function BargainingView() {
                       [translate("Commission_Type"), getCommissionType()],
                       [
                         translate("Affiliate_Link"),
-                        collaborationData?.crmLink ?? "-",
+                        collaborationData?.utmLink ?? "-",
                       ],
                     ].map(([label, value]: any[], idx) => (
                       <div

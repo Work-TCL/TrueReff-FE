@@ -42,7 +42,7 @@ const ButtonLogin: React.FC<AnimatedButtonProps> = ({
                 {label}
             </span>
             <div className={`
-          relative z-10 flex items-center justify-center rounded-full bg-white transition-colors duration-300 ease-in-out
+          relative z-10 ml-2 flex items-center justify-center rounded-full bg-white transition-colors duration-300 ease-in-out
           ${iconClassName}
         `}>
                 {icon}

@@ -88,7 +88,7 @@ const TrendingProductCard = ({ item: product, refreshData }: { item: IProduct, r
   };
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(product?.crmLink);
+      await navigator.clipboard.writeText(product?.utmLink);
       toastMessage.success("Link copied to clipboard!");
     } catch (err) {
       toastMessage.error("Failed to copy!");
@@ -100,7 +100,7 @@ const TrendingProductCard = ({ item: product, refreshData }: { item: IProduct, r
         {/* Image */}
         <div
           className="bg-background rounded-lg max-w-full aspect-[4/3] w-full flex items-center justify-center overflow-hidden"
-          onClick={() => router.push(`${product?.crmLink}`)}
+          onClick={() => router.push(`${product?.utmLink}`)}
         >
           {product.media?.length > 0 ? (
             <img
@@ -184,7 +184,7 @@ const TrendingProductCard = ({ item: product, refreshData }: { item: IProduct, r
               </span>
             )}
           </div>
-          {vendor?.vendorId === "" && creator?.creatorId === "" && (
+          {product?.utmLink && vendor?.vendorId === "" && creator?.creatorId === "" && (
             <div className="flex items-center justify-between w-full">
               <Link
                 href={product?.utmLink}
