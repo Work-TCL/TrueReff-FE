@@ -22,6 +22,7 @@ import {
   ArrowDownToLine,
   SquareUserRound,
   MonitorPlay,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -224,6 +225,12 @@ const Sidebar = ({ expanded, handleExpandSidebar }: ISidebarProps) => {
       icon: UserRound,
       link: "/creator/collaboration",
       notification: true
+    },
+    {
+      label: translate("Social_Automation"),
+      icon: Zap,
+      link: "/creator/social-automation",
+      notification: false
     },
     {
       label: translate("Creator_Analysis"),
