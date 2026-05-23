@@ -53,10 +53,7 @@ function formatAmount(amountCents: number, currency: string) {
 // Treat anything that isn't currently usable as "no active subscription".
 // Without this the UI happily renders an expired/canceled plan as if it were
 // active, and the only CTA is "Cancel" — leaving the user with no upgrade path.
-function isActiveSubscription(
-  sub: IReplyZapSubscription | null
-): boolean {
-  if (!sub) return false;
+function isActiveSubscription(sub: IReplyZapSubscription): boolean {
   return sub.status === "active" || sub.status === "trialing" || sub.status === "past_due";
 }
 
@@ -172,7 +169,10 @@ export default function BillingDashboard() {
 
   if (loading) return <Loader fixed={false} />;
 
-  if (!isActiveSubscription(subscription)) {
+  // Splitting the null check from the active check lets TS narrow `subscription`
+  // to non-null after the early return, while keeping the ternaries inside the
+  // fallback block working for both "no sub" and "inactive sub" cases.
+  if (!subscription || !isActiveSubscription(subscription)) {
     return (
       <div className="p-4 rounded-lg flex flex-col gap-4 h-full">
         <h2 className="text-sm xl:text-xl font-medium">
