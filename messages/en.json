@@ -713,55 +713,55 @@
           "Copy the generated key, it will be used to connect your Shopify store with Truereff."
         ]
       },
-  "2": {
-    "title": "Open the Truereff App Page",
-    "substeps": [
-      "Go to the Shopify App Store:"
-    ]
-  },
-  "3": {
-    "title": "Install the App",
-    "substeps": [
-      "Click on the \"Install\" button on the left-side panel.",
-      "This will begin installing the Truereff Shopify app into your store."
-    ]
-  },
-  "4": {
-    "title": "Log in to Shopify",
-    "substeps": [
-      "If prompted, log in with your Shopify website credentials.",
-      "Complete the login to continue installation."
-    ]
-  },
-  "5": {
-    "title": "Complete Installation",
-    "substeps": [
-      "Follow the on-screen instructions to finish installing the Truereff Shopify app."
-    ]
-  },
-  "6": {
-    "title": "Access Truereff in Admin Panel",
-    "substeps": [
-      "Once installed, Click on the Truereff app that appeare in your installed app list.",
-      "This will open the Truereff app page standalone."
-    ],
-    "image":"/assets/step.png"
-  },
-  "7": {
-    "title": "Enter and Connect",
-    "substeps": [
-      "Enter that copied generated key into the \"Truereff.com Connection Token\" field.",
-      "Click the Connect button to link your Shopify store with Truereff.com, and it will show the status as Connected."
-    ],
-    "image":"/assets/step7.png"
-  },
-  "8": {
-    "title": "Confirmation",
-    "substeps": [
-      "Once connected, refresh this page for update status."
-    ]
-  }
-}
+      "2": {
+        "title": "Open the Truereff App Page",
+        "substeps": [
+          "Go to the Shopify App Store:"
+        ]
+      },
+      "3": {
+        "title": "Install the App",
+        "substeps": [
+          "Click on the \"Install\" button on the left-side panel.",
+          "This will begin installing the Truereff Shopify app into your store."
+        ]
+      },
+      "4": {
+        "title": "Log in to Shopify",
+        "substeps": [
+          "If prompted, log in with your Shopify website credentials.",
+          "Complete the login to continue installation."
+        ]
+      },
+      "5": {
+        "title": "Complete Installation",
+        "substeps": [
+          "Follow the on-screen instructions to finish installing the Truereff Shopify app."
+        ]
+      },
+      "6": {
+        "title": "Access Truereff in Admin Panel",
+        "substeps": [
+          "Once installed, Click on the Truereff app that appeare in your installed app list.",
+          "This will open the Truereff app page standalone."
+        ],
+        "image": "/assets/step.png"
+      },
+      "7": {
+        "title": "Enter and Connect",
+        "substeps": [
+          "Enter that copied generated key into the \"Truereff.com Connection Token\" field.",
+          "Click the Connect button to link your Shopify store with Truereff.com, and it will show the status as Connected."
+        ],
+        "image": "/assets/step7.png"
+      },
+      "8": {
+        "title": "Confirmation",
+        "substeps": [
+          "Once connected, refresh this page for update status."
+        ]
+      }
+    }
   },
   "Account_Holder_Name": "Account Holder Name",
   "Enter_your_phone_number": "Enter your phone number",
@@ -807,5 +807,129 @@
   "Edited": "Edited",
   "Edit_Message": "Edit Message",
   "Confirm_Delete_Message": "Are you sure you want to delete this message?",
-  "Confirm_Delete_Warning": "Note: This action cannot be undone."
+  "Confirm_Delete_Warning": "Note: This action cannot be undone.",
+  "Connect_Socials": "Connect Socials",
+  "Failed_to_load_connections": "Failed to load connections. Please try again.",
+  "Social_account_connected": "Social account connected successfully!",
+  "Try_Again": "Try Again",
+  "Social_Automation": "Social Automation",
+  "Connected_Pages": "Connected Pages",
+  "No_Pages_Connected": "No Pages Connected",
+  "No_Pages_Connected_Desc": "Connect your social media pages from the Connect Socials page first.",
+  "View_Posts": "View Posts",
+  "Posts": "Posts",
+  "No_Posts_Found": "No Posts Found",
+  "No_Posts_Found_Desc": "No posts were found for this page.",
+  "Active": "Active",
+  "Create_Automation": "Create Automation",
+  "Edit_Automation": "Edit Automation",
+  "Automation_Setup": "Automation Setup",
+  "Enable_Automation": "Enable Automation",
+  "Trigger_Type": "Trigger Type",
+  "All_Comments": "All Comments",
+  "Specific_Keywords": "Specific Keywords",
+  "Add_Keyword_Placeholder": "Type a keyword and press Enter",
+  "Comment_Reply_Text": "Comment Reply Text",
+  "Comment_Reply_Placeholder": "e.g. Thanks for your interest! Check your DM",
+  "DM_Template": "DM Template",
+  "Text_Message": "Text Message",
+  "Product_Carousel": "Product Carousel",
+  "DM_Message": "DM Message",
+  "DM_Message_Placeholder": "Message sent before the carousel...",
+  "Available_Variables": "Available Variables (click to copy)",
+  "Variables_Help": "Use variables in card fields. They will be replaced with actual product values when you select a product.",
+  "Variable_Copied": "Variable copied to clipboard",
+  "Carousel_Cards": "Carousel Cards",
+  "Add_Card": "Add Card",
+  "Add_First_Card": "Add your first product card",
+  "Card": "Card",
+  "Select_Product": "Select Product",
+  "Select_Product_Placeholder": "Choose a product...",
+  "Image_URL": "Image URL",
+  "Card_Headline": "Headline",
+  "Card_Description": "Description",
+  "Button": "Button",
+  "Button_Text": "Button Text",
+  "Button_URL_Placeholder": "UTM link (auto-filled)",
+  "UTM_Link_Auto": "UTM link is automatically set from the selected product.",
+  "Send_Once": "Send DM only once per user",
+  "Save_Automation": "Save Automation",
+  "Saving": "Saving...",
+  "Automation_Saved": "Automation saved successfully!",
+  "Automation_Save_Failed": "Failed to save automation. Please try again.",
+  "DM_Preview": "DM Preview",
+  "Preview_Note": "This is an approximate preview of how the DM will appear.",
+  "Collab_Now": "Collab Now",
+  "Actions": "Actions",
+  "Already_On_This_Plan": "You're already on this plan.",
+  "Back_To_Billing": "Back to Billing",
+  "Billed_via_ReplyZap": "Billed via ReplyZap",
+  "Billing": "Billing",
+  "Cancel_Plan_Change": "Cancel Plan Change",
+  "Cancel_Plan_Change_Confirm": "Cancel the scheduled plan change? You'll stay on your current plan.",
+  "Cancel_Subscription": "Cancel Subscription",
+  "Cancel_Subscription_Confirm": "Cancel your subscription at the end of the current period?",
+  "Cancel_Subscription_Immediate_Confirm": "Cancel immediately? You'll lose access right away.",
+  "Cancellation_Scheduled": "Your subscription will end on {date}.",
+  "Card_Needs_Button": "Card {index}: button text and URL are required.",
+  "Card_Needs_Headline": "Card {index}: headline is required.",
+  "Card_Needs_Image": "Card {index}: image URL is required.",
+  "Card_Needs_Product": "Card {index}: pick a product first.",
+  "Carousel_At_Least_One_Card": "Add at least one carousel card.",
+  "Change_Plan": "Change Plan",
+  "Checkout_Failed": "Checkout failed. Please try again.",
+  "Choose_a_Plan": "Choose a Plan",
+  "Connect_Account": "Connect Account",
+  "Currency": "Currency",
+  "Current": "Current",
+  "Current_Plan": "Current Plan",
+  "DM_Message_Required": "DM message is required.",
+  "Date": "Date",
+  "Downgrade_Scheduled": "Downgrade scheduled. It will take effect at the end of your billing period.",
+  "Email_Missing_For_Checkout": "Email is required to start checkout.",
+  "Ends_On": "Ends on {date}",
+  "Failed_to_load_billing": "Failed to load billing.",
+  "Failed_to_load_plans": "Failed to load plans.",
+  "Failed_to_load_posts": "Failed to load posts.",
+  "Free": "Free",
+  "Go_To_Billing": "Go to Billing",
+  "Invoices": "Invoices",
+  "Keyword_Too_Long": "Keyword is too long.",
+  "Keywords_Required": "Add at least one keyword.",
+  "Month": "month",
+  "No_Invoices_Yet": "No invoices yet",
+  "No_Invoices_Yet_Desc": "Invoices will appear here after your first payment.",
+  "No_Limits_Configured": "No usage limits configured for this plan.",
+  "No_Plans_Available": "No plans available",
+  "No_Plans_Available_Desc": "Please check back later.",
+  "Full_Access_Free": "You have full access — for free",
+  "Full_Access_Free_Desc": "Your account includes comment auto-reply and DM automation at no cost. Paid plans are coming soon.",
+  "Load_More": "Load more",
+  "Loading": "Loading…",
+  "No_Subscription": "No subscription",
+  "No_Subscription_Desc": "You don't have a subscription yet. Pick a plan to get started.",
+  "Not_Available": "Not Available",
+  "Payment_Canceled": "Payment canceled",
+  "Payment_Canceled_Desc": "No charge was made. You can pick a plan again any time.",
+  "Payment_Successful": "Payment successful",
+  "Payment_Successful_Desc": "Your subscription is now active.",
+  "Pending_Plan_Change": "Pending Plan Change",
+  "Plan_Change_Cancel_Failed": "Failed to cancel the plan change.",
+  "Plan_Change_Canceled": "Plan change canceled.",
+  "Plan_Change_Failed": "Plan change failed.",
+  "Plan_Change_Scheduled": "{kind} scheduled for {date}.",
+  "Plan_Not_Available": "This plan isn't available from here.",
+  "Plan_Upgraded": "Plan upgraded.",
+  "Processing": "Processing…",
+  "Refresh": "Refresh",
+  "Renews_On": "Renews on {date}",
+  "Subscribe": "Subscribe",
+  "Subscription_Cancel_Failed": "Failed to cancel subscription.",
+  "Subscription_Cancel_Success": "Subscription canceled.",
+  "Subscription_Inactive": "Subscription inactive",
+  "Subscription_Inactive_Desc": "Your subscription status is {status}. Pick a plan to reactivate.",
+  "Too_Many_Keywords": "You've reached the maximum number of keywords.",
+  "Upgrade": "Upgrade",
+  "Usage_This_Period": "Usage This Period",
+  "View_Plans": "View Plans"
 }

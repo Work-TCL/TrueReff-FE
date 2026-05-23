@@ -683,65 +683,65 @@
   "WordPress_Store_connected": "वर्डप्रेस स्टोर जुड़ा हुआ है",
   "Install": "इंस्टॉल करें",
   "Shopify_store_connect_info": {
-  "title": "अपने Shopify स्टोर को Truereff से कैसे जोड़ें",
-  "steps": {
-    "1": {
-      "title": "अपनी यूनिक कुंजी (Unique Key) जनरेट करें",
-      "substeps": [
-        "बटन पर क्लिक करें ताकि आपकी यूनिक कुंजी जनरेट हो सके।",
-        "जनरेट की गई कुंजी को कॉपी करें, इसे आप अपने Shopify स्टोर को Truereff से जोड़ने के लिए इस्तेमाल करेंगे।"
-      ]
-    },
-    "2": {
-      "title": "Truereff ऐप पेज खोलें",
-      "substeps": [
-        "Shopify App Store पर जाएं:"
-      ]
-    },
-    "3": {
-      "title": "ऐप इंस्टॉल करें",
-      "substeps": [
-        "बाएं साइड पैनल पर मौजूद “Install” बटन पर क्लिक करें।",
-        "इससे Truereff Shopify ऐप आपके स्टोर में इंस्टॉल होना शुरू हो जाएगा।"
-      ]
-    },
-    "4": {
-      "title": "Shopify में लॉगिन करें",
-      "substeps": [
-        "अगर लॉगिन पेज खुले तो अपने Shopify अकाउंट की जानकारी से लॉगिन करें।",
-        "इंस्टॉलेशन जारी रखने के लिए लॉगिन पूरा करें।"
-      ]
-    },
-    "5": {
-      "title": "इंस्टॉलेशन पूरा करें",
-      "substeps": [
-        "स्क्रीन पर दिए गए निर्देशों को फॉलो करें और Truereff Shopify ऐप की इंस्टॉलेशन पूरी करें।"
-      ]
-    },
-    "6": {
-      "title": "एडमिन पैनल में Truereff तक पहुँचें",
-      "substeps": [
-        "इंस्टॉल होने के बाद, अपने Installed Apps की लिस्ट में Truereff ऐप पर क्लिक करें।",
-        "इससे Truereff ऐप एक अलग पेज में खुलेगा।"
-      ],
-      "image": "/assets/step.png"
-    },
-    "7": {
-      "title": "कुंजी डालें और कनेक्ट करें",
-      "substeps": [
-        "कॉपी की गई यूनिक कुंजी को “Truereff.com Connection Token” फील्ड में पेस्ट करें।",
-        "“Connect” बटन पर क्लिक करें ताकि आपका Shopify स्टोर Truereff.com से लिंक हो जाए और कनेक्शन स्टेटस ‘Connected’ दिखे।"
-      ],
-      "image": "/assets/step7.png"
-    },
-    "8": {
-      "title": "कन्फर्मेशन",
-      "substeps": [
-        "कनेक्ट होने के बाद, स्टेटस अपडेट देखने के लिए इस पेज को रिफ्रेश करें।"
-      ]
+    "title": "अपने Shopify स्टोर को Truereff से कैसे जोड़ें",
+    "steps": {
+      "1": {
+        "title": "अपनी यूनिक कुंजी (Unique Key) जनरेट करें",
+        "substeps": [
+          "बटन पर क्लिक करें ताकि आपकी यूनिक कुंजी जनरेट हो सके।",
+          "जनरेट की गई कुंजी को कॉपी करें, इसे आप अपने Shopify स्टोर को Truereff से जोड़ने के लिए इस्तेमाल करेंगे।"
+        ]
+      },
+      "2": {
+        "title": "Truereff ऐप पेज खोलें",
+        "substeps": [
+          "Shopify App Store पर जाएं:"
+        ]
+      },
+      "3": {
+        "title": "ऐप इंस्टॉल करें",
+        "substeps": [
+          "बाएं साइड पैनल पर मौजूद “Install” बटन पर क्लिक करें।",
+          "इससे Truereff Shopify ऐप आपके स्टोर में इंस्टॉल होना शुरू हो जाएगा।"
+        ]
+      },
+      "4": {
+        "title": "Shopify में लॉगिन करें",
+        "substeps": [
+          "अगर लॉगिन पेज खुले तो अपने Shopify अकाउंट की जानकारी से लॉगिन करें।",
+          "इंस्टॉलेशन जारी रखने के लिए लॉगिन पूरा करें।"
+        ]
+      },
+      "5": {
+        "title": "इंस्टॉलेशन पूरा करें",
+        "substeps": [
+          "स्क्रीन पर दिए गए निर्देशों को फॉलो करें और Truereff Shopify ऐप की इंस्टॉलेशन पूरी करें।"
+        ]
+      },
+      "6": {
+        "title": "एडमिन पैनल में Truereff तक पहुँचें",
+        "substeps": [
+          "इंस्टॉल होने के बाद, अपने Installed Apps की लिस्ट में Truereff ऐप पर क्लिक करें।",
+          "इससे Truereff ऐप एक अलग पेज में खुलेगा।"
+        ],
+        "image": "/assets/step.png"
+      },
+      "7": {
+        "title": "कुंजी डालें और कनेक्ट करें",
+        "substeps": [
+          "कॉपी की गई यूनिक कुंजी को “Truereff.com Connection Token” फील्ड में पेस्ट करें।",
+          "“Connect” बटन पर क्लिक करें ताकि आपका Shopify स्टोर Truereff.com से लिंक हो जाए और कनेक्शन स्टेटस ‘Connected’ दिखे।"
+        ],
+        "image": "/assets/step7.png"
+      },
+      "8": {
+        "title": "कन्फर्मेशन",
+        "substeps": [
+          "कनेक्ट होने के बाद, स्टेटस अपडेट देखने के लिए इस पेज को रिफ्रेश करें।"
+        ]
+      }
     }
-  }
-},
+  },
   "Account_Holder_Name": "खाता धारक का नाम",
   "Enter_your_phone_number": "अपना फोन नंबर दर्ज करें",
   "Enter_Account_Holder_Number": "खाता धारक का नाम दर्ज करें",
@@ -784,5 +784,129 @@
   "Edited": "संपादित",
   "Edit_Message": "संदेश संपादित करें",
   "Confirm_Delete_Message": "क्या आप वाकई इस संदेश को हटाना चाहते हैं?",
-  "Confirm_Delete_Warning": "नोट: इस क्रिया को पूर्ववत नहीं किया जा सकता।"
+  "Confirm_Delete_Warning": "नोट: इस क्रिया को पूर्ववत नहीं किया जा सकता।",
+  "Connect_Socials": "सोशल मीडिया कनेक्ट करें",
+  "Failed_to_load_connections": "कनेक्शन लोड करने में विफल। कृपया पुनः प्रयास करें।",
+  "Social_account_connected": "सोशल अकाउंट सफलतापूर्वक कनेक्ट हो गया!",
+  "Try_Again": "पुनः प्रयास करें",
+  "Social_Automation": "सोशल ऑटोमेशन",
+  "Connected_Pages": "कनेक्टेड पेज",
+  "No_Pages_Connected": "कोई पेज कनेक्ट नहीं है",
+  "No_Pages_Connected_Desc": "पहले कनेक्ट सोशल्स पेज से अपने सोशल मीडिया पेज कनेक्ट करें।",
+  "View_Posts": "पोस्ट देखें",
+  "Posts": "पोस्ट",
+  "No_Posts_Found": "कोई पोस्ट नहीं मिली",
+  "No_Posts_Found_Desc": "इस पेज के लिए कोई पोस्ट नहीं मिली।",
+  "Active": "सक्रिय",
+  "Create_Automation": "ऑटोमेशन बनाएं",
+  "Edit_Automation": "ऑटोमेशन संपादित करें",
+  "Automation_Setup": "ऑटोमेशन सेटअप",
+  "Enable_Automation": "ऑटोमेशन सक्षम करें",
+  "Trigger_Type": "ट्रिगर प्रकार",
+  "All_Comments": "सभी कमेंट",
+  "Specific_Keywords": "विशिष्ट कीवर्ड",
+  "Add_Keyword_Placeholder": "कीवर्ड टाइप करें और Enter दबाएं",
+  "Comment_Reply_Text": "कमेंट रिप्लाई टेक्स्ट",
+  "Comment_Reply_Placeholder": "जैसे: रुचि के लिए धन्यवाद! अपना DM चेक करें",
+  "DM_Template": "DM टेम्पलेट",
+  "Text_Message": "टेक्स्ट मैसेज",
+  "Product_Carousel": "प्रोडक्ट कैरोसेल",
+  "DM_Message": "DM मैसेज",
+  "DM_Message_Placeholder": "कैरोसेल से पहले भेजा जाने वाला मैसेज...",
+  "Available_Variables": "उपलब्ध वेरिएबल्स (कॉपी करने के लिए क्लिक करें)",
+  "Variables_Help": "कार्ड फ़ील्ड में वेरिएबल्स का उपयोग करें। प्रोडक्ट चुनने पर ये वास्तविक मूल्यों से बदल जाएंगे।",
+  "Variable_Copied": "वेरिएबल क्लिपबोर्ड पर कॉपी हो गया",
+  "Carousel_Cards": "कैरोसेल कार्ड",
+  "Add_Card": "कार्ड जोड़ें",
+  "Add_First_Card": "अपना पहला प्रोडक्ट कार्ड जोड़ें",
+  "Card": "कार्ड",
+  "Select_Product": "प्रोडक्ट चुनें",
+  "Select_Product_Placeholder": "एक प्रोडक्ट चुनें...",
+  "Image_URL": "इमेज URL",
+  "Card_Headline": "हेडलाइन",
+  "Card_Description": "विवरण",
+  "Button": "बटन",
+  "Button_Text": "बटन टेक्स्ट",
+  "Button_URL_Placeholder": "UTM लिंक (स्वतः भरा)",
+  "UTM_Link_Auto": "चयनित प्रोडक्ट से UTM लिंक स्वचालित रूप से सेट होता है।",
+  "Send_Once": "प्रति उपयोगकर्ता केवल एक बार DM भेजें",
+  "Save_Automation": "ऑटोमेशन सेव करें",
+  "Saving": "सेव हो रहा है...",
+  "Automation_Saved": "ऑटोमेशन सफलतापूर्वक सेव हो गया!",
+  "Automation_Save_Failed": "ऑटोमेशन सेव करने में विफल। कृपया पुनः प्रयास करें।",
+  "DM_Preview": "DM प्रीव्यू",
+  "Preview_Note": "यह DM का अनुमानित प्रीव्यू है।",
+  "Collab_Now": "अब सहयोग करें",
+  "Actions": "क्रियाएँ",
+  "Already_On_This_Plan": "आप पहले से इसी प्लान पर हैं।",
+  "Back_To_Billing": "बिलिंग पर वापस जाएँ",
+  "Billed_via_ReplyZap": "ReplyZap के माध्यम से बिल",
+  "Billing": "बिलिंग",
+  "Cancel_Plan_Change": "प्लान परिवर्तन रद्द करें",
+  "Cancel_Plan_Change_Confirm": "अनुसूचित प्लान परिवर्तन रद्द करें?",
+  "Cancel_Subscription": "सदस्यता रद्द करें",
+  "Cancel_Subscription_Confirm": "क्या आप वर्तमान अवधि के अंत में अपनी सदस्यता रद्द करना चाहते हैं?",
+  "Cancel_Subscription_Immediate_Confirm": "तुरंत रद्द करें? आपकी पहुँच तुरंत समाप्त हो जाएगी।",
+  "Cancellation_Scheduled": "आपकी सदस्यता {date} को समाप्त होगी।",
+  "Card_Needs_Button": "कार्ड {index}: बटन का टेक्स्ट और URL आवश्यक है।",
+  "Card_Needs_Headline": "कार्ड {index}: हेडलाइन आवश्यक है।",
+  "Card_Needs_Image": "कार्ड {index}: छवि URL आवश्यक है।",
+  "Card_Needs_Product": "कार्ड {index}: पहले एक उत्पाद चुनें।",
+  "Carousel_At_Least_One_Card": "कम से कम एक कैरोसेल कार्ड जोड़ें।",
+  "Change_Plan": "प्लान बदलें",
+  "Checkout_Failed": "चेकआउट विफल हुआ। पुनः प्रयास करें।",
+  "Choose_a_Plan": "एक प्लान चुनें",
+  "Connect_Account": "खाता कनेक्ट करें",
+  "Currency": "मुद्रा",
+  "Current": "वर्तमान",
+  "Current_Plan": "वर्तमान प्लान",
+  "DM_Message_Required": "DM संदेश आवश्यक है।",
+  "Date": "तारीख़",
+  "Downgrade_Scheduled": "डाउनग्रेड शेड्यूल किया गया।",
+  "Email_Missing_For_Checkout": "चेकआउट के लिए ईमेल आवश्यक है।",
+  "Ends_On": "{date} को समाप्त",
+  "Failed_to_load_billing": "बिलिंग लोड नहीं हो सकी।",
+  "Failed_to_load_plans": "प्लान लोड नहीं हो सके।",
+  "Failed_to_load_posts": "पोस्ट लोड नहीं हो सकीं।",
+  "Free": "निःशुल्क",
+  "Go_To_Billing": "बिलिंग पर जाएँ",
+  "Invoices": "इनवॉइस",
+  "Keyword_Too_Long": "कीवर्ड बहुत लंबा है।",
+  "Keywords_Required": "कम से कम एक कीवर्ड जोड़ें।",
+  "Month": "माह",
+  "No_Invoices_Yet": "अभी कोई इनवॉइस नहीं",
+  "No_Invoices_Yet_Desc": "आपकी पहली भुगतान के बाद इनवॉइस यहाँ दिखेंगे।",
+  "No_Limits_Configured": "इस प्लान के लिए कोई उपयोग सीमा कॉन्फ़िगर नहीं की गई है।",
+  "No_Plans_Available": "कोई प्लान उपलब्ध नहीं",
+  "No_Plans_Available_Desc": "कृपया बाद में पुनः जाँचें।",
+  "Full_Access_Free": "आपके पास पूरी पहुँच है — बिल्कुल मुफ़्त",
+  "Full_Access_Free_Desc": "आपके खाते में कमेंट ऑटो-रिप्लाई और DM ऑटोमेशन बिना किसी शुल्क के शामिल हैं। सशुल्क प्लान जल्द ही आ रहे हैं।",
+  "Load_More": "और लोड करें",
+  "Loading": "लोड हो रहा है…",
+  "No_Subscription": "कोई सदस्यता नहीं",
+  "No_Subscription_Desc": "अभी आपकी कोई सदस्यता नहीं है। शुरू करने के लिए एक प्लान चुनें।",
+  "Not_Available": "उपलब्ध नहीं",
+  "Payment_Canceled": "भुगतान रद्द",
+  "Payment_Canceled_Desc": "कोई शुल्क नहीं लिया गया।",
+  "Payment_Successful": "भुगतान सफल",
+  "Payment_Successful_Desc": "आपकी सदस्यता अब सक्रिय है।",
+  "Pending_Plan_Change": "लंबित प्लान परिवर्तन",
+  "Plan_Change_Cancel_Failed": "प्लान परिवर्तन रद्द करने में विफल।",
+  "Plan_Change_Canceled": "प्लान परिवर्तन रद्द किया गया।",
+  "Plan_Change_Failed": "प्लान परिवर्तन विफल।",
+  "Plan_Change_Scheduled": "{kind} {date} के लिए शेड्यूल किया गया।",
+  "Plan_Not_Available": "यह प्लान यहाँ से उपलब्ध नहीं है।",
+  "Plan_Upgraded": "प्लान अपग्रेड हुआ।",
+  "Processing": "प्रोसेस हो रहा है…",
+  "Refresh": "रिफ्रेश",
+  "Renews_On": "{date} को नवीनीकरण",
+  "Subscribe": "सब्सक्राइब करें",
+  "Subscription_Cancel_Failed": "सदस्यता रद्द करने में विफल।",
+  "Subscription_Cancel_Success": "सदस्यता रद्द हो गई।",
+  "Subscription_Inactive": "सदस्यता निष्क्रिय",
+  "Subscription_Inactive_Desc": "आपकी सदस्यता की स्थिति {status} है।",
+  "Too_Many_Keywords": "आप अधिकतम कीवर्ड तक पहुँच गए हैं।",
+  "Upgrade": "अपग्रेड",
+  "Usage_This_Period": "इस अवधि का उपयोग",
+  "View_Plans": "प्लान देखें"
 }
